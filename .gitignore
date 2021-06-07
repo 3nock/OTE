@@ -1,0 +1,5 @@
+# Ignore node_modules folder
+py
+
+# Ignore all text files
+*.txt
