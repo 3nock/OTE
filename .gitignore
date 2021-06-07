@@ -1,4 +1,4 @@
-# Ignore node_modules folder
+# Ignoring the python file containing headers and lib
 py
 
 # Ignore all text files
