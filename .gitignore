@@ -1,5 +1,32 @@
 # Ignoring the python file containing headers and lib
 py
 
-# Ignore all text files
+# filetypes to ignore
+*.md
+*.pro
+*.pro.user
+*.ui
 *.txt
+
+# others
+*.depend
+*.layout
+*.patch
+*.cscope_file_list
+*.bmarks
+*.chw
+*.cbTemp
+*.opensdf
+*.sdf
+*.suo
+*.VC.opendb
+*.autosave
+*.~vsd
+*.dll
+*.exe
+*.pro.user.*
+*.vcxproj.user
+*.orig
+cov-int*
+*.pdb
+ui_*

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>res/images/icon.ico</file>
+    </qresource>
+    <qresource prefix="/files">
+        <file>res/files/nameservers.txt</file>
+    </qresource>
+</RCC>

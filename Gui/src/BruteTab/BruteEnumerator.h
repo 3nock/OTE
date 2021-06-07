@@ -1,0 +1,105 @@
+#ifndef BRUTEENUMERATORS_H
+#define BRUTEENUMERATORS_H
+
+#include "lib-brute.h"
+
+/*************************************************************************************
+ *                         SUBDOMAIN-BRUTE ENUMERATOR
+ *************************************************************************************/
+class Enumerator_subBrute : public QObject{
+    Q_OBJECT
+
+    public:
+        Enumerator_subBrute(ScanArguments *scanArguments);
+        void Enumerate(QThread *cThread);
+        ScanArguments *scanArguments;
+        int itemToEnumerate;
+        QHostAddress nameserver;
+        QDnsLookup *dns;
+
+    public slots:
+        void lookup();
+        void onStop();
+        void onLookupFinished();
+
+    signals:
+        void subdomain(QString subdomain);
+        void scanLog(QString log);
+        void quitThread();
+};
+
+
+/*************************************************************************************
+ *                              TLD-BRUTE ENUMERATOR
+ *************************************************************************************/
+class Enumerator_tldBrute : public QObject{
+    Q_OBJECT
+
+    public:
+        Enumerator_tldBrute(ScanArguments *scanArguments);
+        void Enumerate(QThread *cThread);
+        ScanArguments *scanArguments;
+        int itemToEnumerate;
+        QHostAddress nameserver;
+        QDnsLookup *dns;
+
+    public slots:
+        void onLookupFinished();
+        void lookup();
+        void onStop();
+
+    signals:
+        void subdomain(QString subdomain);
+        void scanLog(QString log);
+        void quitThread();
+};
+
+
+/*************************************************************************************
+ *                              ACTIVE_SUBDOMAINS ENUMERATOR
+ *************************************************************************************/
+class Enumerator_activeSubdomains : public QObject{
+    Q_OBJECT
+
+    public:
+        Enumerator_activeSubdomains(ScanArguments *scanArguments);
+        void Enumerate(QThread *cThread);
+        ScanArguments *scanArguments;
+        int itemToEnumerate;
+        QHostAddress nameserver;
+        QDnsLookup *dns;
+
+    public slots:
+        void onLookupFinished();
+        void lookup();
+        void onStop();
+
+    signals:
+        void subdomain(QString subdomain);
+        void scanLog(QString log);
+        void quitThread();
+};
+
+
+/*************************************************************************************
+ *                              Check Wildcards
+ *************************************************************************************/
+
+class Enumerator_Wildcards: public QObject{
+    Q_OBJECT
+
+    public:
+        Enumerator_Wildcards(ScanArguments *scanArguments);
+        void Enumerate(QThread *cThread);
+        ScanArguments *scanArguments;
+        QDnsLookup *dns;
+
+    public slots:
+        void onLookupFinished();
+        void lookup();
+
+    signals:
+        void quitThread();
+};
+
+#endif // BRUTEENUMERATORS_H
