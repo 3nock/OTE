@@ -1,14 +1,4 @@
-# Ignoring the python file containing headers and lib
-py
-
-# filetypes to ignore
-*.md
-*.pro
-*.pro.user
-*.ui
-*.txt
-
-# others
+# global filetypes to ignore
 *.depend
 *.layout
 *.patch
@@ -24,6 +14,7 @@ py
 *.~vsd
 *.dll
 *.exe
+*.pro.user
 *.pro.user.*
 *.vcxproj.user
 *.orig

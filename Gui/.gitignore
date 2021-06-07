@@ -1,6 +1,0 @@
-# Ignoring the python file containing headers and lib
-py/
-
-# filetypes to ignore
-*.pro
-*.pro.user
