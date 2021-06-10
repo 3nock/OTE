@@ -16,6 +16,26 @@ QString EnumName(int enumName){
     }
 }
 
+QHostAddress RandomNameserver(bool useCustomNameservers){
+    QStringList nameservers;
+    QString filename;
+    if(useCustomNameservers){
+        filename = QDir::currentPath()+"/wordlists/custom_nameservers.txt";
+    }else{
+        filename = ":/files/res/files/nameservers.txt";
+    }
+    QFile file(filename);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QString line;
+        QTextStream in(&file);
+        while (!in.atEnd()){
+            nameservers.append(in.readLine());
+        }
+        file.close();
+    }
+    return QHostAddress(nameservers[rand()%nameservers.length()]);
+}
+
 // filter for the domain target name...
 QString TargetNameFilter(QString domainName, int enumName){
     /******************* General Modification *******************/

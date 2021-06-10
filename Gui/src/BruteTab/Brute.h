@@ -21,15 +21,23 @@ class Brute : public QWidget{
         ~Brute();
         //...
         void checkWildcards();
-        void actionContextMenu(int enumName);
-        void rightClickContextMenu(int enumName);
+        void showContextMenu_actionButton(int enumName, QPoint position);
+        void showContextMenu_rightClick(int enumName);
         void logs_subBrute(QString log);
         void logs_tldBrute(QString log);
         void logs_activeSubdomains(QString log);
         //...
-        ScanArguments scanArguments_subBrute;
-        ScanArguments scanArguments_tldBrute;
-        ScanArguments scanArguments_activeSubdomains;
+        QStandardItemModel *model_subBrute;
+        QStandardItemModel *model_tldBrute;
+        QStandardItemModel *model_activeSubdomains;
+        //...
+        QStandardItem *results_subBrute;
+        QStandardItem *results_tldBrute;
+        QStandardItem *results_activeSubdomains;
+        //...
+        ScanArguments_Brute scanArguments_subBrute;
+        ScanArguments_Brute scanArguments_tldBrute;
+        ScanArguments_Brute scanArguments_activeSubdomains;
         //...
         int subdomainCount_tldBrute = 0;
         int subdomainCount_subBrute = 0;
@@ -78,7 +86,7 @@ class Brute : public QWidget{
         void on_toolButton_wordlist_subBrute_clicked();
         void on_lineEdit_wordlist_subBrute_returnPressed();
         void on_lineEdit_targetDomain_subBrute_returnPressed();
-        void on_listWidget_subdomains_subBrute_customContextMenuRequested(const QPoint &pos);
+        void on_tableView_results_subBrute_customContextMenuRequested(const QPoint &pos);
 
         //  For tldBrute...
         void on_pushButton_add_tldBrute_clicked();
@@ -95,7 +103,7 @@ class Brute : public QWidget{
         void on_toolButton_wordlist_tldBrute_clicked();
         void on_lineEdit_manualWordlist_tldBrute_returnPressed();
         void on_lineEdit_targetDomain_tldBrute_returnPressed();
-        void on_listWidget_subdomains_tldBrute_customContextMenuRequested(const QPoint &pos);
+        void on_tableView_results_tldBrute_customContextMenuRequested(const QPoint &pos);
 
         // For activeSubdomains...
         void on_pushButton_reloadEnumeratedWordlist_activeSubdomains_clicked();
@@ -110,7 +118,7 @@ class Brute : public QWidget{
         void on_pushButton_action_activeSubdomains_clicked();
         void on_toolButton_config_activeSubdomains_clicked();
         void on_lineEdit_manualWordlist_activeSubdomains_returnPressed();
-        void on_listWidget_subdomains_activeSubdomains_customContextMenuRequested(const QPoint &pos);
+        void on_tableView_results_activeSubdomains_customContextMenuRequested(const QPoint &pos);
 
         // self implemented slots...
         void actionSendToMultiLevel_subBrute();
@@ -122,9 +130,6 @@ class Brute : public QWidget{
         void actionSendToDnsRecords_subBrute();
         void actionSendToDnsRecords_tldBrute();
         void actionSendToDnsRecords_activeSubdomains();
-        void actionSort_subBrute();
-        void actionSort_tldBrute();
-        void actionSort_activeSubdomains();
         //...
         void cursorSendToSave_subBrute();
         void cursorSendToSave_tldBrute();
@@ -140,9 +145,9 @@ class Brute : public QWidget{
         void startEnumeration_tldBrute();
         void startEnumeration_activeSubdomains();
         //...
-        void onSubdomain_subBrute(QString subdomain);
-        void onSubdomain_tldBrute(QString subdomain);
-        void onSubdomain_activeSubdomains(QString subdomain);
+        void resolvedSubdomain_subBrute(QString subdomain, QString ipAddress);
+        void resolvedSubdomain_tldBrute(QString subdomain, QString ipAddress);
+        void resolvedSubdomain_activeSubdomains(QString subdomain, QString ipAddress);
         //...
         void onThreadEnd_subBrute();
         void onThreadEnd_tldBrute();

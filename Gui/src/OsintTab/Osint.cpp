@@ -1,9 +1,7 @@
 #include "Osint.h"
 #include "ui_Osint.h"
 
-/* *****************************************************************
-*                        Constructor & Destructor
-* ******************************************************************/
+/******************************* Constructor & Destructor ********************************/
 
 Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint){
     ui->setupUi(this);
@@ -12,21 +10,20 @@ Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint){
     ui->pushButton_stop->setDisabled(true);
     ui->lineEdit_domain->setPlaceholderText("eg. example.com");
     ui->lineEdit_newProfile->setPlaceholderText("Enter New Profile's Name...");
-    // writting profile names on the comboBox...
-    QFile osintProfiles(currentPath+FILE_PROFILES);
-    osintProfiles.open(QIODevice::ReadOnly | QIODevice::Text);
-    if(osintProfiles.isOpen()){
-        QJsonParseError JsonParseError;
-        QStringList profile_names = QJsonDocument::fromJson(osintProfiles.readAll(), &JsonParseError).object().keys();
-        osintProfiles.close();
-        for(int i = 0; i != profile_names.size(); i++){
-            ui->comboBox_profiles->addItem(profile_names[i]);
-        }
-    }else{
-        logs("[Error] Failed To Open /config/osint-profiles.json File For Display on Profiles!");
-    }
-    // hiding the profiles Frame...
-    ui->frame_profiles->hide();
+    //...
+    setupOsintProfiles();
+    //...
+    results_model = new QStandardItemModel;
+    results_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+    ui->tableView_results->setModel(results_model);
+    //...
+    QPalette p = palette();
+    p.setColor(QPalette::Highlight, QColor(188, 188, 141));
+    p.setColor(QPalette::HighlightedText, QColor(Qt::black));
+    ui->tableView_results->setPalette(p);
+    //...
+    scanArguments = new ScanArguments_Osint;
+    scanResults = new ScanResults_Osint;
 }
 Osint::~Osint(){
     delete ui;
@@ -35,15 +32,13 @@ Osint::~Osint(){
 /************************************* Start Enumeration *********************************/
 void Osint::on_pushButton_start_clicked(){
     if(ui->lineEdit_domain->text() != EMPTY){
-        if(ui->radioButton_fullScan->isChecked()){
-            fullScan = true;
-        }else{
-            fullScan = false;
-        }
-        QStringList choosenOptions;
-        getUserOptions(&choosenOptions);
-        if(choosenOptions.count() == 0){
+        getUserOptions(&scanArguments->choosenOptions);
+        if(scanArguments->choosenOptions.count() == 0){
             QMessageBox::warning(this, TITLE_ERROR, "Please Choose Osint Engine For subdomain Enumerations!");
+            return;
+        }
+        if(ui->lineEdit_domain->text().isEmpty()){
+            QMessageBox::warning(this, TITLE_ERROR, "Please Target Domain For Enumerations!");
             return;
         }
         //...
@@ -51,14 +46,19 @@ void Osint::on_pushButton_start_clicked(){
         ui->pushButton_stop->setEnabled(true);
 
         // converting the QString domainName to char* for compatibility with the PyObject methods...
-        QString targetDomain = TargetNameFilter(ui->lineEdit_domain->text(), ENUMNAME_OSINT);
-        domainName = new char[targetDomain.length() + 1];
-        strcpy(domainName, targetDomain.toStdString().c_str());
+        QString domainName = TargetNameFilter(ui->lineEdit_domain->text(), ENUMNAME_OSINT);
+        char *targetDomain = new char[domainName.length() + 1];
+        strcpy(targetDomain, domainName.toStdString().c_str());
         //...
-        emit sendStatus("[*] Enumerating "+targetDomain+" Subdomains with Osint...");
-        logs("[START] Enumerating "+targetDomain+" Subdomains with Osint...");
+        scanArguments->targetDomain = targetDomain;
+        scanResults->label_subdomainsCount = ui->label_subdomainsCount;
+        scanResults->resultsCount = &subdomainsCount;
+        scanResults->results_model = results_model;
         //...
-        Enumerator *enumerator = new Enumerator(domainName, choosenOptions, ui->listWidget_subdomains, ui->label_subdomainsCount, &subdomainsCount);
+        emit sendStatus("[*] Enumerating "+domainName+" Subdomains with Osint...");
+        logs("[START] Enumerating "+domainName+" Subdomains with Osint...");
+        //...
+        Enumerator *enumerator = new Enumerator(scanArguments, scanResults);
         QThread *cThread = new QThread(this);
         enumerator->Enumerate(cThread);
         enumerator->moveToThread(cThread);
@@ -97,9 +97,11 @@ void Osint::onEnumerationComplete(){
 void Osint::on_pushButton_clear_clicked(){
     // clear subdomains...
     if(ui->tabWidget->currentIndex() == 0){
-        ui->listWidget_subdomains->clear();
+        results_model->clear();
         ui->label_subdomainsCount->clear();
         subdomainsCount = 0;
+        //...
+        results_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     }else{   // clear logs...
         ui->listWidget_logs->clear();
     }
@@ -121,123 +123,141 @@ void Osint::on_toolButton_config_clicked(){
                      OSINT ENGINES OPTIONS
 *******************************************************************/
 void Osint::getUserOptions(QStringList *choosenEngines){
-    if(ui->checkBox_engine_threatminer->isChecked() || fullScan){
+    if(ui->checkBox_engine_threatminer->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_THREATMINER);
     }
-    if(ui->checkBox_engine_shodan->isChecked() || fullScan){
+    if(ui->checkBox_engine_shodan->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_SHODAN);
     }
-    if(ui->checkBox_engine_otx->isChecked() || fullScan){
+    if(ui->checkBox_engine_otx->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_OTX);
     }
-    if(ui->checkBox_engine_netcraft->isChecked() || fullScan){
+    if(ui->checkBox_engine_netcraft->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_NETCRAFT);
     }
-    if(ui->checkBox_engine_censys->isChecked() || fullScan){
+    if(ui->checkBox_engine_censys->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_CENSYS);
     }
-    if(ui->checkBox_engine_github->isChecked() || fullScan){
+    if(ui->checkBox_engine_github->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_GITHUB);
     }
-    if(ui->checkBox_engine_certspotter->isChecked() || fullScan){
+    if(ui->checkBox_engine_certspotter->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_CERTSPOTTER);
     }
-    if(ui->checkBox_engine_dogpile->isChecked() || fullScan){
+    if(ui->checkBox_engine_dogpile->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_DOGPILE);
     }
-    if(ui->checkBox_engine_duckduckgo->isChecked() || fullScan){
+    if(ui->checkBox_engine_duckduckgo->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_DUCKDUCKGO);
     }
-    if(ui->checkBox_engine_exalead->isChecked() || fullScan){
+    if(ui->checkBox_engine_exalead->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_EXALEAD);
     }
-    if(ui->checkBox_engine_huntersearch->isChecked() || fullScan){
+    if(ui->checkBox_engine_huntersearch->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_HUNTERSEARCH);
     }
-    if(ui->checkBox_engine_intelx->isChecked() || fullScan){
+    if(ui->checkBox_engine_intelx->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_INTELX);
     }
-    if(ui->checkBox_engine_securitytrails->isChecked() || fullScan){
+    if(ui->checkBox_engine_securitytrails->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_SECURITYTRAILS);
     }
-    if(ui->checkBox_engine_suip->isChecked() || fullScan){
+    if(ui->checkBox_engine_suip->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_SUIP);
     }
-    if(ui->checkBox_engine_trello->isChecked() || fullScan){
+    if(ui->checkBox_engine_trello->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_TRELLO);
     }
-    if(ui->checkBox_engine_san->isChecked() || fullScan){
+    if(ui->checkBox_engine_san->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_SAN);
     }
-    if(ui->checkBox_engine_cloudflare->isChecked() || fullScan){
+    if(ui->checkBox_engine_cloudflare->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_CLOUDFLARE);
     }
-    if(ui->checkBox_engine_threatcrowd->isChecked() || fullScan){
+    if(ui->checkBox_engine_threatcrowd->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_THREATCROWD);
     }
-    if(ui->checkBox_engine_dnsbufferoverrun->isChecked() || fullScan){
+    if(ui->checkBox_engine_dnsbufferoverrun->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_DNSBUFFEROVERRUN);
     }
-    if(ui->checkBox_engine_hackertarget->isChecked() || fullScan){
+    if(ui->checkBox_engine_hackertarget->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_HACKERTARGET);
     }
-    if(ui->checkBox_engine_pkey->isChecked() || fullScan){
+    if(ui->checkBox_engine_pkey->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_PKEY);
     }
-    if(ui->checkBox_engine_waybackmachine->isChecked() || fullScan){
+    if(ui->checkBox_engine_waybackmachine->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_WAYBACKMACHINE);
     }
-    if(ui->checkBox_engine_ask->isChecked() || fullScan){
+    if(ui->checkBox_engine_ask->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_ASK);
     }
-    if(ui->checkBox_engine_baidu->isChecked() || fullScan){
+    if(ui->checkBox_engine_baidu->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_BAIDU);
     }
-    if(ui->checkBox_engine_bing->isChecked() || fullScan){
+    if(ui->checkBox_engine_bing->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_BING);
     }
-    if(ui->checkBox_engine_crtsh->isChecked() || fullScan){
+    if(ui->checkBox_engine_crtsh->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_CRTSH);
     }
-    if(ui->checkBox_engine_dnsdumpster->isChecked() || fullScan){
+    if(ui->checkBox_engine_dnsdumpster->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_DNSDUMPSTER);
     }
-    if(ui->checkBox_engine_google->isChecked() || fullScan){
+    if(ui->checkBox_engine_google->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_GOOGLE);
     }
-    if(ui->checkBox_engine_passivedns->isChecked() || fullScan){
+    if(ui->checkBox_engine_passivedns->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_PASSIVEDNS);
     }
-    if(ui->checkBox_engine_virustotal->isChecked() || fullScan){
+    if(ui->checkBox_engine_virustotal->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_VIRUSTOTAL);
     }
-    if(ui->checkBox_engine_yahoo->isChecked() || fullScan){
+    if(ui->checkBox_engine_yahoo->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_YAHOO);
     }
-    if(ui->checkBox_engine_virustotalapi->isChecked() || fullScan){
+    if(ui->checkBox_engine_virustotalapi->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_VIRUSTOTALAPI);
     }
-    if(ui->checkBox_engine_omnisint->isChecked() || fullScan){
+    if(ui->checkBox_engine_omnisint->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_OMNISINT);
     }
-    if(ui->checkBox_engine_qwant->isChecked() || fullScan){
+    if(ui->checkBox_engine_qwant->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_QWANT);
     }
-    if(ui->checkBox_engine_rapiddns->isChecked() || fullScan){
+    if(ui->checkBox_engine_rapiddns->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_RAPIDDNS);
     }
-    if(ui->checkBox_engine_urlscan->isChecked() || fullScan){
+    if(ui->checkBox_engine_urlscan->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_URLSCAN);
     }
-    if(ui->checkBox_engine_pentesttools->isChecked() || fullScan){
+    if(ui->checkBox_engine_pentesttools->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_PENTESTTOOLS);
     }
-    if(ui->checkBox_engine_projectdiscovery->isChecked() || fullScan){
+    if(ui->checkBox_engine_projectdiscovery->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_PROJECTDISCOVERY);
     }
-    if(ui->checkBox_engine_spyse->isChecked() || fullScan){
+    if(ui->checkBox_engine_spyse->isChecked() || ui->radioButton_fullScan->isChecked()){
         choosenEngines->append(ENGINE_SPYSE);
     }
+}
+
+void Osint::setupOsintProfiles(){
+    // writting profile names on the comboBox...
+    QFile osintProfiles(currentPath+FILE_PROFILES);
+    osintProfiles.open(QIODevice::ReadOnly | QIODevice::Text);
+    if(osintProfiles.isOpen()){
+        QJsonParseError JsonParseError;
+        QStringList profile_names = QJsonDocument::fromJson(osintProfiles.readAll(), &JsonParseError).object().keys();
+        osintProfiles.close();
+        for(int i = 0; i != profile_names.size(); i++){
+            ui->comboBox_profiles->addItem(profile_names[i]);
+        }
+    }else{
+        logs("[Error] Failed To Open /config/osint-profiles.json File For Display on Profiles!");
+    }
+    // hiding the profiles Frame...
+    ui->frame_profiles->hide();
 }
 
 // the frameWidget containing the profile's options...
@@ -258,200 +278,200 @@ void Osint::on_pushButton_loadProfile_clicked(){
         QJsonDocument apis = QJsonDocument::fromJson(keys.toUtf8());
         QJsonObject keys_object = apis.object()[ui->comboBox_profiles->currentText()].toObject();
         //...
-        if(keys_object.value(ENGINE_THREATMINER) == TRUE){
+        if(keys_object.value(ENGINE_THREATMINER) == OSINT_TRUE){
             ui->checkBox_engine_threatminer->setChecked(true);
         }else{
             ui->checkBox_engine_threatminer->setChecked(false);
         }
-        if(keys_object.value(ENGINE_SHODAN) == TRUE){
+        if(keys_object.value(ENGINE_SHODAN) == OSINT_TRUE){
             ui->checkBox_engine_shodan->setChecked(true);
         }else{
             ui->checkBox_engine_shodan->setChecked(false);
         }
-        if(keys_object.value(ENGINE_BING) == TRUE){
+        if(keys_object.value(ENGINE_BING) == OSINT_TRUE){
             ui->checkBox_engine_bing->setChecked(true);
         }else{
             ui->checkBox_engine_bing->setChecked(false);
         }
-        if(keys_object.value(ENGINE_GITHUB) == TRUE){
+        if(keys_object.value(ENGINE_GITHUB) == OSINT_TRUE){
             ui->checkBox_engine_github->setChecked(true);
         }else{
             ui->checkBox_engine_github->setChecked(false);
         }
-        if(keys_object.value(ENGINE_CENSYS) == TRUE){
+        if(keys_object.value(ENGINE_CENSYS) == OSINT_TRUE){
             ui->checkBox_engine_censys->setChecked(true);
         }else{
             ui->checkBox_engine_censys->setChecked(false);
         }
-        if(keys_object.value(ENGINE_SECURITYTRAILS) == TRUE){
+        if(keys_object.value(ENGINE_SECURITYTRAILS) == OSINT_TRUE){
             ui->checkBox_engine_securitytrails->setChecked(true);
         }else{
             ui->checkBox_engine_securitytrails->setChecked(false);
         }
-        if(keys_object.value(ENGINE_CLOUDFLARE) == TRUE){
+        if(keys_object.value(ENGINE_CLOUDFLARE) == OSINT_TRUE){
             ui->checkBox_engine_cloudflare->setChecked(true);
         }else{
             ui->checkBox_engine_cloudflare->setChecked(false);
         }
-        if(keys_object.value(ENGINE_INTELX) == TRUE){
+        if(keys_object.value(ENGINE_INTELX) == OSINT_TRUE){
             ui->checkBox_engine_intelx->setChecked(true);
         }else{
             ui->checkBox_engine_intelx->setChecked(false);
         }
-        if(keys_object.value(ENGINE_VIRUSTOTAL) == TRUE){
+        if(keys_object.value(ENGINE_VIRUSTOTAL) == OSINT_TRUE){
             ui->checkBox_engine_virustotal->setChecked(true);
         }else{
             ui->checkBox_engine_virustotal->setChecked(false);
         }
-        if(keys_object.value(ENGINE_GOOGLE) == TRUE){
+        if(keys_object.value(ENGINE_GOOGLE) == OSINT_TRUE){
             ui->checkBox_engine_google->setChecked(true);
         }else{
             ui->checkBox_engine_google->setChecked(false);
         }
-        if(keys_object.value(ENGINE_CERTSPOTTER) == TRUE){
+        if(keys_object.value(ENGINE_CERTSPOTTER) == OSINT_TRUE){
             ui->checkBox_engine_certspotter->setChecked(true);
         }else{
             ui->checkBox_engine_certspotter->setChecked(false);
         }
-        if(keys_object.value(ENGINE_CRTSH) == TRUE){
+        if(keys_object.value(ENGINE_CRTSH) == OSINT_TRUE){
             ui->checkBox_engine_crtsh->setChecked(true);
         }else{
             ui->checkBox_engine_crtsh->setChecked(false);
         }
-        if(keys_object.value(ENGINE_DOGPILE) == TRUE){
+        if(keys_object.value(ENGINE_DOGPILE) == OSINT_TRUE){
             ui->checkBox_engine_dogpile->setChecked(true);
         }else{
             ui->checkBox_engine_dogpile->setChecked(false);
         }
-        if(keys_object.value(ENGINE_DUCKDUCKGO) == TRUE){
+        if(keys_object.value(ENGINE_DUCKDUCKGO) == OSINT_TRUE){
             ui->checkBox_engine_duckduckgo->setChecked(true);
         }else{
             ui->checkBox_engine_duckduckgo->setChecked(false);
         }
-        if(keys_object.value(ENGINE_EXALEAD) == TRUE){
+        if(keys_object.value(ENGINE_EXALEAD) == OSINT_TRUE){
             ui->checkBox_engine_exalead->setChecked(true);
         }else{
             ui->checkBox_engine_exalead->setChecked(false);
         }
-        if(keys_object.value(ENGINE_HUNTERSEARCH) == TRUE){
+        if(keys_object.value(ENGINE_HUNTERSEARCH) == OSINT_TRUE){
             ui->checkBox_engine_huntersearch->setChecked(true);
         }else{
             ui->checkBox_engine_huntersearch->setChecked(false);
         }
-        if(keys_object.value(ENGINE_NETCRAFT) == TRUE){
+        if(keys_object.value(ENGINE_NETCRAFT) == OSINT_TRUE){
             ui->checkBox_engine_netcraft->setChecked(true);
         }else{
             ui->checkBox_engine_netcraft->setChecked(false);
         }
-        if(keys_object.value(ENGINE_OTX) == TRUE){
+        if(keys_object.value(ENGINE_OTX) == OSINT_TRUE){
             ui->checkBox_engine_otx->setChecked(true);
         }else{
             ui->checkBox_engine_otx->setChecked(false);
         }
-        if(keys_object.value(ENGINE_SUIP) == TRUE){
+        if(keys_object.value(ENGINE_SUIP) == OSINT_TRUE){
             ui->checkBox_engine_suip->setChecked(true);
         }else{
             ui->checkBox_engine_suip->setChecked(false);
         }
-        if(keys_object.value(ENGINE_TRELLO) == TRUE){
+        if(keys_object.value(ENGINE_TRELLO) == OSINT_TRUE){
             ui->checkBox_engine_trello->setChecked(true);
         }else{
             ui->checkBox_engine_trello->setChecked(false);
         }
-        if(keys_object.value(ENGINE_SAN) == TRUE){
+        if(keys_object.value(ENGINE_SAN) == OSINT_TRUE){
             ui->checkBox_engine_san->setChecked(true);
         }else{
             ui->checkBox_engine_san->setChecked(false);
         }
-        if(keys_object.value(ENGINE_THREATCROWD) == TRUE){
+        if(keys_object.value(ENGINE_THREATCROWD) == OSINT_TRUE){
             ui->checkBox_engine_threatcrowd->setChecked(true);
         }else{
             ui->checkBox_engine_threatcrowd->setChecked(false);
         }
-        if(keys_object.value(ENGINE_DNSBUFFEROVERRUN) == TRUE){
+        if(keys_object.value(ENGINE_DNSBUFFEROVERRUN) == OSINT_TRUE){
             ui->checkBox_engine_dnsbufferoverrun->setChecked(true);
         }else{
             ui->checkBox_engine_dnsbufferoverrun->setChecked(false);
         }
-        if(keys_object.value(ENGINE_HACKERTARGET) == TRUE){
+        if(keys_object.value(ENGINE_HACKERTARGET) == OSINT_TRUE){
             ui->checkBox_engine_hackertarget->setChecked(true);
         }else{
             ui->checkBox_engine_hackertarget->setChecked(false);
         }
-        if(keys_object.value(ENGINE_PKEY) == TRUE){
+        if(keys_object.value(ENGINE_PKEY) == OSINT_TRUE){
             ui->checkBox_engine_pkey->setChecked(true);
         }else{
             ui->checkBox_engine_pkey->setChecked(false);
         }
-        if(keys_object.value(ENGINE_WAYBACKMACHINE) == TRUE){
+        if(keys_object.value(ENGINE_WAYBACKMACHINE) == OSINT_TRUE){
             ui->checkBox_engine_waybackmachine->setChecked(true);
         }else{
             ui->checkBox_engine_waybackmachine->setChecked(false);
         }
-        if(keys_object.value(ENGINE_ASK) == TRUE){
+        if(keys_object.value(ENGINE_ASK) == OSINT_TRUE){
             ui->checkBox_engine_ask->setChecked(true);
         }else{
             ui->checkBox_engine_ask->setChecked(false);
         }
-        if(keys_object.value(ENGINE_BAIDU) == TRUE){
+        if(keys_object.value(ENGINE_BAIDU) == OSINT_TRUE){
             ui->checkBox_engine_baidu->setChecked(true);
         }else{
             ui->checkBox_engine_baidu->setChecked(false);
         }
-        if(keys_object.value(ENGINE_DNSDUMPSTER) == TRUE){
+        if(keys_object.value(ENGINE_DNSDUMPSTER) == OSINT_TRUE){
             ui->checkBox_engine_dnsdumpster->setChecked(true);
         }else{
             ui->checkBox_engine_dnsdumpster->setChecked(false);
         }
-        if(keys_object.value(ENGINE_PASSIVEDNS) == TRUE){
+        if(keys_object.value(ENGINE_PASSIVEDNS) == OSINT_TRUE){
             ui->checkBox_engine_passivedns->setChecked(true);
         }else{
             ui->checkBox_engine_passivedns->setChecked(false);
         }
-        if(keys_object.value(ENGINE_YAHOO) == TRUE){
+        if(keys_object.value(ENGINE_YAHOO) == OSINT_TRUE){
             ui->checkBox_engine_yahoo->setChecked(true);
         }else{
             ui->checkBox_engine_yahoo->setChecked(false);
         }
-        if(keys_object.value(ENGINE_VIRUSTOTALAPI) == TRUE){
+        if(keys_object.value(ENGINE_VIRUSTOTALAPI) == OSINT_TRUE){
             ui->checkBox_engine_virustotalapi->setChecked(true);
         }else{
             ui->checkBox_engine_virustotalapi->setChecked(false);
         }
-        if(keys_object.value(ENGINE_OMNISINT) == TRUE){
+        if(keys_object.value(ENGINE_OMNISINT) == OSINT_TRUE){
             ui->checkBox_engine_omnisint->setChecked(true);
         }else{
             ui->checkBox_engine_omnisint->setChecked(false);
         }
-        if(keys_object.value(ENGINE_QWANT) == TRUE){
+        if(keys_object.value(ENGINE_QWANT) == OSINT_TRUE){
             ui->checkBox_engine_qwant->setChecked(true);
         }
         else{
             ui->checkBox_engine_qwant->setChecked(false);
         }
-        if(keys_object.value(ENGINE_URLSCAN) == TRUE){
+        if(keys_object.value(ENGINE_URLSCAN) == OSINT_TRUE){
             ui->checkBox_engine_urlscan->setChecked(true);
         }else{
             ui->checkBox_engine_urlscan->setChecked(false);
         }
-        if(keys_object.value(ENGINE_RAPIDDNS) == TRUE){
+        if(keys_object.value(ENGINE_RAPIDDNS) == OSINT_TRUE){
             ui->checkBox_engine_rapiddns->setChecked(true);
         }
         else{
             ui->checkBox_engine_rapiddns->setChecked(false);
         }
-        if(keys_object.value(ENGINE_PROJECTDISCOVERY) == TRUE){
+        if(keys_object.value(ENGINE_PROJECTDISCOVERY) == OSINT_TRUE){
             ui->checkBox_engine_projectdiscovery->setChecked(true);
         }
         else{
             ui->checkBox_engine_projectdiscovery->setChecked(false);
         }
-        if(keys_object.value(ENGINE_PENTESTTOOLS) == TRUE){
+        if(keys_object.value(ENGINE_PENTESTTOOLS) == OSINT_TRUE){
             ui->checkBox_engine_pentesttools->setChecked(true);
         }else{
             ui->checkBox_engine_pentesttools->setChecked(false);
         }
-        if(keys_object.value(ENGINE_SPYSE) == TRUE){
+        if(keys_object.value(ENGINE_SPYSE) == OSINT_TRUE){
             ui->checkBox_engine_spyse->setChecked(true);
         }else{
             ui->checkBox_engine_spyse->setChecked(false);
@@ -500,199 +520,199 @@ void Osint::on_pushButton_newProfile_clicked(){
             // inserting the user's options into the Json Object...
             QJsonObject ref_addvalue;
             if(ui->checkBox_engine_censys->isChecked()){
-                ref_addvalue.insert(ENGINE_CENSYS, TRUE);
+                ref_addvalue.insert(ENGINE_CENSYS, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_CENSYS, FALSE);
+                ref_addvalue.insert(ENGINE_CENSYS, OSINT_FALSE);
             }
             if(ui->checkBox_engine_threatminer->isChecked()){
-                ref_addvalue.insert(ENGINE_THREATMINER, TRUE);
+                ref_addvalue.insert(ENGINE_THREATMINER, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_THREATMINER, FALSE);
+                ref_addvalue.insert(ENGINE_THREATMINER, OSINT_FALSE);
             }
             if(ui->checkBox_engine_shodan->isChecked()){
-                ref_addvalue.insert(ENGINE_SHODAN, TRUE);
+                ref_addvalue.insert(ENGINE_SHODAN, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_SHODAN, FALSE);
+                ref_addvalue.insert(ENGINE_SHODAN, OSINT_FALSE);
             }
             if(ui->checkBox_engine_github->isChecked()){
-                ref_addvalue.insert(ENGINE_GITHUB, TRUE);
+                ref_addvalue.insert(ENGINE_GITHUB, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_GITHUB, FALSE);
+                ref_addvalue.insert(ENGINE_GITHUB, OSINT_FALSE);
             }
             if(ui->checkBox_engine_certspotter->isChecked()){
-                ref_addvalue.insert(ENGINE_CERTSPOTTER, TRUE);
+                ref_addvalue.insert(ENGINE_CERTSPOTTER, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_CERTSPOTTER, FALSE);
+                ref_addvalue.insert(ENGINE_CERTSPOTTER, OSINT_FALSE);
             }
             if(ui->checkBox_engine_dogpile->isChecked()){
-                ref_addvalue.insert(ENGINE_DOGPILE, TRUE);
+                ref_addvalue.insert(ENGINE_DOGPILE, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_DOGPILE, FALSE);
+                ref_addvalue.insert(ENGINE_DOGPILE, OSINT_FALSE);
             }
             if(ui->checkBox_engine_duckduckgo->isChecked()){
-                ref_addvalue.insert(ENGINE_DUCKDUCKGO, TRUE);
+                ref_addvalue.insert(ENGINE_DUCKDUCKGO, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_DUCKDUCKGO, FALSE);
+                ref_addvalue.insert(ENGINE_DUCKDUCKGO, OSINT_FALSE);
             }
             if(ui->checkBox_engine_exalead->isChecked()){
-                ref_addvalue.insert(ENGINE_EXALEAD, TRUE);
+                ref_addvalue.insert(ENGINE_EXALEAD, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_EXALEAD, FALSE);
+                ref_addvalue.insert(ENGINE_EXALEAD, OSINT_FALSE);
             }
             if(ui->checkBox_engine_huntersearch->isChecked()){
-                ref_addvalue.insert(ENGINE_HUNTERSEARCH, TRUE);
+                ref_addvalue.insert(ENGINE_HUNTERSEARCH, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_HUNTERSEARCH, FALSE);
+                ref_addvalue.insert(ENGINE_HUNTERSEARCH, OSINT_FALSE);
             }
             if(ui->checkBox_engine_intelx->isChecked()){
-                ref_addvalue.insert(ENGINE_INTELX, TRUE);
+                ref_addvalue.insert(ENGINE_INTELX, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_INTELX, FALSE);
+                ref_addvalue.insert(ENGINE_INTELX, OSINT_FALSE);
             }
             if(ui->checkBox_engine_netcraft->isChecked()){
-                ref_addvalue.insert(ENGINE_NETCRAFT, TRUE);
+                ref_addvalue.insert(ENGINE_NETCRAFT, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_NETCRAFT, FALSE);
+                ref_addvalue.insert(ENGINE_NETCRAFT, OSINT_FALSE);
             }
             if(ui->checkBox_engine_otx->isChecked()){
-                ref_addvalue.insert(ENGINE_OTX, TRUE);
+                ref_addvalue.insert(ENGINE_OTX, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_OTX, FALSE);
+                ref_addvalue.insert(ENGINE_OTX, OSINT_FALSE);
             }
             if(ui->checkBox_engine_securitytrails->isChecked()){
-                ref_addvalue.insert(ENGINE_SECURITYTRAILS, TRUE);
+                ref_addvalue.insert(ENGINE_SECURITYTRAILS, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_SECURITYTRAILS, FALSE);
+                ref_addvalue.insert(ENGINE_SECURITYTRAILS, OSINT_FALSE);
             }
             if(ui->checkBox_engine_suip->isChecked()){
-                ref_addvalue.insert(ENGINE_SUIP, TRUE);
+                ref_addvalue.insert(ENGINE_SUIP, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_SUIP, FALSE);
+                ref_addvalue.insert(ENGINE_SUIP, OSINT_FALSE);
             }
             if(ui->checkBox_engine_trello->isChecked()){
-                ref_addvalue.insert(ENGINE_TRELLO, TRUE);
+                ref_addvalue.insert(ENGINE_TRELLO, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_TRELLO, FALSE);
+                ref_addvalue.insert(ENGINE_TRELLO, OSINT_FALSE);
             }
             if(ui->checkBox_engine_san->isChecked()){
-                ref_addvalue.insert(ENGINE_SAN, TRUE);
+                ref_addvalue.insert(ENGINE_SAN, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_SAN, FALSE);
+                ref_addvalue.insert(ENGINE_SAN, OSINT_FALSE);
             }
             if(ui->checkBox_engine_cloudflare->isChecked()){
-                ref_addvalue.insert(ENGINE_CLOUDFLARE, TRUE);
+                ref_addvalue.insert(ENGINE_CLOUDFLARE, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_CLOUDFLARE, FALSE);
+                ref_addvalue.insert(ENGINE_CLOUDFLARE, OSINT_FALSE);
             }
             if(ui->checkBox_engine_threatcrowd->isChecked()){
-                ref_addvalue.insert(ENGINE_THREATCROWD, TRUE);
+                ref_addvalue.insert(ENGINE_THREATCROWD, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_THREATCROWD, FALSE);
+                ref_addvalue.insert(ENGINE_THREATCROWD, OSINT_FALSE);
             }
             if(ui->checkBox_engine_dnsbufferoverrun->isChecked()){
-                ref_addvalue.insert(ENGINE_DNSBUFFEROVERRUN, TRUE);
+                ref_addvalue.insert(ENGINE_DNSBUFFEROVERRUN, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_DNSBUFFEROVERRUN, FALSE);
+                ref_addvalue.insert(ENGINE_DNSBUFFEROVERRUN, OSINT_FALSE);
             }
             if(ui->checkBox_engine_hackertarget->isChecked()){
-                ref_addvalue.insert(ENGINE_HACKERTARGET, TRUE);
+                ref_addvalue.insert(ENGINE_HACKERTARGET, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_HACKERTARGET, FALSE);
+                ref_addvalue.insert(ENGINE_HACKERTARGET, OSINT_FALSE);
             }
             if(ui->checkBox_engine_pkey->isChecked()){
-                ref_addvalue.insert(ENGINE_PKEY, TRUE);
+                ref_addvalue.insert(ENGINE_PKEY, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_PKEY, FALSE);
+                ref_addvalue.insert(ENGINE_PKEY, OSINT_FALSE);
             }
             if(ui->checkBox_engine_waybackmachine->isChecked()){
-                ref_addvalue.insert(ENGINE_WAYBACKMACHINE, TRUE);
+                ref_addvalue.insert(ENGINE_WAYBACKMACHINE, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_WAYBACKMACHINE, FALSE);
+                ref_addvalue.insert(ENGINE_WAYBACKMACHINE, OSINT_FALSE);
             }
             if(ui->checkBox_engine_ask->isChecked()){
-                ref_addvalue.insert(ENGINE_ASK, TRUE);
+                ref_addvalue.insert(ENGINE_ASK, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_ASK, FALSE);
+                ref_addvalue.insert(ENGINE_ASK, OSINT_FALSE);
             }
             if(ui->checkBox_engine_baidu->isChecked()){
-                ref_addvalue.insert(ENGINE_BAIDU, TRUE);
+                ref_addvalue.insert(ENGINE_BAIDU, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_BAIDU, FALSE);
+                ref_addvalue.insert(ENGINE_BAIDU, OSINT_FALSE);
             }
             if(ui->checkBox_engine_bing->isChecked()){
-                ref_addvalue.insert(ENGINE_BING, TRUE);
+                ref_addvalue.insert(ENGINE_BING, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_BING, FALSE);
+                ref_addvalue.insert(ENGINE_BING, OSINT_FALSE);
             }
             if(ui->checkBox_engine_crtsh->isChecked()){
-                ref_addvalue.insert(ENGINE_CRTSH, TRUE);
+                ref_addvalue.insert(ENGINE_CRTSH, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_CRTSH, FALSE);
+                ref_addvalue.insert(ENGINE_CRTSH, OSINT_FALSE);
             }
             if(ui->checkBox_engine_dnsdumpster->isChecked()){
-                ref_addvalue.insert(ENGINE_DNSDUMPSTER, TRUE);
+                ref_addvalue.insert(ENGINE_DNSDUMPSTER, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_DNSDUMPSTER, FALSE);
+                ref_addvalue.insert(ENGINE_DNSDUMPSTER, OSINT_FALSE);
             }
             if(ui->checkBox_engine_google->isChecked()){
-                ref_addvalue.insert(ENGINE_GOOGLE, TRUE);
+                ref_addvalue.insert(ENGINE_GOOGLE, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_GOOGLE, FALSE);
+                ref_addvalue.insert(ENGINE_GOOGLE, OSINT_FALSE);
             }
             if(ui->checkBox_engine_passivedns->isChecked()){
-                ref_addvalue.insert(ENGINE_PASSIVEDNS, TRUE);
+                ref_addvalue.insert(ENGINE_PASSIVEDNS, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_PASSIVEDNS, FALSE);
+                ref_addvalue.insert(ENGINE_PASSIVEDNS, OSINT_FALSE);
             }
             if(ui->checkBox_engine_virustotal->isChecked()){
-                ref_addvalue.insert(ENGINE_VIRUSTOTAL, TRUE);
+                ref_addvalue.insert(ENGINE_VIRUSTOTAL, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_VIRUSTOTAL, FALSE);
+                ref_addvalue.insert(ENGINE_VIRUSTOTAL, OSINT_FALSE);
             }
             if(ui->checkBox_engine_yahoo->isChecked()){
-                ref_addvalue.insert(ENGINE_YAHOO, TRUE);
+                ref_addvalue.insert(ENGINE_YAHOO, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_YAHOO, FALSE);
+                ref_addvalue.insert(ENGINE_YAHOO, OSINT_FALSE);
             }
             if(ui->checkBox_engine_virustotalapi->isChecked()){
-                ref_addvalue.insert(ENGINE_VIRUSTOTALAPI, TRUE);
+                ref_addvalue.insert(ENGINE_VIRUSTOTALAPI, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_VIRUSTOTALAPI, FALSE);
+                ref_addvalue.insert(ENGINE_VIRUSTOTALAPI, OSINT_FALSE);
             }
             if(ui->checkBox_engine_omnisint->isChecked()){
-                ref_addvalue.insert(ENGINE_OMNISINT, TRUE);
+                ref_addvalue.insert(ENGINE_OMNISINT, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_OMNISINT, FALSE);
+                ref_addvalue.insert(ENGINE_OMNISINT, OSINT_FALSE);
             }
             if(ui->checkBox_engine_qwant->isChecked()){
-                ref_addvalue.insert(ENGINE_QWANT, TRUE);
+                ref_addvalue.insert(ENGINE_QWANT, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_QWANT, FALSE);
+                ref_addvalue.insert(ENGINE_QWANT, OSINT_FALSE);
             }
             if(ui->checkBox_engine_rapiddns->isChecked()){
-                ref_addvalue.insert(ENGINE_RAPIDDNS, TRUE);
+                ref_addvalue.insert(ENGINE_RAPIDDNS, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_RAPIDDNS, FALSE);
+                ref_addvalue.insert(ENGINE_RAPIDDNS, OSINT_FALSE);
             }
             if(ui->checkBox_engine_urlscan->isChecked()){
-                ref_addvalue.insert(ENGINE_URLSCAN, TRUE);
+                ref_addvalue.insert(ENGINE_URLSCAN, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_URLSCAN, FALSE);
+                ref_addvalue.insert(ENGINE_URLSCAN, OSINT_FALSE);
             }
             if(ui->checkBox_engine_pentesttools->isChecked()){
-                ref_addvalue.insert(ENGINE_PENTESTTOOLS, TRUE);
+                ref_addvalue.insert(ENGINE_PENTESTTOOLS, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_PENTESTTOOLS, FALSE);
+                ref_addvalue.insert(ENGINE_PENTESTTOOLS, OSINT_FALSE);
             }
             if(ui->checkBox_engine_projectdiscovery->isChecked()){
-                ref_addvalue.insert(ENGINE_PROJECTDISCOVERY, TRUE);
+                ref_addvalue.insert(ENGINE_PROJECTDISCOVERY, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_PROJECTDISCOVERY, FALSE);
+                ref_addvalue.insert(ENGINE_PROJECTDISCOVERY, OSINT_FALSE);
             }
             if(ui->checkBox_engine_spyse->isChecked()){
-                ref_addvalue.insert(ENGINE_SPYSE, TRUE);
+                ref_addvalue.insert(ENGINE_SPYSE, OSINT_TRUE);
             }else{
-                ref_addvalue.insert(ENGINE_SPYSE, FALSE);
+                ref_addvalue.insert(ENGINE_SPYSE, OSINT_FALSE);
             }
             RootObject.insert(profile_name, ref_addvalue);
             JsonDocument.setObject(RootObject);
@@ -718,17 +738,14 @@ void Osint::on_pushButton_action_clicked(){
     //...
     QAction actionSendToSave("Send To Save", this);
     QAction actionSendToActive("Send To Active Subdomain", this);
-    QAction actionSort("Sort Subdomains", this);
     QAction actionSendToDnsRecords("Send To DnsRecords");
     QAction actionRemoveDuplicates("Remove Duplicates");
     //...
     connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave()));
     connect(&actionSendToActive, SIGNAL(triggered()), this, SLOT(actionSendToActive()));
     connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords()));
-    connect(&actionSort, SIGNAL(triggered()), this, SLOT(actionSort()));
     connect(&actionRemoveDuplicates, SIGNAL(triggered()), this,SLOT(actionRemoveDuplicates()));
     //...
-    menu->addAction(&actionSort);
     menu->addAction(&actionRemoveDuplicates);
     menu->addSeparator();
     menu->addAction(&actionSendToDnsRecords);
@@ -745,9 +762,9 @@ void Osint::on_pushButton_action_clicked(){
 }
 
 /******************************** Right-Click Context Menu ****************************/
-void Osint::on_listWidget_subdomains_customContextMenuRequested(const QPoint &pos){
+void Osint::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
-    if(!ui->listWidget_subdomains->selectedItems().isEmpty()){
+    if(ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
         QMenu *menu = new QMenu(this);
         menu->setAttribute( Qt::WA_DeleteOnClose, true );
         menu->setObjectName("mainMenu");
@@ -788,9 +805,6 @@ void Osint::actionSendToActive(){
     onSendResultsToActive();
     emit changeTabToActive();
 }
-void Osint::actionSort(){
-    ui->listWidget_subdomains->sortItems();
-}
 void Osint::actionRemoveDuplicates(){
     // removing duplicates from the QListWidget...
 }
@@ -801,20 +815,20 @@ void Osint::actionSendToDnsRecords(){
 /************************** Right-Click Context Menu Methods **********************/
 void Osint::cursorOpenInBrowser(){
     // iterate and open each selected item in a browser...
-    foreach(QListWidgetItem *item, ui->listWidget_subdomains->selectedItems()){
-        QDesktopServices::openUrl(QUrl("https://"+item->text(), QUrl::TolerantMode));
+    foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
+        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
 }
 void Osint::cursorSendToSave(){
-    foreach(QListWidgetItem *item, ui->listWidget_subdomains->selectedItems()){
-        emit sendResultsToSave(item->text());
+    foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
+        emit sendResultsToSave(index.data().toString());
     }
     emit changeTabToSave();
     logs("[*] Sent Selected Osint Results To Save...");
 }
 void Osint::cursorSendToActive(){
-    foreach(QListWidgetItem *item, ui->listWidget_subdomains->selectedItems()){
-        emit sendResultsToActive(item->text());
+    foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
+        emit sendResultsToActive(index.data().toString());
     }
     emit changeTabToActive();
     logs("[*] Sent Selected Osint Results To enumerate Active Subdomains in Active...");
@@ -839,14 +853,10 @@ void Osint::logs(QString log){
 
 /********************************* Send Results **********************************/
 void Osint::onSendResultsToSave(){
-    for(int i = 0; i != subdomainsCount; ++i){
-        emit sendResultsToSave(ui->listWidget_subdomains->item(i)->text());
-    }
+    //...
     logs("[*] Sent Osint Results To Save...");
 }
 void Osint::onSendResultsToActive(){
-    for(int i = 0; i != subdomainsCount; ++i){
-        emit sendResultsToActive(ui->listWidget_subdomains->item(i)->text());
-    }
+    //...
     logs("[*] Sent Osint Results To enumerate Active Subdomains...");
 }

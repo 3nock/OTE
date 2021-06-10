@@ -32,7 +32,28 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_brute">
      <property name="styleSheet">
-      <string notr="true">background-color:  rgb(235, 235, 235);</string>
+      <string notr="true">/*
+background-color: rgb(152, 152, 114);
+QTabWidget::tab-bar {
+left: 10px;  move to the right by 5px 
+}
+
+QTabBar::tab:hover {
+background-color: rgb(212, 212, 159);
+}
+
+QTabBar::tab:selected {
+background-color: rgb(179, 179, 134);
+}
+*/
+
+QTabBar::tab:hover{
+background-color: rgb(220, 220, 220);
+}
+
+QTabBar::tab:selected {
+color: rgb(141, 141, 106);
+}</string>
      </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
@@ -133,7 +154,8 @@
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
+</string>
              </property>
              <property name="text">
               <string>Start</string>
@@ -325,7 +347,7 @@ border-radius: 15px</string>
                     <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
                    </property>
                    <property name="text">
-                    <string>Clear Output</string>
+                    <string>Clear Results</string>
                    </property>
                    <property name="default">
                     <bool>true</bool>
@@ -348,8 +370,8 @@ border-radius: 15px</string>
                    </property>
                    <property name="font">
                     <font>
-                     <weight>75</weight>
-                     <bold>true</bold>
+                     <weight>50</weight>
+                     <bold>false</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -451,7 +473,7 @@ border-radius: 15px</string>
                     </layout>
                    </item>
                    <item>
-                    <widget class="QListWidget" name="listWidget_subdomains_subBrute">
+                    <widget class="QTableView" name="tableView_results_subBrute">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                        <horstretch>0</horstretch>
@@ -471,7 +493,7 @@ border-radius: 15px</string>
                       <string/>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">QWidget#listWidget_subdomains_subBrute{
+                      <string notr="true">QWidget#tableView_results_subBrute{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
 border-style: solid;
 border-color: black;
@@ -485,12 +507,42 @@ border-radius: 0px;
                      <property name="lineWidth">
                       <number>1</number>
                      </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::DoubleClicked</set>
+                     </property>
+                     <property name="showDropIndicator" stdset="0">
+                      <bool>false</bool>
+                     </property>
+                     <property name="dragDropOverwriteMode">
+                      <bool>false</bool>
+                     </property>
                      <property name="selectionMode">
                       <enum>QAbstractItemView::ExtendedSelection</enum>
                      </property>
-                     <property name="selectionRectVisible">
+                     <property name="showGrid">
+                      <bool>false</bool>
+                     </property>
+                     <property name="sortingEnabled">
                       <bool>true</bool>
                      </property>
+                     <property name="cornerButtonEnabled">
+                      <bool>false</bool>
+                     </property>
+                     <attribute name="horizontalHeaderMinimumSectionSize">
+                      <number>200</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderDefaultSectionSize">
+                      <number>220</number>
+                     </attribute>
+                     <attribute name="verticalHeaderVisible">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderMinimumSectionSize">
+                      <number>15</number>
+                     </attribute>
+                     <attribute name="verticalHeaderDefaultSectionSize">
+                      <number>15</number>
+                     </attribute>
                     </widget>
                    </item>
                   </layout>
@@ -529,7 +581,10 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, sto
 border-style: solid;
 border-color: black;
 border-width: 1px;
-border-radius: 0px;}</string>
+border-radius: 0px;}
+QListWidget::item:selected {
+background-color:  rgb(199, 199, 149);
+color: black;}</string>
                      </property>
                     </widget>
                    </item>
@@ -686,10 +741,19 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, sto
 border-style: solid;
 border-color: black;
 border-width: 1px;
-border-radius: 0px;}</string>
+border-radius: 0px;}
+QListWidget::item:selected{
+background-color:  rgb(199, 199, 149);
+color: black;}
+QListWidget::item:hover{
+background-color: rgb(230, 230, 172);
+}</string>
                    </property>
                    <property name="dragDropMode">
                     <enum>QAbstractItemView::NoDragDrop</enum>
+                   </property>
+                   <property name="alternatingRowColors">
+                    <bool>false</bool>
                    </property>
                    <property name="selectionMode">
                     <enum>QAbstractItemView::ExtendedSelection</enum>
@@ -1232,7 +1296,7 @@ border-radius: 15px</string>
                     </layout>
                    </item>
                    <item>
-                    <widget class="QListWidget" name="listWidget_subdomains_tldBrute">
+                    <widget class="QTableView" name="tableView_results_tldBrute">
                      <property name="font">
                       <font>
                        <family>MS Shell Dlg 2</family>
@@ -1243,7 +1307,7 @@ border-radius: 15px</string>
                       <enum>Qt::CustomContextMenu</enum>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">QWidget#listWidget_subdomains_tldBrute{
+                      <string notr="true">QWidget#tableView_results_tldBrute{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
 border-style: solid;
 border-color: black;
@@ -1251,12 +1315,48 @@ border-width: 1px;
 border-radius: 0px;
 }</string>
                      </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::DoubleClicked</set>
+                     </property>
+                     <property name="tabKeyNavigation">
+                      <bool>true</bool>
+                     </property>
+                     <property name="showDropIndicator" stdset="0">
+                      <bool>false</bool>
+                     </property>
+                     <property name="dragDropOverwriteMode">
+                      <bool>false</bool>
+                     </property>
                      <property name="selectionMode">
                       <enum>QAbstractItemView::ExtendedSelection</enum>
                      </property>
-                     <property name="selectionRectVisible">
-                      <bool>true</bool>
+                     <property name="showGrid">
+                      <bool>false</bool>
                      </property>
+                     <property name="cornerButtonEnabled">
+                      <bool>false</bool>
+                     </property>
+                     <attribute name="horizontalHeaderMinimumSectionSize">
+                      <number>100</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderDefaultSectionSize">
+                      <number>220</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderHighlightSections">
+                      <bool>true</bool>
+                     </attribute>
+                     <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                      <bool>true</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderVisible">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderMinimumSectionSize">
+                      <number>15</number>
+                     </attribute>
+                     <attribute name="verticalHeaderDefaultSectionSize">
+                      <number>15</number>
+                     </attribute>
                     </widget>
                    </item>
                   </layout>
@@ -1296,7 +1396,10 @@ border-style: solid;
 border-color: black;
 border-width: 1px;
 border-radius: 0px;
-}</string>
+}
+QListWidget::item:selected {
+background-color:  rgb(199, 199, 149);
+color: black;}</string>
                      </property>
                     </widget>
                    </item>
@@ -1454,7 +1557,10 @@ border-style: solid;
 border-color: black;
 border-width: 1px;
 border-radius: 0px;
-}</string>
+}
+QListWidget::item:selected {
+background-color:  rgb(199, 199, 149);
+color: black;}</string>
                    </property>
                    <property name="selectionMode">
                     <enum>QAbstractItemView::ExtendedSelection</enum>
@@ -1942,7 +2048,7 @@ border-radius: 15px</string>
                     </layout>
                    </item>
                    <item>
-                    <widget class="QListWidget" name="listWidget_subdomains_activeSubdomains">
+                    <widget class="QTableView" name="tableView_results_activeSubdomains">
                      <property name="font">
                       <font>
                        <family>MS Shell Dlg 2</family>
@@ -1956,7 +2062,7 @@ border-radius: 15px</string>
                       <string/>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">QWidget#listWidget_subdomains_activeSubdomains{
+                      <string notr="true">QWidget#tableView_results_activeSubdomains{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
 border-style: solid;
 border-color: black;
@@ -1964,12 +2070,42 @@ border-width: 1px;
 border-radius: 0px;
 }</string>
                      </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::DoubleClicked</set>
+                     </property>
+                     <property name="showDropIndicator" stdset="0">
+                      <bool>false</bool>
+                     </property>
+                     <property name="dragDropOverwriteMode">
+                      <bool>false</bool>
+                     </property>
                      <property name="selectionMode">
                       <enum>QAbstractItemView::ExtendedSelection</enum>
                      </property>
-                     <property name="selectionRectVisible">
-                      <bool>true</bool>
+                     <property name="showGrid">
+                      <bool>false</bool>
                      </property>
+                     <property name="cornerButtonEnabled">
+                      <bool>false</bool>
+                     </property>
+                     <attribute name="horizontalHeaderMinimumSectionSize">
+                      <number>100</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderDefaultSectionSize">
+                      <number>220</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                      <bool>true</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderVisible">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderMinimumSectionSize">
+                      <number>15</number>
+                     </attribute>
+                     <attribute name="verticalHeaderDefaultSectionSize">
+                      <number>15</number>
+                     </attribute>
                     </widget>
                    </item>
                   </layout>
@@ -2006,7 +2142,10 @@ border-style: solid;
 border-color: black;
 border-width: 1px;
 border-radius: 0px;
-}</string>
+}
+QListWidget::item:selected {
+background-color:  rgb(199, 199, 149);
+color: black;}</string>
                      </property>
                     </widget>
                    </item>
@@ -2211,7 +2350,10 @@ border-style: solid;
 border-color: black;
 border-width: 1px;
 border-radius: 0px;
-}</string>
+}
+QListWidget::item:selected {
+background-color:  rgb(199, 199, 149);
+color: black;}</string>
                    </property>
                    <property name="selectionMode">
                     <enum>QAbstractItemView::ExtendedSelection</enum>

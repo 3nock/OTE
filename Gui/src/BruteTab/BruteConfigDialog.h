@@ -11,9 +11,9 @@ class BruteConfigDialog : public QDialog{
         Q_OBJECT
 
     public:
-        explicit BruteConfigDialog(QWidget *parent = nullptr, ScanArguments *scanArguments = nullptr);
+        explicit BruteConfigDialog(QWidget *parent = nullptr, ScanArguments_Brute *scanArguments = nullptr);
         ~BruteConfigDialog();
-        ScanArguments *scanArguments;
+        ScanArguments_Brute *scanArguments;
 
     private slots:
         void on_pushButton_clear_clicked();

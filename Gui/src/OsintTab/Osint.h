@@ -20,10 +20,14 @@ class Osint : public QWidget{
         ~Osint();
         //...
         void getUserOptions(QStringList *choosenOptions);
+        void setupOsintProfiles();
         //...
-        char *domainName;
-        bool fullScan = false;
+        ScanArguments_Osint *scanArguments;
+        ScanResults_Osint *scanResults;
+        //...
+        QStandardItemModel *results_model;
         int subdomainsCount = 0;
+        //...
         QString currentPath;
 
     private slots:
@@ -34,7 +38,7 @@ class Osint : public QWidget{
         void on_toolButton_config_clicked();
         void on_toolButton_keys_clicked();
         void on_lineEdit_domain_returnPressed();
-        void on_listWidget_subdomains_customContextMenuRequested(const QPoint &pos);
+        void on_tableView_results_customContextMenuRequested(const QPoint &pos);
         // Engine options...
         void on_checkBox_useProfiles_clicked(bool checked);
         void on_pushButton_loadProfile_clicked();
@@ -44,7 +48,6 @@ class Osint : public QWidget{
         void actionSendToSave();
         void actionSendToActive();
         void actionSendToDnsRecords();
-        void actionSort();
         void actionRemoveDuplicates();
         // slots for context menu for the right click button...
         void cursorSendToSave();

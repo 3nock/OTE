@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>912</width>
-    <height>682</height>
+    <width>1000</width>
+    <height>680</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>910</width>
+    <width>1000</width>
     <height>680</height>
    </size>
   </property>
@@ -62,7 +62,17 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color:  rgb(235, 235, 235);</string>
+       <string notr="true">/*QTabBar::tab:hover {
+background-color: rgb(212, 212, 159);
+}*/
+
+QTabBar::tab:hover{
+background-color: rgb(220, 220, 220);
+}
+
+QTabBar::tab:selected {
+color: rgb(141, 141, 106);
+}</string>
       </property>
      </widget>
     </item>
@@ -145,7 +155,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>912</width>
+     <width>1000</width>
      <height>21</height>
     </rect>
    </property>

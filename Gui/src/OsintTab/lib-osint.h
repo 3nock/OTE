@@ -1,9 +1,12 @@
-#ifndef LIB_H
-#define LIB_H
+#ifndef LIBOSINT_H
+#define LIBOSINT_H
 
+// includes...
 #include "src/core.h"
 
 
+#define OSINT_TRUE "1"
+#define OSINT_FALSE "0"
 // osint engines...
 #define ENGINE_VIRUSTOTALAPI "virustotalapi"
 #define ENGINE_OMNISINT "omnisint"
@@ -55,8 +58,22 @@
 #define CONFIG_TIMEOUT "timeout"
 #define CONFIG_MAX_PAGES "max_pages"
 
-//functions...
+// functions...
 QString GetConfig(QString configType, int enumName);
 void SetConfig(QString configType, int enumName, QString configValue);
 
-#endif // LIB_H
+// structures...
+struct ScanArguments_Osint{
+    QStringList choosenOptions;
+    char *targetDomain;
+};
+typedef struct  ScanArguments_osint ScanArguments_osint;
+
+struct ScanResults_Osint{
+    QLabel *label_subdomainsCount;
+    QStandardItemModel *results_model;
+    int *resultsCount;
+};
+typedef struct ScanResults_Osint ScanResults_Osint;
+
+#endif // LIBOSINT_H

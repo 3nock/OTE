@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QMenu>
 #include <QFont>
+#include <QtGui>
 //...
 #include <QThread>
 #include <QString>
@@ -49,8 +50,6 @@
 #define ENUMNAME_TLDBRUTE 3
 #define ENUMNAME_ACTIVESUBDOMAINS 4
 //...
-#define TRUE "1"
-#define FALSE "0"
 #define NEWLINE "\n"
 #define EMPTY ""
 #define TITLE_ERROR "Error!"
@@ -60,6 +59,7 @@
 #define INFO_SAVETOFILE "Save To File..."
 
 /***************** FUNCTIONS *****************/
+QHostAddress RandomNameserver(bool useCustomNameservers);
 QString TargetNameFilter(QString domainName, int enumName);
 QString EnumName(int enumName);
 QString wordlistFilter(QString word);

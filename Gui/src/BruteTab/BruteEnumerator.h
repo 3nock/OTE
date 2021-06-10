@@ -10,9 +10,10 @@ class Enumerator_subBrute : public QObject{
     Q_OBJECT
 
     public:
-        Enumerator_subBrute(ScanArguments *scanArguments);
+        Enumerator_subBrute(ScanArguments_Brute *scanArguments);
+        ~Enumerator_subBrute();
         void Enumerate(QThread *cThread);
-        ScanArguments *scanArguments;
+        ScanArguments_Brute *scanArguments;
         int itemToEnumerate;
         QHostAddress nameserver;
         QDnsLookup *dns;
@@ -23,7 +24,7 @@ class Enumerator_subBrute : public QObject{
         void onLookupFinished();
 
     signals:
-        void subdomain(QString subdomain);
+        void resolvedSubdomain(QString subdomain, QString ipAddress);
         void scanLog(QString log);
         void quitThread();
 };
@@ -36,9 +37,9 @@ class Enumerator_tldBrute : public QObject{
     Q_OBJECT
 
     public:
-        Enumerator_tldBrute(ScanArguments *scanArguments);
+        Enumerator_tldBrute(ScanArguments_Brute *scanArguments);
         void Enumerate(QThread *cThread);
-        ScanArguments *scanArguments;
+        ScanArguments_Brute *scanArguments;
         int itemToEnumerate;
         QHostAddress nameserver;
         QDnsLookup *dns;
@@ -49,7 +50,7 @@ class Enumerator_tldBrute : public QObject{
         void onStop();
 
     signals:
-        void subdomain(QString subdomain);
+        void resolvedSubdomain(QString subdomain, QString ipAddress);
         void scanLog(QString log);
         void quitThread();
 };
@@ -62,9 +63,9 @@ class Enumerator_activeSubdomains : public QObject{
     Q_OBJECT
 
     public:
-        Enumerator_activeSubdomains(ScanArguments *scanArguments);
+        Enumerator_activeSubdomains(ScanArguments_Brute *scanArguments);
         void Enumerate(QThread *cThread);
-        ScanArguments *scanArguments;
+        ScanArguments_Brute *scanArguments;
         int itemToEnumerate;
         QHostAddress nameserver;
         QDnsLookup *dns;
@@ -75,7 +76,7 @@ class Enumerator_activeSubdomains : public QObject{
         void onStop();
 
     signals:
-        void subdomain(QString subdomain);
+        void resolvedSubdomain(QString subdomain, QString ipAddress);
         void scanLog(QString log);
         void quitThread();
 };
@@ -89,9 +90,9 @@ class Enumerator_Wildcards: public QObject{
     Q_OBJECT
 
     public:
-        Enumerator_Wildcards(ScanArguments *scanArguments);
+        Enumerator_Wildcards(ScanArguments_Brute *scanArguments);
         void Enumerate(QThread *cThread);
-        ScanArguments *scanArguments;
+        ScanArguments_Brute *scanArguments;
         QDnsLookup *dns;
 
     public slots:

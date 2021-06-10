@@ -3,9 +3,18 @@
 /********************************************************************************************
  *                              BRUTE-ENUMERATOR
  ********************************************************************************************/
-Enumerator_subBrute::Enumerator_subBrute(ScanArguments *_scanArguments){
+Enumerator_subBrute::Enumerator_subBrute(ScanArguments_Brute *_scanArguments){
     scanArguments = _scanArguments;
     nameserver = RandomNameserver(scanArguments->useCustomNameServers);
+    //...
+    dns = new QDnsLookup(this);
+    dns->setNameserver(nameserver);
+    dns->setType(scanArguments->dnsRecordType);
+    //...
+    connect(dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
+}
+Enumerator_subBrute::~Enumerator_subBrute(){
+    delete dns;
 }
 
 void Enumerator_subBrute::Enumerate(QThread *cThread){
@@ -23,10 +32,10 @@ void Enumerator_subBrute::onLookupFinished(){
     if(dns->error() == QDnsLookup::NoError){
         if(scanArguments->usesWildcards){
             if(!(dns->hostAddressRecords()[0].value().toString() == scanArguments->foundWildcardIp)){
-                emit subdomain(dns->name());
+                emit resolvedSubdomain(dns->name(), dns->hostAddressRecords()[0].value().toString());
             }
         }else{
-            emit subdomain(dns->name());
+            emit resolvedSubdomain(dns->name(), dns->hostAddressRecords()[0].value().toString());
         }
         goto Finish;
     }
@@ -43,7 +52,6 @@ void Enumerator_subBrute::onLookupFinished(){
         goto Finish;
     }
 Finish:
-    delete dns;
     lookup();
 }
 
@@ -51,12 +59,7 @@ void Enumerator_subBrute::lookup(){
     itemToEnumerate = scanArguments->enumeratedWordlists;
     scanArguments->enumeratedWordlists++;
     if(itemToEnumerate < scanArguments->wordlist->count()){
-        dns = new QDnsLookup(this);
-        dns->setType(scanArguments->dnsRecordType);
-        dns->setNameserver(nameserver);
         dns->setName(nameProcessor_subBrute(scanArguments->wordlist->item(itemToEnumerate)->text(), scanArguments->targetDomain));
-        //...
-        connect(dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
         //...
         scanArguments->wordlist->item(itemToEnumerate)->setForeground(Qt::gray);
         //...
@@ -75,7 +78,7 @@ void Enumerator_subBrute::onStop(){
 /******************************************************************************************************
  *                                      TLD-BRUTE ENUMERATOR
  ******************************************************************************************************/
-Enumerator_tldBrute::Enumerator_tldBrute(ScanArguments *_scanArguments){
+Enumerator_tldBrute::Enumerator_tldBrute(ScanArguments_Brute *_scanArguments){
     scanArguments = _scanArguments;
     nameserver = RandomNameserver(scanArguments->useCustomNameServers);
 }
@@ -90,7 +93,7 @@ void Enumerator_tldBrute::onLookupFinished(){
         goto Finish;
     }
     if(dns->error() == QDnsLookup::NoError){
-        emit subdomain(dns->name());
+        emit resolvedSubdomain(dns->name(), dns->hostAddressRecords()[0].value().toString());
         goto Finish;
     }
     if(dns->error() == QDnsLookup::InvalidReplyError){
@@ -138,7 +141,7 @@ void Enumerator_tldBrute::onStop(){
 /******************************************************************************************************
  *                                      ACTIVE_SUBDOMAINS ENUMERATOR
  ******************************************************************************************************/
-Enumerator_activeSubdomains::Enumerator_activeSubdomains(ScanArguments *_scanArguments){
+Enumerator_activeSubdomains::Enumerator_activeSubdomains(ScanArguments_Brute *_scanArguments){
     scanArguments = _scanArguments;
     nameserver = RandomNameserver(scanArguments->useCustomNameServers);
 }
@@ -153,7 +156,7 @@ void Enumerator_activeSubdomains::onLookupFinished(){
         goto Finish;
     }
     if(dns->error() == QDnsLookup::NoError){
-        emit subdomain(dns->name());
+        emit resolvedSubdomain(dns->name(), dns->hostAddressRecords()[0].value().toString());
         goto Finish;
     }
     if(dns->error() == QDnsLookup::InvalidReplyError){
@@ -203,7 +206,7 @@ void Enumerator_activeSubdomains::onStop(){
  *                                      CHECK WILDCARDS
  ******************************************************************************************************/
 
-Enumerator_Wildcards::Enumerator_Wildcards(ScanArguments *_scanArguments){
+Enumerator_Wildcards::Enumerator_Wildcards(ScanArguments_Brute *_scanArguments){
     scanArguments = _scanArguments;
 }
 

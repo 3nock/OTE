@@ -4,12 +4,9 @@
  *                      Enumerator Class
  ****************************************************************/
 
-Enumerator::Enumerator(char *_domainName, QStringList _choosenEngines, QListWidget *_listWidget_subdomains, QLabel *_label_subdomainsCount, int *_subdomainsCount){
-    domainName = _domainName;
-    choosenEngines = _choosenEngines;
-    listWidget_subdomains = _listWidget_subdomains;
-    label_subdomainsCount = _label_subdomainsCount;
-    subdomainsCount = _subdomainsCount;
+Enumerator::Enumerator(ScanArguments_Osint *_scanArguments, ScanResults_Osint *_scanResults){
+    scanArguments = _scanArguments;
+    scanResults = _scanResults;
 }
 
 // called from osint, connects to the QThread...
@@ -35,10 +32,12 @@ void Enumerator::worker(){
     QString firstEntry;
     Py_ssize_t listSize;
     // loop to perform the enumeration on every choosen Osint Engine...
-    for(int i = 0; i != choosenEngines.count(); i++){
+    QString osintEngine;
+    for(int i = 0; i != scanArguments->choosenOptions.count(); i++){
+        osintEngine = scanArguments->choosenOptions[i];
         pModule = PyImport_ImportModule("main");
-        pFunction = PyObject_GetAttrString(pModule, choosenEngines[i].toUtf8());
-        pArguments = PyTuple_Pack(1, PyUnicode_FromString(domainName));
+        pFunction = PyObject_GetAttrString(pModule, osintEngine.toUtf8());
+        pArguments = PyTuple_Pack(1, PyUnicode_FromString(scanArguments->targetDomain));
         pReturnValue = PyObject_CallObject(pFunction, pArguments);
         // processing results...
         listSize = PyList_Size(pReturnValue);
@@ -48,14 +47,14 @@ void Enumerator::worker(){
                 emit scanLogs(firstEntry);
             }else{
                 for(Py_ssize_t j = 0; j < listSize; j++){
-                    listWidget_subdomains->addItem(PyUnicode_AsUTF8(PyList_GetItem(pReturnValue, j)));
-                    *subdomainsCount += 1;
+                    scanResults->results_model->setItem(*scanResults->resultsCount, 0, new QStandardItem(PyUnicode_AsUTF8(PyList_GetItem(pReturnValue, j))));
+                    *scanResults->resultsCount += 1;
                 }
-                label_subdomainsCount->setNum(*subdomainsCount);
-                emit scanLogs("[*] Enumerated Subdomains By "+choosenEngines[i]+", SIZE: "+QString::number(listSize));
+                scanResults->label_subdomainsCount->setNum(*scanResults->resultsCount);
+                emit scanLogs("[*] Enumerated Subdomains By "+osintEngine+", SIZE: "+QString::number(listSize));
             }
         }else{
-            emit scanLogs("[*] Enumerated Subdomains By "+choosenEngines[i]+", SIZE: 0");
+            emit scanLogs("[*] Enumerated Subdomains By "+osintEngine+", SIZE: 0");
         }
         // dereferencing the python objects...
         Py_DecRef(pModule);
@@ -68,6 +67,8 @@ void Enumerator::worker(){
     }
     // finalizing the python interpreter...
     Py_Finalize();
+    // clearing the options...
+    scanArguments->choosenOptions.clear();
     emit enumerationComplete();
     emit quitThread();
 }

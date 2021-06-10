@@ -16,7 +16,7 @@
 #define WORDLIST_LONG_TLDBRUTE "/wordlists/tldBrute_Long.txt"
 
 //strcutures...
-struct ScanArguments{
+struct ScanArguments_Brute{
     QString targetDomain = nullptr;
     QListWidget *wordlist = nullptr;
     int enumeratedWordlists = 0;
@@ -29,11 +29,10 @@ struct ScanArguments{
     bool usesWildcards = false;
     QString foundWildcardIp = nullptr;
 };
-typedef ScanArguments ScanArguments;
+typedef ScanArguments_Brute ScanArguments_Brute;
 
 //functions...
 QString nameProcessor_subBrute(QString subdomainName, QString domainName);
 QString nameProcessor_tldBrute(QString tldName, QString domainName);
-QHostAddress RandomNameserver(bool useCustomNameservers);
 
 #endif // LIBBRUTE_H

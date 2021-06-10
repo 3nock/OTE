@@ -3,7 +3,7 @@
 
 
 /********************************* Constructor & Destructor ***************************************/
-BruteConfigDialog::BruteConfigDialog(QWidget *parent, ScanArguments *_scanArguments) :QDialog(parent),ui(new Ui::BruteConfigDialog){
+BruteConfigDialog::BruteConfigDialog(QWidget *parent, ScanArguments_Brute *_scanArguments) :QDialog(parent),ui(new Ui::BruteConfigDialog){
     ui->setupUi(this);
     scanArguments = _scanArguments;
     // hiding widgets for custom nameservers input untill user chooses to use custom nameservers...

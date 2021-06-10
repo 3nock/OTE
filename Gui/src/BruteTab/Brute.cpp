@@ -24,8 +24,33 @@ Brute::Brute(QWidget *parent) :QWidget(parent),ui(new Ui::Brute){
     ui->pushButton_reloadEnumeratedWordlist_activeSubdomains->hide();
     //...
     currentPath = QDir::currentPath();
+    //...
+    model_subBrute = new QStandardItemModel;
+    model_tldBrute = new QStandardItemModel;
+    model_activeSubdomains = new QStandardItemModel;
+    //...
+    QStringList headerLabels = {"Subdomain Name:", "IpAddress"};
+    model_subBrute->setHorizontalHeaderLabels(headerLabels);
+    model_tldBrute->setHorizontalHeaderLabels(headerLabels);
+    model_activeSubdomains->setHorizontalHeaderLabels(headerLabels);
+    //...
+    ui->tableView_results_subBrute->setModel(model_subBrute);
+    ui->tableView_results_tldBrute->setModel(model_tldBrute);
+    ui->tableView_results_activeSubdomains->setModel(model_activeSubdomains);
+
+    // Setting highlight Color for items on the listView...
+    QPalette p = palette();
+    p.setColor(QPalette::Highlight, QColor(188, 188, 141));
+    p.setColor(QPalette::HighlightedText, QColor(Qt::black));
+    ui->tableView_results_subBrute->setPalette(p);
+    ui->tableView_results_tldBrute->setPalette(p);
+    ui->tableView_results_activeSubdomains->setPalette(p);
 }
 Brute::~Brute(){
+    delete model_subBrute;
+    delete model_tldBrute;
+    delete model_activeSubdomains;
+    //...
     delete ui;
 }
 
@@ -131,7 +156,7 @@ void Brute::startEnumeration_subBrute(){
         Enumerator->Enumerate(cThread);
         Enumerator->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(subdomain(QString)), this, SLOT(onSubdomain_subBrute(QString)));
+        connect(Enumerator, SIGNAL(resolvedSubdomain(QString, QString)), this, SLOT(resolvedSubdomain_subBrute(QString, QString)));
         connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(log_subBrute(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd_subBrute()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
@@ -157,7 +182,7 @@ void Brute::startEnumeration_tldBrute(){
         Enumerator->Enumerate(cThread);
         Enumerator->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(subdomain(QString)), this, SLOT(onSubdomain_tldBrute(QString)));
+        connect(Enumerator, SIGNAL(resolvedSubdomain(QString, QString)), this, SLOT(resolvedSubdomain_tldBrute(QString, QString)));
         connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(log_tldBrute(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd_tldBrute()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
@@ -183,7 +208,7 @@ void Brute::startEnumeration_activeSubdomains(){
         Enumerator->Enumerate(cThread);
         Enumerator->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(subdomain(QString)), this, SLOT(onSubdomain_activeSubdomains(QString)));
+        connect(Enumerator, SIGNAL(resolvedSubdomain(QString, QString)), this, SLOT(resolvedSubdomain_activeSubdomains(QString, Qstring)));
         connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(log_activeSubdomains(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd_activeSubdomains()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
@@ -195,18 +220,21 @@ void Brute::startEnumeration_activeSubdomains(){
 }
 
 /************************************ Receiving Results ***********************************/
-void Brute::onSubdomain_subBrute(QString subdomain){
-    ui->listWidget_subdomains_subBrute->addItem(subdomain);
+void Brute::resolvedSubdomain_subBrute(QString subdomain, QString ipAddress){
+    model_subBrute->setItem(subdomainCount_subBrute, 0, new QStandardItem(subdomain));
+    model_subBrute->setItem(subdomainCount_subBrute, 1, new QStandardItem(ipAddress));
     subdomainCount_subBrute++;
     ui->label_subdomainsCount_subBrute->setNum(subdomainCount_subBrute);
 }
-void Brute::onSubdomain_tldBrute(QString subdomain){
-    ui->listWidget_subdomains_tldBrute->addItem(subdomain);
+void Brute::resolvedSubdomain_tldBrute(QString subdomain, QString ipAddress){
+    model_tldBrute->setItem(subdomainCount_tldBrute, 0, new QStandardItem(subdomain));
+    model_tldBrute->setItem(subdomainCount_tldBrute, 1, new QStandardItem(ipAddress));
     subdomainCount_tldBrute++;
     ui->label_subdomainsCount_tldBrute->setNum(subdomainCount_tldBrute);
 }
-void Brute::onSubdomain_activeSubdomains(QString subdomain){
-    ui->listWidget_subdomains_activeSubdomains->addItem(subdomain);
+void Brute::resolvedSubdomain_activeSubdomains(QString subdomain, QString ipAddress){
+    model_activeSubdomains->setItem(subdomainCount_activeSubdomains, 0, new QStandardItem(subdomain));
+    model_activeSubdomains->setItem(subdomainCount_activeSubdomains, 1, new QStandardItem(ipAddress));
     subdomainCount_activeSubdomains++;
     ui->label_subdomainsCount_activeSubdomains->setNum(subdomainCount_activeSubdomains);
 }
@@ -429,16 +457,22 @@ void Brute::on_pushButton_clearWordlist_subBrute_clicked(){
     ui->listWidget_wordlist_subBrute->clear();
     ui->label_wordlistCount_subBrute->clear();
     wordlistCount_subBrute = 0;
+    //...
+    model_subBrute->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
 }
 void Brute::on_pushButton_clearWordlist_tldBrute_clicked(){
     ui->listWidget_wordlist_tldBrute->clear();
     ui->label_wordlistCount_tldBrute->clear();
     wordlistCount_tldBrute = 0;
+    //...
+    model_tldBrute->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
 }
 void Brute::on_pushButton_clearWordlist_activeSubdomains_clicked(){
     ui->listWidget_wordlist_activeSubdomains->clear();
     ui->label_wordlistCount_activeSubdomains->clear();
     wordlistCount_activeSubdomains = 0;
+    //...
+    model_activeSubdomains->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
 }
 
 /***************************** Removing Item From Wordlist *********************************/
@@ -471,7 +505,7 @@ void Brute::on_pushButton_remove_activeSubdomains_clicked(){
 void Brute::on_pushButton_clearResults_subBrute_clicked(){
     // if the current tab is subdomains clear subdomains if logs clear logs...
     if(ui->tabWidget_results_subBrute->currentIndex() == 0){
-        ui->listWidget_subdomains_subBrute->clear();
+        model_subBrute->clear();
         ui->label_subdomainsCount_subBrute->clear();
         subdomainCount_subBrute = 0;
     }else{
@@ -481,7 +515,7 @@ void Brute::on_pushButton_clearResults_subBrute_clicked(){
 void Brute::on_pushButton_clearResults_tldBrute_clicked(){
     // if the current tab is subdomains clear subdomains if logs clear logs...
     if(ui->tabWidget_results_tldBrute->currentIndex() == 0){
-        ui->listWidget_subdomains_tldBrute->clear();
+        model_tldBrute->clear();
         ui->label_subdomainsCount_tldBrute->clear();
         subdomainCount_tldBrute = 0;
     }else{
@@ -491,7 +525,7 @@ void Brute::on_pushButton_clearResults_tldBrute_clicked(){
 void Brute::on_pushButton_clearResults_activeSubdomains_clicked(){
     // if the current tab is subdomains clear subdomains if logs clear logs...
     if(ui->tabWidget_results_activeSubdomains->currentIndex() == 0){
-        ui->listWidget_subdomains_activeSubdomains->clear();
+        model_activeSubdomains->clear();
         ui->label_subdomainsCount_activeSubdomains->clear();
         subdomainCount_activeSubdomains = 0;
     }else{
@@ -539,100 +573,91 @@ void Brute::logs_activeSubdomains(QString log){
 
 /***************************** Context Menu For Action Button *****************************/
 void Brute::on_pushButton_action_subBrute_clicked(){
-    actionContextMenu(ENUMNAME_SUBBRUTE);
+    // getting the position of the action button to place the context menu...
+    QPoint pos = ui->pushButton_action_subBrute->mapToGlobal(QPoint(0,0));
+    // showing the context menu right by the side of the action button...
+    showContextMenu_actionButton(ENUMNAME_SUBBRUTE, QPoint(pos.x()+76, pos.y()));
 }
 void Brute::on_pushButton_action_tldBrute_clicked(){
-    actionContextMenu(ENUMNAME_TLDBRUTE);
+    // getting the position of the action button to place the context menu...
+    QPoint pos = ui->pushButton_action_tldBrute->mapToGlobal(QPoint(0,0));
+    // showing the context menu right by the side of the action button...
+    showContextMenu_actionButton(ENUMNAME_TLDBRUTE, QPoint(pos.x()+76, pos.y()));
 }
 void Brute::on_pushButton_action_activeSubdomains_clicked(){
-    actionContextMenu(ENUMNAME_ACTIVESUBDOMAINS);
+    // getting the position of the action button to place the context menu...
+    QPoint pos = ui->pushButton_action_activeSubdomains->mapToGlobal(QPoint(0,0));
+    // showing the context menu right by the side of the action button...
+    showContextMenu_actionButton(ENUMNAME_ACTIVESUBDOMAINS, QPoint(pos.x()+76, pos.y()));
 }
 
 /****************************** Cursor right-click Context Menu ******************************/
-void Brute::on_listWidget_subdomains_subBrute_customContextMenuRequested(const QPoint &pos){
+void Brute::on_tableView_results_subBrute_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
-    rightClickContextMenu(ENUMNAME_SUBBRUTE);
+    // check if user right clicked on items else dont show the context menu...
+    if(!ui->tableView_results_subBrute->selectionModel()->isSelected(ui->tableView_results_subBrute->currentIndex())){
+        return;
+    }
+    showContextMenu_rightClick(ENUMNAME_SUBBRUTE);
 }
-void Brute::on_listWidget_subdomains_tldBrute_customContextMenuRequested(const QPoint &pos){
+void Brute::on_tableView_results_tldBrute_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
-    rightClickContextMenu(ENUMNAME_TLDBRUTE);
+    // check if user right clicked on items else dont show the context menu...
+    if(!ui->tableView_results_tldBrute->selectionModel()->isSelected(ui->tableView_results_tldBrute->currentIndex())){
+        return;
+    }
+    showContextMenu_rightClick(ENUMNAME_TLDBRUTE);
 }
-void Brute::on_listWidget_subdomains_activeSubdomains_customContextMenuRequested(const QPoint &pos){
+void Brute::on_tableView_results_activeSubdomains_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
-    rightClickContextMenu(ENUMNAME_ACTIVESUBDOMAINS);
+    // check if user right clicked on items else dont show the context menu...
+    if(!ui->tableView_results_activeSubdomains->selectionModel()->isSelected(ui->tableView_results_activeSubdomains->currentIndex())){
+        return;
+    }
+    showContextMenu_rightClick(ENUMNAME_ACTIVESUBDOMAINS);
 }
 
 /********************************* action Context Menu ************************************/
-void Brute::actionContextMenu(int enumName){
+/*
+    Re-create this functionallity on the constructor for Efficiency...
+*/
+void Brute::showContextMenu_actionButton(int enumName, QPoint position){
     QMenu *menu = new QMenu(this);
     menu->setAttribute( Qt::WA_DeleteOnClose, true );
     menu->setObjectName("mainMenu");
     //...
     QAction actionSendToSave("Send To Save", this);
-    QAction actionSort("Sort Subdomains", this);
     QAction actionSendToMultiLevel("Send To Multi-level Scan");
     QAction actionSendToDnsRecords("Send To DnsRecords");
     //...
     if(enumName == ENUMNAME_SUBBRUTE){
         connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave_subBrute()));
-        connect(&actionSort, SIGNAL(triggered()), this, SLOT(actionSort_tldBrute()));
         connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords_subBrute()));
         connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(actionSendToMultiLevel_subBrute()));
     }
     if(enumName == ENUMNAME_TLDBRUTE){
         connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave_tldBrute()));
-        connect(&actionSort, SIGNAL(triggered()), this, SLOT(actionSort_tldBrute()));
         connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords_tldBrute()));
         connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(actionSendToMultiLevel_tldBrute()));
     }
     if(enumName == ENUMNAME_ACTIVESUBDOMAINS){
         connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave_activeSubdomains()));
-        connect(&actionSort, SIGNAL(triggered()), this, SLOT(actionSort_activeSubdomains()));
         connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords_activeSubdomains()));
         connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(actionSendToMultiLevel_activeSubdomains()));
     }
     //...
-    menu->addAction(&actionSort);
     menu->addSeparator();
     menu->addAction(&actionSendToDnsRecords);
     menu->addAction(&actionSendToSave);
     menu->addAction(&actionSendToMultiLevel);
     //...
-    QPoint pos;
-    if(enumName == ENUMNAME_SUBBRUTE){
-        pos = ui->pushButton_action_subBrute->mapToGlobal(QPoint(0,0));
-    }
-    if(enumName == ENUMNAME_TLDBRUTE){
-        pos = ui->pushButton_action_tldBrute->mapToGlobal(QPoint(0,0));
-    }
-    if(enumName == ENUMNAME_ACTIVESUBDOMAINS){
-        pos = ui->pushButton_action_activeSubdomains->mapToGlobal(QPoint(0,0));
-    }
-    int x = pos.x()+76;
-    int y = pos.y();
-    //...
     menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
-    menu->move(QPoint(x, y));
+    menu->move(position);
     menu->exec();
 }
 
 /********************************* right-click Context Menu ************************************/
-void Brute::rightClickContextMenu(int enumName){
-    if(enumName == ENUMNAME_SUBBRUTE){
-        if(ui->listWidget_subdomains_subBrute->selectedItems().isEmpty()){
-            return;
-        }
-    }
-    if(enumName == ENUMNAME_TLDBRUTE){
-        if(ui->listWidget_subdomains_tldBrute->selectedItems().isEmpty()){
-            return;
-        }
-    }
-    if(enumName == ENUMNAME_ACTIVESUBDOMAINS){
-        if(ui->listWidget_subdomains_activeSubdomains->selectedItems().isEmpty()){
-            return;
-        }
-    }
+void Brute::showContextMenu_rightClick(int enumName){
     //...
     QMenu *menu = new QMenu(this);
     menu->setAttribute( Qt::WA_DeleteOnClose, true );
@@ -663,8 +688,7 @@ void Brute::rightClickContextMenu(int enumName){
     menu->addAction(&actionSendToSave);
     //...
     QPoint globalCursorPos = QCursor::pos();
-    int mouseScreen = qApp->desktop()->screenNumber(globalCursorPos);
-    QRect mouseScreenGeometry = qApp->desktop()->screen(mouseScreen)->geometry();
+    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
     QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
     //...
     menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
@@ -674,39 +698,34 @@ void Brute::rightClickContextMenu(int enumName){
 
 /****************************** Action Context Menu Methods ***************************/
 void Brute::actionSendToSave_subBrute(){
+    /*
     int resultsCount = ui->listWidget_subdomains_subBrute->count();
     for(int i = 0; i != resultsCount; ++i){
         emit sendResultsToSave(ui->listWidget_subdomains_subBrute->item(i)->text());
     }
     logs_subBrute("[*] Sent "+QString::number(resultsCount)+" subBrute Enumerated Subdomains To Save Tab...");
     emit changeTabToSave();
+    */
 }
 void Brute::actionSendToSave_tldBrute(){
+    /*
     int resultsCount = ui->listWidget_subdomains_tldBrute->count();
     for(int i = 0; i != resultsCount; ++i){
         emit sendResultsToSave(ui->listWidget_subdomains_tldBrute->item(i)->text());
     }
     logs_tldBrute("[*] Sent "+QString::number(resultsCount)+" tldBrute Enumerated Subdomains To Save Tab...");
     emit changeTabToSave();
+    */
 }
 void Brute::actionSendToSave_activeSubdomains(){
+    /*
     int resultsCount = ui->listWidget_subdomains_activeSubdomains->count();
     for(int i = 0; i != resultsCount; ++i){
         emit sendResultsToSave(ui->listWidget_subdomains_activeSubdomains->item(i)->text());
     }
     logs_activeSubdomains("[*] Sent "+QString::number(resultsCount)+" activeSubdomains Enumerated Subdomains To Save Tab...");
     emit changeTabToSave();
-}
-
-/*********************************************************************************/
-void Brute::actionSort_subBrute(){
-    ui->listWidget_subdomains_subBrute->sortItems();
-}
-void Brute::actionSort_tldBrute(){
-    ui->listWidget_subdomains_tldBrute->sortItems();
-}
-void Brute::actionSort_activeSubdomains(){
-    ui->listWidget_subdomains_activeSubdomains->sortItems();
+    */
 }
 
 /*********************************************************************************/
@@ -733,44 +752,42 @@ void Brute::actionSendToMultiLevel_activeSubdomains(){
 
 /*************************** Cursor Right Click Context Menu ***********************/
 void Brute::cursorSendToSave_subBrute(){
-    foreach(QListWidgetItem * item, ui->listWidget_subdomains_subBrute->selectedItems()){
-        emit sendResultsToSave(item->text());
+    /*foreach(const QModelIndex &index, ui->tableView_results_subBrute->selectionModel()->selectedIndexes()){
+        // send selection
     }
     logs_subBrute("[*] Sent "+QString::number(ui->listWidget_subdomains_subBrute->count())+" subBrute Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();
+    emit changeTabToSave();*/
 }
 void Brute::cursorSendToSave_tldBrute(){
-    foreach(QListWidgetItem * item, ui->listWidget_subdomains_tldBrute->selectedItems()){
+    /*foreach(QListWidgetItem * item, ui->listWidget_subdomains_tldBrute->selectedItems()){
         emit sendResultsToSave(item->text());
     }
-    logs_subBrute("[*] Sent "+QString::number(ui->listWidget_subdomains_subBrute->count())+" tldBrute Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();
+    logs_subBrute("[*] Sent "+QString::number(ui->listWidget_subdomains_tldBrute->count())+" tldBrute Enumerated Subdomains To Save Tab...");
+    emit changeTabToSave();*/
 }
 void Brute::cursorSendToSave_activeSubdomains(){
-    foreach(QListWidgetItem * item, ui->listWidget_subdomains_activeSubdomains->selectedItems()){
+    /*foreach(QListWidgetItem * item, ui->listWidget_subdomains_activeSubdomains->selectedItems()){
         emit sendResultsToSave(item->text());
     }
     logs_activeSubdomains("[*] Sent "+QString::number(ui->listWidget_subdomains_activeSubdomains->count())+" activeSubdomains Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();
+    emit changeTabToSave();*/
 }
 
 /************************************************************************************/
 void Brute::cursorOpenInBrowser_subBrute(){
     // iterate and open each selected item in a browser...
-    foreach(QListWidgetItem * item, ui->listWidget_subdomains_subBrute->selectedItems()){
-        QDesktopServices::openUrl(QUrl("https://"+item->text(), QUrl::TolerantMode));
+    foreach(const QModelIndex &index, ui->tableView_results_subBrute->selectionModel()->selectedIndexes()){
+        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
 }
 void Brute::cursorOpenInBrowser_tldBrute(){
-    // iterate and open each selected item in a browser...
-    foreach(QListWidgetItem * item, ui->listWidget_subdomains_tldBrute->selectedItems()){
-        QDesktopServices::openUrl(QUrl("https://"+item->text(), QUrl::TolerantMode));
+    foreach(const QModelIndex &index, ui->tableView_results_tldBrute->selectionModel()->selectedIndexes()){
+        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
 }
 void Brute::cursorOpenInBrowser_activeSubdomains(){
-    // iterate and open each selected item in a browser...
-    foreach(QListWidgetItem * item, ui->listWidget_subdomains_activeSubdomains->selectedItems()){
-        QDesktopServices::openUrl(QUrl("https://"+item->text(), QUrl::TolerantMode));
+    foreach(const QModelIndex &index, ui->tableView_results_activeSubdomains->selectionModel()->selectedIndexes()){
+        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
 }
 
@@ -788,6 +805,7 @@ void Brute::cursorSendToDnsRecords_activeSubdomains(){
 
 /********** on receiving signal to send the enumeration results to the save tab ********/
 void Brute::onSendResultsToSave(){
+    /*
     int resultsCount = ui->listWidget_subdomains_subBrute->count();
     for(int i = 0; i != resultsCount; ++i){
         emit sendResultsToSave(ui->listWidget_subdomains_subBrute->item(i)->text());
@@ -805,6 +823,7 @@ void Brute::onSendResultsToSave(){
         emit sendResultsToSave(ui->listWidget_subdomains_activeSubdomains->item(i)->text());
     }
     logs_activeSubdomains("[*] Sent "+QString::number(resultsCount)+" activeSubdomains Enumerated Subdomains To Save Tab...");
+    */
 }
 
 void Brute::on_pushButton_get_activeSubdomains_clicked(){

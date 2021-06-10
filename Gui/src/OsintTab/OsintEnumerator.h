@@ -8,14 +8,12 @@ class Enumerator: public QObject{
     Q_OBJECT
 
     public:
-        Enumerator(char *domainName, QStringList choosenEngines, QListWidget *listWidget_subdomains, QLabel *label_subdomainsCount, int *subdomainsCount);
+        Enumerator(ScanArguments_Osint *scanArguments, ScanResults_Osint *scanResults);
         void Enumerate(QThread *cThread);
-        // variables...
-        QListWidget *listWidget_subdomains;
-        QLabel *label_subdomainsCount;
-        int *subdomainsCount;
-        char *domainName;
-        QStringList choosenEngines;
+        //...
+        ScanArguments_Osint *scanArguments;
+        ScanResults_Osint *scanResults;
+        //...
         bool stopEnumeration = false;
 
     public slots:
@@ -25,10 +23,9 @@ class Enumerator: public QObject{
         void worker();
 
     signals:
-        // send to osint..
         void scanLogs(QString log);
         void enumerationComplete();
-        // send to self thread..
+        //...
         void quitThread();
 };
 

@@ -278,7 +278,7 @@ border-radius: 15px</string>
                 <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
                </property>
                <property name="text">
-                <string>Clear Output</string>
+                <string>Clear Results</string>
                </property>
               </widget>
              </item>
@@ -298,9 +298,9 @@ border-radius: 15px</string>
                </property>
                <property name="font">
                 <font>
-                 <weight>75</weight>
+                 <weight>50</weight>
                  <italic>false</italic>
-                 <bold>true</bold>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -315,6 +315,15 @@ border-radius: 15px</string>
            </item>
            <item>
             <widget class="QTabWidget" name="tabWidget">
+             <property name="styleSheet">
+              <string notr="true">QTabBar::tab:hover{
+background-color: rgb(220, 220, 220);
+}
+
+QTabBar::tab:selected {
+color: rgb(141, 141, 106);
+}</string>
+             </property>
              <property name="currentIndex">
               <number>0</number>
              </property>
@@ -402,7 +411,7 @@ border-radius: 15px</string>
                 </layout>
                </item>
                <item>
-                <widget class="QListWidget" name="listWidget_subdomains">
+                <widget class="QTableView" name="tableView_results">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -416,7 +425,7 @@ border-radius: 15px</string>
                   <enum>Qt::CustomContextMenu</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">QWidget#listWidget_subdomains{
+                  <string notr="true">QWidget#tableView_results{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
 border-style: solid;
 border-color: black;
@@ -431,7 +440,19 @@ border-radius: 0px;
                   <enum>QFrame::Sunken</enum>
                  </property>
                  <property name="autoScrollMargin">
-                  <number>10</number>
+                  <number>16</number>
+                 </property>
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::DoubleClicked</set>
+                 </property>
+                 <property name="tabKeyNavigation">
+                  <bool>false</bool>
+                 </property>
+                 <property name="showDropIndicator" stdset="0">
+                  <bool>false</bool>
+                 </property>
+                 <property name="dragDropOverwriteMode">
+                  <bool>false</bool>
                  </property>
                  <property name="alternatingRowColors">
                   <bool>false</bool>
@@ -439,9 +460,33 @@ border-radius: 0px;
                  <property name="selectionMode">
                   <enum>QAbstractItemView::ExtendedSelection</enum>
                  </property>
-                 <property name="selectionRectVisible">
+                 <property name="showGrid">
+                  <bool>false</bool>
+                 </property>
+                 <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
+                 <property name="cornerButtonEnabled">
+                  <bool>false</bool>
+                 </property>
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>200</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>220</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderMinimumSectionSize">
+                  <number>15</number>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>15</number>
+                 </attribute>
                 </widget>
                </item>
               </layout>
@@ -1276,7 +1321,7 @@ border-radius: 0px;</string>
   <tabstop>radioButton_customScan</tabstop>
   <tabstop>toolButton_keys</tabstop>
   <tabstop>pushButton_clear</tabstop>
-  <tabstop>listWidget_subdomains</tabstop>
+  <tabstop>tableView_results</tabstop>
   <tabstop>listWidget_logs</tabstop>
  </tabstops>
  <resources/>
