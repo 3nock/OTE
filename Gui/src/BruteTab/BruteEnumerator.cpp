@@ -3,18 +3,18 @@
 /********************************************************************************************
  *                              BRUTE-ENUMERATOR
  ********************************************************************************************/
-Enumerator_subBrute::Enumerator_subBrute(ScanArguments_Brute *_scanArguments){
-    scanArguments = _scanArguments;
-    nameserver = RandomNameserver(scanArguments->useCustomNameServers);
+
+Enumerator_subBrute::Enumerator_subBrute(ScanArguments_Brute *scanArguments)
+    : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this))
+{
+    m_dns->setNameserver(RandomNameserver(m_scanArguments->useCustomNameServers));
+    m_dns->setType(m_scanArguments->dnsRecordType);
     //...
-    dns = new QDnsLookup(this);
-    dns->setNameserver(nameserver);
-    dns->setType(scanArguments->dnsRecordType);
-    //...
-    connect(dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
+    connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
+    connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
 }
 Enumerator_subBrute::~Enumerator_subBrute(){
-    delete dns;
+    delete m_dns;
 }
 
 void Enumerator_subBrute::Enumerate(QThread *cThread){
@@ -22,65 +22,87 @@ void Enumerator_subBrute::Enumerate(QThread *cThread){
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-// When Lookup is finished...
 void Enumerator_subBrute::onLookupFinished(){
-    // target subdomain couldnt be resolved hence false...
-    if(dns->error() == QDnsLookup::NotFoundError){
-        goto Finish;
-    }
-    // subdomain was resolved...
-    if(dns->error() == QDnsLookup::NoError){
-        if(scanArguments->usesWildcards){
-            if(!(dns->hostAddressRecords()[0].value().toString() == scanArguments->foundWildcardIp)){
-                emit resolvedSubdomain(dns->name(), dns->hostAddressRecords()[0].value().toString());
+    ///
+    /// check the results of the lookup if no error occurred emit the results
+    /// if error occurred emit appropriate response...
+    ///
+    switch(m_dns->error()){
+        case QDnsLookup::NotFoundError:
+            break;
+        //...
+        case QDnsLookup::NoError:
+            if(m_scanArguments->usesWildcards){
+                ///
+                /// check if the Ip adress of the subdomain is similar to the wildcard Ip found
+                /// if not similar we emit the results if similar discard the results...
+                ///
+                if(!(m_dns->hostAddressRecords()[0].value().toString() == m_scanArguments->foundWildcardIp)){
+                    emit resolvedSubdomain(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+                }
             }
-        }else{
-            emit resolvedSubdomain(dns->name(), dns->hostAddressRecords()[0].value().toString());
-        }
-        goto Finish;
+            else{
+                emit resolvedSubdomain(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+            }
+            break;
+        //...
+        case QDnsLookup::InvalidReplyError:
+            emit scanLog("[ERROR] InvalidReplyError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        case QDnsLookup::InvalidRequestError:
+            emit scanLog("[ERROR] InvalidRequestError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        case QDnsLookup::ResolverError:
+            emit scanLog("[ERROR] ResolverError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        default:
+            break;
     }
-    if(dns->error() == QDnsLookup::InvalidReplyError){
-        emit scanLog("[*] InvalidReplyError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-    if(dns->error() == QDnsLookup::InvalidRequestError){
-        emit scanLog("[*] InvalidRequestError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-    if(dns->error() == QDnsLookup::ResolverError){
-        emit scanLog("[*] ResolverError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-Finish:
-    lookup();
+    ///
+    /// call the lookup() method to continue another enumuerations...
+    ///
+    emit performAnotherLookup();
 }
 
 void Enumerator_subBrute::lookup(){
-    itemToEnumerate = scanArguments->enumeratedWordlists;
-    scanArguments->enumeratedWordlists++;
-    if(itemToEnumerate < scanArguments->wordlist->count()){
-        dns->setName(nameProcessor_subBrute(scanArguments->wordlist->item(itemToEnumerate)->text(), scanArguments->targetDomain));
+    m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
+    m_scanArguments->currentItemToEnumerate++;
+    if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
+        m_dns->setName(nameProcessor_subBrute(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text(), m_scanArguments->targetDomain));
         //...
-        scanArguments->wordlist->item(itemToEnumerate)->setForeground(Qt::gray);
+        m_scanArguments->wordlist->item(m_currentItemToEnumerate)->setForeground(Qt::gray);
         //...
-        dns->lookup();
+        m_dns->lookup();
     }else{
         // at the end of the wordlist, signal the thread to Quit...
         emit quitThread();
     }
 }
 
-// quiting all running threads upon receiving stop signal...
 void Enumerator_subBrute::onStop(){
+    ///
+    /// quiting all running threads upon receiving stop signal...
+    ///
     emit quitThread();
 }
 
 /******************************************************************************************************
  *                                      TLD-BRUTE ENUMERATOR
  ******************************************************************************************************/
-Enumerator_tldBrute::Enumerator_tldBrute(ScanArguments_Brute *_scanArguments){
-    scanArguments = _scanArguments;
-    nameserver = RandomNameserver(scanArguments->useCustomNameServers);
+Enumerator_tldBrute::Enumerator_tldBrute(ScanArguments_Brute *scanArguments)
+    : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this))
+{
+    m_dns->setType(scanArguments->dnsRecordType);
+    m_dns->setNameserver(RandomNameserver(m_scanArguments->useCustomNameServers));
+    //...
+    connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
+    connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
+}
+Enumerator_tldBrute::~Enumerator_tldBrute(){
+    delete m_dns;
 }
 
 void Enumerator_tldBrute::Enumerate(QThread *cThread){
@@ -89,50 +111,58 @@ void Enumerator_tldBrute::Enumerate(QThread *cThread){
 }
 
 void Enumerator_tldBrute::onLookupFinished(){
-    if(dns->error() == QDnsLookup::NotFoundError){
-        goto Finish;
+    ///
+    /// check the results of the lookup if no error occurred emit the results
+    /// if error occurred emit appropriate response...
+    ///
+    switch(m_dns->error()){
+        case QDnsLookup::NotFoundError:
+            break;
+        //...
+        case QDnsLookup::NoError:
+            emit resolvedSubdomain(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+            break;
+        //...
+        case QDnsLookup::InvalidReplyError:
+            emit scanLog("[ERROR] InvalidReplyError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        case QDnsLookup::InvalidRequestError:
+            emit scanLog("[ERROR] InvalidRequestError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        case QDnsLookup::ResolverError:
+            emit scanLog("[ERROR] ResolverError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        default:
+            break;
     }
-    if(dns->error() == QDnsLookup::NoError){
-        emit resolvedSubdomain(dns->name(), dns->hostAddressRecords()[0].value().toString());
-        goto Finish;
-    }
-    if(dns->error() == QDnsLookup::InvalidReplyError){
-        emit scanLog("[*] InvalidReplyError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-    if(dns->error() == QDnsLookup::InvalidRequestError){
-        emit scanLog("[*] InvalidRequestError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-    if(dns->error() == QDnsLookup::ResolverError){
-        emit scanLog("[*] ResolverError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-Finish:
-    delete dns;
-    lookup();
+    //...
+    emit performAnotherLookup();
 }
 
 void Enumerator_tldBrute::lookup(){
-    itemToEnumerate = scanArguments->enumeratedWordlists;
-    scanArguments->enumeratedWordlists++;
-    if(itemToEnumerate < scanArguments->wordlist->count()){
-        dns = new QDnsLookup(this);
-        dns->setType(scanArguments->dnsRecordType);
-        dns->setNameserver(nameserver);
-        dns->setName(nameProcessor_tldBrute(scanArguments->wordlist->item(itemToEnumerate)->text(), scanArguments->targetDomain));
-        //...
-        connect(dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
-        scanArguments->wordlist->item(itemToEnumerate)->setForeground(Qt::gray);
-        //...
-        dns->lookup();
-    }else{
-        // at the end of the wordlist, signal the thread to Quit...
+    m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
+    m_scanArguments->currentItemToEnumerate++;
+    if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
+        // the function appends the wordlist item to the targetDomain name..
+        m_dns->setName(nameProcessor_tldBrute(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text(), m_scanArguments->targetDomain));
+        ///
+        /// set the color of the enumerated item on QListWidget to grey to mark it
+        /// as already Enumerated...
+        ///
+        m_scanArguments->wordlist->item(m_currentItemToEnumerate)->setForeground(Qt::gray);
+        m_dns->lookup();
+    }
+    else{
+        ///
+        /// at the end of the wordlist, signal the thread to Quit...
+        ///
         emit quitThread();
     }
 }
 
-// quiting all running threads upon receiving stop signal...
 void Enumerator_tldBrute::onStop(){
     emit quitThread();
 }
@@ -141,9 +171,18 @@ void Enumerator_tldBrute::onStop(){
 /******************************************************************************************************
  *                                      ACTIVE_SUBDOMAINS ENUMERATOR
  ******************************************************************************************************/
-Enumerator_activeSubdomains::Enumerator_activeSubdomains(ScanArguments_Brute *_scanArguments){
-    scanArguments = _scanArguments;
-    nameserver = RandomNameserver(scanArguments->useCustomNameServers);
+Enumerator_activeSubdomains::Enumerator_activeSubdomains(ScanArguments_Brute *scanArguments)
+    : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this))
+{
+    m_dns->setType(scanArguments->dnsRecordType);
+    m_dns->setNameserver(RandomNameserver(m_scanArguments->useCustomNameServers));
+    //...
+    //...
+    connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
+    connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
+}
+Enumerator_activeSubdomains::~Enumerator_activeSubdomains(){
+    delete m_dns;
 }
 
 void Enumerator_activeSubdomains::Enumerate(QThread *cThread){
@@ -152,50 +191,58 @@ void Enumerator_activeSubdomains::Enumerate(QThread *cThread){
 }
 
 void Enumerator_activeSubdomains::onLookupFinished(){
-    if(dns->error() == QDnsLookup::NotFoundError){
-        goto Finish;
+    ///
+    /// check the results of the lookup if no error occurred emit the results
+    /// if error occurred emit appropriate response...
+    ///
+    switch(m_dns->error()){
+        case QDnsLookup::NotFoundError:
+            break;
+        //...
+        case QDnsLookup::NoError:
+            emit resolvedSubdomain(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+            break;
+        //...
+        case QDnsLookup::InvalidReplyError:
+            emit scanLog("[ERROR] InvalidReplyError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        case QDnsLookup::InvalidRequestError:
+            emit scanLog("[ERROR] InvalidRequestError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        case QDnsLookup::ResolverError:
+            emit scanLog("[ERROR] ResolverError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            break;
+        //...
+        default:
+            break;
     }
-    if(dns->error() == QDnsLookup::NoError){
-        emit resolvedSubdomain(dns->name(), dns->hostAddressRecords()[0].value().toString());
-        goto Finish;
-    }
-    if(dns->error() == QDnsLookup::InvalidReplyError){
-        emit scanLog("[*] InvalidReplyError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-    if(dns->error() == QDnsLookup::InvalidRequestError){
-        emit scanLog("[*] InvalidRequestError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-    if(dns->error() == QDnsLookup::ResolverError){
-        emit scanLog("[*] ResolverError! SUBDOMAIN: "+dns->name()+"  NAMESERVER: "+dns->nameserver().toString());
-        goto Finish;
-    }
-Finish:
-    delete dns;
-    lookup();
+    //...
+    emit performAnotherLookup();
 }
 
 void Enumerator_activeSubdomains::lookup(){
-    itemToEnumerate = scanArguments->enumeratedWordlists;
-    scanArguments->enumeratedWordlists++;
-    if(itemToEnumerate < scanArguments->wordlist->count()){
-        dns = new QDnsLookup(this);
-        dns->setType(scanArguments->dnsRecordType);
-        dns->setNameserver(nameserver);
-        dns->setName(scanArguments->wordlist->item(itemToEnumerate)->text());
-        //...
-        connect(dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
-        scanArguments->wordlist->item(itemToEnumerate)->setForeground(Qt::gray);
-        //...
-        dns->lookup();
-    }else{
-        // at the end of the wordlist, signal the thread to Quit...
+    m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
+    m_scanArguments->currentItemToEnumerate++;
+    if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
+        // the function appends the wordlist item to the targetDomain name..
+        m_dns->setName(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text());
+        ///
+        /// set the color of the enumerated item on QListWidget to grey to mark it
+        /// as already Enumerated...
+        ///
+        m_scanArguments->wordlist->item(m_currentItemToEnumerate)->setForeground(Qt::gray);
+        m_dns->lookup();
+    }
+    else{
+        ///
+        /// at the end of the wordlist, signal the thread to Quit...
+        ///
         emit quitThread();
     }
 }
 
-// quiting all running threads upon receiving stop signal...
 void Enumerator_activeSubdomains::onStop(){
     emit quitThread();
 }
@@ -206,8 +253,16 @@ void Enumerator_activeSubdomains::onStop(){
  *                                      CHECK WILDCARDS
  ******************************************************************************************************/
 
-Enumerator_Wildcards::Enumerator_Wildcards(ScanArguments_Brute *_scanArguments){
-    scanArguments = _scanArguments;
+Enumerator_Wildcards::Enumerator_Wildcards(ScanArguments_Brute *scanArguments)
+    : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this))
+{
+    m_dns->setType(m_scanArguments->dnsRecordType);
+    m_dns->setNameserver(RandomNameserver(m_scanArguments->useCustomNameServers));
+    //...
+    connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
+}
+Enumerator_Wildcards::~Enumerator_Wildcards(){
+    delete m_dns;
 }
 
 void Enumerator_Wildcards::Enumerate(QThread *cThread){
@@ -216,23 +271,28 @@ void Enumerator_Wildcards::Enumerate(QThread *cThread){
 }
 
 void Enumerator_Wildcards::onLookupFinished(){
-    if(dns->error() == QDnsLookup::NoError){
-        scanArguments->usesWildcards = true;
-        scanArguments->foundWildcardIp = dns->hostAddressRecords()[0].value().toString();
-    }else{
-        scanArguments->usesWildcards = false;
+    switch(m_dns->error()){
+    //...
+    case QDnsLookup::NoError:
+        m_scanArguments->usesWildcards = true;
+        m_scanArguments->foundWildcardIp = m_dns->hostAddressRecords()[0].value().toString();
+        break;
+    //...
+    case QDnsLookup::NotFoundError:
+        m_scanArguments->usesWildcards = false;
+        break;
+    //....
+    default:
+        break;
     }
-    delete dns;
     emit quitThread();
 }
 
 void Enumerator_Wildcards::lookup(){
-    dns = new QDnsLookup(this);
-    dns->setName("3nocknicolas."+scanArguments->targetDomain);
-    dns->setType(scanArguments->dnsRecordType);
-    dns->setNameserver(RandomNameserver(scanArguments->useCustomNameServers));
-    //...
-    connect(dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
-    //...
-    dns->lookup();
+    ///
+    /// check for random non-existent subdomains name
+    /// TODO: make it more advanced...
+    ///
+    m_dns->setName("3nocknicolas."+m_scanArguments->targetDomain);
+    m_dns->lookup();
 }

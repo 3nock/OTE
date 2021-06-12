@@ -4,38 +4,43 @@
 /*************************************************************************************
  *                          Constructor & Destructor
  *************************************************************************************/
-Dns::Dns(QWidget *parent) :QDialog(parent), ui(new Ui::Dns){
+Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
+      resultsRootModel(new QStandardItemModel),
+      root_item(resultsRootModel->invisibleRootItem()),
+      //...
+      scanArguments(new scanArguments_dnsRecords),
+      scanResults(new scanResults_dnsRecords)
+{
     ui->setupUi(this);
     //...
-    resultsRootModel = new QStandardItemModel;
-    root_item = resultsRootModel->invisibleRootItem();
-    //...
-    scanArguments = new scanArguments_dnsRecords;
-    scanResults = new scanResults_dnsRecords;
     scanResults->root_item = root_item;
     scanResults->resultsCountLabel = ui->label_resultsCount_dnsRecords;
-
     //...
     ui->treeView_results_dnsRecords->setModel(resultsRootModel);
     ui->treeView_results_dnsRecords->expandAll();
-    // setting the splitter to the middle...
-    ui->splitter->setSizes(QList<int>()<<150<<1);
     //...
     ui->lineEdit_wordlist_dnsRecords->setPlaceholderText("Enter Target domains/subdomains..");
     ui->pushButton_reload_dnsRecords->hide();
     //...
     ui->pushButton_stop_dnsRecords->setDisabled(true);
-
-    // Setting highlight Color for items on the TreeView...
+    ///
+    /// Setting highlight Color for items on the TreeView...
+    ///
     QPalette p = palette();
     p.setColor(QPalette::Highlight, QColor(188, 188, 141));
     p.setColor(QPalette::HighlightedText, QColor(Qt::black));
     ui->treeView_results_dnsRecords->setPalette(p);
+    ///
+    /// setting the splitter to the middle...
+    ///
+    ui->splitter->setSizes(QList<int>()<<150<<1);
 }
 Dns::~Dns(){
+    delete scanArguments;
+    delete scanResults;
+    delete resultsRootModel;
     delete ui;
 }
-
 
 /**************************************************************************************
                                   Scan
@@ -45,7 +50,9 @@ void Dns::on_pushButton_start_dnsRecords_clicked(){
         QMessageBox::warning(this, TITLE_ERROR, "Please Enter Target Subdomains For Enumeration");
         return;
     }
-    // getting the arguments...
+    ///
+    /// getting the arguments for the Scan...
+    ///
     scanArguments->targetWordlist = ui->listWidget_wordlist_dnsRecords;
     scanArguments->choiceCount = 0;
     if(ui->checkBox_mx_dnsRecords->isChecked()){
@@ -77,7 +84,7 @@ void Dns::on_pushButton_start_dnsRecords_clicked(){
     ui->pushButton_start_dnsRecords->setDisabled(true);
     ui->pushButton_stop_dnsRecords->setEnabled(true);
     ui->pushButton_reload_dnsRecords->show();
-    // Enumeration...
+    //...
     startEnumeration_dnsRecords();
 }
 void Dns::on_pushButton_stop_dnsRecords_clicked(){
@@ -146,10 +153,10 @@ void Dns::on_toolButton_config_dnsRecords_clicked(){
 }
 
 void Dns::on_pushButton_remove_dnsRecords_clicked(){
-    int count = ui->listWidget_wordlist_dnsRecords->selectedItems().count();
-    if(count){
+    int wordlistToRemoveCount = ui->listWidget_wordlist_dnsRecords->selectedItems().count();
+    if(wordlistToRemoveCount){
         qDeleteAll(ui->listWidget_wordlist_dnsRecords->selectedItems());
-        wordlistCount_dnsRecords = wordlistCount_dnsRecords-count;
+        wordlistCount_dnsRecords = wordlistCount_dnsRecords-wordlistToRemoveCount;
     }
     ui->label_wordlistCount_dnsRecords->setNum(wordlistCount_dnsRecords);
 }
@@ -254,10 +261,10 @@ void Dns::showContextMenu_ActionButton(QPoint position){
 }
 
 void Dns::showContextMenu_RightClick(){
-    //...
     QMenu *menu = new QMenu(this);
     menu->setAttribute( Qt::WA_DeleteOnClose, true );
     menu->setObjectName("mainMenu");
+    //...
     QAction actionSendToSave("Send Selected To Save", this);
     QAction actionSendToMultiLevel("Send Selected To Multi-Level");
     QAction actionOpenInBrowser("Open Selected in Browser");
@@ -270,8 +277,9 @@ void Dns::showContextMenu_RightClick(){
     menu->addSeparator();
     menu->addAction(&actionSendToMultiLevel);
     menu->addAction(&actionSendToSave);
-    //...
-    // getting the position of the cursor to show the context menu...
+    ///
+    /// getting the position of the cursor to show the context menu...
+    ///
     QPoint globalCursorPos = QCursor::pos();
     QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
     QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
@@ -298,7 +306,9 @@ void Dns::actionCollectAllRecords_dnsRecords(){
 
 /******************************* For Cursor ********************************/
 void Dns::cursorOpenInBrowser_dnsRecords(){
-    // iterate and open each selected item in a browser...
+    ///
+    /// iterate and open each selected item in a browser...
+    ///
     foreach(const QModelIndex &index, ui->treeView_results_dnsRecords->selectionModel()->selectedIndexes()){
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }

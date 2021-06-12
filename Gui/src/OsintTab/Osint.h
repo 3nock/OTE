@@ -15,20 +15,25 @@ namespace Ui {
 class Osint : public QWidget{
     Q_OBJECT
 
-    public:
-        explicit Osint(QWidget *parent = nullptr);
-        ~Osint();
-        //...
+    private:
+        Ui::Osint *ui;
+
+    private:
         void getUserOptions(QStringList *choosenOptions);
         void setupOsintProfiles();
+        //...
+        QStandardItemModel *results_model;
         //...
         ScanArguments_Osint *scanArguments;
         ScanResults_Osint *scanResults;
         //...
-        QStandardItemModel *results_model;
         int subdomainsCount = 0;
         //...
         QString currentPath;
+
+    public:
+        explicit Osint(QWidget *parent = nullptr);
+        ~Osint();
 
     private slots:
         void on_pushButton_start_clicked();
@@ -73,9 +78,6 @@ class Osint : public QWidget{
         //...
         void changeTabToActive();
         void changeTabToSave();
-
-    private:
-        Ui::Osint *ui;
 };
 
 #endif // OSINT_H

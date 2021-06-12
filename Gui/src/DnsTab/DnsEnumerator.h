@@ -10,30 +10,31 @@
 class Enumerator_dnsRecords: public QObject{
     Q_OBJECT
 
+    private:
+        scanArguments_dnsRecords *m_scanArguments;
+        scanResults_dnsRecords *m_scanResults;
+        //...
+        QStandardItem *m_dnsNameItem;
+        QStandardItem *m_recordItem;
+        //...
+        QHostAddress m_nameserver;
+        QDnsLookup *m_dns_mx;
+        QDnsLookup *m_dns_ns;
+        QDnsLookup *m_dns_txt;
+        QDnsLookup *m_dns_srv;
+        QDnsLookup *m_dns_cname;
+        //...
+        int m_currentTargetToEnumerate = 0;
+        int m_finishedLookups = 0;
+        bool m_firstToResolve = true;
+        //...
+        QString m_currentTarget;
+
     public:
         Enumerator_dnsRecords(scanArguments_dnsRecords *scanArguments, scanResults_dnsRecords *scanResults);
         ~Enumerator_dnsRecords();
         //...
         void Enumerate(QThread *cThread);
-        int finishedLookups = 0;
-        bool firstToResolve = true;
-        //...
-        scanArguments_dnsRecords *scanArguments;
-        scanResults_dnsRecords *scanResults;
-        //...
-        QStandardItem *dnsNameItem;
-        QStandardItem *recordItem;
-        //...
-        QHostAddress nameserver;
-        QDnsLookup *dns_mx;
-        QDnsLookup *dns_ns;
-        QDnsLookup *dns_cname;
-        QDnsLookup *dns_txt;
-        QDnsLookup *dns_srv;
-        //QDnsLookup *dns_any;
-        //...
-        int currentTargetToEnumerate = 0;
-        QString currentTarget;
 
     public slots:
         void onStop();

@@ -10,10 +10,12 @@ namespace Ui {
 class BruteConfigDialog : public QDialog{
         Q_OBJECT
 
+    private:
+        ScanArguments_Brute *m_scanArguments;
+
     public:
         explicit BruteConfigDialog(QWidget *parent = nullptr, ScanArguments_Brute *scanArguments = nullptr);
         ~BruteConfigDialog();
-        ScanArguments_Brute *scanArguments;
 
     private slots:
         void on_pushButton_clear_clicked();

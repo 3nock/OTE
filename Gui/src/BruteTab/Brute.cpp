@@ -1,8 +1,14 @@
 #include "Brute.h"
 #include "ui_Brute.h"
 
+
 /*************************** Class Constructor & Deconstructor *************************/
-Brute::Brute(QWidget *parent) :QWidget(parent),ui(new Ui::Brute){
+Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
+      //...
+      model_subBrute(new QStandardItemModel),
+      model_tldBrute(new QStandardItemModel),
+      model_activeSubdomains(new QStandardItemModel)
+{
     ui->setupUi(this);
     //...
     ui->lineEdit_targetDomain_subBrute->setPlaceholderText("eg. example.com");
@@ -23,12 +29,6 @@ Brute::Brute(QWidget *parent) :QWidget(parent),ui(new Ui::Brute){
     ui->pushButton_reloadEnumeratedWordlist_tldBrute->hide();
     ui->pushButton_reloadEnumeratedWordlist_activeSubdomains->hide();
     //...
-    currentPath = QDir::currentPath();
-    //...
-    model_subBrute = new QStandardItemModel;
-    model_tldBrute = new QStandardItemModel;
-    model_activeSubdomains = new QStandardItemModel;
-    //...
     QStringList headerLabels = {"Subdomain Name:", "IpAddress"};
     model_subBrute->setHorizontalHeaderLabels(headerLabels);
     model_tldBrute->setHorizontalHeaderLabels(headerLabels);
@@ -37,14 +37,17 @@ Brute::Brute(QWidget *parent) :QWidget(parent),ui(new Ui::Brute){
     ui->tableView_results_subBrute->setModel(model_subBrute);
     ui->tableView_results_tldBrute->setModel(model_tldBrute);
     ui->tableView_results_activeSubdomains->setModel(model_activeSubdomains);
-
-    // Setting highlight Color for items on the listView...
+    ///
+    /// Setting highlight Color for items on the listView...
+    ///
     QPalette p = palette();
     p.setColor(QPalette::Highlight, QColor(188, 188, 141));
     p.setColor(QPalette::HighlightedText, QColor(Qt::black));
     ui->tableView_results_subBrute->setPalette(p);
     ui->tableView_results_tldBrute->setPalette(p);
     ui->tableView_results_activeSubdomains->setPalette(p);
+    //...
+    currentPath = QDir::currentPath();
 }
 Brute::~Brute(){
     delete model_subBrute;
@@ -148,7 +151,7 @@ void Brute::startEnumeration_subBrute(){
         maxThreads = wordlistCount;
     }
     activeThreads_subBrute = maxThreads;
-    scanArguments_subBrute.enumeratedWordlists = 0;
+    scanArguments_subBrute.currentItemToEnumerate = 0;
     for(int i = 0; i != maxThreads; i++){
         //...
         Enumerator_subBrute *Enumerator = new Enumerator_subBrute(&scanArguments_subBrute);
@@ -174,7 +177,7 @@ void Brute::startEnumeration_tldBrute(){
         maxThreads = totalWordlist;
     }
     activeThreads_tldBrute = maxThreads;
-    scanArguments_tldBrute.enumeratedWordlists = 0;
+    scanArguments_tldBrute.currentItemToEnumerate = 0;
     for(int i = 0; i != maxThreads; i++){
         //...
         Enumerator_tldBrute *Enumerator = new Enumerator_tldBrute(&scanArguments_tldBrute);
@@ -200,7 +203,7 @@ void Brute::startEnumeration_activeSubdomains(){
         maxThreads = wordlistCount;
     }
     activeThreads_activeSubdomains = maxThreads;
-    scanArguments_activeSubdomains.enumeratedWordlists = 0;
+    scanArguments_activeSubdomains.currentItemToEnumerate = 0;
     for(int i = 0; i != maxThreads; i++){
         //...
         Enumerator_activeSubdomains *Enumerator = new Enumerator_activeSubdomains(&scanArguments_activeSubdomains);

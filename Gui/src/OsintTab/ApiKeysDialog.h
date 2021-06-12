@@ -11,15 +11,20 @@ namespace Ui {
 class ApiKeysDialog : public QDialog{
     Q_OBJECT
 
+    private:
+        void m_setAvailableApiKeys();
+        QString currentPath;
+
     public:
         explicit ApiKeysDialog(QWidget *parent = nullptr);
         ~ApiKeysDialog();
-        QString currentPath;
 
     private slots:
         void on_pushButton_save_clicked();
         void on_pushButton_cancel_clicked();
-        // the button to visit site for acquiring api keys...
+        ///
+        /// the button to visit site for acquiring api keys...
+        ///
         void on_toolButton_getApiKey_censys_clicked();
         void on_toolButton_getApiKey_virustotal_clicked();
         void on_toolButton_getApiKey_github_clicked();

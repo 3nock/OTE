@@ -3,10 +3,13 @@
 
 
 /********************************* Constructor & Destructor ***************************************/
-BruteConfigDialog::BruteConfigDialog(QWidget *parent, ScanArguments_Brute *_scanArguments) :QDialog(parent),ui(new Ui::BruteConfigDialog){
+BruteConfigDialog::BruteConfigDialog(QWidget *parent, ScanArguments_Brute *scanArguments)
+    :QDialog(parent), m_scanArguments(scanArguments), ui(new Ui::BruteConfigDialog)
+{
     ui->setupUi(this);
-    scanArguments = _scanArguments;
-    // hiding widgets for custom nameservers input untill user chooses to use custom nameservers...
+    ///
+    /// hiding widgets for custom nameservers input untill user chooses to use custom nameservers...
+    ///
     ui->frame_nameservers->hide();
     BruteConfigDialog::adjustSize();
     //...
@@ -21,16 +24,16 @@ BruteConfigDialog::~BruteConfigDialog(){
 /*********************************** Saving Configurations ***************************************/
 void BruteConfigDialog::on_pushButton_ok_clicked(){
     if(ui->lineEdit_threads->text().toInt() <= MAX_THREADS && ui->lineEdit_threads->text().toInt() > 0){
-        scanArguments->maxThreads = ui->lineEdit_threads->text().toInt();
+        m_scanArguments->maxThreads = ui->lineEdit_threads->text().toInt();
     }
     if(ui->radioButton_dnsRecordType_A->isChecked()){
-        scanArguments->dnsRecordType = QDnsLookup::A;
+        m_scanArguments->dnsRecordType = QDnsLookup::A;
     }
     if(ui->radioButton_dnsRecordType_AAAA->isChecked()){
-        scanArguments->dnsRecordType = QDnsLookup::AAAA;
+        m_scanArguments->dnsRecordType = QDnsLookup::AAAA;
     }
     if(ui->checkBox_checkWildcards->isChecked()){
-        scanArguments->checkWildcardSubdomains = true;
+        m_scanArguments->checkWildcardSubdomains = true;
     }
     if(ui->checkBox_useCustomNameServers->isChecked() && ui->listWidget_nameservers->count() > 0){
         QFile temp_file(QDir::currentPath()+WORDLIST_CUSTOM_NAMESERVERS);
@@ -42,9 +45,9 @@ void BruteConfigDialog::on_pushButton_ok_clicked(){
             }
             temp_file.close();
         }
-        scanArguments->useCustomNameServers = true;
+        m_scanArguments->useCustomNameServers = true;
     }else{
-        scanArguments->useCustomNameServers = false;
+        m_scanArguments->useCustomNameServers = false;
     }
     accept();
 }

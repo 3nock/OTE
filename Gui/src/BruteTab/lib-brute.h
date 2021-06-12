@@ -19,7 +19,7 @@
 struct ScanArguments_Brute{
     QString targetDomain = nullptr;
     QListWidget *wordlist = nullptr;
-    int enumeratedWordlists = 0;
+    int currentItemToEnumerate = 0;
     //...
     QDnsLookup::Type dnsRecordType = QDnsLookup::A;
     bool checkWildcardSubdomains = false;

@@ -314,7 +314,10 @@ border-radius: 0px;
 }
 QListWidget::item:selected {
 background-color:  rgb(199, 199, 149);
-color: black;}</string>
+color: black;}
+QListWidget::item:hover{
+background-color: rgb(230, 230, 172);
+}</string>
           </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::ExtendedSelection</enum>

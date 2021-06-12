@@ -3,7 +3,12 @@
 
 /******************************* Constructor & Destructor ********************************/
 
-Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint){
+Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint),
+    results_model(new QStandardItemModel),
+    //...
+    scanArguments(new ScanArguments_Osint),
+    scanResults(new ScanResults_Osint)
+{
     ui->setupUi(this);
     //...
     currentPath = QDir::currentPath();
@@ -11,9 +16,6 @@ Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint){
     ui->lineEdit_domain->setPlaceholderText("eg. example.com");
     ui->lineEdit_newProfile->setPlaceholderText("Enter New Profile's Name...");
     //...
-    setupOsintProfiles();
-    //...
-    results_model = new QStandardItemModel;
     results_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     ui->tableView_results->setModel(results_model);
     //...
@@ -22,10 +24,11 @@ Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint){
     p.setColor(QPalette::HighlightedText, QColor(Qt::black));
     ui->tableView_results->setPalette(p);
     //...
-    scanArguments = new ScanArguments_Osint;
-    scanResults = new ScanResults_Osint;
+    setupOsintProfiles();
 }
 Osint::~Osint(){
+    delete scanArguments;
+    delete scanResults;
     delete ui;
 }
 
@@ -44,8 +47,9 @@ void Osint::on_pushButton_start_clicked(){
         //...
         ui->pushButton_start->setDisabled(true);
         ui->pushButton_stop->setEnabled(true);
-
-        // converting the QString domainName to char* for compatibility with the PyObject methods...
+        ///
+        /// converting the QString domainName to char* for compatibility with the PyObject methods...
+        ///
         QString domainName = TargetNameFilter(ui->lineEdit_domain->text(), ENUMNAME_OSINT);
         char *targetDomain = new char[domainName.length() + 1];
         strcpy(targetDomain, domainName.toStdString().c_str());
@@ -243,7 +247,9 @@ void Osint::getUserOptions(QStringList *choosenEngines){
 }
 
 void Osint::setupOsintProfiles(){
-    // writting profile names on the comboBox...
+    ///
+    /// writting profile names on the comboBox...
+    ///
     QFile osintProfiles(currentPath+FILE_PROFILES);
     osintProfiles.open(QIODevice::ReadOnly | QIODevice::Text);
     if(osintProfiles.isOpen()){
@@ -256,11 +262,15 @@ void Osint::setupOsintProfiles(){
     }else{
         logs("[Error] Failed To Open /config/osint-profiles.json File For Display on Profiles!");
     }
-    // hiding the profiles Frame...
+    ///
+    /// hiding the profiles Frame...
+    ///
     ui->frame_profiles->hide();
 }
 
-// the frameWidget containing the profile's options...
+///
+/// show the frameWidget containing the profile's options...
+///
 void Osint::on_checkBox_useProfiles_clicked(bool checked){
     if(checked){
         ui->frame_profiles->show();
@@ -508,16 +518,22 @@ void Osint::on_pushButton_newProfile_clicked(){
         QString profile_name = ui->lineEdit_newProfile->text();
         ui->comboBox_profiles->addItem(profile_name);
         ui->lineEdit_newProfile->clear();
-        // saving to profiles...
+        ///
+        /// saving to profiles...
+        ///
         QFile osintProfiles(currentPath+FILE_PROFILES);
         osintProfiles.open(QIODevice::ReadOnly | QIODevice::Text);
         if(osintProfiles.isOpen()){
-            // reading all data from the key file...
+            ///
+            /// reading all data from the key file...
+            ///
             QJsonParseError JsonParseError;
             QJsonDocument JsonDocument = QJsonDocument::fromJson(osintProfiles.readAll(), &JsonParseError);
             QJsonObject RootObject = JsonDocument.object();
             osintProfiles.close();
-            // inserting the user's options into the Json Object...
+            ///
+            /// inserting the user's options into the Json Object...
+            ///
             QJsonObject ref_addvalue;
             if(ui->checkBox_engine_censys->isChecked()){
                 ref_addvalue.insert(ENGINE_CENSYS, OSINT_TRUE);
@@ -751,7 +767,9 @@ void Osint::on_pushButton_action_clicked(){
     menu->addAction(&actionSendToDnsRecords);
     menu->addAction(&actionSendToSave);
     menu->addAction(&actionSendToActive);
-    // positioning of the context menu...
+    ///
+    /// positioning of the context menu...
+    ///
     QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
     int x = pos.x()+76;
     int y = pos.y();
@@ -784,7 +802,9 @@ void Osint::on_tableView_results_customContextMenuRequested(const QPoint &pos){
         menu->addAction(&actionSendToInfo);
         menu->addAction(&actionSendToSave);
         menu->addAction(&actionSendToDnsRecords);
-        // getting the mouse position..
+        ///
+        /// getting the mouse position..
+        ///
         QPoint globalCursorPos = QCursor::pos();
         int mouseScreen = qApp->desktop()->screenNumber(globalCursorPos);
         QRect mouseScreenGeometry = qApp->desktop()->screen(mouseScreen)->geometry();
@@ -814,7 +834,9 @@ void Osint::actionSendToDnsRecords(){
 
 /************************** Right-Click Context Menu Methods **********************/
 void Osint::cursorOpenInBrowser(){
-    // iterate and open each selected item in a browser...
+    ///
+    /// iterate and open each selected item in a browser...
+    ///
     foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }

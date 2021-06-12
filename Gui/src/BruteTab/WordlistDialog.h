@@ -10,10 +10,13 @@ namespace Ui {
 class WordListDialog : public QDialog{
         Q_OBJECT
 
+    private:
+        int m_enumName;
+        void m_setupSpecialWordlists();
+
     public:
-        explicit WordListDialog(QWidget *parent = nullptr, int _enumName = 0);
+        explicit WordListDialog(QWidget *parent = nullptr, int enumName = 0);
         ~WordListDialog();
-        int enumName;
 
     private slots:
         void on_pushButton_cancel_clicked();

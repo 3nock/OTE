@@ -16,16 +16,13 @@ namespace Ui {
 class Brute : public QWidget{
     Q_OBJECT
 
-    public:
-        explicit Brute(QWidget *parent = nullptr);
-        ~Brute();
-        //...
+    private:
+        Ui::Brute *ui;
+
+    private:
         void checkWildcards();
         void showContextMenu_actionButton(int enumName, QPoint position);
         void showContextMenu_rightClick(int enumName);
-        void logs_subBrute(QString log);
-        void logs_tldBrute(QString log);
-        void logs_activeSubdomains(QString log);
         //...
         QStandardItemModel *model_subBrute;
         QStandardItemModel *model_tldBrute;
@@ -55,6 +52,10 @@ class Brute : public QWidget{
         int endedThreads_activeSubdomains = 0;
         //...
         QString currentPath;
+
+    public:
+        explicit Brute(QWidget *parent = nullptr);
+        ~Brute();
 
     public slots:
         void onSendResultsToSave();
@@ -155,10 +156,10 @@ class Brute : public QWidget{
         //...
         void onWordlistFilename_subBrute(QString);
         void onWordlistFilename_tldBrute(QString);
-
-    private:
-        Ui::Brute *ui;
-
+        //...
+        void logs_subBrute(QString log);
+        void logs_tldBrute(QString log);
+        void logs_activeSubdomains(QString log);
 };
 
 #endif // BRUTE_H

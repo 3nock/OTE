@@ -6,7 +6,9 @@
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWindow){
     ui->setupUi(this);
 
-    // creating and initiating the classes for the modules...
+    ///
+    /// creating and initiating the classes for the modules...
+    ///
     Osint *osint = new Osint(this);
     Brute *brute = new Brute(this);
     Dns *dns = new Dns(this);
@@ -78,18 +80,24 @@ MainWindow::~MainWindow(){
 *                          custom slots Methods...
 * ******************************************************************/
 
-// showing the status to the status label and logging to the log file...
+///
+/// showing the status to the status label and logging to the log file...
+///
 void MainWindow::onReceiveStatus(QString status){
     ui->label_status->setText(status);
 }
 
-// logging the logs to the logfile...
+///
+/// logging the logs to the logfile...
+///
 void MainWindow::onReceiveLog(QString log){
     logfile->write(NEWLINE+log.toUtf8());
     logfile->flush();
 }
 
-// changing tabs...
+///
+/// changing tabs...
+///
 void MainWindow::changeTabToActive(){
     ui->tabWidget_mainTab->setCurrentIndex(2);
 }

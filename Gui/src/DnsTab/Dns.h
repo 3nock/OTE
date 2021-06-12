@@ -12,23 +12,27 @@ namespace Ui {
 class Dns : public QDialog{
     Q_OBJECT
 
-    public:
-        explicit Dns(QWidget *parent = nullptr);
-        ~Dns();
-        //...
+    private:
+        Ui::Dns *ui;
+
+    private:
         void showContextMenu_ActionButton(QPoint position);
         void showContextMenu_RightClick();
-        //...
-        int wordlistCount_dnsRecords = 0;
-        //...
-        scanArguments_dnsRecords *scanArguments;
-        scanResults_dnsRecords *scanResults;
         //...
         QStandardItemModel *resultsRootModel;
         QStandardItem *root_item;
         //...
+        scanArguments_dnsRecords *scanArguments;
+        scanResults_dnsRecords *scanResults;
+        //...
         int activeThreads_dnsRecords = 0;
         int endedThreads_dnsRecords = 0;
+        //...
+        int wordlistCount_dnsRecords = 0;
+
+    public:
+        explicit Dns(QWidget *parent = nullptr);
+        ~Dns();
 
     private slots:
         void on_pushButton_remove_dnsRecords_clicked();
@@ -54,17 +58,13 @@ class Dns : public QDialog{
         void cursorSendToSave_dnsRecords();
         void cursorSendToMultiLevel_dnsRecords();
 
-
-public slots:
+    public slots:
         void onThreadEnded();
         void logs_dnsRecords(QString log);
 
     signals:
         void stop_dnsRecords();
         void sendLog(QString log);
-
-    private:
-        Ui::Dns *ui;
 };
 
 #endif // DNS_H

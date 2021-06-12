@@ -1,20 +1,30 @@
-#include "WordListDialog.h"
-#include "ui_WordListDialog.h"
+#include "WordlistDialog.h"
+#include "ui_WordlistDialog.h"
 
 /******************************** Constructor & Destructor *********************************/
-WordListDialog::WordListDialog(QWidget *parent, int _enumName): QDialog(parent), ui(new Ui::WordListDialog){
+WordListDialog::WordListDialog(QWidget *parent, int enumName):
+    QDialog(parent), m_enumName(enumName), ui(new Ui::WordListDialog)
+{
     ui->setupUi(this);
-    enumName = _enumName;
-    //...
+    ///
+    /// hiding widgets for creating a new special wordlist untill user chooses to use custom nameservers...
+    ///
     ui->frame_newSpecialWordlist->hide();
     WordListDialog::adjustSize();
     //...
     ui->label_title->setText("Choose Wordlist for "+EnumName(enumName)+" subdomain Enumeration");
     ui->lineEdit_specialName->setPlaceholderText("Enter Special wordlist Name...");
     ui->lineEdit_add->setPlaceholderText("Enter new Item...");
+    //...
+    m_setupSpecialWordlists();
+}
+WordListDialog::~WordListDialog(){
+    delete ui;
+}
 
-    // setting all profile's names...
-    QFile profile_names(QDir::currentPath()+"/wordlists/special_"+EnumName(enumName)+"/names.txt");
+/***************************** display all special wordlists ********************************/
+void WordListDialog::m_setupSpecialWordlists(){
+    QFile profile_names(QDir::currentPath()+"/wordlists/special_"+EnumName(m_enumName)+"/names.txt");
     profile_names.open(QIODevice::ReadOnly | QIODevice::Text);
     if(profile_names.isOpen()){
          QTextStream in(&profile_names);
@@ -24,19 +34,16 @@ WordListDialog::WordListDialog(QWidget *parent, int _enumName): QDialog(parent),
          profile_names.close();
     }
 }
-WordListDialog::~WordListDialog(){
-    delete ui;
-}
 
 /********************** choosen wordlist filename(full path) is Emited ***********************/
 void WordListDialog::on_pushButton_ok_clicked(){
     QString choosenWordlistfFile;
     if(ui->radioButton_defaultWordlist->isChecked()){
-        choosenWordlistfFile = QDir::currentPath()+"/wordlists/"+EnumName(enumName)+"_"+ui->comboBox_auto->currentText()+".txt";
+        choosenWordlistfFile = QDir::currentPath()+"/wordlists/"+EnumName(m_enumName)+"_"+ui->comboBox_auto->currentText()+".txt";
         emit(wordlistFilename(choosenWordlistfFile));
     }
     if(ui->radioButton_specialWordlist->isChecked()){
-        choosenWordlistfFile = QDir::currentPath()+"/wordlists/special_"+EnumName(enumName)+"/"+ui->comboBox_special->currentText()+".txt";
+        choosenWordlistfFile = QDir::currentPath()+"/wordlists/special_"+EnumName(m_enumName)+"/"+ui->comboBox_special->currentText()+".txt";
         emit(wordlistFilename(choosenWordlistfFile));
     }
     accept();
@@ -89,8 +96,10 @@ void WordListDialog::on_pushButton_add_clicked(){
 // Creating the new special wordlist...
 void WordListDialog::on_pushButton_create_clicked(){
     QString specialWordlistName = ui->lineEdit_specialName->text();
-    // saving the wordlists to the file...
-    QFile file(QDir::currentPath()+"/wordlists/special_"+EnumName(enumName)+"/"+specialWordlistName+".txt");
+    ///
+    /// saving the wordlists to the file...
+    ///
+    QFile file(QDir::currentPath()+"/wordlists/special_"+EnumName(m_enumName)+"/"+specialWordlistName+".txt");
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     if(file.isOpen()){
         int wordlistCount = ui->listWidget_specialWordlist->count();
@@ -99,8 +108,10 @@ void WordListDialog::on_pushButton_create_clicked(){
         }
         file.close();
     }
-    // saving the name of the new special wordlist profile...
-    QFile profile_names(QDir::currentPath()+"/wordlists/special_"+EnumName(enumName)+"/names.txt");
+    ///
+    /// saving the name of the new special wordlist profile...
+    ///
+    QFile profile_names(QDir::currentPath()+"/wordlists/special_"+EnumName(m_enumName)+"/names.txt");
     profile_names.open(QIODevice::Append | QIODevice::Text);
     if(profile_names.isOpen()){
         QTextStream stream(&profile_names);
