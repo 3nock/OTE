@@ -65,14 +65,14 @@ void SetConfig(QString configType, int enumName, QString configValue);
 // structures...
 struct ScanArguments_Osint{
     QStringList choosenOptions;
-    char *targetDomain;
+    char* targetDomain;
 };
 typedef struct  ScanArguments_osint ScanArguments_osint;
 
 struct ScanResults_Osint{
-    QLabel *label_subdomainsCount;
-    QStandardItemModel *results_model;
-    int *resultsCount;
+    QLabel* label_subdomainsCount;
+    QStandardItemModel* results_model;
+    int* resultsCount;
 };
 typedef struct ScanResults_Osint ScanResults_Osint;
 

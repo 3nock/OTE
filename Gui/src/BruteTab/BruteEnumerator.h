@@ -10,7 +10,7 @@ class Enumerator_subBrute : public QObject{
     Q_OBJECT
 
     private:
-        int m_currentItemToEnumerate;
+        int m_currentItemToEnumerate = 0;
         ScanArguments_Brute* m_scanArguments;
         QDnsLookup* m_dns;
 
@@ -43,7 +43,7 @@ class Enumerator_tldBrute : public QObject{
     Q_OBJECT
 
     private:
-        int m_currentItemToEnumerate;
+        int m_currentItemToEnumerate = 0;
         ScanArguments_Brute *m_scanArguments;
         QDnsLookup *m_dns;
 
@@ -76,8 +76,8 @@ class Enumerator_activeSubdomains : public QObject{
     Q_OBJECT
 
     private:
+        int m_currentItemToEnumerate = 0;
         ScanArguments_Brute *m_scanArguments;
-        int m_currentItemToEnumerate;
         QDnsLookup *m_dns;
 
     public:

@@ -1,13 +1,24 @@
 #include "Brute.h"
 #include "ui_Brute.h"
 
+/*
+
+  add an advanced option that resolves an item on wordlist with all nameservers..
+  first obtains the server from the domain name, then uses those nameservers as default nameservers
+  for the scan...
+
+*/
 
 /*************************** Class Constructor & Deconstructor *************************/
 Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
       //...
       model_subBrute(new QStandardItemModel),
       model_tldBrute(new QStandardItemModel),
-      model_activeSubdomains(new QStandardItemModel)
+      model_activeSubdomains(new QStandardItemModel),
+      //...
+      scanArguments_subBrute(new ScanArguments_Brute),
+      scanArguments_tldBrute(new ScanArguments_Brute),
+      scanArguments_activeSubdomains(new ScanArguments_Brute)
 {
     ui->setupUi(this);
     //...
@@ -67,16 +78,16 @@ void Brute::on_pushButton_start_subBrute_clicked(){
     ui->pushButton_start_subBrute->setDisabled(true);
     ui->pushButton_stop_subBrute->setEnabled(true);
     //...
-    scanArguments_subBrute.targetDomain = TargetNameFilter(ui->lineEdit_targetDomain_subBrute->text(), ENUMNAME_SUBBRUTE);
-    scanArguments_subBrute.wordlist = ui->listWidget_wordlist_subBrute;
-    if(scanArguments_subBrute.checkWildcardSubdomains){
+    scanArguments_subBrute->targetDomain = TargetNameFilter(ui->lineEdit_targetDomain_subBrute->text(), ENUMNAME_SUBBRUTE);
+    scanArguments_subBrute->wordlist = ui->listWidget_wordlist_subBrute;
+    if(scanArguments_subBrute->checkWildcardSubdomains){
         checkWildcards();
     }else{
         startEnumeration_subBrute();
     }
     //...
-    sendStatus("[*] BruteForcing Subdomains For Domain"+scanArguments_subBrute.targetDomain);
-    logs_subBrute("[START] BruteForcing Subdomains For Domain: "+scanArguments_subBrute.targetDomain);
+    sendStatus("[*] BruteForcing Subdomains For Domain"+scanArguments_subBrute->targetDomain);
+    logs_subBrute("[START] BruteForcing Subdomains For Domain: "+scanArguments_subBrute->targetDomain);
 }
 void Brute::on_lineEdit_targetDomain_subBrute_returnPressed(){
     on_pushButton_start_subBrute_clicked();
@@ -91,12 +102,12 @@ void Brute::on_pushButton_start_tldBrute_clicked(){
     ui->pushButton_stop_tldBrute->setEnabled(true);
     ui->pushButton_reloadEnumeratedWordlist_tldBrute->show();
     //...
-    scanArguments_tldBrute.targetDomain = TargetNameFilter(ui->lineEdit_targetDomain_tldBrute->text(), ENUMNAME_TLDBRUTE);
-    scanArguments_tldBrute.wordlist = ui->listWidget_wordlist_tldBrute;
+    scanArguments_tldBrute->targetDomain = TargetNameFilter(ui->lineEdit_targetDomain_tldBrute->text(), ENUMNAME_TLDBRUTE);
+    scanArguments_tldBrute->wordlist = ui->listWidget_wordlist_tldBrute;
     startEnumeration_tldBrute();
     //...
-    sendStatus("[*] BruteForcing TLDs For Domain: "+scanArguments_tldBrute.targetDomain);
-    logs_tldBrute("[START] BruteForcing TLDs For Domain: "+scanArguments_tldBrute.targetDomain);
+    sendStatus("[*] BruteForcing TLDs For Domain: "+scanArguments_tldBrute->targetDomain);
+    logs_tldBrute("[START] BruteForcing TLDs For Domain: "+scanArguments_tldBrute->targetDomain);
 }
 void Brute::on_lineEdit_targetDomain_tldBrute_returnPressed(){
     on_pushButton_start_tldBrute_clicked();
@@ -111,7 +122,7 @@ void Brute::on_pushButton_start_activeSubdomains_clicked(){
     ui->pushButton_start_activeSubdomains->setDisabled(true);
     ui->pushButton_stop_activeSubdomains->setEnabled(true);
     //...
-    scanArguments_activeSubdomains.wordlist = ui->listWidget_wordlist_activeSubdomains;
+    scanArguments_activeSubdomains->wordlist = ui->listWidget_wordlist_activeSubdomains;
     //...
     startEnumeration_activeSubdomains();
     //...
@@ -132,7 +143,7 @@ void Brute::on_pushButton_stop_activeSubdomains_clicked(){
 
 /************************************ Enumeration Functions *********************************/
 void Brute::checkWildcards(){
-    Enumerator_Wildcards *wildcardsEnumerator = new Enumerator_Wildcards(&scanArguments_subBrute);
+    Enumerator_Wildcards *wildcardsEnumerator = new Enumerator_Wildcards(scanArguments_subBrute);
     QThread *cThread = new QThread;
     wildcardsEnumerator->Enumerate(cThread);
     wildcardsEnumerator->moveToThread(cThread);
@@ -145,16 +156,16 @@ void Brute::checkWildcards(){
 }
 
 void Brute::startEnumeration_subBrute(){
-    int maxThreads = scanArguments_subBrute.maxThreads;
+    int maxThreads = scanArguments_subBrute->maxThreads;
     int wordlistCount = ui->listWidget_wordlist_subBrute->count();
     if(maxThreads > wordlistCount){
         maxThreads = wordlistCount;
     }
     activeThreads_subBrute = maxThreads;
-    scanArguments_subBrute.currentItemToEnumerate = 0;
+    scanArguments_subBrute->currentItemToEnumerate = 0;
     for(int i = 0; i != maxThreads; i++){
         //...
-        Enumerator_subBrute *Enumerator = new Enumerator_subBrute(&scanArguments_subBrute);
+        Enumerator_subBrute *Enumerator = new Enumerator_subBrute(scanArguments_subBrute);
         QThread *cThread = new QThread;
         Enumerator->Enumerate(cThread);
         Enumerator->moveToThread(cThread);
@@ -171,16 +182,16 @@ void Brute::startEnumeration_subBrute(){
 }
 
 void Brute::startEnumeration_tldBrute(){
-    int maxThreads = scanArguments_tldBrute.maxThreads;
+    int maxThreads = scanArguments_tldBrute->maxThreads;
     int totalWordlist = ui->listWidget_wordlist_tldBrute->count();
     if(maxThreads > totalWordlist){
         maxThreads = totalWordlist;
     }
     activeThreads_tldBrute = maxThreads;
-    scanArguments_tldBrute.currentItemToEnumerate = 0;
+    scanArguments_tldBrute->currentItemToEnumerate = 0;
     for(int i = 0; i != maxThreads; i++){
         //...
-        Enumerator_tldBrute *Enumerator = new Enumerator_tldBrute(&scanArguments_tldBrute);
+        Enumerator_tldBrute *Enumerator = new Enumerator_tldBrute(scanArguments_tldBrute);
         QThread *cThread = new QThread;
         Enumerator->Enumerate(cThread);
         Enumerator->moveToThread(cThread);
@@ -197,16 +208,16 @@ void Brute::startEnumeration_tldBrute(){
 }
 
 void Brute::startEnumeration_activeSubdomains(){
-    int maxThreads = scanArguments_activeSubdomains.maxThreads;
+    int maxThreads = scanArguments_activeSubdomains->maxThreads;
     int wordlistCount = ui->listWidget_wordlist_activeSubdomains->count();
     if(maxThreads > wordlistCount){
         maxThreads = wordlistCount;
     }
     activeThreads_activeSubdomains = maxThreads;
-    scanArguments_activeSubdomains.currentItemToEnumerate = 0;
+    scanArguments_activeSubdomains->currentItemToEnumerate = 0;
     for(int i = 0; i != maxThreads; i++){
         //...
-        Enumerator_activeSubdomains *Enumerator = new Enumerator_activeSubdomains(&scanArguments_activeSubdomains);
+        Enumerator_activeSubdomains *Enumerator = new Enumerator_activeSubdomains(scanArguments_activeSubdomains);
         QThread *cThread = new QThread;
         Enumerator->Enumerate(cThread);
         Enumerator->moveToThread(cThread);
@@ -299,17 +310,17 @@ void Brute::on_pushButton_reloadEnumeratedWordlist_activeSubdomains_clicked(){
 
 /******************************** Scan Config Dialog ***************************************/
 void Brute::on_toolButton_config_subBrute_clicked(){
-    BruteConfigDialog *scanConfig = new BruteConfigDialog(this, &scanArguments_subBrute);
+    BruteConfigDialog *scanConfig = new BruteConfigDialog(this, scanArguments_subBrute);
     scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
     scanConfig->show();
 }
 void Brute::on_toolButton_config_tldBrute_clicked(){
-    BruteConfigDialog *scanConfig = new BruteConfigDialog(this, &scanArguments_tldBrute);
+    BruteConfigDialog *scanConfig = new BruteConfigDialog(this, scanArguments_tldBrute);
     scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
     scanConfig->show();
 }
 void Brute::on_toolButton_config_activeSubdomains_clicked(){
-    BruteConfigDialog *scanConfig = new BruteConfigDialog(this, &scanArguments_activeSubdomains);
+    BruteConfigDialog *scanConfig = new BruteConfigDialog(this, scanArguments_activeSubdomains);
     scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
     scanConfig->show();
 }
@@ -624,7 +635,7 @@ void Brute::on_tableView_results_activeSubdomains_customContextMenuRequested(con
 /*
     Re-create this functionallity on the constructor for Efficiency...
 */
-void Brute::showContextMenu_actionButton(int enumName, QPoint position){
+void Brute::showContextMenu_actionButton(const int enumName, const QPoint &position){
     QMenu *menu = new QMenu(this);
     menu->setAttribute( Qt::WA_DeleteOnClose, true );
     menu->setObjectName("mainMenu");
@@ -660,7 +671,7 @@ void Brute::showContextMenu_actionButton(int enumName, QPoint position){
 }
 
 /********************************* right-click Context Menu ************************************/
-void Brute::showContextMenu_rightClick(int enumName){
+void Brute::showContextMenu_rightClick(const int enumName){
     //...
     QMenu *menu = new QMenu(this);
     menu->setAttribute( Qt::WA_DeleteOnClose, true );

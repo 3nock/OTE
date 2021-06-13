@@ -32,12 +32,17 @@ void Enumerator_subBrute::onLookupFinished(){
             break;
         //...
         case QDnsLookup::NoError:
-            if(m_scanArguments->usesWildcards){
-                ///
-                /// check if the Ip adress of the subdomain is similar to the wildcard Ip found
-                /// if not similar we emit the results if similar discard the results...
-                ///
-                if(!(m_dns->hostAddressRecords()[0].value().toString() == m_scanArguments->foundWildcardIp)){
+            if(m_scanArguments->checkWildcardSubdomains){
+                if(m_scanArguments->usesWildcards){
+                    ///
+                    /// check if the Ip adress of the subdomain is similar to the wildcard Ip found
+                    /// if not similar we emit the results if similar discard the results...
+                    ///
+                    if(!(m_dns->hostAddressRecords()[0].value().toString() == m_scanArguments->foundWildcardIp)){
+                        emit resolvedSubdomain(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+                    }
+                }
+                else{
                     emit resolvedSubdomain(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
                 }
             }
@@ -77,7 +82,9 @@ void Enumerator_subBrute::lookup(){
         //...
         m_dns->lookup();
     }else{
-        // at the end of the wordlist, signal the thread to Quit...
+        ///
+        /// at the end of the wordlist, signal the thread to Quit...
+        ///
         emit quitThread();
     }
 }

@@ -30,6 +30,7 @@ class Osint : public QWidget{
         int subdomainsCount = 0;
         //...
         QString currentPath;
+        QString m_targetDomain;
 
     public:
         explicit Osint(QWidget *parent = nullptr);

@@ -64,5 +64,7 @@ QString TargetNameFilter(QString domainName, int enumName);
 QString EnumName(int enumName);
 QString wordlistFilter(QString word);
 QString filter(QString word);
+// propossed...
+void loadFile(QListWidget& wordlist, int& count);
 
 #endif // _DNS_MAIN_H

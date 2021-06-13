@@ -21,8 +21,8 @@ class Brute : public QWidget{
 
     private:
         void checkWildcards();
-        void showContextMenu_actionButton(int enumName, QPoint position);
-        void showContextMenu_rightClick(int enumName);
+        void showContextMenu_actionButton(const int enumName, const QPoint& position);
+        void showContextMenu_rightClick(const int enumName);
         //...
         QStandardItemModel *model_subBrute;
         QStandardItemModel *model_tldBrute;
@@ -32,9 +32,9 @@ class Brute : public QWidget{
         QStandardItem *results_tldBrute;
         QStandardItem *results_activeSubdomains;
         //...
-        ScanArguments_Brute scanArguments_subBrute;
-        ScanArguments_Brute scanArguments_tldBrute;
-        ScanArguments_Brute scanArguments_activeSubdomains;
+        ScanArguments_Brute *scanArguments_subBrute;
+        ScanArguments_Brute *scanArguments_tldBrute;
+        ScanArguments_Brute *scanArguments_activeSubdomains;
         //...
         int subdomainCount_tldBrute = 0;
         int subdomainCount_subBrute = 0;

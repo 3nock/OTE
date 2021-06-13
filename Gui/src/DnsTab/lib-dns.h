@@ -16,6 +16,13 @@ struct scanArguments_dnsRecords{
 };
 typedef struct scanArguments_dnsRecords scanArguments_dnsRecords;
 
+struct scanArguments_lookup{
+    QListWidget *targetWordlist = nullptr;
+    int currentTargetToEnumerate = 0;
+    int choiceCount = 0;
+};
+typedef struct scanArguments_lookup scanArguments_lookup;
+
 struct scanResults_dnsRecords{
     QStandardItem *root_item = nullptr;
     QLabel *resultsCountLabel = nullptr;

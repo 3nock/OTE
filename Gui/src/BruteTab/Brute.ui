@@ -752,6 +752,12 @@ QListWidget::item:hover{
 background-color: rgb(230, 230, 172);
 }</string>
                    </property>
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::NoEditTriggers</set>
+                   </property>
+                   <property name="showDropIndicator" stdset="0">
+                    <bool>false</bool>
+                   </property>
                    <property name="dragDropMode">
                     <enum>QAbstractItemView::NoDragDrop</enum>
                    </property>
@@ -762,7 +768,7 @@ background-color: rgb(230, 230, 172);
                     <enum>QAbstractItemView::ExtendedSelection</enum>
                    </property>
                    <property name="selectionRectVisible">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                   </widget>
                  </item>
@@ -1571,11 +1577,17 @@ QListWidget::item:hover{
 background-color: rgb(230, 230, 172);
 }</string>
                    </property>
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::NoEditTriggers</set>
+                   </property>
+                   <property name="showDropIndicator" stdset="0">
+                    <bool>false</bool>
+                   </property>
                    <property name="selectionMode">
                     <enum>QAbstractItemView::ExtendedSelection</enum>
                    </property>
                    <property name="selectionRectVisible">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                   </widget>
                  </item>
@@ -2370,11 +2382,17 @@ QListWidget::item:hover{
 background-color: rgb(230, 230, 172);
 }</string>
                    </property>
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::NoEditTriggers</set>
+                   </property>
+                   <property name="showDropIndicator" stdset="0">
+                    <bool>false</bool>
+                   </property>
                    <property name="selectionMode">
                     <enum>QAbstractItemView::ExtendedSelection</enum>
                    </property>
                    <property name="selectionRectVisible">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                    <property name="sortingEnabled">
                     <bool>false</bool>

@@ -27,6 +27,7 @@ Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint),
     setupOsintProfiles();
 }
 Osint::~Osint(){
+    delete results_model;
     delete scanArguments;
     delete scanResults;
     delete ui;
@@ -47,20 +48,20 @@ void Osint::on_pushButton_start_clicked(){
         //...
         ui->pushButton_start->setDisabled(true);
         ui->pushButton_stop->setEnabled(true);
+        m_targetDomain = TargetNameFilter(ui->lineEdit_domain->text(), ENUMNAME_OSINT);
         ///
         /// converting the QString domainName to char* for compatibility with the PyObject methods...
         ///
-        QString domainName = TargetNameFilter(ui->lineEdit_domain->text(), ENUMNAME_OSINT);
-        char *targetDomain = new char[domainName.length() + 1];
-        strcpy(targetDomain, domainName.toStdString().c_str());
+        char *targetDomain = new char[m_targetDomain.length() + 1];
+        strcpy(targetDomain, m_targetDomain.toStdString().c_str());
         //...
         scanArguments->targetDomain = targetDomain;
         scanResults->label_subdomainsCount = ui->label_subdomainsCount;
         scanResults->resultsCount = &subdomainsCount;
         scanResults->results_model = results_model;
         //...
-        emit sendStatus("[*] Enumerating "+domainName+" Subdomains with Osint...");
-        logs("[START] Enumerating "+domainName+" Subdomains with Osint...");
+        emit sendStatus("[*] Enumerating "+m_targetDomain+" Subdomains with Osint...");
+        logs("[START] Enumerating "+m_targetDomain+" Subdomains with Osint...");
         //...
         Enumerator *enumerator = new Enumerator(scanArguments, scanResults);
         QThread *cThread = new QThread(this);
@@ -106,7 +107,9 @@ void Osint::on_pushButton_clear_clicked(){
         subdomainsCount = 0;
         //...
         results_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
-    }else{   // clear logs...
+    }
+    // clear logs...
+    else{
         ui->listWidget_logs->clear();
     }
 }

@@ -64,6 +64,7 @@ void Enumerator::worker(){
             }
             ///
             /// if no Exception occurred while running python code...
+            ///
             else{
                 for(Py_ssize_t j = 0; j < listSize; j++){
                     m_scanResults->results_model->setItem(*m_scanResults->resultsCount, 0, new QStandardItem(PyUnicode_AsUTF8(PyList_GetItem(pReturnValue, j))));
