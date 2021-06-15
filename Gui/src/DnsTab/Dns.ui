@@ -113,14 +113,14 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QCheckBox" name="checkBox_3">
+               <widget class="QCheckBox" name="checkBox_a_dnsRecords">
                 <property name="text">
                  <string>A</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox_4">
+               <widget class="QCheckBox" name="checkBox_aaaa_dnsRecords">
                 <property name="text">
                  <string>AAAA</string>
                 </property>
@@ -188,20 +188,6 @@
                 </property>
                 <property name="text">
                  <string>SRV</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox">
-                <property name="text">
-                 <string>SOA</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_2">
-                <property name="text">
-                 <string>WHOIS</string>
                 </property>
                </widget>
               </item>
@@ -846,9 +832,25 @@ background-color: rgb(230, 230, 172);
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_9">
            <item>
-            <widget class="QLabel" name="label_11">
+            <widget class="QRadioButton" name="radioButton_hostnameToIp">
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>*Scan Config</string>
+              <string>Hostname to Ip</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_ipToHostname">
+             <property name="text">
+              <string>Ip to Hostname</string>
              </property>
             </widget>
            </item>
@@ -878,46 +880,6 @@ border-radius: 15px</string>
               </size>
              </property>
             </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_8">
-             <property name="text">
-              <string>*Resolving</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="comboBox_option_lookup">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>100</width>
-               <height>20</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 rgb(210, 210, 210));
-border-style: solid;
-border-color:  black;
-border-width: 1px;
-border-radius: 0px;</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>Ip to HostName</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>HostName to Ip</string>
-              </property>
-             </item>
-            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_start_lookup">
@@ -960,7 +922,7 @@ border-radius: 0px;</string>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <layout class="QHBoxLayout" name="horizontalLayout_15">
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -1081,6 +1043,42 @@ QListWidget::item:hover{
 background-color: rgb(230, 230, 172);
 }</string>
                      </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::NoEditTriggers</set>
+                     </property>
+                     <property name="showDropIndicator" stdset="0">
+                      <bool>false</bool>
+                     </property>
+                     <property name="dragDropOverwriteMode">
+                      <bool>false</bool>
+                     </property>
+                     <property name="showGrid">
+                      <bool>false</bool>
+                     </property>
+                     <property name="cornerButtonEnabled">
+                      <bool>false</bool>
+                     </property>
+                     <attribute name="horizontalHeaderMinimumSectionSize">
+                      <number>200</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderDefaultSectionSize">
+                      <number>220</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderHighlightSections">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderVisible">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderMinimumSectionSize">
+                      <number>15</number>
+                     </attribute>
+                     <attribute name="verticalHeaderDefaultSectionSize">
+                      <number>15</number>
+                     </attribute>
+                     <attribute name="verticalHeaderHighlightSections">
+                      <bool>false</bool>
+                     </attribute>
                     </widget>
                    </item>
                   </layout>
@@ -1136,7 +1134,7 @@ background-color: rgb(230, 230, 172);
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <layout class="QHBoxLayout" name="horizontalLayout_12">
              <item>
               <widget class="Line" name="line_10">
@@ -1353,6 +1351,11 @@ background-color: rgb(230, 230, 172);
         </layout>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Ping</string>
+      </attribute>
      </widget>
     </widget>
    </item>

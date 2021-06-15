@@ -19,12 +19,15 @@ class Dns : public QDialog{
         void showContextMenu_ActionButton(QPoint position);
         void showContextMenu_RightClick();
         //...
-        QStandardItemModel *resultsRootModel;
-        QStandardItem *root_item;
+        QStandardItemModel* model_dnsRecords;
+        QStandardItemModel* model_lookup;
+        QStandardItem* rootItem_dnsRecords;
+        QStandardItem* results_lookup;
         //...
-        scanArguments_dnsRecords *m_scanArguments_dnsRecords;
-        scanArguments_lookup *m_scanArguments_lookup;
-        scanResults_dnsRecords *m_scanResults_dnsRecords;
+        scanArguments_dnsRecords* m_scanArguments_dnsRecords;
+        scanArguments_lookup* m_scanArguments_lookup;
+        scanResults_dnsRecords* m_scanResults_dnsRecords;
+        scanResults_lookup* m_scanResults_lookup;
         //...
         int activeThreads_dnsRecords = 0;
         int activeThreads_lookup = 0;
@@ -61,8 +64,10 @@ class Dns : public QDialog{
         void on_pushButton_removeWordlist_lookup_clicked();
         void on_pushButton_loadWordlist_lookup_clicked();
         void on_pushButton_addWordlist_lookup_clicked();
+        void on_pushButton_reload_lookup_clicked();
         void on_toolButton_config_lookup_clicked();
         void on_lineEdit_wordlist_lookup_returnPressed();
+        void on_tableView_results_lookup_customContextMenuRequested(const QPoint &pos);
 
         // self...
         void startEnumeration_dnsRecords();
@@ -82,13 +87,10 @@ class Dns : public QDialog{
         void cursorSendToMultiLevel_dnsRecords();
         void cursorSendToMultiLevel_lookup();
 
-        void on_pushButton_reload_lookup_clicked();
-
-        void on_tableView_results_lookup_customContextMenuRequested(const QPoint &pos);
-
-public slots:
+    public slots:
         void onThreadEnded_dnsRecords();
         void onThreadEnded_lookup();
+        //...
         void logs_dnsRecords(QString log);
         void logs_lookup(QString log);
 

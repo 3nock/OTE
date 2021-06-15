@@ -2,6 +2,7 @@
 #define DNSENUMERATOR_H
 
 #include "lib-dns.h"
+#include <QHostInfo>
 
 /***********************************************************************************
                                DNS-RECORDS ENUMERATOR
@@ -18,6 +19,8 @@ class Enumerator_dnsRecords: public QObject{
         QStandardItem *m_recordItem;
         //...
         QHostAddress m_nameserver;
+        QDnsLookup *m_dns_a;
+        QDnsLookup *m_dns_aaaa;
         QDnsLookup *m_dns_mx;
         QDnsLookup *m_dns_ns;
         QDnsLookup *m_dns_txt;
@@ -42,6 +45,8 @@ class Enumerator_dnsRecords: public QObject{
 
     private slots:
         void lookup();
+        void aLookupFinished();
+        void aaaaLookupFinished();
         void mxLookupFinished();
         void cnameLookupFinished();
         void nsLookupFinished();
@@ -51,9 +56,43 @@ class Enumerator_dnsRecords: public QObject{
 
     signals:
         void quitThread();
-        void scanlogs(QString log);
+        void scanLog(QString log);
         void done();
         void doLookup();
+};
+
+/********************************************************************************
+                            LOOKUPS ENUMERATOR
+*********************************************************************************/
+
+class Enumerator_lookup : public QObject{
+    Q_OBJECT
+
+    private:
+        int m_currentItemToEnumerate = 0;
+        scanArguments_lookup* m_scanArguments;
+        scanResults_lookup* m_scanResults;
+
+    public:
+        Enumerator_lookup(scanArguments_lookup *scanArguments, scanResults_lookup *scanResults);
+        ~Enumerator_lookup();
+        //...
+        void Enumerate_lookup(QThread *cThread);
+        void Enumerate_reverseLookup(QThread *cThread);
+
+    public slots:
+        void onStop();
+
+    private slots:
+        void hostnameLookup();
+        void reverseLookup();
+        void onReverseLookupFinished(QHostInfo info);
+
+    signals:
+        void performAnotherReverseLookup();
+        //...
+        void scanLog(QString log);
+        void quitThread();
 };
 
 #endif // DNSENUMERATOR_H

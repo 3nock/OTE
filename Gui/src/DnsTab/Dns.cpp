@@ -1,24 +1,32 @@
 #include "Dns.h"
 #include "ui_Dns.h"
 
+
 /*************************************************************************************
- *                          Constructor & Destructor
- *************************************************************************************/
+                            Constructor & Destructor
+*************************************************************************************/
+
 Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
-      resultsRootModel(new QStandardItemModel),
-      root_item(resultsRootModel->invisibleRootItem()),
+      model_dnsRecords(new QStandardItemModel),
+      model_lookup(new QStandardItemModel),
+      rootItem_dnsRecords(model_dnsRecords->invisibleRootItem()),
       //...
       m_scanArguments_dnsRecords(new scanArguments_dnsRecords),
       m_scanArguments_lookup(new scanArguments_lookup),
-      m_scanResults_dnsRecords(new scanResults_dnsRecords)
+      //...
+      m_scanResults_dnsRecords(new scanResults_dnsRecords),
+      m_scanResults_lookup(new scanResults_lookup)
 {
     ui->setupUi(this);
     //...
-    m_scanResults_dnsRecords->root_item = root_item;
+    m_scanResults_dnsRecords->rootItem = rootItem_dnsRecords;
     m_scanResults_dnsRecords->resultsCountLabel = ui->label_resultsCount_dnsRecords;
     //...
-    ui->treeView_results_dnsRecords->setModel(resultsRootModel);
-    ui->treeView_results_dnsRecords->expandAll();
+    ui->treeView_results_dnsRecords->setModel(model_dnsRecords);
+    ui->tableView_results_lookup->setModel(model_lookup);
+    //...
+    QStringList headerLabels = {"Subdomain Name:", "IpAddress:"};
+    model_lookup->setHorizontalHeaderLabels(headerLabels);
     //...
     ui->lineEdit_wordlist_dnsRecords->setPlaceholderText("Enter Target domains/subdomains...");
     ui->lineEdit_wordlist_lookup->setPlaceholderText("Enter Host (Ip/HostName) For Lookup...");
@@ -27,6 +35,12 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
     //...
     ui->pushButton_stop_dnsRecords->setDisabled(true);
     ui->pushButton_stop_lookup->setDisabled(true);
+    //...
+    m_scanArguments_dnsRecords->targetWordlist = ui->listWidget_wordlist_dnsRecords;
+    m_scanArguments_lookup->targetWordlist = ui->listWidget_wordlist_lookup;
+    //...
+    m_scanResults_lookup->model = model_lookup;
+    m_scanResults_lookup->resultsCountLabel = ui->label_resultsCount_lookup;
     ///
     /// Setting highlight Color for items on the TreeView...
     ///
@@ -45,12 +59,13 @@ Dns::~Dns(){
     delete m_scanArguments_dnsRecords;
     delete m_scanArguments_lookup;
     delete m_scanResults_dnsRecords;
-    delete resultsRootModel;
+    delete model_dnsRecords;
+    delete model_lookup;
     delete ui;
 }
 
 /**************************************************************************************
-                                  Scan
+                                      Scan
 **************************************************************************************/
 void Dns::on_pushButton_start_dnsRecords_clicked(){
     if(ui->listWidget_wordlist_dnsRecords->count() < 1){
@@ -60,8 +75,15 @@ void Dns::on_pushButton_start_dnsRecords_clicked(){
     ///
     /// getting the arguments for the Scan...
     ///
-    m_scanArguments_dnsRecords->targetWordlist = ui->listWidget_wordlist_dnsRecords;
     m_scanArguments_dnsRecords->choiceCount = 0;
+    if(ui->checkBox_a_dnsRecords->isChecked()){
+        m_scanArguments_dnsRecords->RecordType_a = ui->checkBox_a_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->choiceCount++;
+    }
+    if(ui->checkBox_aaaa_dnsRecords->isChecked()){
+        m_scanArguments_dnsRecords->RecordType_aaaa = ui->checkBox_aaaa_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->choiceCount++;
+    }
     if(ui->checkBox_mx_dnsRecords->isChecked()){
         m_scanArguments_dnsRecords->RecordType_mx = ui->checkBox_mx_dnsRecords->isChecked();
         m_scanArguments_dnsRecords->choiceCount++;
@@ -106,12 +128,6 @@ void Dns::on_pushButton_start_lookup_clicked(){
     ///
     /// getting the arguments for the Scan...
     ///
-    m_scanArguments_lookup->targetWordlist = ui->listWidget_wordlist_lookup;
-    m_scanArguments_lookup->choiceCount = 0;
-    /*
-
-    */
-    //...
     ui->pushButton_start_lookup->setDisabled(true);
     ui->pushButton_stop_lookup->setEnabled(true);
     ui->pushButton_reload_lookup->show();
@@ -138,8 +154,8 @@ void Dns::startEnumeration_dnsRecords(){
         Enumerator->Enumerate(cThread);
         Enumerator->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(scanlogs(QString)), this, SLOT(logs_dnsRecords(QString)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnded()));
+        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs_dnsRecords(QString)));
+        connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnded_dnsRecords()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
         connect(this, SIGNAL(stop_dnsRecords()), Enumerator, SLOT(onStop()));
@@ -156,11 +172,25 @@ void Dns::startEnumeration_lookup(){
     }
     activeThreads_lookup = maxThreads;
     //...
-    m_scanArguments_lookup->currentTargetToEnumerate = 0;
+    m_scanArguments_lookup->currentItemToEnumerate = 0;
     for(int i = 0; i < maxThreads; i++){
-        ///
-        /// nothing yet...
-        ///
+        Enumerator_lookup *Enumerator = new Enumerator_lookup(m_scanArguments_lookup, m_scanResults_lookup);
+        QThread *cThread = new QThread(this);
+        //...
+        if(ui->radioButton_hostnameToIp->isChecked())
+            Enumerator->Enumerate_lookup(cThread);
+        if(ui->radioButton_ipToHostname->isChecked())
+            Enumerator->Enumerate_reverseLookup(cThread);
+        //...
+        Enumerator->moveToThread(cThread);
+        //...
+        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs_lookup(QString)));
+        connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnded_lookup()));
+        connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
+        connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
+        connect(this, SIGNAL(stop_lookup()), Enumerator, SLOT(onStop()));
+        //...
+        cThread->start();
     }
 }
 
@@ -180,6 +210,7 @@ void Dns::onThreadEnded_lookup(){
         endedThreads_lookup = 0;
     }
 }
+
 /*******************************************************************************************
                                     Results Processing
 ********************************************************************************************/
@@ -187,9 +218,9 @@ void Dns::onThreadEnded_lookup(){
 void Dns::on_pushButton_clearOutput_dnsRecords_clicked(){
     if(ui->tabWidget_output_dnsRecords->currentIndex() == 0){
         ui->label_resultsCount_dnsRecords->clear();
-        resultsRootModel->clear();
-        root_item = resultsRootModel->invisibleRootItem();
-        m_scanResults_dnsRecords->root_item = root_item;
+        model_dnsRecords->clear();
+        rootItem_dnsRecords = model_dnsRecords->invisibleRootItem();
+        m_scanResults_dnsRecords->rootItem = rootItem_dnsRecords;
         m_scanResults_dnsRecords->resultsCount = 0;
     }else{
         ui->listWidget_logs_dnsRecords->clear();
@@ -198,18 +229,18 @@ void Dns::on_pushButton_clearOutput_dnsRecords_clicked(){
 void Dns::on_pushButton_clearResults_lookup_clicked(){
     if(ui->tabWidget_lookup->currentIndex() == 0){
         ui->label_resultsCount_lookup->clear();
-        // resultsRootModel->clear();
-        // root_item = resultsRootModel->invisibleRootItem();
-        // m_scanResults_dnsRecords->root_item = root_item;
-        // m_scanResults_loo->resultsCount = 0;
+        model_lookup->clear();
+        //...
+        QStringList headerLabels = {"HostName:", "IpAddress:"};
+        model_lookup->setHorizontalHeaderLabels(headerLabels);
+        //...
+        m_scanResults_lookup->hostnameCount = 0;
+        m_scanResults_lookup->ipAddressCount = 0;
     }else{
         ui->listWidget_logs_lookup->clear();
     }
 }
 
-/**************************************************************************************
- *                          Wordlist Processing
- *************************************************************************************/
 void Dns::on_toolButton_config_dnsRecords_clicked(){
     //BruteConfig *bruteconfig = new BruteConfig(this, ENUMNAME_ACTIVESUBDOMAINS);
     //bruteconfig->setAttribute( Qt::WA_DeleteOnClose, true );
@@ -219,6 +250,11 @@ void Dns::on_toolButton_config_lookup_clicked(){
 
 }
 
+/**************************************************************************************
+ *                          Wordlist Processing
+ *************************************************************************************/
+
+/************************************ Remove wordlist ************************************/
 void Dns::on_pushButton_remove_dnsRecords_clicked(){
     int wordlistToRemoveCount = ui->listWidget_wordlist_dnsRecords->selectedItems().count();
     if(wordlistToRemoveCount){
@@ -236,6 +272,7 @@ void Dns::on_pushButton_removeWordlist_lookup_clicked(){
     ui->label_wordlistCount_lookup->setNum(wordlistCount_lookup);
 }
 
+/************************************ Clear wordlist **************************************/
 void Dns::on_pushButton_clearWordlist_dnsRecords_clicked(){
     ui->listWidget_wordlist_dnsRecords->clear();
     ui->label_wordlistCount_dnsRecords->clear();
@@ -247,6 +284,7 @@ void Dns::on_pushButton_clearWordlist_lookup_clicked(){
     wordlistCount_lookup = 0;
 }
 
+/************************************ Load Wordlist ***************************************/
 void Dns::on_pushButton_load_dnsRecords_clicked(){
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
     if(!filename.isEmpty()){
@@ -282,6 +320,7 @@ void Dns::on_pushButton_loadWordlist_lookup_clicked(){
     }
 }
 
+/***************************** Add Item on Wordlist **************************************/
 void Dns::on_pushButton_add_dnsRecords_clicked(){
     if(ui->lineEdit_wordlist_dnsRecords->text() != EMPTY){
         ui->listWidget_wordlist_dnsRecords->addItem(ui->lineEdit_wordlist_dnsRecords->text());
@@ -299,13 +338,14 @@ void Dns::on_pushButton_addWordlist_lookup_clicked(){
         ui->listWidget_wordlist_lookup->addItem(ui->lineEdit_wordlist_lookup->text());
         ui->lineEdit_wordlist_lookup->clear();
         wordlistCount_lookup++;
-        ui->label_wordlistCount_dnsRecords->setNum(wordlistCount_lookup);
+        ui->label_wordlistCount_lookup->setNum(wordlistCount_lookup);
     }
 }
 void Dns::on_lineEdit_wordlist_lookup_returnPressed(){
     on_pushButton_addWordlist_lookup_clicked();
 }
 
+/********************************* Reload Enumerated Wordlists *********************************/
 void Dns::on_pushButton_reload_dnsRecords_clicked(){
     int count = ui->listWidget_wordlist_dnsRecords->count();
     for(int i = 0; i < count; i++){
@@ -350,6 +390,7 @@ void Dns::logs_lookup(QString log){
 /**********************************************************************************
  *                          Context Menu
  *********************************************************************************/
+/********************************* action Button context Menu ***********************************/
 void Dns::on_pushButton_action_dnsRecords_clicked(){
     // getting the position of the action button to place the context menu...
     QPoint pos = ui->pushButton_action_dnsRecords->mapToGlobal(QPoint(0,0));
@@ -363,6 +404,8 @@ void Dns::on_pushButton_action_lookup_clicked(){
     showContextMenu_ActionButton(QPoint(pos.x()+76, pos.y()));
 }
 
+
+/********************************* right click Context Menu ***************************************/
 void Dns::on_treeView_results_dnsRecords_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos)
     if(!ui->treeView_results_dnsRecords->selectionModel()->isSelected(ui->treeView_results_dnsRecords->currentIndex())){
@@ -437,8 +480,7 @@ void Dns::actionSendToSave_dnsRecords(){
 
 }
 
-void Dns::actionSendToSave_lookup()
-{
+void Dns::actionSendToSave_lookup(){
 
 }
 
@@ -446,8 +488,7 @@ void Dns::actionSendToMultiLevel_dnsRecords(){
 
 }
 
-void Dns::actionSendToMultiLevel_lookup()
-{
+void Dns::actionSendToMultiLevel_lookup(){
 
 }
 
@@ -455,8 +496,7 @@ void Dns::actionCollectAllRecords_dnsRecords(){
 
 }
 
-void Dns::actionCollectAllRecords_lookup()
-{
+void Dns::actionCollectAllRecords_lookup(){
 
 }
 
