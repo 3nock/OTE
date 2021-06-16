@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "core.h"
+#include "src/LevelTab/Level.h"
 #include "src/BruteTab/Brute.h"
 #include "src/OsintTab/Osint.h"
 #include "src/DnsTab/Dns.h"

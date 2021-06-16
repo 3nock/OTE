@@ -374,6 +374,24 @@ border-radius: 15px</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="label_resultsCount_dnsRecords">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>20</height>
+                        </size>
+                       </property>
                        <property name="styleSheet">
                         <string notr="true">background-color: rgb(210, 210, 210);</string>
                        </property>
@@ -779,7 +797,7 @@ background-color: rgb(230, 230, 172);
      </widget>
      <widget class="QWidget" name="tab_lookup">
       <attribute name="title">
-       <string>IP - HostName</string>
+       <string>Lookup</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_20">
        <property name="leftMargin">
@@ -1007,6 +1025,24 @@ border-radius: 15px</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="label_resultsCount_lookup">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>20</height>
+                        </size>
+                       </property>
                        <property name="styleSheet">
                         <string notr="true">background-color: rgb(214, 214, 214);</string>
                        </property>
@@ -1351,11 +1387,6 @@ background-color: rgb(230, 230, 172);
         </layout>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>Ping</string>
-      </attribute>
      </widget>
     </widget>
    </item>

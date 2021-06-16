@@ -26,8 +26,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        src/DnsTab/DnsEnumerator.cpp \
-        src/DnsTab/lib-dns.cpp \
+        src/LevelTab/LevelEnumerator.cpp \
+        src/LevelTab/lib-level.cpp \
+        src\DnsTab\DnsEnumerator.cpp \
+        src\DnsTab\lib-dns.cpp \
+        src\LevelTab\Level.cpp \
         src\BruteTab\lib-brute.cpp \
         src\OsintTab\lib-osint.cpp \
         src\BruteTab\BruteEnumerator.cpp \
@@ -46,8 +49,11 @@ SOURCES += \
         src\MainWindow.cpp
 
 HEADERS += \
-        src/DnsTab/DnsEnumerator.h \
-        src/DnsTab/lib-dns.h \
+        src/LevelTab/LevelEnumerator.h \
+        src/LevelTab/lib-level.h \
+        src\DnsTab\DnsEnumerator.h \
+        src\DnsTab\lib-dns.h \
+        src\LevelTab\Level.h \
         src\BruteTab\lib-brute.h \
         src\OsintTab\lib-osint.h \
         src\BruteTab\BruteEnumerator.h \
@@ -65,6 +71,7 @@ HEADERS += \
         src\MainWindow.h
 
 FORMS += \
+        src\LevelTab\Level.ui \
         src\BruteTab\Brute.ui \
         src\BruteTab\BruteConfigDialog.ui \
         src\BruteTab\WordlistDialog.ui \

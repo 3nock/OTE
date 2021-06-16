@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     ///
     /// creating and initiating the classes for the modules...
     ///
+    Level *level = new Level(this);
     Osint *osint = new Osint(this);
     Brute *brute = new Brute(this);
     Dns *dns = new Dns(this);
@@ -49,7 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     ui->tabWidget_mainTab->insertTab(0, osint, "Osint");
     ui->tabWidget_mainTab->insertTab(1, brute, "Brute");
     ui->tabWidget_mainTab->insertTab(3, dns, "Dns++");
-    ui->tabWidget_mainTab->insertTab(4, save, "Save");
+    ui->tabWidget_mainTab->insertTab(4, level, "Level");
+    ui->tabWidget_mainTab->insertTab(5, save, "Save");
 
     /* setting tab icons...
     ui->tabWidget_mainTab->setTabIcon(0, QIcon(":/img/images/O.png"));

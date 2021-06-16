@@ -53,7 +53,7 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
     /// setting the splitter to the middle...
     ///
     ui->splitter->setSizes(QList<int>()<<150<<1);
-    ui->splitter_2->setSizes(QList<int>()<<150<<1);
+    ui->splitter_2->setSizes(QList<int>()<<100<<1);
 }
 Dns::~Dns(){
     delete m_scanArguments_dnsRecords;
