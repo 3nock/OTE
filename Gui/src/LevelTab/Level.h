@@ -2,20 +2,12 @@
 #define LEVEL_H
 
 #include "lib-level.h"
+#include "LevelEnumerator.h"
 #include "src/BruteTab/WordlistDialog.h"
 
 namespace Ui {
     class Level;
 }
-
-/*
-struct scanArguments_level{
-    QListWidget* wordlist;
-    QStandardItemModel* model_subdomains;
-    QStandardItemModel* model_results;
-    QStandardItemModel* model_allSubdomains;
-}; struct scanArguments_level _scanArguments_level;
-*/
 
 class Level : public QDialog{
         Q_OBJECT
@@ -26,16 +18,30 @@ class Level : public QDialog{
     private:
         QStandardItemModel* m_model_subdomains;
         QStandardItemModel* m_model_results;
-        QStandardItemModel* m_model_allResults;
         //...
-        int wordlistCount = 0;
-        int subdomainsCount = 0;
+        ScanArguments_level* m_scanArguments;
+        //...
+        //int resultsCount = 0;
+        //int wordlistCount = 0;
+        //int subdomainsCount = 0;
+        //...
+        int activeThreads = 0;
+        int endedThreads = 0;
+        //...
+        int level = 0;
+        int doneLevels = 0;
+        int startOfNewLevel = 0;
 
     public:
         explicit Level(QWidget *parent = nullptr);
         ~Level();
+        //...
+        void startEnumeration();
 
     public slots:
+        void resolvedSubdomain(QString subdomain, QString ipAddress);
+        void logs(QString log);
+        void onThreadEnd();
         void onWordlistFilename(QString wordlistFilename);
 
     private slots:
@@ -55,6 +61,11 @@ class Level : public QDialog{
         void on_lineEdit_wordlist_returnPressed();
         void on_pushButton_addSubdomains_clicked();
         void on_lineEdit_subdomains_returnPressed();
+
+    signals:
+        void sendStatus(QString log);
+        void sendLog(QString log);
+        void stop();
 };
 
 #endif // LEVEL_H

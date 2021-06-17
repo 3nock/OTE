@@ -77,31 +77,31 @@ void Dns::on_pushButton_start_dnsRecords_clicked(){
     ///
     m_scanArguments_dnsRecords->choiceCount = 0;
     if(ui->checkBox_a_dnsRecords->isChecked()){
-        m_scanArguments_dnsRecords->RecordType_a = ui->checkBox_a_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->RecordType_a = true;
         m_scanArguments_dnsRecords->choiceCount++;
     }
     if(ui->checkBox_aaaa_dnsRecords->isChecked()){
-        m_scanArguments_dnsRecords->RecordType_aaaa = ui->checkBox_aaaa_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->RecordType_aaaa = true;
         m_scanArguments_dnsRecords->choiceCount++;
     }
     if(ui->checkBox_mx_dnsRecords->isChecked()){
-        m_scanArguments_dnsRecords->RecordType_mx = ui->checkBox_mx_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->RecordType_mx = true;
         m_scanArguments_dnsRecords->choiceCount++;
     }
     if(ui->checkBox_ns_dnsRecords->isChecked()){
-        m_scanArguments_dnsRecords->RecordType_ns = ui->checkBox_ns_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->RecordType_ns = true;
         m_scanArguments_dnsRecords->choiceCount++;
     }
     if(ui->checkBox_srv_dnsRecords->isChecked()){
-        m_scanArguments_dnsRecords->RecordType_srv = ui->checkBox_srv_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->RecordType_srv = true;
         m_scanArguments_dnsRecords->choiceCount++;
     }
     if(ui->checkBox_txt_dnsRecords->isChecked()){
-        m_scanArguments_dnsRecords->RecordType_txt = ui->checkBox_txt_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->RecordType_txt = true;
         m_scanArguments_dnsRecords->choiceCount++;
     }
     if(ui->checkBox_cname_dnsRecords->isChecked()){
-        m_scanArguments_dnsRecords->RecordType_cname = ui->checkBox_cname_dnsRecords->isChecked();
+        m_scanArguments_dnsRecords->RecordType_cname = true;
         m_scanArguments_dnsRecords->choiceCount++;
     }
     //...
