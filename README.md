@@ -1,2 +1,2 @@
-# sub3num
+# subsuite
 subdomain Enumeration Framework

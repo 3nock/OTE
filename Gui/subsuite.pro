@@ -9,7 +9,7 @@ QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = sub3num
+TARGET = subsuite
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -86,7 +86,7 @@ FORMS += \
 # including the python headers and libs...
 INCLUDEPATH += -I py/include
 
-LIBS += -L ../sub3num/Gui/py/libs -lpython38
+LIBS += -L ../subsuite/Gui/py/libs -lpython38
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
