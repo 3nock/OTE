@@ -50,7 +50,6 @@ class Dns : public QDialog{
         void on_pushButton_action_dnsRecords_clicked();
         void on_pushButton_start_dnsRecords_clicked();
         void on_pushButton_stop_dnsRecords_clicked();
-        void on_pushButton_reload_dnsRecords_clicked();
         void on_toolButton_config_dnsRecords_clicked();
         void on_lineEdit_wordlist_dnsRecords_returnPressed();
         void on_treeView_results_dnsRecords_customContextMenuRequested(const QPoint &pos);
@@ -64,7 +63,6 @@ class Dns : public QDialog{
         void on_pushButton_removeWordlist_lookup_clicked();
         void on_pushButton_loadWordlist_lookup_clicked();
         void on_pushButton_addWordlist_lookup_clicked();
-        void on_pushButton_reload_lookup_clicked();
         void on_toolButton_config_lookup_clicked();
         void on_lineEdit_wordlist_lookup_returnPressed();
         void on_tableView_results_lookup_customContextMenuRequested(const QPoint &pos);

@@ -73,8 +73,9 @@ void Enumerator_dnsRecords::lookup(){
     m_scanArguments->currentTargetToEnumerate++;
     if(m_currentTargetToEnumerate < m_scanArguments->targetWordlist->count()){
         //...
+        emit progressBarValue(m_currentTargetToEnumerate);
+        //...
         m_currentTarget = m_scanArguments->targetWordlist->item(m_currentTargetToEnumerate)->text();
-        m_scanArguments->targetWordlist->item(m_currentTargetToEnumerate)->setForeground(Qt::gray);
         if(m_scanArguments->RecordType_a){
             m_dns_a->setName(m_currentTarget);
             m_dns_a->lookup();
@@ -353,11 +354,9 @@ void Enumerator_lookup::reverseLookup(){
     m_scanArguments->currentItemToEnumerate++;
     if(m_currentItemToEnumerate < m_scanArguments->targetWordlist->count())
     {
-        ///
-        /// use non-blocking since only non-blocking are allowed in Qt for
-        /// reverse lookups
-        ///
-        m_scanArguments->targetWordlist->item(m_currentItemToEnumerate)->setForeground(Qt::gray);
+        //...
+        emit progressBarValue(m_currentItemToEnumerate);
+        //...
         QHostInfo::lookupHost(m_scanArguments->targetWordlist->item(m_currentItemToEnumerate)->text(), this, SLOT(onReverseLookupFinished(QHostInfo)));
     }
     else{

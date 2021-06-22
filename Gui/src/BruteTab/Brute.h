@@ -9,6 +9,17 @@
 #include "BruteEnumerator.h"
 
 
+// structures...
+struct status{
+    bool isRunning = false;
+    bool isStopped = false;
+    bool isPaused = false;
+    int numberOfScansDone = 0;
+    int numberOfDifferentDomains = 0;
+};
+typedef struct status status;
+
+//...
 namespace Ui {
     class Brute;
 }
@@ -82,7 +93,6 @@ class Brute : public QWidget{
         void on_pushButton_generate_subBrute_clicked();
         void on_pushButton_action_subBrute_clicked();
         void on_pushButton_stop_subBrute_clicked();
-        void on_pushButton_reloadEnumeratedWordlist_subBrute_clicked();
         void on_toolButton_config_subBrute_clicked();
         void on_toolButton_wordlist_subBrute_clicked();
         void on_lineEdit_wordlist_subBrute_returnPressed();
@@ -98,7 +108,6 @@ class Brute : public QWidget{
         void on_pushButton_load_tldBrute_clicked();
         void on_pushButton_stop_tldBrute_clicked();
         void on_pushButton_action_tldBrute_clicked();
-        void on_pushButton_reloadEnumeratedWordlist_tldBrute_clicked();
         void on_pushButton_generate_tldBrute_clicked();
         void on_toolButton_config_tldBrute_clicked();
         void on_toolButton_wordlist_tldBrute_clicked();
@@ -107,7 +116,6 @@ class Brute : public QWidget{
         void on_tableView_results_tldBrute_customContextMenuRequested(const QPoint &pos);
 
         // For activeSubdomains...
-        void on_pushButton_reloadEnumeratedWordlist_activeSubdomains_clicked();
         void on_pushButton_get_activeSubdomains_clicked();
         void on_pushButton_remove_activeSubdomains_clicked();
         void on_pushButton_clearWordlist_activeSubdomains_clicked();

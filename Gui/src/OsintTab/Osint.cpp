@@ -11,6 +11,8 @@ Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint),
 {
     ui->setupUi(this);
     //...
+    ui->progressBar->hide();
+    //...
     currentPath = QDir::currentPath();
     ui->pushButton_stop->setDisabled(true);
     ui->lineEdit_domain->setPlaceholderText("eg. example.com");

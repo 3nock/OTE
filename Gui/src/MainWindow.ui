@@ -35,9 +35,9 @@
    </size>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="spacing">
-     <number>0</number>
+     <number>3</number>
     </property>
     <property name="leftMargin">
      <number>0</number>
@@ -52,19 +52,27 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QTabWidget" name="tabWidget_mainTab">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <italic>false</italic>
-        <bold>true</bold>
-        <kerning>true</kerning>
-       </font>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
       </property>
-      <property name="styleSheet">
-       <string notr="true">/*QTabBar::tab:hover {
+      <item>
+       <widget class="QTabWidget" name="tabWidget_mainTab">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <italic>false</italic>
+          <bold>true</bold>
+          <kerning>true</kerning>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">/*QTabBar::tab:hover {
 background-color: rgb(212, 212, 159);
 }*/
+QTabWidget::tab-bar {
+    left: 10px; /* move to the right by 5px */
+}
 
 QTabBar::tab:hover{
 background-color: rgb(220, 220, 220);
@@ -73,8 +81,20 @@ background-color: rgb(220, 220, 220);
 QTabBar::tab:selected {
 color: rgb(141, 141, 106);
 }</string>
-      </property>
-     </widget>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(170, 170, 127);</string>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">

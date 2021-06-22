@@ -9,6 +9,28 @@
 
 */
 
+/*
+
+  add a function to first test if the domain you are testing is an active one
+  to reduce un-necessary lookups
+
+*/
+
+/*
+
+ create a notes tab that takes all notes for the related scans of the project...
+ each new domain enumerated and its x-stics are to be recorded...
+ use of wildcard in each phase...
+*/
+
+/*
+ *
+ * must be project base, on launch asks if you want a quick scan or launch a project base...
+ *
+ */
+
+// initiate everything in the constructor...
+
 /*************************** Class Constructor & Deconstructor *************************/
 Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
       //...
@@ -36,9 +58,9 @@ Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
     ui->splitter_2->setSizes(QList<int>()<<150<<1);
     ui->splitter_3->setSizes(QList<int>()<<150<<1);
     //...
-    ui->pushButton_reloadEnumeratedWordlist_subBrute->hide();
-    ui->pushButton_reloadEnumeratedWordlist_tldBrute->hide();
-    ui->pushButton_reloadEnumeratedWordlist_activeSubdomains->hide();
+    ui->progressBar_subBrute->hide();
+    ui->progressBar_tldBrute->hide();
+    ui->progressBar_activeSubdomains->hide();
     //...
     QStringList headerLabels = {"Subdomain Name:", "IpAddress"};
     model_subBrute->setHorizontalHeaderLabels(headerLabels);
@@ -74,9 +96,11 @@ void Brute::on_pushButton_start_subBrute_clicked(){
         QMessageBox::warning(this, TITLE_ERROR, "Please Enter the Target-Domain and/or Wordlist for Enumeration!");
         return;
     }
-    ui->pushButton_reloadEnumeratedWordlist_subBrute->show();
     ui->pushButton_start_subBrute->setDisabled(true);
     ui->pushButton_stop_subBrute->setEnabled(true);
+    ui->progressBar_subBrute->show();
+    //...
+    ui->progressBar_subBrute->setMaximum(ui->listWidget_wordlist_subBrute->count());
     //...
     scanArguments_subBrute->targetDomain = TargetNameFilter(ui->lineEdit_targetDomain_subBrute->text(), ENUMNAME_SUBBRUTE);
     scanArguments_subBrute->wordlist = ui->listWidget_wordlist_subBrute;
@@ -100,7 +124,9 @@ void Brute::on_pushButton_start_tldBrute_clicked(){
     }
     ui->pushButton_start_tldBrute->setDisabled(true);
     ui->pushButton_stop_tldBrute->setEnabled(true);
-    ui->pushButton_reloadEnumeratedWordlist_tldBrute->show();
+    ui->progressBar_tldBrute->show();
+    //...
+    ui->progressBar_tldBrute->setMaximum(ui->listWidget_wordlist_tldBrute->count());
     //...
     scanArguments_tldBrute->targetDomain = TargetNameFilter(ui->lineEdit_targetDomain_tldBrute->text(), ENUMNAME_TLDBRUTE);
     scanArguments_tldBrute->wordlist = ui->listWidget_wordlist_tldBrute;
@@ -118,9 +144,11 @@ void Brute::on_pushButton_start_activeSubdomains_clicked(){
         QMessageBox::warning(this, TITLE_ERROR, "Please Enter the subdomains Wordlist for Enumeration!");
         return;
     }
-    ui->pushButton_reloadEnumeratedWordlist_activeSubdomains->show();
     ui->pushButton_start_activeSubdomains->setDisabled(true);
     ui->pushButton_stop_activeSubdomains->setEnabled(true);
+    ui->progressBar_activeSubdomains->show();
+    //...
+    ui->progressBar_activeSubdomains->setMaximum(ui->listWidget_wordlist_activeSubdomains->count());
     //...
     scanArguments_activeSubdomains->wordlist = ui->listWidget_wordlist_activeSubdomains;
     //...
@@ -171,7 +199,8 @@ void Brute::startEnumeration_subBrute(){
         Enumerator->moveToThread(cThread);
         //...
         connect(Enumerator, SIGNAL(resolvedSubdomain(QString, QString)), this, SLOT(resolvedSubdomain_subBrute(QString, QString)));
-        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(log_subBrute(QString)));
+        connect(Enumerator, SIGNAL(progressBarValue(int)), ui->progressBar_subBrute, SLOT(setValue(int)));
+        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs_subBrute(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd_subBrute()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
@@ -197,7 +226,8 @@ void Brute::startEnumeration_tldBrute(){
         Enumerator->moveToThread(cThread);
         //...
         connect(Enumerator, SIGNAL(resolvedSubdomain(QString, QString)), this, SLOT(resolvedSubdomain_tldBrute(QString, QString)));
-        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(log_tldBrute(QString)));
+        connect(Enumerator, SIGNAL(progressBarValue(int)), ui->progressBar_tldBrute, SLOT(setValue(int)));
+        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs_tldBrute(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd_tldBrute()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
@@ -223,7 +253,8 @@ void Brute::startEnumeration_activeSubdomains(){
         Enumerator->moveToThread(cThread);
         //...
         connect(Enumerator, SIGNAL(resolvedSubdomain(QString, QString)), this, SLOT(resolvedSubdomain_activeSubdomains(QString, Qstring)));
-        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(log_activeSubdomains(QString)));
+        connect(Enumerator, SIGNAL(progressBarValue(int)), ui->progressBar_activeSubdomains, SLOT(setValue(int)));
+        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs_activeSubdomains(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd_activeSubdomains()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
@@ -286,26 +317,6 @@ void Brute::onThreadEnd_activeSubdomains(){
         sendStatus("[*] Enumeration by activeSubdomains Complete!");
         logs_activeSubdomains("[END] Active Subdomains Enumeration Complete!\n");
     }
-}
-
-/********* Restoring the default color of the wordlist items after enumeration *************/
-void Brute::on_pushButton_reloadEnumeratedWordlist_subBrute_clicked(){
-    for(int i = 0; i < ui->listWidget_wordlist_subBrute->count(); i++){
-        ui->listWidget_wordlist_subBrute->item(i)->setForeground(Qt::black);
-    }
-    ui->pushButton_reloadEnumeratedWordlist_subBrute->hide();
-}
-void Brute::on_pushButton_reloadEnumeratedWordlist_tldBrute_clicked(){
-    for(int i = 0; i < ui->listWidget_wordlist_tldBrute->count(); i++){
-        ui->listWidget_wordlist_tldBrute->item(i)->setForeground(Qt::black);
-    }
-    ui->pushButton_reloadEnumeratedWordlist_tldBrute->hide();
-}
-void Brute::on_pushButton_reloadEnumeratedWordlist_activeSubdomains_clicked(){
-    for(int i = 0; i < ui->listWidget_wordlist_activeSubdomains->count(); i++){
-        ui->listWidget_wordlist_activeSubdomains->item(i)->setForeground(Qt::black);
-    }
-    ui->pushButton_reloadEnumeratedWordlist_activeSubdomains->hide();
 }
 
 /******************************** Scan Config Dialog ***************************************/

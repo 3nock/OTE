@@ -55,6 +55,7 @@ class Enumerator_dnsRecords: public QObject{
         //void anyLookupFinished();
 
     signals:
+        void progressBarValue(int value);
         void quitThread();
         void scanLog(QString log);
         void done();
@@ -91,6 +92,7 @@ class Enumerator_lookup : public QObject{
     signals:
         void performAnotherReverseLookup();
         //...
+        void progressBarValue(int value);
         void scanLog(QString log);
         void quitThread();
 };

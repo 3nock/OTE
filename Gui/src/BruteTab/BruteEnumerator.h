@@ -30,6 +30,7 @@ class Enumerator_subBrute : public QObject{
     signals:
         void performAnotherLookup();
         //...
+        void progressBarValue(int value);
         void resolvedSubdomain(QString subdomain, QString ipAddress);
         void scanLog(QString log);
         void quitThread();
@@ -63,6 +64,7 @@ class Enumerator_tldBrute : public QObject{
     signals:
         void performAnotherLookup();
         //...
+        void progressBarValue(int value);
         void resolvedSubdomain(QString subdomain, QString ipAddress);
         void scanLog(QString log);
         void quitThread();
@@ -96,6 +98,7 @@ class Enumerator_activeSubdomains : public QObject{
     signals:
         void performAnotherLookup();
         //...
+        void progressBarValue(int value);
         void resolvedSubdomain(QString subdomain, QString ipAddress);
         void scanLog(QString log);
         void quitThread();

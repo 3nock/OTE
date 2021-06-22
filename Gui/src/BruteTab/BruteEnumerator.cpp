@@ -73,15 +73,18 @@ void Enumerator_subBrute::onLookupFinished(){
 }
 
 void Enumerator_subBrute::lookup(){
+    //...
     m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
     m_scanArguments->currentItemToEnumerate++;
+    //...
     if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
+        //...
         m_dns->setName(nameProcessor_subBrute(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text(), m_scanArguments->targetDomain));
-        //...
-        m_scanArguments->wordlist->item(m_currentItemToEnumerate)->setForeground(Qt::gray);
-        //...
+        progressBarValue(m_currentItemToEnumerate);
         m_dns->lookup();
-    }else{
+        //...
+    }
+    else{
         ///
         /// at the end of the wordlist, signal the thread to Quit...
         ///
@@ -153,13 +156,8 @@ void Enumerator_tldBrute::lookup(){
     m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
     m_scanArguments->currentItemToEnumerate++;
     if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
-        // the function appends the wordlist item to the targetDomain name..
+        progressBarValue(m_currentItemToEnumerate);
         m_dns->setName(nameProcessor_tldBrute(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text(), m_scanArguments->targetDomain));
-        ///
-        /// set the color of the enumerated item on QListWidget to grey to mark it
-        /// as already Enumerated...
-        ///
-        m_scanArguments->wordlist->item(m_currentItemToEnumerate)->setForeground(Qt::gray);
         m_dns->lookup();
     }
     else{
@@ -233,14 +231,11 @@ void Enumerator_activeSubdomains::lookup(){
     m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
     m_scanArguments->currentItemToEnumerate++;
     if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
-        // the function appends the wordlist item to the targetDomain name..
+        //...
+        progressBarValue(m_currentItemToEnumerate);
         m_dns->setName(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text());
-        ///
-        /// set the color of the enumerated item on QListWidget to grey to mark it
-        /// as already Enumerated...
-        ///
-        m_scanArguments->wordlist->item(m_currentItemToEnumerate)->setForeground(Qt::gray);
         m_dns->lookup();
+        //...
     }
     else{
         ///

@@ -2,6 +2,7 @@
 #define LIBBRUTE_H
 
 #include "src/core.h"
+#include <QProgressBar>
 
 //macros...
 #define WORDLIST_SPECIAL_SUBBRUTE "/wordlists/special_subBrute/names.txt"

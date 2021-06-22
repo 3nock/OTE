@@ -30,11 +30,17 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
     //...
     ui->lineEdit_wordlist_dnsRecords->setPlaceholderText("Enter Target domains/subdomains...");
     ui->lineEdit_wordlist_lookup->setPlaceholderText("Enter Host (Ip/HostName) For Lookup...");
-    ui->pushButton_reload_dnsRecords->hide();
+    //...
+    /*
+    ui->pro->hide();
     ui->pushButton_reload_lookup->hide();
+    */
     //...
     ui->pushButton_stop_dnsRecords->setDisabled(true);
     ui->pushButton_stop_lookup->setDisabled(true);
+    //...
+    ui->progressBar_lookup->hide();
+    ui->progressBar_dnsRecords->hide();
     //...
     m_scanArguments_dnsRecords->targetWordlist = ui->listWidget_wordlist_dnsRecords;
     m_scanArguments_lookup->targetWordlist = ui->listWidget_wordlist_lookup;
@@ -112,7 +118,9 @@ void Dns::on_pushButton_start_dnsRecords_clicked(){
     //...
     ui->pushButton_start_dnsRecords->setDisabled(true);
     ui->pushButton_stop_dnsRecords->setEnabled(true);
-    ui->pushButton_reload_dnsRecords->show();
+    ui->progressBar_dnsRecords->show();
+    //...
+    ui->progressBar_dnsRecords->setMaximum(ui->listWidget_wordlist_dnsRecords->count());
     //...
     startEnumeration_dnsRecords();
 }
@@ -130,7 +138,9 @@ void Dns::on_pushButton_start_lookup_clicked(){
     ///
     ui->pushButton_start_lookup->setDisabled(true);
     ui->pushButton_stop_lookup->setEnabled(true);
-    ui->pushButton_reload_lookup->show();
+    ui->progressBar_lookup->show();
+    //...
+    ui->progressBar_lookup->setMaximum(ui->listWidget_wordlist_lookup->count());
     //...
     startEnumeration_lookup();
 }
@@ -155,6 +165,7 @@ void Dns::startEnumeration_dnsRecords(){
         Enumerator->moveToThread(cThread);
         //...
         connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs_dnsRecords(QString)));
+        connect(Enumerator, SIGNAL(progressBarValue(int)), ui->progressBar_dnsRecords, SLOT(setValue(int)));
         connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnded_dnsRecords()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
@@ -185,6 +196,7 @@ void Dns::startEnumeration_lookup(){
         Enumerator->moveToThread(cThread);
         //...
         connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs_lookup(QString)));
+        connect(Enumerator, SIGNAL(progressBarValue(int)), ui->progressBar_lookup, SLOT(setValue(int)));
         connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnded_lookup()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
@@ -343,22 +355,6 @@ void Dns::on_pushButton_addWordlist_lookup_clicked(){
 }
 void Dns::on_lineEdit_wordlist_lookup_returnPressed(){
     on_pushButton_addWordlist_lookup_clicked();
-}
-
-/********************************* Reload Enumerated Wordlists *********************************/
-void Dns::on_pushButton_reload_dnsRecords_clicked(){
-    int count = ui->listWidget_wordlist_dnsRecords->count();
-    for(int i = 0; i < count; i++){
-        ui->listWidget_wordlist_dnsRecords->item(i)->setForeground(Qt::black);
-    }
-    ui->pushButton_reload_dnsRecords->hide();
-}
-void Dns::on_pushButton_reload_lookup_clicked(){
-    int count = ui->listWidget_wordlist_lookup->count();
-    for(int i = 0; i < count; i++){
-        ui->listWidget_wordlist_lookup->item(i)->setForeground(Qt::black);
-    }
-    ui->pushButton_reload_lookup->hide();
 }
 
 /************************************ ALL LOGS ***********************************/
