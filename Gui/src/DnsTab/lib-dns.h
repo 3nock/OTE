@@ -14,7 +14,6 @@ struct scanArguments_dnsRecords{
     bool RecordType_ns = false;
     bool RecordType_txt = false;
     bool RecordType_cname = false;
-    bool RecordType_srv = false;
 }; typedef struct scanArguments_dnsRecords scanArguments_dnsRecords;
 
 struct scanArguments_lookup{

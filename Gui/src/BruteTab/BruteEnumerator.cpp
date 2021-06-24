@@ -4,7 +4,7 @@
  *                              BRUTE-ENUMERATOR
  ********************************************************************************************/
 
-Enumerator_subBrute::Enumerator_subBrute(ScanArguments_Brute *scanArguments)
+BruteEnumerator_subBrute::BruteEnumerator_subBrute(ScanArguments_Brute *scanArguments)
     : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this))
 {
     m_dns->setNameserver(RandomNameserver(m_scanArguments->useCustomNameServers));
@@ -13,16 +13,16 @@ Enumerator_subBrute::Enumerator_subBrute(ScanArguments_Brute *scanArguments)
     connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
     connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
 }
-Enumerator_subBrute::~Enumerator_subBrute(){
+BruteEnumerator_subBrute::~BruteEnumerator_subBrute(){
     delete m_dns;
 }
 
-void Enumerator_subBrute::Enumerate(QThread *cThread){
+void BruteEnumerator_subBrute::Enumerate(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void Enumerator_subBrute::onLookupFinished(){
+void BruteEnumerator_subBrute::onLookupFinished(){
     ///
     /// check the results of the lookup if no error occurred emit the results
     /// if error occurred emit appropriate response...
@@ -72,7 +72,7 @@ void Enumerator_subBrute::onLookupFinished(){
     emit performAnotherLookup();
 }
 
-void Enumerator_subBrute::lookup(){
+void BruteEnumerator_subBrute::lookup(){
     //...
     m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
     m_scanArguments->currentItemToEnumerate++;
@@ -92,7 +92,7 @@ void Enumerator_subBrute::lookup(){
     }
 }
 
-void Enumerator_subBrute::onStop(){
+void BruteEnumerator_subBrute::onStop(){
     ///
     /// quiting all running threads upon receiving stop signal...
     ///
@@ -102,7 +102,7 @@ void Enumerator_subBrute::onStop(){
 /******************************************************************************************************
  *                                      TLD-BRUTE ENUMERATOR
  ******************************************************************************************************/
-Enumerator_tldBrute::Enumerator_tldBrute(ScanArguments_Brute *scanArguments)
+BruteEnumerator_tldBrute::BruteEnumerator_tldBrute(ScanArguments_Brute *scanArguments)
     : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this))
 {
     m_dns->setType(scanArguments->dnsRecordType);
@@ -111,16 +111,16 @@ Enumerator_tldBrute::Enumerator_tldBrute(ScanArguments_Brute *scanArguments)
     connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
     connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
 }
-Enumerator_tldBrute::~Enumerator_tldBrute(){
+BruteEnumerator_tldBrute::~BruteEnumerator_tldBrute(){
     delete m_dns;
 }
 
-void Enumerator_tldBrute::Enumerate(QThread *cThread){
+void BruteEnumerator_tldBrute::Enumerate(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void Enumerator_tldBrute::onLookupFinished(){
+void BruteEnumerator_tldBrute::onLookupFinished(){
     ///
     /// check the results of the lookup if no error occurred emit the results
     /// if error occurred emit appropriate response...
@@ -152,7 +152,7 @@ void Enumerator_tldBrute::onLookupFinished(){
     emit performAnotherLookup();
 }
 
-void Enumerator_tldBrute::lookup(){
+void BruteEnumerator_tldBrute::lookup(){
     m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
     m_scanArguments->currentItemToEnumerate++;
     if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
@@ -168,7 +168,7 @@ void Enumerator_tldBrute::lookup(){
     }
 }
 
-void Enumerator_tldBrute::onStop(){
+void BruteEnumerator_tldBrute::onStop(){
     emit quitThread();
 }
 
@@ -178,7 +178,7 @@ void Enumerator_tldBrute::onStop(){
  *                                      CHECK WILDCARDS
  ******************************************************************************************************/
 
-Enumerator_Wildcards::Enumerator_Wildcards(ScanArguments_Brute *scanArguments)
+BruteEnumerator_Wildcards::BruteEnumerator_Wildcards(ScanArguments_Brute *scanArguments)
     : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this))
 {
     m_dns->setType(m_scanArguments->dnsRecordType);
@@ -186,16 +186,16 @@ Enumerator_Wildcards::Enumerator_Wildcards(ScanArguments_Brute *scanArguments)
     //...
     connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
 }
-Enumerator_Wildcards::~Enumerator_Wildcards(){
+BruteEnumerator_Wildcards::~BruteEnumerator_Wildcards(){
     delete m_dns;
 }
 
-void Enumerator_Wildcards::Enumerate(QThread *cThread){
+void BruteEnumerator_Wildcards::Enumerate(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void Enumerator_Wildcards::onLookupFinished(){
+void BruteEnumerator_Wildcards::onLookupFinished(){
     switch(m_dns->error()){
     //...
     case QDnsLookup::NoError:
@@ -213,7 +213,7 @@ void Enumerator_Wildcards::onLookupFinished(){
     emit quitThread();
 }
 
-void Enumerator_Wildcards::lookup(){
+void BruteEnumerator_Wildcards::lookup(){
     ///
     /// check for random non-existent subdomains name
     /// TODO: make it more advanced...

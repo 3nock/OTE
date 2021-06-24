@@ -10,7 +10,6 @@ Active::Active(QWidget *parent) : QDialog(parent), ui(new Ui::Active),
     ui->lineEdit->setPlaceholderText(("Enter a new item..."));
     ui->pushButton_stop->setDisabled(true);
     ui->splitter_3->setSizes(QList<int>()<<150<<1);
-    ui->progressBar->hide();
 
     QStringList headerLabels = {"Subdomain Name:", "IpAddress"};
     model->setHorizontalHeaderLabels(headerLabels);

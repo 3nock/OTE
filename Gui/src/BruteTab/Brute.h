@@ -31,28 +31,19 @@ class Brute : public QWidget{
 
     private:
         void checkWildcards();
-        void showContextMenu_actionButton(const int enumName, const QPoint& position);
-        void showContextMenu_rightClick(const int enumName);
         //...
-        QStandardItemModel *model_subBrute;
-        QStandardItemModel *model_tldBrute;
+        QStandardItemModel *m_model;
         //...
-        QStandardItem *results_subBrute;
-        QStandardItem *results_tldBrute;
+        QStandardItem *m_results;
         //...
-        ScanArguments_Brute *scanArguments_subBrute;
-        ScanArguments_Brute *scanArguments_tldBrute;
+        ScanArguments_Brute *m_scanArguments;
         //...
-        int subdomainCount_tldBrute = 0;
-        int subdomainCount_subBrute = 0;
+        int subdomainCount = 0;
         //...
-        int wordlistCount_tldBrute= 0;
-        int wordlistCount_subBrute = 0;
+        int wordlistCount = 0;
         //...
-        int activeThreads_subBrute = 0;
-        int activeThreads_tldBrute = 0;
-        int endedThreads_subBrute = 0;
-        int endedThreads_tldBrute = 0;
+        int activeThreads = 0;
+        int endedThreads = 0;
         //...
         QString currentPath;
 
@@ -64,8 +55,7 @@ class Brute : public QWidget{
         void onSendResultsToSave();
 
     signals:
-        void stop_subBrute();
-        void stop_tldBrute();
+        void stop();
         //...
         void sendStatus(QString status);
         void sendLog(QString log);
@@ -75,66 +65,40 @@ class Brute : public QWidget{
 
     private slots:
         // for subBrute...
-        void on_pushButton_add_subBrute_clicked();
-        void on_pushButton_clearWordlist_subBrute_clicked();
-        void on_pushButton_remove_subBrute_clicked();
-        void on_pushButton_clearResults_subBrute_clicked();
-        void on_pushButton_start_subBrute_clicked();
-        void on_pushButton_load_subBrute_clicked();
-        void on_pushButton_generate_subBrute_clicked();
-        void on_pushButton_action_subBrute_clicked();
-        void on_pushButton_stop_subBrute_clicked();
-        void on_toolButton_config_subBrute_clicked();
-        void on_toolButton_wordlist_subBrute_clicked();
-        void on_lineEdit_wordlist_subBrute_returnPressed();
-        void on_lineEdit_targetDomain_subBrute_returnPressed();
-        void on_tableView_results_subBrute_customContextMenuRequested(const QPoint &pos);
-
-        //  For tldBrute...
-        void on_pushButton_add_tldBrute_clicked();
-        void on_pushButton_remove_tldBrute_clicked();
-        void on_pushButton_clearWordlist_tldBrute_clicked();
-        void on_pushButton_clearResults_tldBrute_clicked();
-        void on_pushButton_start_tldBrute_clicked();
-        void on_pushButton_load_tldBrute_clicked();
-        void on_pushButton_stop_tldBrute_clicked();
-        void on_pushButton_action_tldBrute_clicked();
-        void on_pushButton_generate_tldBrute_clicked();
-        void on_toolButton_config_tldBrute_clicked();
-        void on_toolButton_wordlist_tldBrute_clicked();
-        void on_lineEdit_manualWordlist_tldBrute_returnPressed();
-        void on_lineEdit_targetDomain_tldBrute_returnPressed();
-        void on_tableView_results_tldBrute_customContextMenuRequested(const QPoint &pos);
+        void on_pushButton_add_clicked();
+        void on_pushButton_clearWordlist_clicked();
+        void on_pushButton_remove_clicked();
+        void on_pushButton_clearResults_clicked();
+        void on_pushButton_start_clicked();
+        void on_pushButton_load_clicked();
+        void on_pushButton_generate_clicked();
+        void on_pushButton_action_clicked();
+        void on_pushButton_stop_clicked();
+        void on_toolButton_config_clicked();
+        void on_toolButton_wordlist_clicked();
+        void on_lineEdit_wordlist_returnPressed();
+        void on_lineEdit_targetDomain_returnPressed();
+        void on_tableView_results_customContextMenuRequested(const QPoint &pos);
 
         // self implemented slots...
-        void actionSendToMultiLevel_subBrute();
-        void actionSendToMultiLevel_tldBrute();
-        void actionSendToSave_subBrute();
-        void actionSendToSave_tldBrute();
-        void actionSendToDnsRecords_subBrute();
-        void actionSendToDnsRecords_tldBrute();
+        void actionSendToMultiLevel();
+        void actionSendToSave();
+        void actionSendToDnsRecords();
         //...
-        void cursorSendToSave_subBrute();
-        void cursorSendToSave_tldBrute();
-        void cursorSendToDnsRecords_subBrute();
-        void cursorSendToDnsRecords_tldBrute();
-        void cursorOpenInBrowser_subBrute();
-        void cursorOpenInBrowser_tldBrute();
+        void cursorSendToSave();
+        void cursorSendToDnsRecords();
+        void cursorOpenInBrowser();
         //...
         void startEnumeration_subBrute();
         void startEnumeration_tldBrute();
         //...
-        void resolvedSubdomain_subBrute(QString subdomain, QString ipAddress);
-        void resolvedSubdomain_tldBrute(QString subdomain, QString ipAddress);
+        void resolvedSubdomain(QString subdomain, QString ipAddress);
         //...
-        void onThreadEnd_subBrute();
-        void onThreadEnd_tldBrute();
+        void onThreadEnd();
         //...
-        void onWordlistFilename_subBrute(QString);
-        void onWordlistFilename_tldBrute(QString);
+        void onWordlistFilename(QString);
         //...
-        void logs_subBrute(QString log);
-        void logs_tldBrute(QString log);
+        void logs(QString log);
 };
 
 #endif // BRUTE_H

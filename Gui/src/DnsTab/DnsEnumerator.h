@@ -8,7 +8,7 @@
                                DNS-RECORDS ENUMERATOR
 ************************************************************************************/
 
-class Enumerator_dnsRecords: public QObject{
+class DnsRecordsEnumerator: public QObject{
     Q_OBJECT
 
     private:
@@ -24,7 +24,6 @@ class Enumerator_dnsRecords: public QObject{
         QDnsLookup *m_dns_mx;
         QDnsLookup *m_dns_ns;
         QDnsLookup *m_dns_txt;
-        QDnsLookup *m_dns_srv;
         QDnsLookup *m_dns_cname;
         //...
         int m_currentTargetToEnumerate = 0;
@@ -34,8 +33,8 @@ class Enumerator_dnsRecords: public QObject{
         QString m_currentTarget;
 
     public:
-        Enumerator_dnsRecords(scanArguments_dnsRecords *scanArguments, scanResults_dnsRecords *scanResults);
-        ~Enumerator_dnsRecords();
+        DnsRecordsEnumerator(scanArguments_dnsRecords *scanArguments, scanResults_dnsRecords *scanResults);
+        ~DnsRecordsEnumerator();
         //...
         void Enumerate(QThread *cThread);
 
@@ -51,7 +50,6 @@ class Enumerator_dnsRecords: public QObject{
         void cnameLookupFinished();
         void nsLookupFinished();
         void txtLookupFinished();
-        void srvLookupFinished();
         //void anyLookupFinished();
 
     signals:
@@ -62,39 +60,4 @@ class Enumerator_dnsRecords: public QObject{
         void doLookup();
 };
 
-/********************************************************************************
-                            LOOKUPS ENUMERATOR
-*********************************************************************************/
-
-class Enumerator_lookup : public QObject{
-    Q_OBJECT
-
-    private:
-        int m_currentItemToEnumerate = 0;
-        scanArguments_lookup* m_scanArguments;
-        scanResults_lookup* m_scanResults;
-
-    public:
-        Enumerator_lookup(scanArguments_lookup *scanArguments, scanResults_lookup *scanResults);
-        ~Enumerator_lookup();
-        //...
-        void Enumerate_lookup(QThread *cThread);
-        void Enumerate_reverseLookup(QThread *cThread);
-
-    public slots:
-        void onStop();
-
-    private slots:
-        void hostnameLookup();
-        void reverseLookup();
-        void onReverseLookupFinished(QHostInfo info);
-
-    signals:
-        void performAnotherReverseLookup();
-        //...
-        void progressBarValue(int value);
-        void scanLog(QString log);
-        void quitThread();
-};
-
-#endif // DNSENUMERATOR_H
+#endif // DNSENUMMERATOR_H

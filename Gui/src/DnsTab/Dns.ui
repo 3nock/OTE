@@ -7,17 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>869</width>
-    <height>427</height>
+    <height>473</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_12">
+  <layout class="QVBoxLayout" name="verticalLayout_5">
    <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
     <number>0</number>
    </property>
    <property name="rightMargin">
@@ -27,559 +24,432 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="toolTipDuration">
-      <number>2</number>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(235, 235, 235);
-</string>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="tab_dnsRecords">
-      <attribute name="title">
-       <string>Records</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <property name="leftMargin">
-        <number>0</number>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="topMargin">
-        <number>5</number>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
-       <property name="rightMargin">
-        <number>0</number>
+       <property name="text">
+        <string>Checking for various Dns Records Tpes and Information</string>
        </property>
-       <property name="bottomMargin">
-        <number>0</number>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(170, 170, 127);</string>
        </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Checking for various Dns Records Tpes and Information</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="Line" name="line_7">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(170, 170, 127);</string>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <widget class="QFrame" name="frame">
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Plain</enum>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <property name="leftMargin">
-               <number>7</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>7</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QCheckBox" name="checkBox_a_dnsRecords">
-                <property name="text">
-                 <string>A</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_aaaa_dnsRecords">
-                <property name="text">
-                 <string>AAAA</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_mx_dnsRecords">
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>MX</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_ns_dnsRecords">
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>NS</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_cname_dnsRecords">
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>CNAME</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_txt_dnsRecords">
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>TXT</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_srv_dnsRecords">
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>SRV</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="toolButton">
-             <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
+        <widget class="QPushButton" name="pushButton_start">
+         <property name="styleSheet">
+          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+         </property>
+         <property name="text">
+          <string>Start</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_stop">
+         <property name="styleSheet">
+          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+         </property>
+         <property name="text">
+          <string>Stop</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_7">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(170, 170, 127);</string>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QFrame" name="frame">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(210, 210, 210);</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="radioButton_3">
+          <property name="text">
+           <string>Records</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton">
+          <property name="text">
+           <string>SRV Records</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_2">
+          <property name="text">
+           <string>PTR Records</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="toolButton">
+          <property name="styleSheet">
+           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
 border-style: solid;
 border-color: black;
 border-width: 1px;
 border-radius: 15px</string>
-             </property>
-             <property name="text">
-              <string>Config...</string>
-             </property>
-            </widget>
-           </item>
+          </property>
+          <property name="text">
+           <string>Config...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>247</width>
+            <height>13</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QFrame" name="">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>27</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <property name="topMargin">
+            <number>1</number>
+           </property>
+           <property name="bottomMargin">
+            <number>1</number>
+           </property>
            <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
+            <widget class="QCheckBox" name="checkBox_A">
+             <property name="maximumSize">
               <size>
-               <width>40</width>
-               <height>13</height>
+               <width>16777215</width>
+               <height>15</height>
               </size>
              </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_start_dnsRecords">
-             <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-             </property>
              <property name="text">
-              <string>Start</string>
+              <string>A</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_stop_dnsRecords">
-             <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+            <widget class="QCheckBox" name="checkBox_AAAA">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>15</height>
+              </size>
              </property>
              <property name="text">
-              <string>Stop</string>
+              <string>AAAA</string>
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="Line" name="line">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(170, 170, 127);</string>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QSplitter" name="splitter">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_9">
-             <property name="spacing">
-              <number>2</number>
+            <widget class="QCheckBox" name="checkBox_MX">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>15</height>
+              </size>
              </property>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_7">
-               <item>
-                <widget class="QPushButton" name="pushButton_clearOutput_dnsRecords">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>23</height>
-                  </size>
-                 </property>
-                 <property name="mouseTracking">
-                  <bool>false</bool>
-                 </property>
-                 <property name="focusPolicy">
-                  <enum>Qt::StrongFocus</enum>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                 </property>
-                 <property name="text">
-                  <string>Clear Results</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButton_action_dnsRecords">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>75</width>
-                   <height>23</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                 </property>
-                 <property name="text">
-                  <string>Action &gt;</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QTabWidget" name="tabWidget_output_dnsRecords">
-               <property name="currentIndex">
-                <number>0</number>
-               </property>
-               <widget class="QWidget" name="tab_results">
-                <attribute name="title">
-                 <string>Results</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_7">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>3</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_6">
-                   <item>
-                    <widget class="QLabel" name="label_5">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Enumerated Info:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_resultsCount_dnsRecords">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">background-color: rgb(210, 210, 210);</string>
-                     </property>
-                     <property name="frameShape">
-                      <enum>QFrame::Box</enum>
-                     </property>
-                     <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
-                     </property>
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <widget class="QTreeView" name="treeView_results_dnsRecords">
-                   <property name="contextMenuPolicy">
-                    <enum>Qt::CustomContextMenu</enum>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QWidget#treeView_results_dnsRecords{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px;
-}
-QHeaderView::section {
-background-color: rgb(28, 28, 28);
-color: rgb(215, 215, 215);
-}</string>
-                   </property>
-                   <property name="editTriggers">
-                    <set>QAbstractItemView::DoubleClicked</set>
-                   </property>
-                   <property name="showDropIndicator" stdset="0">
-                    <bool>false</bool>
-                   </property>
-                   <property name="selectionMode">
-                    <enum>QAbstractItemView::ExtendedSelection</enum>
-                   </property>
-                   <property name="selectionBehavior">
-                    <enum>QAbstractItemView::SelectItems</enum>
-                   </property>
-                   <property name="indentation">
-                    <number>15</number>
-                   </property>
-                   <property name="uniformRowHeights">
-                    <bool>true</bool>
-                   </property>
-                   <attribute name="headerVisible">
-                    <bool>false</bool>
-                   </attribute>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QWidget" name="tab_logs">
-                <attribute name="title">
-                 <string>Logs</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_8">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QListWidget" name="listWidget_logs_dnsRecords">
-                   <property name="font">
-                    <font>
-                     <family>MS Shell Dlg 2</family>
-                     <pointsize>8</pointsize>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QWidget#listWidget_logs_dnsRecords{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px;
-}
-QListWidget::item:selected {
-background-color:  rgb(199, 199, 149);
-color: black;}
-QListWidget::item:hover{
-background-color: rgb(230, 230, 172);
-}</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </widget>
-             </item>
-             <item>
-              <widget class="QProgressBar" name="progressBar_dnsRecords">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>20</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QProgressBar::chunk {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
-}
-
-QProgressBar {
-    border: 1px solid black;
-    /*border-radius: 5px;*/
-    text-align: center;
-}</string>
-               </property>
-               <property name="value">
-                <number>0</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>MX</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <widget class="Line" name="line_5">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+            <widget class="QCheckBox" name="checkBox_NS">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>NS</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_CNAME">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>CNAME</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_TXT">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>TXT</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(170, 170, 127);</string>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QWidget" name="layoutWidget_3">
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="Line" name="line_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+            <widget class="QPushButton" name="pushButton_clearResults">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="mouseTracking">
+              <bool>false</bool>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+             </property>
+             <property name="text">
+              <string>Clear Results</string>
              </property>
             </widget>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_3">
+            <widget class="QPushButton" name="pushButton_action">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>75</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+             </property>
+             <property name="text">
+              <string>Action &gt;</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTabWidget" name="tabWidget_results">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="tab_results">
+            <attribute name="title">
+             <string>Results</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>3</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <item>
-              <widget class="QLabel" name="label_6">
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Target Domains/Subdomains:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="Line" name="line_4">
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(170, 170, 127);</string>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="theLayout">
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
-                <widget class="QLabel" name="label_wordlistCount_dnsRecords">
+                <widget class="QLabel" name="label_5">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Enumerated Info:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_resultsCount">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -596,12 +466,6 @@ QProgressBar {
                    <height>20</height>
                   </size>
                  </property>
-                 <property name="font">
-                  <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(210, 210, 210);</string>
                  </property>
@@ -616,36 +480,78 @@ QProgressBar {
                  </property>
                 </widget>
                </item>
-               <item>
-                <spacer name="horizontalSpacer_3">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>80</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout">
-               <item>
-                <widget class="QListWidget" name="listWidget_wordlist_dnsRecords">
-                 <property name="font">
-                  <font>
-                   <family>MS Shell Dlg 2</family>
-                   <pointsize>8</pointsize>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QWidget#listWidget_wordlist_dnsRecords{
+              <widget class="QTreeView" name="treeView_results">
+               <property name="contextMenuPolicy">
+                <enum>Qt::CustomContextMenu</enum>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QWidget#treeView_results{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
+border-style: solid;
+border-color: black;
+border-width: 1px;
+border-radius: 0px;
+}
+QHeaderView::section {
+background-color: rgb(28, 28, 28);
+color: rgb(215, 215, 215);
+}</string>
+               </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::DoubleClicked</set>
+               </property>
+               <property name="showDropIndicator" stdset="0">
+                <bool>false</bool>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::ExtendedSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectItems</enum>
+               </property>
+               <property name="indentation">
+                <number>15</number>
+               </property>
+               <property name="uniformRowHeights">
+                <bool>true</bool>
+               </property>
+               <attribute name="headerVisible">
+                <bool>false</bool>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_logs">
+            <attribute name="title">
+             <string>Logs</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QListWidget" name="listWidget_logs">
+               <property name="font">
+                <font>
+                 <family>MS Shell Dlg 2</family>
+                 <pointsize>8</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QWidget#listWidget_logs{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
 border-style: solid;
 border-color: black;
@@ -658,168 +564,37 @@ color: black;}
 QListWidget::item:hover{
 background-color: rgb(230, 230, 172);
 }</string>
-                 </property>
-                 <property name="editTriggers">
-                  <set>QAbstractItemView::DoubleClicked</set>
-                 </property>
-                 <property name="selectionMode">
-                  <enum>QAbstractItemView::ExtendedSelection</enum>
-                 </property>
-                 <property name="selectionRectVisible">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sortingEnabled">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_13">
-                 <item>
-                  <widget class="QPushButton" name="pushButton_remove_dnsRecords">
-                   <property name="minimumSize">
-                    <size>
-                     <width>75</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                   </property>
-                   <property name="text">
-                    <string>Remove</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_clearWordlist_dnsRecords">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>75</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                   </property>
-                   <property name="text">
-                    <string>Clear</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_load_dnsRecords">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>75</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                   </property>
-                   <property name="text">
-                    <string>Load</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="verticalSpacer_3">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
-               <item>
-                <widget class="QLineEdit" name="lineEdit_wordlist_dnsRecords">
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(255, 255, 255);</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButton_add_dnsRecords">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>75</width>
-                   <height>23</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                 </property>
-                 <property name="text">
-                  <string>Add</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+               </property>
+              </widget>
              </item>
             </layout>
-           </item>
-          </layout>
-         </widget>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_lookup">
-      <attribute name="title">
-       <string>PTR Records</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>5</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
+     <widget class="QWidget" name="layoutWidget_4">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_10">
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QLabel" name="label_4">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QLabel" name="label_6">
            <property name="font">
             <font>
              <weight>75</weight>
@@ -827,12 +602,12 @@ background-color: rgb(230, 230, 172);
             </font>
            </property>
            <property name="text">
-            <string>Enumerating Dns Lookup...</string>
+            <string>Target Domains/Subdomains:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="Line" name="line_8">
+          <widget class="Line" name="line_4">
            <property name="styleSheet">
             <string notr="true">background-color: rgb(170, 170, 127);</string>
            </property>
@@ -841,336 +616,239 @@ background-color: rgb(230, 230, 172);
            </property>
           </widget>
          </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_11">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <layout class="QHBoxLayout" name="theLayout">
            <item>
-            <widget class="QRadioButton" name="radioButton_hostnameToIp">
+            <widget class="QLabel" name="label_wordlistCount">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>20</height>
+              </size>
+             </property>
              <property name="font">
               <font>
-               <weight>50</weight>
-               <bold>false</bold>
+               <weight>75</weight>
+               <bold>true</bold>
               </font>
              </property>
-             <property name="text">
-              <string>Hostname to Ip</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_ipToHostname">
-             <property name="text">
-              <string>Ip to Hostname</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="toolButton_config_lookup">
              <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+              <string notr="true">background-color: rgb(210, 210, 210);</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
              </property>
              <property name="text">
-              <string>Config...</string>
+              <string/>
              </property>
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_4">
+            <spacer name="horizontalSpacer_3">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>40</width>
+               <width>80</width>
                <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QPushButton" name="pushButton_start_lookup">
-             <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+            <widget class="QListWidget" name="listWidget_wordlist">
+             <property name="font">
+              <font>
+               <family>MS Shell Dlg 2</family>
+               <pointsize>8</pointsize>
+              </font>
              </property>
-             <property name="text">
-              <string>Start</string>
+             <property name="styleSheet">
+              <string notr="true">QWidget#listWidget_wordlist{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
+border-style: solid;
+border-color: black;
+border-width: 1px;
+border-radius: 0px;
+}
+QListWidget::item:selected {
+background-color:  rgb(199, 199, 149);
+color: black;}
+QListWidget::item:hover{
+background-color: rgb(230, 230, 172);
+}</string>
+             </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::DoubleClicked</set>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::ExtendedSelection</enum>
+             </property>
+             <property name="selectionRectVisible">
+              <bool>true</bool>
+             </property>
+             <property name="sortingEnabled">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_stop_lookup">
+            <layout class="QVBoxLayout" name="verticalLayout_13">
+             <item>
+              <widget class="QPushButton" name="pushButton_remove">
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>23</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+               </property>
+               <property name="text">
+                <string>Remove</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_clearWordlist">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>23</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+               </property>
+               <property name="text">
+                <string>Clear</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_load">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>23</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+               </property>
+               <property name="text">
+                <string>Load</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLineEdit" name="lineEdit_wordlist">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_add">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>75</width>
+               <height>23</height>
+              </size>
+             </property>
              <property name="styleSheet">
               <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
              </property>
              <property name="text">
-              <string>Stop</string>
+              <string>Add</string>
              </property>
             </widget>
            </item>
           </layout>
          </item>
-         <item>
-          <widget class="Line" name="line_9">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(170, 170, 127);</string>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
-       <item>
-        <widget class="QSplitter" name="splitter_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QHBoxLayout" name="horizontalLayout_15">
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_18">
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_14">
-               <item>
-                <widget class="QPushButton" name="pushButton_clearResults_lookup">
-                 <property name="styleSheet">
-                  <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                 </property>
-                 <property name="text">
-                  <string>Clear Results</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButton_action_lookup">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>73</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                 </property>
-                 <property name="text">
-                  <string>Action &gt;</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QTabWidget" name="tabWidget_lookup">
-               <property name="currentIndex">
-                <number>0</number>
-               </property>
-               <widget class="QWidget" name="tab_results_lookup">
-                <attribute name="title">
-                 <string>Results</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_17">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_13">
-                   <item>
-                    <widget class="QLabel" name="label_7">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Resolved Hosts:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_resultsCount_lookup">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">background-color: rgb(214, 214, 214);</string>
-                     </property>
-                     <property name="frameShape">
-                      <enum>QFrame::Box</enum>
-                     </property>
-                     <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
-                     </property>
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <widget class="QTableView" name="tableView_results_lookup">
-                   <property name="contextMenuPolicy">
-                    <enum>Qt::CustomContextMenu</enum>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QWidget#tableView_results_lookup{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px;
-}
-QListWidget::item:selected {
-background-color:  rgb(199, 199, 149);
-color: black;}
-QListWidget::item:hover{
-background-color: rgb(230, 230, 172);
-}</string>
-                   </property>
-                   <property name="editTriggers">
-                    <set>QAbstractItemView::NoEditTriggers</set>
-                   </property>
-                   <property name="showDropIndicator" stdset="0">
-                    <bool>false</bool>
-                   </property>
-                   <property name="dragDropOverwriteMode">
-                    <bool>false</bool>
-                   </property>
-                   <property name="showGrid">
-                    <bool>false</bool>
-                   </property>
-                   <property name="cornerButtonEnabled">
-                    <bool>false</bool>
-                   </property>
-                   <attribute name="horizontalHeaderMinimumSectionSize">
-                    <number>200</number>
-                   </attribute>
-                   <attribute name="horizontalHeaderDefaultSectionSize">
-                    <number>220</number>
-                   </attribute>
-                   <attribute name="horizontalHeaderHighlightSections">
-                    <bool>false</bool>
-                   </attribute>
-                   <attribute name="verticalHeaderVisible">
-                    <bool>false</bool>
-                   </attribute>
-                   <attribute name="verticalHeaderMinimumSectionSize">
-                    <number>15</number>
-                   </attribute>
-                   <attribute name="verticalHeaderDefaultSectionSize">
-                    <number>15</number>
-                   </attribute>
-                   <attribute name="verticalHeaderHighlightSections">
-                    <bool>false</bool>
-                   </attribute>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QWidget" name="tab_logs_lookup">
-                <attribute name="title">
-                 <string>Logs</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_16">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QListWidget" name="listWidget_logs_lookup">
-                   <property name="styleSheet">
-                    <string notr="true">QWidget#listWidget_logs_lookup{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px;
-}
-QListWidget::item:selected {
-background-color:  rgb(199, 199, 149);
-color: black;}
-QListWidget::item:hover{
-background-color: rgb(230, 230, 172);
-}</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </widget>
-             </item>
-             <item>
-              <widget class="QProgressBar" name="progressBar_lookup">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>20</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QProgressBar::chunk {
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>15</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>15</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QProgressBar::chunk {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
 }
 
@@ -1179,206 +857,10 @@ QProgressBar {
     /*border-radius: 5px;*/
     text-align: center;
 }</string>
-               </property>
-               <property name="value">
-                <number>0</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="Line" name="line_11">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QHBoxLayout" name="horizontalLayout_12">
-           <item>
-            <widget class="Line" name="line_10">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_15">
-             <item>
-              <widget class="QLabel" name="label_9">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Hosts To Resolve:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="Line" name="line_13">
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(170, 170, 127);</string>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_16">
-               <item>
-                <widget class="QLabel" name="label_wordlistCount_lookup">
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(213, 213, 213);</string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::Box</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_5">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>80</width>
-                   <height>18</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_10">
-               <item>
-                <widget class="QListWidget" name="listWidget_wordlist_lookup">
-                 <property name="toolTip">
-                  <string/>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QWidget#listWidget_wordlist_lookup{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px;
-}
-QListWidget::item:selected {
-background-color:  rgb(199, 199, 149);
-color: black;}
-QListWidget::item:hover{
-background-color: rgb(230, 230, 172);
-}</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_14">
-                 <item>
-                  <widget class="QPushButton" name="pushButton_clearWordlist_lookup">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                   </property>
-                   <property name="text">
-                    <string>Clear</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_removeWordlist_lookup">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                   </property>
-                   <property name="text">
-                    <string>Remove</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_loadWordlist_lookup">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                   </property>
-                   <property name="text">
-                    <string>Load</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="verticalSpacer">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_11">
-               <item>
-                <widget class="QLineEdit" name="lineEdit_wordlist_lookup">
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(255, 255, 255);</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButton_addWordlist_lookup">
-                 <property name="styleSheet">
-                  <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
-                 </property>
-                 <property name="text">
-                  <string>Add</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>SRV Records</string>
-      </attribute>
-     </widget>
+     </property>
+     <property name="value">
+      <number>70</number>
+     </property>
     </widget>
    </item>
   </layout>

@@ -6,7 +6,7 @@
 /*************************************************************************************
  *                         SUBDOMAIN-BRUTE ENUMERATOR
  *************************************************************************************/
-class Enumerator_subBrute : public QObject{
+class BruteEnumerator_subBrute : public QObject{
     Q_OBJECT
 
     private:
@@ -15,8 +15,8 @@ class Enumerator_subBrute : public QObject{
         QDnsLookup* m_dns;
 
     public:
-        Enumerator_subBrute(ScanArguments_Brute *scanArguments);
-        ~Enumerator_subBrute();
+        BruteEnumerator_subBrute(ScanArguments_Brute *scanArguments);
+        ~BruteEnumerator_subBrute();
         //...
         void Enumerate(QThread *cThread);
 
@@ -40,7 +40,7 @@ class Enumerator_subBrute : public QObject{
 /*************************************************************************************
  *                              TLD-BRUTE ENUMERATOR
  *************************************************************************************/
-class Enumerator_tldBrute : public QObject{
+class BruteEnumerator_tldBrute : public QObject{
     Q_OBJECT
 
     private:
@@ -49,8 +49,8 @@ class Enumerator_tldBrute : public QObject{
         QDnsLookup *m_dns;
 
     public:
-        Enumerator_tldBrute(ScanArguments_Brute *scanArguments);
-        ~Enumerator_tldBrute();
+        BruteEnumerator_tldBrute(ScanArguments_Brute *scanArguments);
+        ~BruteEnumerator_tldBrute();
         //...
         void Enumerate(QThread *cThread);
 
@@ -74,7 +74,7 @@ class Enumerator_tldBrute : public QObject{
 /*************************************************************************************
  *                              Check Wildcards
  *************************************************************************************/
-class Enumerator_Wildcards: public QObject{
+class BruteEnumerator_Wildcards: public QObject{
     Q_OBJECT
 
     private:
@@ -82,8 +82,8 @@ class Enumerator_Wildcards: public QObject{
         QDnsLookup *m_dns;
 
     public:
-        Enumerator_Wildcards(ScanArguments_Brute *scanArguments);
-        ~Enumerator_Wildcards();
+        BruteEnumerator_Wildcards(ScanArguments_Brute *scanArguments);
+        ~BruteEnumerator_Wildcards();
         //...
         void Enumerate(QThread *cThread);
 

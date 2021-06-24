@@ -10,7 +10,6 @@ Level::Level(QWidget *parent) :QDialog(parent),ui(new Ui::Level),
     ui->setupUi(this);
     //...
     ui->pushButton_stop->setDisabled(true);
-    ui->progressBar->hide();
     //...
     QStringList headerLabels = {"Subdomain Name:", "IpAddress"};
     m_model_subdomains->setHorizontalHeaderLabels(headerLabels);
