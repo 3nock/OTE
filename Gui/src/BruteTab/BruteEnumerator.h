@@ -72,40 +72,6 @@ class Enumerator_tldBrute : public QObject{
 
 
 /*************************************************************************************
- *                              ACTIVE_SUBDOMAINS ENUMERATOR
- *************************************************************************************/
-class Enumerator_activeSubdomains : public QObject{
-    Q_OBJECT
-
-    private:
-        int m_currentItemToEnumerate = 0;
-        ScanArguments_Brute *m_scanArguments;
-        QDnsLookup *m_dns;
-
-    public:
-        Enumerator_activeSubdomains(ScanArguments_Brute *scanArguments);
-        ~Enumerator_activeSubdomains();
-        //...
-        void Enumerate(QThread *cThread);
-
-    public slots:
-        void onStop();
-
-    private slots:
-        void lookup();
-        void onLookupFinished();
-
-    signals:
-        void performAnotherLookup();
-        //...
-        void progressBarValue(int value);
-        void resolvedSubdomain(QString subdomain, QString ipAddress);
-        void scanLog(QString log);
-        void quitThread();
-};
-
-
-/*************************************************************************************
  *                              Check Wildcards
  *************************************************************************************/
 class Enumerator_Wildcards: public QObject{

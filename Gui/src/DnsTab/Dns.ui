@@ -31,12 +31,16 @@
      <property name="toolTipDuration">
       <number>2</number>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(235, 235, 235);
+</string>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
      <widget class="QWidget" name="tab_dnsRecords">
       <attribute name="title">
-       <string>DnsRecords</string>
+       <string>Records</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="leftMargin">
@@ -791,7 +795,7 @@ background-color: rgb(230, 230, 172);
      </widget>
      <widget class="QWidget" name="tab_lookup">
       <attribute name="title">
-       <string>Lookup</string>
+       <string>PTR Records</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="leftMargin">
@@ -1369,6 +1373,11 @@ background-color: rgb(230, 230, 172);
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>SRV Records</string>
+      </attribute>
      </widget>
     </widget>
    </item>

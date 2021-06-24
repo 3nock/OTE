@@ -52,9 +52,9 @@
     </widget>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_5">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QLabel" name="label">
          <property name="font">
@@ -135,9 +135,9 @@
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_4">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
         <widget class="QRadioButton" name="radioButton_fullScan">
          <property name="text">
@@ -230,7 +230,7 @@ border-radius: 15px</string>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>10</width>
+           <width>13</width>
            <height>20</height>
           </size>
          </property>

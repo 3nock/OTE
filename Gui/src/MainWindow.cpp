@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     ///
     /// creating and initiating the classes for the modules...
     ///
+    Active *active = new Active(this);
     Level *level = new Level(this);
     Osint *osint = new Osint(this);
     Brute *brute = new Brute(this);
@@ -50,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     ui->tabWidget_mainTab->insertTab(0, osint, "Osint");
     ui->tabWidget_mainTab->insertTab(1, brute, "Brute");
     ui->tabWidget_mainTab->insertTab(3, dns, "Dns++");
+    ui->tabWidget_mainTab->insertTab(4, active, "Active");
     ui->tabWidget_mainTab->insertTab(4, level, "Level");
     ui->tabWidget_mainTab->insertTab(5, save, "Save");
 
