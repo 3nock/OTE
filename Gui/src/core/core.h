@@ -45,9 +45,6 @@
 #define MULTI_ITEMS 2
 #define ALL_ITEMS 3
 //...
-#define SINGLE_TARGET 0
-#define MULTIPLE_TARGETS 1
-//...
 #define ENUMNAME_OSINT 1
 #define ENUMNAME_SUBBRUTE 2
 #define ENUMNAME_TLDBRUTE 3
@@ -60,16 +57,6 @@
 #define CURRENT_PATH "./"
 #define INFO_LOADFILE "Load File..."
 #define INFO_SAVETOFILE "Save To File..."
-
-/******************** STRUCTURES ****************/
-struct status{
-    bool isRunning = false;
-    bool isStopped = false;
-    bool isPaused = false;
-    int numberOfScansDone = 0;
-    int numberOfDifferentDomains = 0;
-};
-typedef struct status status;
 
 /***************** FUNCTIONS *****************/
 QHostAddress RandomNameserver(bool useCustomNameservers);

@@ -60,6 +60,59 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QComboBox" name="comboBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>90</width>
+           <height>22</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-style: solid;
+border-color: rgb(159, 159, 119);
+border-width: 1px;
+border-radius: 0px;
+selection-background-color:  rgb(177, 177, 133);</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Active DNS</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Active HTTP</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Active FTP</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Active SMTP</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>*Enumerates Subdomains/IpAddresses that can be resolved</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -152,18 +205,19 @@
          <number>9</number>
         </property>
         <item>
-         <widget class="QLabel" name="label_17">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
+         <widget class="QRadioButton" name="radioButton_3">
           <property name="text">
-           <string>*Set scan Config</string>
+           <string>active Hostnames</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_4">
+          <property name="text">
+           <string>active IpAddresses</string>
           </property>
          </widget>
         </item>
@@ -543,9 +597,15 @@ background-color: rgb(230, 230, 172);
           <number>6</number>
          </property>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_21">
+          <layout class="QHBoxLayout" name="theLayout">
            <item>
             <widget class="QLabel" name="label_15">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="font">
               <font>
                <weight>75</weight>
@@ -553,24 +613,10 @@ background-color: rgb(230, 230, 172);
               </font>
              </property>
              <property name="text">
-              <string>Subdomains To Enumerate:</string>
+              <string>Target Subdomains:</string>
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="Line" name="line_8">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(170, 170, 127);</string>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="theLayout">
            <item>
             <widget class="QLabel" name="label_wordlistCount">
              <property name="sizePolicy">
@@ -815,7 +861,7 @@ QProgressBar {
 }</string>
      </property>
      <property name="value">
-      <number>70</number>
+      <number>0</number>
      </property>
     </widget>
    </item>

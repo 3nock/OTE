@@ -57,7 +57,7 @@ void Active::startEnumeration(){
         maxThreads = wordlistCount;
     }
     activeThreads = maxThreads;
-    scanArguments->currentItemToEnumerate = 0;
+    scanArguments->currentWordlistToEnumerate = 0;
     for(int i = 0; i != maxThreads; i++){
         //...
         ActiveEnumerator *Enumerator = new ActiveEnumerator(scanArguments);

@@ -24,7 +24,7 @@ void LevelEnumerator::lookup(){
     if(m_currentItemToEnumerate < m_scanArguments->wordlist->count())
     {
         //...
-        m_dns->setName(nameProcessor_subBrute(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text(), m_scanArguments->model_subdomains->item(m_scanArguments->currentSubdomainToEnumerate, 0)->text()));
+        //m_dns->setName(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text(), m_scanArguments->model_subdomains->item(m_scanArguments->currentSubdomainToEnumerate, 0)->text()));
         //...
         m_dns->lookup();
     }

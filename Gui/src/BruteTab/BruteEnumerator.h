@@ -4,19 +4,20 @@
 #include "lib-brute.h"
 
 /*************************************************************************************
- *                         SUBDOMAIN-BRUTE ENUMERATOR
+ *                         BRUTE ENUMERATOR
  *************************************************************************************/
-class BruteEnumerator_subBrute : public QObject{
+class BruteEnumerator : public QObject{
     Q_OBJECT
 
     private:
-        int m_currentItemToEnumerate = 0;
+        int m_currentWordlistToEnumerate = 0;
+        int m_currentTargetToEnumerate = 0;
         ScanArguments_Brute* m_scanArguments;
         QDnsLookup* m_dns;
 
     public:
-        BruteEnumerator_subBrute(ScanArguments_Brute *scanArguments);
-        ~BruteEnumerator_subBrute();
+        BruteEnumerator(ScanArguments_Brute *scanArguments);
+        ~BruteEnumerator();
         //...
         void Enumerate(QThread *cThread);
 
@@ -25,48 +26,15 @@ class BruteEnumerator_subBrute : public QObject{
 
     private slots:
         void lookup();
-        void onLookupFinished();
+        void lookupFinished();
 
     signals:
         void performAnotherLookup();
         //...
-        void progressBarValue(int value);
-        void resolvedSubdomain(QString subdomain, QString ipAddress);
+        void progress(int value);
+        void scanResult(QString subdomain, QString ipAddress);
         void scanLog(QString log);
-        void quitThread();
-};
-
-
-/*************************************************************************************
- *                              TLD-BRUTE ENUMERATOR
- *************************************************************************************/
-class BruteEnumerator_tldBrute : public QObject{
-    Q_OBJECT
-
-    private:
-        int m_currentItemToEnumerate = 0;
-        ScanArguments_Brute *m_scanArguments;
-        QDnsLookup *m_dns;
-
-    public:
-        BruteEnumerator_tldBrute(ScanArguments_Brute *scanArguments);
-        ~BruteEnumerator_tldBrute();
         //...
-        void Enumerate(QThread *cThread);
-
-    public slots:
-        void onStop();
-
-    private slots:
-        void lookup();
-        void onLookupFinished();
-
-    signals:
-        void performAnotherLookup();
-        //...
-        void progressBarValue(int value);
-        void resolvedSubdomain(QString subdomain, QString ipAddress);
-        void scanLog(QString log);
         void quitThread();
 };
 

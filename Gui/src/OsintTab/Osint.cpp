@@ -19,6 +19,8 @@ Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint),
     results_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     ui->tableView_results->setModel(results_model);
     //...
+    ui->progressBar->hide();
+    //...
     QPalette p = palette();
     p.setColor(QPalette::Highlight, QColor(188, 188, 141));
     p.setColor(QPalette::HighlightedText, QColor(Qt::black));

@@ -18,9 +18,16 @@
 
 //strcutures...
 struct ScanArguments_Brute{
-    QString targetDomain = nullptr;
+    QStringList target;
     QListWidget *wordlist = nullptr;
-    int currentItemToEnumerate = 0;
+    QListWidget *targetList = nullptr;
+    int progress = 0;
+    //...
+    bool tldBrute = false;
+    bool subBrute = false;
+    //...
+    int currentWordlistToEnumerate = 0;
+    int currentTargetToEnumerate = 0;
     //...
     QDnsLookup::Type dnsRecordType = QDnsLookup::A;
     bool checkWildcardSubdomains = false;
@@ -32,8 +39,5 @@ struct ScanArguments_Brute{
 };
 typedef ScanArguments_Brute ScanArguments_Brute;
 
-//functions...
-QString nameProcessor_subBrute(QString subdomainName, QString domainName);
-QString nameProcessor_tldBrute(QString tldName, QString domainName);
-
+//...
 #endif // LIBBRUTE_H

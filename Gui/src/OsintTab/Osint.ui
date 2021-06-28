@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>782</width>
+    <width>866</width>
     <height>681</height>
    </rect>
   </property>
@@ -67,26 +67,30 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <italic>false</italic>
-           <bold>false</bold>
-          </font>
+        <widget class="QComboBox" name="comboBox">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>22</height>
+          </size>
          </property>
          <property name="styleSheet">
-          <string notr="true"/>
+          <string notr="true">border-style: solid;
+border-color: black;
+border-width: 1px;
+border-radius: 0px;
+selection-background-color:  rgb(177, 177, 133);</string>
          </property>
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <property name="text">
-          <string>Target Domain:</string>
-         </property>
+         <item>
+          <property name="text">
+           <string>Single Target</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Multiple Targets</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item>
@@ -169,7 +173,7 @@
          <number>5</number>
         </property>
         <property name="rightMargin">
-         <number>5</number>
+         <number>9</number>
         </property>
         <item>
          <widget class="QRadioButton" name="radioButton_customScan">
@@ -189,18 +193,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_keys">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <italic>false</italic>
-           </font>
-          </property>
+         <widget class="QToolButton" name="toolButton_config">
           <property name="styleSheet">
            <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
 border-style: solid;
@@ -209,7 +202,7 @@ border-width: 1px;
 border-radius: 15px</string>
           </property>
           <property name="text">
-           <string>Keys...</string>
+           <string>Config...</string>
           </property>
          </widget>
         </item>
@@ -235,12 +228,23 @@ border-radius: 15px</string>
            </sizepolicy>
           </property>
           <property name="text">
-           <string>*Scan Config</string>
+           <string>*Api Keys</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_config">
+         <widget class="QToolButton" name="toolButton_keys">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <italic>false</italic>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
 border-style: solid;
@@ -249,7 +253,7 @@ border-width: 1px;
 border-radius: 15px</string>
           </property>
           <property name="text">
-           <string>Config...</string>
+           <string>Keys...</string>
           </property>
          </widget>
         </item>
@@ -627,46 +631,27 @@ background-color: rgb(230, 230, 172);
             <string notr="true"/>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Box</enum>
+            <enum>QFrame::NoFrame</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Sunken</enum>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
+            <property name="spacing">
+             <number>6</number>
+            </property>
             <property name="leftMargin">
-             <number>5</number>
+             <number>0</number>
             </property>
             <property name="topMargin">
-             <number>5</number>
+             <number>0</number>
             </property>
             <property name="rightMargin">
-             <number>5</number>
+             <number>0</number>
             </property>
             <property name="bottomMargin">
-             <number>5</number>
+             <number>0</number>
             </property>
-            <item>
-             <widget class="QLabel" name="label_2">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <property name="text">
-               <string>Profiles</string>
-              </property>
-             </widget>
-            </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
@@ -678,11 +663,18 @@ background-color: rgb(230, 230, 172);
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 rgb(210, 210, 210));
+                 <string notr="true">/*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 rgb(210, 210, 210));
 border-style: solid;
 border-color:  black;
 border-width: 1px;
-border-radius: 0px;</string>
+border-radius: 0px;
+*/
+background-color: rgb(220, 220, 220);
+border-style: solid;
+border-color: black;
+border-width: 1px;
+border-radius: 0px;
+selection-background-color:  rgb(177, 177, 133);</string>
                 </property>
                 <property name="editable">
                  <bool>false</bool>
@@ -838,16 +830,6 @@ border-radius: 0px;</string>
                    </property>
                   </widget>
                  </item>
-                 <item>
-                  <widget class="Line" name="line_7">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(170, 170, 127);</string>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
                <item>
@@ -884,7 +866,7 @@ border-radius: 0px;</string>
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>164</width>
+                    <width>186</width>
                     <height>654</height>
                    </rect>
                   </property>
@@ -1155,16 +1137,6 @@ border-radius: 0px;</string>
                    </property>
                   </widget>
                  </item>
-                 <item>
-                  <widget class="Line" name="line_9">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(170, 170, 127);</string>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
                <item>
@@ -1198,7 +1170,7 @@ border-radius: 0px;</string>
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>180</width>
+                    <width>202</width>
                     <height>310</height>
                    </rect>
                   </property>
@@ -1348,7 +1320,7 @@ QProgressBar {
 }</string>
      </property>
      <property name="value">
-      <number>70</number>
+      <number>0</number>
      </property>
     </widget>
    </item>
@@ -1358,7 +1330,6 @@ QProgressBar {
   <tabstop>lineEdit_domain</tabstop>
   <tabstop>pushButton_start</tabstop>
   <tabstop>radioButton_fullScan</tabstop>
-  <tabstop>toolButton_keys</tabstop>
   <tabstop>pushButton_clear</tabstop>
   <tabstop>tableView_results</tabstop>
   <tabstop>listWidget_logs</tabstop>

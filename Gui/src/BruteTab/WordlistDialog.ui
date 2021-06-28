@@ -128,11 +128,12 @@
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 rgb(215, 215, 215));
+             <string notr="true">background-color: rgb(235, 235, 235);
 border-style: solid;
-border-color:  black;
+border-color: black;
 border-width: 1px;
-border-radius: 0px;</string>
+border-radius: 0px;
+selection-background-color:  rgb(177, 177, 133);</string>
             </property>
             <item>
              <property name="text">
@@ -213,11 +214,12 @@ border-radius: 0px;</string>
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 rgb(215, 215, 215));
+             <string notr="true">background-color: rgb(235, 235, 235);
 border-style: solid;
-border-color:  black;
+border-color: black;
 border-width: 1px;
-border-radius: 0px;</string>
+border-radius: 0px;
+selection-background-color:  rgb(177, 177, 133);</string>
             </property>
            </widget>
           </item>
@@ -284,7 +286,7 @@ border-radius: 0px;</string>
         <item>
          <widget class="QPushButton" name="pushButton_create">
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
           </property>
           <property name="text">
            <string>Create</string>
@@ -332,7 +334,7 @@ background-color: rgb(230, 230, 172);
           <item>
            <widget class="QPushButton" name="pushButton_clear">
             <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
             </property>
             <property name="text">
              <string>Clear</string>
@@ -342,7 +344,7 @@ background-color: rgb(230, 230, 172);
           <item>
            <widget class="QPushButton" name="pushButton_remove">
             <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
             </property>
             <property name="text">
              <string>Remove</string>
@@ -352,7 +354,7 @@ background-color: rgb(230, 230, 172);
           <item>
            <widget class="QPushButton" name="pushButton_load">
             <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
             </property>
             <property name="text">
              <string>Load</string>
@@ -388,7 +390,7 @@ background-color: rgb(230, 230, 172);
         <item>
          <widget class="QPushButton" name="pushButton_add">
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
           </property>
           <property name="text">
            <string>Add</string>

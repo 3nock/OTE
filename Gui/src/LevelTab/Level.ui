@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1025</width>
-    <height>493</height>
+    <height>496</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -64,6 +64,41 @@
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QComboBox" name="comboBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>90</width>
+           <height>22</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-style: solid;
+border-color: rgb(159, 159, 119);
+border-width: 1px;
+border-radius: 0px;
+selection-background-color:  rgb(177, 177, 133);</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Nothing Yet</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>*Something Here</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
@@ -362,6 +397,41 @@ border-radius: 15px</string>
                  </property>
                 </widget>
                </item>
+               <item>
+                <widget class="QLabel" name="label_5">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Level:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_levels">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(210, 210, 210);</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </item>
              <item>
@@ -521,7 +591,7 @@ background-color: rgb(230, 230, 172);
               </font>
              </property>
              <property name="text">
-              <string>Subdomain Count:</string>
+              <string>Target Count:</string>
              </property>
             </widget>
            </item>
@@ -539,41 +609,6 @@ background-color: rgb(230, 230, 172);
                <height>20</height>
               </size>
              </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(210, 210, 210);</string>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::Box</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_5">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Level:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_levels">
              <property name="styleSheet">
               <string notr="true">background-color: rgb(210, 210, 210);</string>
              </property>
@@ -1031,7 +1066,7 @@ QProgressBar {
 }</string>
      </property>
      <property name="value">
-      <number>70</number>
+      <number>0</number>
      </property>
     </widget>
    </item>

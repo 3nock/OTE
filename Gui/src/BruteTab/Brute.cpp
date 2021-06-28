@@ -33,27 +33,31 @@
 
 /*************************** Class Constructor & Deconstructor *************************/
 Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
-      //...
       m_model(new QStandardItemModel),
       m_scanArguments(new ScanArguments_Brute)
 {
     ui->setupUi(this);
     //...
-    ui->lineEdit_targetDomain->setPlaceholderText("eg. example.com");
-    ui->lineEdit_wordlist->setPlaceholderText("Enter a new item...");
+    ui->lineEdit_target->setPlaceholderText("eg. example.com");
+    ui->lineEdit_wordlist->setPlaceholderText("Enter a new Wordlist...");
+    ui->lineEdit_multipleTargets->setPlaceholderText("Enter a new Target...");
     //...
     ui->pushButton_stop->setDisabled(true);
+    ui->pushButton_pause->setDisabled(true);
     //...
-    ui->splitter->setSizes(QList<int>()<<150<<1);
+    ui->pushButton_reload->hide();
+    ui->frame_targets->hide();
+    ui->progressBar->hide();
     //...
-    QStringList headerLabels = {"Subdomain Name:", "IpAddress"};
-    m_model->setHorizontalHeaderLabels(headerLabels);
+    ui->splitter->setSizes(QList<int>()<<200<<100);
     //...
+    m_model->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
     ui->tableView_results->setModel(m_model);
     //...
     m_scanArguments->wordlist = ui->listWidget_wordlist;
+    m_scanArguments->targetList = ui->listWidget_targets;
     ///
-    /// Setting highlight Color for items on the listView...
+    /// Setting highlight Color for items on the results tableView...
     ///
     QPalette p = palette();
     p.setColor(QPalette::Highlight, QColor(188, 188, 141));
@@ -65,137 +69,181 @@ Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
 }
 Brute::~Brute(){
     delete m_model;
+    delete m_scanArguments;
     //...
     delete ui;
 }
 
 /*********************************** START Enumeration **********************************/
 void Brute::on_pushButton_start_clicked(){
-    if(!ui->lineEdit_targetDomain->isModified() || !(ui->listWidget_wordlist->count() > 0)){
-        QMessageBox::warning(this, TITLE_ERROR, "Please Enter the Target-Domain and/or Wordlist for Enumeration!");
+    ///
+    /// checking input requirements before scan...
+    ///
+    if(ui->comboBox_target->currentIndex() == 0 && ui->lineEdit_target->text().isEmpty()){
+        QMessageBox::warning(this, TITLE_ERROR, "Please Enter the Target for Enumeration!");
         return;
     }
+    if(ui->comboBox_target->currentIndex() == 1 && ui->listWidget_targets->count() < 1){
+        QMessageBox::warning(this, TITLE_ERROR, "Please Enter the Target for Enumeration!");
+        return;
+    }
+    if(ui->listWidget_wordlist->count() < 1){
+        QMessageBox::warning(this, TITLE_ERROR, "Please Enter the Wordlist for Enumeration!");
+        return;
+    }
+    ///
+    /// disabling and Enabling widgets...
+    ///
     ui->pushButton_start->setDisabled(true);
+    ui->pushButton_pause->setEnabled(true);
     ui->pushButton_stop->setEnabled(true);
+    ui->pushButton_reload->show();
+    ui->progressBar->reset();
     ui->progressBar->show();
-    //...
-    ui->progressBar->setMaximum(ui->listWidget_wordlist->count());
-    //...
-    if(ui->radioButton_subBrute->isChecked()){
-        m_scanArguments->targetDomain = TargetNameFilter(ui->lineEdit_targetDomain->text(), ENUMNAME_SUBBRUTE);
-        if(m_scanArguments->checkWildcardSubdomains){
-            checkWildcards();
-        }else{
-            startEnumeration_subBrute();
+    ///
+    /// Resetting the scan arguments values...
+    ///
+    m_scanArguments->currentWordlistToEnumerate = 0;
+    m_scanArguments->currentTargetToEnumerate = 0;
+    m_scanArguments->progress = 0;
+    m_scanArguments->target.clear();
+    ///
+    /// Processing targets if user chooses subdomain bruteForcing...
+    ///
+    if(ui->radioButton_subBrute->isChecked())
+    {
+        m_scanArguments->subBrute = true;
+        m_scanArguments->tldBrute = false;
+        //...
+        if(ui->comboBox_target->currentIndex() == SINGLE_TARGET)
+        {
+            m_scanArguments->target.append(TargetNameFilter(ui->lineEdit_target->text(), ENUMNAME_SUBBRUTE));
+            // for a single target, progress equals to the total number of wordlist...
+            ui->progressBar->setMaximum(ui->listWidget_wordlist->count());
         }
-        // logs...
-        sendStatus("[*] BruteForcing Subdomains For Domain"+m_scanArguments->targetDomain);
-        logs("[START] BruteForcing Subdomains For Domain: "+m_scanArguments->targetDomain);
+        if(ui->comboBox_target->currentIndex() == MULTIPLE_TARGETS)
+        {
+            for(int i = 0; i < ui->listWidget_targets->count(); i++){
+                m_scanArguments->target.append(TargetNameFilter(ui->listWidget_targets->item(i)->text(), ENUMNAME_SUBBRUTE));
+            }
+            // for multiple targets, progress equals to the total number of wordlist times the total number of targets...
+            ui->progressBar->setMaximum(ui->listWidget_wordlist->count()*m_scanArguments->target.count());
+        }
     }
-    if(ui->radioButton_tldBrute->isChecked()){
-        m_scanArguments->targetDomain = TargetNameFilter(ui->lineEdit_targetDomain->text(), ENUMNAME_TLDBRUTE);
-        startEnumeration_tldBrute();
-        // logs...
-        sendStatus("[*] BruteForcing TLDs For Domain: "+m_scanArguments->targetDomain);
-        logs("[START] BruteForcing TLDs For Domain: "+m_scanArguments->targetDomain);
+    ///
+    /// Processing targets if user chooses TLD bruteForcing...
+    ///
+    if(ui->radioButton_tldBrute->isChecked())
+    {
+        m_scanArguments->tldBrute = true;
+        m_scanArguments->subBrute = false;
+        //...
+        if(ui->comboBox_target->currentIndex() == SINGLE_TARGET)
+        {
+            m_scanArguments->target.append(TargetNameFilter(ui->lineEdit_target->text(), ENUMNAME_TLDBRUTE));
+            // for a single target, progress equals to the total number of wordlist...
+            ui->progressBar->setMaximum(ui->listWidget_wordlist->count());
+        }
+        if(ui->comboBox_target->currentIndex() == MULTIPLE_TARGETS)
+        {
+            for(int i = 0; i < ui->listWidget_targets->count(); i++){
+                m_scanArguments->target.append(TargetNameFilter(ui->listWidget_targets->item(i)->text(), ENUMNAME_TLDBRUTE));
+            }
+            // for multiple targets, progress equals to the total number of wordlist times the total number of targets...
+            ui->progressBar->setMaximum(ui->listWidget_wordlist->count()*m_scanArguments->target.count());
+        }
     }
+    ///
+    /// Starting the scan...
+    ///
+    startEnumeration();
 }
-void Brute::on_lineEdit_targetDomain_returnPressed(){
+void Brute::on_lineEdit_target_returnPressed(){
     on_pushButton_start_clicked();
 }
 
-/************************************* stop Enumeration *************************************/
+/************************************* Pause/Stop Enumeration *************************************/
+void Brute::on_pushButton_pause_clicked(){
+    emit pause();
+}
+
 void Brute::on_pushButton_stop_clicked(){
     emit stop();
 }
 
-/************************************ Enumeration Functions *********************************/
-void Brute::checkWildcards(){
-    BruteEnumerator_Wildcards *wildcardsEnumerator = new BruteEnumerator_Wildcards(m_scanArguments);
-    QThread *cThread = new QThread;
-    wildcardsEnumerator->Enumerate(cThread);
-    wildcardsEnumerator->moveToThread(cThread);
-    //...
-    connect(cThread, SIGNAL(finished()), this, SLOT(startEnumeration()));
-    connect(cThread, SIGNAL(finished()), wildcardsEnumerator, SLOT(deleteLater()));
-    connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-    //...
-    cThread->start();
-}
+/************************************ Enumeration Method *********************************/
 
-void Brute::startEnumeration_subBrute(){
-    int maxThreads = m_scanArguments->maxThreads;
+void Brute::startEnumeration(){
+    ///
+    /// if the numner of threads is greater than the number of wordlists, set the
+    /// number of threads to use to the number of wordlists provided...
+    ///
     int wordlistCount = ui->listWidget_wordlist->count();
-    if(maxThreads > wordlistCount){
-        maxThreads = wordlistCount;
+    if(m_scanArguments->maxThreads > wordlistCount){
+        m_scanArguments->maxThreads = wordlistCount;
     }
-    activeThreads = maxThreads;
-    m_scanArguments->currentItemToEnumerate = 0;
-    for(int i = 0; i != maxThreads; i++){
-        //...
-        BruteEnumerator_subBrute *Enumerator = new BruteEnumerator_subBrute(m_scanArguments);
+    activeThreads = m_scanArguments->maxThreads;
+    //...
+    if(ui->comboBox_target->currentIndex() == MULTIPLE_TARGETS){
+        ui->listWidget_targets->item(0)->setForeground(Qt::gray);
+    }
+    ///
+    /// loop to create threads for enumeration...
+    ///
+    for(int i = 0; i < m_scanArguments->maxThreads; i++)
+    {
         QThread *cThread = new QThread;
+        BruteEnumerator *Enumerator = new BruteEnumerator(m_scanArguments);
         Enumerator->Enumerate(cThread);
         Enumerator->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(resolvedSubdomain(QString, QString)), this, SLOT(resolvedSubdomain(QString, QString)));
-        connect(Enumerator, SIGNAL(progressBarValue(int)), ui->progressBar, SLOT(setValue(int)));
+        connect(Enumerator, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
+        connect(Enumerator, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
         connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd()));
+        connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
         connect(this, SIGNAL(stop()), Enumerator, SLOT(onStop()));
         //...
         cThread->start();
     }
-}
-
-void Brute::startEnumeration_tldBrute(){
-    int maxThreads = m_scanArguments->maxThreads;
-    int totalWordlist = ui->listWidget_wordlist->count();
-    if(maxThreads > totalWordlist){
-        maxThreads = totalWordlist;
-    }
-    activeThreads = maxThreads;
-    m_scanArguments->currentItemToEnumerate = 0;
-    for(int i = 0; i != maxThreads; i++){
-        //...
-        BruteEnumerator_tldBrute *Enumerator = new BruteEnumerator_tldBrute(m_scanArguments);
-        QThread *cThread = new QThread;
-        Enumerator->Enumerate(cThread);
-        Enumerator->moveToThread(cThread);
-        //...
-        connect(Enumerator, SIGNAL(resolvedSubdomain(QString, QString)), this, SLOT(resolvedSubdomain(QString, QString)));
-        connect(Enumerator, SIGNAL(progressBarValue(int)), ui->progressBar, SLOT(setValue(int)));
-        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd()));
-        connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
-        connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stop()), Enumerator, SLOT(onStop()));
-        //...
-        cThread->start();
-    }
+    // logs...
+    sendStatus("[START] Started Subdomain Enumeration!");
+    logs("[START] Started Subdomain Enumeration!");
 }
 
 /************************************ Receiving Results ***********************************/
-void Brute::resolvedSubdomain(QString subdomain, QString ipAddress){
-    m_model->setItem(subdomainCount, 0, new QStandardItem(subdomain));
-    m_model->setItem(subdomainCount, 1, new QStandardItem(ipAddress));
-    subdomainCount++;
-    ui->label_subdomainsCount->setNum(subdomainCount);
+void Brute::scanResult(QString subdomain, QString ipAddress){
+    m_model->setItem(m_model->rowCount(), 0, new QStandardItem(subdomain));
+    m_model->setItem(m_model->rowCount()-1, 1, new QStandardItem(ipAddress));
+    ui->label_subdomainsCount->setNum(m_model->rowCount());
 }
 
-/************************************* End Of Enumeration **********************************/
-void Brute::onThreadEnd(){
+/********************************* Enumeration thread ended ********************************/
+void Brute::scanThreadEnded(){
     endedThreads++;
-    if(endedThreads == activeThreads){
+    if(endedThreads == activeThreads)
+    {
         endedThreads = 0;
+        //...
+        m_scanArguments->target.clear();
+        //...
         ui->pushButton_start->setEnabled(true);
+        ui->pushButton_pause->setDisabled(true);
         ui->pushButton_stop->setDisabled(true);
         //...
         sendStatus("[*] Enumeration Complete!");
         logs("[END] Enumeration Complete!\n");
     }
+}
+
+/********************* Change Btn Subdomain & TLD Enumerations ****************************/
+void Brute::on_radioButton_tldBrute_clicked(){
+    ui->label_mainTitle->setText("(TLD)Top Level Domain(example.*) Enumeration By BruteForcing...");
+}
+
+void Brute::on_radioButton_subBrute_clicked(){
+    ui->label_mainTitle->setText("Subdomain(*.example.com) Enumeration By BruteForcing...");
 }
 
 /******************************** Scan Config Dialog ***************************************/
@@ -205,8 +253,77 @@ void Brute::on_toolButton_config_clicked(){
     scanConfig->show();
 }
 
+void Brute::on_comboBox_target_currentIndexChanged(int index){
+    // index == 1 (Multiple-targets)..
+    if(index){
+        ui->frame_targets->show();
+    }
+    // index == 0 (Single targets)..
+    else{
+        ui->frame_targets->hide();
+    }
+}
+
+/*****************************************************************************************
+                            Multiple Targets
+*****************************************************************************************/
+void Brute::on_pushButton_removeTargets_clicked(){
+    int selectionCount = ui->listWidget_targets->selectedItems().count();
+    if(selectionCount){
+        qDeleteAll(ui->listWidget_targets->selectedItems());
+    }
+    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+}
+
+void Brute::on_pushButton_clearTargets_clicked(){
+    ui->listWidget_targets->clear();
+    ui->label_targetsCount->clear();
+    ui->pushButton_reload->hide();
+}
+
+void Brute::on_pushButton_loadTargets_clicked(){
+    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
+    if(filename.isEmpty()){
+        return;
+    }
+    QFile file(filename);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream in(&file);
+        while (!in.atEnd()){
+            ui->listWidget_targets->addItem(in.readLine());
+        }
+        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+        file.close();
+    }else{
+        QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
+    }
+}
+
+void Brute::on_pushButton_addTargets_clicked(){
+    if(ui->lineEdit_multipleTargets->text() != EMPTY){
+        ui->listWidget_targets->addItem(ui->lineEdit_multipleTargets->text());
+        ui->lineEdit_multipleTargets->clear();
+        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+    }
+}
+
+void Brute::on_lineEdit_multipleTargets_returnPressed(){
+ on_pushButton_addTargets_clicked();
+}
+
+/******************************************************************************************
+                                Wordlists
+*******************************************************************************************/
+
+void Brute::on_pushButton_reload_clicked(){
+    for(int i = 0; i < ui->listWidget_targets->count(); i++){
+        ui->listWidget_targets->item(i)->setForeground(Qt::black);
+    }
+    ui->pushButton_reload->hide();
+}
+
 /******************************* Generate Wordlist (Dialog) ******************************/
-void Brute::on_pushButton_generate_clicked(){
+void Brute::on_pushButton_generateWordlist_clicked(){
     WordListGeneratorDialog *wordlistgenerator = new WordListGeneratorDialog(this);
     wordlistgenerator->setAttribute( Qt::WA_DeleteOnClose, true );
     wordlistgenerator->show();
@@ -233,72 +350,74 @@ void Brute::onWordlistFilename(QString wordlistFilename){
         QTextStream in(&file);
         while (!in.atEnd()){
             ui->listWidget_wordlist->addItem(in.readLine());
-            wordlistCount++;
         }
         file.close();
     }
-    ui->label_wordlistCount->setNum(wordlistCount);
+    ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
 }
 
 /************************************ Loading Wordlist ***********************************/
-void Brute::on_pushButton_load_clicked(){
+void Brute::on_pushButton_loadWordlist_clicked(){
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(!filename.isEmpty()){
-        QFile file(filename);
-        if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-            QTextStream in(&file);
-            while (!in.atEnd()){
-                ui->listWidget_wordlist->addItem(in.readLine());
-                wordlistCount++;
-            }
-            ui->label_wordlistCount->setNum(wordlistCount);
-            file.close();
-        }else{
-            QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
+    if(filename.isEmpty()){
+        return;
+    }
+    QFile file(filename);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream in(&file);
+        while (!in.atEnd()){
+            ui->listWidget_wordlist->addItem(in.readLine());
         }
+        ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
+        file.close();
+    }else{
+        QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
     }
 }
 
 /******************************** Add Item on the Wordlist *********************************/
-void Brute::on_pushButton_add_clicked(){
+void Brute::on_pushButton_addWordlist_clicked(){
     if(ui->lineEdit_wordlist->text() != EMPTY){
         ui->listWidget_wordlist->addItem(ui->lineEdit_wordlist->text());
         ui->lineEdit_wordlist->clear();
-        wordlistCount++;
-        ui->label_wordlistCount->setNum(wordlistCount);
+        ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
     }
 }
 void Brute::on_lineEdit_wordlist_returnPressed(){
-    on_pushButton_add_clicked();
+    on_pushButton_addWordlist_clicked();
 }
 
 /******************************** Clear The Wordlist **************************************/
 void Brute::on_pushButton_clearWordlist_clicked(){
     ui->listWidget_wordlist->clear();
     ui->label_wordlistCount->clear();
-    wordlistCount = 0;
-    //...
-    m_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
 }
 
 /***************************** Removing Item From Wordlist *********************************/
-void Brute::on_pushButton_remove_clicked(){
+void Brute::on_pushButton_removeWordlist_clicked(){
     int selectionCount = ui->listWidget_wordlist->selectedItems().count();
     if(selectionCount){
         qDeleteAll(ui->listWidget_wordlist->selectedItems());
-        wordlistCount = wordlistCount-selectionCount;
     }
-    ui->label_wordlistCount->setNum(wordlistCount);
+    ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
 }
 
 /**************************** Clear the Enumerated Subdomains *****************************/
 void Brute::on_pushButton_clearResults_clicked(){
-    // if the current tab is subdomains clear subdomains if logs clear logs...
-    if(ui->tabWidget_results->currentIndex() == 0){
+    // if the current tab is subdomains clear subdomains...
+    if(ui->tabWidget_results->currentIndex() == 0)
+    {
         m_model->clear();
         ui->label_subdomainsCount->clear();
-        subdomainCount = 0;
-    }else{
+        //...
+        ui->progressBar->reset();
+        ui->progressBar->hide();
+        //...
+        m_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+    }
+    // if the current tab is logs clear logs...
+    else
+    {
         ui->listWidget_logs->clear();
     }
 }
@@ -321,15 +440,14 @@ void Brute::logs(QString log){
 /***************************** Context Menu For Action Button *****************************/
 void Brute::on_pushButton_action_clicked(){
     ///
-    /// getting the position of the action button to place the context menu...
-    ///
-    QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
-    ///
+    /// getting the position of the action button to place the context menu and
     /// showing the context menu right by the side of the action button...
     ///
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute( Qt::WA_DeleteOnClose, true );
-    menu->setObjectName("mainMenu");
+    QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
+    //...
+    QMenu *contextMenu_actionButton = new QMenu(this);
+    contextMenu_actionButton->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_actionButton->setObjectName("actionButtonMenu");
     //...
     QAction actionSendToSave("Send To Save", this);
     QAction actionSendToMultiLevel("Send To Multi-level Scan");
@@ -339,14 +457,15 @@ void Brute::on_pushButton_action_clicked(){
     connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords()));
     connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(actionSendToMultiLevel()));
     //...
-    menu->addSeparator();
-    menu->addAction(&actionSendToDnsRecords);
-    menu->addAction(&actionSendToSave);
-    menu->addAction(&actionSendToMultiLevel);
+    contextMenu_actionButton->addSeparator();
+    contextMenu_actionButton->addAction(&actionSendToDnsRecords);
+    contextMenu_actionButton->addAction(&actionSendToSave);
+    contextMenu_actionButton->addAction(&actionSendToMultiLevel);
     //...
-    menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
-    menu->move(QPoint(pos.x()+76, pos.y()));
-    menu->exec();
+    contextMenu_actionButton->setStyleSheet("QMenu::item::selected#actionButtonMenu{background-color: rgb(170, 170, 127)} QMenu#actionButtonMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
+
+    contextMenu_actionButton->move(QPoint(pos.x()+76, pos.y()));
+    contextMenu_actionButton->exec();
 }
 
 /****************************** Cursor right-click Context Menu ******************************/
@@ -358,10 +477,17 @@ void Brute::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
         return;
     }
+    ///
+    /// getting the position of the cursor to place the context menu...
+    ///
+    QPoint globalCursorPos = QCursor::pos();
+    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
+    QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
     //...
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute( Qt::WA_DeleteOnClose, true );
-    menu->setObjectName("mainMenu");
+    QMenu *contextMenu_rightClick = new QMenu(this);
+    contextMenu_rightClick->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_rightClick->setObjectName("rightClickMenu");
+    //...
     QAction actionSendToSave("Send Selected To Save", this);
     QAction actionSendToDnsRecords("Send Selected To DnsRecords");
     QAction actionOpenInBrowser("Open Selected in Browser");
@@ -370,18 +496,14 @@ void Brute::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
     connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(cursorSendToDnsRecords()));
     //...
-    menu->addAction(&actionOpenInBrowser);
-    menu->addSeparator();
-    menu->addAction(&actionSendToDnsRecords);
-    menu->addAction(&actionSendToSave);
+    contextMenu_rightClick->addAction(&actionOpenInBrowser);
+    contextMenu_rightClick->addSeparator();
+    contextMenu_rightClick->addAction(&actionSendToDnsRecords);
+    contextMenu_rightClick->addAction(&actionSendToSave);
     //...
-    QPoint globalCursorPos = QCursor::pos();
-    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
-    QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
-    //...
-    menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
-    menu->move(localCursorPosition);
-    menu->exec();
+    contextMenu_rightClick->setStyleSheet("QMenu::item::selected#rightClickMenu{background-color: rgb(170, 170, 127)} QMenu#rightClickMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
+    contextMenu_rightClick->move(localCursorPosition);
+    contextMenu_rightClick->exec();
 }
 
 

@@ -56,8 +56,8 @@ void ActiveEnumerator::onLookupFinished(){
 }
 
 void ActiveEnumerator::lookup(){
-    m_currentItemToEnumerate = m_scanArguments->currentItemToEnumerate;
-    m_scanArguments->currentItemToEnumerate++;
+    m_currentItemToEnumerate = m_scanArguments->currentWordlistToEnumerate;
+    m_scanArguments->currentWordlistToEnumerate++;
     if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
         //...
         progressBarValue(m_currentItemToEnumerate);
