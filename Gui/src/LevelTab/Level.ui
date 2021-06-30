@@ -123,6 +123,16 @@ selection-background-color:  rgb(177, 177, 133);</string>
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton_pause">
+         <property name="styleSheet">
+          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+         </property>
+         <property name="text">
+          <string>Pause</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButton_stop">
          <property name="styleSheet">
           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
@@ -642,16 +652,6 @@ background-color: rgb(230, 230, 172);
           </layout>
          </item>
          <item>
-          <widget class="Line" name="line_20">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(170, 170, 127);</string>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
           <layout class="QHBoxLayout" name="horizontalLayout_24">
            <item>
             <widget class="QTableView" name="tableView_subdomains">
@@ -872,16 +872,6 @@ border-radius: 0px;
             </spacer>
            </item>
           </layout>
-         </item>
-         <item>
-          <widget class="Line" name="line_19">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(170, 170, 127);</string>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_21">

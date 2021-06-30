@@ -10,6 +10,7 @@ Level::Level(QWidget *parent) :QDialog(parent),ui(new Ui::Level),
     ui->setupUi(this);
     //...
     ui->pushButton_stop->setDisabled(true);
+    ui->pushButton_pause->setDisabled(true);
     //...
     QStringList headerLabels = {"Subdomain Name:", "IpAddress"};
     m_model_subdomains->setHorizontalHeaderLabels(headerLabels);

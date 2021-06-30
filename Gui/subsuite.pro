@@ -52,6 +52,7 @@ SOURCES += \
 
 HEADERS += \
         src/ActiveTab/ActiveEnumerator.h \
+        src/ActiveTab/lib-active.h \
         src\ActiveTab\Active.h \
         src\LevelTab\LevelEnumerator.h \
         src\LevelTab\lib-level.h \

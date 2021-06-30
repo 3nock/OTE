@@ -262,6 +262,9 @@ selection-background-color:  rgb(177, 177, 133);</string>
       <enum>QFrame::Sunken</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="spacing">
+       <number>2</number>
+      </property>
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -286,7 +289,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
         <item>
          <widget class="QPushButton" name="pushButton_create">
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
+           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
           </property>
           <property name="text">
            <string>Create</string>
@@ -331,6 +334,9 @@ background-color: rgb(230, 230, 172);
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>2</number>
+          </property>
           <item>
            <widget class="QPushButton" name="pushButton_clear">
             <property name="styleSheet">

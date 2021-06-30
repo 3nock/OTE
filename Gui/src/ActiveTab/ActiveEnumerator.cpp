@@ -4,26 +4,27 @@
 /******************************************************************************************************
  *                                      ACTIVE_SUBDOMAINS ENUMERATOR
  ******************************************************************************************************/
-ActiveEnumerator::ActiveEnumerator(ScanArguments_Brute *scanArguments)
-    : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this))
+ActiveEnumerator::ActiveEnumerator(ScanArguments_Active *scanArguments)
+    : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this)),
+      m_socket(new QTcpSocket(this))
 {
     m_dns->setType(scanArguments->dnsRecordType);
-    m_dns->setNameserver(RandomNameserver(m_scanArguments->useCustomNameServers));
+    m_dns->setNameserver(QHostAddress("8.8.8.8"));
     //...
-    //...
-    connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
+    connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
     connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
 }
 ActiveEnumerator::~ActiveEnumerator(){
     delete m_dns;
+    delete m_socket;
 }
 
-void ActiveEnumerator::Enumerate(QThread *cThread){
+void ActiveEnumerator::enumerate(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void ActiveEnumerator::onLookupFinished(){
+void ActiveEnumerator::lookupFinished(){
     ///
     /// check the results of the lookup if no error occurred emit the results
     /// if error occurred emit appropriate response...
@@ -33,7 +34,24 @@ void ActiveEnumerator::onLookupFinished(){
             break;
         //...
         case QDnsLookup::NoError:
-            emit resolvedSubdomain(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+            ///
+            /// If user choosed to check if certain service in that host is available,
+            /// connect to that service via specific port n see if connection is
+            /// Established else just emit the result...
+            ///
+            if(m_scanArguments->checkForService)
+            {
+                m_socket->connectToHost(m_dns->name(), m_scanArguments->service);
+                if(m_socket->waitForConnected(m_scanArguments->timeout))
+                {
+                    m_socket->close();
+                    emit scanResult(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+                }
+            }
+            else
+            {
+                emit scanResult(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+            }
             break;
         //...
         case QDnsLookup::InvalidReplyError:
@@ -56,18 +74,18 @@ void ActiveEnumerator::onLookupFinished(){
 }
 
 void ActiveEnumerator::lookup(){
-    m_currentItemToEnumerate = m_scanArguments->currentWordlistToEnumerate;
-    m_scanArguments->currentWordlistToEnumerate++;
-    if(m_currentItemToEnumerate < m_scanArguments->wordlist->count()){
-        //...
-        progressBarValue(m_currentItemToEnumerate);
-        m_dns->setName(m_scanArguments->wordlist->item(m_currentItemToEnumerate)->text());
+    m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
+    m_scanArguments->currentTargetToEnumerate++;
+    if(m_currentTargetToEnumerate < m_scanArguments->targetList->count())
+    {
+        progress(m_currentTargetToEnumerate+1);
+        m_dns->setName(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
         m_dns->lookup();
-        //...
     }
-    else{
+    else
+    {
         ///
-        /// at the end of the wordlist, signal the thread to Quit...
+        /// at the end of the targetList, signal the thread to Quit...
         ///
         emit quitThread();
     }

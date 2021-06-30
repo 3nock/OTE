@@ -65,7 +65,6 @@ Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
     ui->tableView_results->setPalette(p);
     //...
     currentPath = QDir::currentPath();
-    //...
 }
 Brute::~Brute(){
     delete m_model;
@@ -179,12 +178,14 @@ void Brute::startEnumeration(){
     /// number of threads to use to the number of wordlists provided...
     ///
     int wordlistCount = ui->listWidget_wordlist->count();
-    if(m_scanArguments->maxThreads > wordlistCount){
+    if(m_scanArguments->maxThreads > wordlistCount)
+    {
         m_scanArguments->maxThreads = wordlistCount;
     }
     activeThreads = m_scanArguments->maxThreads;
     //...
-    if(ui->comboBox_target->currentIndex() == MULTIPLE_TARGETS){
+    if(ui->comboBox_target->currentIndex() == MULTIPLE_TARGETS)
+    {
         ui->listWidget_targets->item(0)->setForeground(Qt::gray);
     }
     ///

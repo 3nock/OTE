@@ -12,13 +12,14 @@ class DnsRecordsEnumerator: public QObject{
     Q_OBJECT
 
     private:
-        scanArguments_dnsRecords *m_scanArguments;
-        scanResults_dnsRecords *m_scanResults;
+        ScanArguments_Records *m_scanArguments;
+        ScanResults_Records *m_scanResults;
         //...
         QStandardItem *m_dnsNameItem;
         QStandardItem *m_recordItem;
         //...
         QHostAddress m_nameserver;
+        QDnsLookup *m_dns_srv;
         QDnsLookup *m_dns_a;
         QDnsLookup *m_dns_aaaa;
         QDnsLookup *m_dns_mx;
@@ -27,16 +28,19 @@ class DnsRecordsEnumerator: public QObject{
         QDnsLookup *m_dns_cname;
         //...
         int m_currentTargetToEnumerate = 0;
+        int m_currentSrvToEnumerate = 0;
+        //...
         int m_finishedLookups = 0;
         bool m_firstToResolve = true;
         //...
         QString m_currentTarget;
 
     public:
-        DnsRecordsEnumerator(scanArguments_dnsRecords *scanArguments, scanResults_dnsRecords *scanResults);
+        DnsRecordsEnumerator(ScanArguments_Records *scanArguments, ScanResults_Records *scanResults);
         ~DnsRecordsEnumerator();
         //...
-        void Enumerate(QThread *cThread);
+        void enumerate(QThread *cThread);
+        void enumerate_srv(QThread *cThread);
 
     public slots:
         void onStop();
@@ -44,20 +48,24 @@ class DnsRecordsEnumerator: public QObject{
 
     private slots:
         void lookup();
+        void lookup_srv();
+        //...
+        void srvLookupFinished();
         void aLookupFinished();
         void aaaaLookupFinished();
         void mxLookupFinished();
         void cnameLookupFinished();
         void nsLookupFinished();
         void txtLookupFinished();
-        //void anyLookupFinished();
 
     signals:
-        void progressBarValue(int value);
+        void progress(int value);
         void quitThread();
         void scanLog(QString log);
         void done();
+        //...
         void doLookup();
+        void doLookup_srv();
 };
 
 #endif // DNSENUMMERATOR_H

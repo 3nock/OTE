@@ -4,34 +4,32 @@
 #include "src/core.h"
 
 // Structures...
-struct scanArguments_dnsRecords{
-    QListWidget *targetWordlist = nullptr;
+struct ScanArguments_Records{
+    QListWidget *srvWordlist = nullptr;
+    QListWidget *targetList = nullptr;
+    //...
     int currentTargetToEnumerate = 0;
+    int currentSrvToEnumerate = 0;
+    //...
     int choiceCount = 0;
+    int progress = 0;
+    //...
+    bool RecordType_srv = false;
     bool RecordType_a = false;
     bool RecordType_aaaa = false;
     bool RecordType_mx = false;
     bool RecordType_ns = false;
     bool RecordType_txt = false;
     bool RecordType_cname = false;
-}; typedef struct scanArguments_dnsRecords scanArguments_dnsRecords;
+};
+typedef struct ScanArguments_Records ScanArguments_Records;
 
-struct scanArguments_lookup{
-    QListWidget* targetWordlist = nullptr;
-    int currentItemToEnumerate = 0;
-}; typedef struct scanArguments_lookup scanArguments_lookup;
-
-struct scanResults_dnsRecords{
+struct ScanResults_Records{
     QStandardItem* rootItem = nullptr;
     QLabel *resultsCountLabel = nullptr;
     int resultsCount = 0;
-}; typedef struct scanResults_dnsRecords scanResults_dnsRecords;
+};
+typedef struct ScanResults_Records ScanResults_Records;
 
-struct scanResults_lookup{
-    int hostnameCount = 0;
-    int ipAddressCount = 0;
-    QStandardItemModel* model = nullptr;
-    QLabel* resultsCountLabel = nullptr;
-}; typedef struct scanResults_lookup scanResults_lookup;
 
 #endif // LIBDNS_H

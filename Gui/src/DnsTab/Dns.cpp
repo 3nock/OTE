@@ -10,9 +10,8 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
       m_model(new QStandardItemModel),
       m_rootItem(m_model->invisibleRootItem()),
       //...
-      m_scanArguments(new scanArguments_dnsRecords),
-      //...
-      m_scanResults(new scanResults_dnsRecords)
+      m_scanArguments(new ScanArguments_Records),
+      m_scanResults(new ScanResults_Records)
 {
     ui->setupUi(this);
     //...
@@ -21,11 +20,14 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
     //...
     ui->treeView_results->setModel(m_model);
     //...
-    ui->lineEdit_wordlist->setPlaceholderText("Enter Target domains/subdomains...");
+    ui->lineEdit_targets->setPlaceholderText("Enter Target domains/subdomains...");
+    ui->lineEdit_srvWordlist->setPlaceholderText("Enter new SRV...");
     //...
     ui->pushButton_stop->setDisabled(true);
+    ui->pushButton_pause->setDisabled(true);
     //...
-    m_scanArguments->targetWordlist = ui->listWidget_wordlist;
+    m_scanArguments->targetList = ui->listWidget_targets;
+    m_scanArguments->srvWordlist = ui->listWidget_srvWordlist;
     ///
     /// Setting highlight Color for items on the TreeView...
     ///
@@ -36,12 +38,13 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
     ///
     /// setting the splitter to the middle...
     ///
-    ui->splitter->setSizes(QList<int>()<<150<<1);
+    ui->splitter->setSizes(QList<int>()<<160<<1);
 }
 Dns::~Dns(){
     delete m_scanArguments;
     delete m_scanResults;
     delete m_model;
+    //...
     delete ui;
 }
 
@@ -49,50 +52,74 @@ Dns::~Dns(){
                                       Scan
 **************************************************************************************/
 void Dns::on_pushButton_start_clicked(){
-    if(ui->listWidget_wordlist->count() < 1){
+    if(ui->listWidget_targets->count() < 1){
         QMessageBox::warning(this, TITLE_ERROR, "Please Enter Target Subdomains For Enumeration!");
         return;
     }
     ///
     /// getting the arguments for the Scan...
     ///
-    m_scanArguments->choiceCount = 0;
-    if(ui->checkBox_A->isChecked()){
-        m_scanArguments->RecordType_a = true;
-        m_scanArguments->choiceCount++;
+    if(ui->comboBox_option->currentIndex() == 0)
+    {
+        m_scanArguments->choiceCount = 0;
+        if(ui->checkBox_A->isChecked()){
+            m_scanArguments->RecordType_a = true;
+            m_scanArguments->choiceCount++;
+        }
+        if(ui->checkBox_AAAA->isChecked()){
+            m_scanArguments->RecordType_aaaa = true;
+            m_scanArguments->choiceCount++;
+        }
+        if(ui->checkBox_MX->isChecked()){
+            m_scanArguments->RecordType_mx = true;
+            m_scanArguments->choiceCount++;
+        }
+        if(ui->checkBox_NS->isChecked()){
+            m_scanArguments->RecordType_ns = true;
+            m_scanArguments->choiceCount++;
+        }
+        if(ui->checkBox_TXT->isChecked()){
+            m_scanArguments->RecordType_txt = true;
+            m_scanArguments->choiceCount++;
+        }
+        if(ui->checkBox_CNAME->isChecked()){
+            m_scanArguments->RecordType_cname = true;
+            m_scanArguments->choiceCount++;
+        }
+        //...
+        if(m_scanArguments->choiceCount == 0){
+            QMessageBox::warning(this, TITLE_ERROR, "Please Choose the DNS-RECORD you want to Enumerate!");
+            return;
+        }
+        //...
+        ui->progressBar->setMaximum(ui->listWidget_targets->count());
     }
-    if(ui->checkBox_AAAA->isChecked()){
-        m_scanArguments->RecordType_aaaa = true;
-        m_scanArguments->choiceCount++;
+    if(ui->comboBox_option->currentIndex() == 1)
+    {
+        if(ui->listWidget_srvWordlist->count() > 0)
+        {
+            m_scanArguments->RecordType_srv = true;
+            ui->progressBar->setMaximum(ui->listWidget_targets->count()*ui->listWidget_srvWordlist->count());
+        }
+        else
+        {
+            QMessageBox::warning(this, TITLE_ERROR, "Please Enter SRV Wordlist!");
+            return;
+        }
     }
-    if(ui->checkBox_MX->isChecked()){
-        m_scanArguments->RecordType_mx = true;
-        m_scanArguments->choiceCount++;
-    }
-    if(ui->checkBox_NS->isChecked()){
-        m_scanArguments->RecordType_ns = true;
-        m_scanArguments->choiceCount++;
-    }
-    if(ui->checkBox_TXT->isChecked()){
-        m_scanArguments->RecordType_txt = true;
-        m_scanArguments->choiceCount++;
-    }
-    if(ui->checkBox_CNAME->isChecked()){
-        m_scanArguments->RecordType_cname = true;
-        m_scanArguments->choiceCount++;
-    }
-    //...
-    if(m_scanArguments->choiceCount == 0){
-        QMessageBox::warning(this, TITLE_ERROR, "Please Choose the DNS-RECORD you want to Enumerate!");
-        return;
-    }
-    //...
+    ///
+    /// reseting, disabling/enabling the widgets...
+    ///
     ui->pushButton_start->setDisabled(true);
     ui->pushButton_stop->setEnabled(true);
+    ui->progressBar->clearMask();
+    ui->progressBar->reset();
     ui->progressBar->show();
-    //...
-    ui->progressBar->setMaximum(ui->listWidget_wordlist->count());
-    //...
+    ///
+    /// start Enumeration...
+    ///
+    m_scanArguments->currentSrvToEnumerate = 0;
+    m_scanArguments->currentTargetToEnumerate = 0;
     startEnumeration();
 }
 void Dns::on_pushButton_stop_clicked(){
@@ -102,22 +129,30 @@ void Dns::on_pushButton_stop_clicked(){
 /**************************************** Enumerators *************************************/
 void Dns::startEnumeration(){
     int maxThreads = 1;
-    int wordlistCount = ui->listWidget_wordlist->count();
+    int wordlistCount = ui->listWidget_targets->count();
     if(wordlistCount < maxThreads){
         maxThreads = wordlistCount;
     }
-    activeThreads = maxThreads;
+    m_activeThreads = maxThreads;
     //...
     m_scanArguments->currentTargetToEnumerate = 0;
     for(int i = 0; i < maxThreads; i++){
         DnsRecordsEnumerator *Enumerator = new DnsRecordsEnumerator(m_scanArguments, m_scanResults);
         QThread *cThread = new QThread(this);
-        Enumerator->Enumerate(cThread);
+        //...
+        if(ui->comboBox_option->currentIndex() == 0)
+        {
+            Enumerator->enumerate(cThread);
+        }
+        if(ui->comboBox_option->currentIndex() == 1)
+        {
+            Enumerator->enumerate_srv(cThread);
+        }
         Enumerator->moveToThread(cThread);
         //...
         connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(Enumerator, SIGNAL(progressBarValue(int)), ui->progressBar, SLOT(setValue(int)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnded()));
+        connect(Enumerator, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
+        connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
         connect(this, SIGNAL(stop()), Enumerator, SLOT(onStop()));
@@ -126,12 +161,15 @@ void Dns::startEnumeration(){
     }
 }
 
-void Dns::onThreadEnded(){
-    endedThreads++;
-    if(activeThreads == endedThreads){
+void Dns::scanThreadEnded(){
+    m_endedThreads++;
+    if(m_activeThreads == m_endedThreads)
+    {
         ui->pushButton_stop->setDisabled(true);
         ui->pushButton_start->setEnabled(true);
-        endedThreads = 0;
+        m_endedThreads = 0;
+        //...
+        logs("[END] Enumeration Complete!\n");
     }
 }
 
@@ -162,34 +200,30 @@ void Dns::on_toolButton_config_clicked(){
  *************************************************************************************/
 
 /************************************ Remove wordlist ************************************/
-void Dns::on_pushButton_remove_clicked(){
-    int wordlistToRemoveCount = ui->listWidget_wordlist->selectedItems().count();
-    if(wordlistToRemoveCount){
-        qDeleteAll(ui->listWidget_wordlist->selectedItems());
-        wordlistCount = wordlistCount-wordlistToRemoveCount;
+void Dns::on_pushButton_removeTargets_clicked(){
+    if(ui->listWidget_targets->selectedItems().count()){
+        qDeleteAll(ui->listWidget_targets->selectedItems());
     }
-    ui->label_wordlistCount->setNum(wordlistCount);
+    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
 }
 
 /************************************ Clear wordlist **************************************/
-void Dns::on_pushButton_clearWordlist_clicked(){
-    ui->listWidget_wordlist->clear();
-    ui->label_wordlistCount->clear();
-    wordlistCount = 0;
+void Dns::on_pushButton_clearTargets_clicked(){
+    ui->listWidget_targets->clear();
+    ui->label_targetsCount->clear();
 }
 
 /************************************ Load Wordlist ***************************************/
-void Dns::on_pushButton_load_clicked(){
+void Dns::on_pushButton_loadTargets_clicked(){
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
     if(!filename.isEmpty()){
         QFile file(filename);
         if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
             QTextStream in(&file);
             while (!in.atEnd()){
-                ui->listWidget_wordlist->addItem(in.readLine());
-                wordlistCount++;
+                ui->listWidget_targets->addItem(in.readLine());
             }
-            ui->label_wordlistCount->setNum(wordlistCount);
+            ui->label_targetsCount->setNum(ui->listWidget_targets->count());
             file.close();
         }else{
             QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
@@ -198,17 +232,59 @@ void Dns::on_pushButton_load_clicked(){
 }
 
 /***************************** Add Item on Wordlist **************************************/
-void Dns::on_pushButton_add_clicked(){
-    if(ui->lineEdit_wordlist->text() != EMPTY){
-        ui->listWidget_wordlist->addItem(ui->lineEdit_wordlist->text());
-        ui->lineEdit_wordlist->clear();
-        wordlistCount++;
-        ui->label_wordlistCount->setNum(wordlistCount);
+void Dns::on_pushButton_addTargets_clicked(){
+    if(ui->lineEdit_targets->text() != EMPTY){
+        ui->listWidget_targets->addItem(ui->lineEdit_targets->text());
+        ui->lineEdit_targets->clear();
+        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
     }
 }
-void Dns::on_lineEdit_wordlist_returnPressed(){
-    on_pushButton_add_clicked();
+void Dns::on_lineEdit_targets_returnPressed(){
+    on_pushButton_addTargets_clicked();
 }
+
+/************************************* SRV WORDLIST ****************************************/
+void Dns::on_pushButton_removeSrvWordlist_clicked(){
+    if(ui->listWidget_srvWordlist->selectedItems().count()){
+        qDeleteAll(ui->listWidget_srvWordlist->selectedItems());
+    }
+    ui->label_srvWordlistCount->setNum(ui->listWidget_srvWordlist->count());
+}
+
+void Dns::on_pushButton_clearSrvWordlist_clicked(){
+    ui->listWidget_srvWordlist->clear();
+    ui->label_srvWordlistCount->clear();
+}
+
+void Dns::on_pushButton_loadSrvWordlist_clicked(){
+    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
+    if(!filename.isEmpty()){
+        QFile file(filename);
+        if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+            QTextStream in(&file);
+            while (!in.atEnd()){
+                ui->listWidget_srvWordlist->addItem(in.readLine());
+            }
+            ui->label_srvWordlistCount->setNum(ui->listWidget_srvWordlist->count());
+            file.close();
+        }else{
+            QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
+        }
+    }
+}
+
+void Dns::on_pushButton_addSrvWordlist_clicked(){
+    if(ui->lineEdit_srvWordlist->text() != EMPTY){
+        ui->listWidget_srvWordlist->addItem(ui->lineEdit_srvWordlist->text());
+        ui->lineEdit_srvWordlist->clear();
+        ui->label_srvWordlistCount->setNum(ui->listWidget_srvWordlist->count());
+    }
+}
+
+void Dns::on_lineEdit_srvWordlist_returnPressed(){
+    on_pushButton_addSrvWordlist_clicked();
+}
+
 
 /************************************ ALL LOGS ***********************************/
 void Dns::logs(QString log){

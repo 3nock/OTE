@@ -27,7 +27,8 @@ void BruteEnumerator::lookupFinished(){
     /// check the results of the lookup if no error occurred emit the results
     /// if error occurred emit appropriate response...
     ///
-    switch(m_dns->error()){
+    switch(m_dns->error())
+    {
         case QDnsLookup::NotFoundError:
             break;
         //...
@@ -96,7 +97,7 @@ void BruteEnumerator::lookup(){
             m_scanArguments->currentTargetToEnumerate++;
             m_scanArguments->currentWordlistToEnumerate = 0;
             m_scanArguments->targetList->item(m_scanArguments->currentTargetToEnumerate)->setForeground(Qt::gray);
-            performAnotherLookup();
+            emit performAnotherLookup();
         }
         else
         {
