@@ -601,7 +601,7 @@ background-color: rgb(230, 230, 172);
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <widget class="Line" name="line_6">
@@ -616,7 +616,7 @@ background-color: rgb(230, 230, 172);
           <widget class="QFrame" name="frame_targets">
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <property name="spacing">
-             <number>2</number>
+             <number>6</number>
             </property>
             <property name="leftMargin">
              <number>0</number>
@@ -838,7 +838,7 @@ background-color: rgb(230, 230, 172);
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <property name="spacing">
-             <number>2</number>
+             <number>6</number>
             </property>
             <property name="leftMargin">
              <number>0</number>

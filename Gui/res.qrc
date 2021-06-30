@@ -6,5 +6,6 @@
     </qresource>
     <qresource prefix="/files">
         <file>res/files/nameservers.txt</file>
+        <file>res/files/srv.txt</file>
     </qresource>
 </RCC>

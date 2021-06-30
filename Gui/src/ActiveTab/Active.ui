@@ -616,13 +616,13 @@ background-color: rgb(230, 230, 172);
         <widget class="QFrame" name="frame_targets">
          <layout class="QVBoxLayout" name="verticalLayout_25">
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="leftMargin">
            <number>0</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>0</number>
           </property>
           <property name="rightMargin">
            <number>0</number>

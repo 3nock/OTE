@@ -25,8 +25,12 @@ struct ScanArguments_Records{
 typedef struct ScanArguments_Records ScanArguments_Records;
 
 struct ScanResults_Records{
+    QStandardItemModel* m_model_srv = nullptr;
     QStandardItem* rootItem = nullptr;
+    //..
     QLabel *resultsCountLabel = nullptr;
+    QLabel *srvResultsLabel = nullptr;
+    //...
     int resultsCount = 0;
 };
 typedef struct ScanResults_Records ScanResults_Records;

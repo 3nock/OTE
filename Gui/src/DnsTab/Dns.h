@@ -17,8 +17,10 @@ class Dns : public QDialog{
 
     private:
         void startEnumeration();
+        void loadSrvWordlist();
         //...
         QStandardItemModel* m_model;
+        QStandardItemModel* m_model_srv;
         QStandardItem* m_rootItem;
         //...
         ScanArguments_Records* m_scanArguments;
@@ -68,6 +70,7 @@ class Dns : public QDialog{
         void cursorOpenInBrowser();
         void cursorSendToSave();
         void cursorSendToMultiLevel();
+        void on_comboBox_option_currentIndexChanged(int index);
 };
 
 #endif // DNS_H

@@ -8,6 +8,7 @@
 
 Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
       m_model(new QStandardItemModel),
+      m_model_srv(new QStandardItemModel),
       m_rootItem(m_model->invisibleRootItem()),
       //...
       m_scanArguments(new ScanArguments_Records),
@@ -26,6 +27,9 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
     ui->pushButton_stop->setDisabled(true);
     ui->pushButton_pause->setDisabled(true);
     //...
+    ui->frame_srvWordlist->hide();
+    ui->progressBar->hide();
+    //...
     m_scanArguments->targetList = ui->listWidget_targets;
     m_scanArguments->srvWordlist = ui->listWidget_srvWordlist;
     ///
@@ -35,10 +39,13 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
     p.setColor(QPalette::Highlight, QColor(188, 188, 141));
     p.setColor(QPalette::HighlightedText, QColor(Qt::black));
     ui->treeView_results->setPalette(p);
+    ui->tableView_srv->setPalette(p);
     ///
     /// setting the splitter to the middle...
     ///
-    ui->splitter->setSizes(QList<int>()<<160<<1);
+    ui->splitter->setSizes(QList<int>()<<180<<1);
+    //...
+    loadSrvWordlist();
 }
 Dns::~Dns(){
     delete m_scanArguments;
@@ -161,6 +168,30 @@ void Dns::startEnumeration(){
     }
 }
 
+void Dns::loadSrvWordlist(){
+    ///
+    /// setup...
+    ///
+    m_model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+    ui->tableView_srv->setModel(m_model_srv);
+    m_scanResults->m_model_srv = m_model_srv;
+    //...
+    m_scanResults->srvResultsLabel = ui->label_srvCount;
+    ///
+    /// ...
+    ///
+    QFile file(":/files/res/files/srv.txt");
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream in(&file);
+        while (!in.atEnd()){
+            ui->listWidget_srvWordlist->addItem(in.readLine());
+        }
+        ui->label_srvWordlistCount->setNum(ui->listWidget_srvWordlist->count());
+        file.close();
+    }
+}
+
 void Dns::scanThreadEnded(){
     m_endedThreads++;
     if(m_activeThreads == m_endedThreads)
@@ -178,13 +209,16 @@ void Dns::scanThreadEnded(){
 ********************************************************************************************/
 
 void Dns::on_pushButton_clearResults_clicked(){
-    if(ui->tabWidget_results->currentIndex() == 0){
+    if(ui->tabWidget_results->currentIndex() == 0)
+    {
         ui->label_resultsCount->clear();
         m_model->clear();
         m_rootItem = m_model->invisibleRootItem();
         m_scanResults->rootItem = m_rootItem;
         m_scanResults->resultsCount = 0;
-    }else{
+    }
+    else
+    {
         ui->listWidget_logs->clear();
     }
 }
@@ -193,6 +227,22 @@ void Dns::on_toolButton_config_clicked(){
     //BruteConfig *bruteconfig = new BruteConfig(this, ENUMNAME_ACTIVESUBDOMAINS);
     //bruteconfig->setAttribute( Qt::WA_DeleteOnClose, true );
     //bruteconfig->show();
+}
+
+/**************************************************************************************/
+void Dns::on_comboBox_option_currentIndexChanged(int index){
+    if(index)
+    {
+        ui->frame_srvWordlist->show();
+        ui->frame_records->hide();
+        ui->tabWidget_results->setCurrentIndex(1);
+    }
+    else
+    {
+        ui->frame_srvWordlist->hide();
+        ui->frame_records->show();
+        ui->tabWidget_results->setCurrentIndex(0);
+    }
 }
 
 /**************************************************************************************

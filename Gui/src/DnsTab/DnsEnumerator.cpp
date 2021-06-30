@@ -7,6 +7,7 @@
 DnsRecordsEnumerator::DnsRecordsEnumerator(ScanArguments_Records *scanArguments, ScanResults_Records *scanResults)
     : m_scanArguments(scanArguments), m_scanResults(scanResults),
       m_nameserver(RandomNameserver(false)),
+      m_dns_srv(new QDnsLookup(this)),
       m_dns_a(new QDnsLookup(this)),
       m_dns_aaaa(new QDnsLookup(this)),
       m_dns_mx(new QDnsLookup(this)),
@@ -18,6 +19,7 @@ DnsRecordsEnumerator::DnsRecordsEnumerator(ScanArguments_Records *scanArguments,
     connect(this, SIGNAL(doLookup()), this, SLOT(lookup()));
     connect(this, SIGNAL(doLookup_srv()), this, SLOT(lookup_srv()));
     //...
+    m_dns_srv->setType(QDnsLookup::SRV);
     m_dns_a->setType(QDnsLookup::A);
     m_dns_aaaa->setType(QDnsLookup::AAAA);
     m_dns_mx->setType(QDnsLookup::MX);
@@ -25,6 +27,7 @@ DnsRecordsEnumerator::DnsRecordsEnumerator(ScanArguments_Records *scanArguments,
     m_dns_txt->setType(QDnsLookup::TXT);
     m_dns_cname->setType(QDnsLookup::CNAME);
     //...
+    m_dns_srv->setNameserver(m_nameserver);
     m_dns_a->setNameserver(m_nameserver);
     m_dns_a->setNameserver(m_nameserver);
     m_dns_mx->setNameserver(m_nameserver);
@@ -32,6 +35,7 @@ DnsRecordsEnumerator::DnsRecordsEnumerator(ScanArguments_Records *scanArguments,
     m_dns_txt->setNameserver(m_nameserver);
     m_dns_cname->setNameserver(m_nameserver);
     //...
+    connect(m_dns_srv, SIGNAL(finished()), this, SLOT(srvLookupFinished()));
     connect(m_dns_a, SIGNAL(finished()), this, SLOT(aLookupFinished()));
     connect(m_dns_aaaa, SIGNAL(finished()), this, SLOT(aaaaLookupFinished()));
     connect(m_dns_mx, SIGNAL(finished()), this, SLOT(mxLookupFinished()));
@@ -40,6 +44,7 @@ DnsRecordsEnumerator::DnsRecordsEnumerator(ScanArguments_Records *scanArguments,
     connect(m_dns_cname, SIGNAL(finished()), this, SLOT(cnameLookupFinished()));
 }
 DnsRecordsEnumerator::~DnsRecordsEnumerator(){
+    delete m_dns_srv;
     delete m_dns_a;
     delete m_dns_aaaa;
     delete m_dns_mx;
@@ -166,11 +171,12 @@ void DnsRecordsEnumerator::srvLookupFinished(){
         {
             for(const QDnsServiceRecord &record : records)
             {
-                m_scanResults->rootItem->appendRow(new QStandardItem("Name: "+record.name()+" Target: "+record.target()));
-                m_scanResults->resultsCount++;
+                m_scanResults->m_model_srv->setItem(m_scanResults->m_model_srv->rowCount(), 0, new QStandardItem(record.name()));
+                m_scanResults->m_model_srv->setItem(m_scanResults->m_model_srv->rowCount()-1, 1, new QStandardItem(record.target()));
+                m_scanResults->m_model_srv->setItem(m_scanResults->m_model_srv->rowCount()-1, 2, new QStandardItem(QString::number(record.port())));
             }
             //...
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsCount);
+            m_scanResults->srvResultsLabel->setNum(m_scanResults->m_model_srv->rowCount());
         }
     }
     emit doLookup_srv();
