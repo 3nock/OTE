@@ -14,8 +14,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(235, 235, 235);
-</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_17">
    <property name="leftMargin">
@@ -45,15 +44,18 @@
          <bold>true</bold>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string>Subdomain Enumeration Using Open Source Intelligence (OSINT) Engines...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="Line" name="line_8">
+      <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -71,15 +73,19 @@
          <property name="minimumSize">
           <size>
            <width>100</width>
-           <height>22</height>
+           <height>20</height>
           </size>
          </property>
          <property name="styleSheet">
           <string notr="true">border-style: solid;
 border-color: black;
 border-width: 1px;
-border-radius: 0px;
-selection-background-color:  rgb(177, 177, 133);</string>
+color: white;
+background-color:rgb(82, 82, 82);
+selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgba(143, 143, 107));</string>
+         </property>
+         <property name="frame">
+          <bool>true</bool>
          </property>
          <item>
           <property name="text">
@@ -95,11 +101,17 @@ selection-background-color:  rgb(177, 177, 133);</string>
        </item>
        <item>
         <widget class="QLineEdit" name="lineEdit_domain">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
          <property name="contextMenuPolicy">
           <enum>Qt::NoContextMenu</enum>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 255, 255);</string>
+          <string notr="true"/>
          </property>
          <property name="cursorPosition">
           <number>0</number>
@@ -108,6 +120,12 @@ selection-background-color:  rgb(177, 177, 133);</string>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_start">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
            <width>75</width>
@@ -118,7 +136,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Start</string>
@@ -127,8 +145,20 @@ selection-background-color:  rgb(177, 177, 133);</string>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_pause">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>75</width>
+           <height>23</height>
+          </size>
+         </property>
          <property name="styleSheet">
-          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Pause</string>
@@ -137,8 +167,20 @@ selection-background-color:  rgb(177, 177, 133);</string>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_stop">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>75</width>
+           <height>23</height>
+          </size>
+         </property>
          <property name="styleSheet">
-          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Stop</string>
@@ -150,7 +192,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
      <item>
       <widget class="Line" name="line_3">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -170,7 +212,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(210, 210, 210);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::Box</enum>
@@ -205,9 +247,10 @@ selection-background-color:  rgb(177, 177, 133);</string>
         <item>
          <widget class="QToolButton" name="toolButton_config">
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
+           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
+color: rgb(230,230,230);
 border-style: solid;
-border-color: black;
+border-color: rgb(50, 50, 50);
 border-width: 1px;
 border-radius: 15px</string>
           </property>
@@ -256,9 +299,10 @@ border-radius: 15px</string>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
+           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
+color: rgb(230,230,230);
 border-style: solid;
-border-color: black;
+border-color: rgb(50, 50, 50);
 border-width: 1px;
 border-radius: 15px</string>
           </property>
@@ -268,16 +312,6 @@ border-radius: 15px</string>
          </widget>
         </item>
        </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
       </widget>
      </item>
     </layout>
@@ -292,7 +326,7 @@ border-radius: 15px</string>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <property name="spacing">
-          <number>2</number>
+          <number>5</number>
          </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -305,7 +339,7 @@ border-radius: 15px</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Clear Results</string>
@@ -334,7 +368,7 @@ border-radius: 15px</string>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Action &gt;</string>
@@ -346,13 +380,7 @@ border-radius: 15px</string>
          <item>
           <widget class="QTabWidget" name="tabWidget">
            <property name="styleSheet">
-            <string notr="true">QTabBar::tab:hover{
-background-color: rgb(220, 220, 220);
-}
-
-QTabBar::tab:selected {
-color: rgb(141, 141, 106);
-}</string>
+            <string notr="true"/>
            </property>
            <property name="currentIndex">
             <number>0</number>
@@ -363,19 +391,19 @@ color: rgb(141, 141, 106);
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout">
              <property name="spacing">
-              <number>3</number>
+              <number>6</number>
              </property>
              <property name="leftMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <property name="topMargin">
-              <number>2</number>
+              <number>6</number>
              </property>
              <property name="rightMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -392,6 +420,9 @@ color: rgb(141, 141, 106);
                    <weight>75</weight>
                    <bold>true</bold>
                   </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>Enumerated Subdomains:</string>
@@ -425,7 +456,7 @@ color: rgb(141, 141, 106);
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-color: rgb(210, 210, 210);</string>
+                  <string notr="true">background-color:rgb(80, 80, 80);</string>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::Box</enum>
@@ -455,13 +486,7 @@ color: rgb(141, 141, 106);
                 <enum>Qt::CustomContextMenu</enum>
                </property>
                <property name="styleSheet">
-                <string notr="true">QWidget#tableView_results{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px;
-}</string>
+                <string notr="true"/>
                </property>
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
@@ -550,19 +575,7 @@ border-radius: 0px;
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">QWidget#listWidget_logs{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px
-}
-QListWidget::item:selected{
-background-color:  rgb(199, 199, 149);
-color: black;}
-QListWidget::item:hover{
-background-color: rgb(230, 230, 172);
-}</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -574,6 +587,9 @@ background-color: rgb(230, 230, 172);
        </item>
        <item>
         <widget class="Line" name="line_2">
+         <property name="styleSheet">
+          <string notr="true">background-color:rgb(80, 80, 80);</string>
+         </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -585,6 +601,9 @@ background-color: rgb(230, 230, 172);
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
         <widget class="Line" name="line_5">
+         <property name="styleSheet">
+          <string notr="true">background-color:rgb(80, 80, 80);</string>
+         </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -608,6 +627,9 @@ background-color: rgb(230, 230, 172);
                <bold>true</bold>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
               <string>Choose Osint Engines:</string>
              </property>
@@ -616,7 +638,7 @@ background-color: rgb(230, 230, 172);
            <item>
             <widget class="Line" name="line_10">
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(170, 170, 127);</string>
+              <string notr="true">background-color:rgb(82, 82, 82);</string>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -673,18 +695,7 @@ background-color: rgb(230, 230, 172);
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">/*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 rgb(210, 210, 210));
-border-style: solid;
-border-color:  black;
-border-width: 1px;
-border-radius: 0px;
-*/
-background-color: rgb(220, 220, 220);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px;
-selection-background-color:  rgb(177, 177, 133);</string>
+                 <string notr="true"/>
                 </property>
                 <property name="editable">
                  <bool>false</bool>
@@ -709,7 +720,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Load</string>
@@ -743,7 +754,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
                  <number>-1</number>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Delete</string>
@@ -757,7 +768,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
               <item>
                <widget class="QLineEdit" name="lineEdit_newProfile">
                 <property name="styleSheet">
-                 <string notr="true">background-color: rgb(255, 255, 255);</string>
+                 <string notr="true"/>
                 </property>
                </widget>
               </item>
@@ -782,7 +793,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Create</string>
@@ -799,7 +810,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
            <item>
             <widget class="Line" name="line_4">
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(170, 170, 127);</string>
+              <string notr="true">background-color:rgb(82, 82, 82);</string>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -808,6 +819,9 @@ selection-background-color:  rgb(177, 177, 133);</string>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="spacing">
+              <number>9</number>
+             </property>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_12">
                <item>
@@ -851,7 +865,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
                   <enum>Qt::NoContextMenu</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-color: rgb(210, 210, 210);</string>
+                  <string notr="true">background-color:rgb(82, 82, 82);</string>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
@@ -876,7 +890,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>186</width>
+                    <width>182</width>
                     <height>654</height>
                    </rect>
                   </property>
@@ -1109,13 +1123,6 @@ selection-background-color:  rgb(177, 177, 133);</string>
               </layout>
              </item>
              <item>
-              <widget class="Line" name="line_6">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1155,7 +1162,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
                   <enum>Qt::NoContextMenu</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-color: rgb(210, 210, 210);</string>
+                  <string notr="true">background-color:rgb(82, 82, 82);</string>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
@@ -1180,7 +1187,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>202</width>
+                    <width>198</width>
                     <height>310</height>
                    </rect>
                   </property>
@@ -1319,18 +1326,13 @@ selection-background-color:  rgb(177, 177, 133);</string>
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">QProgressBar::chunk {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
-}
-
-QProgressBar {
-    border: 1px solid black;
-    /*border-radius: 5px;*/
-    text-align: center;
-}</string>
+      <string notr="true"/>
+     </property>
+     <property name="maximum">
+      <number>0</number>
      </property>
      <property name="value">
-      <number>0</number>
+      <number>-1</number>
      </property>
     </widget>
    </item>

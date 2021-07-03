@@ -20,15 +20,10 @@ Level::Level(QWidget *parent) :QDialog(parent),ui(new Ui::Level),
     ui->tableView_results->setModel(m_model_results);
     //...
     ui->splitter->setSizes(QList<int>()<<220<<2);
+    ui->progressBar->hide();
     //...
     ui->lineEdit_wordlist->setPlaceholderText("Enter new wordlist item...");
     ui->lineEdit_subdomains->setPlaceholderText("Enter new subdomain:ipAddress item...");
-    //...
-    QPalette p = palette();
-    p.setColor(QPalette::Highlight, QColor(188, 188, 141));
-    p.setColor(QPalette::HighlightedText, QColor(Qt::black));
-    ui->tableView_subdomains->setPalette(p);
-    ui->tableView_results->setPalette(p);
 }
 
 Level::~Level(){

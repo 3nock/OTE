@@ -780,7 +780,6 @@ void Osint::on_pushButton_action_clicked(){
     int x = pos.x()+76;
     int y = pos.y();
     //...
-    menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
     menu->move(QPoint(x, y));
     menu->exec();
 }

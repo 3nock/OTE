@@ -463,8 +463,6 @@ void Brute::on_pushButton_action_clicked(){
     contextMenu_actionButton->addAction(&actionSendToSave);
     contextMenu_actionButton->addAction(&actionSendToMultiLevel);
     //...
-    contextMenu_actionButton->setStyleSheet("QMenu::item::selected#actionButtonMenu{background-color: rgb(170, 170, 127)} QMenu#actionButtonMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
-
     contextMenu_actionButton->move(QPoint(pos.x()+76, pos.y()));
     contextMenu_actionButton->exec();
 }
@@ -502,7 +500,6 @@ void Brute::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     contextMenu_rightClick->addAction(&actionSendToDnsRecords);
     contextMenu_rightClick->addAction(&actionSendToSave);
     //...
-    contextMenu_rightClick->setStyleSheet("QMenu::item::selected#rightClickMenu{background-color: rgb(170, 170, 127)} QMenu#rightClickMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
     contextMenu_rightClick->move(localCursorPosition);
     contextMenu_rightClick->exec();
 }

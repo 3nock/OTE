@@ -15,11 +15,6 @@ Active::Active(QWidget *parent) : QDialog(parent), ui(new Ui::Active),
     m_model->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
     ui->tableView_results->setModel(m_model);
     //...
-    QPalette p = palette();
-    p.setColor(QPalette::Highlight, QColor(188, 188, 141));
-    p.setColor(QPalette::HighlightedText, QColor(Qt::black));
-    ui->tableView_results->setPalette(p);
-    //...
     ui->splitter_3->setSizes(QList<int>()<<160<<1);
     //...
     currentPath = QDir::currentPath();
@@ -277,7 +272,6 @@ void Active::on_pushButton_action_clicked(){
     menu->addAction(&actionSendToSave);
     menu->addAction(&actionSendToMultiLevel);
     //...
-    menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
     menu->move(QPoint(pos.x()+76, pos.y()));
     menu->exec();
 }
@@ -310,7 +304,6 @@ void Active::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
     QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
     //...
-    menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
     menu->move(localCursorPosition);
     menu->exec();
 }

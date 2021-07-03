@@ -38,7 +38,7 @@
      <item>
       <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -50,7 +50,7 @@
    <item>
     <widget class="QFrame" name="frame">
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(210, 210, 210);</string>
+      <string notr="true">background-color:rgb(82, 82, 82);</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -128,12 +128,12 @@
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(235, 235, 235);
-border-style: solid;
+             <string notr="true">border-style: solid;
 border-color: black;
 border-width: 1px;
-border-radius: 0px;
-selection-background-color:  rgb(177, 177, 133);</string>
+background-color:rgb(82, 82, 82);
+selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgb(143, 143, 107));
+color: rgb(230,230,230);</string>
             </property>
             <item>
              <property name="text">
@@ -214,12 +214,12 @@ selection-background-color:  rgb(177, 177, 133);</string>
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(235, 235, 235);
-border-style: solid;
+             <string notr="true">border-style: solid;
 border-color: black;
 border-width: 1px;
-border-radius: 0px;
-selection-background-color:  rgb(177, 177, 133);</string>
+background-color:rgb(82, 82, 82);
+selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgb(143, 143, 107));
+color: rgb(230,230,230);</string>
             </property>
            </widget>
           </item>
@@ -253,7 +253,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
    <item>
     <widget class="QFrame" name="frame_newSpecialWordlist">
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(210, 210, 210);</string>
+      <string notr="true">background-color:rgb(82, 82, 82);</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -282,14 +282,26 @@ selection-background-color:  rgb(177, 177, 133);</string>
         <item>
          <widget class="QLineEdit" name="lineEdit_specialName">
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(255, 255, 255);</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_create">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>75</width>
+            <height>23</height>
+           </size>
+          </property>
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Create</string>
@@ -310,19 +322,7 @@ selection-background-color:  rgb(177, 177, 133);</string>
         <item>
          <widget class="QListWidget" name="listWidget_specialWordlist">
           <property name="styleSheet">
-           <string notr="true">QWidget#listWidget_specialWordlist{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 0px;
-}
-QListWidget::item:selected {
-background-color:  rgb(199, 199, 149);
-color: black;}
-QListWidget::item:hover{
-background-color: rgb(230, 230, 172);
-}</string>
+           <string notr="true"/>
           </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::ExtendedSelection</enum>
@@ -339,8 +339,14 @@ background-color: rgb(230, 230, 172);
           </property>
           <item>
            <widget class="QPushButton" name="pushButton_clear">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>23</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
+             <string notr="true">background-color:rgb(82, 82, 82);</string>
             </property>
             <property name="text">
              <string>Clear</string>
@@ -349,8 +355,14 @@ background-color: rgb(230, 230, 172);
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_remove">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>23</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
+             <string notr="true">background-color:rgb(82, 82, 82);</string>
             </property>
             <property name="text">
              <string>Remove</string>
@@ -359,8 +371,14 @@ background-color: rgb(230, 230, 172);
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_load">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>23</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
+             <string notr="true">background-color:rgb(82, 82, 82);</string>
             </property>
             <property name="text">
              <string>Load</string>
@@ -389,14 +407,20 @@ background-color: rgb(230, 230, 172);
         <item>
          <widget class="QLineEdit" name="lineEdit_add">
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(255, 255, 255);</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_add">
+          <property name="minimumSize">
+           <size>
+            <width>75</width>
+            <height>23</height>
+           </size>
+          </property>
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);</string>
+           <string notr="true">background-color:rgb(82, 82, 82);</string>
           </property>
           <property name="text">
            <string>Add</string>
@@ -413,7 +437,7 @@ background-color: rgb(230, 230, 172);
      <item>
       <widget class="Line" name="line_2">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -425,7 +449,7 @@ background-color: rgb(230, 230, 172);
        <item>
         <widget class="QPushButton" name="pushButton_cancel">
          <property name="styleSheet">
-          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Cancel</string>
@@ -435,7 +459,7 @@ background-color: rgb(230, 230, 172);
        <item>
         <widget class="QPushButton" name="pushButton_ok">
          <property name="styleSheet">
-          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>OK</string>

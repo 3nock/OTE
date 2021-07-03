@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>267</width>
-    <height>300</height>
+    <height>331</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -44,7 +44,7 @@
      <item>
       <widget class="Line" name="line_2">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -56,7 +56,7 @@
    <item>
     <widget class="QFrame" name="frame">
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(210, 210, 210);</string>
+      <string notr="true">background-color:rgb(82, 82, 82);</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -95,7 +95,7 @@
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(255, 255, 255);</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
@@ -132,7 +132,7 @@
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(255, 255, 255);</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
@@ -216,7 +216,7 @@
      <item>
       <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -228,7 +228,7 @@
        <item>
         <widget class="QPushButton" name="pushButton_cancel">
          <property name="styleSheet">
-          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Cancel</string>
@@ -238,7 +238,7 @@
        <item>
         <widget class="QPushButton" name="pushButton_ok">
          <property name="styleSheet">
-          <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Ok</string>

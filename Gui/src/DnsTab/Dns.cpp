@@ -33,14 +33,6 @@ Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
     m_scanArguments->targetList = ui->listWidget_targets;
     m_scanArguments->srvWordlist = ui->listWidget_srvWordlist;
     ///
-    /// Setting highlight Color for items on the TreeView...
-    ///
-    QPalette p = palette();
-    p.setColor(QPalette::Highlight, QColor(188, 188, 141));
-    p.setColor(QPalette::HighlightedText, QColor(Qt::black));
-    ui->treeView_results->setPalette(p);
-    ui->tableView_srv->setPalette(p);
-    ///
     /// setting the splitter to the middle...
     ///
     ui->splitter->setSizes(QList<int>()<<180<<1);
@@ -379,7 +371,6 @@ void Dns::on_pushButton_action_clicked(){
     menu->addAction(&actionSendToSave);
     menu->addAction(&actionSendToMultiLevel);
     //...
-    menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
     menu->move(QPoint(pos.x()+76, pos.y()));
     menu->exec();
 }
@@ -416,7 +407,6 @@ void Dns::on_treeView_results_customContextMenuRequested(const QPoint &pos){
     QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
     QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
     //...
-    menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
     menu->move(localCursorPosition);
     menu->exec();
 }

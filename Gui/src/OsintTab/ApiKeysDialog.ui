@@ -56,7 +56,7 @@
      <item>
       <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -70,7 +70,7 @@
      <item>
       <widget class="QScrollArea" name="scrollArea">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(210, 210, 210);</string>
+        <string notr="true">background-color:rgb(100, 100, 100);</string>
        </property>
        <property name="widgetResizable">
         <bool>true</bool>
@@ -203,7 +203,7 @@
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -273,18 +273,14 @@
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_censys">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -390,7 +386,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -460,7 +456,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -561,7 +557,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -656,7 +652,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -757,7 +753,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -858,7 +854,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -959,7 +955,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1054,7 +1050,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1155,7 +1151,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1256,7 +1252,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1354,7 +1350,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1452,7 +1448,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1553,7 +1549,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1654,7 +1650,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1749,7 +1745,7 @@ border-radius: 15px</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -1801,7 +1797,7 @@ border-radius: 15px</string>
      <item>
       <widget class="Line" name="line_2">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 170, 127);</string>
+        <string notr="true">background-color:rgb(82, 82, 82);</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -1821,7 +1817,7 @@ border-radius: 15px</string>
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Save</string>
@@ -1837,7 +1833,7 @@ border-radius: 15px</string>
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Cancel</string>
