@@ -78,7 +78,7 @@ class Brute : public QWidget{
         void on_lineEdit_multipleTargets_returnPressed();
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
         void on_comboBox_target_currentIndexChanged(int index);
-        // ...
+        //...
         void actionSendToMultiLevel();
         void actionSendToSave();
         void actionSendToDnsRecords();

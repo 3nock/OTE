@@ -50,7 +50,7 @@
      <item>
       <widget class="Line" name="line_10">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -81,12 +81,7 @@
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-style: solid;
-border-color: black;
-border-width: 1px;
-background-color:rgb(82, 82, 82);
-selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgb(143, 143, 107));
-color: rgb(230,230,230);</string>
+          <string notr="true"/>
          </property>
          <item>
           <property name="text">
@@ -206,7 +201,7 @@ color: rgb(230,230,230);</string>
      <item>
       <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -226,7 +221,7 @@ color: rgb(230,230,230);</string>
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="frameShape">
         <enum>QFrame::Box</enum>
@@ -242,19 +237,9 @@ color: rgb(230,230,230);</string>
          <number>9</number>
         </property>
         <item>
-         <widget class="QRadioButton" name="radioButton_hostname">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>active Hostnames</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_ip">
-          <property name="text">
-           <string>active IpAddresses</string>
+           <string>*Scan Config</string>
           </property>
          </widget>
         </item>
@@ -267,12 +252,7 @@ color: rgb(230,230,230);</string>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
-color: rgb(230,230,230);
-border-style: solid;
-border-color: rgb(50, 50, 50);
-border-width: 1px;
-border-radius: 15px</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Config..</string>
@@ -314,12 +294,7 @@ border-radius: 15px</string>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
-color: rgb(230,230,230);
-border-style: solid;
-border-color: rgb(50, 50, 50);
-border-width: 1px;
-border-radius: 15px</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Get...</string>
@@ -341,7 +316,7 @@ border-radius: 15px</string>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_22">
          <property name="spacing">
-          <number>2</number>
+          <number>6</number>
          </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_17">
@@ -479,7 +454,7 @@ border-radius: 15px</string>
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-color:rgb(80, 80, 80);</string>
+                  <string notr="true"/>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::Box</enum>
@@ -512,7 +487,7 @@ border-radius: 15px</string>
                 <string notr="true"/>
                </property>
                <property name="editTriggers">
-                <set>QAbstractItemView::DoubleClicked</set>
+                <set>QAbstractItemView::NoEditTriggers</set>
                </property>
                <property name="showDropIndicator" stdset="0">
                 <bool>false</bool>
@@ -523,6 +498,12 @@ border-radius: 15px</string>
                <property name="selectionMode">
                 <enum>QAbstractItemView::ExtendedSelection</enum>
                </property>
+               <property name="verticalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
+               <property name="horizontalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
                <property name="showGrid">
                 <bool>false</bool>
                </property>
@@ -532,6 +513,9 @@ border-radius: 15px</string>
                <property name="cornerButtonEnabled">
                 <bool>false</bool>
                </property>
+               <attribute name="horizontalHeaderCascadingSectionResizes">
+                <bool>true</bool>
+               </attribute>
                <attribute name="horizontalHeaderMinimumSectionSize">
                 <number>100</number>
                </attribute>
@@ -539,6 +523,9 @@ border-radius: 15px</string>
                 <number>220</number>
                </attribute>
                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
                 <bool>true</bool>
                </attribute>
                <attribute name="verticalHeaderVisible">
@@ -596,7 +583,7 @@ border-radius: 15px</string>
        <item>
         <widget class="Line" name="line_17">
          <property name="styleSheet">
-          <string notr="true">background-color:rgb(82, 82, 82);</string>
+          <string notr="true"/>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -610,7 +597,7 @@ border-radius: 15px</string>
        <item>
         <widget class="Line" name="line_7">
          <property name="styleSheet">
-          <string notr="true">background-color:rgb(82, 82, 82);</string>
+          <string notr="true"/>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -683,7 +670,7 @@ border-radius: 15px</string>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color:rgb(80, 80, 80);</string>
+               <string notr="true"/>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
@@ -728,13 +715,19 @@ border-radius: 15px</string>
                <string notr="true"/>
               </property>
               <property name="editTriggers">
-               <set>QAbstractItemView::NoEditTriggers</set>
+               <set>QAbstractItemView::DoubleClicked</set>
               </property>
               <property name="showDropIndicator" stdset="0">
                <bool>false</bool>
               </property>
               <property name="selectionMode">
                <enum>QAbstractItemView::ExtendedSelection</enum>
+              </property>
+              <property name="verticalScrollMode">
+               <enum>QAbstractItemView::ScrollPerPixel</enum>
+              </property>
+              <property name="horizontalScrollMode">
+               <enum>QAbstractItemView::ScrollPerPixel</enum>
               </property>
               <property name="selectionRectVisible">
                <bool>false</bool>

@@ -53,7 +53,7 @@
      <item>
       <widget class="Line" name="line_3">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -84,12 +84,7 @@
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-style: solid;
-border-color: black;
-border-width: 1px;
-background-color:rgb(82, 82, 82);
-selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgb(143, 143, 107));
-color: rgb(230,230,230);</string>
+          <string notr="true"/>
          </property>
          <item>
           <property name="text">
@@ -184,7 +179,7 @@ color: rgb(230,230,230);</string>
      <item>
       <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -204,7 +199,7 @@ color: rgb(230,230,230);</string>
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="frameShape">
         <enum>QFrame::Box</enum>
@@ -245,12 +240,7 @@ color: rgb(230,230,230);</string>
         <item>
          <widget class="QToolButton" name="toolButton_config">
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
-color: rgb(230,230,230);
-border-style: solid;
-border-color: rgb(50, 50, 50);
-border-width: 1px;
-border-radius: 15px</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Config..</string>
@@ -295,12 +285,7 @@ border-radius: 15px</string>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
-color: rgb(230,230,230);
-border-style: solid;
-border-color: rgb(50, 50, 50);
-border-width: 1px;
-border-radius: 15px</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Wordlist..</string>
@@ -322,7 +307,7 @@ border-radius: 15px</string>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_6">
          <property name="spacing">
-          <number>3</number>
+          <number>6</number>
          </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -439,7 +424,7 @@ border-radius: 15px</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_subdomainsCount">
+                <widget class="QLabel" name="label_resultsCount">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                    <horstretch>0</horstretch>
@@ -465,7 +450,7 @@ border-radius: 15px</string>
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-color:rgb(80, 80, 80);</string>
+                  <string notr="true"/>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::Box</enum>
@@ -510,7 +495,7 @@ border-radius: 15px</string>
                 <number>1</number>
                </property>
                <property name="editTriggers">
-                <set>QAbstractItemView::DoubleClicked</set>
+                <set>QAbstractItemView::NoEditTriggers</set>
                </property>
                <property name="showDropIndicator" stdset="0">
                 <bool>false</bool>
@@ -521,6 +506,12 @@ border-radius: 15px</string>
                <property name="selectionMode">
                 <enum>QAbstractItemView::ExtendedSelection</enum>
                </property>
+               <property name="verticalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
+               <property name="horizontalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
                <property name="showGrid">
                 <bool>false</bool>
                </property>
@@ -528,13 +519,19 @@ border-radius: 15px</string>
                 <bool>true</bool>
                </property>
                <property name="cornerButtonEnabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
+               <attribute name="horizontalHeaderCascadingSectionResizes">
+                <bool>true</bool>
+               </attribute>
                <attribute name="horizontalHeaderMinimumSectionSize">
                 <number>200</number>
                </attribute>
                <attribute name="horizontalHeaderDefaultSectionSize">
                 <number>220</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
                </attribute>
                <attribute name="verticalHeaderVisible">
                 <bool>false</bool>
@@ -591,7 +588,7 @@ border-radius: 15px</string>
        <item>
         <widget class="Line" name="line_2">
          <property name="styleSheet">
-          <string notr="true">background-color:rgb(82, 82, 82);</string>
+          <string notr="true"/>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -605,7 +602,7 @@ border-radius: 15px</string>
        <item>
         <widget class="Line" name="line_6">
          <property name="styleSheet">
-          <string notr="true">background-color:rgb(82, 82, 82);</string>
+          <string notr="true"/>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -699,7 +696,7 @@ border-radius: 15px</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color:rgb(80, 80, 80);</string>
+                 <string notr="true"/>
                 </property>
                 <property name="frameShape">
                  <enum>QFrame::Box</enum>
@@ -736,6 +733,18 @@ border-radius: 15px</string>
                <widget class="QListWidget" name="listWidget_targets">
                 <property name="styleSheet">
                  <string notr="true"/>
+                </property>
+                <property name="editTriggers">
+                 <set>QAbstractItemView::DoubleClicked</set>
+                </property>
+                <property name="selectionMode">
+                 <enum>QAbstractItemView::ExtendedSelection</enum>
+                </property>
+                <property name="verticalScrollMode">
+                 <enum>QAbstractItemView::ScrollPerPixel</enum>
+                </property>
+                <property name="horizontalScrollMode">
+                 <enum>QAbstractItemView::ScrollPerPixel</enum>
                 </property>
                </widget>
               </item>
@@ -863,7 +872,7 @@ border-radius: 15px</string>
             <item>
              <widget class="Line" name="line_12">
               <property name="styleSheet">
-               <string notr="true">background-color:rgb(82, 82, 82);</string>
+               <string notr="true"/>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -954,7 +963,7 @@ border-radius: 15px</string>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color:rgb(80, 80, 80);</string>
+                 <string notr="true"/>
                 </property>
                 <property name="frameShape">
                  <enum>QFrame::Box</enum>
@@ -1005,7 +1014,7 @@ border-radius: 15px</string>
                  <string notr="true"/>
                 </property>
                 <property name="editTriggers">
-                 <set>QAbstractItemView::NoEditTriggers</set>
+                 <set>QAbstractItemView::DoubleClicked</set>
                 </property>
                 <property name="showDropIndicator" stdset="0">
                  <bool>false</bool>
@@ -1018,6 +1027,12 @@ border-radius: 15px</string>
                 </property>
                 <property name="selectionMode">
                  <enum>QAbstractItemView::ExtendedSelection</enum>
+                </property>
+                <property name="verticalScrollMode">
+                 <enum>QAbstractItemView::ScrollPerPixel</enum>
+                </property>
+                <property name="horizontalScrollMode">
+                 <enum>QAbstractItemView::ScrollPerPixel</enum>
                 </property>
                 <property name="selectionRectVisible">
                  <bool>false</bool>

@@ -59,7 +59,7 @@ void Osint::on_pushButton_start_clicked(){
         strcpy(targetDomain, m_targetDomain.toStdString().c_str());
         //...
         scanArguments->targetDomain = targetDomain;
-        scanResults->label_subdomainsCount = ui->label_subdomainsCount;
+        scanResults->label_subdomainsCount = ui->label_resultsCount;
         scanResults->resultsCount = &subdomainsCount;
         scanResults->results_model = results_model;
         //...
@@ -106,7 +106,7 @@ void Osint::on_pushButton_clear_clicked(){
     // clear subdomains...
     if(ui->tabWidget->currentIndex() == 0){
         results_model->clear();
-        ui->label_subdomainsCount->clear();
+        ui->label_resultsCount->clear();
         subdomainsCount = 0;
         //...
         results_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});

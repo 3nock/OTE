@@ -38,7 +38,7 @@
      <item>
       <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -50,7 +50,7 @@
    <item>
     <widget class="QFrame" name="frame">
      <property name="styleSheet">
-      <string notr="true">background-color:rgb(82, 82, 82);</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -128,12 +128,7 @@
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-style: solid;
-border-color: black;
-border-width: 1px;
-background-color:rgb(82, 82, 82);
-selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgb(143, 143, 107));
-color: rgb(230,230,230);</string>
+             <string notr="true"/>
             </property>
             <item>
              <property name="text">
@@ -214,12 +209,7 @@ color: rgb(230,230,230);</string>
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-style: solid;
-border-color: black;
-border-width: 1px;
-background-color:rgb(82, 82, 82);
-selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgb(143, 143, 107));
-color: rgb(230,230,230);</string>
+             <string notr="true"/>
             </property>
            </widget>
           </item>
@@ -253,7 +243,7 @@ color: rgb(230,230,230);</string>
    <item>
     <widget class="QFrame" name="frame_newSpecialWordlist">
      <property name="styleSheet">
-      <string notr="true">background-color:rgb(82, 82, 82);</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -324,8 +314,17 @@ color: rgb(230,230,230);</string>
           <property name="styleSheet">
            <string notr="true"/>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::DoubleClicked</set>
+          </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+          <property name="verticalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
+          <property name="horizontalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
           </property>
           <property name="selectionRectVisible">
            <bool>true</bool>
@@ -437,7 +436,7 @@ color: rgb(230,230,230);</string>
      <item>
       <widget class="Line" name="line_2">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

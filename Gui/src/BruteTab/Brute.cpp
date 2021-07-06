@@ -217,7 +217,7 @@ void Brute::startEnumeration(){
 void Brute::scanResult(QString subdomain, QString ipAddress){
     m_model->setItem(m_model->rowCount(), 0, new QStandardItem(subdomain));
     m_model->setItem(m_model->rowCount()-1, 1, new QStandardItem(ipAddress));
-    ui->label_subdomainsCount->setNum(m_model->rowCount());
+    ui->label_resultsCount->setNum(m_model->rowCount());
 }
 
 /********************************* Enumeration thread ended ********************************/
@@ -409,7 +409,7 @@ void Brute::on_pushButton_clearResults_clicked(){
     if(ui->tabWidget_results->currentIndex() == 0)
     {
         m_model->clear();
-        ui->label_subdomainsCount->clear();
+        ui->label_resultsCount->clear();
         //...
         ui->progressBar->reset();
         ui->progressBar->hide();

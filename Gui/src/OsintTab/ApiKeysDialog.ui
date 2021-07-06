@@ -56,7 +56,7 @@
      <item>
       <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -70,7 +70,7 @@
      <item>
       <widget class="QScrollArea" name="scrollArea">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(100, 100, 100);</string>
+        <string notr="true"/>
        </property>
        <property name="widgetResizable">
         <bool>true</bool>
@@ -463,11 +463,7 @@
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_riskiq">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -564,11 +560,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_bing">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -659,11 +651,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_certspotter">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -760,11 +748,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_cloudflare">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -861,11 +845,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_github">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -962,11 +942,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_google">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1057,11 +1033,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_hunter">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1158,11 +1130,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_intelx">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1259,11 +1227,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_pentesttools">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1357,11 +1321,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_projectdiscovery">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1455,11 +1415,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_securityTrails">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1556,11 +1512,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_shodan">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1657,11 +1609,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_spyse">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1752,11 +1700,7 @@ border-radius: 15px</string>
              <item>
               <widget class="QToolButton" name="toolButton_getApiKey_virustotal">
                <property name="styleSheet">
-                <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1.5, stop: 0 white, stop: 1 grey);
-border-style: solid;
-border-color: black;
-border-width: 1px;
-border-radius: 15px</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Get...</string>
@@ -1797,7 +1741,7 @@ border-radius: 15px</string>
      <item>
       <widget class="Line" name="line_2">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

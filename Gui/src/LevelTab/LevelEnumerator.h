@@ -7,8 +7,8 @@ class LevelEnumerator: public QObject{
     Q_OBJECT
 
     private:
-        int m_currentItemToEnumerate = 0;
-        int m_currentResultsItem = 0;
+        int m_currentWordlistToEnumerate = 0;
+        int m_currentTargetToEnumerate = 0;
         ScanArguments_level* m_scanArguments;
         QDnsLookup* m_dns;
 
@@ -23,13 +23,15 @@ class LevelEnumerator: public QObject{
 
     private slots:
         void lookup();
-        void onLookupFinished();
+        void lookupFinished();
 
     signals:
         void performAnotherLookup();
         //...
+        void progress(int value);
+        void scanResult(QString subdomain, QString ipAddress);
         void scanLog(QString log);
-        void resolvedSubdomain(QString subdomain, QString ipAddress);
+        //...
         void quitThread();
 };
 

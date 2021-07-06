@@ -5,15 +5,26 @@
 #include "src/BruteTab/lib-brute.h"
 
 struct ScanArguments_level{
-    QStandardItemModel* model_subdomains = nullptr;
-    QListWidget* wordlist;
+    QListWidget* wordlist = nullptr;
+    QListWidget* targetList = nullptr;
     //...
     int currentWordlistToEnumerate = 0;
-    int currentSubdomainToEnumerate = 0;
+    int currentTargetToEnumerate = 0;
     //...
-    bool usesWildcards = false;
+    int currentLevel = 0;
+    int maxLevel = 0;
+    //...
+    int lastCount = 0;
+    //...
+    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
+    bool useCustomNameServers = false;
+    int maxThreads = 50;
+    //...
     bool checkWildcardSubdomains = false;
+    bool usesWildcards = false;
     QString foundWildcardIp = nullptr;
+    //...
+    int progress = 0;
 };
 typedef ScanArguments_level ScanArguments_level;
 

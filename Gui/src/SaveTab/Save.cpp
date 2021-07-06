@@ -13,7 +13,7 @@ void Save::onReceiveResults(QString subdomain){
     ui->listWidget_results_Save->addItem(subdomain);
     subdomains_file.write(subdomain.toUtf8()+NEWLINE);
     total_subdomain_count++;
-    ui->label_resultsCount_Save->setNum(total_subdomain_count);
+    ui->label_resultsCount->setNum(total_subdomain_count);
 }
 
 // sending signal for loading the Enumerated subdomains...
@@ -40,7 +40,7 @@ void Save::on_toolButton_get_Save_clicked(){
 void Save::on_pushButton_clear_Save_clicked(){
     ui->listWidget_results_Save->clear();
     total_subdomain_count = 0;
-    ui->label_resultsCount_Save->setNum(total_subdomain_count);
+    ui->label_resultsCount->setNum(total_subdomain_count);
     subdomains_file.remove();
     subdomains_file.open();
 }
@@ -67,7 +67,7 @@ void Save::on_pushButton_load_Save_clicked(){
             subdomains_file.write(line.toUtf8()+NEWLINE);
             total_subdomain_count++;
         }
-        ui->label_resultsCount_Save->setNum(total_subdomain_count);
+        ui->label_resultsCount->setNum(total_subdomain_count);
         file.close();
     }
 }
@@ -116,7 +116,7 @@ void Save::on_pushButton_filter_Save_clicked(){
                     total_subdomain_count--;
                 }
             }
-            ui->label_resultsCount_Save->setNum(total_subdomain_count);
+            ui->label_resultsCount->setNum(total_subdomain_count);
         }
         if(ui->comboBox_filter_Save->currentText() == "Starts with"){
             int i = 0;
@@ -128,7 +128,7 @@ void Save::on_pushButton_filter_Save_clicked(){
                     total_subdomain_count--;
                 }
             }
-            ui->label_resultsCount_Save->setNum(total_subdomain_count);
+            ui->label_resultsCount->setNum(total_subdomain_count);
         }
         if(ui->comboBox_filter_Save->currentText() == "Contains"){
             int i = 0;
@@ -140,7 +140,7 @@ void Save::on_pushButton_filter_Save_clicked(){
                     total_subdomain_count--;
                 }
             }
-            ui->label_resultsCount_Save->setNum(total_subdomain_count);
+            ui->label_resultsCount->setNum(total_subdomain_count);
         }
     }
 }
@@ -156,7 +156,7 @@ void Save::on_pushButton_back_Save_clicked(){
         ui->listWidget_results_Save->addItem(line);
         total_subdomain_count++;
     }
-    ui->label_resultsCount_Save->setNum(total_subdomain_count);
+    ui->label_resultsCount->setNum(total_subdomain_count);
 }
 
 // sorting the items on the listWidget...

@@ -16,32 +16,30 @@ class Level : public QDialog{
         Ui::Level *ui;
 
     private:
-        QStandardItemModel* m_model_subdomains;
+        void startEnumeration();
+        //...
         QStandardItemModel* m_model_results;
         //...
         ScanArguments_level* m_scanArguments;
+        status *m_status;
         //...
-        //int resultsCount = 0;
-        //int wordlistCount = 0;
-        //int subdomainsCount = 0;
-        //...
-        int activeThreads = 0;
-        int endedThreads = 0;
-        //...
-        int level = 0;
-        int doneLevels = 0;
-        int startOfNewLevel = 0;
+        int m_activeThreads = 0;
+        int m_endedThreads = 0;
 
     public:
         explicit Level(QWidget *parent = nullptr);
         ~Level();
-        //...
-        void startEnumeration();
+
+    signals:
+        void sendStatus(QString log);
+        void sendLog(QString log);
+        void stop();
 
     public slots:
-        void resolvedSubdomain(QString subdomain, QString ipAddress);
+        void scanThreadEnd();
+        void scanResult(QString subdomain, QString ipAddress);
+        //...
         void logs(QString log);
-        void onThreadEnd();
         void onWordlistFilename(QString wordlistFilename);
 
     private slots:
@@ -50,22 +48,26 @@ class Level : public QDialog{
         void on_toolButton_config_clicked();
         void on_pushButton_clearResults_clicked();
         void on_pushButton_action_clicked();
-        void on_pushButton_removeSubdomains_clicked();
-        void on_pushButton_clearSubdomains_clicked();
-        void on_pushButton_loadSubdomains_clicked();
+        void on_pushButton_removeTargets_clicked();
+        void on_pushButton_clearTargets_clicked();
+        void on_pushButton_loadTargets_clicked();
         void on_pushButton_removeWordlist_clicked();
         void on_pushButton_clearWordlist_clicked();
         void on_pushButton_loadWordlist_clicked();
         void on_pushButton_addWordlist_clicked();
         void on_toolButton_wordlist_clicked();
         void on_lineEdit_wordlist_returnPressed();
-        void on_pushButton_addSubdomains_clicked();
-        void on_lineEdit_subdomains_returnPressed();
-
-    signals:
-        void sendStatus(QString log);
-        void sendLog(QString log);
-        void stop();
+        void on_pushButton_addTargets_clicked();
+        void on_lineEdit_targets_returnPressed();
+        void on_tableView_results_customContextMenuRequested(const QPoint &pos);
+        //...
+        void actionSendToMultiLevel();
+        void actionSendToSave();
+        void actionSendToDnsRecords();
+        //...
+        void cursorSendToSave();
+        void cursorSendToDnsRecords();
+        void cursorOpenInBrowser();
 };
 
 #endif // LEVEL_H

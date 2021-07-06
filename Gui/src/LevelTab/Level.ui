@@ -50,7 +50,7 @@
      <item>
       <widget class="Line" name="line_18">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(80, 80, 80);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -64,7 +64,14 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QComboBox" name="comboBox">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>*Number Of Levels</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBox_levels">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -73,29 +80,15 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>90</width>
-           <height>22</height>
+           <width>50</width>
+           <height>21</height>
           </size>
          </property>
-         <property name="styleSheet">
-          <string notr="true">border-style: solid;
-border-color: black;
-border-width: 1px;
-background-color:rgb(82, 82, 82);
-selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgb(143, 143, 107));
-color: rgb(230,230,230);</string>
+         <property name="minimum">
+          <number>1</number>
          </property>
-         <item>
-          <property name="text">
-           <string>Nothing Yet</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>*Something Here</string>
+         <property name="maximum">
+          <number>10</number>
          </property>
         </widget>
        </item>
@@ -183,7 +176,7 @@ color: rgb(230,230,230);</string>
      <item>
       <widget class="Line" name="line">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(80, 80, 80);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -197,7 +190,7 @@ color: rgb(230,230,230);</string>
      <item>
       <widget class="QFrame" name="frame">
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(82, 82, 82);</string>
+        <string notr="true"/>
        </property>
        <property name="frameShape">
         <enum>QFrame::Box</enum>
@@ -228,12 +221,7 @@ color: rgb(230,230,230);</string>
         <item>
          <widget class="QToolButton" name="toolButton_config">
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
-color: rgb(230,230,230);
-border-style: solid;
-border-color: rgb(50, 50, 50);
-border-width: 1px;
-border-radius: 15px</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Config...</string>
@@ -269,12 +257,7 @@ border-radius: 15px</string>
         <item>
          <widget class="QToolButton" name="toolButton_wordlist">
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
-color: rgb(230,230,230);
-border-style: solid;
-border-color: rgb(50, 50, 50);
-border-width: 1px;
-border-radius: 15px</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>wordlist..</string>
@@ -296,7 +279,7 @@ border-radius: 15px</string>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_12">
          <property name="spacing">
-          <number>2</number>
+          <number>6</number>
          </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -359,7 +342,7 @@ border-radius: 15px</string>
           </layout>
          </item>
          <item>
-          <widget class="QTabWidget" name="tabWidget_output_dnsRecords_2">
+          <widget class="QTabWidget" name="tabWidget_results">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -425,7 +408,7 @@ border-radius: 15px</string>
                   </size>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-color:rgb(80, 80, 80);</string>
+                  <string notr="true"/>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::Box</enum>
@@ -458,9 +441,9 @@ border-radius: 15px</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_levels">
+                <widget class="QLabel" name="label_level">
                  <property name="styleSheet">
-                  <string notr="true">background-color:rgb(80, 80, 80);</string>
+                  <string notr="true"/>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::Box</enum>
@@ -498,6 +481,12 @@ border-radius: 15px</string>
                <property name="selectionBehavior">
                 <enum>QAbstractItemView::SelectItems</enum>
                </property>
+               <property name="verticalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
+               <property name="horizontalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
                <property name="showGrid">
                 <bool>false</bool>
                </property>
@@ -507,11 +496,17 @@ border-radius: 15px</string>
                <property name="cornerButtonEnabled">
                 <bool>false</bool>
                </property>
+               <attribute name="horizontalHeaderCascadingSectionResizes">
+                <bool>true</bool>
+               </attribute>
                <attribute name="horizontalHeaderMinimumSectionSize">
                 <number>200</number>
                </attribute>
                <attribute name="horizontalHeaderDefaultSectionSize">
                 <number>220</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
                </attribute>
                <attribute name="verticalHeaderVisible">
                 <bool>false</bool>
@@ -568,7 +563,7 @@ border-radius: 15px</string>
        <item>
         <widget class="Line" name="line_14">
          <property name="styleSheet">
-          <string notr="true">background-color:rgb(80, 80, 80);</string>
+          <string notr="true"/>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -582,7 +577,7 @@ border-radius: 15px</string>
        <item>
         <widget class="Line" name="line_15">
          <property name="styleSheet">
-          <string notr="true">background-color:rgb(80, 80, 80);</string>
+          <string notr="true"/>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -625,7 +620,7 @@ border-radius: 15px</string>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_subdomainsCount">
+            <widget class="QLabel" name="label_targetsCount">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -639,7 +634,7 @@ border-radius: 15px</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color:rgb(80, 80, 80);</string>
+              <string notr="true"/>
              </property>
              <property name="frameShape">
               <enum>QFrame::Box</enum>
@@ -673,12 +668,12 @@ border-radius: 15px</string>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_24">
            <item>
-            <widget class="QTableView" name="tableView_subdomains">
+            <widget class="QListWidget" name="listWidget_targets">
              <property name="styleSheet">
               <string notr="true"/>
              </property>
              <property name="editTriggers">
-              <set>QAbstractItemView::NoEditTriggers</set>
+              <set>QAbstractItemView::DoubleClicked</set>
              </property>
              <property name="showDropIndicator" stdset="0">
               <bool>false</bool>
@@ -686,33 +681,12 @@ border-radius: 15px</string>
              <property name="dragDropOverwriteMode">
               <bool>false</bool>
              </property>
-             <property name="showGrid">
-              <bool>false</bool>
+             <property name="verticalScrollMode">
+              <enum>QAbstractItemView::ScrollPerPixel</enum>
              </property>
-             <property name="sortingEnabled">
-              <bool>true</bool>
+             <property name="horizontalScrollMode">
+              <enum>QAbstractItemView::ScrollPerPixel</enum>
              </property>
-             <property name="cornerButtonEnabled">
-              <bool>false</bool>
-             </property>
-             <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>200</number>
-             </attribute>
-             <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>200</number>
-             </attribute>
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderMinimumSectionSize">
-              <number>15</number>
-             </attribute>
-             <attribute name="verticalHeaderDefaultSectionSize">
-              <number>15</number>
-             </attribute>
-             <attribute name="verticalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
             </widget>
            </item>
            <item>
@@ -721,7 +695,7 @@ border-radius: 15px</string>
               <number>3</number>
              </property>
              <item>
-              <widget class="QPushButton" name="pushButton_removeSubdomains">
+              <widget class="QPushButton" name="pushButton_removeTargets">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -743,7 +717,7 @@ border-radius: 15px</string>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_clearSubdomains">
+              <widget class="QPushButton" name="pushButton_clearTargets">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -765,7 +739,7 @@ border-radius: 15px</string>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_loadSubdomains">
+              <widget class="QPushButton" name="pushButton_loadTargets">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -806,14 +780,14 @@ border-radius: 15px</string>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QLineEdit" name="lineEdit_subdomains">
+            <widget class="QLineEdit" name="lineEdit_targets">
              <property name="styleSheet">
               <string notr="true"/>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_addSubdomains">
+            <widget class="QPushButton" name="pushButton_addTargets">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -839,7 +813,7 @@ border-radius: 15px</string>
          <item>
           <widget class="Line" name="line_16">
            <property name="styleSheet">
-            <string notr="true">background-color:rgb(80, 80, 80);</string>
+            <string notr="true"/>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -906,7 +880,7 @@ border-radius: 15px</string>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color:rgb(80, 80, 80);</string>
+              <string notr="true"/>
              </property>
              <property name="frameShape">
               <enum>QFrame::Box</enum>
@@ -953,8 +927,17 @@ border-radius: 15px</string>
              <property name="editTriggers">
               <set>QAbstractItemView::DoubleClicked</set>
              </property>
+             <property name="showDropIndicator" stdset="0">
+              <bool>false</bool>
+             </property>
              <property name="selectionMode">
               <enum>QAbstractItemView::ExtendedSelection</enum>
+             </property>
+             <property name="verticalScrollMode">
+              <enum>QAbstractItemView::ScrollPerPixel</enum>
+             </property>
+             <property name="horizontalScrollMode">
+              <enum>QAbstractItemView::ScrollPerPixel</enum>
              </property>
              <property name="selectionRectVisible">
               <bool>true</bool>

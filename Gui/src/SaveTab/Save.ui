@@ -53,7 +53,7 @@
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(80, 80, 80);</string>
+        <string notr="true"/>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -65,7 +65,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
-      <widget class="QFrame" name="">
+      <widget class="QFrame" name="frame">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -73,7 +73,7 @@
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color:rgb(80, 80, 80);</string>
+        <string notr="true"/>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
@@ -111,12 +111,7 @@
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-style: solid;
-border-color: black;
-border-width: 1px;
-color: white;
-background-color:rgb(82, 82, 82);
-selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgba(143, 143, 107));</string>
+           <string notr="true"/>
           </property>
           <item>
            <property name="text">
@@ -172,12 +167,7 @@ selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2
            <number>-1</number>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
-color: rgb(230,230,230);
-border-style: solid;
-border-color: rgb(50, 50, 50);
-border-width: 1px;
-border-radius: 15px</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Get...</string>
@@ -227,7 +217,7 @@ border-radius: 15px</string>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_resultsCount_Save">
+            <widget class="QLabel" name="label_resultsCount">
              <property name="font">
               <font>
                <weight>75</weight>
@@ -235,7 +225,7 @@ border-radius: 15px</string>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color:rgb(80, 80, 80);</string>
+              <string notr="true"/>
              </property>
              <property name="frameShape">
               <enum>QFrame::Box</enum>
@@ -279,8 +269,20 @@ border-radius: 15px</string>
              <property name="styleSheet">
               <string notr="true"/>
              </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::DoubleClicked</set>
+             </property>
+             <property name="showDropIndicator" stdset="0">
+              <bool>false</bool>
+             </property>
              <property name="selectionMode">
               <enum>QAbstractItemView::MultiSelection</enum>
+             </property>
+             <property name="verticalScrollMode">
+              <enum>QAbstractItemView::ScrollPerPixel</enum>
+             </property>
+             <property name="horizontalScrollMode">
+              <enum>QAbstractItemView::ScrollPerPixel</enum>
              </property>
              <property name="selectionRectVisible">
               <bool>true</bool>
@@ -442,12 +444,7 @@ border-radius: 15px</string>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">border-style: solid;
-border-color: black;
-border-width: 1px;
-color: white;
-background-color:rgb(82, 82, 82);
-selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgba(143, 143, 107));</string>
+              <string notr="true"/>
              </property>
              <property name="currentIndex">
               <number>2</number>
@@ -511,7 +508,7 @@ selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2
        <item>
         <widget class="Line" name="line">
          <property name="styleSheet">
-          <string notr="true">background-color:rgb(80, 80, 80);</string>
+          <string notr="true"/>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -525,7 +522,7 @@ selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2
        <item>
         <widget class="Line" name="line_6">
          <property name="styleSheet">
-          <string notr="true">background-color:rgb(80, 80, 80);</string>
+          <string notr="true"/>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -601,12 +598,7 @@ selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border-style: solid;
-border-color: black;
-border-width: 1px;
-color: white;
-background-color:rgb(82, 82, 82);
-selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.7 rgba(143, 143, 107));</string>
+              <string notr="true"/>
              </property>
              <item>
               <property name="text">
