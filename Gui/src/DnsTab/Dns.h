@@ -16,18 +16,19 @@ class Dns : public QDialog{
         Ui::Dns *ui;
 
     private:
-        void startEnumeration();
+        void startScan();
         void loadSrvWordlist();
         //...
-        QStandardItemModel* m_model;
-        QStandardItemModel* m_model_srv;
-        QStandardItem* m_rootItem;
-        //...
+        ScanStatus *m_scanStatus;
+        ScanConfig *m_scanConfig;
         ScanArguments_Records* m_scanArguments;
         ScanResults_Records* m_scanResults;
         //...
+        QStandardItemModel* m_model_results;
+        QStandardItemModel* m_model_srvResults;
+        QStandardItem* m_rootItem;
+        //...
         int m_activeThreads = 0;
-        int m_endedThreads = 0;
 
     public:
         explicit Dns(QWidget *parent = nullptr);
@@ -36,6 +37,7 @@ class Dns : public QDialog{
     signals:
         void stop();
         void sendLog(QString log);
+        void sendStatus(QString status);
 
     public slots:
         void scanThreadEnded();
@@ -47,6 +49,7 @@ class Dns : public QDialog{
         void on_pushButton_start_clicked();
         void on_pushButton_stop_clicked();
         void on_toolButton_config_clicked();
+        void on_comboBox_option_currentIndexChanged(int index);
         //...
         void on_pushButton_removeTargets_clicked();
         void on_pushButton_clearTargets_clicked();
@@ -62,6 +65,7 @@ class Dns : public QDialog{
         //...
         void on_pushButton_clearResults_clicked();
         void on_treeView_results_customContextMenuRequested(const QPoint &pos);
+        void on_tableView_srv_customContextMenuRequested(const QPoint &pos);
         //...
         void actionSendToSave();
         void actionSendToMultiLevel();
@@ -70,7 +74,7 @@ class Dns : public QDialog{
         void cursorOpenInBrowser();
         void cursorSendToSave();
         void cursorSendToMultiLevel();
-        void on_comboBox_option_currentIndexChanged(int index);
+        void on_pushButton_pause_clicked();
 };
 
 #endif // DNS_H

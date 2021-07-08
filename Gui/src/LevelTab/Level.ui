@@ -681,11 +681,17 @@
              <property name="dragDropOverwriteMode">
               <bool>false</bool>
              </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::ExtendedSelection</enum>
+             </property>
              <property name="verticalScrollMode">
               <enum>QAbstractItemView::ScrollPerPixel</enum>
              </property>
              <property name="horizontalScrollMode">
               <enum>QAbstractItemView::ScrollPerPixel</enum>
+             </property>
+             <property name="selectionRectVisible">
+              <bool>true</bool>
              </property>
             </widget>
            </item>

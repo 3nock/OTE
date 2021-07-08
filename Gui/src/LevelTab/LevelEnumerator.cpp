@@ -1,10 +1,12 @@
 #include "LevelEnumerator.h"
 
-LevelEnumerator::LevelEnumerator(ScanArguments_level *scanArguments)
-    : m_scanArguments(scanArguments), m_dns(new QDnsLookup)
+LevelEnumerator::LevelEnumerator(ScanConfig *scanConfig, ScanArguments_level *scanArguments)
+    : m_scanConfig(scanConfig),
+      m_scanArguments(scanArguments),
+      m_dns(new QDnsLookup)
 {
-    m_dns->setNameserver(RandomNameserver(m_scanArguments->useCustomNameServers));
-    m_dns->setType(m_scanArguments->dnsRecordType);
+    m_dns->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
+    m_dns->setType(m_scanConfig->dnsRecordType);
     //...
     connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
     connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
@@ -13,7 +15,7 @@ LevelEnumerator::~LevelEnumerator(){
     delete m_dns;
 }
 
-void LevelEnumerator::Enumerate(QThread *cThread){
+void LevelEnumerator::enumerate(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
@@ -29,12 +31,12 @@ void LevelEnumerator::lookupFinished(){
             break;
         //...
         case QDnsLookup::NoError:
-            if(m_scanArguments->checkWildcardSubdomains && m_scanArguments->usesWildcards){
+            if(m_scanConfig->checkWildcard && m_scanConfig->hasWildcard){
                 ///
                 /// check if the Ip adress of the subdomain is similar to the wildcard Ip found
                 /// if not similar we emit the results if similar discard the results...
                 ///
-                if(!(m_dns->hostAddressRecords()[0].value().toString() == m_scanArguments->foundWildcardIp)){
+                if(!(m_dns->hostAddressRecords()[0].value().toString() == m_scanConfig->wildcardIp)){
                     emit scanResult(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
                 }
             }
@@ -58,6 +60,12 @@ void LevelEnumerator::lookupFinished(){
         default:
             break;
     }
+    ///
+    /// scan progress...
+    ///
+    m_scanArguments->progress++;
+    emit progress(m_scanArguments->progress);
+    //...
     emit performAnotherLookup();
 }
 
@@ -71,9 +79,6 @@ void LevelEnumerator::lookup(){
     {
         m_dns->setName(m_scanArguments->wordlist->item(m_currentWordlistToEnumerate)->text()+"."+m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
         m_dns->lookup();
-        // scan progress...
-        m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
     }
     ///
     /// reached end of the wordlist...

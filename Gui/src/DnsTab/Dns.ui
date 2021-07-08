@@ -620,7 +620,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_srvCount">
+                <widget class="QLabel" name="label_srvResultsCount">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>

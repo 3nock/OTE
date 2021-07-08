@@ -1,15 +1,18 @@
 #include "ActiveEnumerator.h"
 
 
-/******************************************************************************************************
- *                                      ACTIVE_SUBDOMAINS ENUMERATOR
- ******************************************************************************************************/
-ActiveEnumerator::ActiveEnumerator(ScanArguments_Active *scanArguments)
-    : m_scanArguments(scanArguments), m_dns(new QDnsLookup(this)),
+/*************************************************************************************************
+                                     ACTIVE_SUBDOMAINS ENUMERATOR
+**************************************************************************************************/
+ActiveEnumerator::ActiveEnumerator(ScanConfig *scanConfig, ScanArguments_Active *scanArguments)
+    : m_scanConfig(scanConfig),
+      m_scanArguments(scanArguments),
+      //...
+      m_dns(new QDnsLookup(this)),
       m_socket(new QTcpSocket(this))
 {
-    m_dns->setType(scanArguments->dnsRecordType);
-    m_dns->setNameserver(QHostAddress("8.8.8.8"));
+    m_dns->setType(scanConfig->dnsRecordType);
+    m_dns->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
     //...
     connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
     connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
@@ -39,10 +42,10 @@ void ActiveEnumerator::lookupFinished(){
             /// connect to that service via specific port n see if connection is
             /// Established else just emit the result...
             ///
-            if(m_scanArguments->checkForService)
+            if(m_scanArguments->checkActiveService)
             {
                 m_socket->connectToHost(m_dns->name(), m_scanArguments->service);
-                if(m_socket->waitForConnected(m_scanArguments->timeout))
+                if(m_socket->waitForConnected(m_scanConfig->timeout))
                 {
                     m_socket->close();
                     emit scanResult(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
@@ -69,6 +72,11 @@ void ActiveEnumerator::lookupFinished(){
         default:
             break;
     }
+    ///
+    /// scan progress...
+    ///
+    m_scanArguments->progress++;
+    emit progress(m_scanArguments->progress);
     //...
     emit performAnotherLookup();
 }
@@ -78,7 +86,6 @@ void ActiveEnumerator::lookup(){
     m_scanArguments->currentTargetToEnumerate++;
     if(m_currentTargetToEnumerate < m_scanArguments->targetList->count())
     {
-        progress(m_currentTargetToEnumerate+1);
         m_dns->setName(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
         m_dns->lookup();
     }

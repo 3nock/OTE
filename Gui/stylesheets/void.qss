@@ -41,7 +41,7 @@ QFrame#frame, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers {
 }
 
 /******** QLabels ***********/
-QLabel#label_resultsCount, QLabel#label_targetsCount, QLabel#label_wordlistCount, QLabel#label_srvWordlistCount, QLabel#label_levels, QLabel#label_srvCount{
+QLabel#label_resultsCount, QLabel#label_targetsCount, QLabel#label_wordlistCount, QLabel#label_srvWordlistCount, QLabel#label_levels, QLabel#label_srvResultsCount{
 	background-color:rgb(80, 80, 80);
 }
 

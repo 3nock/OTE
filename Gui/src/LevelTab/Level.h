@@ -3,7 +3,6 @@
 
 #include "lib-level.h"
 #include "LevelEnumerator.h"
-#include "src/BruteTab/WordlistDialog.h"
 
 namespace Ui {
     class Level;
@@ -16,15 +15,18 @@ class Level : public QDialog{
         Ui::Level *ui;
 
     private:
-        void startEnumeration();
+        void startScan();
+        void nextLevel();
+        //...
+        ScanStatus *m_scanStatus;
+        ScanConfig *m_scanConfig;
+        ScanArguments_level *m_scanArguments;
         //...
         QStandardItemModel* m_model_results;
         //...
-        ScanArguments_level* m_scanArguments;
-        status *m_status;
-        //...
         int m_activeThreads = 0;
-        int m_endedThreads = 0;
+        //...
+        int lastScanResultsCount = 0;
 
     public:
         explicit Level(QWidget *parent = nullptr);
@@ -40,7 +42,7 @@ class Level : public QDialog{
         void scanResult(QString subdomain, QString ipAddress);
         //...
         void logs(QString log);
-        void onWordlistFilename(QString wordlistFilename);
+        void choosenWordlist(QString wordlistFilename);
 
     private slots:
         void on_pushButton_start_clicked();
@@ -68,6 +70,7 @@ class Level : public QDialog{
         void cursorSendToSave();
         void cursorSendToDnsRecords();
         void cursorOpenInBrowser();
+        void on_pushButton_pause_clicked();
 };
 
 #endif // LEVEL_H

@@ -2,7 +2,7 @@
 #define WORDLISTGENERATORDIALOG_H
 
 // headers...
-#include "lib-brute.h"
+#include "src/core.h"
 
 namespace Ui {
     class WordListGeneratorDialog;
@@ -19,4 +19,4 @@ class WordListGeneratorDialog : public QDialog{
         Ui::WordListGeneratorDialog *ui;
 };
 
-#endif // WORDLISTGENERATOR_H
+#endif // WORDLISTGENERATORDIALOG_H

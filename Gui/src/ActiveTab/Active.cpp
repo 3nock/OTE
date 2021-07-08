@@ -2,7 +2,10 @@
 #include "ui_Active.h"
 
 Active::Active(QWidget *parent) : QDialog(parent), ui(new Ui::Active),
-    m_model(new QStandardItemModel), m_scanArguments(new ScanArguments_Active)
+    m_scanStatus(new ScanStatus),
+    m_scanConfig(new ScanConfig),
+    m_scanArguments(new ScanArguments_Active),
+    m_model_results(new QStandardItemModel)
 {
     ui->setupUi(this);
     //...
@@ -12,21 +15,27 @@ Active::Active(QWidget *parent) : QDialog(parent), ui(new Ui::Active),
     ui->pushButton_stop->setDisabled(true);
     ui->pushButton_pause->setDisabled(true);
     //...
-    m_model->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
-    ui->tableView_results->setModel(m_model);
+    m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+    ui->tableView_results->setModel(m_model_results);
     //...
     ui->splitter_3->setSizes(QList<int>()<<160<<1);
     //...
-    currentPath = QDir::currentPath();
+    m_scanArguments->targetList = ui->listWidget_targets;
 }
 Active::~Active(){
+    delete m_scanStatus;
+    delete m_scanConfig;
+    delete m_scanArguments;
+    delete m_model_results;
+    //...
     delete ui;
-    delete m_model;
 }
 
+/******************************* Start **************************************/
 void Active::on_pushButton_start_clicked(){
     ///
-    /// checking input requirements before scan...
+    /// checking if all requirements are satisfied before scan if not prompt error
+    /// then exit function...
     ///
     if(!(ui->listWidget_targets->count() > 0)){
         QMessageBox::warning(this, TITLE_ERROR, "Please Enter the subdomains Wordlist for Enumeration!");
@@ -38,66 +47,92 @@ void Active::on_pushButton_start_clicked(){
     ui->pushButton_start->setDisabled(true);
     ui->pushButton_pause->setEnabled(true);
     ui->pushButton_stop->setEnabled(true);
-    ui->progressBar->clearMask();
-    ui->progressBar->reset();
     ui->progressBar->show();
-    ///
-    /// Getting scan arguments....
-    ///
-    m_scanArguments->targetList = ui->listWidget_targets;
-    ui->progressBar->setMaximum(ui->listWidget_targets->count());
-    //...
-    if(ui->comboBox_option->currentIndex() == ACTIVE_DNS){
-        m_scanArguments->checkForService = false;
-    }
-    if(ui->comboBox_option->currentIndex() == ACTIVE_HTTP){
-        m_scanArguments->checkForService = true;
-        m_scanArguments->service = 80;
-    }
-    if(ui->comboBox_option->currentIndex() == ACTIVE_HTTPS){
-        m_scanArguments->checkForService = true;
-        m_scanArguments->service = 443;
-    }
-    if(ui->comboBox_option->currentIndex() == ACTIVE_FTP){
-        m_scanArguments->checkForService = true;
-        m_scanArguments->service = 21;
-    }
-    if(ui->comboBox_option->currentIndex() == ACTIVE_SMTP){
-        m_scanArguments->checkForService = true;
-        m_scanArguments->service = 587;
-    }
     ///
     /// Resetting the scan arguments values...
     ///
     m_scanArguments->currentTargetToEnumerate = 0;
     m_scanArguments->progress = 0;
+    ui->progressBar->reset();
     ///
-    /// start Scan...
+    /// Getting scan arguments....
     ///
-    startEnumeration();
+    if(ui->comboBox_option->currentIndex() == ACTIVE::DNS){
+        m_scanArguments->checkActiveService = false;
+    }
+    if(ui->comboBox_option->currentIndex() == ACTIVE::HTTP){
+        m_scanArguments->checkActiveService = true;
+        m_scanArguments->service = 80;
+    }
+    if(ui->comboBox_option->currentIndex() == ACTIVE::HTTPS){
+        m_scanArguments->checkActiveService = true;
+        m_scanArguments->service = 443;
+    }
+    if(ui->comboBox_option->currentIndex() == ACTIVE::FTP){
+        m_scanArguments->checkActiveService = true;
+        m_scanArguments->service = 21;
+    }
+    if(ui->comboBox_option->currentIndex() == ACTIVE::SMTP){
+        m_scanArguments->checkActiveService = true;
+        m_scanArguments->service = 587;
+    }
+    ui->progressBar->setMaximum(ui->listWidget_targets->count());
+    ///
+    /// start active subdomain enumeration...
+    ///
+    startScan();
+    //...
+    sendStatus("[*] Testing For Active Subdomains...");
+    logs("[START] Testing For Active Subdomains...");
+}
+
+/************************************* STOP/PAUSE *************************************/
+void Active::on_pushButton_pause_clicked(){
+    ///
+    /// if the scan was already paused, then this current click is to
+    /// Resume the scan, just call the startScan, with the same arguments and
+    /// it will continue at where it ended...
+    ///
+    if(m_scanStatus->isPaused){
+        ui->pushButton_pause->setText("Pause");
+        m_scanStatus->isPaused = false;
+        //...
+        startScan();
+        //...
+        sendStatus("[START] Resumed Subdomain Enumeration!");
+        logs("[START] Resumed Subdomain Enumeration!");
+    }
+    else
+    {
+        m_scanStatus->isPaused = true;
+        emit stop();
+    }
 }
 
 void Active::on_pushButton_stop_clicked(){
     emit stop();
+    m_scanStatus->isStopped = true;
 }
 
-void Active::startEnumeration(){
+void Active::startScan(){
     ///
     /// if the numner of threads is greater than the number of wordlists, set the
-    /// number of threads to use to the number of wordlists provided...
+    /// number of threads to use to the number of wordlists available to avoid
+    /// creating more threads than needed...
     ///
     int wordlistCount = ui->listWidget_targets->count();
-    if(m_scanArguments->maxThreads > wordlistCount)
+    int threadsCount = m_scanConfig->threadsCount;
+    if(threadsCount > wordlistCount)
     {
-        m_scanArguments->maxThreads = wordlistCount;
+        threadsCount = wordlistCount;
     }
-    m_activeThreads = m_scanArguments->maxThreads;
+    m_activeThreads = threadsCount;
     ///
     /// loop to create threads for enumeration...
     ///
-    for(int i = 0; i < m_scanArguments->maxThreads; i++)
+    for(int i = 0; i < threadsCount; i++)
     {
-        ActiveEnumerator *Enumerator = new ActiveEnumerator(m_scanArguments);
+        ActiveEnumerator *Enumerator = new ActiveEnumerator(m_scanConfig, m_scanArguments);
         QThread *cThread = new QThread;
         Enumerator->enumerate(cThread);
         Enumerator->moveToThread(cThread);
@@ -105,45 +140,77 @@ void Active::startEnumeration(){
         connect(Enumerator, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
         connect(Enumerator, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
         connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(onThreadEnd()));
+        connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
         connect(this, SIGNAL(stop()), Enumerator, SLOT(onStop()));
         //...
         cThread->start();
     }
-    // logs...
-    sendStatus("[*] Testing For Active Subdomains...");
-    logs("[START] Testing For Active Subdomains...");
+    m_scanStatus->isRunning = true;
 }
 
 void Active::scanResult(QString subdomain, QString ipAddress){
-    m_model->setItem(m_model->rowCount(), 0, new QStandardItem(subdomain));
-    m_model->setItem(m_model->rowCount()-1, 1, new QStandardItem(ipAddress));
-    ui->label_resultsCount->setNum(m_model->rowCount());
+    m_model_results->setItem(m_model_results->rowCount(), 0, new QStandardItem(subdomain));
+    m_model_results->setItem(m_model_results->rowCount()-1, 1, new QStandardItem(ipAddress));
+    ui->label_resultsCount->setNum(m_model_results->rowCount());
 }
 
-void Active::onThreadEnd(){
-    m_endedThreads++;
-    if(m_endedThreads == m_activeThreads)
+void Active::scanThreadEnded(){
+    m_activeThreads--;
+    ///
+    /// if all Scan Threads have finished...
+    ///
+    if(m_activeThreads == 0)
     {
-        m_endedThreads = 0;
-        //...
-        ui->pushButton_start->setEnabled(true);
-        ui->pushButton_pause->setDisabled(true);
-        ui->pushButton_stop->setDisabled(true);
-        //...
-        sendStatus("[*] Enumeration Complete!");
-        logs("[END] Enumeration Complete!\n");
+        if(m_scanStatus->isPaused)
+        {
+            ui->pushButton_pause->setText("Resume");
+            m_scanStatus->isRunning = false;
+            //...
+            sendStatus("[*] Scan Paused!");
+            logs("[*] Scan Paused!\n");
+            return;
+        }
+        else
+        {
+            m_scanStatus->isPaused = false;
+            m_scanStatus->isStopped = false;
+            m_scanStatus->isRunning = false;
+            //...
+            ui->pushButton_start->setEnabled(true);
+            ui->pushButton_pause->setDisabled(true);
+            ui->pushButton_stop->setDisabled(true);
+            //...
+            sendStatus("[*] Enumeration Complete!");
+            logs("[END] Enumeration Complete!\n");
+        }
+    }
+}
+
+/********************* When User Changes options For Active Scan *************************/
+void Active::on_comboBox_option_currentIndexChanged(int index){
+    if(index == ACTIVE::DNS){
+        ui->label_details->setText("Resolves the target hostname To it's IpAddress");
+    }
+    if(index == ACTIVE::HTTP){
+        ui->label_details->setText("Resolves the target, if Resolved, Then tests for connection To port 80");
+    }
+    if(index == ACTIVE::HTTPS){
+        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 443");
+    }
+    if(index == ACTIVE::FTP){
+        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 20");
+    }
+    if(index == ACTIVE::SMTP){
+        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 587");
     }
 }
 
 void Active::on_toolButton_config_clicked(){
-    /*
-    BruteConfigDialog *scanConfig = new BruteConfigDialog(this, m_scanArguments);
+    ConfigDialog *scanConfig = new ConfigDialog(this, m_scanConfig);
     scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
     scanConfig->show();
-    */
 }
 
 void Active::on_pushButton_loadTargets_clicked(){
@@ -179,7 +246,7 @@ void Active::on_pushButton_clearTargets_clicked(){
     ui->listWidget_targets->clear();
     ui->label_targetsCount->clear();
     //...
-    m_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+    m_model_results->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
 }
 
 void Active::on_pushButton_removeTargets_clicked(){
@@ -190,18 +257,22 @@ void Active::on_pushButton_removeTargets_clicked(){
 }
 
 void Active::on_pushButton_clearResults_clicked(){
-    // if the current tab is subdomains clear subdomains
+    ///
+    /// if the current tab is subdomains clear subdomains...
+    ///
     if(ui->tabWidget_results->currentIndex() == 0)
     {
-        m_model->clear();
+        m_model_results->clear();
         ui->label_resultsCount->clear();
-        m_model->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+        m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
         //...
         ui->progressBar->clearMask();
         ui->progressBar->reset();
         ui->progressBar->hide();
     }
-    // if current tab is logs-tab clear logs...
+    ///
+    /// if current tab is logs-tab clear logs...
+    ///
     else
     {
         ui->listWidget_logs->clear();
@@ -211,32 +282,15 @@ void Active::on_pushButton_clearResults_clicked(){
 void Active::logs(QString log){
     sendLog(log);
     ui->listWidget_logs->addItem(log);
-    if(log.startsWith("[ERROR]")){
+    if(log.startsWith("[ERROR]"))
+    {
         ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setForeground(Qt::red);
         return;
     }
-    if(log.startsWith("[START]") || log.startsWith("[END]")){
+    if(log.startsWith("[START]") || log.startsWith("[END]"))
+    {
         ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setFont(QFont("MS Shell Dlg 2", 8, QFont::Bold));
         return;
-    }
-}
-
-/********************* When User Chnages options For Active Scan *************************/
-void Active::on_comboBox_option_currentIndexChanged(int index){
-    if(index == ACTIVE_DNS){
-        ui->label_details->setText("Resolves the target hostname To it's IpAddress");
-    }
-    if(index == ACTIVE_HTTP){
-        ui->label_details->setText("Resolves the target, if Resolved, Then tests for connection To port 80");
-    }
-    if(index == ACTIVE_HTTPS){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 443");
-    }
-    if(index == ACTIVE_FTP){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 20");
-    }
-    if(index == ACTIVE_SMTP){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 587");
     }
 }
 

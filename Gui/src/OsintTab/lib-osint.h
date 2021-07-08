@@ -1,10 +1,14 @@
 #ifndef LIBOSINT_H
 #define LIBOSINT_H
 
-// includes...
+/**********************************************
+                 includes
+***********************************************/
 #include "src/core.h"
 
-
+/**********************************************
+                 Macros
+***********************************************/
 #define OSINT_TRUE "1"
 #define OSINT_FALSE "0"
 // osint engines...
@@ -47,22 +51,24 @@
 #define ENGINE_DNSDUMPSTER "dnsdumpster"
 #define ENGINE_PASSIVEDNS "passivedns"
 #define ENGINE_YAHOO "yahoo"
-
 // file's paths...
 #define FILE_CONFIG "/config/osint-config.json"
 #define FILE_APIKEYS "/config/osint-apiKeys.json"
 #define FILE_PROFILES "/config/osint-profiles.json"
-
 // configurations...
 #define CONFIG_THREADS "threads"
 #define CONFIG_TIMEOUT "timeout"
 #define CONFIG_MAX_PAGES "max_pages"
 
-// functions...
-QString GetConfig(QString configType, int enumName);
-void SetConfig(QString configType, int enumName, QString configValue);
+/**********************************************
+                   enums
+***********************************************/
+#define OSINT_TRUE "1"
+#define OSINT_FALSE "0"
 
-// structures...
+/**********************************************
+                 Structures
+***********************************************/
 struct ScanArguments_Osint{
     QStringList choosenOptions;
     char* targetDomain;

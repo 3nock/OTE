@@ -19,24 +19,26 @@ class Active : public QDialog{
         Ui::Active *ui;
 
     private:
-        void startEnumeration();
+        void startScan();
         //...
-        QStandardItemModel *m_model;
+        ScanStatus *m_scanStatus;
+        ScanConfig *m_scanConfig;
         ScanArguments_Active *m_scanArguments;
         //...
-        int m_activeThreads = 0;
-        int m_endedThreads = 0;
+        QStandardItemModel *m_model_results;
         //...
-        QString currentPath;
+        int m_activeThreads = 0;
 
     signals:
         void stop();
+        //...
         void sendStatus(QString status);
         void sendLog(QString log);
 
     public slots:
         void scanResult(QString subdomain, QString ipAddress);
-        void onThreadEnd();
+        void scanThreadEnded();
+        //...
         void logs(QString log);
 
     private slots:
@@ -65,6 +67,7 @@ class Active : public QDialog{
         void cursorSendToSave();
         void cursorSendToDnsRecords();
         void cursorOpenInBrowser();
+        void on_pushButton_pause_clicked();
 };
 
 #endif // ACTIVE_H

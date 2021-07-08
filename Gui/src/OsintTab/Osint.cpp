@@ -51,7 +51,7 @@ void Osint::on_pushButton_start_clicked(){
         //...
         ui->pushButton_start->setDisabled(true);
         ui->pushButton_stop->setEnabled(true);
-        m_targetDomain = TargetNameFilter(ui->lineEdit_domain->text(), ENUMNAME_OSINT);
+        m_targetDomain = TargetNameFilter(ui->lineEdit_domain->text(), ENGINE::OSINT);
         ///
         /// converting the QString domainName to char* for compatibility with the PyObject methods...
         ///
@@ -124,9 +124,11 @@ void Osint::on_toolButton_keys_clicked(){
     apiKeysDialog->show();
 }
 void Osint::on_toolButton_config_clicked(){
+    /*
     OsintConfigDialog *scanConfig = new OsintConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
     scanConfig->show();
+    */
 }
 
 /******************************************************************

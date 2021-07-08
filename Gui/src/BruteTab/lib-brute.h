@@ -1,31 +1,28 @@
 #ifndef LIBBRUTE_H
 #define LIBBRUTE_H
 
+/***************************************
+               Includes
+****************************************/
 #include "src/core.h"
-#include <QProgressBar>
+#include "src/Dialogs/ConfigDialog.h"
+#include "src/Dialogs/WordlistDialog.h"
+#include "src/Dialogs/WordlistGeneratorDialog.h"
 
-//strcutures...
+/***************************************
+              strcutures
+****************************************/
 struct ScanArguments_Brute{
-    QStringList target;
-    QListWidget *wordlist = nullptr;
-    QListWidget *targetList = nullptr;
-    int progress = 0;
+    QStringList targetList;
+    QListWidget *wordlist;
     //...
-    bool tldBrute = false;
-    bool subBrute = false;
+    bool tldBrute;
+    bool subBrute;
     //...
-    int currentWordlistToEnumerate = 0;
-    int currentTargetToEnumerate = 0;
-    //...
-    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
-    bool checkWildcardSubdomains = false;
-    bool useCustomNameServers = false;
-    int maxThreads = 50;
-    //...
-    bool usesWildcards = false;
-    QString foundWildcardIp = nullptr;
+    int currentWordlistToEnumerate;
+    int currentTargetToEnumerate;
+    int progress;
 };
 typedef ScanArguments_Brute ScanArguments_Brute;
 
-//...
 #endif // LIBBRUTE_H

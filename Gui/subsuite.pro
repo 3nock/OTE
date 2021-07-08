@@ -26,7 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        src/ActiveTab/ActiveEnumerator.cpp \
+        src\ActiveTab\ActiveEnumerator.cpp \
         src\ActiveTab\Active.cpp \
         src\LevelTab\LevelEnumerator.cpp \
         src\LevelTab\lib-level.cpp \
@@ -37,22 +37,21 @@ SOURCES += \
         src\OsintTab\lib-osint.cpp \
         src\BruteTab\BruteEnumerator.cpp \
         src\BruteTab\Brute.cpp \
-        src\BruteTab\BruteConfigDialog.cpp \
-        src\BruteTab\WordlistDialog.cpp \
-        src\BruteTab\WordlistGeneratorDialog.cpp \
-        src\OsintTab\OsintConfigDialog.cpp \
         src\OsintTab\OsintEnumerator.cpp \
         src\OsintTab\Osint.cpp \
-        src\OsintTab\ApiKeysDialog.cpp \
         src\DnsTab\Dns.cpp \
         src\SaveTab\Save.cpp \
-        src\main.cpp \
+		src\Dialogs\ConfigDialog.cpp \
+        src\Dialogs\WordlistDialog.cpp \
+		src\Dialogs\ApiKeysDialog.cpp \
+        src\Dialogs\WordlistGeneratorDialog.cpp \
         src\core.cpp \
+		src\main.cpp \
         src\MainWindow.cpp
 
 HEADERS += \
-        src/ActiveTab/ActiveEnumerator.h \
-        src/ActiveTab/lib-active.h \
+        src\ActiveTab\ActiveEnumerator.h \
+        src\ActiveTab\lib-active.h \
         src\ActiveTab\Active.h \
         src\LevelTab\LevelEnumerator.h \
         src\LevelTab\lib-level.h \
@@ -63,15 +62,14 @@ HEADERS += \
         src\OsintTab\lib-osint.h \
         src\BruteTab\BruteEnumerator.h \
         src\BruteTab\Brute.h \
-        src\BruteTab\BruteConfigDialog.h \
-        src\BruteTab\WordlistDialog.h \
-        src\BruteTab\WordlistGeneratorDialog.h \
-        src\OsintTab\OsintConfigDialog.h \
         src\OsintTab\OsintEnumerator.h \
         src\OsintTab\Osint.h \
-        src\OsintTab\ApiKeysDialog.h \
         src\DnsTab\Dns.h \
         src\SaveTab\Save.h \
+		src\Dialogs\ApiKeysDialog.h \
+        src\Dialogs\ConfigDialog.h \
+        src\Dialogs\WordlistDialog.h \
+		src\Dialogs\WordlistGeneratorDialog.h \
         src\core.h \
         src\MainWindow.h
 
@@ -79,14 +77,13 @@ FORMS += \
         src\ActiveTab\Active.ui \
         src\LevelTab\Level.ui \
         src\BruteTab\Brute.ui \
-        src\BruteTab\BruteConfigDialog.ui \
-        src\BruteTab\WordlistDialog.ui \
-        src\BruteTab\WordlistGeneratorDialog.ui \
-        src\OsintTab\OsintConfigDialog.ui \
         src\OsintTab\Osint.ui \
-        src\OsintTab\ApiKeysDialog.ui \
         src\DnsTab\Dns.ui \
         src\SaveTab\Save.ui \
+		src\Dialogs\ConfigDialog.ui \
+        src\Dialogs\WordlistDialog.ui \
+        src\Dialogs\WordlistGeneratorDialog.ui \
+        src\Dialogs\ApiKeysDialog.ui \
         src\MainWindow.ui
 
 # including the python headers and libs...

@@ -2,13 +2,19 @@
 #include "ui_Level.h"
 
 Level::Level(QWidget *parent) :QDialog(parent),ui(new Ui::Level),
-    m_model_results(new QStandardItemModel),
-    m_scanArguments(new ScanArguments_level)
+    m_scanStatus(new ScanStatus),
+    m_scanConfig(new ScanConfig),
+    m_scanArguments(new ScanArguments_level),
+    m_model_results(new QStandardItemModel)
 {
     ui->setupUi(this);
     //...
+    ui->lineEdit_wordlist->setPlaceholderText("Enter new wordlist item...");
+    ui->lineEdit_targets->setPlaceholderText("Enter new target item...");
+    //...
     ui->pushButton_stop->setDisabled(true);
     ui->pushButton_pause->setDisabled(true);
+    ui->progressBar->hide();
     //...
     m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
     //...
@@ -18,13 +24,11 @@ Level::Level(QWidget *parent) :QDialog(parent),ui(new Ui::Level),
     m_scanArguments->targetList = ui->listWidget_targets;
     //...
     ui->splitter->setSizes(QList<int>()<<220<<2);
-    ui->progressBar->hide();
-    //...
-    ui->lineEdit_wordlist->setPlaceholderText("Enter new wordlist item...");
-    ui->lineEdit_targets->setPlaceholderText("Enter new target item...");
 }
 
 Level::~Level(){
+    delete m_scanStatus;
+    delete m_scanConfig;
     delete m_model_results;
     delete m_scanArguments;
     //...
@@ -33,6 +37,10 @@ Level::~Level(){
 
 /************************************** Start and Stop Scan ********************************************/
 void Level::on_pushButton_start_clicked(){
+    ///
+    /// checking if all requirements are satisfied before scan if not prompt error
+    /// then exit function...
+    ///
     if(ui->listWidget_wordlist->count() < 1){
         QMessageBox::warning(this, TITLE_ERROR, "Please Enter wordlist For Enumeration!");
         return;
@@ -42,59 +50,90 @@ void Level::on_pushButton_start_clicked(){
         return;
     }
     ///
-    /// enabling and disabling widgets...
+    /// disabling & Enabling widgets...
     ///
-    ui->progressBar->show();
-    ui->pushButton_stop->setEnabled(true);
-    ui->pushButton_pause->setEnabled(true);
     ui->pushButton_start->setDisabled(true);
+    ui->pushButton_pause->setEnabled(true);
+    ui->pushButton_stop->setEnabled(true);
+    ui->progressBar->reset();
+    ui->progressBar->show();
     ///
-    /// Getting the arguments....
+    /// Resetting & Getting the arguments....
     ///
-    m_scanArguments->maxLevel = ui->spinBox_levels->value();
     m_scanArguments->progress = 0;
     m_scanArguments->currentLevel = 0;
-    m_scanArguments->currentWordlistToEnumerate = 0;
     m_scanArguments->currentTargetToEnumerate = 0;
+    m_scanArguments->currentWordlistToEnumerate = 0;
+    m_scanArguments->maxLevel = ui->spinBox_levels->value();
+    lastScanResultsCount = m_model_results->rowCount();
+    ui->progressBar->setMaximum(ui->listWidget_targets->count()*ui->listWidget_wordlist->count());
+    ///
+    /// subdomain level check...
+    ///
+    m_scanArguments->currentLevel++;
+    ui->label_level->setNum(m_scanArguments->currentLevel);
     ///
     /// start enumeration...
     ///
-    startEnumeration();
-    // logs...
+    startScan();
+    //...
     sendStatus("[*] Enumerating Multi-Level Subdomains...");
     logs("[START] Enumerating Multi-Level Subdomains...");
 }
+
+/********************************** PAUSE/STOP ******************************************/
+void Level::on_pushButton_pause_clicked(){
+    ///
+    /// if the scan was already paused, then this current click is to
+    /// Resume the scan, just call the startScan, with the same arguments and
+    /// it will continue at where it ended...
+    ///
+    if(m_scanStatus->isPaused)
+    {
+        ui->pushButton_pause->setText("Pause");
+        m_scanStatus->isPaused = false;
+        //...
+        startScan();
+        //...
+        sendStatus("[RESUME] Resumed Subdomain Enumeration!");
+        logs("[RESUME] Resumed Subdomain Enumeration!");
+    }
+    else
+    {
+        m_scanStatus->isPaused = true;
+        emit stop();
+    }
+}
+
 void Level::on_pushButton_stop_clicked(){
-    m_status->isStopped = true;
+    m_scanStatus->isStopped = true;
     emit stop();
 }
 
 /***************************************************************************************
                                     Enumeration
 ****************************************************************************************/
-void Level::startEnumeration(){
-    if(m_scanArguments->maxThreads > ui->listWidget_wordlist->count()){
-        m_scanArguments->maxThreads = ui->listWidget_wordlist->count();
+void Level::startScan(){
+    ///
+    /// if the numner of threads is greater than the number of wordlists, set the
+    /// number of threads to use to the number of wordlists available to avoid
+    /// creating more threads than needed...
+    ///
+    int wordlistCount = ui->listWidget_wordlist->count();
+    int threadsCount = m_scanConfig->threadsCount;
+    if(threadsCount > wordlistCount)
+    {
+        threadsCount = wordlistCount;
     }
-    m_endedThreads = 0;
-    m_activeThreads = m_scanArguments->maxThreads;
-    //...
-    m_scanArguments->currentLevel++;
-    ui->label_level->setNum(m_scanArguments->currentLevel);
-    m_scanArguments->currentWordlistToEnumerate = 0;
-    ///
-    /// setting the progressBar Values...
-    ///
-    ui->progressBar->reset();
-    ui->progressBar->setMaximum(ui->listWidget_targets->count()*ui->listWidget_wordlist->count());
+    m_activeThreads = threadsCount;
     ///
     /// starting the loop to enumerate subdmains according to the number of threads...
     ///
-    for(int i = 0; i < m_scanArguments->maxThreads; i++)
+    for(int i = 0; i < threadsCount; i++)
     {
-        LevelEnumerator *Enumerator = new LevelEnumerator(m_scanArguments);
+        LevelEnumerator *Enumerator = new LevelEnumerator(m_scanConfig, m_scanArguments);
         QThread *cThread = new QThread;
-        Enumerator->Enumerate(cThread);
+        Enumerator->enumerate(cThread);
         Enumerator->moveToThread(cThread);
         //...
         connect(Enumerator, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
@@ -107,54 +146,92 @@ void Level::startEnumeration(){
         //...
         cThread->start();
     }
+    m_scanStatus->isRunning = true;
+}
+
+void Level::nextLevel(){
+    ///
+    /// first Clear the last level targetList of all previous subdomains...
+    ///
+    ui->listWidget_targets->clear();
+    ///
+    /// then copy the newly enumerated subdomains from results model to the
+    /// new targetList...
+    ///
+    while(lastScanResultsCount < m_model_results->rowCount())
+    {
+        ui->listWidget_targets->addItem(m_model_results->item(lastScanResultsCount, 0)->text());
+        lastScanResultsCount++;
+    }
+    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+    ///
+    /// Resetting the arguments....
+    ///
+    ui->progressBar->reset();
+    m_scanArguments->progress = 0;
+    m_scanArguments->currentTargetToEnumerate = 0;
+    m_scanArguments->currentWordlistToEnumerate = 0;
+    lastScanResultsCount = m_model_results->rowCount();
+    ui->progressBar->setMaximum(ui->listWidget_targets->count()*ui->listWidget_wordlist->count());
+    ///
+    /// subdomain level check...
+    ///
+    m_scanArguments->currentLevel++;
+    ui->label_level->setNum(m_scanArguments->currentLevel);
+    ///
+    /// start another scan on a higher level than previous scan...
+    ///
+    startScan();
+    //...
+    sendStatus("[*] Enumerating subdomains on Level: "+QString::number(m_scanArguments->currentLevel));
+    logs("[*] Enumerating subdomains on Level: "+QString::number(m_scanArguments->currentLevel));
 }
 
 void Level::scanThreadEnd(){
-    m_endedThreads++;
-    if(m_endedThreads != m_activeThreads)
+    m_activeThreads--;
+    if(m_activeThreads != 0)
     {
         return;
     }
-    m_endedThreads = 0;
-    m_scanArguments->progress = 0;
     ///
     /// check if you've reached last level and if not start another scan to enumerate
     /// another level...
     ///
-    if(!m_status->isStopped && (m_scanArguments->currentLevel < m_scanArguments->maxLevel))
+    if(m_scanStatus->isPaused)
     {
-        ///
-        /// first Clear the targetList of all previous subdomains...
-        ///
-        ui->listWidget_targets->clear();
-        ///
-        /// then copy the newly enumerated subdomains from results model to the
-        /// new targetList...
-        ///
-        while(m_scanArguments->lastCount < m_model_results->rowCount())
-        {
-            ui->listWidget_targets->addItem(m_model_results->item(m_scanArguments->lastCount, 0)->text());
-            m_scanArguments->lastCount++;
-        }
-        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-        ///
-        /// start another enumeration level...
-        ///
-        startEnumeration();
+        ui->pushButton_pause->setText("Resume");
+        m_scanStatus->isRunning = false;
+        //...
+        sendStatus("[*] Scan Paused!");
+        logs("[*] Scan Paused!\n");
+        return;
+    }
+    if(!m_scanStatus->isStopped && (m_scanArguments->currentLevel < m_scanArguments->maxLevel) && (lastScanResultsCount < m_model_results->rowCount()))
+    {
+        nextLevel();
     }
     else
     {
+        ///
+        /// Reached End of the scan on all levels or the scan was stopped...
+        ///
+        m_scanStatus->isPaused = false;
+        m_scanStatus->isStopped = false;
+        m_scanStatus->isRunning = false;
+        //...
         ui->pushButton_start->setEnabled(true);
         ui->pushButton_stop->setDisabled(true);
         ui->pushButton_pause->setDisabled(true);
         //...
         sendStatus("[*] Enumeration by tldBrute Complete!");
-        logs("[END] TLD Bruteforcing Complete!\n");
+        logs("[END] Multi-Level Subdomain Bruteforcing Complete!\n");
     }
 }
 
 void Level::on_toolButton_config_clicked(){
-
+    ConfigDialog *scanConfig = new ConfigDialog(this, m_scanConfig);
+    scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
+    scanConfig->show();
 }
 
 /************************************** Results *****************************************/
@@ -282,13 +359,13 @@ void Level::on_lineEdit_wordlist_returnPressed(){
 }
 
 void Level::on_toolButton_wordlist_clicked(){
-    WordListDialog *wordlistDialog = new WordListDialog(this, ENUMNAME_SUBBRUTE);
+    WordListDialog *wordlistDialog = new WordListDialog(this, ENGINE::SUBBRUTE);
     wordlistDialog->setAttribute( Qt::WA_DeleteOnClose, true );
-    connect(wordlistDialog, SIGNAL(wordlistFilename(QString)), this, SLOT(onWordlistFilename(QString)));
+    connect(wordlistDialog, SIGNAL(choosenWordlist(QString)), this, SLOT(choosenWordlist(QString)));
     wordlistDialog->show();
 }
 
-void Level::onWordlistFilename(QString wordlistFilename){
+void Level::choosenWordlist(QString wordlistFilename){
     QFile file(wordlistFilename);
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
         QTextStream in(&file);

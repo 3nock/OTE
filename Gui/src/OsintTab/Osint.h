@@ -4,8 +4,8 @@
 // headers...
 #include "lib-osint.h"
 #include "OsintEnumerator.h"
-#include "OsintConfigDialog.h"
-#include "ApiKeysDialog.h"
+#include "src/Dialogs/ApiKeysDialog.h"
+#include "src/Dialogs/ConfigDialog.h"
 
 
 namespace Ui {

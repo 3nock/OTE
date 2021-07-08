@@ -3,35 +3,41 @@
 
 #include "src/core.h"
 
-// Structures...
+/**************************************************
+                   enums
+***************************************************/
+enum OPTION{
+    DNSRECORDS = 0,
+    SRV = 1
+};
+
+/**************************************************
+                   Structures
+***************************************************/
 struct ScanArguments_Records{
-    QListWidget *srvWordlist = nullptr;
-    QListWidget *targetList = nullptr;
+    QListWidget *srvWordlist;
+    QListWidget *targetList;
     //...
-    int currentTargetToEnumerate = 0;
-    int currentSrvToEnumerate = 0;
+    int currentTargetToEnumerate;
+    int currentSrvToEnumerate;
+    int progress;
     //...
-    int choiceCount = 0;
-    int progress = 0;
-    //...
-    bool RecordType_srv = false;
-    bool RecordType_a = false;
-    bool RecordType_aaaa = false;
-    bool RecordType_mx = false;
-    bool RecordType_ns = false;
-    bool RecordType_txt = false;
-    bool RecordType_cname = false;
+    bool RecordType_srv;
+    bool RecordType_a;
+    bool RecordType_aaaa;
+    bool RecordType_mx;
+    bool RecordType_ns;
+    bool RecordType_txt;
+    bool RecordType_cname;
 };
 typedef struct ScanArguments_Records ScanArguments_Records;
 
 struct ScanResults_Records{
-    QStandardItemModel* m_model_srv = nullptr;
-    QStandardItem* rootItem = nullptr;
+    QStandardItemModel* m_model_srv;
+    QStandardItem* rootItem;
     //..
-    QLabel *resultsCountLabel = nullptr;
-    QLabel *srvResultsLabel = nullptr;
-    //...
-    int resultsCount = 0;
+    QLabel *resultsCountLabel;
+    QLabel *srvResultsLabel;
 };
 typedef struct ScanResults_Records ScanResults_Records;
 

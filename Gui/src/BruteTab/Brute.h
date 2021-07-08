@@ -1,11 +1,7 @@
 #ifndef BRUTE_H
 #define BRUTE_H
 
-// headers...
 #include "lib-brute.h"
-#include "WordlistGeneratorDialog.h"
-#include "BruteConfigDialog.h"
-#include "WordlistDialog.h"
 #include "BruteEnumerator.h"
 
 namespace Ui {
@@ -19,15 +15,14 @@ class Brute : public QWidget{
         Ui::Brute *ui;
 
     private:
-        void startEnumeration();
+        void startScan();
         //...
-        QStandardItemModel *m_model;
+        QStandardItemModel *m_model_results;
+        ScanStatus *m_scanStatus;
+        ScanConfig *m_scanConfig;
         ScanArguments_Brute *m_scanArguments;
         //...
-        int activeThreads = 0;
-        int endedThreads = 0;
-        //...
-        QString currentPath;
+        int m_activeThreads = 0;
 
     public:
         explicit Brute(QWidget *parent = nullptr);
@@ -39,7 +34,7 @@ class Brute : public QWidget{
         //...
         void logs(QString log);
         //...
-        void onWordlistFilename(QString);
+        void choosenWordlist(QString);
         //...
         void onSendResultsToSave();
 
@@ -60,7 +55,6 @@ class Brute : public QWidget{
         void on_pushButton_action_clicked();
         void on_toolButton_config_clicked();
         void on_pushButton_clearResults_clicked();
-        void on_pushButton_reload_clicked();
         void on_pushButton_addWordlist_clicked();
         void on_pushButton_clearWordlist_clicked();
         void on_pushButton_removeWordlist_clicked();

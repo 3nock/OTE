@@ -3,23 +3,25 @@
 
 #include "lib-brute.h"
 
-/*************************************************************************************
- *                         BRUTE ENUMERATOR
- *************************************************************************************/
+/************************************************************************************
+                                 BRUTE ENUMERATOR
+*************************************************************************************/
 class BruteEnumerator : public QObject{
     Q_OBJECT
 
     private:
         int m_currentWordlistToEnumerate = 0;
         int m_currentTargetToEnumerate = 0;
-        ScanArguments_Brute* m_scanArguments;
-        QDnsLookup* m_dns;
+        //...
+        ScanArguments_Brute *m_scanArguments;
+        ScanConfig *m_scanConfig;
+        QDnsLookup *m_dns;
 
     public:
-        BruteEnumerator(ScanArguments_Brute *scanArguments);
+        BruteEnumerator(ScanConfig *scanConfig, ScanArguments_Brute *scanArguments);
         ~BruteEnumerator();
         //...
-        void Enumerate(QThread *cThread);
+        void enumerate(QThread *cThread);
 
     public slots:
         void onStop();
@@ -47,13 +49,14 @@ class BruteEnumerator_Wildcards: public QObject{
 
     private:
         ScanArguments_Brute *m_scanArguments;
+        ScanConfig *m_scanConfig;
         QDnsLookup *m_dns;
 
     public:
-        BruteEnumerator_Wildcards(ScanArguments_Brute *scanArguments);
+        BruteEnumerator_Wildcards(ScanConfig *scanConfig, ScanArguments_Brute *scanArguments);
         ~BruteEnumerator_Wildcards();
         //...
-        void Enumerate(QThread *cThread);
+        void enumerate(QThread *cThread);
 
     private slots:
         void onLookupFinished();

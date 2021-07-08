@@ -4,9 +4,10 @@
                             DNS-RECORDS ENUMERATOR
 *********************************************************************************/
 
-DnsRecordsEnumerator::DnsRecordsEnumerator(ScanArguments_Records *scanArguments, ScanResults_Records *scanResults)
-    : m_scanArguments(scanArguments), m_scanResults(scanResults),
-      m_nameserver(RandomNameserver(false)),
+DnsRecordsEnumerator::DnsRecordsEnumerator(ScanConfig *scanConfig, ScanArguments_Records *scanArguments, ScanResults_Records *scanResults)
+    : m_scanConfig(scanConfig),
+      m_scanArguments(scanArguments),
+      m_scanResults(scanResults),
       m_dns_srv(new QDnsLookup(this)),
       m_dns_a(new QDnsLookup(this)),
       m_dns_aaaa(new QDnsLookup(this)),
@@ -15,7 +16,6 @@ DnsRecordsEnumerator::DnsRecordsEnumerator(ScanArguments_Records *scanArguments,
       m_dns_txt(new QDnsLookup(this)),
       m_dns_cname(new QDnsLookup(this))
 {
-    connect(this, SIGNAL(done()), this, SLOT(trackFinishedLookups()));
     connect(this, SIGNAL(doLookup()), this, SLOT(lookup()));
     connect(this, SIGNAL(doLookup_srv()), this, SLOT(lookup_srv()));
     //...
@@ -27,13 +27,13 @@ DnsRecordsEnumerator::DnsRecordsEnumerator(ScanArguments_Records *scanArguments,
     m_dns_txt->setType(QDnsLookup::TXT);
     m_dns_cname->setType(QDnsLookup::CNAME);
     //...
-    m_dns_srv->setNameserver(m_nameserver);
-    m_dns_a->setNameserver(m_nameserver);
-    m_dns_a->setNameserver(m_nameserver);
-    m_dns_mx->setNameserver(m_nameserver);
-    m_dns_ns->setNameserver(m_nameserver);
-    m_dns_txt->setNameserver(m_nameserver);
-    m_dns_cname->setNameserver(m_nameserver);
+    m_dns_srv->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
+    m_dns_a->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
+    m_dns_a->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
+    m_dns_mx->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
+    m_dns_ns->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
+    m_dns_txt->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
+    m_dns_cname->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
     //...
     connect(m_dns_srv, SIGNAL(finished()), this, SLOT(srvLookupFinished()));
     connect(m_dns_a, SIGNAL(finished()), this, SLOT(aLookupFinished()));
@@ -63,13 +63,6 @@ void DnsRecordsEnumerator::enumerate_srv(QThread *cThread){
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void DnsRecordsEnumerator::trackFinishedLookups(){
-    m_finishedLookups++;
-    if(m_finishedLookups == m_scanArguments->choiceCount){
-        emit doLookup();
-    }
-}
-
 void DnsRecordsEnumerator::lookup(){
     //...
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
@@ -82,38 +75,39 @@ void DnsRecordsEnumerator::lookup(){
         {
             m_dns_a->setName(m_currentTarget);
             m_dns_a->lookup();
+            m_activeLookups++;
         }
         if(m_scanArguments->RecordType_aaaa)
         {
             m_dns_aaaa->setName(m_currentTarget);
             m_dns_aaaa->lookup();
+            m_activeLookups++;
         }
         if(m_scanArguments->RecordType_mx)
         {
             m_dns_mx->setName(m_currentTarget);
             m_dns_mx->lookup();
+            m_activeLookups++;
         }
         if(m_scanArguments->RecordType_ns)
         {
             m_dns_ns->setName(m_currentTarget);
             m_dns_ns->lookup();
+            m_activeLookups++;
         }
         if(m_scanArguments->RecordType_txt)
         {
             m_dns_txt->setName(m_currentTarget);
             m_dns_txt->lookup();
+            m_activeLookups++;
         }
         if(m_scanArguments->RecordType_cname)
         {
             m_dns_cname->setName(m_currentTarget);
             m_dns_cname->lookup();
+            m_activeLookups++;
         }
-        //...
         m_firstToResolve = true;
-        m_finishedLookups = 0;
-        //...
-        m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
     }
     else
     {
@@ -135,9 +129,6 @@ void DnsRecordsEnumerator::lookup_srv(){
         m_currentTarget = m_scanArguments->srvWordlist->item(m_currentSrvToEnumerate)->text()+"."+m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text();
         m_dns_srv->setName(m_currentTarget);
         m_dns_srv->lookup();
-        //...
-        m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
     }
     ///
     /// reached end of the wordlist...
@@ -179,6 +170,12 @@ void DnsRecordsEnumerator::srvLookupFinished(){
             m_scanResults->srvResultsLabel->setNum(m_scanResults->m_model_srv->rowCount());
         }
     }
+    ///
+    /// scan progress...
+    ///
+    m_scanArguments->progress++;
+    emit progress(m_scanArguments->progress);
+    //...
     emit doLookup_srv();
 }
 
@@ -191,8 +188,7 @@ void DnsRecordsEnumerator::aLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCount++;
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsCount);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
         }
         const auto records = m_dns_a->hostAddressRecords();
         if(records.count())
@@ -205,7 +201,17 @@ void DnsRecordsEnumerator::aLookupFinished(){
             m_dnsNameItem->appendRow(m_recordItem);
         }
     }
-    emit done();
+    m_activeLookups--;
+    if(m_activeLookups == 0)
+    {
+        ///
+        /// scan progress...
+        ///
+        m_scanArguments->progress++;
+        emit progress(m_scanArguments->progress);
+        //...
+        emit doLookup();
+    }
 }
 
 void DnsRecordsEnumerator::aaaaLookupFinished(){
@@ -217,8 +223,7 @@ void DnsRecordsEnumerator::aaaaLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCount++;
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsCount);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
         }
         const auto records = m_dns_aaaa->hostAddressRecords();
         if(records.count())
@@ -231,7 +236,17 @@ void DnsRecordsEnumerator::aaaaLookupFinished(){
             m_dnsNameItem->appendRow(m_recordItem);
         }
     }
-    emit done();
+    m_activeLookups--;
+    if(m_activeLookups == 0)
+    {
+        ///
+        /// scan progress...
+        ///
+        m_scanArguments->progress++;
+        emit progress(m_scanArguments->progress);
+        //...
+        emit doLookup();
+    }
 }
 
 void DnsRecordsEnumerator::mxLookupFinished(){
@@ -243,8 +258,7 @@ void DnsRecordsEnumerator::mxLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCount++;
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsCount);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
         }
         const auto records = m_dns_mx->mailExchangeRecords();
         if(records.count())
@@ -257,7 +271,17 @@ void DnsRecordsEnumerator::mxLookupFinished(){
             m_dnsNameItem->appendRow(m_recordItem);
         }
     }
-    emit done();
+    m_activeLookups--;
+    if(m_activeLookups == 0)
+    {
+        ///
+        /// scan progress...
+        ///
+        m_scanArguments->progress++;
+        emit progress(m_scanArguments->progress);
+        //...
+        emit doLookup();
+    }
 }
 
 void DnsRecordsEnumerator::cnameLookupFinished()
@@ -270,8 +294,7 @@ void DnsRecordsEnumerator::cnameLookupFinished()
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCount++;
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsCount);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
         }
         const auto records = m_dns_cname->canonicalNameRecords();
         if(records.count())
@@ -284,7 +307,17 @@ void DnsRecordsEnumerator::cnameLookupFinished()
             m_dnsNameItem->appendRow(m_recordItem);
         }
     }
-    emit done();
+    m_activeLookups--;
+    if(m_activeLookups == 0)
+    {
+        ///
+        /// scan progress...
+        ///
+        m_scanArguments->progress++;
+        emit progress(m_scanArguments->progress);
+        //...
+        emit doLookup();
+    }
 }
 
 void DnsRecordsEnumerator::nsLookupFinished(){
@@ -296,8 +329,7 @@ void DnsRecordsEnumerator::nsLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCount++;
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsCount);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
         }
         const auto records = m_dns_ns->nameServerRecords();
         if(records.count())
@@ -310,7 +342,17 @@ void DnsRecordsEnumerator::nsLookupFinished(){
             m_dnsNameItem->appendRow(m_recordItem);
         }
     }
-    emit done();
+    m_activeLookups--;
+    if(m_activeLookups == 0)
+    {
+        ///
+        /// scan progress...
+        ///
+        m_scanArguments->progress++;
+        emit progress(m_scanArguments->progress);
+        //...
+        emit doLookup();
+    }
 }
 
 void DnsRecordsEnumerator::txtLookupFinished(){
@@ -322,8 +364,7 @@ void DnsRecordsEnumerator::txtLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCount++;
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsCount);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
         }
         const auto records = m_dns_txt->textRecords();
         if(records.count())
@@ -339,6 +380,15 @@ void DnsRecordsEnumerator::txtLookupFinished(){
             m_dnsNameItem->appendRow(m_recordItem);
         }
     }
-    emit done();
+    m_activeLookups--;
+    if(m_activeLookups == 0)
+    {
+        ///
+        /// scan progress...
+        ///
+        m_scanArguments->progress++;
+        emit progress(m_scanArguments->progress);
+        //...
+        emit doLookup();
+    }
 }
-

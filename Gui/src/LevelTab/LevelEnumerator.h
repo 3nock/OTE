@@ -9,14 +9,15 @@ class LevelEnumerator: public QObject{
     private:
         int m_currentWordlistToEnumerate = 0;
         int m_currentTargetToEnumerate = 0;
-        ScanArguments_level* m_scanArguments;
-        QDnsLookup* m_dns;
+        ScanConfig *m_scanConfig;
+        ScanArguments_level *m_scanArguments;
+        QDnsLookup *m_dns;
 
     public:
-        LevelEnumerator(ScanArguments_level *scanArguments);
+        LevelEnumerator(ScanConfig *scanConfig, ScanArguments_level *scanArguments);
         ~LevelEnumerator();
         //...
-        void Enumerate(QThread *cThread);
+        void enumerate(QThread *cThread);
 
     public slots:
         void onStop();

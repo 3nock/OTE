@@ -1,21 +1,24 @@
-#ifndef BRUTECONFIGDIALOG_H
-#define BRUTECONFIGDIALOG_H
+#ifndef CONFIGDIALOG_H
+#define CONFIGDIALOG_H
 
-#include "lib-brute.h"
+#include "src/core.h"
 
 namespace Ui {
-    class BruteConfigDialog;
+    class ConfigDialog;
 }
 
-class BruteConfigDialog : public QDialog{
+class ConfigDialog : public QDialog{
         Q_OBJECT
 
     private:
-        ScanArguments_Brute *m_scanArguments;
+        Ui::ConfigDialog *ui;
+
+    private:
+        ScanConfig *m_scanConfig;
 
     public:
-        explicit BruteConfigDialog(QWidget *parent = nullptr, ScanArguments_Brute *scanArguments = nullptr);
-        ~BruteConfigDialog();
+        explicit ConfigDialog(QWidget *parent = nullptr, ScanConfig *scanConfig = nullptr);
+        ~ConfigDialog();
 
     private slots:
         void on_pushButton_clear_clicked();
@@ -25,9 +28,6 @@ class BruteConfigDialog : public QDialog{
         void on_pushButton_cancel_clicked();
         void on_pushButton_ok_clicked();
         void on_checkBox_useCustomNameServers_clicked(bool checked);
-
-    private:
-        Ui::BruteConfigDialog *ui;
 };
 
-#endif // BRUTECONFIGDIALOG_H
+#endif // CONFIGDIALOG_H

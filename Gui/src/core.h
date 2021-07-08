@@ -1,7 +1,9 @@
 #ifndef DNS_MAIN_H
 #define DNS_MAIN_H
 
-/*************** HEADERS ******************/
+/***************************************************
+                    HEADERS
+****************************************************/
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QListWidgetItem>
@@ -32,6 +34,7 @@
 #include <QTcpSocket>
 #include <QUrl>
 //...
+#include <QProgressBar>
 #include <QMainWindow>
 #include <QObject>
 #include <QWidget>
@@ -40,19 +43,17 @@
 #include "Python.h"
 #define slots
 
-/******************* MACROS *****************/
-#define MAX_THREADS 100
+/***************************************************
+                    MACROS
+****************************************************/
+/*#define MAX_THREADS 100
 #define SINGLE_ITEM 1
 #define MULTI_ITEMS 2
 #define ALL_ITEMS 3
+*/
 //...
 #define SINGLE_TARGET 0
 #define MULTIPLE_TARGETS 1
-//...
-#define ENUMNAME_OSINT 1
-#define ENUMNAME_SUBBRUTE 2
-#define ENUMNAME_TLDBRUTE 3
-#define ENUMNAME_ACTIVESUBDOMAINS 4
 //...
 #define NEWLINE "\n"
 #define EMPTY ""
@@ -61,7 +62,7 @@
 #define CURRENT_PATH "./"
 #define INFO_LOADFILE "Load File..."
 #define INFO_SAVETOFILE "Save To File..."
-//macros...
+//...
 #define WORDLIST_SPECIAL_SUBBRUTE "/wordlists/special_subBrute/names.txt"
 #define WORDLIST_SPECIAL_TLDBRUTE "/wordlists/special_tldBrute/names.txt"
 #define WORDLIST_NAMESERVERS "/wordlists/nameservers.txt"
@@ -73,23 +74,56 @@
 #define WORDLIST_LONG_SUBBRUTE "/wordlists/subBrute_Long.txt"
 #define WORDLIST_LONG_TLDBRUTE "/wordlists/tldBrute_Long.txt"
 
-/******************** STRUCTURES ****************/
-struct status{
+/***************************************************
+                    ENUMERATORS
+****************************************************/
+enum ENGINE{
+    OSINT = 1,
+    SUBBRUTE = 2,
+    TLDBRUTE = 3,
+    ACTIVE = 4,
+    RECORDS = 5
+};
+
+/***************************************************
+                    STRUCTURES
+****************************************************/
+struct ScanStatus{
     bool isRunning = false;
     bool isStopped = false;
     bool isPaused = false;
-    int numberOfScansDone = 0;
-    int numberOfDifferentDomains = 0;
 };
-typedef struct status status;
+typedef struct ScanStatus ScanStatus;
 
-/***************** FUNCTIONS *****************/
+struct ScanConfig{
+    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
+    bool useCustomNameServers = false;
+    int threadsCount = 50;
+    int timeout = 3000;
+    //...
+    bool checkWildcard = false;
+    bool hasWildcard = false;
+    QString wildcardIp;
+};
+typedef struct ScanConfig ScanConfig;
+
+/***************************************************
+                    FUNCTIONS
+****************************************************/
+void SetConfig(QString configType, ENGINE engineName, QString configValue);
+//...
+QString GetConfig(QString configType, ENGINE engineName);
+//...
 QHostAddress RandomNameserver(bool useCustomNameservers);
-QString TargetNameFilter(QString domainName, int enumName);
-QString EnumName(int enumName);
+//...
+QString TargetNameFilter(QString domainName, ENGINE engineName);
+//...
+QString EnumName(ENGINE engineName);
+//...
 QString wordlistFilter(QString word);
+//...
 QString filter(QString word);
-// propossed...
+//...
 void loadFile(QListWidget& wordlist, int& count);
 
 #endif // _DNS_MAIN_H

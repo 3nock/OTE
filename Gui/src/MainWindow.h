@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "core.h"
+#include "src/core.h"
 #include "src/ActiveTab/Active.h"
 #include "src/LevelTab/Level.h"
 #include "src/BruteTab/Brute.h"

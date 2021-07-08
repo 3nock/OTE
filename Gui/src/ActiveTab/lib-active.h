@@ -1,29 +1,34 @@
 #ifndef LIBACTIVE_H
 #define LIBACTIVE_H
 
+/******************************************
+                  includes
+*******************************************/
 #include "src/core.h"
+#include "src/Dialogs/ConfigDialog.h"
 
-// macros...
-#define ACTIVE_DNS 0
-#define ACTIVE_HTTP 1
-#define ACTIVE_HTTPS 2
-#define ACTIVE_FTP 3
-#define ACTIVE_SMTP 4
+/*******************************************
+                   enums
+********************************************/
+enum ACTIVE{
+    DNS = 0,
+    HTTP = 1,
+    HTTPS = 2,
+    FTP = 3,
+    SMTP = 4
+};
 
-// structures....
+/*******************************************
+                 structures
+********************************************/
 struct ScanArguments_Active{
-    QListWidget* targetList = nullptr;
+    QListWidget *targetList;
     //...
-    int progress = 0;
-    int currentTargetToEnumerate = 0;
+    int progress;
+    int currentTargetToEnumerate;
     //...
-    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
-    bool useCustomNameServers = false;
-    int maxThreads = 50;
-    // socket...
-    bool checkForService = false;
-    quint16 service = 80;
-    int timeout = 3000;
+    quint16 service;
+    bool checkActiveService;
 };
 typedef struct ScanArguments_Active ScanArguments_Active;
 

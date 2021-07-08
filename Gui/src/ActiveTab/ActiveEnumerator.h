@@ -4,19 +4,22 @@
 #include "lib-active.h"
 
 /*************************************************************************************
- *                              ACTIVE_SUBDOMAINS ENUMERATOR
- *************************************************************************************/
+                              ACTIVE_SUBDOMAINS ENUMERATOR
+*************************************************************************************/
 class ActiveEnumerator : public QObject{
     Q_OBJECT
 
     private:
         int m_currentTargetToEnumerate = 0;
+        //...
+        ScanConfig *m_scanConfig;
         ScanArguments_Active *m_scanArguments;
+        //...
         QDnsLookup *m_dns;
         QTcpSocket *m_socket;
 
     public:
-        ActiveEnumerator(ScanArguments_Active *scanArguments);
+        ActiveEnumerator(ScanConfig *scanConfig, ScanArguments_Active *scanArguments);
         ~ActiveEnumerator();
         //...
         void enumerate(QThread *cThread);

@@ -1,7 +1,7 @@
 #ifndef WORDLISTDIALOG_H
 #define WORDLISTDIALOG_H
 
-#include "lib-brute.h"
+#include "src/core.h"
 
 namespace Ui {
     class WordListDialog;
@@ -11,11 +11,14 @@ class WordListDialog : public QDialog{
         Q_OBJECT
 
     private:
-        int m_enumName;
+        Ui::WordListDialog *ui;
+
+    private:
+        ENGINE m_engine;
         void m_setupSpecialWordlists();
 
     public:
-        explicit WordListDialog(QWidget *parent = nullptr, int enumName = 0);
+        explicit WordListDialog(QWidget *parent, ENGINE engine);
         ~WordListDialog();
 
     private slots:
@@ -30,10 +33,7 @@ class WordListDialog : public QDialog{
 
     signals:
         // emits the filename of the choosen wordlist...
-        void wordlistFilename(QString);
-
-    private:
-        Ui::WordListDialog *ui;
+        void choosenWordlist(QString);
 };
 
 #endif // WORDLISTDIALOG_H

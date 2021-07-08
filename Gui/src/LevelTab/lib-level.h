@@ -1,30 +1,26 @@
 #ifndef LIBLEVEL_H
 #define LIBLEVEL_H
 
+/************************************************
+                   includes
+************************************************/
 #include "src/core.h"
-#include "src/BruteTab/lib-brute.h"
+#include "src/Dialogs/ConfigDialog.h"
+#include "src/Dialogs/WordlistDialog.h"
 
+/************************************************
+                  structures
+************************************************/
 struct ScanArguments_level{
-    QListWidget* wordlist = nullptr;
-    QListWidget* targetList = nullptr;
+    QListWidget* wordlist;
+    QListWidget* targetList;
     //...
-    int currentWordlistToEnumerate = 0;
-    int currentTargetToEnumerate = 0;
+    int progress;
+    int currentTargetToEnumerate;
+    int currentWordlistToEnumerate;
     //...
-    int currentLevel = 0;
-    int maxLevel = 0;
-    //...
-    int lastCount = 0;
-    //...
-    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
-    bool useCustomNameServers = false;
-    int maxThreads = 50;
-    //...
-    bool checkWildcardSubdomains = false;
-    bool usesWildcards = false;
-    QString foundWildcardIp = nullptr;
-    //...
-    int progress = 0;
+    int currentLevel;
+    int maxLevel;
 };
 typedef ScanArguments_level ScanArguments_level;
 

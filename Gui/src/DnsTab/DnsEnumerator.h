@@ -2,7 +2,6 @@
 #define DNSENUMERATOR_H
 
 #include "lib-dns.h"
-#include <QHostInfo>
 
 /***********************************************************************************
                                DNS-RECORDS ENUMERATOR
@@ -12,13 +11,13 @@ class DnsRecordsEnumerator: public QObject{
     Q_OBJECT
 
     private:
+        ScanConfig *m_scanConfig;
         ScanArguments_Records *m_scanArguments;
         ScanResults_Records *m_scanResults;
         //...
         QStandardItem *m_dnsNameItem;
         QStandardItem *m_recordItem;
         //...
-        QHostAddress m_nameserver;
         QDnsLookup *m_dns_srv;
         QDnsLookup *m_dns_a;
         QDnsLookup *m_dns_aaaa;
@@ -30,13 +29,13 @@ class DnsRecordsEnumerator: public QObject{
         int m_currentTargetToEnumerate = 0;
         int m_currentSrvToEnumerate = 0;
         //...
-        int m_finishedLookups = 0;
+        int m_activeLookups = 0;
         bool m_firstToResolve = true;
         //...
         QString m_currentTarget;
 
     public:
-        DnsRecordsEnumerator(ScanArguments_Records *scanArguments, ScanResults_Records *scanResults);
+        DnsRecordsEnumerator(ScanConfig *scanConfig, ScanArguments_Records *scanArguments, ScanResults_Records *scanResults);
         ~DnsRecordsEnumerator();
         //...
         void enumerate(QThread *cThread);
@@ -44,7 +43,6 @@ class DnsRecordsEnumerator: public QObject{
 
     public slots:
         void onStop();
-        void trackFinishedLookups();
 
     private slots:
         void lookup();

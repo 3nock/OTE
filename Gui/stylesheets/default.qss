@@ -22,7 +22,7 @@ QComboBox {
 	border-width: 1px;
 	color: rgb(230,230,230);
 	padding: 2px;
-	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgba(97, 97, 97, 255));
+	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(77, 77, 77, 255));
 }
 
 QComboBox QWidget{
@@ -49,7 +49,7 @@ QFrame#frame, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers {
 }
 
 /******** QLabels ***********/
-QLabel#label_resultsCount, QLabel#label_targetsCount, QLabel#label_wordlistCount, QLabel#label_srvWordlistCount, QLabel#label_level, QLabel#label_srvCount{
+QLabel#label_resultsCount, QLabel#label_targetsCount, QLabel#label_wordlistCount, QLabel#label_srvWordlistCount, QLabel#label_level, QLabel#label_srvResultsCount{
 	background-color:rgb(80, 80, 80);
 }
 
@@ -131,7 +131,8 @@ QPushButton {
 	border-style: solid;
 	color: rgb(0,0,0);
 	padding: 2px;
-	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgba(85, 85, 85, 255));
+	color: grey;
+	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(77, 77, 77, 255));
 }
 
 QPushButton:hover {
@@ -174,7 +175,7 @@ QPushButton:disabled {
 	color: rgb(0, 0, 0);
 	padding: 2px;
 	color: grey;
-	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(77, 77, 77, 255));
+	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgba(85, 85, 85, 255));
 }
 
 QLineEdit {
