@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     Osint *osint = new Osint(this);
     Brute *brute = new Brute(this);
     Dns *dns = new Dns(this);
+    Ip *ip = new Ip(this);
     Save *save = new Save(this);
 
     // connecting status signals from all the modules to the status slot of main window...
@@ -50,8 +51,9 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     // creating tabs...
     ui->tabWidget_mainTab->insertTab(0, osint, "Osint");
     ui->tabWidget_mainTab->insertTab(1, brute, "Brute");
-    ui->tabWidget_mainTab->insertTab(3, active, "Active");
-    ui->tabWidget_mainTab->insertTab(4, dns, "Dns++");
+    ui->tabWidget_mainTab->insertTab(2, active, "Active");
+    ui->tabWidget_mainTab->insertTab(3, dns, "Record");
+    ui->tabWidget_mainTab->insertTab(4, ip, "Ip");
     ui->tabWidget_mainTab->insertTab(5, level, "Level");
     ui->tabWidget_mainTab->insertTab(6, save, "Save");
 

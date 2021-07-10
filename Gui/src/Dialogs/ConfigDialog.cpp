@@ -4,7 +4,7 @@
 
 /********************************* Constructor & Destructor ***************************************/
 ConfigDialog::ConfigDialog(QWidget *parent, ScanConfig *scanConfig)
-    :QDialog(parent), ui(new Ui::ConfigDialog),
+    : QDialog(parent), ui(new Ui::ConfigDialog),
       m_scanConfig(scanConfig)
 {
     ui->setupUi(this);
@@ -16,7 +16,10 @@ ConfigDialog::ConfigDialog(QWidget *parent, ScanConfig *scanConfig)
     //...
     ui->lineEdit_nameservers->setPlaceholderText("Enter Nameserver...");
     ui->lineEdit_threads->setPlaceholderText("Thread count...");
+    ui->lineEdit_timeout->setPlaceholderText("Lookup timeout...");
+    //...
     ui->lineEdit_threads->setText(QString::number(m_scanConfig->threadsCount));
+    ui->lineEdit_timeout->setText(QString::number(m_scanConfig->timeout));
 }
 ConfigDialog::~ConfigDialog(){
     delete ui;
@@ -36,18 +39,23 @@ void ConfigDialog::on_pushButton_ok_clicked(){
     if(ui->checkBox_checkWildcards->isChecked()){
         m_scanConfig->checkWildcard = true;
     }
-    if(ui->checkBox_useCustomNameServers->isChecked() && ui->listWidget_nameservers->count() > 0){
+    if(ui->checkBox_useCustomNameServers->isChecked() && ui->listWidget_nameservers->count() > 0)
+    {
         QFile temp_file(QDir::currentPath()+WORDLIST_CUSTOM_NAMESERVERS);
         temp_file.open(QIODevice::WriteOnly | QIODevice::Text);
-        if(temp_file.isOpen()){
+        if(temp_file.isOpen())
+        {
            int the_count = ui->listWidget_nameservers->count();
-           for(int i = 0; i != the_count; ++i){
+           for(int i = 0; i != the_count; ++i)
+           {
                temp_file.write((ui->listWidget_nameservers->item(i)->text()+NEWLINE).toUtf8());
-            }
-            temp_file.close();
+           }
+           temp_file.close();
         }
         m_scanConfig->useCustomNameServers = true;
-    }else{
+    }
+    else
+    {
         m_scanConfig->useCustomNameServers = false;
     }
     accept();
@@ -58,9 +66,12 @@ void ConfigDialog::on_pushButton_cancel_clicked(){
 
 /******************************* Operations On Custom-Nameservers *********************************/
 void ConfigDialog::on_checkBox_useCustomNameServers_clicked(bool checked){
-    if(checked){
+    if(checked)
+    {
         ui->frame_nameservers->show();
-    }else{
+    }
+    else
+    {
         ui->frame_nameservers->hide();
     }
     ConfigDialog::adjustSize();
@@ -71,18 +82,22 @@ void ConfigDialog::on_pushButton_clear_clicked(){
 }
 
 void ConfigDialog::on_pushButton_remove_clicked(){
-    if(ui->listWidget_nameservers->selectedItems().count()){
+    if(ui->listWidget_nameservers->selectedItems().count())
+    {
         qDeleteAll(ui->listWidget_nameservers->selectedItems());
     }
 }
 
 void ConfigDialog::on_pushButton_load_clicked(){
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(!filename.isEmpty()){
+    if(!filename.isEmpty())
+    {
         QFile file(filename);
-        if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
             QTextStream in(&file);
-            while (!in.atEnd()){
+            while (!in.atEnd())
+            {
                 ui->listWidget_nameservers->addItem(in.readLine());
             }
             file.close();

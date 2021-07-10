@@ -1,10 +1,10 @@
-#include "Active.h"
-#include "ui_Active.h"
+#include "Ip.h"
+#include "ui_Ip.h"
 
-Active::Active(QWidget *parent) : QDialog(parent), ui(new Ui::Active),
+Ip::Ip(QWidget *parent) : QDialog(parent), ui(new Ui::Ip),
     m_scanStatus(new ScanStatus),
     m_scanConfig(new ScanConfig),
-    m_scanArguments(new ScanArguments_Active),
+    m_scanArguments(new ScanArguments_Ip),
     m_model_results(new QStandardItemModel)
 {
     ui->setupUi(this);
@@ -15,14 +15,16 @@ Active::Active(QWidget *parent) : QDialog(parent), ui(new Ui::Active),
     ui->pushButton_stop->setDisabled(true);
     ui->pushButton_pause->setDisabled(true);
     //...
-    m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+    m_model_results->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
     ui->tableView_results->setModel(m_model_results);
     //...
     ui->splitter_3->setSizes(QList<int>()<<160<<1);
     //...
+    m_scanArguments->label_resultsCount = ui->label_resultsCount;
     m_scanArguments->targetList = ui->listWidget_targets;
+    m_scanArguments->model_results = m_model_results;
 }
-Active::~Active(){
+Ip::~Ip(){
     delete m_scanStatus;
     delete m_scanConfig;
     delete m_scanArguments;
@@ -32,7 +34,7 @@ Active::~Active(){
 }
 
 /******************************* Start **************************************/
-void Active::on_pushButton_start_clicked(){
+void Ip::on_pushButton_start_clicked(){
     ///
     /// checking if all requirements are satisfied before scan if not prompt error
     /// then exit function...
@@ -57,37 +59,18 @@ void Active::on_pushButton_start_clicked(){
     ///
     /// Getting scan arguments....
     ///
-    if(ui->comboBox_option->currentIndex() == ACTIVE::DNS){
-        m_scanArguments->checkActiveService = false;
-    }
-    if(ui->comboBox_option->currentIndex() == ACTIVE::HTTP){
-        m_scanArguments->checkActiveService = true;
-        m_scanArguments->service = 80;
-    }
-    if(ui->comboBox_option->currentIndex() == ACTIVE::HTTPS){
-        m_scanArguments->checkActiveService = true;
-        m_scanArguments->service = 443;
-    }
-    if(ui->comboBox_option->currentIndex() == ACTIVE::FTP){
-        m_scanArguments->checkActiveService = true;
-        m_scanArguments->service = 21;
-    }
-    if(ui->comboBox_option->currentIndex() == ACTIVE::SMTP){
-        m_scanArguments->checkActiveService = true;
-        m_scanArguments->service = 587;
-    }
     ui->progressBar->setMaximum(ui->listWidget_targets->count());
     ///
-    /// start active subdomain enumeration...
+    /// start Ip subdomain enumeration...
     ///
     startScan();
     //...
-    sendStatus("[*] Testing For Active Subdomains...");
-    logs("[START] Testing For Active Subdomains...");
+    sendStatus("[*] Testing For Ip Subdomains...");
+    logs("[START] Testing For Ip Subdomains...");
 }
 
 /************************************* STOP/PAUSE *************************************/
-void Active::on_pushButton_pause_clicked(){
+void Ip::on_pushButton_pause_clicked(){
     ///
     /// if the scan was already paused, then this current click is to
     /// Resume the scan, just call the startScan, with the same arguments and
@@ -109,12 +92,12 @@ void Active::on_pushButton_pause_clicked(){
     }
 }
 
-void Active::on_pushButton_stop_clicked(){
+void Ip::on_pushButton_stop_clicked(){
     emit stop();
     m_scanStatus->isStopped = true;
 }
 
-void Active::startScan(){
+void Ip::startScan(){
     ///
     /// if the numner of threads is greater than the number of wordlists, set the
     /// number of threads to use to the number of wordlists available to avoid
@@ -132,7 +115,7 @@ void Active::startScan(){
     ///
     for(int i = 0; i < threadsCount; i++)
     {
-        ActiveEnumerator *Enumerator = new ActiveEnumerator(m_scanConfig, m_scanArguments);
+        IpEnumerator *Enumerator = new IpEnumerator(m_scanConfig, m_scanArguments);
         QThread *cThread = new QThread;
         Enumerator->enumerate(cThread);
         Enumerator->moveToThread(cThread);
@@ -150,13 +133,7 @@ void Active::startScan(){
     m_scanStatus->isRunning = true;
 }
 
-void Active::scanResult(QString subdomain, QString ipAddress){
-    m_model_results->setItem(m_model_results->rowCount(), 0, new QStandardItem(subdomain));
-    m_model_results->setItem(m_model_results->rowCount()-1, 1, new QStandardItem(ipAddress));
-    ui->label_resultsCount->setNum(m_model_results->rowCount());
-}
-
-void Active::scanThreadEnded(){
+void Ip::scanThreadEnded(){
     m_activeThreads--;
     ///
     /// if all Scan Threads have finished...
@@ -188,32 +165,20 @@ void Active::scanThreadEnded(){
     }
 }
 
-/********************* When User Changes options For Active Scan *************************/
-void Active::on_comboBox_option_currentIndexChanged(int index){
-    if(index == ACTIVE::DNS){
-        ui->label_details->setText("Resolves the target hostname To it's IpAddress");
-    }
-    if(index == ACTIVE::HTTP){
-        ui->label_details->setText("Resolves the target, if Resolved, Then tests for connection To port 80");
-    }
-    if(index == ACTIVE::HTTPS){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 443");
-    }
-    if(index == ACTIVE::FTP){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 20");
-    }
-    if(index == ACTIVE::SMTP){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 587");
-    }
+void Ip::scanResult(QString subdomain, QString ipAddress){
+    m_scanArguments->model_results->setItem(m_scanArguments->model_results->rowCount(), 0, new QStandardItem(ipAddress));
+    m_scanArguments->model_results->setItem(m_scanArguments->model_results->rowCount()-1, 1, new QStandardItem(subdomain));
+    //...
+    m_scanArguments->label_resultsCount->setNum(m_scanArguments->model_results->rowCount());
 }
 
-void Active::on_toolButton_config_clicked(){
+void Ip::on_toolButton_config_clicked(){
     ConfigDialog *scanConfig = new ConfigDialog(this, m_scanConfig);
     scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
     scanConfig->show();
 }
 
-void Active::on_pushButton_loadTargets_clicked(){
+void Ip::on_pushButton_loadTargets_clicked(){
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
     if(!filename.isEmpty()){
         QFile file(filename);
@@ -230,7 +195,7 @@ void Active::on_pushButton_loadTargets_clicked(){
     }
 }
 
-void Active::on_pushButton_addTargets_clicked(){
+void Ip::on_pushButton_addTargets_clicked(){
     if(ui->lineEdit_targets->text() != EMPTY){
         ui->listWidget_targets->addItem(ui->lineEdit_targets->text());
         ui->lineEdit_targets->clear();
@@ -238,23 +203,23 @@ void Active::on_pushButton_addTargets_clicked(){
     }
 }
 
-void Active::on_lineEdit_targets_returnPressed(){
+void Ip::on_lineEdit_targets_returnPressed(){
     on_pushButton_addTargets_clicked();
 }
 
-void Active::on_pushButton_clearTargets_clicked(){
+void Ip::on_pushButton_clearTargets_clicked(){
     ui->listWidget_targets->clear();
     ui->label_targetsCount->clear();
 }
 
-void Active::on_pushButton_removeTargets_clicked(){
+void Ip::on_pushButton_removeTargets_clicked(){
     if(ui->listWidget_targets->selectedItems().count()){
         qDeleteAll(ui->listWidget_targets->selectedItems());
     }
     ui->label_targetsCount->setNum(ui->listWidget_targets->selectedItems().count());
 }
 
-void Active::on_pushButton_clearResults_clicked(){
+void Ip::on_pushButton_clearResults_clicked(){
     ///
     /// if the current tab is subdomains clear subdomains...
     ///
@@ -262,7 +227,7 @@ void Active::on_pushButton_clearResults_clicked(){
     {
         m_model_results->clear();
         ui->label_resultsCount->clear();
-        m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+        m_model_results->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
         //...
         ui->progressBar->clearMask();
         ui->progressBar->reset();
@@ -277,7 +242,7 @@ void Active::on_pushButton_clearResults_clicked(){
     }
 }
 
-void Active::logs(QString log){
+void Ip::logs(QString log){
     sendLog(log);
     ui->listWidget_logs->addItem(log);
     if(log.startsWith("[ERROR]"))
@@ -292,14 +257,18 @@ void Active::logs(QString log){
     }
 }
 
-void Active::on_radioButton_hostname_clicked(){
+void Ip::on_radioButton_hostname_clicked(){
 
 }
-void Active::on_radioButton_ip_clicked(){
+void Ip::on_radioButton_ip_clicked(){
 
 }
 
-void Active::on_pushButton_action_clicked(){
+void Ip::on_comboBox_option_currentIndexChanged(int index){
+    Q_UNUSED(index);
+}
+
+void Ip::on_pushButton_action_clicked(){
     ///
     /// getting the position of the action button to place the context menu...
     ///
@@ -328,7 +297,7 @@ void Active::on_pushButton_action_clicked(){
     menu->exec();
 }
 
-void Active::on_tableView_results_customContextMenuRequested(const QPoint &pos){
+void Ip::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
     ///
     /// check if user right clicked on items else dont show the context menu...
@@ -360,43 +329,43 @@ void Active::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     menu->exec();
 }
 
-void Active::on_pushButton_get_clicked(){
+void Ip::on_pushButton_get_clicked(){
 
 }
 
-void Active::actionSendToSave(){
+void Ip::actionSendToSave(){
     /*
     int resultsCount = ui->listWidget_subdomains->count();
     for(int i = 0; i != resultsCount; ++i){
         emit sendResultsToSave(ui->listWidget_subdomains->item(i)->text());
     }
-    logs("[*] Sent "+QString::number(resultsCount)+" activeSubdomains Enumerated Subdomains To Save Tab...");
+    logs("[*] Sent "+QString::number(resultsCount)+" IpSubdomains Enumerated Subdomains To Save Tab...");
     emit changeTabToSave();
     */
 }
 
-void Active::actionSendToDnsRecords(){
+void Ip::actionSendToDnsRecords(){
 
 }
 
-void Active::actionSendToMultiLevel(){
+void Ip::actionSendToMultiLevel(){
 
 }
 
-void Active::cursorSendToSave(){
+void Ip::cursorSendToSave(){
     /*foreach(QListWidgetItem * item, ui->listWidget_subdomains->selectedItems()){
         emit sendResultsToSave(item->text());
     }
-    logs("[*] Sent "+QString::number(ui->listWidget_subdomains->count())+" activeSubdomains Enumerated Subdomains To Save Tab...");
+    logs("[*] Sent "+QString::number(ui->listWidget_subdomains->count())+" IpSubdomains Enumerated Subdomains To Save Tab...");
     emit changeTabToSave();*/
 }
 
-void Active::cursorOpenInBrowser(){
+void Ip::cursorOpenInBrowser(){
     foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
 }
 
-void Active::cursorSendToDnsRecords(){
+void Ip::cursorSendToDnsRecords(){
 
 }

@@ -7,6 +7,7 @@
 #include "src/BruteTab/Brute.h"
 #include "src/OsintTab/Osint.h"
 #include "src/DnsTab/Dns.h"
+#include "src/IpTab/Ip.h"
 #include "src/SaveTab/Save.h"
 
 namespace Ui {

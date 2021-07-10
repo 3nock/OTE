@@ -31,6 +31,7 @@
 //...
 #include <QHostAddress>
 #include <QDnsLookup>
+#include <QHostInfo>
 #include <QTcpSocket>
 #include <QUrl>
 //...
