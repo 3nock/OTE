@@ -76,7 +76,8 @@ void Ip::on_pushButton_pause_clicked(){
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(m_scanStatus->isPaused){
+    if(m_scanStatus->isPaused)
+    {
         ui->pushButton_pause->setText("Pause");
         m_scanStatus->isPaused = false;
         //...
@@ -182,21 +183,25 @@ void Ip::on_pushButton_loadTargets_clicked(){
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
     if(!filename.isEmpty()){
         QFile file(filename);
-        if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
             QTextStream in(&file);
             while (!in.atEnd()){
                 ui->listWidget_targets->addItem(in.readLine());
             }
             ui->label_targetsCount->setNum(ui->listWidget_targets->count());
             file.close();
-        }else{
+        }
+        else
+        {
             QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
         }
     }
 }
 
 void Ip::on_pushButton_addTargets_clicked(){
-    if(ui->lineEdit_targets->text() != EMPTY){
+    if(ui->lineEdit_targets->text() != EMPTY)
+    {
         ui->listWidget_targets->addItem(ui->lineEdit_targets->text());
         ui->lineEdit_targets->clear();
         ui->label_targetsCount->setNum(ui->listWidget_targets->count());

@@ -20,7 +20,7 @@ class Brute : public QWidget{
         QStandardItemModel *m_model_results;
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
-        ScanArguments_Brute *m_scanArguments;
+        brute::ScanArguments *m_scanArguments;
         //...
         int m_activeThreads = 0;
 

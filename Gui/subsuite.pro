@@ -27,6 +27,7 @@ CONFIG += c++11
 
 SOURCES += \
         src/IpTab/IpEnumerator.cpp \
+        src/SplashScreen.cpp \
         src\IpTab\Ip.cpp \
         src\ActiveTab\ActiveEnumerator.cpp \
         src\ActiveTab\Active.cpp \
@@ -53,6 +54,7 @@ SOURCES += \
 
 HEADERS += \
         src/IpTab/IpEnumerator.h \
+        src/SplashScreen.h \
         src\IpTab\Ip.h \
         src\ActiveTab\ActiveEnumerator.h \
         src\ActiveTab\lib-active.h \
@@ -105,4 +107,4 @@ RESOURCES += \
     res.qrc
 
 # setting the icon...
-RC_ICONS = res/images/icon.ico
+RC_ICONS = res/icons/main.ico

@@ -4,7 +4,7 @@
  *                              BRUTE-ENUMERATOR
  ********************************************************************************************/
 
-BruteEnumerator::BruteEnumerator(ScanConfig* scanConfig, ScanArguments_Brute *scanArguments)
+BruteEnumerator::BruteEnumerator(ScanConfig* scanConfig, brute::ScanArguments *scanArguments)
     : m_scanArguments(scanArguments),
       m_scanConfig(scanConfig),
       m_dns(new QDnsLookup)
@@ -123,7 +123,7 @@ void BruteEnumerator::onStop(){
  *                                      CHECK WILDCARDS
  ******************************************************************************************************/
 
-BruteEnumerator_Wildcards::BruteEnumerator_Wildcards(ScanConfig *scanConfig, ScanArguments_Brute *scanArguments)
+BruteEnumerator_Wildcards::BruteEnumerator_Wildcards(ScanConfig *scanConfig, brute::ScanArguments *scanArguments)
     : m_scanArguments(scanArguments),
       m_scanConfig(scanConfig),
       m_dns(new QDnsLookup(this))

@@ -473,7 +473,7 @@
            </property>
            <widget class="QWidget" name="tab_results">
             <attribute name="title">
-             <string>Results</string>
+             <string>Records</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <property name="leftMargin">
@@ -505,7 +505,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>Enumerated Info:</string>
+                  <string>Enumerated Records:</string>
                  </property>
                 </widget>
                </item>

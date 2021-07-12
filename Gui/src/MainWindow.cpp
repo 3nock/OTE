@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     ui->tabWidget_mainTab->insertTab(0, osint, "Osint");
     ui->tabWidget_mainTab->insertTab(1, brute, "Brute");
     ui->tabWidget_mainTab->insertTab(2, active, "Active");
-    ui->tabWidget_mainTab->insertTab(3, dns, "Record");
+    ui->tabWidget_mainTab->insertTab(3, dns, "Dns++");
     ui->tabWidget_mainTab->insertTab(4, ip, "Ip");
     ui->tabWidget_mainTab->insertTab(5, level, "Level");
     ui->tabWidget_mainTab->insertTab(6, save, "Save");

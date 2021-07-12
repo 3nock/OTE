@@ -36,7 +36,7 @@ Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
       m_model_results(new QStandardItemModel),
       m_scanStatus(new ScanStatus),
       m_scanConfig(new ScanConfig),
-      m_scanArguments(new ScanArguments_Brute)
+      m_scanArguments(new brute::ScanArguments)
 {
     ui->setupUi(this);
     //...

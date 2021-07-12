@@ -85,6 +85,16 @@
            <string>Reverse Lookup</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Whois Lookup </string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Ip to Asn</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item>

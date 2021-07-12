@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/img">
-        <file>res/images/play.png</file>
-        <file>res/images/pause.png</file>
-        <file>res/images/stop.png</file>
+        <file>res/icons/main.ico</file>
+        <file>res/icons/folder.png</file>
+        <file>res/icons/settings.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/nameservers.txt</file>

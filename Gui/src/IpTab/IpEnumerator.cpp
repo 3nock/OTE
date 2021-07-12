@@ -63,3 +63,17 @@ void IpEnumerator::lookup(){
 void IpEnumerator::onStop(){
     emit quitThread();
 }
+
+/*
+void IpEnumerator::lookup(){
+    socket->connectToHost("whois.cymru.com", 43);
+    if(socket->waitForConnected(3000)){
+        socket->write("8.8.8.8");
+        socket->waitForBytesWritten(1000);
+        socket->waitForReadyRead(3000);
+        scanLog(QString::number(socket->bytesAvailable()));
+        socket->close();
+    }
+    quitThread();
+}
+*/

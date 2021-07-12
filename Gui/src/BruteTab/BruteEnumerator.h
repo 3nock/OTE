@@ -13,12 +13,12 @@ class BruteEnumerator : public QObject{
         int m_currentWordlistToEnumerate = 0;
         int m_currentTargetToEnumerate = 0;
         //...
-        ScanArguments_Brute *m_scanArguments;
+        brute::ScanArguments *m_scanArguments;
         ScanConfig *m_scanConfig;
         QDnsLookup *m_dns;
 
     public:
-        BruteEnumerator(ScanConfig *scanConfig, ScanArguments_Brute *scanArguments);
+        BruteEnumerator(ScanConfig *scanConfig, brute::ScanArguments *scanArguments);
         ~BruteEnumerator();
         //...
         void enumerate(QThread *cThread);
@@ -48,12 +48,12 @@ class BruteEnumerator_Wildcards: public QObject{
     Q_OBJECT
 
     private:
-        ScanArguments_Brute *m_scanArguments;
+        brute::ScanArguments *m_scanArguments;
         ScanConfig *m_scanConfig;
         QDnsLookup *m_dns;
 
     public:
-        BruteEnumerator_Wildcards(ScanConfig *scanConfig, ScanArguments_Brute *scanArguments);
+        BruteEnumerator_Wildcards(ScanConfig *scanConfig, brute::ScanArguments *scanArguments);
         ~BruteEnumerator_Wildcards();
         //...
         void enumerate(QThread *cThread);

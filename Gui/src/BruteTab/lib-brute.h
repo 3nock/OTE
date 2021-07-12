@@ -12,17 +12,19 @@
 /***************************************
               strcutures
 ****************************************/
-struct ScanArguments_Brute{
-    QStringList targetList;
-    QListWidget *wordlist;
-    //...
-    bool tldBrute;
-    bool subBrute;
-    //...
-    int currentWordlistToEnumerate;
-    int currentTargetToEnumerate;
-    int progress;
-};
-typedef ScanArguments_Brute ScanArguments_Brute;
+namespace brute {
+    struct ScanArguments{
+        QStringList targetList;
+        QListWidget *wordlist;
+        //...
+        bool tldBrute;
+        bool subBrute;
+        //...
+        int currentWordlistToEnumerate;
+        int currentTargetToEnumerate;
+        int progress;
+    };
+    typedef ScanArguments ScanArguments;
+}
 
 #endif // LIBBRUTE_H

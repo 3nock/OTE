@@ -88,7 +88,7 @@ QSplitter::handle:horizontal {
 	width: 10px;
 }
 
-QListWidget, QTreeView, QTableView{
+QListWidget, QTreeView, QTableView, QPlainTextEdit{
 	selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
 	/*background-color:rgb(82, 82, 82);*/
 	background-color: rgb(65, 75, 80);
@@ -98,11 +98,11 @@ QListWidget, QTreeView, QTableView{
 	border-width: 1px;
 }
 
-QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected{
+QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QPlainTextEdit::item:selected{
 	background-color: rgb(135, 135, 95);
 }
 
-QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover {
+QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QPlainTextEdit::item:hover {
 	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.8 rgb(135, 135, 100));
 }
 
