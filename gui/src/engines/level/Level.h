@@ -8,7 +8,7 @@ namespace Ui {
     class Level;
 }
 
-class Level : public QDialog{
+class Level : public QWidget{
         Q_OBJECT
 
     private:

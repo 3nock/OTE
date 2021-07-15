@@ -1,7 +1,7 @@
 #include "Active.h"
 #include "ui_Active.h"
 
-Active::Active(QWidget *parent) : QDialog(parent), ui(new Ui::Active),
+Active::Active(QWidget *parent) : QWidget(parent), ui(new Ui::Active),
     m_scanStatus(new ScanStatus),
     m_scanConfig(new ScanConfig),
     m_scanArguments(new ScanArguments_Active),

@@ -93,10 +93,10 @@ FORMS += \
         src\dialogs\ApiKeysDialog.ui \
         src\MainWindow.ui
 
-# including the python headers and libs...
-INCLUDEPATH += -I py/include
+# including the python3 headers and libs for compile time...
+INCLUDEPATH += -I ../include/python3/include
 
-LIBS += -L ../subsuite/Gui/py/libs -lpython38
+LIBS += -L ../subsuite/include/python3/libs -lpython38
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

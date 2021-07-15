@@ -8,7 +8,7 @@ namespace Ui {
     class Active;
 }
 
-class Active : public QDialog{
+class Active : public QWidget{
         Q_OBJECT
 
     public:

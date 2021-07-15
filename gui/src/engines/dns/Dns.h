@@ -9,7 +9,7 @@ namespace Ui {
     class Dns;
 }
 
-class Dns : public QDialog{
+class Dns : public QWidget{
     Q_OBJECT
 
     private:

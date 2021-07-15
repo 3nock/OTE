@@ -7,7 +7,7 @@ namespace Ui {
     class Save;
 }
 
-class Save : public QDialog{
+class Save : public QWidget{
     Q_OBJECT
 
     public:

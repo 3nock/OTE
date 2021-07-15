@@ -6,7 +6,7 @@
                             Constructor & Destructor
 *************************************************************************************/
 
-Dns::Dns(QWidget *parent) : QDialog(parent), ui(new Ui::Dns),
+Dns::Dns(QWidget *parent) : QWidget(parent), ui(new Ui::Dns),
       m_scanStatus(new ScanStatus),
       m_scanConfig(new ScanConfig),
       m_scanArguments(new ScanArguments_Records),

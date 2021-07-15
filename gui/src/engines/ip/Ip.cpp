@@ -1,7 +1,7 @@
 #include "Ip.h"
 #include "ui_Ip.h"
 
-Ip::Ip(QWidget *parent) : QDialog(parent), ui(new Ui::Ip),
+Ip::Ip(QWidget *parent) : QWidget(parent), ui(new Ui::Ip),
     m_scanStatus(new ScanStatus),
     m_scanConfig(new ScanConfig),
     m_scanArguments(new ScanArguments_Ip),

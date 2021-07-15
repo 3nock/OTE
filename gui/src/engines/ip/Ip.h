@@ -9,8 +9,7 @@ namespace Ui {
     class Ip;
 }
 
-class Ip : public QDialog
-{
+class Ip : public QWidget{
         Q_OBJECT
 
     private:

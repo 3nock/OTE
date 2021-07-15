@@ -1,7 +1,7 @@
 #include "Save.h"
 #include "ui_Save.h"
 
-Save::Save(QWidget *parent) : QDialog(parent), ui(new Ui::Save){
+Save::Save(QWidget *parent) : QWidget(parent), ui(new Ui::Save){
     ui->setupUi(this);
 
     // setting the splitter to the middle...

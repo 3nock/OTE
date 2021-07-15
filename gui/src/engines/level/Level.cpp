@@ -1,7 +1,7 @@
 #include "Level.h"
 #include "ui_Level.h"
 
-Level::Level(QWidget *parent) :QDialog(parent),ui(new Ui::Level),
+Level::Level(QWidget *parent) :QWidget(parent),ui(new Ui::Level),
     m_scanStatus(new ScanStatus),
     m_scanConfig(new ScanConfig),
     m_scanArguments(new ScanArguments_level),
