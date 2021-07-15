@@ -5,9 +5,9 @@
                Includes
 ****************************************/
 #include "src/core.h"
-#include "src/Dialogs/ConfigDialog.h"
-#include "src/Dialogs/WordlistDialog.h"
-#include "src/Dialogs/WordlistGeneratorDialog.h"
+#include "src/dialogs/ConfigDialog.h"
+#include "src/dialogs/WordlistDialog.h"
+#include "src/dialogs/WordlistGeneratorDialog.h"
 
 /***************************************
               strcutures

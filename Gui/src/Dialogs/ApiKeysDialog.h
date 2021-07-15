@@ -2,7 +2,7 @@
 #define APIKEYS_H
 
 // headers...
-#include "src/OsintTab/lib-osint.h"
+#include "src/engines/osint/lib-osint.h"
 
 namespace Ui {
     class ApiKeysDialog;

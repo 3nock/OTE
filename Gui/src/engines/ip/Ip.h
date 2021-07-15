@@ -3,7 +3,7 @@
 
 #include "src/core.h"
 #include "IpEnumerator.h"
-#include "src/Dialogs/ConfigDialog.h"
+#include "src/dialogs/ConfigDialog.h"
 
 namespace Ui {
     class Ip;

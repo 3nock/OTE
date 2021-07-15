@@ -2,13 +2,13 @@
 #define MAINWINDOW_H
 
 #include "src/core.h"
-#include "src/ActiveTab/Active.h"
-#include "src/LevelTab/Level.h"
-#include "src/BruteTab/Brute.h"
-#include "src/OsintTab/Osint.h"
-#include "src/DnsTab/Dns.h"
-#include "src/IpTab/Ip.h"
-#include "src/SaveTab/Save.h"
+#include "src/engines/ip/Ip.h"
+#include "src/engines/dns/Dns.h"
+#include "src/engines/save/Save.h"
+#include "src/engines/level/Level.h"
+#include "src/engines/brute/Brute.h"
+#include "src/engines/osint/Osint.h"
+#include "src/engines/active/Active.h"
 
 namespace Ui {
     class MainWindow;

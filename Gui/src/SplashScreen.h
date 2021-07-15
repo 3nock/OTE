@@ -4,8 +4,8 @@
 
 class SplashScreen
 {
-public:
-    SplashScreen();
+    public:
+        SplashScreen();
 };
 
 #endif // SPLASHSCREEN_H

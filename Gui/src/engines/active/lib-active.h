@@ -5,7 +5,7 @@
                   includes
 *******************************************/
 #include "src/core.h"
-#include "src/Dialogs/ConfigDialog.h"
+#include "src/dialogs/ConfigDialog.h"
 
 /*******************************************
                    enums
