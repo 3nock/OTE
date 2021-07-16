@@ -8,4 +8,7 @@
         <file>res/files/nameservers.txt</file>
         <file>res/files/srv.txt</file>
     </qresource>
+    <qresource prefix="/themes">
+        <file>res/themes/native.qss</file>
+    </qresource>
 </RCC>

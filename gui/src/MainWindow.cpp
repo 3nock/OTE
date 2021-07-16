@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     ///
     /// creating and initiating the classes for the modules...
     ///
+    Project *project = new Project(this);
     Active *active = new Active(this);
     Level *level = new Level(this);
     Osint *osint = new Osint(this);
@@ -49,13 +50,14 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     connect(brute, SIGNAL(changeTabToSave()), this, SLOT(changeTabToSave()));
 
     // creating tabs...
-    ui->tabWidget_mainTab->insertTab(0, osint, "Osint");
-    ui->tabWidget_mainTab->insertTab(1, brute, "Brute");
-    ui->tabWidget_mainTab->insertTab(2, active, "Active");
-    ui->tabWidget_mainTab->insertTab(3, dns, "Dns++");
-    ui->tabWidget_mainTab->insertTab(4, ip, "Ip");
-    ui->tabWidget_mainTab->insertTab(5, level, "Level");
-    ui->tabWidget_mainTab->insertTab(6, save, "Save");
+    ui->tabWidget_mainTab->insertTab(0, project, "Project");
+    ui->tabWidget_mainTab->insertTab(1, osint, "Osint");
+    ui->tabWidget_mainTab->insertTab(2, brute, "Brute");
+    ui->tabWidget_mainTab->insertTab(3, active, "Active");
+    ui->tabWidget_mainTab->insertTab(4, dns, "Dns++");
+    ui->tabWidget_mainTab->insertTab(5, ip, "Ip");
+    ui->tabWidget_mainTab->insertTab(6, level, "Level");
+    ui->tabWidget_mainTab->insertTab(7, save, "Save");
 
     /* setting tab icons...
     ui->tabWidget_mainTab->setTabIcon(0, QIcon(":/img/images/O.png"));

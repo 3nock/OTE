@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "src/core.h"
+#include "src/project/Project.h"
 #include "src/engines/ip/Ip.h"
 #include "src/engines/dns/Dns.h"
 #include "src/engines/save/Save.h"

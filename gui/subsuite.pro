@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    src/project/Project.cpp \
         src\engines\save\Save.cpp \
         src\engines\ip\Ip.cpp \
         src\engines\ip\IpEnumerator.cpp \
@@ -53,6 +54,7 @@ SOURCES += \
         src\main.cpp \
 
 HEADERS += \
+        src/project/Project.h \
         src\engines\save\Save.h \
         src\engines\ip\Ip.h \
         src\engines\ip\IpEnumerator.h \
@@ -80,6 +82,7 @@ HEADERS += \
         src\core.h
 
 FORMS += \
+        src/project/Project.ui \
         src\engines\ip\Ip.ui \
         src\engines\dns\Dns.ui \
         src\engines\save\Save.ui \

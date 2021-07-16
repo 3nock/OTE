@@ -43,6 +43,7 @@ class Active : public QWidget{
 
     private slots:
         void on_pushButton_start_clicked();
+        void on_pushButton_pause_clicked();
         void on_pushButton_stop_clicked();
         void on_pushButton_get_clicked();
         void on_pushButton_action_clicked();
@@ -67,7 +68,6 @@ class Active : public QWidget{
         void cursorSendToSave();
         void cursorSendToDnsRecords();
         void cursorOpenInBrowser();
-        void on_pushButton_pause_clicked();
 };
 
 #endif // ACTIVE_H

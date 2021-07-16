@@ -73,7 +73,7 @@ QComboBox {
 	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(77, 77, 77, 255));
 }
 
-QComboBox QWidget{
+QComboBox QWidget {
 	border-style: outset;
 	border-style: solid;
 	border-color: black;
@@ -141,7 +141,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 
 QSplitter::handle:horizontal {
 	background-color:rgb(105,105,105);
-	width: 10px;
+        width: 5px;
+}
+
+QSplitter::handle:vertical{
+	background-color:rgb(105,105,105);
+        height: 5px
 }
 
 QListWidget, QTreeView, QTableView{
@@ -296,15 +301,18 @@ QTabWidget {
 }
 
 QTabWidget::pane {
-		border-color: grey;
-		background-color:rgb(105,105,105);
-		border-style: solid;
-		border-width: 1px;
+        border-color: grey;
+        background-color:rgb(105,105,105);
+        border-style: solid;
+        border-top-width: 3px;
+        border-right-width: 1px;
+        border-left-width: 1px;
+        border-bottom-width: 0px;
 }
 
 QTabBar::tab {
 	height: 16px;
-	width: 50px;
+        width: 55px;
 	padding: 1px;
 	color:rgb(250,250,250);
   	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgba(97, 97, 97, 255));
