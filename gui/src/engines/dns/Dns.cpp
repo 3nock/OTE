@@ -6,7 +6,9 @@
                             Constructor & Destructor
 *************************************************************************************/
 
-Dns::Dns(QWidget *parent) : QWidget(parent), ui(new Ui::Dns),
+Dns::Dns(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Dns),
+      m_resultsModel(resultsModel),
+      //...
       m_scanStatus(new ScanStatus),
       m_scanConfig(new ScanConfig),
       m_scanArguments(new ScanArguments_Records),
@@ -409,28 +411,34 @@ void Dns::on_pushButton_action_clicked(){
     /// getting the position of the action button to place the context menu...
     ///
     QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
-    ///
-    /// showing the context menu right by the side of the action button...
-    ///
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute( Qt::WA_DeleteOnClose, true );
-    menu->setObjectName("mainMenu");
     //...
-    QAction actionSendToSave("Send To Save", this);
-    QAction actionSendToMultiLevel("Send To Multi-level Scan");
-    QAction actionCollectAllRecords("Send To DnsRecords");
+    QMenu *contextMenu_actionButton = new QMenu(this);
+    contextMenu_actionButton->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_actionButton->setObjectName("actionButtonMenu");
     //...
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave()));
-    connect(&actionCollectAllRecords, SIGNAL(triggered()), this, SLOT(actionCollectAllRecords()));
-    connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(actionSendToMultiLevel()));
+    QAction actionSendToIp("Send IpAddresses To Ip");
+    QAction actionSendToActive("Send Subdomains To Active");
+    QAction actionSendToBrute("Send Subdomains To Brute");
+    QAction actionSendToSave("Send Subdomains To Save");
+    QAction actionSendToLevel("Send Subdomains To Level");
+    QAction actionSendToRecords("Send Subdomains To Records");
     //...
-    menu->addSeparator();
-    menu->addAction(&actionCollectAllRecords);
-    menu->addAction(&actionSendToSave);
-    menu->addAction(&actionSendToMultiLevel);
+    connect(&actionSendToIp, SIGNAL(triggered()), this, SLOT(actionSendToIp(ENGINE::RECORDS)));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave(ENGINE::RECORDS)));
+    connect(&actionSendToBrute, SIGNAL(triggered()), this, SLOT(actionSendToBrute(ENGINE::RECORDS)));
+    connect(&actionSendToActive, SIGNAL(triggered()), this, SLOT(actionSendToActive(ENGINE::RECORDS)));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(actionSendToRecords(ENGINE::RECORDS)));
+    connect(&actionSendToLevel, SIGNAL(triggered()), this, SLOT(actionSendToLevel(ENGINE::RECORDS)));
     //...
-    menu->move(QPoint(pos.x()+76, pos.y()));
-    menu->exec();
+    contextMenu_actionButton->addAction(&actionSendToIp);
+    contextMenu_actionButton->addAction(&actionSendToBrute);
+    contextMenu_actionButton->addAction(&actionSendToActive);
+    contextMenu_actionButton->addAction(&actionSendToRecords);
+    contextMenu_actionButton->addAction(&actionSendToLevel);
+    contextMenu_actionButton->addAction(&actionSendToSave);
+    //...
+    contextMenu_actionButton->move(QPoint(pos.x()+76, pos.y()));
+    contextMenu_actionButton->exec();;
 }
 
 
@@ -441,32 +449,32 @@ void Dns::on_treeView_results_customContextMenuRequested(const QPoint &pos){
     if(!ui->treeView_results->selectionModel()->isSelected(ui->treeView_results->currentIndex())){
         return;
     }
-    //...
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute( Qt::WA_DeleteOnClose, true );
-    menu->setObjectName("mainMenu");
-    //...
-    QAction actionSendToSave("Send Selected To Save", this);
-    QAction actionSendToMultiLevel("Send Selected To Multi-Level");
-    QAction actionOpenInBrowser("Open Selected in Browser");
-    //...
-    connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
-    connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(cursorSendToMultiLevel()));
-    //...
-    menu->addAction(&actionOpenInBrowser);
-    menu->addSeparator();
-    menu->addAction(&actionSendToMultiLevel);
-    menu->addAction(&actionSendToSave);
     ///
-    /// getting the position of the cursor to show the context menu...
+    /// getting the position of the cursor to place the context menu...
     ///
     QPoint globalCursorPos = QCursor::pos();
     QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
     QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
     //...
-    menu->move(localCursorPosition);
-    menu->exec();
+    QMenu *contextMenu_rightClick = new QMenu(this);
+    contextMenu_rightClick->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_rightClick->setObjectName("rightClickMenu");
+    //...
+    QAction actionSendToSave("Send Selected To Save", this);
+    QAction actionSendToRecords("Send Selected To Records");
+    QAction actionOpenInBrowser("Open Selected in Browser");
+    //...
+    connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(cursorSendToRecords()));
+    //...
+    contextMenu_rightClick->addAction(&actionOpenInBrowser);
+    contextMenu_rightClick->addSeparator();
+    contextMenu_rightClick->addAction(&actionSendToRecords);
+    contextMenu_rightClick->addAction(&actionSendToSave);
+    //...
+    contextMenu_rightClick->move(localCursorPosition);
+    contextMenu_rightClick->exec();
 }
 
 void Dns::on_tableView_srv_customContextMenuRequested(const QPoint &pos){
@@ -474,52 +482,35 @@ void Dns::on_tableView_srv_customContextMenuRequested(const QPoint &pos){
     if(!ui->tableView_srv->selectionModel()->isSelected(ui->tableView_srv->currentIndex())){
         return;
     }
-    //...
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute( Qt::WA_DeleteOnClose, true );
-    menu->setObjectName("mainMenu");
-    //...
-    QAction actionSendToSave("Send Selected To Save", this);
-    QAction actionSendToMultiLevel("Send Selected To Multi-Level");
-    QAction actionOpenInBrowser("Open Selected in Browser");
-    //...
-    connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
-    connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(cursorSendToMultiLevel()));
-    //...
-    menu->addAction(&actionOpenInBrowser);
-    menu->addSeparator();
-    menu->addAction(&actionSendToMultiLevel);
-    menu->addAction(&actionSendToSave);
     ///
-    /// getting the position of the cursor to show the context menu...
+    /// getting the position of the cursor to place the context menu...
     ///
     QPoint globalCursorPos = QCursor::pos();
     QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
     QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
     //...
-    menu->move(localCursorPosition);
-    menu->exec();
+    QMenu *contextMenu_rightClick = new QMenu(this);
+    contextMenu_rightClick->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_rightClick->setObjectName("rightClickMenu");
+    //...
+    QAction actionSendToSave("Send Selected To Save", this);
+    QAction actionSendToRecords("Send Selected To Records");
+    QAction actionOpenInBrowser("Open Selected in Browser");
+    //...
+    connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(cursorSendToRecords()));
+    //...
+    contextMenu_rightClick->addAction(&actionOpenInBrowser);
+    contextMenu_rightClick->addSeparator();
+    contextMenu_rightClick->addAction(&actionSendToRecords);
+    contextMenu_rightClick->addAction(&actionSendToSave);
+    //...
+    contextMenu_rightClick->move(localCursorPosition);
+    contextMenu_rightClick->exec();
 }
-
-
 
 /************************ Implementation Of Context Menu's Actions ************************/
-
-/*************************** For action button *****************************/
-void Dns::actionSendToSave(){
-
-}
-
-void Dns::actionSendToMultiLevel(){
-
-}
-
-void Dns::actionCollectAllRecords(){
-
-}
-
-/******************************* For Cursor ********************************/
 void Dns::cursorOpenInBrowser(){
     ///
     /// iterate and open each selected item in a browser...
@@ -527,12 +518,4 @@ void Dns::cursorOpenInBrowser(){
     foreach(const QModelIndex &index, ui->treeView_results->selectionModel()->selectedIndexes()){
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
-}
-
-void Dns::cursorSendToSave(){
-
-}
-
-void Dns::cursorSendToMultiLevel(){
-
 }

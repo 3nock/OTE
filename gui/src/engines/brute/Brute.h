@@ -2,13 +2,14 @@
 #define BRUTE_H
 
 #include "lib-brute.h"
+#include "src/engines/Base.h"
 #include "BruteEnumerator.h"
 
 namespace Ui {
     class Brute;
 }
 
-class Brute : public QWidget{
+class Brute : public BaseClass{
     Q_OBJECT
 
     private:
@@ -17,7 +18,8 @@ class Brute : public QWidget{
     private:
         void startScan();
         //...
-        QStandardItemModel *m_model_results;
+        ResultsModel *m_resultsModel;
+        //...
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
         brute::ScanArguments *m_scanArguments;
@@ -25,7 +27,7 @@ class Brute : public QWidget{
         int m_activeThreads = 0;
 
     public:
-        explicit Brute(QWidget *parent = nullptr);
+        explicit Brute(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Brute();
 
     public slots:
@@ -35,18 +37,10 @@ class Brute : public QWidget{
         void logs(QString log);
         //...
         void choosenWordlist(QString);
-        //...
-        void onSendResultsToSave();
 
     signals:
         void stop();
         void pause();
-        //...
-        void sendStatus(QString status);
-        void sendLog(QString log);
-        // ...
-        void sendResultsToSave(QString);
-        void changeTabToSave();
 
     private slots:
         void on_pushButton_start_clicked();
@@ -73,12 +67,6 @@ class Brute : public QWidget{
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
         void on_comboBox_target_currentIndexChanged(int index);
         //...
-        void actionSendToMultiLevel();
-        void actionSendToSave();
-        void actionSendToDnsRecords();
-        //...
-        void cursorSendToSave();
-        void cursorSendToDnsRecords();
         void cursorOpenInBrowser();
 };
 

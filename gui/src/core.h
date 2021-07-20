@@ -47,12 +47,6 @@
 /***************************************************
                     MACROS
 ****************************************************/
-/*#define MAX_THREADS 100
-#define SINGLE_ITEM 1
-#define MULTI_ITEMS 2
-#define ALL_ITEMS 3
-*/
-//...
 #define SINGLE_TARGET 0
 #define MULTIPLE_TARGETS 1
 //...
@@ -83,12 +77,24 @@ enum ENGINE{
     SUBBRUTE = 2,
     TLDBRUTE = 3,
     ACTIVE = 4,
-    RECORDS = 5
+    RECORDS = 5,
+    BRUTE = 6
 };
 
 /***************************************************
                     STRUCTURES
 ****************************************************/
+struct ResultsModel{
+    QStandardItemModel *ip = nullptr;
+    QStandardItemModel *osint = nullptr;
+    QStandardItemModel *brute = nullptr;
+    QStandardItemModel *active = nullptr;
+    QStandardItemModel *record = nullptr;
+    QStandardItemModel *level = nullptr;
+    QStandardItemModel *save = nullptr;
+};
+typedef struct ResultsModel ResultsModel;
+
 struct ScanStatus{
     bool isRunning = false;
     bool isStopped = false;
@@ -104,7 +110,7 @@ struct ScanConfig{
     //...
     bool checkWildcard = false;
     bool hasWildcard = false;
-    QString wildcardIp;
+    QString wildcardIp = nullptr;
 };
 typedef struct ScanConfig ScanConfig;
 

@@ -3,8 +3,8 @@
 
 /******************************* Constructor & Destructor ********************************/
 
-Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint),
-    results_model(new QStandardItemModel),
+Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Osint),
+    m_resultsModel(resultsModel),
     //...
     scanArguments(new ScanArguments_Osint),
     scanResults(new ScanResults_Osint)
@@ -16,8 +16,8 @@ Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint),
     ui->lineEdit_domain->setPlaceholderText("eg. example.com");
     ui->lineEdit_newProfile->setPlaceholderText("Enter New Profile's Name...");
     //...
-    results_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
-    ui->tableView_results->setModel(results_model);
+    m_resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+    ui->tableView_results->setModel(m_resultsModel->osint);
     //...
     ui->pushButton_pause->setDisabled(true);
     ui->progressBar->hide();
@@ -30,7 +30,6 @@ Osint::Osint(QWidget *parent) : QWidget(parent), ui(new Ui::Osint),
     setupOsintProfiles();
 }
 Osint::~Osint(){
-    delete results_model;
     delete scanArguments;
     delete scanResults;
     delete ui;
@@ -61,7 +60,7 @@ void Osint::on_pushButton_start_clicked(){
         scanArguments->targetDomain = targetDomain;
         scanResults->label_subdomainsCount = ui->label_resultsCount;
         scanResults->resultsCount = &subdomainsCount;
-        scanResults->results_model = results_model;
+        scanResults->results_model = m_resultsModel->osint;
         //...
         emit sendStatus("[*] Enumerating "+m_targetDomain+" Subdomains with Osint...");
         logs("[START] Enumerating "+m_targetDomain+" Subdomains with Osint...");
@@ -105,11 +104,11 @@ void Osint::onEnumerationComplete(){
 void Osint::on_pushButton_clear_clicked(){
     // clear subdomains...
     if(ui->tabWidget->currentIndex() == 0){
-        results_model->clear();
+        m_resultsModel->osint->clear();
         ui->label_resultsCount->clear();
         subdomainsCount = 0;
         //...
-        results_model->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+        m_resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     }
     // clear logs...
     else{
@@ -756,88 +755,74 @@ void Osint::on_pushButton_newProfile_clicked(){
 
 /*************************** Action-Button Context Menu **************************************/
 void Osint::on_pushButton_action_clicked(){
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute( Qt::WA_DeleteOnClose, true );
-    menu->setObjectName("mainMenu");
-    //...
-    QAction actionSendToSave("Send To Save", this);
-    QAction actionSendToActive("Send To Active Subdomain", this);
-    QAction actionSendToDnsRecords("Send To DnsRecords");
-    QAction actionRemoveDuplicates("Remove Duplicates");
-    //...
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave()));
-    connect(&actionSendToActive, SIGNAL(triggered()), this, SLOT(actionSendToActive()));
-    connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords()));
-    connect(&actionRemoveDuplicates, SIGNAL(triggered()), this,SLOT(actionRemoveDuplicates()));
-    //...
-    menu->addAction(&actionRemoveDuplicates);
-    menu->addSeparator();
-    menu->addAction(&actionSendToDnsRecords);
-    menu->addAction(&actionSendToSave);
-    menu->addAction(&actionSendToActive);
     ///
     /// positioning of the context menu...
     ///
     QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
-    int x = pos.x()+76;
-    int y = pos.y();
     //...
-    menu->move(QPoint(x, y));
-    menu->exec();
+    QMenu *contextMenu_actionButton = new QMenu(this);
+    contextMenu_actionButton->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_actionButton->setObjectName("actionButtonMenu");
+    //...
+    QAction actionSendToIp("Send IpAddresses To Ip");
+    QAction actionSendToActive("Send Subdomains To Active");
+    QAction actionSendToBrute("Send Subdomains To Brute");
+    QAction actionSendToSave("Send Subdomains To Save");
+    QAction actionSendToLevel("Send Subdomains To Level");
+    QAction actionSendToRecords("Send Subdomains To Records");
+    //...
+    connect(&actionSendToIp, SIGNAL(triggered()), this, SLOT(actionSendToIp(ENGINE::OSINT)));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave(ENGINE::OSINT)));
+    connect(&actionSendToBrute, SIGNAL(triggered()), this, SLOT(actionSendToBrute(ENGINE::OSINT)));
+    connect(&actionSendToActive, SIGNAL(triggered()), this, SLOT(actionSendToActive(ENGINE::OSINT)));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(actionSendToRecords(ENGINE::OSINT)));
+    connect(&actionSendToLevel, SIGNAL(triggered()), this, SLOT(actionSendToLevel(ENGINE::OSINT)));
+    //...
+    contextMenu_actionButton->addAction(&actionSendToIp);
+    contextMenu_actionButton->addAction(&actionSendToBrute);
+    contextMenu_actionButton->addAction(&actionSendToActive);
+    contextMenu_actionButton->addAction(&actionSendToRecords);
+    contextMenu_actionButton->addAction(&actionSendToLevel);
+    contextMenu_actionButton->addAction(&actionSendToSave);
+    //...
+    contextMenu_actionButton->move(QPoint(pos.x()+76, pos.y()));
+    contextMenu_actionButton->exec();;
 }
 
 /******************************** Right-Click Context Menu ****************************/
 void Osint::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
-    if(ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
-        QMenu *menu = new QMenu(this);
-        menu->setAttribute( Qt::WA_DeleteOnClose, true );
-        menu->setObjectName("mainMenu");
-        //...
-        QAction actionSendToSave("Send Selected To Save", this);
-        QAction actionSendToDnsRecords("Send Selected To DnsRecords", this);
-        QAction actionSendToInfo("Send Selected To Info");
-        QAction actionOpenInBrowser("Open Selected in Browser");
-        //...
-        connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
-        connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
-        connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(cursorSendToDnsRecords()));
-        connect(&actionSendToInfo, SIGNAL(triggered()), this, SLOT(cursorSendToInfo()));
-        //...
-        menu->addAction(&actionOpenInBrowser);
-        menu->addSeparator();
-        menu->addAction(&actionSendToInfo);
-        menu->addAction(&actionSendToSave);
-        menu->addAction(&actionSendToDnsRecords);
-        ///
-        /// getting the mouse position..
-        ///
-        QPoint globalCursorPos = QCursor::pos();
-        int mouseScreen = qApp->desktop()->screenNumber(globalCursorPos);
-        QRect mouseScreenGeometry = qApp->desktop()->screen(mouseScreen)->geometry();
-        QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
-        //...
-        menu->setStyleSheet("QMenu::item::selected#mainMenu{background-color: rgb(170, 170, 127)} QMenu#mainMenu{background-color: qlineargradient(x1:0,  y1:0, x2:0, y2:1, stop: 0 white, stop: 0.8 rgb(246, 255, 199)); border-style: solid; border-color: black; border-width: 1px;}");
-        menu->move(localCursorPosition);
-        menu->exec();
+    if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
+        return;
     }
+    ///
+    /// getting the position of the cursor to place the context menu...
+    ///
+    QPoint globalCursorPos = QCursor::pos();
+    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
+    QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
+    //...
+    QMenu *contextMenu_rightClick = new QMenu(this);
+    contextMenu_rightClick->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_rightClick->setObjectName("rightClickMenu");
+    //...
+    QAction actionSendToSave("Send Selected To Save", this);
+    QAction actionSendToRecords("Send Selected To Records");
+    QAction actionOpenInBrowser("Open Selected in Browser");
+    //...
+    connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(cursorSendToRecords()));
+    //...
+    contextMenu_rightClick->addAction(&actionOpenInBrowser);
+    contextMenu_rightClick->addSeparator();
+    contextMenu_rightClick->addAction(&actionSendToRecords);
+    contextMenu_rightClick->addAction(&actionSendToSave);
+    //...
+    contextMenu_rightClick->move(localCursorPosition);
+    contextMenu_rightClick->exec();
 }
 
-/************************ Action-Button Context Menu Methods ***********************/
-void Osint::actionSendToSave(){
-    onSendResultsToSave();
-    emit changeTabToSave();
-}
-void Osint::actionSendToActive(){
-    onSendResultsToActive();
-    emit changeTabToActive();
-}
-void Osint::actionRemoveDuplicates(){
-    // removing duplicates from the QListWidget...
-}
-void Osint::actionSendToDnsRecords(){
-    // nothing yet...
-}
 
 /************************** Right-Click Context Menu Methods **********************/
 void Osint::cursorOpenInBrowser(){
@@ -847,23 +832,6 @@ void Osint::cursorOpenInBrowser(){
     foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
-}
-void Osint::cursorSendToSave(){
-    foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
-        emit sendResultsToSave(index.data().toString());
-    }
-    emit changeTabToSave();
-    logs("[*] Sent Selected Osint Results To Save...");
-}
-void Osint::cursorSendToActive(){
-    foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
-        emit sendResultsToActive(index.data().toString());
-    }
-    emit changeTabToActive();
-    logs("[*] Sent Selected Osint Results To enumerate Active Subdomains in Active...");
-}
-void Osint::cursorSendToDnsRecords(){
-    // not yet implemented...
 }
 
 /*********************************** logs ***************************************/
@@ -878,14 +846,4 @@ void Osint::logs(QString log){
         ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setFont(QFont("MS Shell Dlg 2", 8, QFont::Bold));
         return;
     }
-}
-
-/********************************* Send Results **********************************/
-void Osint::onSendResultsToSave(){
-    //...
-    logs("[*] Sent Osint Results To Save...");
-}
-void Osint::onSendResultsToActive(){
-    //...
-    logs("[*] Sent Osint Results To enumerate Active Subdomains...");
 }

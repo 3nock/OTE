@@ -1,11 +1,12 @@
 #include "Level.h"
 #include "ui_Level.h"
 
-Level::Level(QWidget *parent) :QWidget(parent),ui(new Ui::Level),
+Level::Level(QWidget *parent, ResultsModel *resultsModel) :BaseClass(parent),ui(new Ui::Level),
+    m_resultsModel(resultsModel),
+    //...
     m_scanStatus(new ScanStatus),
     m_scanConfig(new ScanConfig),
-    m_scanArguments(new ScanArguments_level),
-    m_model_results(new QStandardItemModel)
+    m_scanArguments(new ScanArguments_level)
 {
     ui->setupUi(this);
     //...
@@ -16,9 +17,9 @@ Level::Level(QWidget *parent) :QWidget(parent),ui(new Ui::Level),
     ui->pushButton_pause->setDisabled(true);
     ui->progressBar->hide();
     //...
-    m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+    m_resultsModel->level->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
     //...
-    ui->tableView_results->setModel(m_model_results);
+    ui->tableView_results->setModel(m_resultsModel->level);
     //...
     m_scanArguments->wordlist = ui->listWidget_wordlist;
     m_scanArguments->targetList = ui->listWidget_targets;
@@ -29,7 +30,7 @@ Level::Level(QWidget *parent) :QWidget(parent),ui(new Ui::Level),
 Level::~Level(){
     delete m_scanStatus;
     delete m_scanConfig;
-    delete m_model_results;
+    delete m_resultsModel->level;
     delete m_scanArguments;
     //...
     delete ui;
@@ -65,7 +66,7 @@ void Level::on_pushButton_start_clicked(){
     m_scanArguments->currentTargetToEnumerate = 0;
     m_scanArguments->currentWordlistToEnumerate = 0;
     m_scanArguments->maxLevel = ui->spinBox_levels->value();
-    lastScanResultsCount = m_model_results->rowCount();
+    lastScanResultsCount = m_resultsModel->level->rowCount();
     ui->progressBar->setMaximum(ui->listWidget_targets->count()*ui->listWidget_wordlist->count());
     ///
     /// subdomain level check...
@@ -158,9 +159,9 @@ void Level::nextLevel(){
     /// then copy the newly enumerated subdomains from results model to the
     /// new targetList...
     ///
-    while(lastScanResultsCount < m_model_results->rowCount())
+    while(lastScanResultsCount < m_resultsModel->level->rowCount())
     {
-        ui->listWidget_targets->addItem(m_model_results->item(lastScanResultsCount, 0)->text());
+        ui->listWidget_targets->addItem(m_resultsModel->level->item(lastScanResultsCount, 0)->text());
         lastScanResultsCount++;
     }
     ui->label_targetsCount->setNum(ui->listWidget_targets->count());
@@ -171,7 +172,7 @@ void Level::nextLevel(){
     m_scanArguments->progress = 0;
     m_scanArguments->currentTargetToEnumerate = 0;
     m_scanArguments->currentWordlistToEnumerate = 0;
-    lastScanResultsCount = m_model_results->rowCount();
+    lastScanResultsCount = m_resultsModel->level->rowCount();
     ui->progressBar->setMaximum(ui->listWidget_targets->count()*ui->listWidget_wordlist->count());
     ///
     /// subdomain level check...
@@ -206,7 +207,7 @@ void Level::scanThreadEnd(){
         logs("[*] Scan Paused!\n");
         return;
     }
-    if(!m_scanStatus->isStopped && (m_scanArguments->currentLevel < m_scanArguments->maxLevel) && (lastScanResultsCount < m_model_results->rowCount()))
+    if(!m_scanStatus->isStopped && (m_scanArguments->currentLevel < m_scanArguments->maxLevel) && (lastScanResultsCount < m_resultsModel->level->rowCount()))
     {
         nextLevel();
     }
@@ -236,9 +237,9 @@ void Level::on_toolButton_config_clicked(){
 
 /************************************** Results *****************************************/
 void Level::scanResult(QString subdomain, QString ipAddress){
-    m_model_results->setItem(m_model_results->rowCount(), 0, new QStandardItem(subdomain));
-    m_model_results->setItem(m_model_results->rowCount()-1, 1, new QStandardItem(ipAddress));
-    ui->label_resultsCount->setNum(m_model_results->rowCount());
+    m_resultsModel->level->setItem(m_resultsModel->level->rowCount(), 0, new QStandardItem(subdomain));
+    m_resultsModel->level->setItem(m_resultsModel->level->rowCount()-1, 1, new QStandardItem(ipAddress));
+    ui->label_resultsCount->setNum(m_resultsModel->level->rowCount());
 }
 
 void Level::on_pushButton_clearResults_clicked(){
@@ -247,13 +248,13 @@ void Level::on_pushButton_clearResults_clicked(){
     ///
     if(ui->tabWidget_results->currentIndex() == 0)
     {
-        m_model_results->clear();
+        m_resultsModel->level->clear();
         ui->label_resultsCount->clear();
         //...
         ui->progressBar->reset();
         ui->progressBar->hide();
         //...
-        m_model_results->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+        m_resultsModel->level->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     }
     ///
     /// if the current tab is logs clear logs...
@@ -407,21 +408,29 @@ void Level::on_pushButton_action_clicked(){
     contextMenu_actionButton->setAttribute( Qt::WA_DeleteOnClose, true );
     contextMenu_actionButton->setObjectName("actionButtonMenu");
     //...
-    QAction actionSendToSave("Send To Save", this);
-    QAction actionSendToMultiLevel("Send To Multi-level Scan");
-    QAction actionSendToDnsRecords("Send To DnsRecords");
+    QAction actionSendToIp("Send IpAddresses To Ip");
+    QAction actionSendToActive("Send Subdomains To Active");
+    QAction actionSendToBrute("Send Subdomains To Brute");
+    QAction actionSendToSave("Send Subdomains To Save");
+    QAction actionSendToLevel("Send Subdomains To Level");
+    QAction actionSendToRecords("Send Subdomains To Records");
     //...
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave()));
-    connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords()));
-    connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(actionSendToMultiLevel()));
+    connect(&actionSendToIp, SIGNAL(triggered()), this, SLOT(actionSendToIp(ENGINE::LEVEL)));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave(ENGINE::LEVEL)));
+    connect(&actionSendToBrute, SIGNAL(triggered()), this, SLOT(actionSendToBrute(ENGINE::LEVEL)));
+    connect(&actionSendToActive, SIGNAL(triggered()), this, SLOT(actionSendToActive(ENGINE::LEVEL)));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(actionSendToRecords(ENGINE::LEVEL)));
+    connect(&actionSendToLevel, SIGNAL(triggered()), this, SLOT(actionSendToLevel(ENGINE::LEVEL)));
     //...
-    contextMenu_actionButton->addSeparator();
-    contextMenu_actionButton->addAction(&actionSendToDnsRecords);
+    contextMenu_actionButton->addAction(&actionSendToIp);
+    contextMenu_actionButton->addAction(&actionSendToBrute);
+    contextMenu_actionButton->addAction(&actionSendToActive);
+    contextMenu_actionButton->addAction(&actionSendToRecords);
+    contextMenu_actionButton->addAction(&actionSendToLevel);
     contextMenu_actionButton->addAction(&actionSendToSave);
-    contextMenu_actionButton->addAction(&actionSendToMultiLevel);
     //...
     contextMenu_actionButton->move(QPoint(pos.x()+76, pos.y()));
-    contextMenu_actionButton->exec();
+    contextMenu_actionButton->exec();;
 }
 
 void Level::on_tableView_results_customContextMenuRequested(const QPoint &pos){
@@ -444,16 +453,16 @@ void Level::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     contextMenu_rightClick->setObjectName("rightClickMenu");
     //...
     QAction actionSendToSave("Send Selected To Save", this);
-    QAction actionSendToDnsRecords("Send Selected To DnsRecords");
+    QAction actionSendToRecords("Send Selected To Records");
     QAction actionOpenInBrowser("Open Selected in Browser");
     //...
     connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
     connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
-    connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(cursorSendToDnsRecords()));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(cursorSendToRecords()));
     //...
     contextMenu_rightClick->addAction(&actionOpenInBrowser);
     contextMenu_rightClick->addSeparator();
-    contextMenu_rightClick->addAction(&actionSendToDnsRecords);
+    contextMenu_rightClick->addAction(&actionSendToRecords);
     contextMenu_rightClick->addAction(&actionSendToSave);
     //...
     contextMenu_rightClick->move(localCursorPosition);
@@ -461,46 +470,9 @@ void Level::on_tableView_results_customContextMenuRequested(const QPoint &pos){
 }
 
 /****************************** Action Context Menu Methods ***************************/
-void Level::actionSendToSave(){
-    /*
-    int resultsCount = ui->listWidget_subdomains->count();
-    for(int i = 0; i != resultsCount; ++i){
-        emit sendResultsToSave(ui->listWidget_subdomains->item(i)->text());
-    }
-    logs("[*] Sent "+QString::number(resultsCount)+" subBrute Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();
-    */
-}
-
-/*********************************************************************************/
-void Level::actionSendToDnsRecords(){
-
-}
-
-/**********************************************************************************/
-void Level::actionSendToMultiLevel(){
-
-}
-
-/*************************** Cursor Right Click Context Menu ***********************/
-void Level::cursorSendToSave(){
-    /*foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
-        // send selection
-    }
-    logs("[*] Sent "+QString::number(ui->listWidget_subdomains->count())+" subBrute Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();*/
-}
-
-/************************************************************************************/
 void Level::cursorOpenInBrowser(){
     // iterate and open each selected item in a browser...
     foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
-}
-
-
-/*************************************************************************************/
-void Level::cursorSendToDnsRecords(){
-
 }

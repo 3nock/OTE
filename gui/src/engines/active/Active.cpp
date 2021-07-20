@@ -1,11 +1,12 @@
 #include "Active.h"
 #include "ui_Active.h"
 
-Active::Active(QWidget *parent) : QWidget(parent), ui(new Ui::Active),
+Active::Active(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Active),
+    m_resultsModel(resultsModel),
+    //...
     m_scanStatus(new ScanStatus),
     m_scanConfig(new ScanConfig),
-    m_scanArguments(new ScanArguments_Active),
-    m_model_results(new QStandardItemModel)
+    m_scanArguments(new ScanArguments_Active)
 {
     ui->setupUi(this);
     //...
@@ -15,8 +16,8 @@ Active::Active(QWidget *parent) : QWidget(parent), ui(new Ui::Active),
     ui->pushButton_stop->setDisabled(true);
     ui->pushButton_pause->setDisabled(true);
     //...
-    m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
-    ui->tableView_results->setModel(m_model_results);
+    m_resultsModel->active->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+    ui->tableView_results->setModel(m_resultsModel->active);
     //...
     ui->splitter_3->setSizes(QList<int>()<<160<<1);
     //...
@@ -26,7 +27,6 @@ Active::~Active(){
     delete m_scanStatus;
     delete m_scanConfig;
     delete m_scanArguments;
-    delete m_model_results;
     //...
     delete ui;
 }
@@ -151,9 +151,9 @@ void Active::startScan(){
 }
 
 void Active::scanResult(QString subdomain, QString ipAddress){
-    m_model_results->setItem(m_model_results->rowCount(), 0, new QStandardItem(subdomain));
-    m_model_results->setItem(m_model_results->rowCount()-1, 1, new QStandardItem(ipAddress));
-    ui->label_resultsCount->setNum(m_model_results->rowCount());
+    m_resultsModel->active->setItem(m_resultsModel->active->rowCount(), 0, new QStandardItem(subdomain));
+    m_resultsModel->active->setItem(m_resultsModel->active->rowCount()-1, 1, new QStandardItem(ipAddress));
+    ui->label_resultsCount->setNum(m_resultsModel->active->rowCount());
 }
 
 void Active::scanThreadEnded(){
@@ -213,6 +213,10 @@ void Active::on_toolButton_config_clicked(){
     scanConfig->show();
 }
 
+void Active::on_pushButton_get_clicked(){
+
+}
+
 void Active::on_pushButton_loadTargets_clicked(){
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
     if(!filename.isEmpty()){
@@ -260,9 +264,9 @@ void Active::on_pushButton_clearResults_clicked(){
     ///
     if(ui->tabWidget_results->currentIndex() == 0)
     {
-        m_model_results->clear();
+        m_resultsModel->active->clear();
         ui->label_resultsCount->clear();
-        m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+        m_resultsModel->active->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
         //...
         ui->progressBar->clearMask();
         ui->progressBar->reset();
@@ -292,6 +296,16 @@ void Active::logs(QString log){
     }
 }
 
+void Active::receiveTargets(ENGINE engineName){
+    if(engineName == ENGINE::BRUTE){
+        for(char i = 0; i < m_resultsModel->brute->rowCount(); i++)
+        {
+            ui->listWidget_targets->addItem(m_resultsModel->brute->item(i, 0)->text());
+        }
+    }
+    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+}
+
 void Active::on_radioButton_hostname_clicked(){
 
 }
@@ -301,31 +315,38 @@ void Active::on_radioButton_ip_clicked(){
 
 void Active::on_pushButton_action_clicked(){
     ///
-    /// getting the position of the action button to place the context menu...
-    ///
-    QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
-    ///
+    /// getting the position of the action button to place the context menu and
     /// showing the context menu right by the side of the action button...
     ///
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute( Qt::WA_DeleteOnClose, true );
-    menu->setObjectName("mainMenu");
+    QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
     //...
-    QAction actionSendToSave("Send To Save", this);
-    QAction actionSendToMultiLevel("Send To Multi-level Scan");
-    QAction actionSendToDnsRecords("Send To DnsRecords");
+    QMenu *contextMenu_actionButton = new QMenu(this);
+    contextMenu_actionButton->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_actionButton->setObjectName("actionButtonMenu");
     //...
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave()));
-    connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords()));
-    connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(actionSendToMultiLevel()));
+    QAction actionSendToIp("Send IpAddresses To Ip");
+    QAction actionSendToActive("Send Subdomains To Active");
+    QAction actionSendToBrute("Send Subdomains To Brute");
+    QAction actionSendToSave("Send Subdomains To Save");
+    QAction actionSendToLevel("Send Subdomains To Level");
+    QAction actionSendToRecords("Send Subdomains To Records");
     //...
-    menu->addSeparator();
-    menu->addAction(&actionSendToDnsRecords);
-    menu->addAction(&actionSendToSave);
-    menu->addAction(&actionSendToMultiLevel);
+    connect(&actionSendToIp, SIGNAL(triggered()), this, SLOT(actionSendToIp(ENGINE::ACTION)));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave(ENGINE::ACTION)));
+    connect(&actionSendToBrute, SIGNAL(triggered()), this, SLOT(actionSendToBrute(ENGINE::ACTION)));
+    connect(&actionSendToActive, SIGNAL(triggered()), this, SLOT(actionSendToActive(ENGINE::ACTION)));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(actionSendToRecords(ENGINE::ACTION)));
+    connect(&actionSendToLevel, SIGNAL(triggered()), this, SLOT(actionSendToLevel(ENGINE::ACTION)));
     //...
-    menu->move(QPoint(pos.x()+76, pos.y()));
-    menu->exec();
+    contextMenu_actionButton->addAction(&actionSendToIp);
+    contextMenu_actionButton->addAction(&actionSendToBrute);
+    contextMenu_actionButton->addAction(&actionSendToActive);
+    contextMenu_actionButton->addAction(&actionSendToRecords);
+    contextMenu_actionButton->addAction(&actionSendToLevel);
+    contextMenu_actionButton->addAction(&actionSendToSave);
+    //...
+    contextMenu_actionButton->move(QPoint(pos.x()+76, pos.y()));
+    contextMenu_actionButton->exec();;
 }
 
 void Active::on_tableView_results_customContextMenuRequested(const QPoint &pos){
@@ -336,67 +357,38 @@ void Active::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
         return;
     }
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute( Qt::WA_DeleteOnClose, true );
-    menu->setObjectName("mainMenu");
-    QAction actionSendToSave("Send Selected To Save", this);
-    QAction actionSendToDnsRecords("Send Selected To DnsRecords");
-    QAction actionOpenInBrowser("Open Selected in Browser");
-    //...
-    connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
-    connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(cursorSendToDnsRecords()));
-    //...
-    menu->addAction(&actionOpenInBrowser);
-    menu->addSeparator();
-    menu->addAction(&actionSendToDnsRecords);
-    menu->addAction(&actionSendToSave);
-    //...
+    ///
+    /// getting the position of the cursor to place the context menu...
+    ///
     QPoint globalCursorPos = QCursor::pos();
     QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
     QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
     //...
-    menu->move(localCursorPosition);
-    menu->exec();
+    QMenu *contextMenu_rightClick = new QMenu(this);
+    contextMenu_rightClick->setAttribute( Qt::WA_DeleteOnClose, true );
+    contextMenu_rightClick->setObjectName("rightClickMenu");
+    //...
+    QAction actionSendToSave("Send Selected To Save", this);
+    QAction actionSendToRecords("Send Selected To Records");
+    QAction actionOpenInBrowser("Open Selected in Browser");
+    //...
+    connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(cursorSendToRecords()));
+    //...
+    contextMenu_rightClick->addAction(&actionOpenInBrowser);
+    contextMenu_rightClick->addSeparator();
+    contextMenu_rightClick->addAction(&actionSendToRecords);
+    contextMenu_rightClick->addAction(&actionSendToSave);
+    //...
+    contextMenu_rightClick->move(localCursorPosition);
+    contextMenu_rightClick->exec();
 }
 
-void Active::on_pushButton_get_clicked(){
-
-}
-
-void Active::actionSendToSave(){
-    /*
-    int resultsCount = ui->listWidget_subdomains->count();
-    for(int i = 0; i != resultsCount; ++i){
-        emit sendResultsToSave(ui->listWidget_subdomains->item(i)->text());
-    }
-    logs("[*] Sent "+QString::number(resultsCount)+" activeSubdomains Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();
-    */
-}
-
-void Active::actionSendToDnsRecords(){
-
-}
-
-void Active::actionSendToMultiLevel(){
-
-}
-
-void Active::cursorSendToSave(){
-    /*foreach(QListWidgetItem * item, ui->listWidget_subdomains->selectedItems()){
-        emit sendResultsToSave(item->text());
-    }
-    logs("[*] Sent "+QString::number(ui->listWidget_subdomains->count())+" activeSubdomains Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();*/
-}
-
+/*********************************************************************************/
 void Active::cursorOpenInBrowser(){
     foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
 }
 
-void Active::cursorSendToDnsRecords(){
-
-}

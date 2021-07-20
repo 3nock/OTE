@@ -1,6 +1,7 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
+#include "src/engines/Base.h"
 #include "lib-level.h"
 #include "LevelEnumerator.h"
 
@@ -8,7 +9,7 @@ namespace Ui {
     class Level;
 }
 
-class Level : public QWidget{
+class Level : public BaseClass{
         Q_OBJECT
 
     private:
@@ -18,23 +19,21 @@ class Level : public QWidget{
         void startScan();
         void nextLevel();
         //...
+        ResultsModel *m_resultsModel;
+        //...
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
         ScanArguments_level *m_scanArguments;
-        //...
-        QStandardItemModel* m_model_results;
         //...
         int m_activeThreads = 0;
         //...
         int lastScanResultsCount = 0;
 
     public:
-        explicit Level(QWidget *parent = nullptr);
+        explicit Level(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Level();
 
     signals:
-        void sendStatus(QString log);
-        void sendLog(QString log);
         void stop();
 
     public slots:
@@ -46,6 +45,7 @@ class Level : public QWidget{
 
     private slots:
         void on_pushButton_start_clicked();
+        void on_pushButton_pause_clicked();
         void on_pushButton_stop_clicked();
         void on_toolButton_config_clicked();
         void on_pushButton_clearResults_clicked();
@@ -63,14 +63,7 @@ class Level : public QWidget{
         void on_lineEdit_targets_returnPressed();
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
         //...
-        void actionSendToMultiLevel();
-        void actionSendToSave();
-        void actionSendToDnsRecords();
-        //...
-        void cursorSendToSave();
-        void cursorSendToDnsRecords();
         void cursorOpenInBrowser();
-        void on_pushButton_pause_clicked();
 };
 
 #endif // LEVEL_H

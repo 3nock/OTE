@@ -18,21 +18,25 @@ namespace Ui {
 class MainWindow : public QMainWindow{
         Q_OBJECT
 
+    private:
+        Ui::MainWindow *ui;
+
+    public:
+        ResultsModel *resultsModel;
+
     public:
         explicit MainWindow(QWidget *parent = nullptr);
-        void checkForMissingFiles();
         ~MainWindow();
-        //variables...
+        //...
+        void checkForMissingFiles();
+        //...
         QFile *logfile;
 
     public slots:
         void onReceiveLog(QString log);
         void onReceiveStatus(QString status);
-        void changeTabToActive();
-        void changeTabToSave();
-
-    private:
-        Ui::MainWindow *ui;
+        //...
+        void onChangeTabToActive();
 };
 
 #endif // MAINWINDOW_H

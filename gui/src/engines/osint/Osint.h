@@ -2,6 +2,7 @@
 #define OSINT_H
 
 // headers...
+#include "src/engines/Base.h"
 #include "lib-osint.h"
 #include "OsintEnumerator.h"
 #include "src/dialogs/ApiKeysDialog.h"
@@ -12,7 +13,7 @@ namespace Ui {
     class Osint;
 }
 
-class Osint : public QWidget{
+class Osint : public BaseClass{
     Q_OBJECT
 
     private:
@@ -22,7 +23,7 @@ class Osint : public QWidget{
         void getUserOptions(QStringList *choosenOptions);
         void setupOsintProfiles();
         //...
-        QStandardItemModel *results_model;
+        ResultsModel *m_resultsModel;
         //...
         ScanArguments_Osint *scanArguments;
         ScanResults_Osint *scanResults;
@@ -33,7 +34,7 @@ class Osint : public QWidget{
         QString m_targetDomain;
 
     public:
-        explicit Osint(QWidget *parent = nullptr);
+        explicit Osint(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Osint();
 
     private slots:
@@ -45,40 +46,21 @@ class Osint : public QWidget{
         void on_toolButton_keys_clicked();
         void on_lineEdit_domain_returnPressed();
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
-        // Engine options...
+        //...
         void on_checkBox_useProfiles_clicked(bool checked);
         void on_pushButton_loadProfile_clicked();
         void on_pushButton_deleteProfile_clicked();
         void on_pushButton_newProfile_clicked();
-        // slots for context menu for the action button...
-        void actionSendToSave();
-        void actionSendToActive();
-        void actionSendToDnsRecords();
-        void actionRemoveDuplicates();
-        // slots for context menu for the right click button...
-        void cursorSendToSave();
-        void cursorSendToActive();
-        void cursorSendToDnsRecords();
+        //...
         void cursorOpenInBrowser();
         //...
         void onEnumerationComplete();
 
     public slots:
         void logs(QString log);
-        void onSendResultsToSave();
-        void onSendResultsToActive();
 
     signals:
         void stopEnumeration();
-        //...
-        void sendLog(QString log);
-        void sendStatus(QString status);
-        //...
-        void sendResultsToActive(QString);
-        void sendResultsToSave(QString);
-        //...
-        void changeTabToActive();
-        void changeTabToSave();
 };
 
 #endif // OSINT_H

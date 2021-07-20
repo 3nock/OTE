@@ -3,68 +3,48 @@
 
 /* ************************* Class Constructor & Destructor ********************************/
 
-MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWindow){
+MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow),
+    resultsModel(new ResultsModel)
+{
     ui->setupUi(this);
-
+    ///
+    /// creating the standard item models...
+    ///
+    resultsModel->ip = new QStandardItemModel;
+    resultsModel->save = new QStandardItemModel;
+    resultsModel->brute = new QStandardItemModel;
+    resultsModel->level = new QStandardItemModel;
+    resultsModel->osint = new QStandardItemModel;
+    resultsModel->active = new QStandardItemModel;
+    resultsModel->record = new QStandardItemModel;
     ///
     /// creating and initiating the classes for the modules...
     ///
-    Project *project = new Project(this);
-    Active *active = new Active(this);
-    Level *level = new Level(this);
-    Osint *osint = new Osint(this);
-    Brute *brute = new Brute(this);
-    Dns *dns = new Dns(this);
-    Ip *ip = new Ip(this);
-    Save *save = new Save(this);
+    Project *project = new Project(this, resultsModel);
+    Active *active = new Active(this, resultsModel);
+    Level *level = new Level(this, resultsModel);
+    Brute *brute = new Brute(this, resultsModel);
+    Dns *dns = new Dns(this, resultsModel);
+    Ip *ip = new Ip(this, resultsModel);
+    Save *save = new Save(this, resultsModel);
+    Osint *osint = new Osint(this, resultsModel);
 
-    // connecting status signals from all the modules to the status slot of main window...
-    connect(brute, SIGNAL(sendStatus(QString)), this, SLOT(onReceiveStatus(QString)));
-    connect(dns, SIGNAL(sendStatus(QString)), this, SLOT(onReceiveStatus(QString)));
-    connect(osint, SIGNAL(sendStatus(QString)), this, SLOT(onReceiveStatus(QString)));
-    connect(save, SIGNAL(sendStatus(QString)), this, SLOT(onReceiveStatus(QString)));
+    // Sending results...
+    connect(brute, SIGNAL(sendToActive(ENGINE)), active, SLOT(receiveTargets(ENGINE)));
 
-    // connecting Logs signals from all the modules to the save on a log file...
-    connect(brute, SIGNAL(sendLog(QString)), this, SLOT(onReceiveLog(QString)));
-    connect(dns, SIGNAL(sendLog(QString)), this, SLOT(onReceiveLog(QString)));
-    connect(osint, SIGNAL(sendLog(QString)), this, SLOT(onReceiveLog(QString)));
-    connect(save, SIGNAL(sendLog(QString)), this, SLOT(onReceiveLog(QString)));
-
-    // connecting signals to save the enumerated results to the saveResults class...
-    connect(brute, SIGNAL(sendResultsToSave(QString)), save, SLOT(onReceiveResults(QString)));
-    connect(dns, SIGNAL(sendResultsToSave(QString)), save, SLOT(onReceiveResults(QString)));
-    connect(osint, SIGNAL(sendResultsToSave(QString)), save, SLOT(onReceiveResults(QString)));
-
-    // connecting signal to save enumerated results...
-    // connect(save, SIGNAL(getActiveResults()), active, SLOT(onSendResultsToSave()));
-    connect(save, SIGNAL(getBruteResults()), brute, SLOT(onSendResultsToSave()));
-    connect(save, SIGNAL(getOsintResults()), osint, SLOT(onSendResultsToSave()));
-
-    // connecting signal to test for active subdomains from subdomins in osint enumerated results...
-    // connect(osint, SIGNAL(sendResultsToActive(QString)), active, SLOT(onReceiveResults(QString)));
-    // connect(active, SIGNAL(getOsintResults_active()), osint, SLOT(onSendResultsToActive()));
-
-    // connecting signals to change tabs when saving and testing results...
-    connect(osint, SIGNAL(changeTabToActive()), this, SLOT(changeTabToActive()));
-    connect(osint, SIGNAL(changeTabToSave()), this, SLOT(changeTabToSave()));
-    connect(brute, SIGNAL(changeTabToSave()), this, SLOT(changeTabToSave()));
+    // changing tabs...
+    connect(brute, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
 
     // creating tabs...
-    ui->tabWidget_mainTab->insertTab(0, project, "Project");
-    ui->tabWidget_mainTab->insertTab(1, osint, "Osint");
-    ui->tabWidget_mainTab->insertTab(2, brute, "Brute");
-    ui->tabWidget_mainTab->insertTab(3, active, "Active");
-    ui->tabWidget_mainTab->insertTab(4, dns, "Dns++");
-    ui->tabWidget_mainTab->insertTab(5, ip, "Ip");
-    ui->tabWidget_mainTab->insertTab(6, level, "Level");
-    ui->tabWidget_mainTab->insertTab(7, save, "Save");
-
-    /* setting tab icons...
-    ui->tabWidget_mainTab->setTabIcon(0, QIcon(":/img/images/O.png"));
-    ui->tabWidget_mainTab->setTabIcon(1, QIcon(":/img/images/B.png"));
-    ui->tabWidget_mainTab->setTabIcon(2, QIcon(":/img/images/A.png"));
-    ui->tabWidget_mainTab->setTabIcon(3, QIcon(":/img/images/I.png"));
-    ui->tabWidget_mainTab->setTabIcon(4, QIcon(":/img/images/S.png"));*/
+    ui->tabWidget_mainTab->insertTab(0, osint, "Osint");
+    ui->tabWidget_mainTab->insertTab(1, brute, "Brute");
+    ui->tabWidget_mainTab->insertTab(2, active, "Active");
+    ui->tabWidget_mainTab->insertTab(3, dns, "Dns++");
+    ui->tabWidget_mainTab->insertTab(4, ip, "Ip");
+    ui->tabWidget_mainTab->insertTab(5, level, "Level");
+    ui->tabWidget_mainTab->insertTab(6, save, "Save");
+    ui->tabWidget_mainTab->insertTab(7, project, "Project");
+    //...
     ui->tabWidget_mainTab->setCurrentIndex(0);
 
     // Welcome...
@@ -78,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWind
     logfile->flush();
 }
 MainWindow::~MainWindow(){
+    delete resultsModel;
     delete ui;
     // closing the log file and deleting the pointer to it...
     logfile->close();
@@ -106,12 +87,10 @@ void MainWindow::onReceiveLog(QString log){
 ///
 /// changing tabs...
 ///
-void MainWindow::changeTabToActive(){
+void MainWindow::onChangeTabToActive(){
     ui->tabWidget_mainTab->setCurrentIndex(2);
 }
-void MainWindow::changeTabToSave(){
-    ui->tabWidget_mainTab->setCurrentIndex(4);
-}
+
 
 /****************************** Initialization Functions **********************************/
 

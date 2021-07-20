@@ -32,8 +32,8 @@
 // initiate everything in the constructor...
 
 /*************************** Class Constructor & Deconstructor *************************/
-Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
-      m_model_results(new QStandardItemModel),
+Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Brute),
+      m_resultsModel(resultsModel),
       m_scanStatus(new ScanStatus),
       m_scanConfig(new ScanConfig),
       m_scanArguments(new brute::ScanArguments)
@@ -52,13 +52,12 @@ Brute::Brute(QWidget *parent) : QWidget(parent), ui(new Ui::Brute),
     //...
     ui->splitter->setSizes(QList<int>()<<200<<100);
     //...
-    m_model_results->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
-    ui->tableView_results->setModel(m_model_results);
+    m_resultsModel->brute->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+    ui->tableView_results->setModel(m_resultsModel->brute);
     //...
     m_scanArguments->wordlist = ui->listWidget_wordlist;
 }
 Brute::~Brute(){
-    delete m_model_results;
     delete m_scanStatus;
     delete m_scanConfig;
     delete m_scanArguments;
@@ -233,9 +232,9 @@ void Brute::startScan(){
 
 /************************************ Receiving Results ***********************************/
 void Brute::scanResult(QString subdomain, QString ipAddress){
-    m_model_results->setItem(m_model_results->rowCount(), 0, new QStandardItem(subdomain));
-    m_model_results->setItem(m_model_results->rowCount()-1, 1, new QStandardItem(ipAddress));
-    ui->label_resultsCount->setNum(m_model_results->rowCount());
+    m_resultsModel->brute->setItem(m_resultsModel->brute->rowCount(), 0, new QStandardItem(subdomain));
+    m_resultsModel->brute->setItem(m_resultsModel->brute->rowCount()-1, 1, new QStandardItem(ipAddress));
+    ui->label_resultsCount->setNum(m_resultsModel->brute->rowCount());
 }
 
 /********************************* Enumeration thread ended ********************************/
@@ -306,13 +305,13 @@ void Brute::on_pushButton_clearResults_clicked(){
     ///
     if(ui->tabWidget_results->currentIndex() == 0)
     {
-        m_model_results->clear();
+        m_resultsModel->brute->clear();
         ui->label_resultsCount->clear();
         //...
         ui->progressBar->reset();
         ui->progressBar->hide();
         //...
-        m_model_results->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+        m_resultsModel->brute->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     }
     ///
     /// if the current tab is logs clear logs...
@@ -454,7 +453,7 @@ void Brute::on_pushButton_removeWordlist_clicked(){
     ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
 }
 
-/****************************** Save And Display logs *************************************/
+/****************************** Save And Display logs *********************************/
 void Brute::logs(QString log){
     sendLog(log);
     ui->listWidget_logs->addItem(log);
@@ -469,7 +468,10 @@ void Brute::logs(QString log){
 }
 
 
-/***************************** Context Menu For Action Button *****************************/
+/***************************************************************************************
+                                    Context Menus
+****************************************************************************************/
+
 void Brute::on_pushButton_action_clicked(){
     ///
     /// getting the position of the action button to place the context menu and
@@ -481,24 +483,31 @@ void Brute::on_pushButton_action_clicked(){
     contextMenu_actionButton->setAttribute( Qt::WA_DeleteOnClose, true );
     contextMenu_actionButton->setObjectName("actionButtonMenu");
     //...
-    QAction actionSendToSave("Send To Save", this);
-    QAction actionSendToMultiLevel("Send To Multi-level Scan");
-    QAction actionSendToDnsRecords("Send To DnsRecords");
+    QAction actionSendToIp("Send IpAddresses To Ip");
+    QAction actionSendToActive("Send Subdomains To Active");
+    QAction actionSendToBrute("Send Subdomains To Brute");
+    QAction actionSendToSave("Send Subdomains To Save");
+    QAction actionSendToLevel("Send Subdomains To Level");
+    QAction actionSendToRecords("Send Subdomains To Records");
     //...
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave()));
-    connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(actionSendToDnsRecords()));
-    connect(&actionSendToMultiLevel, SIGNAL(triggered()), this, SLOT(actionSendToMultiLevel()));
+    connect(&actionSendToIp, SIGNAL(triggered()), this, SLOT(actionSendToIp(ENGINE::BRUTE)));
+    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave(ENGINE::BRUTE)));
+    connect(&actionSendToBrute, SIGNAL(triggered()), this, SLOT(actionSendToBrute(ENGINE::BRUTE)));
+    connect(&actionSendToActive, SIGNAL(triggered()), this, SLOT([=](){actionSendToActive(ENGINE::BRUTE)}));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(actionSendToRecords(ENGINE::BRUTE)));
+    connect(&actionSendToLevel, SIGNAL(triggered()), this, SLOT(actionSendToLevel(ENGINE::BRUTE)));
     //...
-    contextMenu_actionButton->addSeparator();
-    contextMenu_actionButton->addAction(&actionSendToDnsRecords);
+    contextMenu_actionButton->addAction(&actionSendToIp);
+    contextMenu_actionButton->addAction(&actionSendToBrute);
+    contextMenu_actionButton->addAction(&actionSendToActive);
+    contextMenu_actionButton->addAction(&actionSendToRecords);
+    contextMenu_actionButton->addAction(&actionSendToLevel);
     contextMenu_actionButton->addAction(&actionSendToSave);
-    contextMenu_actionButton->addAction(&actionSendToMultiLevel);
     //...
     contextMenu_actionButton->move(QPoint(pos.x()+76, pos.y()));
-    contextMenu_actionButton->exec();
+    contextMenu_actionButton->exec();;
 }
 
-/****************************** Cursor right-click Context Menu ******************************/
 void Brute::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
     ///
@@ -519,87 +528,26 @@ void Brute::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     contextMenu_rightClick->setObjectName("rightClickMenu");
     //...
     QAction actionSendToSave("Send Selected To Save", this);
-    QAction actionSendToDnsRecords("Send Selected To DnsRecords");
+    QAction actionSendToRecords("Send Selected To Records");
     QAction actionOpenInBrowser("Open Selected in Browser");
     //...
     connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
     connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
-    connect(&actionSendToDnsRecords, SIGNAL(triggered()), this, SLOT(cursorSendToDnsRecords()));
+    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(cursorSendToRecords()));
     //...
     contextMenu_rightClick->addAction(&actionOpenInBrowser);
     contextMenu_rightClick->addSeparator();
-    contextMenu_rightClick->addAction(&actionSendToDnsRecords);
+    contextMenu_rightClick->addAction(&actionSendToRecords);
     contextMenu_rightClick->addAction(&actionSendToSave);
     //...
     contextMenu_rightClick->move(localCursorPosition);
     contextMenu_rightClick->exec();
 }
 
-
-/****************************** Action Context Menu Methods ***************************/
-void Brute::actionSendToSave(){
-    /*
-    int resultsCount = ui->listWidget_subdomains->count();
-    for(int i = 0; i != resultsCount; ++i){
-        emit sendResultsToSave(ui->listWidget_subdomains->item(i)->text());
-    }
-    logs("[*] Sent "+QString::number(resultsCount)+" subBrute Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();
-    */
-}
-
-/*********************************************************************************/
-void Brute::actionSendToDnsRecords(){
-
-}
-
-/**********************************************************************************/
-void Brute::actionSendToMultiLevel(){
-
-}
-
-/*************************** Cursor Right Click Context Menu ***********************/
-void Brute::cursorSendToSave(){
-    /*foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
-        // send selection
-    }
-    logs("[*] Sent "+QString::number(ui->listWidget_subdomains->count())+" subBrute Enumerated Subdomains To Save Tab...");
-    emit changeTabToSave();*/
-}
-
-/************************************************************************************/
+/********************************* Other Actions *****************************/
 void Brute::cursorOpenInBrowser(){
     // iterate and open each selected item in a browser...
     foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
     }
-}
-
-
-/*************************************************************************************/
-void Brute::cursorSendToDnsRecords(){
-
-}
-
-/********** on receiving signal to send the enumeration results to the save tab ********/
-void Brute::onSendResultsToSave(){
-    /*
-    int resultsCount = ui->listWidget_subdomains->count();
-    for(int i = 0; i != resultsCount; ++i){
-        emit sendResultsToSave(ui->listWidget_subdomains->item(i)->text());
-    }
-    logs("[*] Sent "+QString::number(resultsCount)+" subBrute Enumerated Subdomains To Save Tab...");
-    //...
-    resultsCount = ui->listWidget_subdomains_tldBrute->count();
-    for(int i = 0; i != resultsCount; ++i){
-        emit sendResultsToSave(ui->listWidget_subdomains_tldBrute->item(i)->text());
-    }
-    logs_tldBrute("[*] Sent "+QString::number(resultsCount)+" tldBrute Enumerated Subdomains To Save Tab...");
-    //...
-    resultsCount = ui->listWidget_subdomains_activeSubdomains->count();
-    for(int i = 0; i != resultsCount; ++i){
-        emit sendResultsToSave(ui->listWidget_subdomains_activeSubdomains->item(i)->text());
-    }
-    logs_activeSubdomains("[*] Sent "+QString::number(resultsCount)+" activeSubdomains Enumerated Subdomains To Save Tab...");
-    */
 }

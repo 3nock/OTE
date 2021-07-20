@@ -1,17 +1,22 @@
 #ifndef SAVE_H
 #define SAVE_H
 
+#include "src/engines/Base.h"
 #include "src/core.h"
 
 namespace Ui {
     class Save;
 }
 
-class Save : public QWidget{
+class Save : public BaseClass{
     Q_OBJECT
 
+    private:
+        Ui::Save *ui;
+        ResultsModel *m_resultsModel;
+
     public:
-        explicit Save(QWidget *parent = nullptr);
+        explicit Save(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Save();
         int total_subdomain_count = 0;
         QTemporaryFile subdomains_file;
@@ -41,9 +46,6 @@ class Save : public QWidget{
         void on_pushButton_sort_Save_clicked();
         void on_toolButton_get_Save_clicked();
         void on_lineEdit_filter_Save_returnPressed();
-
-    private:
-        Ui::Save *ui;
 };
 
 #endif // SAVE_H

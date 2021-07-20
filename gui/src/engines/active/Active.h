@@ -1,6 +1,7 @@
 #ifndef ACTIVE_H
 #define ACTIVE_H
 
+#include "src/engines/Base.h"
 #include "lib-active.h"
 #include "ActiveEnumerator.h"
 
@@ -8,11 +9,11 @@ namespace Ui {
     class Active;
 }
 
-class Active : public QWidget{
+class Active : public BaseClass{
         Q_OBJECT
 
     public:
-        explicit Active(QWidget *parent = nullptr);
+        explicit Active(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Active();
 
     private:
@@ -21,25 +22,24 @@ class Active : public QWidget{
     private:
         void startScan();
         //...
+        ResultsModel *m_resultsModel;
+        //...
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
         ScanArguments_Active *m_scanArguments;
-        //...
-        QStandardItemModel *m_model_results;
         //...
         int m_activeThreads = 0;
 
     signals:
         void stop();
-        //...
-        void sendStatus(QString status);
-        void sendLog(QString log);
 
     public slots:
         void scanResult(QString subdomain, QString ipAddress);
         void scanThreadEnded();
         //...
         void logs(QString log);
+        //...
+        void receiveTargets(ENGINE engineName);
 
     private slots:
         void on_pushButton_start_clicked();
@@ -60,13 +60,7 @@ class Active : public QWidget{
         void on_radioButton_ip_clicked();
         void on_comboBox_option_currentIndexChanged(int index);
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
-        // context...
-        void actionSendToMultiLevel();
-        void actionSendToSave();
-        void actionSendToDnsRecords();
-        // cursor...
-        void cursorSendToSave();
-        void cursorSendToDnsRecords();
+        //...
         void cursorOpenInBrowser();
 };
 

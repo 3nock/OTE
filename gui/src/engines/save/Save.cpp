@@ -1,9 +1,10 @@
 #include "Save.h"
 #include "ui_Save.h"
 
-Save::Save(QWidget *parent) : QWidget(parent), ui(new Ui::Save){
+Save::Save(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Save),
+    m_resultsModel(resultsModel)
+{
     ui->setupUi(this);
-
     // setting the splitter to the middle...
     ui->splitter->setSizes(QList<int>()<<500<<1);
 }

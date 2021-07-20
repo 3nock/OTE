@@ -1,7 +1,7 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include <QWidget>
+#include "src/core.h"
 
 namespace Ui {
     class Project;
@@ -10,12 +10,15 @@ namespace Ui {
 class Project : public QWidget{
         Q_OBJECT
 
-    public:
-        explicit Project(QWidget *parent = nullptr);
-        ~Project();
-
     private:
         Ui::Project *ui;
+
+    public:
+        ResultsModel *m_resultsModel;
+
+    public:
+        explicit Project(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        ~Project();
 };
 
 #endif // PROJECT_H

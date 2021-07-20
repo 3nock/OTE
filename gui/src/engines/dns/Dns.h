@@ -2,6 +2,7 @@
 #define DNS_H
 
 // headers...
+#include "src/engines/Base.h"
 #include "lib-dns.h"
 #include "DnsEnumerator.h"
 
@@ -9,7 +10,7 @@ namespace Ui {
     class Dns;
 }
 
-class Dns : public QWidget{
+class Dns : public BaseClass{
     Q_OBJECT
 
     private:
@@ -18,6 +19,8 @@ class Dns : public QWidget{
     private:
         void startScan();
         void loadSrvWordlist();
+        //...
+        ResultsModel *m_resultsModel;
         //...
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
@@ -31,13 +34,11 @@ class Dns : public QWidget{
         int m_activeThreads = 0;
 
     public:
-        explicit Dns(QWidget *parent = nullptr);
+        explicit Dns(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Dns();
 
     signals:
         void stop();
-        void sendLog(QString log);
-        void sendStatus(QString status);
 
     public slots:
         void scanThreadEnded();
@@ -47,6 +48,7 @@ class Dns : public QWidget{
     private slots:
         void on_pushButton_action_clicked();
         void on_pushButton_start_clicked();
+        void on_pushButton_pause_clicked();
         void on_pushButton_stop_clicked();
         void on_toolButton_config_clicked();
         void on_comboBox_option_currentIndexChanged(int index);
@@ -67,14 +69,7 @@ class Dns : public QWidget{
         void on_treeView_results_customContextMenuRequested(const QPoint &pos);
         void on_tableView_srv_customContextMenuRequested(const QPoint &pos);
         //...
-        void actionSendToSave();
-        void actionSendToMultiLevel();
-        void actionCollectAllRecords();
-        //...
         void cursorOpenInBrowser();
-        void cursorSendToSave();
-        void cursorSendToMultiLevel();
-        void on_pushButton_pause_clicked();
 };
 
 #endif // DNS_H
