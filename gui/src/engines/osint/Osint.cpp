@@ -12,20 +12,20 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), u
     ui->setupUi(this);
     //...
     currentPath = QDir::currentPath();
-    ui->pushButton_stop->setDisabled(true);
     ui->lineEdit_domain->setPlaceholderText("eg. example.com");
     ui->lineEdit_newProfile->setPlaceholderText("Enter New Profile's Name...");
+    ui->lineEdit_multipleTargets->setPlaceholderText("Enter a new Target...");
     //...
     m_resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     ui->tableView_results->setModel(m_resultsModel->osint);
     //...
     ui->pushButton_pause->setDisabled(true);
-    ui->progressBar->hide();
+    ui->pushButton_stop->setDisabled(true);
     //...
-    QPalette p = palette();
-    p.setColor(QPalette::Highlight, QColor(188, 188, 141));
-    p.setColor(QPalette::HighlightedText, QColor(Qt::black));
-    ui->tableView_results->setPalette(p);
+    ui->progressBar->hide();
+    ui->frame_targets->hide();
+    //...
+    ui->splitter->setSizes(QList<int>()<<270<<180);
     //...
     setupOsintProfiles();
 }
@@ -130,125 +130,171 @@ void Osint::on_toolButton_config_clicked(){
     */
 }
 
+/*****************************************************************************************
+                            Multiple Targets
+*****************************************************************************************/
+void Osint::on_pushButton_removeTargets_clicked(){
+    int selectionCount = ui->listWidget_targets->selectedItems().count();
+    if(selectionCount){
+        qDeleteAll(ui->listWidget_targets->selectedItems());
+    }
+    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+}
+
+void Osint::on_pushButton_clearTargets_clicked(){
+    ui->listWidget_targets->clear();
+    ui->label_targetsCount->clear();
+}
+
+void Osint::on_pushButton_loadTargets_clicked(){
+    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
+    if(filename.isEmpty()){
+        return;
+    }
+    QFile file(filename);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream in(&file);
+        while (!in.atEnd()){
+            ui->listWidget_targets->addItem(in.readLine());
+        }
+        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+        file.close();
+    }else{
+        QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
+    }
+}
+
+void Osint::on_pushButton_addTargets_clicked(){
+    if(ui->lineEdit_multipleTargets->text() != EMPTY){
+        ui->listWidget_targets->addItem(ui->lineEdit_multipleTargets->text());
+        ui->lineEdit_multipleTargets->clear();
+        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+    }
+}
+
+void Osint::on_lineEdit_multipleTargets_returnPressed(){
+ on_pushButton_addTargets_clicked();
+}
+
 /******************************************************************
                      OSINT ENGINES OPTIONS
 *******************************************************************/
 void Osint::getUserOptions(QStringList *choosenEngines){
-    if(ui->checkBox_engine_threatminer->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_threatminer->isChecked()){
         choosenEngines->append(ENGINE_THREATMINER);
     }
-    if(ui->checkBox_engine_shodan->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_shodan->isChecked()){
         choosenEngines->append(ENGINE_SHODAN);
     }
-    if(ui->checkBox_engine_otx->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_otx->isChecked()){
         choosenEngines->append(ENGINE_OTX);
     }
-    if(ui->checkBox_engine_netcraft->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_netcraft->isChecked()){
         choosenEngines->append(ENGINE_NETCRAFT);
     }
-    if(ui->checkBox_engine_censys->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_censys->isChecked()){
         choosenEngines->append(ENGINE_CENSYS);
     }
-    if(ui->checkBox_engine_github->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_github->isChecked()){
         choosenEngines->append(ENGINE_GITHUB);
     }
-    if(ui->checkBox_engine_certspotter->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_certspotter->isChecked()){
         choosenEngines->append(ENGINE_CERTSPOTTER);
     }
-    if(ui->checkBox_engine_dogpile->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_dogpile->isChecked()){
         choosenEngines->append(ENGINE_DOGPILE);
     }
-    if(ui->checkBox_engine_duckduckgo->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_duckduckgo->isChecked()){
         choosenEngines->append(ENGINE_DUCKDUCKGO);
     }
-    if(ui->checkBox_engine_exalead->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_exalead->isChecked()){
         choosenEngines->append(ENGINE_EXALEAD);
     }
-    if(ui->checkBox_engine_huntersearch->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_huntersearch->isChecked()){
         choosenEngines->append(ENGINE_HUNTERSEARCH);
     }
-    if(ui->checkBox_engine_intelx->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_intelx->isChecked()){
         choosenEngines->append(ENGINE_INTELX);
     }
-    if(ui->checkBox_engine_securitytrails->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_securitytrails->isChecked()){
         choosenEngines->append(ENGINE_SECURITYTRAILS);
     }
-    if(ui->checkBox_engine_suip->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_suip->isChecked()){
         choosenEngines->append(ENGINE_SUIP);
     }
-    if(ui->checkBox_engine_trello->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_trello->isChecked()){
         choosenEngines->append(ENGINE_TRELLO);
     }
-    if(ui->checkBox_engine_san->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_san->isChecked()){
         choosenEngines->append(ENGINE_SAN);
     }
-    if(ui->checkBox_engine_cloudflare->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_cloudflare->isChecked()){
         choosenEngines->append(ENGINE_CLOUDFLARE);
     }
-    if(ui->checkBox_engine_threatcrowd->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_threatcrowd->isChecked()){
         choosenEngines->append(ENGINE_THREATCROWD);
     }
-    if(ui->checkBox_engine_dnsbufferoverrun->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_dnsbufferoverrun->isChecked()){
         choosenEngines->append(ENGINE_DNSBUFFEROVERRUN);
     }
-    if(ui->checkBox_engine_hackertarget->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_hackertarget->isChecked()){
         choosenEngines->append(ENGINE_HACKERTARGET);
     }
-    if(ui->checkBox_engine_pkey->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_pkey->isChecked()){
         choosenEngines->append(ENGINE_PKEY);
     }
-    if(ui->checkBox_engine_waybackmachine->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_waybackmachine->isChecked()){
         choosenEngines->append(ENGINE_WAYBACKMACHINE);
     }
-    if(ui->checkBox_engine_ask->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_ask->isChecked()){
         choosenEngines->append(ENGINE_ASK);
     }
-    if(ui->checkBox_engine_baidu->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_baidu->isChecked()){
         choosenEngines->append(ENGINE_BAIDU);
     }
-    if(ui->checkBox_engine_bing->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_bing->isChecked()){
         choosenEngines->append(ENGINE_BING);
     }
-    if(ui->checkBox_engine_crtsh->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_crtsh->isChecked()){
         choosenEngines->append(ENGINE_CRTSH);
     }
-    if(ui->checkBox_engine_dnsdumpster->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_dnsdumpster->isChecked()){
         choosenEngines->append(ENGINE_DNSDUMPSTER);
     }
-    if(ui->checkBox_engine_google->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_google->isChecked()){
         choosenEngines->append(ENGINE_GOOGLE);
     }
-    if(ui->checkBox_engine_passivedns->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_passivedns->isChecked()){
         choosenEngines->append(ENGINE_PASSIVEDNS);
     }
-    if(ui->checkBox_engine_virustotal->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_virustotal->isChecked()){
         choosenEngines->append(ENGINE_VIRUSTOTAL);
     }
-    if(ui->checkBox_engine_yahoo->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_yahoo->isChecked()){
         choosenEngines->append(ENGINE_YAHOO);
     }
-    if(ui->checkBox_engine_virustotalapi->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_virustotalapi->isChecked()){
         choosenEngines->append(ENGINE_VIRUSTOTALAPI);
     }
-    if(ui->checkBox_engine_omnisint->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_omnisint->isChecked()){
         choosenEngines->append(ENGINE_OMNISINT);
     }
-    if(ui->checkBox_engine_qwant->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_qwant->isChecked()){
         choosenEngines->append(ENGINE_QWANT);
     }
-    if(ui->checkBox_engine_rapiddns->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_rapiddns->isChecked()){
         choosenEngines->append(ENGINE_RAPIDDNS);
     }
-    if(ui->checkBox_engine_urlscan->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_urlscan->isChecked()){
         choosenEngines->append(ENGINE_URLSCAN);
     }
-    if(ui->checkBox_engine_pentesttools->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_pentesttools->isChecked()){
         choosenEngines->append(ENGINE_PENTESTTOOLS);
     }
-    if(ui->checkBox_engine_projectdiscovery->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_projectdiscovery->isChecked()){
         choosenEngines->append(ENGINE_PROJECTDISCOVERY);
     }
-    if(ui->checkBox_engine_spyse->isChecked() || ui->radioButton_fullScan->isChecked()){
+    if(ui->checkBox_engine_spyse->isChecked()){
         choosenEngines->append(ENGINE_SPYSE);
     }
 }
@@ -756,42 +802,25 @@ void Osint::on_pushButton_newProfile_clicked(){
 /*************************** Action-Button Context Menu **************************************/
 void Osint::on_pushButton_action_clicked(){
     ///
-    /// positioning of the context menu...
+    /// check if there are results available else dont show the context menu...
+    ///
+    if(m_resultsModel->osint->rowCount() < 1){
+        return;
+    }
+    ///
+    /// getting the position of the action button to place the context menu and
+    /// showing the context menu right by the side of the action button...
     ///
     QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
-    //...
-    QMenu *contextMenu_actionButton = new QMenu(this);
-    contextMenu_actionButton->setAttribute( Qt::WA_DeleteOnClose, true );
-    contextMenu_actionButton->setObjectName("actionButtonMenu");
-    //...
-    QAction actionSendToIp("Send IpAddresses To Ip");
-    QAction actionSendToActive("Send Subdomains To Active");
-    QAction actionSendToBrute("Send Subdomains To Brute");
-    QAction actionSendToSave("Send Subdomains To Save");
-    QAction actionSendToLevel("Send Subdomains To Level");
-    QAction actionSendToRecords("Send Subdomains To Records");
-    //...
-    connect(&actionSendToIp, SIGNAL(triggered()), this, SLOT(actionSendToIp(ENGINE::OSINT)));
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(actionSendToSave(ENGINE::OSINT)));
-    connect(&actionSendToBrute, SIGNAL(triggered()), this, SLOT(actionSendToBrute(ENGINE::OSINT)));
-    connect(&actionSendToActive, SIGNAL(triggered()), this, SLOT(actionSendToActive(ENGINE::OSINT)));
-    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(actionSendToRecords(ENGINE::OSINT)));
-    connect(&actionSendToLevel, SIGNAL(triggered()), this, SLOT(actionSendToLevel(ENGINE::OSINT)));
-    //...
-    contextMenu_actionButton->addAction(&actionSendToIp);
-    contextMenu_actionButton->addAction(&actionSendToBrute);
-    contextMenu_actionButton->addAction(&actionSendToActive);
-    contextMenu_actionButton->addAction(&actionSendToRecords);
-    contextMenu_actionButton->addAction(&actionSendToLevel);
-    contextMenu_actionButton->addAction(&actionSendToSave);
-    //...
-    contextMenu_actionButton->move(QPoint(pos.x()+76, pos.y()));
-    contextMenu_actionButton->exec();;
+    contextMenu_actionButton(ENGINE::OSINT, pos);
 }
 
 /******************************** Right-Click Context Menu ****************************/
 void Osint::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
+    ///
+    /// check if user right clicked on items else dont show the context menu...
+    ///
     if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
         return;
     }
@@ -802,36 +831,7 @@ void Osint::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
     QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
     //...
-    QMenu *contextMenu_rightClick = new QMenu(this);
-    contextMenu_rightClick->setAttribute( Qt::WA_DeleteOnClose, true );
-    contextMenu_rightClick->setObjectName("rightClickMenu");
-    //...
-    QAction actionSendToSave("Send Selected To Save", this);
-    QAction actionSendToRecords("Send Selected To Records");
-    QAction actionOpenInBrowser("Open Selected in Browser");
-    //...
-    connect(&actionOpenInBrowser, SIGNAL(triggered()), this, SLOT(cursorOpenInBrowser()));
-    connect(&actionSendToSave, SIGNAL(triggered()), this, SLOT(cursorSendToSave()));
-    connect(&actionSendToRecords, SIGNAL(triggered()), this, SLOT(cursorSendToRecords()));
-    //...
-    contextMenu_rightClick->addAction(&actionOpenInBrowser);
-    contextMenu_rightClick->addSeparator();
-    contextMenu_rightClick->addAction(&actionSendToRecords);
-    contextMenu_rightClick->addAction(&actionSendToSave);
-    //...
-    contextMenu_rightClick->move(localCursorPosition);
-    contextMenu_rightClick->exec();
-}
-
-
-/************************** Right-Click Context Menu Methods **********************/
-void Osint::cursorOpenInBrowser(){
-    ///
-    /// iterate and open each selected item in a browser...
-    ///
-    foreach(const QModelIndex &index, ui->tableView_results->selectionModel()->selectedIndexes()){
-        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
-    }
+    contextMenu_rightClick(ui->tableView_results->selectionModel(), localCursorPosition);
 }
 
 /*********************************** logs ***************************************/
@@ -846,4 +846,51 @@ void Osint::logs(QString log){
         ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setFont(QFont("MS Shell Dlg 2", 8, QFont::Bold));
         return;
     }
+}
+
+void Osint::on_comboBox_target_currentIndexChanged(int index){
+    if(index){
+        ui->frame_targets->show();
+    }
+    else{
+        ui->frame_targets->hide();
+    }
+}
+
+/****************************** CONTEXT MENU ************************************/
+void Osint::a_receiveTargets(ENGINE engineName){
+    QStandardItemModel *model;
+    //...
+    if(engineName == ENGINE::BRUTE){
+        model = m_resultsModel->brute;
+    }
+    if(engineName == ENGINE::ACTIVE){
+        model = m_resultsModel->active;
+    }
+    if(engineName == ENGINE::RECORDS){
+        model = m_resultsModel->record;
+    }
+    if(engineName == ENGINE::IP){
+        model = m_resultsModel->ip;
+    }
+    if(engineName == ENGINE::LEVEL){
+        model = m_resultsModel->level;
+    }
+    //...
+    for(char i = 0; i < model->rowCount(); i++){
+        ui->listWidget_targets->addItem(model->item(i, 0)->text());
+    }
+    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+    //...
+    ui->comboBox_target->setCurrentIndex(1);
+}
+
+void Osint::c_receiveTargets(QItemSelectionModel *selectionModel){
+    // iterate and open each selected and append on the target's listwidget...
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        ui->listWidget_targets->addItem(index.data().toString());
+    }
+    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+    //...
+    ui->comboBox_target->setCurrentIndex(1);
 }

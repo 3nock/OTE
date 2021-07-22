@@ -37,6 +37,10 @@ class Level : public BaseClass{
         void stop();
 
     public slots:
+        void a_receiveTargets(ENGINE engineName);
+        void c_receiveTargets(QItemSelectionModel *selectionModel);
+
+    public slots:
         void scanThreadEnd();
         void scanResult(QString subdomain, QString ipAddress);
         //...
@@ -62,8 +66,6 @@ class Level : public BaseClass{
         void on_pushButton_addTargets_clicked();
         void on_lineEdit_targets_returnPressed();
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
-        //...
-        void cursorOpenInBrowser();
 };
 
 #endif // LEVEL_H

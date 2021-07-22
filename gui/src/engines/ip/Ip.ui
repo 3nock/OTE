@@ -14,6 +14,9 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
+   <property name="spacing">
+    <number>7</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -45,10 +48,7 @@
       </widget>
      </item>
      <item>
-      <widget class="Line" name="line_10">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
+      <widget class="Line" name="line">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -185,16 +185,6 @@
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -206,6 +196,18 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>42</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>42</height>
+        </size>
        </property>
        <property name="styleSheet">
         <string notr="true"/>

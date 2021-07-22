@@ -31,6 +31,10 @@ class Brute : public BaseClass{
         ~Brute();
 
     public slots:
+        void a_receiveTargets(ENGINE engineName);
+        void c_receiveTargets(QItemSelectionModel *selectionModel);
+
+    public slots:
         void scanResult(QString subdomain, QString ipAddress);
         void scanThreadEnded();
         //...
@@ -66,8 +70,6 @@ class Brute : public BaseClass{
         void on_lineEdit_multipleTargets_returnPressed();
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
         void on_comboBox_target_currentIndexChanged(int index);
-        //...
-        void cursorOpenInBrowser();
 };
 
 #endif // BRUTE_H

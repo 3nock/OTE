@@ -41,6 +41,10 @@ class Dns : public BaseClass{
         void stop();
 
     public slots:
+        void a_receiveTargets(ENGINE engineName);
+        void c_receiveTargets(QItemSelectionModel *selectionModel);
+
+    public slots:
         void scanThreadEnded();
         //...
         void logs(QString log);
@@ -68,8 +72,6 @@ class Dns : public BaseClass{
         void on_pushButton_clearResults_clicked();
         void on_treeView_results_customContextMenuRequested(const QPoint &pos);
         void on_tableView_srv_customContextMenuRequested(const QPoint &pos);
-        //...
-        void cursorOpenInBrowser();
 };
 
 #endif // DNS_H

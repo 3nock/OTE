@@ -22,8 +22,8 @@ QToolButton:hover {
         border-bottom-width: 1px;
         border-style: solid;
         border-radius: 15px;
-        color: rgb(0,0,0);
-        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(80, 80, 80, 255), stop:1 rgb(143, 143, 107));
+        color: rgb(250,250,250);
+        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(50, 61, 73));
 }
 
 QToolButton:pressed {
@@ -37,7 +37,7 @@ QToolButton:pressed {
     border-style: solid;
     border-radius: 15px;
     color: rgb(0,0,0);
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(143, 143, 107));
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(60, 71, 83));
 }
 
 QSpinBox {
@@ -65,7 +65,7 @@ QComboBox QWidget {
         border-width: 1px;
         color: rgb(230,230,230);
         background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(70, 70, 70, 255));
-        selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:0.7 rgba(143, 143, 107));
+        selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(40, 51, 63));
 }
 
 /********** Line *************/
@@ -142,7 +142,7 @@ QSplitter::handle:vertical{
 }
 
 QListWidget, QTreeView, QTableView{
-        selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgb(143, 143, 107));
+        selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(40, 51, 63));
         background-color:rgb(50, 50, 50);
         color: rgb(230,230,230);
         border-style: solid;
@@ -193,9 +193,9 @@ QPushButton:hover {
         border-bottom-color: rgb(115, 115, 115);
         border-bottom-width: 1px;
         border-style: solid;
-        color: rgb(0,0,0);
+        color: rgb(250,250,250);
         padding: 2px;
-        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(143, 143, 107));
+        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(40, 51, 63));
 }
 
 QPushButton:pressed {
@@ -276,7 +276,7 @@ QMenu::item:selected {
         color:rgb(255,255,255);
         border-style: solid;
         border-color: black;
-        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(143, 143, 107));
+        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(40, 51, 63));
 }
 
 QMenu::​separator {

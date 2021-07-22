@@ -19,6 +19,10 @@ class Osint : public BaseClass{
     private:
         Ui::Osint *ui;
 
+    public slots:
+        void a_receiveTargets(ENGINE engineName);
+        void c_receiveTargets(QItemSelectionModel *selectionModel);
+
     private:
         void getUserOptions(QStringList *choosenOptions);
         void setupOsintProfiles();
@@ -47,14 +51,19 @@ class Osint : public BaseClass{
         void on_lineEdit_domain_returnPressed();
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
         //...
+        void on_pushButton_removeTargets_clicked();
+        void on_pushButton_clearTargets_clicked();
+        void on_pushButton_loadTargets_clicked();
+        void on_pushButton_addTargets_clicked();
+        void on_lineEdit_multipleTargets_returnPressed();
+        //...
         void on_checkBox_useProfiles_clicked(bool checked);
         void on_pushButton_loadProfile_clicked();
         void on_pushButton_deleteProfile_clicked();
         void on_pushButton_newProfile_clicked();
         //...
-        void cursorOpenInBrowser();
-        //...
         void onEnumerationComplete();
+        void on_comboBox_target_currentIndexChanged(int index);
 
     public slots:
         void logs(QString log);

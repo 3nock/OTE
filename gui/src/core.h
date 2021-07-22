@@ -78,7 +78,9 @@ enum ENGINE{
     TLDBRUTE = 3,
     ACTIVE = 4,
     RECORDS = 5,
-    BRUTE = 6
+    BRUTE = 6,
+    IP = 7,
+    LEVEL = 8
 };
 
 /***************************************************

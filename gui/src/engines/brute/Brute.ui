@@ -17,6 +17,9 @@
    <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_8">
+   <property name="spacing">
+    <number>7</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -47,16 +50,6 @@
        </property>
        <property name="text">
         <string>Subdomain(*.example.com) Enumeration By BruteForcing...</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line_3">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -176,16 +169,6 @@
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -197,6 +180,18 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>42</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>42</height>
+        </size>
        </property>
        <property name="styleSheet">
         <string notr="true"/>
@@ -234,6 +229,13 @@
           </property>
           <property name="text">
            <string>TLD Bruteforcing</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>*Scan Config</string>
           </property>
          </widget>
         </item>
@@ -615,7 +617,7 @@
           <widget class="QFrame" name="frame_targets">
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <property name="spacing">
-             <number>6</number>
+             <number>5</number>
             </property>
             <property name="leftMargin">
              <number>0</number>
@@ -841,16 +843,6 @@
               </item>
              </layout>
             </item>
-            <item>
-             <widget class="Line" name="line_12">
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
            </layout>
           </widget>
          </item>
@@ -864,7 +856,7 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <property name="spacing">
-             <number>6</number>
+             <number>5</number>
             </property>
             <property name="leftMargin">
              <number>0</number>

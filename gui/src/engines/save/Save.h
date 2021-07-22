@@ -22,7 +22,6 @@ class Save : public BaseClass{
         QTemporaryFile subdomains_file;
         int sort;
 
-    // signals and slots...
     signals:
         // sending status and logs to the mainWindow...
         void sendStatus(QString status);

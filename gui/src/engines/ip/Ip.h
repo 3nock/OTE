@@ -35,6 +35,10 @@ class Ip : public BaseClass{
         void stop();
 
     public slots:
+        void a_receiveTargets(ENGINE engineName);
+        void c_receiveTargets(QItemSelectionModel *selectionModel);
+
+    public slots:
         void scanResult(QString subdomain, QString ipAddress);
         void scanThreadEnded();
         //...
@@ -59,8 +63,6 @@ class Ip : public BaseClass{
         void on_radioButton_ip_clicked();
         void on_comboBox_option_currentIndexChanged(int index);
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
-        //...
-        void cursorOpenInBrowser();
 };
 
 #endif // IP_H

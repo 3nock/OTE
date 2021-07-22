@@ -17,6 +17,9 @@
    <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
+   <property name="spacing">
+    <number>7</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -48,10 +51,7 @@
       </widget>
      </item>
      <item>
-      <widget class="Line" name="line_18">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
+      <widget class="Line" name="line">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -173,22 +173,24 @@
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
       <widget class="QFrame" name="frame">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>42</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>42</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true"/>
        </property>
@@ -815,16 +817,6 @@
             </widget>
            </item>
           </layout>
-         </item>
-         <item>
-          <widget class="Line" name="line_16">
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="theLayout_2">

@@ -10,5 +10,6 @@
     </qresource>
     <qresource prefix="/themes">
         <file>res/themes/native.qss</file>
+        <file>res/themes/ice.qss</file>
     </qresource>
 </RCC>
