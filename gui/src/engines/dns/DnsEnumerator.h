@@ -12,8 +12,8 @@ class DnsRecordsEnumerator: public QObject{
 
     private:
         ScanConfig *m_scanConfig;
-        ScanArguments_Records *m_scanArguments;
-        ScanResults_Records *m_scanResults;
+        record::ScanArguments *m_scanArguments;
+        record::ScanResults *m_scanResults;
         //...
         QStandardItem *m_dnsNameItem;
         QStandardItem *m_recordItem;
@@ -35,7 +35,7 @@ class DnsRecordsEnumerator: public QObject{
         QString m_currentTarget;
 
     public:
-        DnsRecordsEnumerator(ScanConfig *scanConfig, ScanArguments_Records *scanArguments, ScanResults_Records *scanResults);
+        DnsRecordsEnumerator(ScanConfig *scanConfig, record::ScanArguments *scanArguments, record::ScanResults *scanResults);
         ~DnsRecordsEnumerator();
         //...
         void enumerate(QThread *cThread);

@@ -26,7 +26,7 @@ class Active : public BaseClass{
         //...
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
-        ScanArguments_Active *m_scanArguments;
+        active::ScanArguments *m_scanArguments;
         //...
         int m_activeThreads = 0;
 

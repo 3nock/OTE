@@ -24,8 +24,8 @@ class Dns : public BaseClass{
         //...
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
-        ScanArguments_Records* m_scanArguments;
-        ScanResults_Records* m_scanResults;
+        record::ScanArguments* m_scanArguments;
+        record::ScanResults* m_scanResults;
         //...
         QStandardItemModel* m_model_results;
         QStandardItemModel* m_model_srvResults;

@@ -13,13 +13,13 @@ class ActiveEnumerator : public QObject{
         int m_currentTargetToEnumerate = 0;
         //...
         ScanConfig *m_scanConfig;
-        ScanArguments_Active *m_scanArguments;
+        active::ScanArguments *m_scanArguments;
         //...
         QDnsLookup *m_dns;
         QTcpSocket *m_socket;
 
     public:
-        ActiveEnumerator(ScanConfig *scanConfig, ScanArguments_Active *scanArguments);
+        ActiveEnumerator(ScanConfig *scanConfig, active::ScanArguments *scanArguments);
         ~ActiveEnumerator();
         //...
         void enumerate(QThread *cThread);

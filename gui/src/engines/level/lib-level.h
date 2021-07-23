@@ -11,18 +11,19 @@
 /************************************************
                   structures
 ************************************************/
-struct ScanArguments_level{
-    QListWidget* wordlist;
-    QListWidget* targetList;
-    //...
-    int progress;
-    int currentTargetToEnumerate;
-    int currentWordlistToEnumerate;
-    //...
-    int currentLevel;
-    int maxLevel;
-};
-typedef ScanArguments_level ScanArguments_level;
-
+namespace level {
+    struct ScanArguments{
+        QListWidget* wordlist;
+        QListWidget* targetList;
+        //...
+        int progress;
+        int currentTargetToEnumerate;
+        int currentWordlistToEnumerate;
+        //...
+        int currentLevel;
+        int maxLevel;
+    };
+    typedef ScanArguments ScanArguments;
+}
 
 #endif // LIBLEVEL_H

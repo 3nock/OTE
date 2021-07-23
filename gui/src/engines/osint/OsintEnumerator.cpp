@@ -1,7 +1,7 @@
 #include "OsintEnumerator.h"
 
 /********************************* Constructor & Destructor **********************************/
-Enumerator::Enumerator(ScanArguments_Osint *scanArguments, ScanResults_Osint *scanResults)
+Enumerator::Enumerator(osint::ScanArguments *scanArguments, osint::ScanResults *scanResults)
     : m_scanArguments(scanArguments), m_scanResults(scanResults)
 {
     // nothing yet...

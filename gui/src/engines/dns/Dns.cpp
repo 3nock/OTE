@@ -11,8 +11,8 @@ Dns::Dns(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(ne
       //...
       m_scanStatus(new ScanStatus),
       m_scanConfig(new ScanConfig),
-      m_scanArguments(new ScanArguments_Records),
-      m_scanResults(new ScanResults_Records),
+      m_scanArguments(new record::ScanArguments),
+      m_scanResults(new record::ScanResults),
       //...
       m_model_results(new QStandardItemModel),
       m_model_srvResults(new QStandardItemModel),
@@ -230,6 +230,10 @@ void Dns::scanThreadEnded(){
         }
         else
         {
+            // set the progress bar to 100% just in case...
+            if(!m_scanStatus->isStopped){
+                ui->progressBar->setValue(ui->progressBar->maximum());
+            }
             m_scanStatus->isPaused = false;
             m_scanStatus->isStopped = false;
             m_scanStatus->isRunning = false;
@@ -457,14 +461,7 @@ void Dns::on_treeView_results_customContextMenuRequested(const QPoint &pos){
     if(!ui->treeView_results->selectionModel()->isSelected(ui->treeView_results->currentIndex())){
         return;
     }
-    ///
-    /// getting the position of the cursor to place the context menu...
-    ///
-    QPoint globalCursorPos = QCursor::pos();
-    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
-    QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
-    //...
-    contextMenu_rightClick(ui->treeView_results->selectionModel(), localCursorPosition);
+    contextMenu_rightClick(ui->treeView_results->selectionModel());
 }
 
 void Dns::on_tableView_srv_customContextMenuRequested(const QPoint &pos){
@@ -472,12 +469,5 @@ void Dns::on_tableView_srv_customContextMenuRequested(const QPoint &pos){
     if(!ui->tableView_srv->selectionModel()->isSelected(ui->tableView_srv->currentIndex())){
         return;
     }
-    ///
-    /// getting the position of the cursor to place the context menu...
-    ///
-    QPoint globalCursorPos = QCursor::pos();
-    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
-    QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
-    //...
-    contextMenu_rightClick(ui->tableView_srv->selectionModel(), localCursorPosition);
+    contextMenu_rightClick(ui->tableView_srv->selectionModel());
 }

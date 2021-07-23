@@ -18,10 +18,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <property name="spacing">
-    <number>7</number>
+    <number>6</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>5</number>
    </property>
    <property name="rightMargin">
     <number>0</number>
@@ -31,6 +34,9 @@
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_25">
+     <property name="spacing">
+      <number>4</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_2">
        <property name="sizePolicy">
@@ -207,6 +213,23 @@
         <property name="rightMargin">
          <number>5</number>
         </property>
+        <item>
+         <widget class="QRadioButton" name="radioButton">
+          <property name="text">
+           <string>Subdomain</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_2">
+          <property name="text">
+           <string>TLD</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QLabel" name="label_4">
           <property name="sizePolicy">

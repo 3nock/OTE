@@ -4,7 +4,7 @@
                             DNS-RECORDS ENUMERATOR
 *********************************************************************************/
 
-DnsRecordsEnumerator::DnsRecordsEnumerator(ScanConfig *scanConfig, ScanArguments_Records *scanArguments, ScanResults_Records *scanResults)
+DnsRecordsEnumerator::DnsRecordsEnumerator(ScanConfig *scanConfig, record::ScanArguments *scanArguments, record::ScanResults *scanResults)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       m_scanResults(scanResults),

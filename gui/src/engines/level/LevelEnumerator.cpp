@@ -1,6 +1,6 @@
 #include "LevelEnumerator.h"
 
-LevelEnumerator::LevelEnumerator(ScanConfig *scanConfig, ScanArguments_level *scanArguments)
+LevelEnumerator::LevelEnumerator(ScanConfig *scanConfig, level::ScanArguments *scanArguments)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       m_dns(new QDnsLookup)

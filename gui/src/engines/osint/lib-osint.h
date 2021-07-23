@@ -69,17 +69,19 @@
 /**********************************************
                  Structures
 ***********************************************/
-struct ScanArguments_Osint{
-    QStringList choosenOptions;
-    char* targetDomain;
-};
-typedef struct  ScanArguments_osint ScanArguments_osint;
+namespace osint{
+    struct ScanArguments{
+        QStringList choosenOptions;
+        char* targetDomain;
+    };
+    typedef struct  ScanArguments ScanArguments_osint;
 
-struct ScanResults_Osint{
-    QLabel* label_subdomainsCount;
-    QStandardItemModel* results_model;
-    int* resultsCount;
-};
-typedef struct ScanResults_Osint ScanResults_Osint;
+    struct ScanResults{
+        QLabel* label_subdomainsCount;
+        QStandardItemModel* results_model;
+        int* resultsCount;
+    };
+    typedef struct ScanResults ScanResults;
+}
 
 #endif // LIBOSINT_H

@@ -21,16 +21,18 @@ enum ACTIVE{
 /*******************************************
                  structures
 ********************************************/
-struct ScanArguments_Active{
-    QListWidget *targetList;
-    //...
-    int progress;
-    int currentTargetToEnumerate;
-    //...
-    quint16 service;
-    bool checkActiveService;
-};
-typedef struct ScanArguments_Active ScanArguments_Active;
+namespace active{
+    struct ScanArguments{
+        QListWidget *targetList;
+        //...
+        int progress;
+        int currentTargetToEnumerate;
+        //...
+        quint16 service;
+        bool checkActiveService;
+    };
+    typedef struct ScanArguments ScanArguments;
+}
 
 
 #endif // LIBACTIVE_H

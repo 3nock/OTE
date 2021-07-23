@@ -3,7 +3,7 @@
 /*************************************************************************************************
                                      Ip_SUBDOMAINS ENUMERATOR
 **************************************************************************************************/
-IpEnumerator::IpEnumerator(ScanConfig *scanConfig, ScanArguments_Ip *scanArguments)
+IpEnumerator::IpEnumerator(ScanConfig *scanConfig, ip::ScanArguments *scanArguments)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       //...

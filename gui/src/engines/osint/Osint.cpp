@@ -6,8 +6,8 @@
 Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Osint),
     m_resultsModel(resultsModel),
     //...
-    scanArguments(new ScanArguments_Osint),
-    scanResults(new ScanResults_Osint)
+    scanArguments(new osint::ScanArguments),
+    scanResults(new osint::ScanResults)
 {
     ui->setupUi(this);
     //...
@@ -824,14 +824,7 @@ void Osint::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
         return;
     }
-    ///
-    /// getting the position of the cursor to place the context menu...
-    ///
-    QPoint globalCursorPos = QCursor::pos();
-    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
-    QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
-    //...
-    contextMenu_rightClick(ui->tableView_results->selectionModel(), localCursorPosition);
+    contextMenu_rightClick(ui->tableView_results->selectionModel());
 }
 
 /*********************************** logs ***************************************/

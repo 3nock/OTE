@@ -1,21 +1,7 @@
 #ifndef IPENUMERATOR_H
 #define IPENUMERATOR_H
 
-#include "src/core.h"
-
-/********************************************************
-                        structures
-*********************************************************/
-struct ScanArguments_Ip{
-    QListWidget *targetList;
-    QLabel *label_resultsCount;
-    QStandardItemModel *model_results;
-    //...
-    int progress;
-    int currentTargetToEnumerate;
-};
-typedef struct ScanArguments_Ip ScanArguments_Ip;
-
+#include "lib-ip.h"
 
 /*********************************************************
                 ACTIVE_SUBDOMAINS ENUMERATOR
@@ -27,12 +13,12 @@ class IpEnumerator : public QObject{
         int m_currentTargetToEnumerate = 0;
         //...
         ScanConfig *m_scanConfig;
-        ScanArguments_Ip *m_scanArguments;
+        ip::ScanArguments *m_scanArguments;
         //...
         QHostInfo *hostInfo;
 
     public:
-        IpEnumerator(ScanConfig *scanConfig, ScanArguments_Ip *scanArguments);
+        IpEnumerator(ScanConfig *scanConfig, ip::ScanArguments *scanArguments);
         ~IpEnumerator();
         //...
         void enumerate(QThread *cThread);

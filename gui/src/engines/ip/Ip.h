@@ -23,7 +23,7 @@ class Ip : public BaseClass{
         //...
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
-        ScanArguments_Ip *m_scanArguments;
+        ip::ScanArguments *m_scanArguments;
         //...
         int m_activeThreads = 0;
 

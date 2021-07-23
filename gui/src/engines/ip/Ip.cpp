@@ -6,7 +6,7 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new 
     //...
     m_scanStatus(new ScanStatus),
     m_scanConfig(new ScanConfig),
-    m_scanArguments(new ScanArguments_Ip)
+    m_scanArguments(new ip::ScanArguments)
 {
     ui->setupUi(this);
     //...
@@ -153,6 +153,10 @@ void Ip::scanThreadEnded(){
         }
         else
         {
+            // set the progress bar to 100% just in case...
+            if(!m_scanStatus->isStopped){
+                ui->progressBar->setValue(ui->progressBar->maximum());
+            }
             m_scanStatus->isPaused = false;
             m_scanStatus->isStopped = false;
             m_scanStatus->isRunning = false;
@@ -330,14 +334,7 @@ void Ip::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
         return;
     }
-    ///
-    /// getting the position of the cursor to place the context menu...
-    ///
-    QPoint globalCursorPos = QCursor::pos();
-    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
-    QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
-    //...
-    contextMenu_rightClick(ui->tableView_results->selectionModel(), localCursorPosition);
+    contextMenu_rightClick(ui->tableView_results->selectionModel());
 }
 
 void Ip::on_pushButton_get_clicked(){

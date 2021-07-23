@@ -8,13 +8,13 @@ class Enumerator: public QObject{
     Q_OBJECT
 
     private:
-        ScanArguments_Osint *m_scanArguments;
-        ScanResults_Osint *m_scanResults;
+        osint::ScanArguments *m_scanArguments;
+        osint::ScanResults *m_scanResults;
         //...
         bool m_stopEnumeration = false;
 
     public:
-        Enumerator(ScanArguments_Osint *scanArguments, ScanResults_Osint *scanResults);
+        Enumerator(osint::ScanArguments *scanArguments, osint::ScanResults *scanResults);
         ~Enumerator();
         void Enumerate(QThread *cThread);
 

@@ -4,7 +4,7 @@
 /*************************************************************************************************
                                      ACTIVE_SUBDOMAINS ENUMERATOR
 **************************************************************************************************/
-ActiveEnumerator::ActiveEnumerator(ScanConfig *scanConfig, ScanArguments_Active *scanArguments)
+ActiveEnumerator::ActiveEnumerator(ScanConfig *scanConfig, active::ScanArguments *scanArguments)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       //...

@@ -10,11 +10,11 @@ class LevelEnumerator: public QObject{
         int m_currentWordlistToEnumerate = 0;
         int m_currentTargetToEnumerate = 0;
         ScanConfig *m_scanConfig;
-        ScanArguments_level *m_scanArguments;
+        level::ScanArguments *m_scanArguments;
         QDnsLookup *m_dns;
 
     public:
-        LevelEnumerator(ScanConfig *scanConfig, ScanArguments_level *scanArguments);
+        LevelEnumerator(ScanConfig *scanConfig, level::ScanArguments *scanArguments);
         ~LevelEnumerator();
         //...
         void enumerate(QThread *cThread);

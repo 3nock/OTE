@@ -10,7 +10,7 @@ class BaseClass : public QWidget{
         explicit BaseClass(QWidget *parent = nullptr);
         //...
         void contextMenu_actionButton(ENGINE engineName, QPoint &pos);
-        void contextMenu_rightClick(QItemSelectionModel* selectionModel, QPoint &pos);
+        void contextMenu_rightClick(QItemSelectionModel* selectionModel);
 
     signals:
         void sendLog(QString log);
@@ -52,6 +52,9 @@ class BaseClass : public QWidget{
         void actionSendToRecords(ENGINE engineName);
         void actionSendToIp(ENGINE engineName);
         //...
+        void actionSave(ENGINE engineName);
+        void actionCopy(ENGINE engineName);
+        //...
         void cursorOpenInBrowser(QItemSelectionModel *selectionModel);
         void cursorSendToOsint(QItemSelectionModel *selectionModel);
         void cursorSendToActive(QItemSelectionModel *selectionModel);
@@ -60,6 +63,9 @@ class BaseClass : public QWidget{
         void cursorSendToIp(QItemSelectionModel *selectionModel);
         void cursorSendToBrute(QItemSelectionModel *selectionModel);
         void cursorSendToLevel(QItemSelectionModel *selectionModel);
+        //...
+        void cursorSave(QItemSelectionModel *selectionModel);
+        void cursorCopy(QItemSelectionModel *selectionModel);
 };
 
 #endif // BASECLASS_H

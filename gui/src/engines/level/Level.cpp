@@ -6,7 +6,7 @@ Level::Level(QWidget *parent, ResultsModel *resultsModel) :BaseClass(parent),ui(
     //...
     m_scanStatus(new ScanStatus),
     m_scanConfig(new ScanConfig),
-    m_scanArguments(new ScanArguments_level)
+    m_scanArguments(new level::ScanArguments)
 {
     ui->setupUi(this);
     //...
@@ -24,7 +24,7 @@ Level::Level(QWidget *parent, ResultsModel *resultsModel) :BaseClass(parent),ui(
     m_scanArguments->wordlist = ui->listWidget_wordlist;
     m_scanArguments->targetList = ui->listWidget_targets;
     //...
-    ui->splitter->setSizes(QList<int>()<<220<<2);
+    ui->splitter->setSizes(QList<int>()<<280<<200);
 }
 
 Level::~Level(){
@@ -213,6 +213,10 @@ void Level::scanThreadEnd(){
     }
     else
     {
+        // set the progress bar to 100% just in case...
+        if(!m_scanStatus->isStopped){
+            ui->progressBar->setValue(ui->progressBar->maximum());
+        }
         ///
         /// Reached End of the scan on all levels or the scan was stopped...
         ///
@@ -453,12 +457,5 @@ void Level::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
         return;
     }
-    ///
-    /// getting the position of the cursor to place the context menu...
-    ///
-    QPoint globalCursorPos = QCursor::pos();
-    QRect mouseScreenGeometry = qApp->desktop()->screen(qApp->desktop()->screenNumber(globalCursorPos))->geometry();
-    QPoint localCursorPosition = globalCursorPos - mouseScreenGeometry.topLeft();
-    //...
-    contextMenu_rightClick(ui->tableView_results->selectionModel(), localCursorPosition);
+    contextMenu_rightClick(ui->tableView_results->selectionModel());
 }
