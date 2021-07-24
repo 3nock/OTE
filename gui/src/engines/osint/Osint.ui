@@ -18,13 +18,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_12">
    <property name="leftMargin">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="topMargin">
     <number>5</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="bottomMargin">
     <number>0</number>
@@ -355,13 +355,13 @@
            <property name="currentIndex">
             <number>0</number>
            </property>
-           <widget class="QWidget" name="tab_results_osint">
+           <widget class="QWidget" name="tab_results">
             <attribute name="title">
              <string>Results</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout">
              <property name="spacing">
-              <number>6</number>
+              <number>5</number>
              </property>
              <property name="leftMargin">
               <number>6</number>
@@ -373,7 +373,7 @@
               <number>6</number>
              </property>
              <property name="bottomMargin">
-              <number>6</number>
+              <number>0</number>
              </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -528,7 +528,7 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="tab_logs_osint">
+           <widget class="QWidget" name="tab_logs">
             <attribute name="title">
              <string>Logs</string>
             </attribute>
@@ -1056,7 +1056,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>206</width>
+                  <width>204</width>
                   <height>654</height>
                  </rect>
                 </property>
@@ -1349,7 +1349,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>206</width>
+                  <width>204</width>
                   <height>286</height>
                  </rect>
                 </property>

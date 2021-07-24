@@ -1,7 +1,7 @@
 #include "Save.h"
 #include "ui_Save.h"
 
-Save::Save(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Save),
+Save::Save(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Save),
     m_resultsModel(resultsModel)
 {
     ui->setupUi(this);
@@ -9,32 +9,9 @@ Save::Save(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(
     ui->splitter->setSizes(QList<int>()<<500<<1);
 }
 
-// getting the Enumerated subdomains from osint and brute...
-void Save::onReceiveResults(QString subdomain){
-    ui->listWidget_results_Save->addItem(subdomain);
-    subdomains_file.write(subdomain.toUtf8()+NEWLINE);
-    total_subdomain_count++;
-    ui->label_resultsCount->setNum(total_subdomain_count);
-}
-
 // sending signal for loading the Enumerated subdomains...
 void Save::on_toolButton_get_Save_clicked(){
-    if(ui->radioButton_getFrom_Save->isChecked()){
-        if(ui->comboBox_get_Save->currentIndex() == 0){
-            emit getOsintResults();
-        }
-        if(ui->comboBox_get_Save->currentIndex() == 1){
-            emit getBruteResults();
-        }
-        if(ui->comboBox_get_Save->currentIndex() == 2){
-            emit getActiveResults();
-        }
-    }
-    if(ui->radioButton_getAll_Save->isChecked()){
-        emit getOsintResults();
-        emit getBruteResults();
-        emit getActiveResults();
-    }
+
 }
 
 // clearing the subdomains listwidget...

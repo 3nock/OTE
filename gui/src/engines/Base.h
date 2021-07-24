@@ -3,11 +3,16 @@
 
 #include "src/core.h"
 
-class BaseClass : public QWidget{
+class BaseClass : public QWidget {
         Q_OBJECT
 
+    private:
+        ResultsModel *m_resultsModel;
+        // void setupContextMenu_actionButton();
+        // void setupContextMEnu_rightClick();
+
     public:
-        explicit BaseClass(QWidget *parent = nullptr);
+        explicit BaseClass(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         //...
         void contextMenu_actionButton(ENGINE engineName, QPoint &pos);
         void contextMenu_rightClick(QItemSelectionModel* selectionModel);
@@ -43,7 +48,7 @@ class BaseClass : public QWidget{
         void changeTabToProject();
         void changeTabToSave();
 
-    public slots:
+    private slots:
         void actionSendToOsint(ENGINE engineName);
         void actionSendToActive(ENGINE engineName);
         void actionSendToBrute(ENGINE engineName);
@@ -52,8 +57,8 @@ class BaseClass : public QWidget{
         void actionSendToRecords(ENGINE engineName);
         void actionSendToIp(ENGINE engineName);
         //...
-        void actionSave(ENGINE engineName);
-        void actionCopy(ENGINE engineName);
+        void actionSave(ENGINE engineName, CHOICE);
+        void actionCopy(ENGINE engineName, CHOICE);
         //...
         void cursorOpenInBrowser(QItemSelectionModel *selectionModel);
         void cursorSendToOsint(QItemSelectionModel *selectionModel);

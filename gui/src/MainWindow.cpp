@@ -17,6 +17,28 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     resultsModel->osint = new QStandardItemModel;
     resultsModel->active = new QStandardItemModel;
     resultsModel->record = new QStandardItemModel;
+    //...
+    resultsModel->project = new ProjectResult;
+    resultsModel->project->model = new QStandardItemModel;
+    resultsModel->project->rootItem = resultsModel->project->model->invisibleRootItem();
+    //...
+    resultsModel->project->subdomainAndIp = new QStandardItem("subdomain & ip");
+    resultsModel->project->subdomains = new QStandardItem("subdomains");
+    resultsModel->project->tlds = new QStandardItem("tld");
+    resultsModel->project->ipAddresses = new QStandardItem("ip-addresses");
+    resultsModel->project->srv = new QStandardItem("srv");
+    //...
+    resultsModel->project->subdomainAndIp->setIcon(QIcon(":/img/res/icons/folder.png"));
+    resultsModel->project->subdomains->setIcon(QIcon(":/img/res/icons/folder.png"));
+    resultsModel->project->tlds->setIcon(QIcon(":/img/res/icons/folder.png"));
+    resultsModel->project->ipAddresses->setIcon(QIcon(":/img/res/icons/folder.png"));
+    resultsModel->project->srv->setIcon(QIcon(":/img/res/icons/folder.png"));
+    //...
+    resultsModel->project->rootItem->appendRow(resultsModel->project->subdomainAndIp);
+    resultsModel->project->rootItem->appendRow(resultsModel->project->subdomains);
+    resultsModel->project->rootItem->appendRow(resultsModel->project->tlds);
+    resultsModel->project->rootItem->appendRow(resultsModel->project->ipAddresses);
+    resultsModel->project->rootItem->appendRow(resultsModel->project->srv);
     ///
     /// creating and initiating the classes for the modules...
     ///
@@ -37,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(brute, SIGNAL(a_sendToRecord(ENGINE)), records, SLOT(a_receiveTargets(ENGINE)));
     connect(brute, SIGNAL(a_sendToLevel(ENGINE)), level, SLOT(a_receiveTargets(ENGINE)));
     //...
-    connect(brute, SIGNAL(c_sendToOsint(QItenSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
+    connect(brute, SIGNAL(c_sendToOsint(QItemSelectionModel*)), osint, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(brute, SIGNAL(c_sendToActive(QItemSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(brute, SIGNAL(c_sendToBrute(QItemSelectionModel*)), brute, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(brute, SIGNAL(c_sendToIp(QItemSelectionModel*)), ip, SLOT(c_receiveTargets(QItemSelectionModel*)));
@@ -52,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(active, SIGNAL(a_sendToRecord(ENGINE)), records, SLOT(a_receiveTargets(ENGINE)));
     connect(active, SIGNAL(a_sendToLevel(ENGINE)), level, SLOT(a_receiveTargets(ENGINE)));
     //...
-    connect(active, SIGNAL(c_sendToOsint(QItenSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
+    connect(active, SIGNAL(c_sendToOsint(QItemSelectionModel*)), osint, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(active, SIGNAL(c_sendToActive(QItemSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(active, SIGNAL(c_sendToBrute(QItemSelectionModel*)), brute, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(active, SIGNAL(c_sendToIp(QItemSelectionModel*)), ip, SLOT(c_receiveTargets(QItemSelectionModel*)));
@@ -67,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(osint, SIGNAL(a_sendToRecord(ENGINE)), records, SLOT(a_receiveTargets(ENGINE)));
     connect(osint, SIGNAL(a_sendToLevel(ENGINE)), level, SLOT(a_receiveTargets(ENGINE)));
     //...
-    connect(osint, SIGNAL(c_sendToOsint(QItenSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
+    connect(osint, SIGNAL(c_sendToOsint(QItemSelectionModel*)), osint, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(osint, SIGNAL(c_sendToActive(QItemSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(osint, SIGNAL(c_sendToBrute(QItemSelectionModel*)), brute, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(osint, SIGNAL(c_sendToIp(QItemSelectionModel*)), ip, SLOT(c_receiveTargets(QItemSelectionModel*)));
@@ -82,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(ip, SIGNAL(a_sendToRecord(ENGINE)), records, SLOT(a_receiveTargets(ENGINE)));
     connect(ip, SIGNAL(a_sendToLevel(ENGINE)), level, SLOT(a_receiveTargets(ENGINE)));
     //...
-    connect(ip, SIGNAL(c_sendToOsint(QItenSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
+    connect(ip, SIGNAL(c_sendToOsint(QItemSelectionModel*)), osint, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(ip, SIGNAL(c_sendToActive(QItemSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(ip, SIGNAL(c_sendToBrute(QItemSelectionModel*)), brute, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(ip, SIGNAL(c_sendToIp(QItemSelectionModel*)), ip, SLOT(c_receiveTargets(QItemSelectionModel*)));
@@ -97,7 +119,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(records, SIGNAL(a_sendToRecord(ENGINE)), records, SLOT(a_receiveTargets(ENGINE)));
     connect(records, SIGNAL(a_sendToLevel(ENGINE)), level, SLOT(a_receiveTargets(ENGINE)));
     //...
-    connect(records, SIGNAL(c_sendToOsint(QItenSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
+    connect(records, SIGNAL(c_sendToOsint(QItemSelectionModel*)), osint, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(records, SIGNAL(c_sendToActive(QItemSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(records, SIGNAL(c_sendToBrute(QItemSelectionModel*)), brute, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(records, SIGNAL(c_sendToIp(QItemSelectionModel*)), ip, SLOT(c_receiveTargets(QItemSelectionModel*)));
@@ -112,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(level, SIGNAL(a_sendToRecord(ENGINE)), records, SLOT(a_receiveTargets(ENGINE)));
     connect(level, SIGNAL(a_sendToLevel(ENGINE)), level, SLOT(a_receiveTargets(ENGINE)));
     //...
-    connect(level, SIGNAL(c_sendToOsint(QItenSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
+    connect(level, SIGNAL(c_sendToOsint(QItemSelectionModel*)), osint, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(level, SIGNAL(c_sendToActive(QItemSelectionModel*)), active, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(level, SIGNAL(c_sendToBrute(QItemSelectionModel*)), brute, SLOT(c_receiveTargets(QItemSelectionModel*)));
     connect(level, SIGNAL(c_sendToIp(QItemSelectionModel*)), ip, SLOT(c_receiveTargets(QItemSelectionModel*)));
@@ -169,7 +191,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->tabWidget_mainTab->setCurrentIndex(0);
 
     // Welcome...
-    ui->label_status->setText(" Welcome!");
+    ui->statusbar->showMessage("Welcome!", 5000);
 
     // creating and initiating the logfile...
     QString dateTime = QDateTime::currentDateTime().toString("dd-MM-yyyy");
@@ -194,7 +216,7 @@ MainWindow::~MainWindow(){
 /// showing the status to the status label and logging to the log file...
 ///
 void MainWindow::onReceiveStatus(QString status){
-    ui->label_status->setText(status);
+    ui->statusbar->showMessage(status, 5000);
 }
 
 ///
@@ -228,8 +250,3 @@ void MainWindow::onChangeTabToLevel(){
 }
 
 
-/****************************** Initialization Functions **********************************/
-
-void MainWindow::checkForMissingFiles(){
-
-}

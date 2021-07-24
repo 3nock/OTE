@@ -1,3 +1,13 @@
+QStatusBar {
+    border-style: outset;
+    border-width: 1px;
+    border-top-color: grey;
+    border-right-color: grey;
+    border-left-color: grey;
+    border-bottom-color: transparent;
+    border-style: solid;
+}
+
 QToolButton {
         border-style: outset;
         border-width: 2px;
@@ -66,9 +76,6 @@ QComboBox QWidget {
         color: rgb(250,250,250);
         background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(70, 70, 70, 255));
         selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(70, 81, 93));
-        selection-border-style: solid;
-        selction-border-color: black;
-        selection-border-width: 1px;
 }
 
 /********** Line *************/
@@ -279,10 +286,10 @@ QMenuBar::item:selected {
 }
 
 QMenu::item:selected {
-        color:rgb(255,255,255);
+        color:rgb(0,0,0);
         border-style: solid;
         border-color: black;
-        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(40, 51, 63));
+        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:0.4 rgb(50, 61, 72));
 }
 
 QMenu::​separator {
@@ -314,7 +321,7 @@ QTabWidget::pane {
         border-top-width: 1px;
         border-right-width: 1px;
         border-left-width: 1px;
-        border-bottom-width: 1px;
+        border-bottom-width: 0px;
 }
 
 QTabBar::tab {

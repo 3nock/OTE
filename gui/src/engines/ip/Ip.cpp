@@ -1,7 +1,7 @@
 #include "Ip.h"
 #include "ui_Ip.h"
 
-Ip::Ip(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Ip),
+Ip::Ip(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Ip),
     m_resultsModel(resultsModel),
     //...
     m_scanStatus(new ScanStatus),

@@ -1,7 +1,7 @@
 #include "Level.h"
 #include "ui_Level.h"
 
-Level::Level(QWidget *parent, ResultsModel *resultsModel) :BaseClass(parent),ui(new Ui::Level),
+Level::Level(QWidget *parent, ResultsModel *resultsModel) :BaseClass(parent, resultsModel),ui(new Ui::Level),
     m_resultsModel(resultsModel),
     //...
     m_scanStatus(new ScanStatus),
@@ -244,6 +244,9 @@ void Level::scanResult(QString subdomain, QString ipAddress){
     m_resultsModel->level->setItem(m_resultsModel->level->rowCount(), 0, new QStandardItem(subdomain));
     m_resultsModel->level->setItem(m_resultsModel->level->rowCount()-1, 1, new QStandardItem(ipAddress));
     ui->label_resultsCount->setNum(m_resultsModel->level->rowCount());
+    // To Project...
+    m_resultsModel->project->subdomains->appendRow(new QStandardItem(subdomain));
+    m_resultsModel->project->ipAddresses->appendRow(new QStandardItem(ipAddress));
 }
 
 void Level::on_pushButton_clearResults_clicked(){

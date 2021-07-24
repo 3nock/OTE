@@ -83,9 +83,26 @@ enum ENGINE{
     LEVEL = 8
 };
 
+enum CHOICE{
+    susbdomains = 0,
+    ipaddress = 1,
+    all = 2
+};
+
 /***************************************************
                     STRUCTURES
 ****************************************************/
+struct ProjectResult{
+    QStandardItemModel *model = nullptr;
+    QStandardItem *rootItem = nullptr;
+    QStandardItem *subdomainAndIp = nullptr;
+    QStandardItem *subdomains = nullptr;
+    QStandardItem *tlds = nullptr;
+    QStandardItem *ipAddresses = nullptr;
+    QStandardItem *srv = nullptr;
+};
+typedef struct ProjectResult ProjectResult;
+
 struct ResultsModel{
     QStandardItemModel *ip = nullptr;
     QStandardItemModel *osint = nullptr;
@@ -94,6 +111,8 @@ struct ResultsModel{
     QStandardItemModel *record = nullptr;
     QStandardItemModel *level = nullptr;
     QStandardItemModel *save = nullptr;
+    //...
+    ProjectResult *project = nullptr;
 };
 typedef struct ResultsModel ResultsModel;
 

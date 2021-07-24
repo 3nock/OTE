@@ -28,8 +28,6 @@ class MainWindow : public QMainWindow{
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         //...
-        void checkForMissingFiles();
-        //...
         QFile *logfile;
 
     public slots:

@@ -32,7 +32,7 @@
 // initiate everything in the constructor...
 
 /*************************** Class Constructor & Deconstructor *************************/
-Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Brute),
+Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Brute),
       m_resultsModel(resultsModel),
       m_scanStatus(new ScanStatus),
       m_scanConfig(new ScanConfig),
@@ -249,6 +249,14 @@ void Brute::scanResult(QString subdomain, QString ipAddress){
     m_resultsModel->brute->setItem(m_resultsModel->brute->rowCount(), 0, new QStandardItem(subdomain));
     m_resultsModel->brute->setItem(m_resultsModel->brute->rowCount()-1, 1, new QStandardItem(ipAddress));
     ui->label_resultsCount->setNum(m_resultsModel->brute->rowCount());
+    // To Project...
+    if(m_scanArguments->tldBrute){
+        m_resultsModel->project->tlds->appendRow(new QStandardItem(subdomain));
+    }
+    if(m_scanArguments->subBrute){
+        m_resultsModel->project->subdomains->appendRow(new QStandardItem(subdomain));
+    }
+    m_resultsModel->project->ipAddresses->appendRow(new QStandardItem(ipAddress));
 }
 
 /********************************* Enumeration thread ended ********************************/

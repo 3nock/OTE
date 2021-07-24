@@ -3,7 +3,7 @@
 
 /******************************* Constructor & Destructor ********************************/
 
-Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Osint),
+Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Osint),
     m_resultsModel(resultsModel),
     //...
     scanArguments(new osint::ScanArguments),

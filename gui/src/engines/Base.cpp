@@ -1,6 +1,7 @@
 #include "Base.h"
 
-BaseClass::BaseClass(QWidget *parent) : QWidget(parent)
+BaseClass::BaseClass(QWidget *parent, ResultsModel *resultsModel) : QWidget(parent),
+    m_resultsModel(resultsModel)
 {
 
 }
@@ -9,11 +10,30 @@ BaseClass::BaseClass(QWidget *parent) : QWidget(parent)
                             CONTEXT MENU
 ****************************************************************************/
 void BaseClass::contextMenu_actionButton(ENGINE engineName, QPoint &pos){
-    Q_UNUSED(engineName);
+    QMenu *contextMenu_save = new QMenu(this);
+    QMenu *contextMenu_copy = new QMenu(this);
+    QMenu *contextMenu_main = new QMenu(this);
+    ///
+    /// ...
+    ///
+    contextMenu_main->setAttribute( Qt::WA_DeleteOnClose, true );
     //...
-    QMenu *contextMenu_actionButton = new QMenu(this);
-    contextMenu_actionButton->setAttribute( Qt::WA_DeleteOnClose, true );
-    contextMenu_actionButton->setObjectName("actionButtonMenu");
+    contextMenu_save->setTitle("Save");
+    contextMenu_copy->setTitle("Copy");
+    //...
+    contextMenu_save->setObjectName("saveMenu");
+    contextMenu_copy->setObjectName("saveMenu");
+    contextMenu_main->setObjectName("rightClickMenu");
+    ///
+    /// ...
+    ///
+    QAction actionSaveAll("subdomain | ip");
+    QAction actionSaveSubdomains("subdomains");
+    QAction actionSaveIpAddresses("ip-addresses");
+    //...
+    QAction actionCopyAll("subdomain | ip");
+    QAction actionCopySubdomains("subdomains");
+    QAction actionCopyIpAddresses("ip-addresses");
     //...
     QAction actionSendToIp("Send ip-addresses to Ip");
     QAction actionSendToOsint("Send subdomains to Osint");
@@ -22,6 +42,16 @@ void BaseClass::contextMenu_actionButton(ENGINE engineName, QPoint &pos){
     QAction actionSendToSave("Send subdomains to Save");
     QAction actionSendToLevel("Send subdomains to Level");
     QAction actionSendToRecords("Send subdomains to Records");
+    ///
+    /// ...
+    ///
+    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->actionSave(engineName, CHOICE::susbdomains);});
+    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->actionSave(engineName, CHOICE::ipaddress);});
+    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->actionSave(engineName, CHOICE::all);});
+    //...
+    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->actionCopy(engineName, CHOICE::susbdomains);});
+    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->actionCopy(engineName, CHOICE::ipaddress);});
+    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->actionCopy(engineName, CHOICE::all);});
     //...
     connect(&actionSendToIp, &QAction::triggered, this, [=](){this->actionSendToIp(engineName);});
     connect(&actionSendToOsint, &QAction::triggered, this, [=](){this->actionSendToOsint(engineName);});
@@ -30,43 +60,41 @@ void BaseClass::contextMenu_actionButton(ENGINE engineName, QPoint &pos){
     connect(&actionSendToActive, &QAction::triggered, this, [=](){this->actionSendToActive(engineName);});
     connect(&actionSendToRecords, &QAction::triggered, this, [=](){this->actionSendToRecords(engineName);});
     connect(&actionSendToLevel, &QAction::triggered, this, [=](){this->actionSendToLevel(engineName);});
+    ///
+    /// ...
+    ///
+    contextMenu_save->addAction(&actionSaveSubdomains);
+    contextMenu_save->addAction(&actionSaveIpAddresses);
+    contextMenu_save->addAction(&actionSaveAll);
     //...
-    contextMenu_actionButton->addAction(&actionSendToIp);
-    contextMenu_actionButton->addSeparator();
-    contextMenu_actionButton->addAction(&actionSendToOsint);
-    contextMenu_actionButton->addAction(&actionSendToBrute);
-    contextMenu_actionButton->addAction(&actionSendToActive);
-    contextMenu_actionButton->addAction(&actionSendToRecords);
-    contextMenu_actionButton->addAction(&actionSendToLevel);
-    contextMenu_actionButton->addAction(&actionSendToSave);
+    contextMenu_copy->addAction(&actionCopySubdomains);
+    contextMenu_copy->addAction(&actionCopyIpAddresses);
+    contextMenu_copy->addAction(&actionCopyAll);
     //...
-    contextMenu_actionButton->exec(QPoint(pos.x()+76, pos.y()));
+    contextMenu_main->addMenu(contextMenu_copy);
+    contextMenu_main->addMenu(contextMenu_save);
+    contextMenu_main->addSeparator();
+    contextMenu_main->addAction(&actionSendToIp);
+    contextMenu_main->addSeparator();
+    contextMenu_main->addAction(&actionSendToOsint);
+    contextMenu_main->addAction(&actionSendToBrute);
+    contextMenu_main->addAction(&actionSendToActive);
+    contextMenu_main->addAction(&actionSendToRecords);
+    contextMenu_main->addAction(&actionSendToLevel);
+    contextMenu_main->addAction(&actionSendToSave);
+    //...
+    contextMenu_main->exec(QPoint(pos.x()+76, pos.y()));
 }
 
 void BaseClass::contextMenu_rightClick(QItemSelectionModel* selectionModel){
-    //...
-    QMenu *contextMenu_save = new QMenu(this);
-    QMenu *contextMenu_copy = new QMenu(this);
     QMenu *contextMenu_main = new QMenu(this);
-    //...
-    contextMenu_save->setTitle("Save");
-    contextMenu_copy->setTitle("Copy");
-    //contextMenu_save->setAttribute( Qt::WA_DeleteOnClose, true );
-    //contextMenu_copy->setAttribute( Qt::WA_DeleteOnClose, true );
     contextMenu_main->setAttribute( Qt::WA_DeleteOnClose, true );
-    contextMenu_save->setObjectName("saveMenu");
-    contextMenu_copy->setObjectName("saveMenu");
     contextMenu_main->setObjectName("rightClickMenu");
     ///
     /// ...
     ///
-    QAction actionSaveAll("All");
-    QAction actionSaveSubdomains("Subdomains");
-    QAction actionSaveIpAddresses("Ip-addresses");
-    //...
-    QAction actionCopyAll("All");
-    QAction actionCopySubdomains("Subdomains");
-    QAction actionCopyIpAddresses("Ip-addresses");
+    QAction actionSave("Save");
+    QAction actionCopy("Copy");
     //...
     QAction actionOpenInBrowser("Open selected in Browser");
     QAction actionSendToOsint("Send selected to Osint");
@@ -79,15 +107,11 @@ void BaseClass::contextMenu_rightClick(QItemSelectionModel* selectionModel){
     ///
     /// ...
     ///
-    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->cursorSave(selectionModel);});
-    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->cursorSave(selectionModel);});
-    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->cursorSave(selectionModel);});
-    //...
-    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->cursorCopy(selectionModel);});
-    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->cursorCopy(selectionModel);});
-    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->cursorCopy(selectionModel);});
+    connect(&actionSave, &QAction::triggered, this, [=](){this->cursorSave(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->cursorCopy(selectionModel);});
     //...
     connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->cursorOpenInBrowser(selectionModel);});
+    //...
     connect(&actionSendToOsint, &QAction::triggered, this, [=](){this->cursorSendToOsint(selectionModel);});
     connect(&actionSendToIp, &QAction::triggered, this, [=](){this->cursorSendToIp(selectionModel);});
     connect(&actionSendToSave, &QAction::triggered, this, [=](){this->cursorSendToSave(selectionModel);});
@@ -98,18 +122,10 @@ void BaseClass::contextMenu_rightClick(QItemSelectionModel* selectionModel){
     ///
     /// ...
     ///
-    contextMenu_save->addAction(&actionSaveAll);
-    contextMenu_save->addAction(&actionSaveSubdomains);
-    contextMenu_save->addAction(&actionSaveIpAddresses);
-    //...
-    contextMenu_copy->addAction(&actionCopyAll);
-    contextMenu_copy->addAction(&actionCopySubdomains);
-    contextMenu_copy->addAction(&actionCopyIpAddresses);
-    //...
-    contextMenu_main->addMenu(contextMenu_copy);
-    contextMenu_main->addMenu(contextMenu_save);
-    contextMenu_main->addSeparator();
     contextMenu_main->addAction(&actionOpenInBrowser);
+    contextMenu_main->addSeparator();
+    contextMenu_main->addAction(&actionCopy);
+    contextMenu_main->addAction(&actionSave);
     contextMenu_main->addSeparator();
     contextMenu_main->addAction(&actionSendToOsint);
     contextMenu_main->addAction(&actionSendToIp);
@@ -124,7 +140,15 @@ void BaseClass::contextMenu_rightClick(QItemSelectionModel* selectionModel){
     contextMenu_main->exec(QCursor::pos());
 }
 
-/****************************** Send All Results ***************************/
+/**************************** Open in Browser **************************/
+void BaseClass::cursorOpenInBrowser(QItemSelectionModel *selectionModel){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
+    }
+}
+
+/***************************** Send Results *****************************/
 void BaseClass::actionSendToOsint(ENGINE engineName){
     emit a_sendToOsint(engineName);
     emit changeTabToOsint();
@@ -153,24 +177,8 @@ void BaseClass::actionSendToLevel(ENGINE engineName){
     emit a_sendToLevel(engineName);
     emit changeTabToLevel();
 }
-///
-/// COPY & SAVE...
-///
-void BaseClass::actionSave(ENGINE engineName){
 
-}
-void BaseClass::actionCopy(ENGINE engineName){
-
-}
-/**************************** Send Selected Results *************************/
-
-void BaseClass::cursorOpenInBrowser(QItemSelectionModel *selectionModel){
-    // iterate and open each selected item in a browser...
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
-    }
-}
-//...
+//......
 void BaseClass::cursorSendToOsint(QItemSelectionModel *selectionModel){
     emit c_sendToOsint(selectionModel);
     emit changeTabToOsint();
@@ -199,12 +207,125 @@ void BaseClass::cursorSendToLevel(QItemSelectionModel *selectionModel){
     emit c_sendToLevel(selectionModel);
     emit changeTabToLevel();
 }
-///
-/// COPY & SAVE
-///
-void BaseClass::cursorSave(QItemSelectionModel *selectionModel){
 
+/********************************** COPY & SAVE ************************************/
+
+void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
+    QString filename = QFileDialog::getSaveFileName(this, INFO_LOADFILE, CURRENT_PATH);
+    if(filename.isEmpty()){
+        return;
+    }
+    //...
+    QStandardItemModel *model;
+    if(engineName == ENGINE::IP){
+        model = m_resultsModel->ip;
+    }
+    if(engineName == ENGINE::BRUTE){
+        model = m_resultsModel->brute;
+    }
+    if(engineName == ENGINE::LEVEL){
+        model = m_resultsModel->level;
+    }
+    if(engineName == ENGINE::OSINT){
+        model = m_resultsModel->osint;
+    }
+    if(engineName == ENGINE::ACTIVE){
+        model = m_resultsModel->active;
+    }
+    if(engineName == ENGINE::RECORDS){
+        model = m_resultsModel->record;
+    }
+    //...
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(file.isOpen())
+    {
+        if(choice == CHOICE::susbdomains){
+            for(int i = 0; i != model->rowCount(); ++i){
+                file.write((model->item(i, 0)->text()+NEWLINE).toUtf8());
+            }
+        }
+        if(choice == CHOICE::ipaddress){
+            for(int i = 0; i != model->rowCount(); ++i){
+                file.write((model->item(i, 1)->text()+NEWLINE).toUtf8());
+            }
+        }
+        if(choice == CHOICE::all){
+            for(int i = 0; i != model->rowCount(); ++i){
+                file.write((model->item(i, 0)->text()+":"+model->item(i, 1)->text()+NEWLINE).toUtf8());
+            }
+        }
+
+        file.close();
+    }
+}
+void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
+    QStandardItemModel *model;
+    if(engineName == ENGINE::IP){
+        model = m_resultsModel->ip;
+    }
+    if(engineName == ENGINE::BRUTE){
+        model = m_resultsModel->brute;
+    }
+    if(engineName == ENGINE::LEVEL){
+        model = m_resultsModel->level;
+    }
+    if(engineName == ENGINE::OSINT){
+        model = m_resultsModel->osint;
+    }
+    if(engineName == ENGINE::ACTIVE){
+        model = m_resultsModel->active;
+    }
+    if(engineName == ENGINE::RECORDS){
+        model = m_resultsModel->record;
+    }
+    ///
+    /// ...
+    ///
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString data = "";
+    if(choice == CHOICE::susbdomains){
+        for(int i = 0; i != model->rowCount(); ++i){
+            data.append(model->item(i, 0)->text()+NEWLINE);
+        }
+    }
+    if(choice == CHOICE::ipaddress){
+        for(int i = 0; i != model->rowCount(); ++i){
+            data.append(model->item(i, 1)->text()+NEWLINE);
+        }
+    }
+    if(choice == CHOICE::all){
+        for(int i = 0; i != model->rowCount(); ++i){
+            data.append(model->item(i, 0)->text()+"|"+model->item(i, 1)->text()+NEWLINE);
+        }
+    }
+    clipboard->setText(data);
+}
+
+//......
+void BaseClass::cursorSave(QItemSelectionModel *selectionModel){
+    QString filename = QFileDialog::getSaveFileName(this, INFO_LOADFILE, CURRENT_PATH);
+    if(filename.isEmpty()){
+        return;
+    }
+    //...
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(file.isOpen())
+    {
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            file.write((index.data().toString()+NEWLINE).toUtf8());
+        }
+        file.close();
+    }
 }
 void BaseClass::cursorCopy(QItemSelectionModel *selectionModel){
-
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString data = "";
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        data.append(index.data().toString());
+        data.append(NEWLINE);
+    }
+    clipboard->setText(data);
 }

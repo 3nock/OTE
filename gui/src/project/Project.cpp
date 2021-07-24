@@ -5,6 +5,8 @@ Project::Project(QWidget *parent, ResultsModel *resultsModel) :QWidget(parent), 
     m_resultsModel(resultsModel)
 {
     ui->setupUi(this);
+    //...
+    ui->treeView->setModel(m_resultsModel->project->model);
 
 }
 Project::~Project(){

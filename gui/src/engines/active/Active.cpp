@@ -1,7 +1,7 @@
 #include "Active.h"
 #include "ui_Active.h"
 
-Active::Active(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Active),
+Active::Active(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Active),
     m_resultsModel(resultsModel),
     //...
     m_scanStatus(new ScanStatus),
@@ -154,6 +154,9 @@ void Active::scanResult(QString subdomain, QString ipAddress){
     m_resultsModel->active->setItem(m_resultsModel->active->rowCount(), 0, new QStandardItem(subdomain));
     m_resultsModel->active->setItem(m_resultsModel->active->rowCount()-1, 1, new QStandardItem(ipAddress));
     ui->label_resultsCount->setNum(m_resultsModel->active->rowCount());
+    // To Project...
+    m_resultsModel->project->subdomains->appendRow(new QStandardItem(subdomain));
+    m_resultsModel->project->ipAddresses->appendRow(new QStandardItem(ipAddress));
 }
 
 void Active::scanThreadEnded(){

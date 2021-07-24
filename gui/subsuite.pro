@@ -26,7 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    src/engines/ip/lib-ip.cpp \
+        src/engines/ip/lib-ip.cpp \
         src\project\Project.cpp \
         src\engines\Base.cpp \
         src\engines\ip\Ip.cpp \

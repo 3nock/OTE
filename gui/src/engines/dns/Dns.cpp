@@ -6,7 +6,7 @@
                             Constructor & Destructor
 *************************************************************************************/
 
-Dns::Dns(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent), ui(new Ui::Dns),
+Dns::Dns(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Dns),
       m_resultsModel(resultsModel),
       //...
       m_scanStatus(new ScanStatus),

@@ -26,13 +26,6 @@ class Save : public BaseClass{
         // sending status and logs to the mainWindow...
         void sendStatus(QString status);
         void sendLog(QString log);
-        // signals to trigger saving of the enumerated results...
-        void getActiveResults();
-        void getBruteResults();
-        void getOsintResults();
-
-    public slots:
-        void onReceiveResults(QString);
 
     private slots:
         void on_pushButton_clearResults_Save_clicked();
