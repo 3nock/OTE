@@ -8,37 +8,63 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
 {
     ui->setupUi(this);
     ///
+    /// for dns records....
+    ///
+    RecordsResults *recordResults = new RecordsResults;
+    recordResults->model_srv = new QStandardItemModel;
+    recordResults->model_records = new QStandardItemModel;
+    recordResults->rootItem = recordResults->model_records->invisibleRootItem();
+    ///
     /// creating the standard item models...
     ///
     resultsModel->ip = new QStandardItemModel;
-    resultsModel->save = new QStandardItemModel;
     resultsModel->brute = new QStandardItemModel;
     resultsModel->level = new QStandardItemModel;
     resultsModel->osint = new QStandardItemModel;
     resultsModel->active = new QStandardItemModel;
-    resultsModel->record = new QStandardItemModel;
-    //...
+    resultsModel->record = recordResults;
+    ///
+    /// for entire project results...
+    ///
     resultsModel->project = new ProjectResult;
     resultsModel->project->model = new QStandardItemModel;
     resultsModel->project->rootItem = resultsModel->project->model->invisibleRootItem();
     //...
-    resultsModel->project->subdomainAndIp = new QStandardItem("subdomain & ip");
     resultsModel->project->subdomains = new QStandardItem("subdomains");
-    resultsModel->project->tlds = new QStandardItem("tld");
-    resultsModel->project->ipAddresses = new QStandardItem("ip-addresses");
+    resultsModel->project->tld = new QStandardItem("tld");
+    resultsModel->project->records = new QStandardItem("records");
+    resultsModel->project->a = new QStandardItem("a");
+    resultsModel->project->aaaa = new QStandardItem("aaaa");
+    resultsModel->project->mx = new QStandardItem("mx");
+    resultsModel->project->cname = new QStandardItem("cname");
+    resultsModel->project->ns = new QStandardItem("ns");
+    resultsModel->project->txt = new QStandardItem("txt");
     resultsModel->project->srv = new QStandardItem("srv");
     //...
-    resultsModel->project->subdomainAndIp->setIcon(QIcon(":/img/res/icons/folder.png"));
-    resultsModel->project->subdomains->setIcon(QIcon(":/img/res/icons/folder.png"));
-    resultsModel->project->tlds->setIcon(QIcon(":/img/res/icons/folder.png"));
-    resultsModel->project->ipAddresses->setIcon(QIcon(":/img/res/icons/folder.png"));
-    resultsModel->project->srv->setIcon(QIcon(":/img/res/icons/folder.png"));
+    resultsModel->project->subdomains->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    resultsModel->project->tld->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    resultsModel->project->records->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    resultsModel->project->a->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    resultsModel->project->aaaa->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    resultsModel->project->mx->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    resultsModel->project->ns->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    resultsModel->project->cname->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    resultsModel->project->txt->setIcon(QIcon(":/img/res/icons/folder2.png"));;
+    resultsModel->project->srv->setIcon(QIcon(":/img/res/icons/folder2.png"));
     //...
-    resultsModel->project->rootItem->appendRow(resultsModel->project->subdomainAndIp);
+    resultsModel->project->model->setColumnCount(2);
     resultsModel->project->rootItem->appendRow(resultsModel->project->subdomains);
-    resultsModel->project->rootItem->appendRow(resultsModel->project->tlds);
-    resultsModel->project->rootItem->appendRow(resultsModel->project->ipAddresses);
-    resultsModel->project->rootItem->appendRow(resultsModel->project->srv);
+    resultsModel->project->rootItem->appendRow(resultsModel->project->tld);
+    resultsModel->project->rootItem->appendRow(resultsModel->project->records);
+    //...
+    resultsModel->project->records->appendRow(resultsModel->project->a);
+    resultsModel->project->records->appendRow(resultsModel->project->aaaa);
+    resultsModel->project->records->appendRow(resultsModel->project->ns);
+    resultsModel->project->records->appendRow(resultsModel->project->mx);
+    resultsModel->project->records->appendRow(resultsModel->project->cname);
+    resultsModel->project->records->appendRow(resultsModel->project->txt);
+    resultsModel->project->records->appendRow(resultsModel->project->srv);
+
     ///
     /// creating and initiating the classes for the modules...
     ///
@@ -48,7 +74,6 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     Brute *brute = new Brute(this, resultsModel);
     Dns *records = new Dns(this, resultsModel);
     Ip *ip = new Ip(this, resultsModel);
-    Save *save = new Save(this, resultsModel);
     Osint *osint = new Osint(this, resultsModel);
 
     // BRUTE::Sending results...
@@ -185,7 +210,6 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->tabWidget_mainTab->insertTab(3, records, "Record");
     ui->tabWidget_mainTab->insertTab(4, ip, "Ip");
     ui->tabWidget_mainTab->insertTab(5, level, "Level");
-    ui->tabWidget_mainTab->insertTab(6, save, "Save");
     ui->tabWidget_mainTab->insertTab(7, project, "Project");
     //...
     ui->tabWidget_mainTab->setCurrentIndex(0);

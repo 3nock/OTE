@@ -27,21 +27,10 @@ class Active : public BaseClass{
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
         active::ScanArguments *m_scanArguments;
-        //...
-        int m_activeThreads = 0;
-
-    signals:
-        void stop();
-
-    public slots:
-        void a_receiveTargets(ENGINE engineName);
-        void c_receiveTargets(QItemSelectionModel *selectionModel);
 
     public slots:
         void scanResult(QString subdomain, QString ipAddress);
         void scanThreadEnded();
-        //...
-        void logs(QString log);
 
     private slots:
         void on_pushButton_start_clicked();

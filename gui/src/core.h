@@ -4,6 +4,7 @@
 /***************************************************
                     HEADERS
 ****************************************************/
+#include <QLineEdit>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QListWidgetItem>
@@ -73,20 +74,35 @@
                     ENUMERATORS
 ****************************************************/
 enum ENGINE{
-    OSINT = 1,
-    SUBBRUTE = 2,
-    TLDBRUTE = 3,
-    ACTIVE = 4,
-    RECORDS = 5,
-    BRUTE = 6,
-    IP = 7,
-    LEVEL = 8
+    // brute...
+    BRUTE = 0,
+    SUBBRUTE = 1,
+    TLDBRUTE = 2,
+    // records...
+    RECORDS = 3,
+    DNSRECORDS = 4,
+    SRVRECORDS = 5,
+    // ...
+    ACTIVE = 6,
+    OSINT = 7,
+    IP = 8,
+    LEVEL = 9
 };
 
 enum CHOICE{
     susbdomains = 0,
     ipaddress = 1,
-    all = 2
+    all = 2,
+    //...
+    srvName = 3,
+    srvTarget = 4,
+    //...
+    CNAME = 5,
+    TXT = 6,
+    NS = 7,
+    MX = 8,
+    A = 9,
+    AAAA = 10
 };
 
 /***************************************************
@@ -95,23 +111,37 @@ enum CHOICE{
 struct ProjectResult{
     QStandardItemModel *model = nullptr;
     QStandardItem *rootItem = nullptr;
-    QStandardItem *subdomainAndIp = nullptr;
     QStandardItem *subdomains = nullptr;
-    QStandardItem *tlds = nullptr;
-    QStandardItem *ipAddresses = nullptr;
+    QStandardItem *tld = nullptr;
+    //...
+    QStandardItem *records = nullptr;
     QStandardItem *srv = nullptr;
+    QStandardItem *a = nullptr;
+    QStandardItem *aaaa = nullptr;
+    QStandardItem *mx = nullptr;
+    QStandardItem *txt = nullptr;
+    QStandardItem *cname = nullptr;
+    QStandardItem *ns = nullptr;
 };
 typedef struct ProjectResult ProjectResult;
+
+struct RecordsResults{
+    QStandardItemModel *model_srv = nullptr;
+    QStandardItemModel *model_records = nullptr;
+    QStandardItem *rootItem = nullptr;
+    int resultsCount = NULL;
+};
+typedef struct RecordsResults RecordsResults;
 
 struct ResultsModel{
     QStandardItemModel *ip = nullptr;
     QStandardItemModel *osint = nullptr;
     QStandardItemModel *brute = nullptr;
     QStandardItemModel *active = nullptr;
-    QStandardItemModel *record = nullptr;
     QStandardItemModel *level = nullptr;
-    QStandardItemModel *save = nullptr;
+    QStandardItemModel *records = nullptr;
     //...
+    RecordsResults *record = nullptr;
     ProjectResult *project = nullptr;
 };
 typedef struct ResultsModel ResultsModel;

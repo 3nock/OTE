@@ -10,7 +10,16 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, re
     scanResults(new osint::ScanResults)
 {
     ui->setupUi(this);
-    //...
+    ///
+    /// setting up targets widgets to the base class...
+    ///
+    widgets->listWidget_targets = ui->listWidget_targets;
+    widgets->label_targetsCount = ui->label_targetsCount;
+    widgets->lineEdit_targetInput = ui->lineEdit_multipleTargets;
+    widgets->listWidget_logs = ui->listWidget_logs;
+    ///
+    /// other initializations...
+    ///
     currentPath = QDir::currentPath();
     ui->lineEdit_domain->setPlaceholderText("eg. example.com");
     ui->lineEdit_newProfile->setPlaceholderText("Enter New Profile's Name...");
@@ -72,7 +81,7 @@ void Osint::on_pushButton_start_clicked(){
         //...
         connect(enumerator, SIGNAL(scanLogs(QString)), this, SLOT(logs(QString)));
         connect(enumerator, SIGNAL(enumerationComplete()), this, SLOT(onEnumerationComplete()));
-        connect(this, SIGNAL(stopEnumeration()), enumerator, SLOT(onStopEnumeration()));
+        connect(this, SIGNAL(stopScan()), enumerator, SLOT(onStopEnumeration()));
         connect(cThread, SIGNAL(finished()), enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
         //...
@@ -87,7 +96,7 @@ void Osint::on_lineEdit_domain_returnPressed(){
 
 /****************************************** stop ****************************************/
 void Osint::on_pushButton_stop_clicked(){
-    emit stopEnumeration();
+    emit stopScan();
     sendStatus("[*] Stopping...");
 }
 
@@ -134,46 +143,23 @@ void Osint::on_toolButton_config_clicked(){
                             Multiple Targets
 *****************************************************************************************/
 void Osint::on_pushButton_removeTargets_clicked(){
-    int selectionCount = ui->listWidget_targets->selectedItems().count();
-    if(selectionCount){
-        qDeleteAll(ui->listWidget_targets->selectedItems());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+    removeTargets();
 }
 
 void Osint::on_pushButton_clearTargets_clicked(){
-    ui->listWidget_targets->clear();
-    ui->label_targetsCount->clear();
+    clearTargets();
 }
 
 void Osint::on_pushButton_loadTargets_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(filename.isEmpty()){
-        return;
-    }
-    QFile file(filename);
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        QTextStream in(&file);
-        while (!in.atEnd()){
-            ui->listWidget_targets->addItem(in.readLine());
-        }
-        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-        file.close();
-    }else{
-        QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
-    }
+    loadTargetsFromFile();
 }
 
 void Osint::on_pushButton_addTargets_clicked(){
-    if(ui->lineEdit_multipleTargets->text() != EMPTY){
-        ui->listWidget_targets->addItem(ui->lineEdit_multipleTargets->text());
-        ui->lineEdit_multipleTargets->clear();
-        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-    }
+    addTargets();
 }
 
 void Osint::on_lineEdit_multipleTargets_returnPressed(){
- on_pushButton_addTargets_clicked();
+    addTargets();
 }
 
 /******************************************************************
@@ -827,20 +813,6 @@ void Osint::on_tableView_results_customContextMenuRequested(const QPoint &pos){
     contextMenu_rightClick(ui->tableView_results->selectionModel());
 }
 
-/*********************************** logs ***************************************/
-void Osint::logs(QString log){
-    sendLog(log);
-    ui->listWidget_logs->addItem(log);
-    if(log.startsWith("[Error]") || log.startsWith("[Exception]")){
-        ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setForeground(Qt::red);
-        return;
-    }
-    if(log.startsWith("[START]") || log.startsWith("[END]")){
-        ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setFont(QFont("MS Shell Dlg 2", 8, QFont::Bold));
-        return;
-    }
-}
-
 void Osint::on_comboBox_target_currentIndexChanged(int index){
     if(index){
         ui->frame_targets->show();
@@ -848,42 +820,4 @@ void Osint::on_comboBox_target_currentIndexChanged(int index){
     else{
         ui->frame_targets->hide();
     }
-}
-
-/****************************** CONTEXT MENU ************************************/
-void Osint::a_receiveTargets(ENGINE engineName){
-    QStandardItemModel *model;
-    //...
-    if(engineName == ENGINE::BRUTE){
-        model = m_resultsModel->brute;
-    }
-    if(engineName == ENGINE::ACTIVE){
-        model = m_resultsModel->active;
-    }
-    if(engineName == ENGINE::RECORDS){
-        model = m_resultsModel->record;
-    }
-    if(engineName == ENGINE::IP){
-        model = m_resultsModel->ip;
-    }
-    if(engineName == ENGINE::LEVEL){
-        model = m_resultsModel->level;
-    }
-    //...
-    for(char i = 0; i < model->rowCount(); i++){
-        ui->listWidget_targets->addItem(model->item(i, 0)->text());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-    //...
-    ui->comboBox_target->setCurrentIndex(1);
-}
-
-void Osint::c_receiveTargets(QItemSelectionModel *selectionModel){
-    // iterate and open each selected and append on the target's listwidget...
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        ui->listWidget_targets->addItem(index.data().toString());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-    //...
-    ui->comboBox_target->setCurrentIndex(1);
 }

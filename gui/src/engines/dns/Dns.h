@@ -26,28 +26,13 @@ class Dns : public BaseClass{
         ScanConfig *m_scanConfig;
         record::ScanArguments* m_scanArguments;
         record::ScanResults* m_scanResults;
-        //...
-        QStandardItemModel* m_model_results;
-        QStandardItemModel* m_model_srvResults;
-        QStandardItem* m_rootItem;
-        //...
-        int m_activeThreads = 0;
 
     public:
         explicit Dns(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Dns();
 
-    signals:
-        void stop();
-
-    public slots:
-        void a_receiveTargets(ENGINE engineName);
-        void c_receiveTargets(QItemSelectionModel *selectionModel);
-
     public slots:
         void scanThreadEnded();
-        //...
-        void logs(QString log);
 
     private slots:
         void on_pushButton_action_clicked();

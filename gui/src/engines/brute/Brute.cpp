@@ -3,6 +3,12 @@
 
 /*
 
+  name BruteEnumerator to BruteScanner
+
+*/
+
+/*
+
   add an advanced option that resolves an item on wordlist with all nameservers..
   first obtains the server from the domain name, then uses those nameservers as default nameservers
   for the scan...
@@ -39,8 +45,17 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, re
       m_scanArguments(new brute::ScanArguments)
 {
     ui->setupUi(this);
-    //...
-    ui->lineEdit_target->setPlaceholderText("Enter Target eg. example.com");
+    ///
+    /// setting up targets widgets to the base class...
+    ///
+    widgets->listWidget_targets = ui->listWidget_targets;
+    widgets->label_targetsCount = ui->label_targetsCount;
+    widgets->lineEdit_targetInput = ui->lineEdit_multipleTargets;
+    widgets->listWidget_logs = ui->listWidget_logs;
+    ///
+    /// other initializations...
+    ///
+    ui->lineEdit_target->setPlaceholderText("eg. example.com");
     ui->lineEdit_wordlist->setPlaceholderText("Enter a new Wordlist...");
     ui->lineEdit_multipleTargets->setPlaceholderText("Enter a new Target...");
     //...
@@ -183,12 +198,12 @@ void Brute::on_pushButton_pause_clicked(){
     else
     {
         m_scanStatus->isPaused = true;
-        emit stop();
+        emit stopScan();
     }
 }
 
 void Brute::on_pushButton_stop_clicked(){
-    emit stop();
+    emit stopScan();
     if(m_scanStatus->isPaused)
     {
         m_scanArguments->targetList.clear();
@@ -220,7 +235,7 @@ void Brute::startScan(){
     {
         threadsCount = wordlistCount;
     }
-    m_activeThreads = threadsCount;
+    activeThreads = threadsCount;
     ///
     /// loop to create threads for scan...
     ///
@@ -237,7 +252,7 @@ void Brute::startScan(){
         connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stop()), Enumerator, SLOT(onStop()));
+        connect(this, SIGNAL(stopScan()), Enumerator, SLOT(onStop()));
         //...
         cThread->start();
     }
@@ -250,22 +265,23 @@ void Brute::scanResult(QString subdomain, QString ipAddress){
     m_resultsModel->brute->setItem(m_resultsModel->brute->rowCount()-1, 1, new QStandardItem(ipAddress));
     ui->label_resultsCount->setNum(m_resultsModel->brute->rowCount());
     // To Project...
+    QStandardItem *Subdomain = new QStandardItem(subdomain);
+    QStandardItem *IpAddress = new QStandardItem(ipAddress);
     if(m_scanArguments->tldBrute){
-        m_resultsModel->project->tlds->appendRow(new QStandardItem(subdomain));
+        m_resultsModel->project->tld->appendRow(QList<QStandardItem *>() << Subdomain << IpAddress);
     }
     if(m_scanArguments->subBrute){
-        m_resultsModel->project->subdomains->appendRow(new QStandardItem(subdomain));
+        m_resultsModel->project->subdomains->appendRow(QList<QStandardItem *>() << Subdomain << IpAddress);
     }
-    m_resultsModel->project->ipAddresses->appendRow(new QStandardItem(ipAddress));
 }
 
 /********************************* Enumeration thread ended ********************************/
 void Brute::scanThreadEnded(){
-    m_activeThreads--;
+    activeThreads--;
     ///
     /// if all Scan Threads have finished...
     ///
-    if(m_activeThreads == 0)
+    if(activeThreads == 0)
     {
         if(m_scanStatus->isPaused)
         {
@@ -352,46 +368,23 @@ void Brute::on_pushButton_clearResults_clicked(){
                             Multiple Targets
 *****************************************************************************************/
 void Brute::on_pushButton_removeTargets_clicked(){
-    int selectionCount = ui->listWidget_targets->selectedItems().count();
-    if(selectionCount){
-        qDeleteAll(ui->listWidget_targets->selectedItems());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
+    removeTargets();
 }
 
 void Brute::on_pushButton_clearTargets_clicked(){
-    ui->listWidget_targets->clear();
-    ui->label_targetsCount->clear();
+    clearTargets();
 }
 
 void Brute::on_pushButton_loadTargets_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(filename.isEmpty()){
-        return;
-    }
-    QFile file(filename);
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        QTextStream in(&file);
-        while (!in.atEnd()){
-            ui->listWidget_targets->addItem(in.readLine());
-        }
-        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-        file.close();
-    }else{
-        QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
-    }
+    loadTargetsFromFile();
 }
 
 void Brute::on_pushButton_addTargets_clicked(){
-    if(ui->lineEdit_multipleTargets->text() != EMPTY){
-        ui->listWidget_targets->addItem(ui->lineEdit_multipleTargets->text());
-        ui->lineEdit_multipleTargets->clear();
-        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-    }
+    addTargets();
 }
 
 void Brute::on_lineEdit_multipleTargets_returnPressed(){
- on_pushButton_addTargets_clicked();
+    addTargets();
 }
 
 /******************************************************************************************
@@ -431,43 +424,6 @@ void Brute::choosenWordlist(QString wordlistFilename){
         file.close();
     }
     ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
-}
-
-void Brute::a_receiveTargets(ENGINE engineName){
-    QStandardItemModel *model;
-    //...
-    if(engineName == ENGINE::BRUTE){
-        model = m_resultsModel->brute;
-    }
-    if(engineName == ENGINE::ACTIVE){
-        model = m_resultsModel->active;
-    }
-    if(engineName == ENGINE::RECORDS){
-        model = m_resultsModel->record;
-    }
-    if(engineName == ENGINE::IP){
-        model = m_resultsModel->ip;
-    }
-    if(engineName == ENGINE::LEVEL){
-        model = m_resultsModel->level;
-    }
-    //...
-    for(char i = 0; i < model->rowCount(); i++){
-        ui->listWidget_targets->addItem(model->item(i, 0)->text());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-    // changing to multi-target...
-    ui->comboBox_target->setCurrentIndex(1);
-}
-
-void Brute::c_receiveTargets(QItemSelectionModel *selectionModel){
-    // iterate and open each selected and append on the target's listwidget...
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        ui->listWidget_targets->addItem(index.data().toString());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-    // changing to multi-target...
-    ui->comboBox_target->setCurrentIndex(1);
 }
 
 /************************************ Loading Wordlist ***********************************/
@@ -515,21 +471,6 @@ void Brute::on_pushButton_removeWordlist_clicked(){
     }
     ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
 }
-
-/****************************** Save And Display logs *********************************/
-void Brute::logs(QString log){
-    sendLog(log);
-    ui->listWidget_logs->addItem(log);
-    if (log.startsWith("[ERROR]")){
-        ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setForeground(Qt::red);
-        return;
-    }
-    if(log.startsWith("[START]") || log.startsWith("[END]")){
-        ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setFont(QFont("MS Shell Dlg 2", 8, QFont::Bold));
-        return;
-    }
-}
-
 
 /***************************************************************************************
                                     Context Menus

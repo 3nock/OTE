@@ -1,3 +1,53 @@
+QScrollBar:vertical {
+        border-style: solid black;
+        border-width: 1px;
+        background-color: transparent;
+        width: 12px;
+}
+
+QScrollBar:horizontal {
+        border-style: solid black;
+        border-width: 1px;
+        background-color: transparent;
+        height: 12px;
+}
+
+QScrollBar::handle:vertical {
+        min-height: 17px;
+        background-color: rgb(81,81,81);
+}
+
+QScrollBar:handle:horizontal {
+        min-width: 17px;
+        background-color: rgb(81,81,81);
+}
+
+QScrollBar::handle:vertical:hover {
+        background-color: rgb(95,95,95);
+}
+
+QScrollBar:handle:horizontal:hover {
+        background-color: rgb(100,100,100);
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: transparent;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+    width: 0px;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    height: 0px;
+    width: 0px;
+}
+
 QStatusBar {
     border-style: outset;
     border-width: 1px;
@@ -78,6 +128,12 @@ QComboBox QWidget {
         selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(70, 81, 93));
 }
 
+QComboBox::drop-down {
+    border-left-width: 1px;
+    border-left-color: rgb(40,40,40);
+    border-left-style: solid;
+}
+
 /********** Line *************/
 QFrame[frameShape="4"] {
     border: none;
@@ -91,7 +147,7 @@ QFrame[frameShape="5"] {
 
 /********* QFrames **********/
 QFrame#frame, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers {
-        background-color:rgb(68, 68, 68);
+        background-color:rgb(67, 67, 67);
 }
 
 /******** QLabels ***********/
@@ -102,7 +158,7 @@ QLabel#label_resultsCount, QLabel#label_targetsCount, QLabel#label_wordlistCount
 QScrollArea {
     border-style: outset;
     border-style: solid;
-    border-color: rgb(50,50,50);
+    border-color: rgb(40,40,40);
     border-width: 1px;
 }
 
@@ -111,11 +167,11 @@ QAbstractScrollArea {
 }
 
 QScrollArea QWidget {
-        background-color:rgb(68, 68, 68);
+        background-color:rgb(66, 66, 66);
 }
 
 QMainWindow {
-        background-color:rgb(82,82,82);
+        background-color:rgb(80,80,80);
 }
 
 QDialog {
@@ -124,28 +180,6 @@ QDialog {
 
 QLabel {
         color:rgb(0,0,0);
-}
-
-QScrollBar:vertical {
-        border-style: solid;
-        border-color: black;
-        background-color:rgb(65, 65, 65);
-        width: 15px;
-}
-
-QScrollBar:horizontal {
-        border-style: solid;
-        border-color: black;
-        background-color:rgb(65, 65, 65);
-        height: 15px;
-}
-
-QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
-    background: rgb(80,80,80);
-}
-
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-    background: rgb(80,80,80);
 }
 
 QSplitter::handle:horizontal {
@@ -158,7 +192,7 @@ QSplitter::handle:vertical{
         height: 5px
 }
 
-QListWidget, QTreeView, QTableView{
+QListWidget, QTreeView, QTableView, QColumnView{
         selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(40, 51, 63));
         background-color:rgb(50, 50, 50);
         color: rgb(230,230,230);
@@ -167,11 +201,13 @@ QListWidget, QTreeView, QTableView{
         border-width: 1px;
 }
 
-QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected{
+/*
+QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected{
         background-color: rgb(50, 61, 73);
 }
+*/
 
-QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover {
+QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QColumnView::item:hover, QColumnView::item:hover {
         background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(60, 71, 83));
 }
 
@@ -264,7 +300,7 @@ QProgressBar::chunk {
 }
 
 QMenuBar {
-        background: rgb(82, 82, 82);
+        background: rgb(80, 80, 80);
 }
 
 QMenu {
@@ -275,7 +311,7 @@ QMenu {
 }
 
 QMenuBar::item {
-        color:rgb(210,210,210);
+        color:rgb(250,250,250);
         spacing: 3px;
         padding: 1px 4px;
         background: transparent;

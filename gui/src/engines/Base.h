@@ -1,23 +1,55 @@
 #ifndef BASECLASS_H
 #define BASECLASS_H
 
+/*******************************************
+                INCLUDES
+********************************************/
 #include "src/core.h"
 
+/*******************************************
+                STRUCTURES
+********************************************/
+struct Widgets{
+    // targets widgets...
+    QListWidget *listWidget_targets = nullptr;
+    QLabel *label_targetsCount = nullptr;
+    QLineEdit *lineEdit_targetInput = nullptr;
+    // logs widgets...
+    QListWidget *listWidget_logs = nullptr;
+};
+typedef Widgets Widgets;
+
+/*******************************************
+                 CLASS
+********************************************/
 class BaseClass : public QWidget {
         Q_OBJECT
 
     private:
         ResultsModel *m_resultsModel;
-        // void setupContextMenu_actionButton();
-        // void setupContextMEnu_rightClick();
+        QSet<QString> m_targetSet;
+
+    public:
+        Widgets *widgets;
+        int activeThreads = 0;
 
     public:
         explicit BaseClass(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         //...
         void contextMenu_actionButton(ENGINE engineName, QPoint &pos);
         void contextMenu_rightClick(QItemSelectionModel* selectionModel);
+        //...
+        void logs(QString log);
+        //...
+        void addTargets();
+        void clearTargets();
+        void removeTargets();
+        void loadTargetsFromFile();
 
     signals:
+        void stopScan();
+        void pauseScan();
+        //...
         void sendLog(QString log);
         void sendStatus(QString status);
         //...
@@ -27,7 +59,6 @@ class BaseClass : public QWidget {
         void a_sendToRecord(ENGINE engineName);
         void a_sendToIp(ENGINE engineName);
         void a_sendToLevel(ENGINE engineName);
-        void a_sendToSave(ENGINE engineName);
         void a_sendToProject(ENGINE engineName);
         //...
         void c_sendToOsint(QItemSelectionModel* selectionModel);
@@ -36,7 +67,6 @@ class BaseClass : public QWidget {
         void c_sendToRecord(QItemSelectionModel* selectionModel);
         void c_sendToIp(QItemSelectionModel* selectionModel);
         void c_sendToLevel(QItemSelectionModel* selectionModel);
-        void c_sendToSave(QItemSelectionModel* selectionModel);
         void c_sendToProject(QItemSelectionModel* selectionModel);
         //...
         void changeTabToOsint();
@@ -46,14 +76,16 @@ class BaseClass : public QWidget {
         void changeTabToRecords();
         void changeTabToLevel();
         void changeTabToProject();
-        void changeTabToSave();
+
+    public slots:
+        void a_receiveTargets(ENGINE engineName);
+        void c_receiveTargets(QItemSelectionModel *selectionModel);
 
     private slots:
         void actionSendToOsint(ENGINE engineName);
         void actionSendToActive(ENGINE engineName);
         void actionSendToBrute(ENGINE engineName);
         void actionSendToLevel(ENGINE engineName);
-        void actionSendToSave(ENGINE engineName);
         void actionSendToRecords(ENGINE engineName);
         void actionSendToIp(ENGINE engineName);
         //...
@@ -63,7 +95,6 @@ class BaseClass : public QWidget {
         void cursorOpenInBrowser(QItemSelectionModel *selectionModel);
         void cursorSendToOsint(QItemSelectionModel *selectionModel);
         void cursorSendToActive(QItemSelectionModel *selectionModel);
-        void cursorSendToSave(QItemSelectionModel *selectionModel);
         void cursorSendToRecords(QItemSelectionModel *selectionModel);
         void cursorSendToIp(QItemSelectionModel *selectionModel);
         void cursorSendToBrute(QItemSelectionModel *selectionModel);

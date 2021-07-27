@@ -24,25 +24,14 @@ class Ip : public BaseClass{
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
         ip::ScanArguments *m_scanArguments;
-        //...
-        int m_activeThreads = 0;
 
     public:
         explicit Ip(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Ip();
 
-    signals:
-        void stop();
-
-    public slots:
-        void a_receiveTargets(ENGINE engineName);
-        void c_receiveTargets(QItemSelectionModel *selectionModel);
-
     public slots:
         void scanResult(QString subdomain, QString ipAddress);
         void scanThreadEnded();
-        //...
-        void logs(QString log);
 
     private slots:
         void on_pushButton_start_clicked();
@@ -59,8 +48,6 @@ class Ip : public BaseClass{
         void on_pushButton_addTargets_clicked();
         void on_lineEdit_targets_returnPressed();
         //...
-        void on_radioButton_hostname_clicked();
-        void on_radioButton_ip_clicked();
         void on_comboBox_option_currentIndexChanged(int index);
         void on_tableView_results_customContextMenuRequested(const QPoint &pos);
 };

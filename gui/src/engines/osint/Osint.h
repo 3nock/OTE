@@ -19,10 +19,6 @@ class Osint : public BaseClass{
     private:
         Ui::Osint *ui;
 
-    public slots:
-        void a_receiveTargets(ENGINE engineName);
-        void c_receiveTargets(QItemSelectionModel *selectionModel);
-
     private:
         void getUserOptions(QStringList *choosenOptions);
         void setupOsintProfiles();
@@ -64,12 +60,6 @@ class Osint : public BaseClass{
         //...
         void onEnumerationComplete();
         void on_comboBox_target_currentIndexChanged(int index);
-
-    public slots:
-        void logs(QString log);
-
-    signals:
-        void stopEnumeration();
 };
 
 #endif // OSINT_H

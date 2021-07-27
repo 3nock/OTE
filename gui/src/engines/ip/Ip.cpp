@@ -9,7 +9,16 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsM
     m_scanArguments(new ip::ScanArguments)
 {
     ui->setupUi(this);
-    //...
+    ///
+    /// setting up targets widgets to the base class...
+    ///
+    widgets->listWidget_targets = ui->listWidget_targets;
+    widgets->label_targetsCount = ui->label_targetsCount;
+    widgets->lineEdit_targetInput = ui->lineEdit_targets;
+    widgets->listWidget_logs = ui->listWidget_logs;
+    ///
+    /// other initializations...
+    ///
     ui->lineEdit_targets->setPlaceholderText(("Enter a new target..."));
     ui->progressBar->hide();
     //...
@@ -90,12 +99,12 @@ void Ip::on_pushButton_pause_clicked(){
     else
     {
         m_scanStatus->isPaused = true;
-        emit stop();
+        emit stopScan();
     }
 }
 
 void Ip::on_pushButton_stop_clicked(){
-    emit stop();
+    emit stopScan();
     m_scanStatus->isStopped = true;
 }
 
@@ -111,7 +120,7 @@ void Ip::startScan(){
     {
         threadsCount = wordlistCount;
     }
-    m_activeThreads = threadsCount;
+    activeThreads = threadsCount;
     ///
     /// loop to create threads for enumeration...
     ///
@@ -128,7 +137,7 @@ void Ip::startScan(){
         connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
         connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stop()), Enumerator, SLOT(onStop()));
+        connect(this, SIGNAL(stopScan()), Enumerator, SLOT(onStop()));
         //...
         cThread->start();
     }
@@ -136,11 +145,11 @@ void Ip::startScan(){
 }
 
 void Ip::scanThreadEnded(){
-    m_activeThreads--;
+    activeThreads--;
     ///
     /// if all Scan Threads have finished...
     ///
-    if(m_activeThreads == 0)
+    if(activeThreads == 0)
     {
         if(m_scanStatus->isPaused)
         {
@@ -184,51 +193,28 @@ void Ip::on_toolButton_config_clicked(){
     scanConfig->show();
 }
 
+/**************************** Targets For Scan ***********************************/
 void Ip::on_pushButton_loadTargets_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(!filename.isEmpty()){
-        QFile file(filename);
-        if(file.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            QTextStream in(&file);
-            while (!in.atEnd()){
-                ui->listWidget_targets->addItem(in.readLine());
-            }
-            ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-            file.close();
-        }
-        else
-        {
-            QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
-        }
-    }
+    loadTargetsFromFile();
 }
 
 void Ip::on_pushButton_addTargets_clicked(){
-    if(ui->lineEdit_targets->text() != EMPTY)
-    {
-        ui->listWidget_targets->addItem(ui->lineEdit_targets->text());
-        ui->lineEdit_targets->clear();
-        ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-    }
+    addTargets();
 }
 
 void Ip::on_lineEdit_targets_returnPressed(){
-    on_pushButton_addTargets_clicked();
+    addTargets();
 }
 
 void Ip::on_pushButton_clearTargets_clicked(){
-    ui->listWidget_targets->clear();
-    ui->label_targetsCount->clear();
+    clearTargets();
 }
 
 void Ip::on_pushButton_removeTargets_clicked(){
-    if(ui->listWidget_targets->selectedItems().count()){
-        qDeleteAll(ui->listWidget_targets->selectedItems());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->selectedItems().count());
+    removeTargets();
 }
 
+/****************************** results ******************************/
 void Ip::on_pushButton_clearResults_clicked(){
     ///
     /// if the current tab is subdomains clear subdomains...
@@ -250,61 +236,6 @@ void Ip::on_pushButton_clearResults_clicked(){
     {
         ui->listWidget_logs->clear();
     }
-}
-
-void Ip::logs(QString log){
-    sendLog(log);
-    ui->listWidget_logs->addItem(log);
-    if(log.startsWith("[ERROR]"))
-    {
-        ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setForeground(Qt::red);
-        return;
-    }
-    if(log.startsWith("[START]") || log.startsWith("[END]"))
-    {
-        ui->listWidget_logs->item(ui->listWidget_logs->count()-1)->setFont(QFont("MS Shell Dlg 2", 8, QFont::Bold));
-        return;
-    }
-}
-
-void Ip::a_receiveTargets(ENGINE engineName){
-    QStandardItemModel *model;
-    //...
-    if(engineName == ENGINE::BRUTE){
-        model = m_resultsModel->brute;
-    }
-    if(engineName == ENGINE::ACTIVE){
-        model = m_resultsModel->active;
-    }
-    if(engineName == ENGINE::RECORDS){
-        model = m_resultsModel->record;
-    }
-    if(engineName == ENGINE::IP){
-        model = m_resultsModel->ip;
-    }
-    if(engineName == ENGINE::LEVEL){
-        model = m_resultsModel->level;
-    }
-    //...
-    for(char i = 0; i < model->rowCount(); i++){
-        ui->listWidget_targets->addItem(model->item(i, 1)->text());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-}
-
-void Ip::c_receiveTargets(QItemSelectionModel *selectionModel){
-    // iterate and open each selected and append on the target's listwidget...
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        ui->listWidget_targets->addItem(index.data().toString());
-    }
-    ui->label_targetsCount->setNum(ui->listWidget_targets->count());
-}
-
-void Ip::on_radioButton_hostname_clicked(){
-
-}
-void Ip::on_radioButton_ip_clicked(){
-
 }
 
 void Ip::on_comboBox_option_currentIndexChanged(int index){

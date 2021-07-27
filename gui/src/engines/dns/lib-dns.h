@@ -7,7 +7,7 @@
                    enums
 ***************************************************/
 enum OPTION{
-    DNSRECORDS = 0,
+    ALLRECORDS = 0,
     SRV = 1
 };
 
@@ -34,8 +34,7 @@ namespace record{
     typedef struct ScanArguments ScanArguments;
 
     struct ScanResults{
-        QStandardItemModel* m_model_srv;
-        QStandardItem* rootItem;
+        ResultsModel *resultsModel;
         //..
         QLabel *resultsCountLabel;
         QLabel *srvResultsLabel;

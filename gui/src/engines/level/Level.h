@@ -25,26 +25,16 @@ class Level : public BaseClass{
         ScanConfig *m_scanConfig;
         level::ScanArguments *m_scanArguments;
         //...
-        int m_activeThreads = 0;
-        //...
         int lastScanResultsCount = 0;
 
     public:
         explicit Level(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Level();
 
-    signals:
-        void stop();
-
-    public slots:
-        void a_receiveTargets(ENGINE engineName);
-        void c_receiveTargets(QItemSelectionModel *selectionModel);
-
     public slots:
         void scanThreadEnd();
         void scanResult(QString subdomain, QString ipAddress);
         //...
-        void logs(QString log);
         void choosenWordlist(QString wordlistFilename);
 
     private slots:

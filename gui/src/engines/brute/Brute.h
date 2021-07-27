@@ -23,28 +23,16 @@ class Brute : public BaseClass{
         ScanStatus *m_scanStatus;
         ScanConfig *m_scanConfig;
         brute::ScanArguments *m_scanArguments;
-        //...
-        int m_activeThreads = 0;
 
     public:
         explicit Brute(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Brute();
 
     public slots:
-        void a_receiveTargets(ENGINE engineName);
-        void c_receiveTargets(QItemSelectionModel *selectionModel);
-
-    public slots:
         void scanResult(QString subdomain, QString ipAddress);
         void scanThreadEnded();
         //...
-        void logs(QString log);
-        //...
         void choosenWordlist(QString);
-
-    signals:
-        void stop();
-        void pause();
 
     private slots:
         void on_pushButton_start_clicked();

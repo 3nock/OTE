@@ -162,12 +162,12 @@ void DnsRecordsEnumerator::srvLookupFinished(){
         {
             for(const QDnsServiceRecord &record : records)
             {
-                m_scanResults->m_model_srv->setItem(m_scanResults->m_model_srv->rowCount(), 0, new QStandardItem(record.name()));
-                m_scanResults->m_model_srv->setItem(m_scanResults->m_model_srv->rowCount()-1, 1, new QStandardItem(record.target()));
-                m_scanResults->m_model_srv->setItem(m_scanResults->m_model_srv->rowCount()-1, 2, new QStandardItem(QString::number(record.port())));
+                m_scanResults->resultsModel->record->model_srv->appendRow({new QStandardItem(record.name()), new QStandardItem(record.target()), new QStandardItem(QString::number(record.port()))});
+                // for project...
+                m_scanResults->resultsModel->project->srv->appendRow({new QStandardItem(record.name()), new QStandardItem(record.target())});
             }
             //...
-            m_scanResults->srvResultsLabel->setNum(m_scanResults->m_model_srv->rowCount());
+            m_scanResults->srvResultsLabel->setNum(m_scanResults->resultsModel->record->model_srv->rowCount());
         }
     }
     ///
@@ -187,17 +187,19 @@ void DnsRecordsEnumerator::aLookupFinished(){
             m_firstToResolve = false;
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
-            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder.png"));
-            m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
+            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
         }
         const auto records = m_dns_a->hostAddressRecords();
         if(records.count())
         {
             m_recordItem = new QStandardItem("A");
-            m_recordItem->setIcon(QIcon(":/img/res/icons/settings.png"));
+            m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsHostAddressRecord &record : records){
                 m_recordItem->appendRow(new QStandardItem(record.value().toString()));
+                // for project...
+                m_scanResults->resultsModel->project->a->appendRow(new QStandardItem(record.value().toString()));
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -223,17 +225,19 @@ void DnsRecordsEnumerator::aaaaLookupFinished(){
             m_firstToResolve = false;
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
-            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder.png"));
-            m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
+            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
         }
         const auto records = m_dns_aaaa->hostAddressRecords();
         if(records.count())
         {
             m_recordItem = new QStandardItem("AAAA");
-            m_recordItem->setIcon(QIcon(":/img/res/icons/settings.png"));
+            m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsHostAddressRecord &record : records) {
                 m_recordItem->appendRow(new QStandardItem(record.value().toString()));
+                // for project...
+                m_scanResults->resultsModel->project->aaaa->appendRow(new QStandardItem(record.value().toString()));
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -259,17 +263,19 @@ void DnsRecordsEnumerator::mxLookupFinished(){
             m_firstToResolve = false;
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
-            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder.png"));
-            m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
+            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
         }
         const auto records = m_dns_mx->mailExchangeRecords();
         if(records.count())
         {
             m_recordItem = new QStandardItem("MX");
-            m_recordItem->setIcon(QIcon(":/img/res/icons/settings.png"));
+            m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsMailExchangeRecord &record : records) {
                 m_recordItem->appendRow(new QStandardItem(record.exchange()));
+                // for project...
+                m_scanResults->resultsModel->project->mx->appendRow(new QStandardItem(record.exchange()));
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -296,17 +302,19 @@ void DnsRecordsEnumerator::cnameLookupFinished()
             m_firstToResolve = false;
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
-            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder.png"));
-            m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
+            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
         }
         const auto records = m_dns_cname->canonicalNameRecords();
         if(records.count())
         {
             m_recordItem = new QStandardItem("CNAME");
-            m_recordItem->setIcon(QIcon(":/img/res/icons/settings.png"));
+            m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsDomainNameRecord &record : records) {
                 m_recordItem->appendRow(new QStandardItem(record.value()));
+                // for project...
+                m_scanResults->resultsModel->project->cname->appendRow(new QStandardItem(record.value()));
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -332,17 +340,19 @@ void DnsRecordsEnumerator::nsLookupFinished(){
             m_firstToResolve = false;
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
-            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder.png"));
-            m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
+            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
         }
         const auto records = m_dns_ns->nameServerRecords();
         if(records.count())
         {
             m_recordItem = new QStandardItem("NS");
-            m_recordItem->setIcon(QIcon(":/img/res/icons/settings.png"));
+            m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsDomainNameRecord &record : records) {
                 m_recordItem->appendRow(new QStandardItem(record.value()));
+                // for project...
+                m_scanResults->resultsModel->project->ns->appendRow(new QStandardItem(record.value()));
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -368,19 +378,22 @@ void DnsRecordsEnumerator::txtLookupFinished(){
             m_firstToResolve = false;
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
-            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder.png"));
-            m_scanResults->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->rootItem->rowCount());
+            m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
         }
         const auto records = m_dns_txt->textRecords();
         if(records.count())
         {
             m_recordItem = new QStandardItem("TXT");
-            m_recordItem->setIcon(QIcon(":/img/res/icons/settings.png"));
+            m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsTextRecord &record : records)
             {
                 for(int i = 0; i != record.values().size(); i++){
-                    m_recordItem->appendRow(new QStandardItem(QString(record.values()[i])));
+                    QString value(record.values()[i]);
+                    m_recordItem->appendRow(new QStandardItem(value));
+                    // for project...
+                    m_scanResults->resultsModel->project->txt->appendRow(new QStandardItem(value));
                 }
             }
             m_dnsNameItem->appendRow(m_recordItem);
