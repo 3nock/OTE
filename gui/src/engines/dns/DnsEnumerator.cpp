@@ -162,12 +162,16 @@ void DnsRecordsEnumerator::srvLookupFinished(){
         {
             for(const QDnsServiceRecord &record : records)
             {
-                m_scanResults->resultsModel->record->model_srv->appendRow({new QStandardItem(record.name()), new QStandardItem(record.target()), new QStandardItem(QString::number(record.port()))});
-                // for project...
-                m_scanResults->resultsModel->project->srv->appendRow({new QStandardItem(record.name()), new QStandardItem(record.target())});
+                ///
+                /// save to srv model...
+                ///
+                m_scanResults->resultsModel->records->model_srv->appendRow({new QStandardItem(record.name()), new QStandardItem(record.target()), new QStandardItem(QString::number(record.port()))});
+                ///
+                /// save to project model...
+                ///
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.name()<<record.target(), RESULTS::srv);
             }
-            //...
-            m_scanResults->srvResultsLabel->setNum(m_scanResults->resultsModel->record->model_srv->rowCount());
+            m_scanResults->srvResultsLabel->setNum(m_scanResults->resultsModel->records->model_srv->rowCount());
         }
     }
     ///
@@ -188,8 +192,8 @@ void DnsRecordsEnumerator::aLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
+            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
         }
         const auto records = m_dns_a->hostAddressRecords();
         if(records.count())
@@ -198,8 +202,10 @@ void DnsRecordsEnumerator::aLookupFinished(){
             m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsHostAddressRecord &record : records){
                 m_recordItem->appendRow(new QStandardItem(record.value().toString()));
-                // for project...
-                m_scanResults->resultsModel->project->a->appendRow(new QStandardItem(record.value().toString()));
+                ///
+                /// save to project model...
+                ///
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value().toString(), RESULTS::a);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -226,8 +232,8 @@ void DnsRecordsEnumerator::aaaaLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
+            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
         }
         const auto records = m_dns_aaaa->hostAddressRecords();
         if(records.count())
@@ -236,8 +242,10 @@ void DnsRecordsEnumerator::aaaaLookupFinished(){
             m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsHostAddressRecord &record : records) {
                 m_recordItem->appendRow(new QStandardItem(record.value().toString()));
-                // for project...
-                m_scanResults->resultsModel->project->aaaa->appendRow(new QStandardItem(record.value().toString()));
+                ///
+                /// save to project model...
+                ///
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value().toString(), RESULTS::aaaa);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -264,8 +272,8 @@ void DnsRecordsEnumerator::mxLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
+            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
         }
         const auto records = m_dns_mx->mailExchangeRecords();
         if(records.count())
@@ -274,8 +282,10 @@ void DnsRecordsEnumerator::mxLookupFinished(){
             m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsMailExchangeRecord &record : records) {
                 m_recordItem->appendRow(new QStandardItem(record.exchange()));
-                // for project...
-                m_scanResults->resultsModel->project->mx->appendRow(new QStandardItem(record.exchange()));
+                ///
+                /// save to project model...
+                ///
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.exchange(), RESULTS::mx);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -303,8 +313,8 @@ void DnsRecordsEnumerator::cnameLookupFinished()
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
+            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
         }
         const auto records = m_dns_cname->canonicalNameRecords();
         if(records.count())
@@ -313,8 +323,10 @@ void DnsRecordsEnumerator::cnameLookupFinished()
             m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsDomainNameRecord &record : records) {
                 m_recordItem->appendRow(new QStandardItem(record.value()));
-                // for project...
-                m_scanResults->resultsModel->project->cname->appendRow(new QStandardItem(record.value()));
+                ///
+                /// save to project model...
+                ///
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value(), RESULTS::cname);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -341,8 +353,8 @@ void DnsRecordsEnumerator::nsLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
+            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
         }
         const auto records = m_dns_ns->nameServerRecords();
         if(records.count())
@@ -351,8 +363,10 @@ void DnsRecordsEnumerator::nsLookupFinished(){
             m_recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
             for(const QDnsDomainNameRecord &record : records) {
                 m_recordItem->appendRow(new QStandardItem(record.value()));
-                // for project...
-                m_scanResults->resultsModel->project->ns->appendRow(new QStandardItem(record.value()));
+                ///
+                /// save to project model...
+                ///
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value(), RESULTS::ns);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -379,8 +393,8 @@ void DnsRecordsEnumerator::txtLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->record->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->record->rootItem->rowCount());
+            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
         }
         const auto records = m_dns_txt->textRecords();
         if(records.count())
@@ -392,8 +406,10 @@ void DnsRecordsEnumerator::txtLookupFinished(){
                 for(int i = 0; i != record.values().size(); i++){
                     QString value(record.values()[i]);
                     m_recordItem->appendRow(new QStandardItem(value));
-                    // for project...
-                    m_scanResults->resultsModel->project->txt->appendRow(new QStandardItem(value));
+                    ///
+                    /// save to project model...
+                    ///
+                    m_scanResults->resultsModel->project->append(QList<QString>()<<value, RESULTS::txt);
                 }
             }
             m_dnsNameItem->appendRow(m_recordItem);

@@ -8,15 +8,20 @@ Project::Project(QWidget *parent, ResultsModel *resultsModel) :QWidget(parent), 
 {
     ui->setupUi(this);
     //...
-    m_proxyModel->setSourceModel(m_resultsModel->project->model);
+    m_proxyModel->setSourceModel(m_resultsModel->projectModel);
     m_proxyModel->setRecursiveFilteringEnabled(true);
     m_proxyModel->setFilterKeyColumn(0);
     //...
-    ui->treeView->setModel(m_resultsModel->project->model);
+    ui->treeView->setModel(m_proxyModel);
     ui->treeView->expandAll();
+    ui->treeView->setColumnHidden(1, true);
     //...
-    ui->lineEdit_inScope->setPlaceholderText("e.g google");
-    ui->lineEdit_outScope->setPlaceholderText("e.g google");
+    ui->lineEdit_inScope->setPlaceholderText("e.g google ...");
+    ui->lineEdit_filter->setPlaceholderText("Enter filter...");
+    //...
+    ui->frame_filter->hide();
+    ui->treeView->setColumnHidden(1, true);
+    ui->treeView->setColumnHidden(2, true);
 }
 Project::~Project(){
     delete m_proxyModel;
@@ -78,38 +83,30 @@ void Project::on_lineEdit_inScope_returnPressed(){
     on_pushButton_addInScope_clicked();
 }
 
-/************************************ OUT-SCOPE *********************************/
-void Project::on_pushButton_clearOutScope_clicked(){
-    ui->listWidget_outScope->clear();
-}
-void Project::on_pushButton_removeOutScope_clicked(){
-    int selectionCount = ui->listWidget_outScope->selectedItems().count();
-    if(selectionCount){
-        qDeleteAll(ui->listWidget_outScope->selectedItems());
+/*************************************************************************************/
+void Project::on_checkBox_enableFilter_clicked(bool checked){
+    if(checked){
+        ui->frame_filter->show();
+    }
+    else{
+        ui->frame_filter->hide();
     }
 }
-void Project::on_pushButton_loadOutScope_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(filename.isEmpty()){
-        return;
+
+
+void Project::on_checkBox_columnIpAddress_clicked(bool checked){
+    if(checked){
+        ui->treeView->setColumnHidden(1, false);
     }
-    QFile file(filename);
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        QTextStream in(&file);
-        while (!in.atEnd()){
-            ui->listWidget_outScope->addItem(in.readLine());
-        }
-        file.close();
-    }else{
-        QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
+    else{
+        ui->treeView->setColumnHidden(1, true);
     }
 }
-void Project::on_pushButton_addOutScope_clicked(){
-    if(ui->lineEdit_outScope->text() != EMPTY){
-        ui->listWidget_outScope->addItem(ui->lineEdit_outScope->text());
-        ui->lineEdit_outScope->clear();
+void Project::on_checkBox_columnScopeTarget_clicked(bool checked){
+    if(checked){
+        ui->treeView->setColumnHidden(2, false);
     }
-}
-void Project::on_lineEdit_outScope_returnPressed(){
-    on_pushButton_addOutScope_clicked();
+    else{
+        ui->treeView->setColumnHidden(2, true);
+    }
 }

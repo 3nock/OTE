@@ -26,6 +26,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    src/engines/BaseScanners.cpp \
+        src\project\ProjectDataModel.cpp \
         src\engines\ip\lib-ip.cpp \
         src\project\Project.cpp \
         src\engines\Base.cpp \
@@ -55,6 +57,8 @@ SOURCES += \
         src\main.cpp \
 
 HEADERS += \
+        src/engines/BaseScanners.h \
+        src\project\ProjectDataModel.h \
         src\engines\ip\lib-ip.h \
         src\project\Project.h \
         src\engines\Base.h \

@@ -29,12 +29,9 @@ class Project : public QWidget{
         void on_pushButton_loadInScope_clicked();
         void on_pushButton_addInScope_clicked();
         void on_lineEdit_inScope_returnPressed();
-        //...
-        void on_pushButton_clearOutScope_clicked();
-        void on_pushButton_removeOutScope_clicked();
-        void on_pushButton_loadOutScope_clicked();
-        void on_pushButton_addOutScope_clicked();
-        void on_lineEdit_outScope_returnPressed();
+        void on_checkBox_enableFilter_clicked(bool checked);
+        void on_checkBox_columnIpAddress_clicked(bool checked);
+        void on_checkBox_columnScopeTarget_clicked(bool checked);
 };
 
 #endif // PROJECT_H

@@ -44,6 +44,8 @@
 #undef slots
 #include "Python.h"
 #define slots
+// self defined...
+#include "src/project/ProjectDataModel.h"
 
 /***************************************************
                     MACROS
@@ -108,30 +110,13 @@ enum CHOICE{
 /***************************************************
                     STRUCTURES
 ****************************************************/
-struct ProjectResult{
-    QStandardItemModel *model = nullptr;
-    QStandardItem *rootItem = nullptr;
-    QStandardItem *subdomains = nullptr;
-    QStandardItem *tld = nullptr;
-    //...
-    QStandardItem *records = nullptr;
-    QStandardItem *srv = nullptr;
-    QStandardItem *a = nullptr;
-    QStandardItem *aaaa = nullptr;
-    QStandardItem *mx = nullptr;
-    QStandardItem *txt = nullptr;
-    QStandardItem *cname = nullptr;
-    QStandardItem *ns = nullptr;
-};
-typedef struct ProjectResult ProjectResult;
-
-struct RecordsResults{
+struct RecordsModel{
     QStandardItemModel *model_srv = nullptr;
     QStandardItemModel *model_records = nullptr;
     QStandardItem *rootItem = nullptr;
     int resultsCount = NULL;
 };
-typedef struct RecordsResults RecordsResults;
+typedef struct RecordsModel RecordsModel;
 
 struct ResultsModel{
     QStandardItemModel *ip = nullptr;
@@ -139,10 +124,10 @@ struct ResultsModel{
     QStandardItemModel *brute = nullptr;
     QStandardItemModel *active = nullptr;
     QStandardItemModel *level = nullptr;
-    QStandardItemModel *records = nullptr;
+    QStandardItemModel *projectModel = nullptr;
     //...
-    RecordsResults *record = nullptr;
-    ProjectResult *project = nullptr;
+    RecordsModel *records = nullptr;
+    ProjectDataModel *project = nullptr;
 };
 typedef struct ResultsModel ResultsModel;
 

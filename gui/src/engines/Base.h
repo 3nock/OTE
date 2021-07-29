@@ -35,9 +35,10 @@ class BaseClass : public QWidget {
 
     public:
         explicit BaseClass(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        ~BaseClass();
         //...
         void contextMenu_actionButton(ENGINE engineName, QPoint &pos);
-        void contextMenu_rightClick(QItemSelectionModel* selectionModel);
+        void contextMenu_rightClick(QItemSelectionModel*);
         //...
         void logs(QString log);
         //...
@@ -53,21 +54,21 @@ class BaseClass : public QWidget {
         void sendLog(QString log);
         void sendStatus(QString status);
         //...
-        void a_sendToOsint(ENGINE engineName);
-        void a_sendToActive(ENGINE engineName);
-        void a_sendToBrute(ENGINE engineName);
-        void a_sendToRecord(ENGINE engineName);
-        void a_sendToIp(ENGINE engineName);
-        void a_sendToLevel(ENGINE engineName);
-        void a_sendToProject(ENGINE engineName);
+        void a_sendToOsint(ENGINE, CHOICE);
+        void a_sendToActive(ENGINE, CHOICE);
+        void a_sendToBrute(ENGINE, CHOICE);
+        void a_sendToRecord(ENGINE, CHOICE);
+        void a_sendToIp(ENGINE, CHOICE);
+        void a_sendToLevel(ENGINE, CHOICE);
+        void a_sendToProject(ENGINE, CHOICE);
         //...
-        void c_sendToOsint(QItemSelectionModel* selectionModel);
-        void c_sendToActive(QItemSelectionModel* selectionModel);
-        void c_sendToBrute(QItemSelectionModel* selectionModel);
-        void c_sendToRecord(QItemSelectionModel* selectionModel);
-        void c_sendToIp(QItemSelectionModel* selectionModel);
-        void c_sendToLevel(QItemSelectionModel* selectionModel);
-        void c_sendToProject(QItemSelectionModel* selectionModel);
+        void c_sendToOsint(QItemSelectionModel*);
+        void c_sendToActive(QItemSelectionModel*);
+        void c_sendToBrute(QItemSelectionModel*);
+        void c_sendToRecord(QItemSelectionModel*);
+        void c_sendToIp(QItemSelectionModel*);
+        void c_sendToLevel(QItemSelectionModel*);
+        void c_sendToProject(QItemSelectionModel*);
         //...
         void changeTabToOsint();
         void changeTabToBrute();
@@ -78,30 +79,30 @@ class BaseClass : public QWidget {
         void changeTabToProject();
 
     public slots:
-        void a_receiveTargets(ENGINE engineName);
-        void c_receiveTargets(QItemSelectionModel *selectionModel);
+        void a_receiveTargets(ENGINE engineName, CHOICE);
+        void c_receiveTargets(QItemSelectionModel*);
 
     private slots:
-        void actionSendToOsint(ENGINE engineName);
-        void actionSendToActive(ENGINE engineName);
-        void actionSendToBrute(ENGINE engineName);
-        void actionSendToLevel(ENGINE engineName);
-        void actionSendToRecords(ENGINE engineName);
-        void actionSendToIp(ENGINE engineName);
+        void actionSendToOsint(ENGINE, CHOICE);
+        void actionSendToActive(ENGINE, CHOICE);
+        void actionSendToBrute(ENGINE, CHOICE);
+        void actionSendToLevel(ENGINE, CHOICE);
+        void actionSendToRecords(ENGINE, CHOICE);
+        void actionSendToIp(ENGINE, CHOICE);
         //...
         void actionSave(ENGINE engineName, CHOICE);
         void actionCopy(ENGINE engineName, CHOICE);
         //...
-        void cursorOpenInBrowser(QItemSelectionModel *selectionModel);
-        void cursorSendToOsint(QItemSelectionModel *selectionModel);
-        void cursorSendToActive(QItemSelectionModel *selectionModel);
-        void cursorSendToRecords(QItemSelectionModel *selectionModel);
-        void cursorSendToIp(QItemSelectionModel *selectionModel);
-        void cursorSendToBrute(QItemSelectionModel *selectionModel);
-        void cursorSendToLevel(QItemSelectionModel *selectionModel);
+        void cursorOpenInBrowser(QItemSelectionModel*);
+        void cursorSendToOsint(QItemSelectionModel*);
+        void cursorSendToActive(QItemSelectionModel*);
+        void cursorSendToRecords(QItemSelectionModel*);
+        void cursorSendToIp(QItemSelectionModel*);
+        void cursorSendToBrute(QItemSelectionModel*);
+        void cursorSendToLevel(QItemSelectionModel*);
         //...
-        void cursorSave(QItemSelectionModel *selectionModel);
-        void cursorCopy(QItemSelectionModel *selectionModel);
+        void cursorSave(QItemSelectionModel*);
+        void cursorCopy(QItemSelectionModel*);
 };
 
 #endif // BASECLASS_H

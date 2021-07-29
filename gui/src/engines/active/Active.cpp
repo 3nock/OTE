@@ -160,13 +160,15 @@ void Active::startScan(){
 }
 
 void Active::scanResult(QString subdomain, QString ipAddress){
-    m_resultsModel->active->setItem(m_resultsModel->active->rowCount(), 0, new QStandardItem(subdomain));
-    m_resultsModel->active->setItem(m_resultsModel->active->rowCount()-1, 1, new QStandardItem(ipAddress));
+    ///
+    /// save to active model...
+    ///
+    m_resultsModel->active->appendRow({new QStandardItem(subdomain), new QStandardItem(ipAddress)});
     ui->label_resultsCount->setNum(m_resultsModel->active->rowCount());
-    // To Project...
-    QStandardItem *Subdomain = new QStandardItem(subdomain);
-    QStandardItem *IpAddress = new QStandardItem(ipAddress);
-    m_resultsModel->project->subdomains->appendRow(QList<QStandardItem *>() << Subdomain << IpAddress);
+    ///
+    /// save to project model...
+    ///
+    m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::subdomains);
 }
 
 void Active::scanThreadEnded(){

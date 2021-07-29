@@ -3,6 +3,7 @@
 
 #include "lib-brute.h"
 #include "src/engines/Base.h"
+#include "src/engines/BaseScanners.h"
 #include "BruteEnumerator.h"
 
 namespace Ui {
@@ -18,6 +19,7 @@ class Brute : public BaseClass{
     private:
         void startScan();
         //...
+        QSet<QString> m_subdomainsSet;
         ResultsModel *m_resultsModel;
         //...
         ScanStatus *m_scanStatus;

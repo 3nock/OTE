@@ -4,7 +4,7 @@
         <file>res/icons/folder.png</file>
         <file>res/icons/settings.png</file>
         <file>res/icons/folder2.png</file>
-        <file>res/icons/green.png</file>
+        <file>res/icons/arrow.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/nameservers.txt</file>

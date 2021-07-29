@@ -250,13 +250,16 @@ void Level::on_toolButton_config_clicked(){
 
 /************************************** Results *****************************************/
 void Level::scanResult(QString subdomain, QString ipAddress){
-    m_resultsModel->level->setItem(m_resultsModel->level->rowCount(), 0, new QStandardItem(subdomain));
-    m_resultsModel->level->setItem(m_resultsModel->level->rowCount()-1, 1, new QStandardItem(ipAddress));
+    ///
+    /// save to level model...
+    ///
+    m_resultsModel->level->appendRow({new QStandardItem(ipAddress), new QStandardItem(subdomain)});
     ui->label_resultsCount->setNum(m_resultsModel->level->rowCount());
-    // To Project...
-    QStandardItem *Subdomain = new QStandardItem(subdomain);
-    QStandardItem *IpAddress = new QStandardItem(ipAddress);
-    m_resultsModel->project->subdomains->appendRow(QList<QStandardItem *>() << Subdomain << IpAddress);
+    ///
+    /// save to project model...
+    ///
+    m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::subdomains);
+
 }
 
 void Level::on_pushButton_clearResults_clicked(){

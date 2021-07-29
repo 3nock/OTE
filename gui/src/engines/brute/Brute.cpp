@@ -261,17 +261,23 @@ void Brute::startScan(){
 
 /************************************ Receiving Results ***********************************/
 void Brute::scanResult(QString subdomain, QString ipAddress){
-    m_resultsModel->brute->setItem(m_resultsModel->brute->rowCount(), 0, new QStandardItem(subdomain));
-    m_resultsModel->brute->setItem(m_resultsModel->brute->rowCount()-1, 1, new QStandardItem(ipAddress));
+    if(m_subdomainsSet.contains(subdomain)){
+        return;
+    }
+    m_subdomainsSet.insert(subdomain);
+    ///
+    /// save to brute model...
+    ///
+    m_resultsModel->brute->appendRow({new QStandardItem(subdomain), new QStandardItem(ipAddress)});
     ui->label_resultsCount->setNum(m_resultsModel->brute->rowCount());
-    // To Project...
-    QStandardItem *Subdomain = new QStandardItem(subdomain);
-    QStandardItem *IpAddress = new QStandardItem(ipAddress);
+    ///
+    /// save to Project model...
+    ///
     if(m_scanArguments->tldBrute){
-        m_resultsModel->project->tld->appendRow(QList<QStandardItem *>() << Subdomain << IpAddress);
+        m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::tlds);
     }
     if(m_scanArguments->subBrute){
-        m_resultsModel->project->subdomains->appendRow(QList<QStandardItem *>() << Subdomain << IpAddress);
+        m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::subdomains);
     }
 }
 
@@ -347,6 +353,7 @@ void Brute::on_pushButton_clearResults_clicked(){
     ///
     if(ui->tabWidget_results->currentIndex() == 0)
     {
+        m_subdomainsSet.clear();
         m_resultsModel->brute->clear();
         ui->label_resultsCount->clear();
         //...

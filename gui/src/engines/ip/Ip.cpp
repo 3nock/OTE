@@ -181,10 +181,15 @@ void Ip::scanThreadEnded(){
 }
 
 void Ip::scanResult(QString subdomain, QString ipAddress){
-    m_scanArguments->model_results->setItem(m_scanArguments->model_results->rowCount(), 0, new QStandardItem(ipAddress));
-    m_scanArguments->model_results->setItem(m_scanArguments->model_results->rowCount()-1, 1, new QStandardItem(subdomain));
-    //...
+    ///
+    /// save to ip model model...
+    ///
+    m_resultsModel->ip->appendRow({new QStandardItem(ipAddress), new QStandardItem(subdomain)});
     m_scanArguments->label_resultsCount->setNum(m_scanArguments->model_results->rowCount());
+    ///
+    /// save to project model...
+    ///
+    m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::subdomains);
 }
 
 void Ip::on_toolButton_config_clicked(){

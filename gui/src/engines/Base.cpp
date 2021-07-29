@@ -6,11 +6,20 @@ BaseClass::BaseClass(QWidget *parent, ResultsModel *resultsModel) : QWidget(pare
 {
 
 }
+BaseClass::~BaseClass(){
+    delete widgets;
+}
 
 void BaseClass::logs(QString log){
+    ///
+    /// send the log to the main logger class...
+    ///
     sendLog(log);
+    ///
+    /// adding the log to local log widget and setting color depending on error...
+    ///
     widgets->listWidget_logs->addItem(log);
-    if(log.startsWith("[ERROR]"))
+    if(log.startsWith("[ERROR]") || log.startsWith("[Error]"))
     {
         widgets->listWidget_logs->item(widgets->listWidget_logs->count()-1)->setForeground(Qt::red);
         return;
@@ -26,9 +35,15 @@ void BaseClass::logs(QString log){
                         WIDGETS - TARGETS
 ****************************************************************************/
 void BaseClass::addTargets(){
+    ///
+    /// check...
+    ///
     if(widgets->lineEdit_targetInput->text() == EMPTY){
         return;
     }
+    ///
+    /// adding target from lineEdit to widget and to set...
+    ///
     QString item = widgets->lineEdit_targetInput->text();
     if(!m_targetSet.contains(item)){
         m_targetSet.insert(widgets->lineEdit_targetInput->text());
@@ -45,17 +60,28 @@ void BaseClass::clearTargets(){
 }
 
 void BaseClass::removeTargets(){
+    ///
+    /// check...
+    ///
     if(!widgets->listWidget_targets->selectedItems().count()){
         return;
     }
-    foreach(QListWidgetItem *item, widgets->listWidget_targets->selectedItems()){
+    ///
+    /// iterating and deleting every selected item from widget and from set...
+    ///
+    foreach(QListWidgetItem *item, widgets->listWidget_targets->selectedItems())
+    {
         m_targetSet.remove(item->text());
         widgets->listWidget_targets->removeItemWidget(item);
+        delete item;
     }
     widgets->label_targetsCount->setNum(widgets->listWidget_targets->count());
 }
 
 void BaseClass::loadTargetsFromFile(){
+    ///
+    /// check...
+    ///
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
     if(filename.isEmpty()){
         return;
@@ -65,7 +91,9 @@ void BaseClass::loadTargetsFromFile(){
         QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
         return;
     }
-    //...
+    ///
+    /// loading the file contents...
+    ///
     QString item;
     QTextStream in(&file);
     while (!in.atEnd())
@@ -169,12 +197,12 @@ void BaseClass::contextMenu_actionButton(ENGINE engineName, QPoint &pos){
     ///
     /// SUBDOMAINS AND IPS...
     ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){this->actionSendToIp(engineName);});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){this->actionSendToOsint(engineName);});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){this->actionSendToBrute(engineName);});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){this->actionSendToActive(engineName);});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){this->actionSendToRecords(engineName);});
-    connect(&actionSendToLevel, &QAction::triggered, this, [=](){this->actionSendToLevel(engineName);});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){this->actionSendToIp(engineName, CHOICE::ipaddress);});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){this->actionSendToOsint(engineName, CHOICE::susbdomains);});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){this->actionSendToBrute(engineName, CHOICE::susbdomains);});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){this->actionSendToActive(engineName, CHOICE::susbdomains);});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){this->actionSendToRecords(engineName, CHOICE::susbdomains);});
+    connect(&actionSendToLevel, &QAction::triggered, this, [=](){this->actionSendToLevel(engineName, CHOICE::susbdomains);});
     ///
     /// ADDING ACTIONS TO THE CONTEXT MENU...
     ///
@@ -213,8 +241,12 @@ void BaseClass::contextMenu_actionButton(ENGINE engineName, QPoint &pos){
     }
     contextMenu_main->addMenu(contextMenu_copy);
     contextMenu_main->addMenu(contextMenu_save);
+    //...
     contextMenu_main->addSeparator();
-    contextMenu_main->addAction(&actionSendToIp);
+    if(engineName != ENGINE::SRVRECORDS){
+        contextMenu_main->addAction(&actionSendToIp);
+    }
+    //...
     contextMenu_main->addSeparator();
     contextMenu_main->addAction(&actionSendToOsint);
     contextMenu_main->addAction(&actionSendToBrute);
@@ -259,13 +291,13 @@ void BaseClass::contextMenu_rightClick(QItemSelectionModel* selectionModel){
     ///
     /// ...
     ///
-    contextMenu_main->addAction(&actionOpenInBrowser);
-    contextMenu_main->addSeparator();
     contextMenu_main->addAction(&actionCopy);
     contextMenu_main->addAction(&actionSave);
     contextMenu_main->addSeparator();
-    contextMenu_main->addAction(&actionSendToOsint);
+    contextMenu_main->addAction(&actionOpenInBrowser);
+    contextMenu_main->addSeparator();
     contextMenu_main->addAction(&actionSendToIp);
+    contextMenu_main->addAction(&actionSendToOsint);
     contextMenu_main->addAction(&actionSendToBrute);
     contextMenu_main->addAction(&actionSendToActive);
     contextMenu_main->addAction(&actionSendToRecords);
@@ -278,39 +310,48 @@ void BaseClass::contextMenu_rightClick(QItemSelectionModel* selectionModel){
 
 /**************************** Open in Browser **************************/
 void BaseClass::cursorOpenInBrowser(QItemSelectionModel *selectionModel){
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// ...
+    ///
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
-        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
+        item = index.data().toString();
+        if(!itemSet.contains(item) && item != "A" && item != "AAAA" && item != "NS" && item != "MX" && item != "CNAME" && item != "TXT"){
+            itemSet.insert(item);
+            QDesktopServices::openUrl(QUrl("https://"+item, QUrl::TolerantMode));
+        }
     }
 }
 
 /***************************** Send Results *****************************/
-void BaseClass::actionSendToOsint(ENGINE engineName){
-    emit a_sendToOsint(engineName);
+void BaseClass::actionSendToOsint(ENGINE engineName, CHOICE choice){
+    emit a_sendToOsint(engineName, choice);
     emit changeTabToOsint();
 }
-void BaseClass::actionSendToBrute(ENGINE engineName){
-    emit a_sendToBrute(engineName);
+void BaseClass::actionSendToBrute(ENGINE engineName, CHOICE choice){
+    emit a_sendToBrute(engineName, choice);
     emit changeTabToBrute();
 }
-void BaseClass::actionSendToRecords(ENGINE engineName){
-    emit a_sendToRecord(engineName);
+void BaseClass::actionSendToRecords(ENGINE engineName, CHOICE choice){
+    emit a_sendToRecord(engineName, choice);
     emit changeTabToRecords();
 }
-void BaseClass::actionSendToIp(ENGINE engineName){
-    emit a_sendToIp(engineName);
+void BaseClass::actionSendToIp(ENGINE engineName, CHOICE choice){
+    emit a_sendToIp(engineName, choice);
     emit changeTabToIp();
 }
-void BaseClass::actionSendToActive(ENGINE engineName){
-    emit a_sendToActive(engineName);
+void BaseClass::actionSendToActive(ENGINE engineName, CHOICE choice){
+    emit a_sendToActive(engineName, choice);
     emit changeTabToActive();
 }
-void BaseClass::actionSendToLevel(ENGINE engineName){
-    emit a_sendToLevel(engineName);
+void BaseClass::actionSendToLevel(ENGINE engineName, CHOICE choice){
+    emit a_sendToLevel(engineName, choice);
     emit changeTabToLevel();
 }
 
-//......
+//...
 void BaseClass::cursorSendToOsint(QItemSelectionModel *selectionModel){
     emit c_sendToOsint(selectionModel);
     emit changeTabToOsint();
@@ -339,6 +380,9 @@ void BaseClass::cursorSendToLevel(QItemSelectionModel *selectionModel){
 /********************************** COPY & SAVE ************************************/
 
 void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
+    ///
+    /// checks...
+    ///
     QString filename = QFileDialog::getSaveFileName(this, INFO_LOADFILE, CURRENT_PATH);
     if(filename.isEmpty()){
         return;
@@ -349,39 +393,44 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
         return;
     }
     ///
-    /// ...
+    /// variable declarations...
     ///
+    QStandardItemModel *model = nullptr;
     QSet<QString> itemSet;
     QString item;
     ///
-    /// ...
+    /// Engine the results are from...
     ///
-    QStandardItemModel *model;
-    if(engineName == ENGINE::IP){
+    switch(engineName){
+    case ENGINE::IP:
         model = m_resultsModel->ip;
-    }
-    if(engineName == ENGINE::BRUTE){
+        break;
+    case ENGINE::BRUTE:
         model = m_resultsModel->brute;
-    }
-    if(engineName == ENGINE::LEVEL){
+        break;
+    case ENGINE::LEVEL:
         model = m_resultsModel->level;
-    }
-    if(engineName == ENGINE::OSINT){
+        break;
+    case ENGINE::OSINT:
         model = m_resultsModel->osint;
-    }
-    if(engineName == ENGINE::ACTIVE){
+        break;
+    case ENGINE::ACTIVE:
         model = m_resultsModel->active;
-    }
-    if(engineName == ENGINE::DNSRECORDS){
-        model = m_resultsModel->record->model_records;
-    }
-    if(engineName == ENGINE::SRVRECORDS){
-        model = m_resultsModel->record->model_srv;
+        break;
+    case ENGINE::DNSRECORDS:
+        model = m_resultsModel->records->model_records;
+        break;
+    case ENGINE::SRVRECORDS:
+        model = m_resultsModel->records->model_srv;
+        break;
+    default:
+        break;
     }
     ///
-    /// ...
+    /// choice of item to save...
     ///
-    if(choice == CHOICE::susbdomains){
+    switch(choice){
+    case CHOICE::susbdomains:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 0)->text().append(NEWLINE);
@@ -390,8 +439,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 file.write(item.toUtf8());
             }
         }
-    }
-    if(choice == CHOICE::ipaddress){
+        break;
+    case CHOICE::ipaddress:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 1)->text().append(NEWLINE);
@@ -400,8 +449,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 file.write(item.toUtf8());
             }
         }
-    }
-    if(choice == CHOICE::all){
+        break;
+    case CHOICE::all:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 0)->text()+":"+model->item(i, 1)->text().append(NEWLINE);
@@ -410,8 +459,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 file.write(item.toUtf8());
             }
         }
-    }
-    if(choice == CHOICE::srvName){
+        break;
+    case CHOICE::srvName:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 0)->text().append(NEWLINE);
@@ -420,8 +469,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 file.write(item.toUtf8());
             }
         }
-    }
-    if(choice == CHOICE::srvTarget){
+        break;
+    case CHOICE::srvTarget:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 1)->text().append(NEWLINE);
@@ -430,8 +479,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 file.write(item.toUtf8());
             }
         }
-    }
-    if(choice == CHOICE::MX){
+        break;
+    case CHOICE::MX:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -448,8 +497,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 }
             }
         }
-    }
-    if(choice == CHOICE::NS){
+        break;
+    case CHOICE::NS:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -466,8 +515,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 }
             }
         }
-    }
-    if(choice == CHOICE::TXT){
+        break;
+    case CHOICE::TXT:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -484,8 +533,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 }
             }
         }
-    }
-    if(choice == CHOICE::CNAME){
+        break;
+    case CHOICE::CNAME:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -502,8 +551,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 }
             }
         }
-    }
-    if(choice == CHOICE::A){
+        break;
+    case CHOICE::A:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -520,8 +569,8 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 }
             }
         }
-    }
-    if(choice == CHOICE::AAAA){
+        break;
+    case CHOICE::AAAA:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -538,97 +587,103 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
                 }
             }
         }
+        break;
     }
     file.close();
 }
 
 void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
+    ///
+    /// variable declaration...
+    ///
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data;
-    QStandardItemModel *model;
-    ///
-    /// ...
-    ///
+    QStandardItemModel *model = nullptr;
+    QString clipboardData;
     QSet<QString> itemSet;
     QString item;
     ///
-    /// ...
+    /// Engine to Copy from...
     ///
-    if(engineName == ENGINE::IP){
+    switch(engineName){
+    case ENGINE::IP:
         model = m_resultsModel->ip;
-    }
-    if(engineName == ENGINE::BRUTE){
+        break;
+    case ENGINE::BRUTE:
         model = m_resultsModel->brute;
-    }
-    if(engineName == ENGINE::LEVEL){
+        break;
+    case ENGINE::LEVEL:
         model = m_resultsModel->level;
-    }
-    if(engineName == ENGINE::OSINT){
+        break;
+    case ENGINE::OSINT:
         model = m_resultsModel->osint;
-    }
-    if(engineName == ENGINE::ACTIVE){
+        break;
+    case ENGINE::ACTIVE:
         model = m_resultsModel->active;
-    }
-    if(engineName == ENGINE::DNSRECORDS){
-        model = m_resultsModel->record->model_records;
-    }
-    if(engineName == ENGINE::SRVRECORDS){
-        model = m_resultsModel->record->model_srv;
+        break;
+    case ENGINE::DNSRECORDS:
+        model = m_resultsModel->records->model_records;
+        break;
+    case ENGINE::SRVRECORDS:
+        model = m_resultsModel->records->model_srv;
+        break;
+    default:
+        break;
     }
     ///
-    /// ...
+    /// type of item to save...
     ///
-    if(choice == CHOICE::susbdomains){
+    switch(choice){
+    case CHOICE::susbdomains:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 0)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
-                data.append(item);
+                clipboardData.append(item);
             }
         }
-    }
-    if(choice == CHOICE::ipaddress){
+        break;
+    case CHOICE::ipaddress:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 1)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
-                data.append(item);
+                clipboardData.append(item);
             }
         }
-    }
-    if(choice == CHOICE::all){
+        break;
+    case CHOICE::all:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 0)->text()+"|"+model->item(i, 1)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
-                data.append(item);
+                clipboardData.append(item);
             }
         }
-    }
-    if(choice == CHOICE::srvName){
+        break;
+    case CHOICE::srvName:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 0)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
-                data.append(item);
+                clipboardData.append(item);
             }
         }
-    }
-    if(choice == CHOICE::srvTarget){
+        break;
+    case CHOICE::srvTarget:
         for(int i = 0; i != model->rowCount(); ++i)
         {
             item = model->item(i, 1)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
-                data.append(item);
+                clipboardData.append(item);
             }
         }
-    }
-    if(choice == CHOICE::MX){
+        break;
+    case CHOICE::MX:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -639,14 +694,14 @@ void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
                         item = model->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
-                            data.append(item);
+                            clipboardData.append(item);
                         }
                     }
                 }
             }
         }
-    }
-    if(choice == CHOICE::NS){
+        break;
+    case CHOICE::NS:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -657,14 +712,14 @@ void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
                         item = model->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
-                            data.append(item);
+                            clipboardData.append(item);
                         }
                     }
                 }
             }
         }
-    }
-    if(choice == CHOICE::TXT){
+        break;
+    case CHOICE::TXT:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -675,14 +730,14 @@ void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
                         item = model->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
-                            data.append(item);
+                            clipboardData.append(item);
                         }
                     }
                 }
             }
         }
-    }
-    if(choice == CHOICE::CNAME){
+        break;
+    case CHOICE::CNAME:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -693,14 +748,14 @@ void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
                         item = model->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
-                            data.append(item);
+                            clipboardData.append(item);
                         }
                     }
                 }
             }
         }
-    }
-    if(choice == CHOICE::A){
+        break;
+    case CHOICE::A:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -711,14 +766,14 @@ void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
                         item = model->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
-                            data.append(item);
+                            clipboardData.append(item);
                         }
                     }
                 }
             }
         }
-    }
-    if(choice == CHOICE::AAAA){
+        break;
+    case CHOICE::AAAA:
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -729,14 +784,15 @@ void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
                         item = model->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
-                            data.append(item);
+                            clipboardData.append(item);
                         }
                     }
                 }
             }
         }
+        break;
     }
-    clipboard->setText(data);
+    clipboard->setText(clipboardData);
 }
 
 //......
@@ -745,24 +801,42 @@ void BaseClass::cursorSave(QItemSelectionModel *selectionModel){
     if(filename.isEmpty()){
         return;
     }
-    //...
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     if(file.isOpen())
     {
         foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            file.write((index.data().toString()+NEWLINE).toUtf8());
+            item = index.data().toString();
+            if(!itemSet.contains(item) && item != "A" && item != "AAAA" && item != "NS" && item != "MX" && item != "CNAME" && item != "TXT"){
+                itemSet.insert(item);
+                data.append(item.append(NEWLINE));
+            }
         }
+        file.write(data.toUtf8());
         file.close();
     }
 }
 void BaseClass::cursorCopy(QItemSelectionModel *selectionModel){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data = "";
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
-        data.append(index.data().toString());
-        data.append(NEWLINE);
+        item = index.data().toString();
+        if(!itemSet.contains(item) && item != "A" && item != "AAAA" && item != "NS" && item != "MX" && item != "CNAME" && item != "TXT"){
+            itemSet.insert(item);
+            data.append(item.append(NEWLINE));
+        }
     }
     clipboard->setText(data);
 }
@@ -771,31 +845,46 @@ void BaseClass::cursorCopy(QItemSelectionModel *selectionModel){
 /***************************************************************************
                         RECEIVING TARGETS
 ****************************************************************************/
-void BaseClass::a_receiveTargets(ENGINE engineName){
-    QStandardItemModel *model;
+void BaseClass::a_receiveTargets(ENGINE engineName, CHOICE choice){
+    ///
+    /// varible declaration...
+    ///
+    QStandardItemModel *model = nullptr;
     QString item;
     ///
-    /// ...
+    /// engine targets are from...
     ///
-    if(engineName == ENGINE::BRUTE){
+    switch(engineName){
+    case ENGINE::BRUTE:
         model = m_resultsModel->brute;
-    }
-    if(engineName == ENGINE::ACTIVE){
+        break;
+    case ENGINE::ACTIVE:
         model = m_resultsModel->active;
-    }
-    if(engineName == ENGINE::IP){
-        model = m_resultsModel->ip;
-    }
-    if(engineName == ENGINE::LEVEL){
+        break;
+    case ENGINE::LEVEL:
         model = m_resultsModel->level;
-    }
-    if(engineName == ENGINE::DNSRECORDS){
-        model = m_resultsModel->record->model_records;
+        break;
+    case ENGINE::IP:
+        model = m_resultsModel->ip;
+        break;
+    case ENGINE::DNSRECORDS:
+        model = m_resultsModel->records->model_records;
         for(char i = 0; i < model->rowCount(); i++)
         {
             for(char j = 0; j < model->item(i)->rowCount(); j++)
             {
-                if(model->item(i)->child(j)->text() == "CNAME" || model->item(i)->child(j)->text() == "MX" || model->item(i)->child(j)->text() == "NS")
+                if(choice == CHOICE::susbdomains && (model->item(i)->child(j)->text() == "CNAME" || model->item(i)->child(j)->text() == "MX" || model->item(i)->child(j)->text() == "NS"))
+                {
+                    for(int k = 0; k < model->item(i)->child(j)->rowCount(); k++){
+                        item = model->item(i)->child(j)->child(k)->text();
+                        if(!m_targetSet.contains(item))
+                        {
+                            m_targetSet.insert(item);
+                            widgets->listWidget_targets->addItem(item);
+                        }
+                    }
+                }
+                if(choice == CHOICE::ipaddress && (model->item(i)->child(j)->text() == "A" || model->item(i)->child(j)->text() == "AAAA"))
                 {
                     for(int k = 0; k < model->item(i)->child(j)->rowCount(); k++){
                         item = model->item(i)->child(j)->child(k)->text();
@@ -810,10 +899,11 @@ void BaseClass::a_receiveTargets(ENGINE engineName){
         }
         widgets->label_targetsCount->setNum(widgets->listWidget_targets->count());
         return;
-    }
-    if(engineName == ENGINE::SRVRECORDS)
-    {
-        model = m_resultsModel->record->model_srv;
+    case ENGINE::SRVRECORDS:
+        if(choice == CHOICE::ipaddress){
+            return;
+        }
+        model = m_resultsModel->records->model_srv;
         for(char i = 0; i < model->rowCount(); i++)
         {
             item = model->item(i, 1)->text();
@@ -824,13 +914,18 @@ void BaseClass::a_receiveTargets(ENGINE engineName){
         }
         widgets->label_targetsCount->setNum(widgets->listWidget_targets->count());
         return;
+    default:
+        break;
     }
     ///
     /// for every other engine...
     ///
     for(char i = 0; i < model->rowCount(); i++)
     {
-        item = model->item(i, 0)->text();
+        if(choice == CHOICE::susbdomains)
+            item = model->item(i, 0)->text();
+        if(choice == CHOICE::ipaddress)
+            item = model->item(i, 1)->text();
         if(!m_targetSet.contains(item)){
             m_targetSet.insert(item);
             widgets->listWidget_targets->addItem(item);
@@ -841,7 +936,9 @@ void BaseClass::a_receiveTargets(ENGINE engineName){
 
 void BaseClass::c_receiveTargets(QItemSelectionModel *selectionModel){
     QString item;
-    // iterate and open each selected and append on the target's listwidget...
+    ///
+    /// iterate and open each selected and append on the target's listwidget...
+    ///
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
         item = index.data().toString();

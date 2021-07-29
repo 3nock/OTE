@@ -145,9 +145,9 @@ QComboBox QWidget {
 }
 
 QComboBox::drop-down {
-    border-left-width: 1px;
-    border-left-color: rgb(40,40,40);
-    border-left-style: solid;
+    image: url(:/img/res/icons/arrow.png);
+    padding-top: 6px;
+    padding-right: 5px;
 }
 
 /********** Line *************/
@@ -172,6 +172,7 @@ QLabel#label_resultsCount, QLabel#label_targetsCount, QLabel#label_wordlistCount
 }
 
 QScrollArea {
+    background-color:rgb(66, 66, 66);
     border-style: outset;
     border-style: solid;
     border-color: rgb(40,40,40);
@@ -179,11 +180,11 @@ QScrollArea {
 }
 
 QAbstractScrollArea {
-        background-color: transparent;
+    background-color: transparent;
 }
 
 QScrollArea QWidget {
-        background-color:rgb(66, 66, 66);
+    background-color:rgb(66, 66, 66);
 }
 
 QMainWindow {
@@ -217,11 +218,9 @@ QListWidget, QTreeView, QTableView, QColumnView{
         border-width: 1px;
 }
 
-/*
 QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected{
         background-color: rgb(50, 61, 73);
 }
-*/
 
 QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QColumnView::item:hover, QColumnView::item:hover {
         background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(60, 71, 83));
@@ -341,7 +340,7 @@ QMenu::item:selected {
         color:rgb(0,0,0);
         border-style: solid;
         border-color: black;
-        background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:0.4 rgb(50, 61, 72));
+        background-color: rgb(50, 61, 73);;
 }
 
 QMenu::​separator {

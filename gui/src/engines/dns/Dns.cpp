@@ -36,10 +36,10 @@ Dns::Dns(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, result
     //...
     ui->splitter->setSizes(QList<int>()<<180<<1);
     //...
-    m_resultsModel->record->model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+    m_resultsModel->records->model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
     //...
-    ui->treeView_results->setModel(m_resultsModel->record->model_records);
-    ui->tableView_srv->setModel(m_resultsModel->record->model_srv);
+    ui->treeView_results->setModel(m_resultsModel->records->model_records);
+    ui->tableView_srv->setModel(m_resultsModel->records->model_srv);
     //...
     m_scanArguments->targetList = ui->listWidget_targets;
     m_scanArguments->srvWordlist = ui->listWidget_srvWordlist;
@@ -256,17 +256,17 @@ void Dns::scanThreadEnded(){
 void Dns::on_pushButton_clearResults_clicked(){
     switch (ui->tabWidget_results->currentIndex()){
         case 0:
-            m_resultsModel->record->model_records->clear();
+            m_resultsModel->records->model_records->clear();
             ui->label_resultsCount->clear();
-            m_resultsModel->record->rootItem = m_resultsModel->record->model_records->invisibleRootItem();
+            m_resultsModel->records->rootItem = m_resultsModel->records->model_records->invisibleRootItem();
             //...
             ui->progressBar->hide();
             break;
         //...
         case 1:
-            m_resultsModel->record->model_srv->clear();
+            m_resultsModel->records->model_srv->clear();
             ui->label_srvResultsCount->clear();
-            m_resultsModel->record->model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+            m_resultsModel->records->model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
             //...
             ui->progressBar->hide();
             break;
@@ -371,7 +371,7 @@ void Dns::on_pushButton_action_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(m_resultsModel->record->model_records->rowCount() < 1 && m_resultsModel->record->model_srv->rowCount() < 1){
+    if(m_resultsModel->records->model_records->rowCount() < 1 && m_resultsModel->records->model_srv->rowCount() < 1){
         return;
     }
     ///
