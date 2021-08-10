@@ -1,35 +1,30 @@
-#ifndef DNS_H
-#define DNS_H
+#ifndef DNSRECORDS_H
+#define DNSRECORDS_H
 
 // headers...
 #include "src/engines/Base.h"
-#include "lib-dns.h"
-#include "DnsEnumerator.h"
+#include "DnsRecordsScanner.h"
 
 namespace Ui {
-    class Dns;
+    class DnsRecords;
 }
 
-class Dns : public BaseClass{
+class DnsRecords : public BaseClass{
     Q_OBJECT
 
     private:
-        Ui::Dns *ui;
+        Ui::DnsRecords *ui;
 
     private:
         void startScan();
         void loadSrvWordlist();
         //...
-        ResultsModel *m_resultsModel;
-        //...
-        ScanStatus *m_scanStatus;
-        ScanConfig *m_scanConfig;
-        record::ScanArguments* m_scanArguments;
-        record::ScanResults* m_scanResults;
+        records::ScanArguments* m_scanArguments;
+        records::ScanResults* m_scanResults;
 
     public:
-        explicit Dns(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
-        ~Dns();
+        explicit DnsRecords(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        ~DnsRecords();
 
     public slots:
         void scanThreadEnded();
@@ -59,4 +54,4 @@ class Dns : public BaseClass{
         void on_tableView_srv_customContextMenuRequested(const QPoint &pos);
 };
 
-#endif // DNS_H
+#endif // DNSRECORDS_H

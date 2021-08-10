@@ -35,16 +35,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -152,13 +142,6 @@
        </layout>
       </item>
       <item>
-       <widget class="Line" name="line_5">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <property name="spacing">
          <number>5</number>
@@ -218,13 +201,6 @@
        </layout>
       </item>
       <item>
-       <widget class="Line" name="line_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QCheckBox" name="checkBox_newSpecialWordlist">
         <property name="font">
          <font>
@@ -253,7 +229,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <property name="spacing">
-       <number>2</number>
+       <number>5</number>
       </property>
       <property name="leftMargin">
        <number>0</number>
@@ -265,7 +241,7 @@
        <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>1</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -290,6 +266,12 @@
             <height>23</height>
            </size>
           </property>
+          <property name="maximumSize">
+           <size>
+            <width>75</width>
+            <height>23</height>
+           </size>
+          </property>
           <property name="styleSheet">
            <string notr="true"/>
           </property>
@@ -299,13 +281,6 @@
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="Line" name="line_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -344,8 +319,14 @@
               <height>23</height>
              </size>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>75</width>
+              <height>23</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color:rgb(82, 82, 82);</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>Clear</string>
@@ -360,8 +341,14 @@
               <height>23</height>
              </size>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>75</width>
+              <height>23</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color:rgb(82, 82, 82);</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>Remove</string>
@@ -376,8 +363,14 @@
               <height>23</height>
              </size>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>75</width>
+              <height>23</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color:rgb(82, 82, 82);</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>Load</string>
@@ -418,8 +411,14 @@
             <height>23</height>
            </size>
           </property>
+          <property name="maximumSize">
+           <size>
+            <width>75</width>
+            <height>23</height>
+           </size>
+          </property>
           <property name="styleSheet">
-           <string notr="true">background-color:rgb(82, 82, 82);</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Add</string>
@@ -434,19 +433,21 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="Line" name="line_2">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QPushButton" name="pushButton_cancel">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>23</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>
@@ -457,6 +458,18 @@
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_ok">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>23</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>

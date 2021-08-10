@@ -4,7 +4,7 @@
 #include "src/core.h"
 #include "src/project/Project.h"
 #include "src/engines/ip/Ip.h"
-#include "src/engines/dns/Dns.h"
+#include "src/engines/dns/DnsRecords.h"
 #include "src/engines/level/Level.h"
 #include "src/engines/brute/Brute.h"
 #include "src/engines/osint/Osint.h"

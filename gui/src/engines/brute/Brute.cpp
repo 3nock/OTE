@@ -2,10 +2,26 @@
 #include "ui_Brute.h"
 
 /*
+ use ini file settings...
 
-  name BruteEnumerator to BruteScanner
+ fix filter from what you have learned, it shud not be asocciated with scope...
+
+ check if connected to the internet...
+ check if host is active...
+ pop an alert to user if wants cont...
+ Use QNetworkConfigurationManager::isOnline().
 
 */
+
+/*
+ QSet contains size check...
+*/
+
+
+/*
+ create a scrapper tab: use c++...
+*/
+
 
 /*
 
@@ -35,13 +51,8 @@
  *
  */
 
-// initiate everything in the constructor...
-
 /*************************** Class Constructor & Deconstructor *************************/
 Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Brute),
-      m_resultsModel(resultsModel),
-      m_scanStatus(new ScanStatus),
-      m_scanConfig(new ScanConfig),
       m_scanArguments(new brute::ScanArguments)
 {
     ui->setupUi(this);
@@ -67,14 +78,12 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, re
     //...
     ui->splitter->setSizes(QList<int>()<<200<<100);
     //...
-    m_resultsModel->brute->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
-    ui->tableView_results->setModel(m_resultsModel->brute);
+    resultsModel->brute->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+    ui->tableView_results->setModel(resultsModel->brute);
     //...
     m_scanArguments->wordlist = ui->listWidget_wordlist;
 }
 Brute::~Brute(){
-    delete m_scanStatus;
-    delete m_scanConfig;
     delete m_scanArguments;
     //...
     delete ui;
@@ -186,9 +195,9 @@ void Brute::on_pushButton_pause_clicked(){
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(m_scanStatus->isPaused){
+    if(scanStatus->isPaused){
         ui->pushButton_pause->setText("Pause");
-        m_scanStatus->isPaused = false;
+        scanStatus->isPaused = false;
         //...
         startScan();
         //...
@@ -197,19 +206,19 @@ void Brute::on_pushButton_pause_clicked(){
     }
     else
     {
-        m_scanStatus->isPaused = true;
+        scanStatus->isPaused = true;
         emit stopScan();
     }
 }
 
 void Brute::on_pushButton_stop_clicked(){
     emit stopScan();
-    if(m_scanStatus->isPaused)
+    if(scanStatus->isPaused)
     {
         m_scanArguments->targetList.clear();
-        m_scanStatus->isPaused = false;
-        m_scanStatus->isStopped = false;
-        m_scanStatus->isRunning = false;
+        scanStatus->isPaused = false;
+        scanStatus->isStopped = false;
+        scanStatus->isRunning = false;
         //...
         ui->pushButton_start->setEnabled(true);
         ui->pushButton_pause->setDisabled(true);
@@ -218,7 +227,7 @@ void Brute::on_pushButton_stop_clicked(){
         sendStatus("[*] Enumeration Complete!");
         logs("[END] Enumeration Complete!\n");
     }
-    m_scanStatus->isStopped = true;
+    scanStatus->isStopped = true;
 }
 
 /************************************ Enumeration Method *********************************/
@@ -230,7 +239,7 @@ void Brute::startScan(){
     /// creating more threads than needed...
     ///
     int wordlistCount = ui->listWidget_wordlist->count();
-    int threadsCount = m_scanConfig->threadsCount;
+    int threadsCount = scanConfig->threadsCount;
     if(threadsCount > wordlistCount)
     {
         threadsCount = wordlistCount;
@@ -242,25 +251,25 @@ void Brute::startScan(){
     for(int i = 0; i < threadsCount; i++)
     {
         QThread *cThread = new QThread;
-        BruteEnumerator *Enumerator = new BruteEnumerator(m_scanConfig, m_scanArguments);
-        Enumerator->enumerate(cThread);
-        Enumerator->moveToThread(cThread);
+        brute::Scanner *scanner = new brute::Scanner(scanConfig, m_scanArguments);
+        scanner->startScan(cThread);
+        scanner->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
-        connect(Enumerator, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
-        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
+        connect(scanner, SIGNAL(scanResult(QString, QString, QString)), this, SLOT(scanResult(QString, QString, QString)));
+        connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
+        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
-        connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
+        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stopScan()), Enumerator, SLOT(onStop()));
+        connect(this, SIGNAL(stopScan()), scanner, SLOT(stopScan()));
         //...
         cThread->start();
     }
-    m_scanStatus->isRunning = true;
+    scanStatus->isRunning = true;
 }
 
 /************************************ Receiving Results ***********************************/
-void Brute::scanResult(QString subdomain, QString ipAddress){
+void Brute::scanResult(QString subdomain, QString ipAddress, QString target){
     if(m_subdomainsSet.contains(subdomain)){
         return;
     }
@@ -268,16 +277,16 @@ void Brute::scanResult(QString subdomain, QString ipAddress){
     ///
     /// save to brute model...
     ///
-    m_resultsModel->brute->appendRow({new QStandardItem(subdomain), new QStandardItem(ipAddress)});
-    ui->label_resultsCount->setNum(m_resultsModel->brute->rowCount());
+    resultsModel->brute->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ipAddress));
+    ui->label_resultsCount->setNum(resultsModel->brute->rowCount());
     ///
     /// save to Project model...
     ///
     if(m_scanArguments->tldBrute){
-        m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::tlds);
+        resultsModel->project->append(QStringList()<<subdomain<<ipAddress<<target, RESULTS::tlds);
     }
     if(m_scanArguments->subBrute){
-        m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::subdomains);
+        resultsModel->project->append(QStringList()<<subdomain<<ipAddress<<target, RESULTS::subdomains);
     }
 }
 
@@ -289,10 +298,10 @@ void Brute::scanThreadEnded(){
     ///
     if(activeThreads == 0)
     {
-        if(m_scanStatus->isPaused)
+        if(scanStatus->isPaused)
         {
             ui->pushButton_pause->setText("Resume");
-            m_scanStatus->isRunning = false;
+            scanStatus->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
             logs("[*] Scan Paused!\n");
@@ -301,13 +310,13 @@ void Brute::scanThreadEnded(){
         else
         {
             // set the progress bar to 100% just in case...
-            if(!m_scanStatus->isStopped){
+            if(!scanStatus->isStopped){
                 ui->progressBar->setValue(ui->progressBar->maximum());
             }
             m_scanArguments->targetList.clear();
-            m_scanStatus->isPaused = false;
-            m_scanStatus->isStopped = false;
-            m_scanStatus->isRunning = false;
+            scanStatus->isPaused = false;
+            scanStatus->isStopped = false;
+            scanStatus->isRunning = false;
             //...
             ui->pushButton_start->setEnabled(true);
             ui->pushButton_pause->setDisabled(true);
@@ -330,9 +339,9 @@ void Brute::on_radioButton_subBrute_clicked(){
 
 /******************************** Scan Config Dialog ***************************************/
 void Brute::on_toolButton_config_clicked(){
-    ConfigDialog *scanConfig = new ConfigDialog(this, m_scanConfig);
-    scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
-    scanConfig->show();
+    ConfigDialog *configDialog = new ConfigDialog(this, scanConfig);
+    configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
+    configDialog->show();
 }
 
 void Brute::on_comboBox_target_currentIndexChanged(int index){
@@ -354,13 +363,13 @@ void Brute::on_pushButton_clearResults_clicked(){
     if(ui->tabWidget_results->currentIndex() == 0)
     {
         m_subdomainsSet.clear();
-        m_resultsModel->brute->clear();
+        resultsModel->brute->clear();
         ui->label_resultsCount->clear();
         //...
         ui->progressBar->reset();
         ui->progressBar->hide();
         //...
-        m_resultsModel->brute->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+        resultsModel->brute->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     }
     ///
     /// if the current tab is logs clear logs...
@@ -407,7 +416,7 @@ void Brute::on_pushButton_generateWordlist_clicked(){
 
 /**************************** Choose Wordlist To Use (Dialog) ****************************/
 void Brute::on_toolButton_wordlist_clicked(){
-    WordListDialog *wordlistDialog;
+    WordListDialog *wordlistDialog = nullptr;
     if(ui->radioButton_subBrute->isChecked()){
         wordlistDialog = new WordListDialog(this, ENGINE::SUBBRUTE);
     }
@@ -487,7 +496,7 @@ void Brute::on_pushButton_action_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(m_resultsModel->brute->rowCount() < 1){
+    if(resultsModel->brute->rowCount() < 1){
         return;
     }
     ///

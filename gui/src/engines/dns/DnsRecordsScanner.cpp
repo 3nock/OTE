@@ -1,10 +1,10 @@
-#include "DnsEnumerator.h"
+#include "DnsRecordsScanner.h"
 
 /********************************************************************************
                             DNS-RECORDS ENUMERATOR
 *********************************************************************************/
 
-DnsRecordsEnumerator::DnsRecordsEnumerator(ScanConfig *scanConfig, record::ScanArguments *scanArguments, record::ScanResults *scanResults)
+records::Scanner::Scanner(ScanConfig *scanConfig, records::ScanArguments *scanArguments, records::ScanResults *scanResults)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       m_scanResults(scanResults),
@@ -43,7 +43,7 @@ DnsRecordsEnumerator::DnsRecordsEnumerator(ScanConfig *scanConfig, record::ScanA
     connect(m_dns_txt, SIGNAL(finished()), this, SLOT(txtLookupFinished()));
     connect(m_dns_cname, SIGNAL(finished()), this, SLOT(cnameLookupFinished()));
 }
-DnsRecordsEnumerator::~DnsRecordsEnumerator(){
+records::Scanner::~Scanner(){
     delete m_dns_srv;
     delete m_dns_a;
     delete m_dns_aaaa;
@@ -53,17 +53,17 @@ DnsRecordsEnumerator::~DnsRecordsEnumerator(){
     delete m_dns_cname;
 }
 
-void DnsRecordsEnumerator::enumerate(QThread *cThread){
+void records::Scanner::startScan(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void DnsRecordsEnumerator::enumerate_srv(QThread *cThread){
+void records::Scanner::startScan_srv(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup_srv()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void DnsRecordsEnumerator::lookup(){
+void records::Scanner::lookup(){
     //...
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     m_scanArguments->currentTargetToEnumerate++;
@@ -118,7 +118,7 @@ void DnsRecordsEnumerator::lookup(){
     }
 }
 
-void DnsRecordsEnumerator::lookup_srv(){
+void records::Scanner::lookup_srv(){
     //...
     m_currentSrvToEnumerate = m_scanArguments->currentSrvToEnumerate;
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
@@ -148,13 +148,13 @@ void DnsRecordsEnumerator::lookup_srv(){
     }
 }
 
-void DnsRecordsEnumerator::onStop(){
+void records::Scanner::stopScan(){
     emit quitThread();
 }
 
 /******************************* RECORD-TYPES LOOKUP FINISHED *********************************/
 
-void DnsRecordsEnumerator::srvLookupFinished(){
+void records::Scanner::srvLookupFinished(){
     if(m_dns_srv->error() == QDnsLookup::NoError)
     {
         const auto records = m_dns_srv->serviceRecords();
@@ -169,7 +169,7 @@ void DnsRecordsEnumerator::srvLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.name()<<record.target(), RESULTS::srv);
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.name()<<record.target()<<m_dns_srv->name(), RESULTS::srv);
             }
             m_scanResults->srvResultsLabel->setNum(m_scanResults->resultsModel->records->model_srv->rowCount());
         }
@@ -178,12 +178,12 @@ void DnsRecordsEnumerator::srvLookupFinished(){
     /// scan progress...
     ///
     m_scanArguments->progress++;
-    emit progress(m_scanArguments->progress);
+    emit scanProgress(m_scanArguments->progress);
     //...
     emit doLookup_srv();
 }
 
-void DnsRecordsEnumerator::aLookupFinished(){
+void records::Scanner::aLookupFinished(){
     if(m_dns_a->error() == QDnsLookup::NoError)
     {
         if(m_firstToResolve)
@@ -205,7 +205,7 @@ void DnsRecordsEnumerator::aLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value().toString(), RESULTS::a);
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value().toString()<<m_dns_a->name(), RESULTS::a);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -217,13 +217,13 @@ void DnsRecordsEnumerator::aLookupFinished(){
         /// scan progress...
         ///
         m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
+        emit scanProgress(m_scanArguments->progress);
         //...
         emit doLookup();
     }
 }
 
-void DnsRecordsEnumerator::aaaaLookupFinished(){
+void records::Scanner::aaaaLookupFinished(){
     if(m_dns_aaaa->error() == QDnsLookup::NoError)
     {
         if(m_firstToResolve)
@@ -245,7 +245,7 @@ void DnsRecordsEnumerator::aaaaLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value().toString(), RESULTS::aaaa);
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value().toString()<<m_dns_aaaa->name(), RESULTS::aaaa);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -257,13 +257,13 @@ void DnsRecordsEnumerator::aaaaLookupFinished(){
         /// scan progress...
         ///
         m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
+        emit scanProgress(m_scanArguments->progress);
         //...
         emit doLookup();
     }
 }
 
-void DnsRecordsEnumerator::mxLookupFinished(){
+void records::Scanner::mxLookupFinished(){
     if(m_dns_mx->error() == QDnsLookup::NoError)
     {
         if(m_firstToResolve)
@@ -285,7 +285,7 @@ void DnsRecordsEnumerator::mxLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.exchange(), RESULTS::mx);
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.exchange()<<m_dns_mx->name(), RESULTS::mx);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -297,13 +297,13 @@ void DnsRecordsEnumerator::mxLookupFinished(){
         /// scan progress...
         ///
         m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
+        emit scanProgress(m_scanArguments->progress);
         //...
         emit doLookup();
     }
 }
 
-void DnsRecordsEnumerator::cnameLookupFinished()
+void records::Scanner::cnameLookupFinished()
 {
     if(m_dns_cname->error() == QDnsLookup::NoError)
     {
@@ -326,7 +326,7 @@ void DnsRecordsEnumerator::cnameLookupFinished()
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value(), RESULTS::cname);
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value()<<m_dns_cname->name(), RESULTS::cname);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -338,13 +338,13 @@ void DnsRecordsEnumerator::cnameLookupFinished()
         /// scan progress...
         ///
         m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
+        emit scanProgress(m_scanArguments->progress);
         //...
         emit doLookup();
     }
 }
 
-void DnsRecordsEnumerator::nsLookupFinished(){
+void records::Scanner::nsLookupFinished(){
     if(m_dns_ns->error() == QDnsLookup::NoError)
     {
         if(m_firstToResolve)
@@ -366,7 +366,7 @@ void DnsRecordsEnumerator::nsLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value(), RESULTS::ns);
+                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value()<<m_dns_ns->name(), RESULTS::ns);
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -378,13 +378,13 @@ void DnsRecordsEnumerator::nsLookupFinished(){
         /// scan progress...
         ///
         m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
+        emit scanProgress(m_scanArguments->progress);
         //...
         emit doLookup();
     }
 }
 
-void DnsRecordsEnumerator::txtLookupFinished(){
+void records::Scanner::txtLookupFinished(){
     if(m_dns_txt->error() == QDnsLookup::NoError)
     {
         if(m_firstToResolve)
@@ -409,7 +409,7 @@ void DnsRecordsEnumerator::txtLookupFinished(){
                     ///
                     /// save to project model...
                     ///
-                    m_scanResults->resultsModel->project->append(QList<QString>()<<value, RESULTS::txt);
+                    m_scanResults->resultsModel->project->append(QList<QString>()<<value<<m_dns_txt->name(), RESULTS::txt);
                 }
             }
             m_dnsNameItem->appendRow(m_recordItem);
@@ -422,7 +422,7 @@ void DnsRecordsEnumerator::txtLookupFinished(){
         /// scan progress...
         ///
         m_scanArguments->progress++;
-        emit progress(m_scanArguments->progress);
+        emit scanProgress(m_scanArguments->progress);
         //...
         emit doLookup();
     }

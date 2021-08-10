@@ -1016,7 +1016,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QScrollArea" name="scrollArea">
+                <widget class="QScrollArea" name="scrollArea_noKeyEngines">
                  <property name="cursor" stdset="0">
                   <cursorShape>ArrowCursor</cursorShape>
                  </property>
@@ -1312,7 +1312,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QScrollArea" name="scrollArea_requireApiKey">
+                <widget class="QScrollArea" name="scrollArea_keyEngines">
                  <property name="contextMenuPolicy">
                   <enum>Qt::NoContextMenu</enum>
                  </property>

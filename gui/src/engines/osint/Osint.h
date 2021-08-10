@@ -3,8 +3,7 @@
 
 // headers...
 #include "src/engines/Base.h"
-#include "lib-osint.h"
-#include "OsintEnumerator.h"
+#include "OsintScanner.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ConfigDialog.h"
 
@@ -22,8 +21,6 @@ class Osint : public BaseClass{
     private:
         void getUserOptions(QStringList *choosenOptions);
         void setupOsintProfiles();
-        //...
-        ResultsModel *m_resultsModel;
         //...
         osint::ScanArguments *scanArguments;
         osint::ScanResults *scanResults;

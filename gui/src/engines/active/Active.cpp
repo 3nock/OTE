@@ -2,10 +2,6 @@
 #include "ui_Active.h"
 
 Active::Active(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Active),
-    m_resultsModel(resultsModel),
-    //...
-    m_scanStatus(new ScanStatus),
-    m_scanConfig(new ScanConfig),
     m_scanArguments(new active::ScanArguments)
 {
     ui->setupUi(this);
@@ -25,18 +21,15 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, 
     ui->pushButton_stop->setDisabled(true);
     ui->pushButton_pause->setDisabled(true);
     //...
-    m_resultsModel->active->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
-    ui->tableView_results->setModel(m_resultsModel->active);
+    resultsModel->active->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+    ui->tableView_results->setModel(resultsModel->active);
     //...
     ui->splitter->setSizes(QList<int>()<<160<<1);
     //...
     m_scanArguments->targetList = ui->listWidget_targets;
 }
 Active::~Active(){
-    delete m_scanStatus;
-    delete m_scanConfig;
     delete m_scanArguments;
-    //...
     delete ui;
 }
 
@@ -102,9 +95,9 @@ void Active::on_pushButton_pause_clicked(){
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(m_scanStatus->isPaused){
+    if(scanStatus->isPaused){
         ui->pushButton_pause->setText("Pause");
-        m_scanStatus->isPaused = false;
+        scanStatus->isPaused = false;
         //...
         startScan();
         //...
@@ -113,14 +106,14 @@ void Active::on_pushButton_pause_clicked(){
     }
     else
     {
-        m_scanStatus->isPaused = true;
+        scanStatus->isPaused = true;
         emit stopScan();
     }
 }
 
 void Active::on_pushButton_stop_clicked(){
     emit stopScan();
-    m_scanStatus->isStopped = true;
+    scanStatus->isStopped = true;
 }
 
 void Active::startScan(){
@@ -130,7 +123,7 @@ void Active::startScan(){
     /// creating more threads than needed...
     ///
     int wordlistCount = ui->listWidget_targets->count();
-    int threadsCount = m_scanConfig->threadsCount;
+    int threadsCount = scanConfig->threadsCount;
     if(threadsCount > wordlistCount)
     {
         threadsCount = wordlistCount;
@@ -141,34 +134,34 @@ void Active::startScan(){
     ///
     for(int i = 0; i < threadsCount; i++)
     {
-        ActiveEnumerator *Enumerator = new ActiveEnumerator(m_scanConfig, m_scanArguments);
+        active::Scanner *scanner = new active::Scanner(scanConfig, m_scanArguments);
         QThread *cThread = new QThread;
-        Enumerator->enumerate(cThread);
-        Enumerator->moveToThread(cThread);
+        scanner->startScan(cThread);
+        scanner->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
-        connect(Enumerator, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
-        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
+        connect(scanner, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
+        connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
+        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
-        connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
+        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stopScan()), Enumerator, SLOT(onStop()));
+        connect(this, SIGNAL(stopScan()), scanner, SLOT(stopScan()));
         //...
         cThread->start();
     }
-    m_scanStatus->isRunning = true;
+    scanStatus->isRunning = true;
 }
 
 void Active::scanResult(QString subdomain, QString ipAddress){
     ///
     /// save to active model...
     ///
-    m_resultsModel->active->appendRow({new QStandardItem(subdomain), new QStandardItem(ipAddress)});
-    ui->label_resultsCount->setNum(m_resultsModel->active->rowCount());
+    resultsModel->active->appendRow(QList<QStandardItem*>() << new QStandardItem(subdomain) << new QStandardItem(ipAddress));
+    ui->label_resultsCount->setNum(resultsModel->active->rowCount());
     ///
     /// save to project model...
     ///
-    m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::subdomains);
+    resultsModel->project->append(QStringList()<<subdomain<<ipAddress<<subdomain, RESULTS::subdomains);
 }
 
 void Active::scanThreadEnded(){
@@ -178,10 +171,10 @@ void Active::scanThreadEnded(){
     ///
     if(activeThreads == 0)
     {
-        if(m_scanStatus->isPaused)
+        if(scanStatus->isPaused)
         {
             ui->pushButton_pause->setText("Resume");
-            m_scanStatus->isRunning = false;
+            scanStatus->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
             logs("[*] Scan Paused!\n");
@@ -190,12 +183,12 @@ void Active::scanThreadEnded(){
         else
         {
             // set the progress bar to 100% just in case...
-            if(!m_scanStatus->isStopped){
+            if(!scanStatus->isStopped){
                 ui->progressBar->setValue(ui->progressBar->maximum());
             }
-            m_scanStatus->isPaused = false;
-            m_scanStatus->isStopped = false;
-            m_scanStatus->isRunning = false;
+            scanStatus->isPaused = false;
+            scanStatus->isStopped = false;
+            scanStatus->isRunning = false;
             //...
             ui->pushButton_start->setEnabled(true);
             ui->pushButton_pause->setDisabled(true);
@@ -227,9 +220,9 @@ void Active::on_comboBox_option_currentIndexChanged(int index){
 }
 
 void Active::on_toolButton_config_clicked(){
-    ConfigDialog *scanConfig = new ConfigDialog(this, m_scanConfig);
-    scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
-    scanConfig->show();
+    ConfigDialog *configDialog = new ConfigDialog(this, scanConfig);
+    configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
+    configDialog->show();
 }
 
 void Active::on_pushButton_get_clicked(){
@@ -264,9 +257,9 @@ void Active::on_pushButton_clearResults_clicked(){
     ///
     if(ui->tabWidget_results->currentIndex() == 0)
     {
-        m_resultsModel->active->clear();
+        resultsModel->active->clear();
         ui->label_resultsCount->clear();
-        m_resultsModel->active->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
+        resultsModel->active->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
         //...
         ui->progressBar->clearMask();
         ui->progressBar->reset();
@@ -285,7 +278,7 @@ void Active::on_pushButton_action_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(m_resultsModel->active->rowCount() < 1){
+    if(resultsModel->active->rowCount() < 1){
         return;
     }
     ///

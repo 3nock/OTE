@@ -1,12 +1,23 @@
 #ifndef IPENUMERATOR_H
 #define IPENUMERATOR_H
 
-#include "lib-ip.h"
+#include "src/core.h"
 
-/*********************************************************
-                ACTIVE_SUBDOMAINS ENUMERATOR
-**********************************************************/
-class IpEnumerator : public QObject{
+
+namespace ip{
+
+struct ScanArguments{
+    QListWidget *targetList;
+    QLabel *label_resultsCount;
+    QStandardItemModel *model_results;
+    //...
+    int progress;
+    int currentTargetToEnumerate;
+};
+typedef struct ScanArguments ScanArguments;
+
+
+class Scanner : public QObject{
     Q_OBJECT
 
     private:
@@ -18,26 +29,26 @@ class IpEnumerator : public QObject{
         QHostInfo *hostInfo;
 
     public:
-        IpEnumerator(ScanConfig *scanConfig, ip::ScanArguments *scanArguments);
-        ~IpEnumerator();
+        Scanner(ScanConfig *scanConfig, ip::ScanArguments *scanArguments);
+        ~Scanner();
         //...
-        void enumerate(QThread *cThread);
+        void startScan(QThread *cThread);
 
     public slots:
-        void onStop();
+        void stopScan();
 
     private slots:
         void lookup();
         void lookupFinished(QHostInfo info);
 
     signals:
-        void performAnotherLookup();
+        void anotherLookup();
         //...
         void scanResult(QString subdomain, QString ipAddress);
-        void progress(int value);
+        void scanProgress(int value);
         void scanLog(QString log);
         //...
         void quitThread();
 };
-
+}
 #endif // IPENUMERATOR_H

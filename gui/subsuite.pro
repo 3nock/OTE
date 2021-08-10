@@ -26,27 +26,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    src/engines/BaseScanners.cpp \
+        src\engines\CommonScanners.cpp \
         src\project\ProjectDataModel.cpp \
-        src\engines\ip\lib-ip.cpp \
         src\project\Project.cpp \
         src\engines\Base.cpp \
         src\engines\ip\Ip.cpp \
-        src\engines\ip\IpEnumerator.cpp \
+        src\engines\ip\IpScanner.cpp \
         src\engines\active\Active.cpp \
-        src\engines\active\ActiveEnumerator.cpp \
+        src\engines\active\ActiveScanner.cpp \
         src\engines\level\Level.cpp \
-        src\engines\level\lib-level.cpp \
-        src\engines\level\LevelEnumerator.cpp \
-        src\engines\dns\Dns.cpp \
-        src\engines\dns\lib-dns.cpp \
-        src\engines\dns\DnsEnumerator.cpp \
+        src\engines\level\LevelScanner.cpp \
+        src\engines\dns\DnsRecords.cpp \
+        src\engines\dns\DnsRecordsScanner.cpp \
         src\engines\brute\Brute.cpp \
-        src\engines\brute\lib-brute.cpp \
-        src\engines\brute\BruteEnumerator.cpp \
+        src\engines\brute\BruteScanner.cpp \
         src\engines\osint\Osint.cpp \
-        src\engines\osint\lib-osint.cpp \
-        src\engines\osint\OsintEnumerator.cpp \
+        src\engines\osint\OsintScanner.cpp \
         src\dialogs\ConfigDialog.cpp \
         src\dialogs\ApiKeysDialog.cpp \
         src\dialogs\WordlistDialog.cpp \
@@ -57,28 +52,22 @@ SOURCES += \
         src\main.cpp \
 
 HEADERS += \
-        src/engines/BaseScanners.h \
+        src\engines\CommonScanners.h \
         src\project\ProjectDataModel.h \
-        src\engines\ip\lib-ip.h \
         src\project\Project.h \
         src\engines\Base.h \
         src\engines\ip\Ip.h \
-        src\engines\ip\IpEnumerator.h \
+        src\engines\ip\IpScanner.h \
         src\engines\active\Active.h \
-        src\engines\active\lib-active.h \
-        src\engines\active\ActiveEnumerator.h \
+        src\engines\active\ActiveScanner.h \
         src\engines\level\Level.h \
-        src\engines\level\lib-level.h \
-        src\engines\level\LevelEnumerator.h \
-        src\engines\dns\Dns.h \
-        src\engines\dns\lib-dns.h \
-        src\engines\dns\DnsEnumerator.h \
+        src\engines\level\LevelScanner.h \
+        src\engines\dns\DnsRecords.h \
+        src\engines\dns\DnsRecordsScanner.h \
         src\engines\brute\Brute.h \
-        src\engines\brute\lib-brute.h \
-        src\engines\brute\BruteEnumerator.h \
+        src\engines\brute\BruteScanner.h \
         src\engines\osint\Osint.h \
-        src\engines\osint\lib-osint.h \
-        src\engines\osint\OsintEnumerator.h \
+        src\engines\osint\OsintScanner.h \
         src\dialogs\ApiKeysDialog.h \
         src\dialogs\ConfigDialog.h \
         src\dialogs\WordlistDialog.h \
@@ -90,7 +79,7 @@ HEADERS += \
 FORMS += \
         src\project\Project.ui \
         src\engines\ip\Ip.ui \
-        src\engines\dns\Dns.ui \
+        src\engines\dns\DnsRecords.ui \
         src\engines\level\Level.ui \
         src\engines\brute\Brute.ui \
         src\engines\osint\Osint.ui \

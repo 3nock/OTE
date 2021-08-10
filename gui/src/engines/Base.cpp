@@ -1,12 +1,16 @@
 #include "Base.h"
 
-BaseClass::BaseClass(QWidget *parent, ResultsModel *resultsModel) : QWidget(parent),
-    m_resultsModel(resultsModel),
+BaseClass::BaseClass(QWidget *parent, ResultsModel *_resultsModel) : QWidget(parent),
+    resultsModel(_resultsModel),
+    scanStatus(new ScanStatus),
+    scanConfig(new ScanConfig),
     widgets(new Widgets)
 {
 
 }
 BaseClass::~BaseClass(){
+    delete scanStatus;
+    delete scanConfig;
     delete widgets;
 }
 
@@ -403,25 +407,25 @@ void BaseClass::actionSave(ENGINE engineName, CHOICE choice){
     ///
     switch(engineName){
     case ENGINE::IP:
-        model = m_resultsModel->ip;
+        model = resultsModel->ip;
         break;
     case ENGINE::BRUTE:
-        model = m_resultsModel->brute;
+        model = resultsModel->brute;
         break;
     case ENGINE::LEVEL:
-        model = m_resultsModel->level;
+        model = resultsModel->level;
         break;
     case ENGINE::OSINT:
-        model = m_resultsModel->osint;
+        model = resultsModel->osint;
         break;
     case ENGINE::ACTIVE:
-        model = m_resultsModel->active;
+        model = resultsModel->active;
         break;
     case ENGINE::DNSRECORDS:
-        model = m_resultsModel->records->model_records;
+        model = resultsModel->records->model_records;
         break;
     case ENGINE::SRVRECORDS:
-        model = m_resultsModel->records->model_srv;
+        model = resultsModel->records->model_srv;
         break;
     default:
         break;
@@ -606,25 +610,25 @@ void BaseClass::actionCopy(ENGINE engineName, CHOICE choice){
     ///
     switch(engineName){
     case ENGINE::IP:
-        model = m_resultsModel->ip;
+        model = resultsModel->ip;
         break;
     case ENGINE::BRUTE:
-        model = m_resultsModel->brute;
+        model = resultsModel->brute;
         break;
     case ENGINE::LEVEL:
-        model = m_resultsModel->level;
+        model = resultsModel->level;
         break;
     case ENGINE::OSINT:
-        model = m_resultsModel->osint;
+        model = resultsModel->osint;
         break;
     case ENGINE::ACTIVE:
-        model = m_resultsModel->active;
+        model = resultsModel->active;
         break;
     case ENGINE::DNSRECORDS:
-        model = m_resultsModel->records->model_records;
+        model = resultsModel->records->model_records;
         break;
     case ENGINE::SRVRECORDS:
-        model = m_resultsModel->records->model_srv;
+        model = resultsModel->records->model_srv;
         break;
     default:
         break;
@@ -856,19 +860,19 @@ void BaseClass::a_receiveTargets(ENGINE engineName, CHOICE choice){
     ///
     switch(engineName){
     case ENGINE::BRUTE:
-        model = m_resultsModel->brute;
+        model = resultsModel->brute;
         break;
     case ENGINE::ACTIVE:
-        model = m_resultsModel->active;
+        model = resultsModel->active;
         break;
     case ENGINE::LEVEL:
-        model = m_resultsModel->level;
+        model = resultsModel->level;
         break;
     case ENGINE::IP:
-        model = m_resultsModel->ip;
+        model = resultsModel->ip;
         break;
     case ENGINE::DNSRECORDS:
-        model = m_resultsModel->records->model_records;
+        model = resultsModel->records->model_records;
         for(char i = 0; i < model->rowCount(); i++)
         {
             for(char j = 0; j < model->item(i)->rowCount(); j++)
@@ -903,7 +907,7 @@ void BaseClass::a_receiveTargets(ENGINE engineName, CHOICE choice){
         if(choice == CHOICE::ipaddress){
             return;
         }
-        model = m_resultsModel->records->model_srv;
+        model = resultsModel->records->model_srv;
         for(char i = 0; i < model->rowCount(); i++)
         {
             item = model->item(i, 1)->text();

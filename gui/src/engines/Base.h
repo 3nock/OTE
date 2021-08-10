@@ -26,10 +26,14 @@ class BaseClass : public QWidget {
         Q_OBJECT
 
     private:
-        ResultsModel *m_resultsModel;
         QSet<QString> m_targetSet;
 
     public:
+        ResultsModel *resultsModel;
+        //...
+        ScanStatus *scanStatus;
+        ScanConfig *scanConfig;
+        //...
         Widgets *widgets;
         int activeThreads = 0;
 

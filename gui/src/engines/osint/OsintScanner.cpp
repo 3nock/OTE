@@ -1,19 +1,19 @@
-#include "OsintEnumerator.h"
+#include "OsintScanner.h"
 
 /********************************* Constructor & Destructor **********************************/
-Enumerator::Enumerator(osint::ScanArguments *scanArguments, osint::ScanResults *scanResults)
+osint::Scanner::Scanner(osint::ScanArguments *scanArguments, osint::ScanResults *scanResults)
     : m_scanArguments(scanArguments), m_scanResults(scanResults)
 {
     // nothing yet...
 }
-Enumerator::~Enumerator(){
+osint::Scanner::~Scanner(){
     // nothing yet...
 }
 
 ///
 /// called from osint, connects to the QThread...
 ///
-void Enumerator::Enumerate(QThread *cThread){
+void osint::Scanner::startScan(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(worker()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
@@ -21,7 +21,7 @@ void Enumerator::Enumerate(QThread *cThread){
 ///
 ///  the main function runned on the QThread...
 ///
-void Enumerator::worker(){
+void osint::Scanner::lookup(){
     ///
     /// initialize python intepreter Enviroment...
     ///
@@ -60,7 +60,7 @@ void Enumerator::worker(){
             /// if an exception occured while running python code...
             ///
             if(firstEntry.startsWith("[")){
-                emit scanLogs(firstEntry);
+                emit scanLog(firstEntry);
             }
             ///
             /// if no Exception occurred while running python code...
@@ -71,11 +71,11 @@ void Enumerator::worker(){
                     *m_scanResults->resultsCount += 1;
                 }
                 m_scanResults->label_subdomainsCount->setNum(*m_scanResults->resultsCount);
-                emit scanLogs("[*] Enumerated Subdomains By "+osintEngine+", SIZE: "+QString::number(listSize));
+                emit scanLog("[*] Enumerated Subdomains By "+osintEngine+", SIZE: "+QString::number(listSize));
             }
         }
         else{
-            emit scanLogs("[*] Enumerated Subdomains By "+osintEngine+", SIZE: 0");
+            emit scanLog("[*] Enumerated Subdomains By "+osintEngine+", SIZE: 0");
         }
         ///
         /// dereferencing the python objects...
@@ -97,10 +97,9 @@ void Enumerator::worker(){
     /// clearing the options...
     ///
     m_scanArguments->choosenOptions.clear();
-    emit enumerationComplete();
     emit quitThread();
 }
 
-void Enumerator::onStopEnumeration(){
+void osint::Scanner::stopScan(){
     m_stopEnumeration = true;
 }

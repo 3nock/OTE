@@ -1,22 +1,22 @@
-#include "IpEnumerator.h"
+ #include "IpScanner.h"
 
 /*************************************************************************************************
                                      Ip_SUBDOMAINS ENUMERATOR
 **************************************************************************************************/
-IpEnumerator::IpEnumerator(ScanConfig *scanConfig, ip::ScanArguments *scanArguments)
+ip::Scanner::Scanner(ScanConfig *scanConfig, ip::ScanArguments *scanArguments)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       //...
       hostInfo(new QHostInfo)
 {
     //...
-    connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
+    connect(this, SIGNAL(anotherLookup()), this, SLOT(lookup()));
 }
-IpEnumerator::~IpEnumerator(){
+ip::Scanner::~Scanner(){
     delete hostInfo;
 }
 
-void IpEnumerator::enumerate(QThread *cThread){
+void ip::Scanner::startScan(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
@@ -24,7 +24,7 @@ void IpEnumerator::enumerate(QThread *cThread){
 ///
 /// TODO: test the results if its is not simply an address using regular expression...
 ///
-void IpEnumerator::lookupFinished(QHostInfo info){
+void ip::Scanner::lookupFinished(QHostInfo info){
     ///
     /// check the results of the lookup if no error occurred save the results
     /// if error occurred emit appropriate response...
@@ -39,12 +39,12 @@ void IpEnumerator::lookupFinished(QHostInfo info){
     /// scan progress...
     ///
     m_scanArguments->progress++;
-    emit progress(m_scanArguments->progress);
+    emit scanProgress(m_scanArguments->progress);
     //...
-    emit performAnotherLookup();
+    emit anotherLookup();
 }
 
-void IpEnumerator::lookup(){
+void ip::Scanner::lookup(){
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     m_scanArguments->currentTargetToEnumerate++;
     if(m_currentTargetToEnumerate < m_scanArguments->targetList->count())
@@ -60,7 +60,7 @@ void IpEnumerator::lookup(){
     }
 }
 
-void IpEnumerator::onStop(){
+void ip::Scanner::stopScan(){
     emit quitThread();
 }
 

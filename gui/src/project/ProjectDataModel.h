@@ -55,8 +55,8 @@ class ProjectDataModel{
 
     public:
         ProjectDataModel(QStandardItemModel *projectModel);
-        void append(QList<QString> items, RESULTS resultType);
-        void setColumnCount(int columnCount);
+        //...
+        void append(QStringList items, RESULTS resultType);
 };
 
 #endif // MODELS_H

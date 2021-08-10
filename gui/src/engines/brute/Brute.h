@@ -1,10 +1,9 @@
 #ifndef BRUTE_H
 #define BRUTE_H
 
-#include "lib-brute.h"
 #include "src/engines/Base.h"
-#include "src/engines/BaseScanners.h"
-#include "BruteEnumerator.h"
+#include "src/engines/CommonScanners.h"
+#include "BruteScanner.h"
 
 namespace Ui {
     class Brute;
@@ -20,10 +19,6 @@ class Brute : public BaseClass{
         void startScan();
         //...
         QSet<QString> m_subdomainsSet;
-        ResultsModel *m_resultsModel;
-        //...
-        ScanStatus *m_scanStatus;
-        ScanConfig *m_scanConfig;
         brute::ScanArguments *m_scanArguments;
 
     public:
@@ -31,7 +26,7 @@ class Brute : public BaseClass{
         ~Brute();
 
     public slots:
-        void scanResult(QString subdomain, QString ipAddress);
+        void scanResult(QString subdomain, QString ipAddress, QString target);
         void scanThreadEnded();
         //...
         void choosenWordlist(QString);

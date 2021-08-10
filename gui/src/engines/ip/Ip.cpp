@@ -2,10 +2,6 @@
 #include "ui_Ip.h"
 
 Ip::Ip(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Ip),
-    m_resultsModel(resultsModel),
-    //...
-    m_scanStatus(new ScanStatus),
-    m_scanConfig(new ScanConfig),
     m_scanArguments(new ip::ScanArguments)
 {
     ui->setupUi(this);
@@ -25,20 +21,17 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsM
     ui->pushButton_stop->setDisabled(true);
     ui->pushButton_pause->setDisabled(true);
     //...
-    m_resultsModel->ip->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
-    ui->tableView_results->setModel(m_resultsModel->ip);
+    resultsModel->ip->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
+    ui->tableView_results->setModel(resultsModel->ip);
     //...
     ui->splitter_3->setSizes(QList<int>()<<160<<1);
     //...
     m_scanArguments->label_resultsCount = ui->label_resultsCount;
     m_scanArguments->targetList = ui->listWidget_targets;
-    m_scanArguments->model_results = m_resultsModel->ip;
+    m_scanArguments->model_results = resultsModel->ip;
 }
 Ip::~Ip(){
-    delete m_scanStatus;
-    delete m_scanConfig;
     delete m_scanArguments;
-    delete m_resultsModel->ip;
     //...
     delete ui;
 }
@@ -86,10 +79,10 @@ void Ip::on_pushButton_pause_clicked(){
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(m_scanStatus->isPaused)
+    if(scanStatus->isPaused)
     {
         ui->pushButton_pause->setText("Pause");
-        m_scanStatus->isPaused = false;
+        scanStatus->isPaused = false;
         //...
         startScan();
         //...
@@ -98,14 +91,14 @@ void Ip::on_pushButton_pause_clicked(){
     }
     else
     {
-        m_scanStatus->isPaused = true;
+        scanStatus->isPaused = true;
         emit stopScan();
     }
 }
 
 void Ip::on_pushButton_stop_clicked(){
     emit stopScan();
-    m_scanStatus->isStopped = true;
+    scanStatus->isStopped = true;
 }
 
 void Ip::startScan(){
@@ -115,7 +108,7 @@ void Ip::startScan(){
     /// creating more threads than needed...
     ///
     int wordlistCount = ui->listWidget_targets->count();
-    int threadsCount = m_scanConfig->threadsCount;
+    int threadsCount = scanConfig->threadsCount;
     if(threadsCount > wordlistCount)
     {
         threadsCount = wordlistCount;
@@ -126,22 +119,22 @@ void Ip::startScan(){
     ///
     for(int i = 0; i < threadsCount; i++)
     {
-        IpEnumerator *Enumerator = new IpEnumerator(m_scanConfig, m_scanArguments);
+        ip::Scanner *scanner = new ip::Scanner(scanConfig, m_scanArguments);
         QThread *cThread = new QThread;
-        Enumerator->enumerate(cThread);
-        Enumerator->moveToThread(cThread);
+        scanner->startScan(cThread);
+        scanner->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
-        connect(Enumerator, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
-        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
+        connect(scanner, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
+        connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
+        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
         connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
-        connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
+        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stopScan()), Enumerator, SLOT(onStop()));
+        connect(this, SIGNAL(stopScan()), scanner, SLOT(stopScan()));
         //...
         cThread->start();
     }
-    m_scanStatus->isRunning = true;
+    scanStatus->isRunning = true;
 }
 
 void Ip::scanThreadEnded(){
@@ -151,10 +144,10 @@ void Ip::scanThreadEnded(){
     ///
     if(activeThreads == 0)
     {
-        if(m_scanStatus->isPaused)
+        if(scanStatus->isPaused)
         {
             ui->pushButton_pause->setText("Resume");
-            m_scanStatus->isRunning = false;
+            scanStatus->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
             logs("[*] Scan Paused!\n");
@@ -163,12 +156,12 @@ void Ip::scanThreadEnded(){
         else
         {
             // set the progress bar to 100% just in case...
-            if(!m_scanStatus->isStopped){
+            if(!scanStatus->isStopped){
                 ui->progressBar->setValue(ui->progressBar->maximum());
             }
-            m_scanStatus->isPaused = false;
-            m_scanStatus->isStopped = false;
-            m_scanStatus->isRunning = false;
+            scanStatus->isPaused = false;
+            scanStatus->isStopped = false;
+            scanStatus->isRunning = false;
             //...
             ui->pushButton_start->setEnabled(true);
             ui->pushButton_pause->setDisabled(true);
@@ -184,18 +177,18 @@ void Ip::scanResult(QString subdomain, QString ipAddress){
     ///
     /// save to ip model model...
     ///
-    m_resultsModel->ip->appendRow({new QStandardItem(ipAddress), new QStandardItem(subdomain)});
+    resultsModel->ip->appendRow(QList<QStandardItem*>() <<new QStandardItem(ipAddress) <<new QStandardItem(subdomain));
     m_scanArguments->label_resultsCount->setNum(m_scanArguments->model_results->rowCount());
     ///
     /// save to project model...
     ///
-    m_resultsModel->project->append({subdomain, ipAddress}, RESULTS::subdomains);
+    resultsModel->project->append(QStringList()<<subdomain<<ipAddress<<subdomain, RESULTS::subdomains);
 }
 
 void Ip::on_toolButton_config_clicked(){
-    ConfigDialog *scanConfig = new ConfigDialog(this, m_scanConfig);
-    scanConfig->setAttribute( Qt::WA_DeleteOnClose, true );
-    scanConfig->show();
+    ConfigDialog *configDialog = new ConfigDialog(this, scanConfig);
+    configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
+    configDialog->show();
 }
 
 /**************************** Targets For Scan ***********************************/
@@ -226,9 +219,9 @@ void Ip::on_pushButton_clearResults_clicked(){
     ///
     if(ui->tabWidget_results->currentIndex() == 0)
     {
-        m_resultsModel->ip->clear();
+        resultsModel->ip->clear();
         ui->label_resultsCount->clear();
-        m_resultsModel->ip->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
+        resultsModel->ip->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
         //...
         ui->progressBar->clearMask();
         ui->progressBar->reset();
@@ -251,7 +244,7 @@ void Ip::on_pushButton_action_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(m_resultsModel->ip->rowCount() < 1){
+    if(resultsModel->ip->rowCount() < 1){
         return;
     }
     ///

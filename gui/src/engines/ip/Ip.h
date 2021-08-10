@@ -2,8 +2,7 @@
 #define IP_H
 
 #include "src/engines/Base.h"
-#include "src/core.h"
-#include "IpEnumerator.h"
+#include "IpScanner.h"
 #include "src/dialogs/ConfigDialog.h"
 
 namespace Ui {
@@ -19,10 +18,6 @@ class Ip : public BaseClass{
     private:
         void startScan();
         //...
-        ResultsModel *m_resultsModel;
-        //...
-        ScanStatus *m_scanStatus;
-        ScanConfig *m_scanConfig;
         ip::ScanArguments *m_scanArguments;
 
     public:

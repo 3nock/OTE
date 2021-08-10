@@ -4,8 +4,6 @@
 /******************************* Constructor & Destructor ********************************/
 
 Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Osint),
-    m_resultsModel(resultsModel),
-    //...
     scanArguments(new osint::ScanArguments),
     scanResults(new osint::ScanResults)
 {
@@ -25,8 +23,8 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, re
     ui->lineEdit_newProfile->setPlaceholderText("Enter New Profile's Name...");
     ui->lineEdit_multipleTargets->setPlaceholderText("Enter a new Target...");
     //...
-    m_resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
-    ui->tableView_results->setModel(m_resultsModel->osint);
+    resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+    ui->tableView_results->setModel(resultsModel->osint);
     //...
     ui->pushButton_pause->setDisabled(true);
     ui->pushButton_stop->setDisabled(true);
@@ -69,21 +67,21 @@ void Osint::on_pushButton_start_clicked(){
         scanArguments->targetDomain = targetDomain;
         scanResults->label_subdomainsCount = ui->label_resultsCount;
         scanResults->resultsCount = &subdomainsCount;
-        scanResults->results_model = m_resultsModel->osint;
+        scanResults->results_model = resultsModel->osint;
         //...
         emit sendStatus("[*] Enumerating "+m_targetDomain+" Subdomains with Osint...");
         logs("[START] Enumerating "+m_targetDomain+" Subdomains with Osint...");
         //...
-        Enumerator *enumerator = new Enumerator(scanArguments, scanResults);
+        osint::Scanner *scanner = new osint::Scanner(scanArguments, scanResults);
         QThread *cThread = new QThread(this);
-        enumerator->Enumerate(cThread);
-        enumerator->moveToThread(cThread);
+        scanner->startScan(cThread);
+        scanner->moveToThread(cThread);
         //...
-        connect(enumerator, SIGNAL(scanLogs(QString)), this, SLOT(logs(QString)));
-        connect(enumerator, SIGNAL(enumerationComplete()), this, SLOT(onEnumerationComplete()));
-        connect(this, SIGNAL(stopScan()), enumerator, SLOT(onStopEnumeration()));
-        connect(cThread, SIGNAL(finished()), enumerator, SLOT(deleteLater()));
+        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
+        connect(cThread, SIGNAL(finished()), this, SLOT(onEnumerationComplete()));
+        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
+        connect(this, SIGNAL(stopScan()), scanner, SLOT(onStopEnumeration()));
         //...
         cThread->start();
     }else{
@@ -113,11 +111,11 @@ void Osint::onEnumerationComplete(){
 void Osint::on_pushButton_clear_clicked(){
     // clear subdomains...
     if(ui->tabWidget->currentIndex() == 0){
-        m_resultsModel->osint->clear();
+        resultsModel->osint->clear();
         ui->label_resultsCount->clear();
         subdomainsCount = 0;
         //...
-        m_resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
+        resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     }
     // clear logs...
     else{
@@ -790,7 +788,7 @@ void Osint::on_pushButton_action_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(m_resultsModel->osint->rowCount() < 1){
+    if(resultsModel->osint->rowCount() < 1){
         return;
     }
     ///

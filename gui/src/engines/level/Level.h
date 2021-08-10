@@ -2,8 +2,7 @@
 #define LEVEL_H
 
 #include "src/engines/Base.h"
-#include "lib-level.h"
-#include "LevelEnumerator.h"
+#include "LevelScanner.h"
 
 namespace Ui {
     class Level;
@@ -19,10 +18,6 @@ class Level : public BaseClass{
         void startScan();
         void nextLevel();
         //...
-        ResultsModel *m_resultsModel;
-        //...
-        ScanStatus *m_scanStatus;
-        ScanConfig *m_scanConfig;
         level::ScanArguments *m_scanArguments;
         //...
         int lastScanResultsCount = 0;

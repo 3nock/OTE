@@ -1,10 +1,10 @@
-#include "ActiveEnumerator.h"
+#include "ActiveScanner.h"
 
 
 /*************************************************************************************************
                                      ACTIVE_SUBDOMAINS ENUMERATOR
 **************************************************************************************************/
-ActiveEnumerator::ActiveEnumerator(ScanConfig *scanConfig, active::ScanArguments *scanArguments)
+active::Scanner::Scanner(ScanConfig *scanConfig, active::ScanArguments *scanArguments)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       //...
@@ -15,19 +15,19 @@ ActiveEnumerator::ActiveEnumerator(ScanConfig *scanConfig, active::ScanArguments
     m_dns->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
     //...
     connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
-    connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
+    connect(this, SIGNAL(anotherLookup()), this, SLOT(lookup()));
 }
-ActiveEnumerator::~ActiveEnumerator(){
+active::Scanner::~Scanner(){
     delete m_dns;
     delete m_socket;
 }
 
-void ActiveEnumerator::enumerate(QThread *cThread){
+void active::Scanner::startScan(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void ActiveEnumerator::lookupFinished(){
+void active::Scanner::lookupFinished(){
     ///
     /// check the results of the lookup if no error occurred emit the results
     /// if error occurred emit appropriate response...
@@ -76,12 +76,12 @@ void ActiveEnumerator::lookupFinished(){
     /// scan progress...
     ///
     m_scanArguments->progress++;
-    emit progress(m_scanArguments->progress);
+    emit scanProgress(m_scanArguments->progress);
     //...
-    emit performAnotherLookup();
+    emit anotherLookup();
 }
 
-void ActiveEnumerator::lookup(){
+void active::Scanner::lookup(){
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     m_scanArguments->currentTargetToEnumerate++;
     if(m_currentTargetToEnumerate < m_scanArguments->targetList->count())
@@ -98,6 +98,6 @@ void ActiveEnumerator::lookup(){
     }
 }
 
-void ActiveEnumerator::onStop(){
+void active::Scanner::stopScan(){
     emit quitThread();
 }

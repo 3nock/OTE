@@ -2,16 +2,40 @@
 #define BASESCANNERS_H
 
 #include "src/core.h"
-#include "src/engines/brute/lib-brute.h"
+#include "src/engines/brute/BruteScanner.h"
 
 /***************************************************************************************
-                                      GET NameServers
+                                  Is Target Active
+****************************************************************************************/
+class TargetCheck: public QObject {
+    Q_OBJECT
+    private:
+        int m_check = 0;
+        QDnsLookup *m_dns;
+
+    public:
+        TargetCheck(QObject *parent = nullptr);
+
+    signals:
+        void anotherLookup();
+        //...
+        void isActive();
+        void notActive();
+
+    private slots:
+        void lookupFinished();
+        void lookup();
+        void isTargetActive(QString target);
+};
+
+/***************************************************************************************
+                                  GET NameServers
 ****************************************************************************************/
 
 /****************************************************************************************
-                                      CHECK WILDCARDS
+                                   CHECK WILDCARDS
 *****************************************************************************************/
-class BruteEnumerator_Wildcards: public QObject{
+class BruteEnumerator_Wildcards: public QObject {
     Q_OBJECT
 
     private:

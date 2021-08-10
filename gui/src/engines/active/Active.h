@@ -2,8 +2,7 @@
 #define ACTIVE_H
 
 #include "src/engines/Base.h"
-#include "lib-active.h"
-#include "ActiveEnumerator.h"
+#include "ActiveScanner.h"
 
 namespace Ui {
     class Active;
@@ -22,10 +21,6 @@ class Active : public BaseClass{
     private:
         void startScan();
         //...
-        ResultsModel *m_resultsModel;
-        //...
-        ScanStatus *m_scanStatus;
-        ScanConfig *m_scanConfig;
         active::ScanArguments *m_scanArguments;
 
     public slots:

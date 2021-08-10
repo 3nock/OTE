@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     Active *active = new Active(this, resultsModel);
     Level *level = new Level(this, resultsModel);
     Brute *brute = new Brute(this, resultsModel);
-    Dns *records = new Dns(this, resultsModel);
+    DnsRecords *records = new DnsRecords(this, resultsModel);
     Ip *ip = new Ip(this, resultsModel);
     Osint *osint = new Osint(this, resultsModel);
 

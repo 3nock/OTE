@@ -1,18 +1,14 @@
-#include "Dns.h"
-#include "ui_Dns.h"
+#include "DnsRecords.h"
+#include "ui_DnsRecords.h"
 
 
 /*************************************************************************************
                             Constructor & Destructor
 *************************************************************************************/
 
-Dns::Dns(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Dns),
-      m_resultsModel(resultsModel),
-      //...
-      m_scanStatus(new ScanStatus),
-      m_scanConfig(new ScanConfig),
-      m_scanArguments(new record::ScanArguments),
-      m_scanResults(new record::ScanResults)
+DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::DnsRecords),
+      m_scanArguments(new records::ScanArguments),
+      m_scanResults(new records::ScanResults)
 {
     ui->setupUi(this);
     ///
@@ -36,23 +32,21 @@ Dns::Dns(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, result
     //...
     ui->splitter->setSizes(QList<int>()<<180<<1);
     //...
-    m_resultsModel->records->model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+    resultsModel->records->model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
     //...
-    ui->treeView_results->setModel(m_resultsModel->records->model_records);
-    ui->tableView_srv->setModel(m_resultsModel->records->model_srv);
+    ui->treeView_results->setModel(resultsModel->records->model_records);
+    ui->tableView_srv->setModel(resultsModel->records->model_srv);
     //...
     m_scanArguments->targetList = ui->listWidget_targets;
     m_scanArguments->srvWordlist = ui->listWidget_srvWordlist;
     //...
-    m_scanResults->resultsModel = m_resultsModel;
+    m_scanResults->resultsModel = resultsModel;
     m_scanResults->resultsCountLabel = ui->label_resultsCount;
     m_scanResults->srvResultsLabel = ui->label_srvResultsCount;
     //...
     loadSrvWordlist();
 }
-Dns::~Dns(){
-    delete m_scanStatus;
-    delete m_scanConfig;
+DnsRecords::~DnsRecords(){
     delete m_scanArguments;
     delete m_scanResults;
     //...
@@ -62,7 +56,7 @@ Dns::~Dns(){
 /**************************************************************************************
                                       Scan
 **************************************************************************************/
-void Dns::on_pushButton_start_clicked(){
+void DnsRecords::on_pushButton_start_clicked(){
     ///
     /// checking if all requirements are satisfied before scan if not prompt error
     /// then exit function...
@@ -125,16 +119,16 @@ void Dns::on_pushButton_start_clicked(){
     logs("[START] Started Subdomain Enumeration!");
 }
 
-void Dns::on_pushButton_pause_clicked(){
+void DnsRecords::on_pushButton_pause_clicked(){
     ///
     /// if the scan was already paused, then this current click is to
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(m_scanStatus->isPaused)
+    if(scanStatus->isPaused)
     {
         ui->pushButton_pause->setText("Pause");
-        m_scanStatus->isPaused = false;
+        scanStatus->isPaused = false;
         //...
         startScan();
         //...
@@ -143,18 +137,18 @@ void Dns::on_pushButton_pause_clicked(){
     }
     else
     {
-        m_scanStatus->isPaused = true;
+        scanStatus->isPaused = true;
         emit stopScan();
     }
 }
 
-void Dns::on_pushButton_stop_clicked(){
+void DnsRecords::on_pushButton_stop_clicked(){
     emit stopScan();
-    m_scanStatus->isStopped = true;
+    scanStatus->isStopped = true;
 }
 
 /**************************************** Enumerators *************************************/
-void Dns::startScan(){
+void DnsRecords::startScan(){
     ///
     /// if the numner of threads is greater than the number of wordlists, set the
     /// number of threads to use to the number of wordlists available to avoid
@@ -162,7 +156,7 @@ void Dns::startScan(){
     ///
     int wordlistCount = ui->listWidget_targets->count();
     int srvWordlistCount = ui->listWidget_srvWordlist->count();
-    int threadsCount = m_scanConfig->threadsCount;
+    int threadsCount = scanConfig->threadsCount;
     if((ui->comboBox_option->currentIndex() == OPTION::ALLRECORDS) && (threadsCount > wordlistCount))
     {
         threadsCount = wordlistCount;
@@ -177,30 +171,30 @@ void Dns::startScan(){
     ///
     for(int i = 0; i < threadsCount; i++)
     {
-        DnsRecordsEnumerator *Enumerator = new DnsRecordsEnumerator(m_scanConfig, m_scanArguments, m_scanResults);
+        records::Scanner *scanner = new records::Scanner(scanConfig, m_scanArguments, m_scanResults);
         QThread *cThread = new QThread(this);
         //...
         if(ui->comboBox_option->currentIndex() == OPTION::ALLRECORDS){
-            Enumerator->enumerate(cThread);
+            scanner->startScan(cThread);
         }
         if(ui->comboBox_option->currentIndex() == OPTION::SRV){
-            Enumerator->enumerate_srv(cThread);
+            scanner->startScan_srv(cThread);
         }
-        Enumerator->moveToThread(cThread);
+        scanner->moveToThread(cThread);
         //...
-        connect(Enumerator, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(Enumerator, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
+        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
+        connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
         connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
-        connect(cThread, SIGNAL(finished()), Enumerator, SLOT(deleteLater()));
+        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stopScan()), Enumerator, SLOT(onStop()));
+        connect(this, SIGNAL(stopScan()), scanner, SLOT(stopScan()));
         //...
         cThread->start();
     }
-    m_scanStatus->isRunning = true;
+    scanStatus->isRunning = true;
 }
 
-void Dns::loadSrvWordlist(){
+void DnsRecords::loadSrvWordlist(){
     QFile file(":/files/res/files/srv.txt");
     if(file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -213,17 +207,17 @@ void Dns::loadSrvWordlist(){
     }
 }
 
-void Dns::scanThreadEnded(){
+void DnsRecords::scanThreadEnded(){
     activeThreads--;
     ///
     /// if all Scan Threads have finished...
     ///
     if(activeThreads == 0)
     {
-        if(m_scanStatus->isPaused)
+        if(scanStatus->isPaused)
         {
             ui->pushButton_pause->setText("Resume");
-            m_scanStatus->isRunning = false;
+            scanStatus->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
             logs("[*] Scan Paused!\n");
@@ -232,12 +226,12 @@ void Dns::scanThreadEnded(){
         else
         {
             // set the progress bar to 100% just in case...
-            if(!m_scanStatus->isStopped){
+            if(!scanStatus->isStopped){
                 ui->progressBar->setValue(ui->progressBar->maximum());
             }
-            m_scanStatus->isPaused = false;
-            m_scanStatus->isStopped = false;
-            m_scanStatus->isRunning = false;
+            scanStatus->isPaused = false;
+            scanStatus->isStopped = false;
+            scanStatus->isRunning = false;
             //...
             ui->pushButton_start->setEnabled(true);
             ui->pushButton_pause->setDisabled(true);
@@ -253,20 +247,20 @@ void Dns::scanThreadEnded(){
                                     Results Processing
 ********************************************************************************************/
 
-void Dns::on_pushButton_clearResults_clicked(){
+void DnsRecords::on_pushButton_clearResults_clicked(){
     switch (ui->tabWidget_results->currentIndex()){
         case 0:
-            m_resultsModel->records->model_records->clear();
+            resultsModel->records->model_records->clear();
             ui->label_resultsCount->clear();
-            m_resultsModel->records->rootItem = m_resultsModel->records->model_records->invisibleRootItem();
+            resultsModel->records->rootItem = resultsModel->records->model_records->invisibleRootItem();
             //...
             ui->progressBar->hide();
             break;
         //...
         case 1:
-            m_resultsModel->records->model_srv->clear();
+            resultsModel->records->model_srv->clear();
             ui->label_srvResultsCount->clear();
-            m_resultsModel->records->model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+            resultsModel->records->model_srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
             //...
             ui->progressBar->hide();
             break;
@@ -277,7 +271,7 @@ void Dns::on_pushButton_clearResults_clicked(){
     }
 }
 
-void Dns::on_toolButton_config_clicked(){
+void DnsRecords::on_toolButton_config_clicked(){
     /*
     ScanConfig *bruteconfig = new ScanConfig(this, m_scanConfig, ENGINE::ACTIVE);
     bruteconfig->setAttribute( Qt::WA_DeleteOnClose, true );
@@ -286,7 +280,7 @@ void Dns::on_toolButton_config_clicked(){
 }
 
 /**************************************************************************************/
-void Dns::on_comboBox_option_currentIndexChanged(int index){
+void DnsRecords::on_comboBox_option_currentIndexChanged(int index){
     if(index)
     {
         ui->frame_srvWordlist->show();
@@ -305,39 +299,39 @@ void Dns::on_comboBox_option_currentIndexChanged(int index){
                           Targets for Scan
 ***************************************************************************************/
 
-void Dns::on_pushButton_removeTargets_clicked(){
+void DnsRecords::on_pushButton_removeTargets_clicked(){
     removeTargets();
 }
 
-void Dns::on_pushButton_clearTargets_clicked(){
+void DnsRecords::on_pushButton_clearTargets_clicked(){
     clearTargets();
 }
 
-void Dns::on_pushButton_loadTargets_clicked(){
+void DnsRecords::on_pushButton_loadTargets_clicked(){
     loadTargetsFromFile();
 }
 
-void Dns::on_pushButton_addTargets_clicked(){
+void DnsRecords::on_pushButton_addTargets_clicked(){
     addTargets();
 }
-void Dns::on_lineEdit_targets_returnPressed(){
+void DnsRecords::on_lineEdit_targets_returnPressed(){
     addTargets();
 }
 
 /************************************* SRV WORDLIST ****************************************/
-void Dns::on_pushButton_removeSrvWordlist_clicked(){
+void DnsRecords::on_pushButton_removeSrvWordlist_clicked(){
     if(ui->listWidget_srvWordlist->selectedItems().count()){
         qDeleteAll(ui->listWidget_srvWordlist->selectedItems());
     }
     ui->label_srvWordlistCount->setNum(ui->listWidget_srvWordlist->count());
 }
 
-void Dns::on_pushButton_clearSrvWordlist_clicked(){
+void DnsRecords::on_pushButton_clearSrvWordlist_clicked(){
     ui->listWidget_srvWordlist->clear();
     ui->label_srvWordlistCount->clear();
 }
 
-void Dns::on_pushButton_loadSrvWordlist_clicked(){
+void DnsRecords::on_pushButton_loadSrvWordlist_clicked(){
     QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
     if(!filename.isEmpty()){
         QFile file(filename);
@@ -354,7 +348,7 @@ void Dns::on_pushButton_loadSrvWordlist_clicked(){
     }
 }
 
-void Dns::on_pushButton_addSrvWordlist_clicked(){
+void DnsRecords::on_pushButton_addSrvWordlist_clicked(){
     if(ui->lineEdit_srvWordlist->text() != EMPTY){
         ui->listWidget_srvWordlist->addItem(ui->lineEdit_srvWordlist->text());
         ui->lineEdit_srvWordlist->clear();
@@ -362,16 +356,16 @@ void Dns::on_pushButton_addSrvWordlist_clicked(){
     }
 }
 
-void Dns::on_lineEdit_srvWordlist_returnPressed(){
+void DnsRecords::on_lineEdit_srvWordlist_returnPressed(){
     on_pushButton_addSrvWordlist_clicked();
 }
 
 /********************************* action Button context Menu ***********************************/
-void Dns::on_pushButton_action_clicked(){
+void DnsRecords::on_pushButton_action_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(m_resultsModel->records->model_records->rowCount() < 1 && m_resultsModel->records->model_srv->rowCount() < 1){
+    if(resultsModel->records->model_records->rowCount() < 1 && resultsModel->records->model_srv->rowCount() < 1){
         return;
     }
     ///
@@ -388,7 +382,7 @@ void Dns::on_pushButton_action_clicked(){
 }
 
 /********************************* right click Context Menu ***************************************/
-void Dns::on_treeView_results_customContextMenuRequested(const QPoint &pos){
+void DnsRecords::on_treeView_results_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos)
     if(!ui->treeView_results->selectionModel()->isSelected(ui->treeView_results->currentIndex())){
         return;
@@ -396,7 +390,7 @@ void Dns::on_treeView_results_customContextMenuRequested(const QPoint &pos){
     contextMenu_rightClick(ui->treeView_results->selectionModel());
 }
 
-void Dns::on_tableView_srv_customContextMenuRequested(const QPoint &pos){
+void DnsRecords::on_tableView_srv_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos)
     if(!ui->tableView_srv->selectionModel()->isSelected(ui->tableView_srv->currentIndex())){
         return;

@@ -1,12 +1,54 @@
-#include "BaseScanners.h"
+#include "src/engines/CommonScanners.h"
+
+/***************************************************************************************
+                                  Is Target Active
+****************************************************************************************/
+TargetCheck::TargetCheck(QObject *parent): QObject (parent)
+{
+    connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
+}
+
+void TargetCheck::lookupFinished(){
+    if(m_dns->error() == QDnsLookup::NoError)
+    {
+        emit isActive();
+        return;
+    }
+    else
+    {
+        lookup();
+    }
+}
+
+void TargetCheck::lookup(){
+    if(m_check == 0){
+        m_dns->setType(QDnsLookup::A);
+        m_dns->setNameserver(QHostAddress("8.8.8.8"));
+    }
+    if(m_check == 1){
+        m_dns->setType(QDnsLookup::AAAA);
+        m_dns->setNameserver(QHostAddress("8.8.8.8"));
+    }
+    if(m_check == 2){
+        emit notActive();
+        return;
+    }
+    m_dns->lookup();
+}
+
+void TargetCheck::isTargetActive(QString target){
+    m_dns->setName(target);
+    //...
+    lookup();
+}
 
 /***************************************************************************************
                                       GET NameServers
 ****************************************************************************************/
 
-/****************************************************************************************
+/***************************************************************************************
                                       CHECK WILDCARDS
-*****************************************************************************************/
+****************************************************************************************/
 BruteEnumerator_Wildcards::BruteEnumerator_Wildcards(ScanConfig *scanConfig, brute::ScanArguments *scanArguments)
     : m_scanArguments(scanArguments),
       m_scanConfig(scanConfig),

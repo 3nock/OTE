@@ -57,9 +57,7 @@
    <item>
     <widget class="QScrollArea" name="scrollArea">
      <property name="styleSheet">
-      <string notr="true">QScrollArea#scrollArea{
-background-color: rgb(84, 84, 84);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="sizeAdjustPolicy">
       <enum>QAbstractScrollArea::AdjustToContents</enum>
@@ -76,7 +74,7 @@ background-color: rgb(84, 84, 84);
         <x>0</x>
         <y>0</y>
         <width>544</width>
-        <height>532</height>
+        <height>658</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -253,6 +251,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_18">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -419,6 +424,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_6">
          <item>
           <widget class="QLabel" name="label_7">
@@ -505,6 +517,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
           <widget class="QLabel" name="label_14">
@@ -583,6 +602,13 @@ background-color: rgb(84, 84, 84);
           </spacer>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -671,6 +697,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_12">
          <item>
           <widget class="QLabel" name="label_5">
@@ -755,6 +788,13 @@ background-color: rgb(84, 84, 84);
           </spacer>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_13">
@@ -843,6 +883,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_15">
          <item>
           <widget class="QLabel" name="label_15">
@@ -921,6 +968,13 @@ background-color: rgb(84, 84, 84);
           </spacer>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_16">
@@ -1009,6 +1063,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line_9">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_17">
          <item>
           <widget class="QLabel" name="label_17">
@@ -1092,6 +1153,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_18">
          <item>
           <widget class="QLabel" name="label_16">
@@ -1173,6 +1241,13 @@ background-color: rgb(84, 84, 84);
           </spacer>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_11">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -1261,6 +1336,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line_12">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
           <widget class="QLabel" name="label_6">
@@ -1347,6 +1429,13 @@ background-color: rgb(84, 84, 84);
         </layout>
        </item>
        <item>
+        <widget class="Line" name="line_13">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_10">
          <item>
           <widget class="QLabel" name="label_11">
@@ -1431,6 +1520,13 @@ background-color: rgb(84, 84, 84);
           </spacer>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_14">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -1539,6 +1635,12 @@ background-color: rgb(84, 84, 84);
          <height>23</height>
         </size>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>23</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true"/>
        </property>
@@ -1552,6 +1654,12 @@ background-color: rgb(84, 84, 84);
        <property name="minimumSize">
         <size>
          <width>0</width>
+         <height>23</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
          <height>23</height>
         </size>
        </property>

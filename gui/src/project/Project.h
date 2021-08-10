@@ -32,6 +32,7 @@ class Project : public QWidget{
         void on_checkBox_enableFilter_clicked(bool checked);
         void on_checkBox_columnIpAddress_clicked(bool checked);
         void on_checkBox_columnScopeTarget_clicked(bool checked);
+        void on_pushButton_filter_clicked();
 };
 
 #endif // PROJECT_H

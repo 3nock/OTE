@@ -1,30 +1,26 @@
-#include "BruteEnumerator.h"
+#include "LevelScanner.h"
 
-/********************************************************************************************
- *                              BRUTE-ENUMERATOR
- ********************************************************************************************/
-
-BruteEnumerator::BruteEnumerator(ScanConfig* scanConfig, brute::ScanArguments *scanArguments)
-    : m_scanArguments(scanArguments),
-      m_scanConfig(scanConfig),
+level::Scanner::Scanner(ScanConfig *scanConfig, level::ScanArguments *scanArguments)
+    : m_scanConfig(scanConfig),
+      m_scanArguments(scanArguments),
       m_dns(new QDnsLookup)
 {
     m_dns->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
     m_dns->setType(m_scanConfig->dnsRecordType);
     //...
     connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
-    connect(this, SIGNAL(performAnotherLookup()), this, SLOT(lookup()));
+    connect(this, SIGNAL(anotherLookup()), this, SLOT(lookup()));
 }
-BruteEnumerator::~BruteEnumerator(){
+level::Scanner::~Scanner(){
     delete m_dns;
 }
 
-void BruteEnumerator::enumerate(QThread *cThread){
+void level::Scanner::startScan(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void BruteEnumerator::lookupFinished(){
+void level::Scanner::lookupFinished(){
     ///
     /// check the results of the lookup if no error occurred emit the results
     /// if error occurred emit appropriate response...
@@ -35,7 +31,7 @@ void BruteEnumerator::lookupFinished(){
             break;
         //...
         case QDnsLookup::NoError:
-            if(m_scanArguments->subBrute && m_scanConfig->checkWildcard && m_scanConfig->hasWildcard){
+            if(m_scanConfig->checkWildcard && m_scanConfig->hasWildcard){
                 ///
                 /// check if the Ip adress of the subdomain is similar to the wildcard Ip found
                 /// if not similar we emit the results if similar discard the results...
@@ -68,50 +64,44 @@ void BruteEnumerator::lookupFinished(){
     /// scan progress...
     ///
     m_scanArguments->progress++;
-    emit progress(m_scanArguments->progress);
+    emit scanProgress(m_scanArguments->progress);
     //...
-    emit performAnotherLookup();
+    emit anotherLookup();
 }
 
-void BruteEnumerator::lookup(){
+void level::Scanner::lookup(){
     //...
     m_currentWordlistToEnumerate = m_scanArguments->currentWordlistToEnumerate;
-    m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     m_scanArguments->currentWordlistToEnumerate++;
+    m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     //...
     if(m_currentWordlistToEnumerate < m_scanArguments->wordlist->count())
     {
-        if(m_scanArguments->subBrute)
-        {
-            m_dns->setName(m_scanArguments->wordlist->item(m_currentWordlistToEnumerate)->text()+"."+m_scanArguments->targetList[m_currentTargetToEnumerate]);
-        }
-        if(m_scanArguments->tldBrute)
-        {
-            m_dns->setName(m_scanArguments->targetList[m_currentTargetToEnumerate]+"."+m_scanArguments->wordlist->item(m_currentWordlistToEnumerate)->text());
-        }
+        m_dns->setName(m_scanArguments->wordlist->item(m_currentWordlistToEnumerate)->text()+"."+m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
         m_dns->lookup();
     }
+    ///
+    /// reached end of the wordlist...
+    ///
     else
     {
         ///
-        /// Reached end of the wordlist...
-        /// if there are multiple targets, choose another target and start afresh...
+        /// choose another target and start again...
         ///
-        if(m_scanArguments->currentTargetToEnumerate < m_scanArguments->targetList.count()-1)
+        if(m_scanArguments->currentTargetToEnumerate < m_scanArguments->targetList->count()-1)
         {
             m_scanArguments->currentTargetToEnumerate++;
             m_scanArguments->currentWordlistToEnumerate = 0;
-            emit performAnotherLookup();
+            emit anotherLookup();
         }
         else
         {
             emit quitThread();
-            return;
         }
     }
 }
 
-void BruteEnumerator::onStop(){
+void level::Scanner::stopScan(){
     ///
     /// quiting all running threads upon receiving stop signal...
     ///

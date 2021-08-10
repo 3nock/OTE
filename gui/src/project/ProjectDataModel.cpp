@@ -42,7 +42,7 @@ ProjectDataModel::ProjectDataModel(QStandardItemModel *projectModel):
     m_records->appendRow(m_srv);
 }
 
-void ProjectDataModel::append(QList<QString> items, RESULTS resultsType){
+void ProjectDataModel::append(QStringList items, RESULTS resultsType){
     ///
     /// checks...
     ///
@@ -56,61 +56,58 @@ void ProjectDataModel::append(QList<QString> items, RESULTS resultsType){
     case RESULTS::subdomains:
         if(!m_subdomainsSet.contains(items[0])){
             m_subdomainsSet.insert(items[0]);
-            m_subdomains->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1])});
+            m_subdomains->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
         }
         break;
     case RESULTS::tlds:
         if(!m_tldsSet.contains(items[0])){
             m_tldsSet.insert(items[0]);
-            m_tlds->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1])});
+            m_tlds->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
         }
         break;
     case RESULTS::a:
         if(!m_aSet.contains(items[0])){
             m_aSet.insert(items[0]);
-            m_a->appendRow(new QStandardItem(items[0]));
+            m_a->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
         }
         break;
     case RESULTS::aaaa:
         if(!m_aaaaSet.contains(items[0])){
             m_aaaaSet.insert(items[0]);
-            m_aaaa->appendRow(new QStandardItem(items[0]));
+            m_aaaa->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
         }
         break;
     case RESULTS::ns:
         if(!m_nsSet.contains(items[0])){
             m_nsSet.insert(items[0]);
-            m_ns->appendRow(new QStandardItem(items[0]));
+            m_ns->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
         }
         break;
     case RESULTS::mx:
         if(!m_mxSet.contains(items[0])){
             m_mxSet.insert(items[0]);
-            m_mx->appendRow(new QStandardItem(items[0]));
+            m_mx->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
         }
         break;
     case RESULTS::txt:
         if(!m_txtSet.contains(items[0])){
             m_txtSet.insert(items[0]);
-            m_txt->appendRow(new QStandardItem(items[0]));
+            m_txt->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
         }
         break;
     case RESULTS::cname:
         if(!m_cnameSet.contains(items[0])){
             m_cnameSet.insert(items[0]);
-            m_cname->appendRow(new QStandardItem(items[0]));
+            m_cname->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
         }
         break;
     case RESULTS::srv:
         if(!m_srvSet.contains(items[0])){
             m_srvSet.insert(items[0]);
-            m_srv->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1])});
+            m_srv->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
         }
         break;
     }
 }
 
-void ProjectDataModel::setColumnCount(int columnCount){
-    m_projectModel->setColumnCount(columnCount);
-}
 
