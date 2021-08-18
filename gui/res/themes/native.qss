@@ -65,7 +65,7 @@ QToolButton:!pressed {
     border-style: solid;
     border-radius: 15px;
     color: rgb(190,190,190);
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(40, 51, 63));
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgba(144, 144, 109, 90));
 }
 
 QToolButton:hover {
@@ -79,7 +79,7 @@ QToolButton:hover {
     border-style: solid;
     border-radius: 15px;
     color: white;
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(50, 61, 73));
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgba(144, 144, 109, 90));
 }
 
 QToolButton:pressed {
@@ -121,7 +121,7 @@ QComboBox QWidget {
     border-width: 1px;
     color: rgb(250,250,250);
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(70, 70, 70, 255));
-    selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgb(141, 141, 106));
+    selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(141, 141, 106, 180));
 }
 
 QComboBox::drop-down {
@@ -195,7 +195,6 @@ QSplitter::handle:vertical{
 }
 
 QListWidget, QTreeView, QTableView, QColumnView{
-    selection-background-color: rgb(40, 51, 63);
     background-color:rgb(40, 40, 40);
     color: rgb(230,230,230);
     border-style: solid;
@@ -204,15 +203,19 @@ QListWidget, QTreeView, QTableView, QColumnView{
 }
 
 QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected{
-    background-color: rgb(50, 61, 73);
+    background-color: rgba(144, 144, 109, 80);
+    color: white;
 }
 
 QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QColumnView::item:hover, QColumnView::item:hover {
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgb(60, 71, 83));
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(144,144,109);
+    background-color: rgba(150, 150, 114, 80);
 }
 
 QHeaderView::section {
-    background-color: grey;
+    background-color: rgba(140,140,140,100);
     border-style: solid;
     border-width: 1px;
     border-color: rgb(40,40,40);
@@ -233,17 +236,7 @@ QPushButton {
 }
 
 QPushButton:hover {
-    border-style: outset;
-    border-width: 2px;
-    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:0.6, x2:0.5, y2:0.4, stop:0 rgba(140, 140, 140, 255), stop:1 rgba(0,0,0, 255));
-    border-right-color: qlineargradient(spread:pad, x1:0.4, y1:0.5, x2:0.6, y2:0.5, stop:0 rgba(140, 140, 140, 255), stop:1 rgba(0,0,0,255));
-    border-left-color: qlineargradient(spread:pad, x1:0.6, y1:0.5, x2:0.4, y2:0.5, stop:0 rgba(140, 140, 140, 255), stop:1 rgba(0,0,0,255));
-    border-bottom-color: rgb(70, 70, 70);
-    border-bottom-width: 1px;
-    border-style: solid;
-    color: rgb(230, 230, 230);
-    padding: 2px;
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(50, 50, 50, 255), stop:1 rgb(140, 140, 105));
+    color: rgb(230,230,230);
 }
 
 QPushButton:pressed {
@@ -299,6 +292,7 @@ QProgressBar::chunk {
 }
 
 QMenuBar {
+    margin-top: 1px;
     background: rgb(62, 62, 62);
 }
 
@@ -311,6 +305,7 @@ QMenu {
 }
 
 QMenuBar::item {
+    margin-top: 1px;
     color:white;
     spacing: 15px;
     padding-left: 8px;
@@ -321,15 +316,19 @@ QMenuBar::item {
 }
 
 QMenuBar::item:selected, QMenuBar::item:hover{
-    background-color: rgb(135, 135, 100);
-    color: black;
+    color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    background-color: rgba(144, 144, 109, 90);
 }
 
 QMenu::item:selected {
-    color:rgb(0,0,0);
+    color: white;
     border-style: solid;
-    border-color: black;
-    background-color: rgb(141,141,106);
+    border-width: 1px;
+    border-color: rgb(144,144,109);
+    background-color: rgba(144, 144, 109, 90);
 }
 
 QMenu::​separator {
@@ -368,21 +367,22 @@ QTabBar::tab {
     border-style: solid;
     border-width: 1px;
     border-color: grey;
+    border-bottom-width: 0px;
     margin-top: 0px;
     margin-left: 1px;
     margin-right: 1px;
 }
 
 QTabBar::tab:hover {
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgb(141, 141, 106));
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(141, 141, 106, 180));
     margin-top: 0px;
     margin-left: 1px;
     margin-right: 1px;
 }
 
 QTabBar::tab:selected {
-    background-color: grey;
-    color: rgb(37,37,37);
+    background-color: rgba(140,140,140,100);
+    color: rgb(30,30,30);
     margin-top: 0px;
     margin-left: 1px;
     margin-right: 1px;
