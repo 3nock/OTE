@@ -115,7 +115,7 @@ QToolButton:pressed {
 QSpinBox {
     border-style: outset;
     border-style: solid;
-    border-color: black;
+    border-color: grey;
     color: rgb(230,230,230);
     background-color: rgb(57,57,57);
 }
@@ -137,7 +137,7 @@ QComboBox QWidget {
     border-width: 1px;
     color: rgb(250,250,250);
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(70, 70, 70, 255));
-    selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgb(70, 81, 93));
+    selection-background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgb(141, 141, 106));
 }
 
 QComboBox::drop-down {
@@ -145,6 +145,12 @@ QComboBox::drop-down {
     padding-top: 6px;
     padding-right: 5px;
 }
+
+QComboBox QWidget::item {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
 
 /********** Line *************/
 QFrame[frameShape=&quot;4&quot;] {
@@ -296,7 +302,7 @@ QLineEdit:!read-only {
 
 QProgressBar {
     text-align: center;
-    color: white;
+    color: black;
     border-width: 1px;
     border-radius: 10px;
     border-color: rgb(0,0,0);
@@ -364,8 +370,8 @@ QTabWidget::pane {
     background-color:rgb(62,62,62);
     border-style: solid;
     border-top-width: 1px;
-    border-right-width: 1px;
-    border-left-width: 1px;
+    border-right-width: 0px;
+    border-left-width: 0px;
     border-bottom-width: 0px;
 }
 
@@ -378,12 +384,15 @@ QTabBar::tab {
     border-style: solid;
     border-width: 1px;
     border-color: grey;
+    margin-top: 0px;
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 QTabBar::tab:hover {
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgb(141, 141, 106));
     margin-top: 0px;
-    margin-left: 0px;
+    margin-left: 1px;
     margin-right: 1px;
 }
 
@@ -391,7 +400,7 @@ QTabBar::tab:selected {
     background-color: grey;
     color: rgb(37,37,37);
     margin-top: 0px;
-    margin-left: 0px;
+    margin-left: 1px;
     margin-right: 1px;
 }
 
@@ -493,26 +502,39 @@ QRadioButton:hover {
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionopen_project"/>
+    <addaction name="actionrecent_projects"/>
+    <addaction name="actionexit"/>
    </widget>
    <widget class="QMenu" name="menuProject">
     <property name="title">
      <string>Project</string>
     </property>
+    <addaction name="actionsettings"/>
+    <addaction name="actionrename"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Tools</string>
     </property>
+    <addaction name="actionfavourites"/>
+    <addaction name="actionmass_scan"/>
+    <addaction name="actionamass"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actiondocumentation"/>
+    <addaction name="actionupdates"/>
+    <addaction name="actionissues"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>About</string>
     </property>
+    <addaction name="actionabout_sub3_suite"/>
+    <addaction name="actionabout_Qt"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuProject"/>
@@ -521,6 +543,71 @@ QRadioButton:hover {
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionopen_project">
+   <property name="text">
+    <string>open project</string>
+   </property>
+  </action>
+  <action name="actionrecent_projects">
+   <property name="text">
+    <string>recent projects</string>
+   </property>
+  </action>
+  <action name="actionexit">
+   <property name="text">
+    <string>exit</string>
+   </property>
+  </action>
+  <action name="actionsettings">
+   <property name="text">
+    <string>settings</string>
+   </property>
+  </action>
+  <action name="actionrename">
+   <property name="text">
+    <string>rename</string>
+   </property>
+  </action>
+  <action name="actionabout_sub3_suite">
+   <property name="text">
+    <string>about sub3 suite</string>
+   </property>
+  </action>
+  <action name="actionabout_Qt">
+   <property name="text">
+    <string>about Qt</string>
+   </property>
+  </action>
+  <action name="actiondocumentation">
+   <property name="text">
+    <string>documentation</string>
+   </property>
+  </action>
+  <action name="actionupdates">
+   <property name="text">
+    <string>updates</string>
+   </property>
+  </action>
+  <action name="actionissues">
+   <property name="text">
+    <string>issues</string>
+   </property>
+  </action>
+  <action name="actionfavourites">
+   <property name="text">
+    <string>favourites</string>
+   </property>
+  </action>
+  <action name="actionmass_scan">
+   <property name="text">
+    <string>mass scan</string>
+   </property>
+  </action>
+  <action name="actionamass">
+   <property name="text">
+    <string>amass</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

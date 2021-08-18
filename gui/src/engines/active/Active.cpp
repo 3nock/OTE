@@ -23,8 +23,11 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, 
     //...
     resultsModel->active->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
     ui->tableView_results->setModel(resultsModel->active);
-    //...
-    ui->splitter->setSizes(QList<int>()<<160<<1);
+    ///
+    /// equally seperate the widgets...
+    ///
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
+                                        << static_cast<int>((this->width() * 0.50)));
     //...
     m_scanArguments->targetList = ui->listWidget_targets;
 }

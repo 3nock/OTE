@@ -65,6 +65,9 @@
        </property>
        <item>
         <widget class="QTreeView" name="treeView">
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="autoScroll">
           <bool>false</bool>
          </property>
@@ -337,7 +340,11 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
-          <widget class="QListWidget" name="listWidget_inScope"/>
+          <widget class="QListWidget" name="listWidget_inScope">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+          </widget>
          </item>
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">

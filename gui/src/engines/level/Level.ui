@@ -53,7 +53,7 @@
      <item>
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>*Number Of Subdomain Levels</string>
+        <string>Number Of Subdomain Levels:</string>
        </property>
       </widget>
      </item>
@@ -71,11 +71,55 @@
          <height>21</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="minimum">
         <number>1</number>
        </property>
        <property name="maximum">
         <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Current Level:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_level">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
@@ -357,13 +401,13 @@
                 <number>5</number>
                </property>
                <property name="leftMargin">
-                <number>6</number>
+                <number>2</number>
                </property>
                <property name="topMargin">
                 <number>6</number>
                </property>
                <property name="rightMargin">
-                <number>6</number>
+                <number>0</number>
                </property>
                <property name="bottomMargin">
                 <number>0</number>
@@ -427,6 +471,9 @@
                </item>
                <item>
                 <widget class="QTableView" name="tableView_results">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="contextMenuPolicy">
                   <enum>Qt::CustomContextMenu</enum>
                  </property>
@@ -500,7 +547,7 @@
                 <number>0</number>
                </property>
                <property name="topMargin">
-                <number>0</number>
+                <number>6</number>
                </property>
                <property name="rightMargin">
                 <number>0</number>
@@ -515,6 +562,9 @@
                    <family>MS Shell Dlg 2</family>
                    <pointsize>8</pointsize>
                   </font>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="styleSheet">
                   <string notr="true"/>
@@ -615,41 +665,6 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_5">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Level:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_level">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="frameShape">
-                <enum>QFrame::Box</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
               <spacer name="horizontalSpacer_7">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -671,6 +686,9 @@
             <layout class="QHBoxLayout" name="horizontalLayout_24">
              <item>
               <widget class="QListWidget" name="listWidget_targets">
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
                <property name="styleSheet">
                 <string notr="true"/>
                </property>
@@ -918,6 +936,9 @@
                  <family>MS Shell Dlg 2</family>
                  <pointsize>8</pointsize>
                 </font>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
                </property>
                <property name="styleSheet">
                 <string notr="true"/>

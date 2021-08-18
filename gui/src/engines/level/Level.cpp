@@ -28,8 +28,11 @@ Level::Level(QWidget *parent, ResultsModel *resultsModel) :BaseClass(parent, res
     //...
     m_scanArguments->wordlist = ui->listWidget_wordlist;
     m_scanArguments->targetList = ui->listWidget_targets;
-    //...
-    ui->splitter->setSizes(QList<int>()<<280<<200);
+    ///
+    /// equally seperate the widgets...
+    ///
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
+                                        << static_cast<int>((this->width() * 0.50)));
 }
 
 Level::~Level(){

@@ -23,8 +23,11 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsM
     //...
     resultsModel->ip->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
     ui->tableView_results->setModel(resultsModel->ip);
-    //...
-    ui->splitter_3->setSizes(QList<int>()<<160<<1);
+    ///
+    /// equally seperate the widgets...
+    ///
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
+                                        << static_cast<int>((this->width() * 0.50)));
     //...
     m_scanArguments->label_resultsCount = ui->label_resultsCount;
     m_scanArguments->targetList = ui->listWidget_targets;

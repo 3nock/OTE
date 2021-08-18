@@ -31,8 +31,11 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, re
     //...
     ui->progressBar->hide();
     ui->frame_targets->hide();
-    //...
-    ui->splitter->setSizes(QList<int>()<<270<<180);
+    ///
+    /// equally seperate the widgets...
+    ///
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
+                                        << static_cast<int>((this->width() * 0.50)));
     //...
     setupOsintProfiles();
 }

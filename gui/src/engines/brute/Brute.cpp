@@ -75,8 +75,11 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, re
     //...
     ui->frame_targets->hide();
     ui->progressBar->hide();
-    //...
-    ui->splitter->setSizes(QList<int>()<<200<<100);
+    ///
+    /// equally seperate the widgets...
+    ///
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
+                                        << static_cast<int>((this->width() * 0.50)));
     //...
     resultsModel->brute->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
     ui->tableView_results->setModel(resultsModel->brute);

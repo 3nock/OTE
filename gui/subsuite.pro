@@ -93,7 +93,7 @@ FORMS += \
 # including the python3 headers and libs for compile time...
 INCLUDEPATH += -I ../include/python3/include
 
-LIBS += -L ../subsuite/include/python3/libs -lpython38
+LIBS += $$OUT_PWD/libs/python38.lib
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

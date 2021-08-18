@@ -64,6 +64,9 @@
          <height>22</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true"/>
        </property>
@@ -374,13 +377,13 @@
                 <number>5</number>
                </property>
                <property name="leftMargin">
-                <number>6</number>
+                <number>2</number>
                </property>
                <property name="topMargin">
                 <number>6</number>
                </property>
                <property name="rightMargin">
-                <number>6</number>
+                <number>0</number>
                </property>
                <property name="bottomMargin">
                 <number>0</number>
@@ -455,6 +458,9 @@
                    <family>MS Shell Dlg 2</family>
                    <pointsize>8</pointsize>
                   </font>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="contextMenuPolicy">
                   <enum>Qt::CustomContextMenu</enum>
@@ -532,7 +538,7 @@
                 <number>0</number>
                </property>
                <property name="topMargin">
-                <number>0</number>
+                <number>6</number>
                </property>
                <property name="rightMargin">
                 <number>0</number>
@@ -547,6 +553,9 @@
                    <family>MS Shell Dlg 2</family>
                    <pointsize>8</pointsize>
                   </font>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="styleSheet">
                   <string notr="true"/>
@@ -689,6 +698,9 @@
                   <family>MS Shell Dlg 2</family>
                   <pointsize>8</pointsize>
                  </font>
+                </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
                 </property>
                 <property name="styleSheet">
                  <string notr="true"/>
