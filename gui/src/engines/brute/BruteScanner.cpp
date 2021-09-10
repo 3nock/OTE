@@ -1,8 +1,5 @@
 #include "BruteScanner.h"
 
-/********************************************************************************************
- *                              BRUTE-ENUMERATOR
- ********************************************************************************************/
 
 brute::Scanner::Scanner(ScanConfig* scanConfig, brute::ScanArguments *scanArguments)
     : m_scanArguments(scanArguments),

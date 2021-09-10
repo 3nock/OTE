@@ -1,111 +1,113 @@
 #include "ConfigDialog.h"
 #include "ui_ConfigDialog.h"
+//...
+#include "src/Config.h"
 
 
-/********************************* Constructor & Destructor ***************************************/
-ConfigDialog::ConfigDialog(QWidget *parent, ScanConfig *scanConfig)
-    : QDialog(parent), ui(new Ui::ConfigDialog),
+/*
+ * TODO:
+ *
+ */
+ConfigDialog::ConfigDialog(QWidget *parent, ScanConfig *scanConfig) : QDialog(parent), ui(new Ui::ConfigDialog),
       m_scanConfig(scanConfig)
 {
     ui->setupUi(this);
     ///
-    /// hiding widgets for custom nameservers input untill user chooses to use custom nameservers...
+    /// initializing...
     ///
-    ui->frame_nameservers->hide();
+    ui->customNameservers->init("NS");
+    ///
+    /// hiding widgets for custom nameservers input untill user chooses
+    /// to use custom nameservers...
+    ///
+    ui->customNameservers->hide();
     ConfigDialog::adjustSize();
-    //...
-    ui->lineEdit_nameservers->setPlaceholderText("Enter Nameserver...");
-    ui->lineEdit_threads->setPlaceholderText("Thread count...");
-    ui->lineEdit_timeout->setPlaceholderText("Lookup timeout...");
-    //...
-    ui->lineEdit_threads->setText(QString::number(m_scanConfig->threadsCount));
-    ui->lineEdit_timeout->setText(QString::number(m_scanConfig->timeout));
+    ///
+    /// setting the placeholder text...
+    ///
+    ui->lineEditThreads->setPlaceholderText("Thread count...");
+    ui->lineEditTimeout->setPlaceholderText("Lookup timeout...");
+    ///
+    /// load the config values...
+    ///
+    this->loadConfigValues();
 }
 ConfigDialog::~ConfigDialog(){
     delete ui;
 }
 
-/*********************************** Saving Configurations ***************************************/
-void ConfigDialog::on_pushButton_ok_clicked(){
-    if(ui->lineEdit_threads->text().toInt() <= 100 && ui->lineEdit_threads->text().toInt() > 0){
-        m_scanConfig->threadsCount = ui->lineEdit_threads->text().toInt();
+void ConfigDialog::loadConfigValues(){
+    ///
+    /// getting custom nameservers...
+    ///
+    int size = Config::settings().beginReadArray("Custom-Nameservers");
+    for(int i = 0; i < size; i++){
+        Config::settings().setArrayIndex(i);
+        ui->customNameservers->add(Config::settings().value("value").toString());
     }
-    if(ui->radioButton_dnsRecordType_A->isChecked()){
+    Config::settings().endArray();
+    ///
+    /// other specific configurations...
+    ///
+    Config::settings().beginGroup(m_scanConfig->name);
+    ui->lineEditThreads->setText(Config::settings().value("threads").toString());
+    ui->lineEditTimeout->setText(Config::settings().value("timeout").toString());
+    Config::settings().endGroup();
+}
+
+void ConfigDialog::saveConfigValues(){
+    ///
+    /// saving the custom nameservers...
+    ///
+    Config::settings().beginWriteArray("Custom-Nameservers");
+    for(int i = 0; i < ui->customNameservers->listWidget->count(); i++){
+        Config::settings().setArrayIndex(i);
+        Config::settings().setValue("value", ui->customNameservers->listWidget->item(i)->text());
+    }
+    Config::settings().endArray();
+    ///
+    /// saving the custom nameservers...
+    ///
+    Config::settings().beginGroup(m_scanConfig->name);
+    Config::settings().setValue("threads", ui->lineEditThreads->text());
+    Config::settings().setValue("timeout", ui->lineEditTimeout->text());
+    Config::settings().endGroup();
+}
+
+void ConfigDialog::on_buttonOk_clicked(){
+    if(ui->lineEditThreads->text().toInt() <= 100 && ui->lineEditThreads->text().toInt() > 0){
+        m_scanConfig->threadsCount = ui->lineEditThreads->text().toInt();
+    }
+    if(ui->radioButtonDnsRecordTypeA->isChecked()){
         m_scanConfig->dnsRecordType = QDnsLookup::A;
     }
-    if(ui->radioButton_dnsRecordType_AAAA->isChecked()){
+    if(ui->radioButtonDnsRecordTypeAAAA->isChecked()){
         m_scanConfig->dnsRecordType = QDnsLookup::AAAA;
     }
-    if(ui->checkBox_checkWildcards->isChecked()){
+    if(ui->checkBoxCheckWildcards->isChecked()){
         m_scanConfig->checkWildcard = true;
     }
-    if(ui->checkBox_useCustomNameServers->isChecked() && ui->listWidget_nameservers->count() > 0)
+    if(ui->checkBoxCustomNameServers->isChecked() && ui->customNameservers->listWidget->count() > 0)
     {
-        QFile temp_file(QDir::currentPath()+WORDLIST_CUSTOM_NAMESERVERS);
-        temp_file.open(QIODevice::WriteOnly | QIODevice::Text);
-        if(temp_file.isOpen())
-        {
-           int the_count = ui->listWidget_nameservers->count();
-           for(int i = 0; i != the_count; ++i)
-           {
-               temp_file.write((ui->listWidget_nameservers->item(i)->text()+NEWLINE).toUtf8());
-           }
-           temp_file.close();
-        }
+        for(int i = 0; i != ui->customNameservers->listWidget->count(); ++i)
+            m_scanConfig->customNameServers.append(ui->customNameservers->listWidget->item(i)->text());
         m_scanConfig->useCustomNameServers = true;
     }
-    else
-    {
+    else{
         m_scanConfig->useCustomNameServers = false;
     }
-    accept();
-}
-void ConfigDialog::on_pushButton_cancel_clicked(){
+    this->saveConfigValues();
     accept();
 }
 
-/******************************* Operations On Custom-Nameservers *********************************/
-void ConfigDialog::on_checkBox_useCustomNameServers_clicked(bool checked){
+void ConfigDialog::on_buttonCancel_clicked(){
+    accept();
+}
+
+void ConfigDialog::on_checkBoxCustomNameServers_clicked(bool checked){
     if(checked)
-    {
-        ui->frame_nameservers->show();
-    }
+        ui->customNameservers->show();
     else
-    {
-        ui->frame_nameservers->hide();
-    }
+        ui->customNameservers->hide();
     ConfigDialog::adjustSize();
-}
-
-void ConfigDialog::on_pushButton_clear_clicked(){
-    ui->listWidget_nameservers->clear();
-}
-
-void ConfigDialog::on_pushButton_remove_clicked(){
-    if(ui->listWidget_nameservers->selectedItems().count())
-    {
-        qDeleteAll(ui->listWidget_nameservers->selectedItems());
-    }
-}
-
-void ConfigDialog::on_pushButton_load_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(!filename.isEmpty())
-    {
-        QFile file(filename);
-        if(file.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            QTextStream in(&file);
-            while (!in.atEnd())
-            {
-                ui->listWidget_nameservers->addItem(in.readLine());
-            }
-            file.close();
-        }
-    }
-}
-
-void ConfigDialog::on_pushButton_add_clicked(){
-    ui->listWidget_nameservers->addItem(ui->lineEdit_nameservers->text());
-    ui->lineEdit_nameservers->clear();
 }

@@ -1,8 +1,5 @@
  #include "IpScanner.h"
 
-/*************************************************************************************************
-                                     Ip_SUBDOMAINS ENUMERATOR
-**************************************************************************************************/
 ip::Scanner::Scanner(ScanConfig *scanConfig, ip::ScanArguments *scanArguments)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),

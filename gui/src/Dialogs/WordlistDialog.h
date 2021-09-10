@@ -1,7 +1,8 @@
 #ifndef WORDLISTDIALOG_H
 #define WORDLISTDIALOG_H
 
-#include "src/core.h"
+#include <QDialog>
+#include "src/utils.h"
 
 namespace Ui {
     class WordListDialog;
@@ -10,30 +11,23 @@ namespace Ui {
 class WordListDialog : public QDialog{
         Q_OBJECT
 
-    private:
-        Ui::WordListDialog *ui;
-
-    private:
-        ENGINE m_engine;
-        void m_setupSpecialWordlists();
-
     public:
-        explicit WordListDialog(QWidget *parent, ENGINE engine);
+        WordListDialog(QWidget *parent, ENGINE engine);
         ~WordListDialog();
 
     private slots:
-        void on_pushButton_cancel_clicked();
-        void on_pushButton_clear_clicked();
-        void on_pushButton_remove_clicked();
-        void on_pushButton_load_clicked();
-        void on_pushButton_add_clicked();
-        void on_pushButton_create_clicked();
-        void on_pushButton_ok_clicked();
-        void on_checkBox_newSpecialWordlist_clicked(bool);
+        void on_buttonCancel_clicked();
+        void on_buttonCreate_clicked();
+        void on_buttonOk_clicked();
+        void on_checkBoxNewSpecialWordlist_clicked(bool);
 
     signals:
-        // emits the filename of the choosen wordlist...
         void choosenWordlist(QString);
+
+    private:
+        Ui::WordListDialog *ui;
+        const ENGINE m_engine;
+        void setupSpecialWordlists();
 };
 
 #endif // WORDLISTDIALOG_H

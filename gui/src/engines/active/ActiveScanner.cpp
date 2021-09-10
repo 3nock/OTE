@@ -1,9 +1,6 @@
 #include "ActiveScanner.h"
 
 
-/*************************************************************************************************
-                                     ACTIVE_SUBDOMAINS ENUMERATOR
-**************************************************************************************************/
 active::Scanner::Scanner(ScanConfig *scanConfig, active::ScanArguments *scanArguments)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),

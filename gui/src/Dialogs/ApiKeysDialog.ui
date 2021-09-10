@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>541</width>
+    <width>560</width>
     <height>550</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>541</width>
+    <width>560</width>
     <height>550</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>541</width>
+    <width>560</width>
     <height>550</height>
    </size>
   </property>
@@ -73,11 +73,23 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>544</width>
-        <height>658</height>
+        <width>532</width>
+        <height>652</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="leftMargin">
+        <number>6</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
        <item>
         <widget class="QLabel" name="label_3">
          <property name="sizePolicy">
@@ -128,7 +140,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_censys_id">
+          <widget class="QLineEdit" name="lineEditCensysId">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -198,7 +210,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_censys_secret">
+          <widget class="QLineEdit" name="lineEditCensysSecret">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -223,7 +235,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_censys">
+          <widget class="QToolButton" name="buttonGetCensys">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -304,7 +316,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_riskiq_username">
+          <widget class="QLineEdit" name="lineEditRiskIqUsername">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -374,7 +386,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_riskiq_key">
+          <widget class="QLineEdit" name="lineEditRiskIqKey">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -399,7 +411,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_riskiq">
+          <widget class="QToolButton" name="buttonGetRiskIq">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -464,7 +476,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_bing">
+          <widget class="QLineEdit" name="lineEditBing">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -489,7 +501,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_bing">
+          <widget class="QToolButton" name="buttonGetBing">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -557,7 +569,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_certspotter">
+          <widget class="QLineEdit" name="lineEditCertspotter">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -576,7 +588,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_certspotter">
+          <widget class="QToolButton" name="buttonGetCertspotter">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -644,7 +656,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_cloudflare">
+          <widget class="QLineEdit" name="lineEditCloudflare">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -669,7 +681,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_cloudflare">
+          <widget class="QToolButton" name="buttonGetCloudflare">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -737,7 +749,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_github">
+          <widget class="QLineEdit" name="lineEditGithub">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -762,7 +774,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_github">
+          <widget class="QToolButton" name="buttonGetGithub">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -830,7 +842,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_google">
+          <widget class="QLineEdit" name="lineEditGoogle">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -855,7 +867,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_google">
+          <widget class="QToolButton" name="buttonGetGoogle">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -923,7 +935,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_hunter">
+          <widget class="QLineEdit" name="lineEditHunter">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -942,7 +954,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_hunter">
+          <widget class="QToolButton" name="buttonGetHunter">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -1010,7 +1022,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_intelx">
+          <widget class="QLineEdit" name="lineEditIntelX">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1035,7 +1047,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_intelx">
+          <widget class="QToolButton" name="buttonGetIntelX">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -1103,7 +1115,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_pentesttools">
+          <widget class="QLineEdit" name="lineEditPentestTools">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1128,7 +1140,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_pentesttools">
+          <widget class="QToolButton" name="buttonGetPentestTools">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -1193,7 +1205,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_projectdiscovery">
+          <widget class="QLineEdit" name="lineEditProjectDiscovery">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1218,7 +1230,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_projectdiscovery">
+          <widget class="QToolButton" name="buttonGetProjectDiscovery">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -1283,7 +1295,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_trailssec">
+          <widget class="QLineEdit" name="lineEditSecurityTrails">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1308,7 +1320,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_securityTrails">
+          <widget class="QToolButton" name="buttonGetSecurityTrails">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -1376,7 +1388,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_shodan">
+          <widget class="QLineEdit" name="lineEditShodan">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1401,7 +1413,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_shodan">
+          <widget class="QToolButton" name="buttonGetShodan">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -1469,7 +1481,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_spyse">
+          <widget class="QLineEdit" name="lineEditSpyse">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1494,7 +1506,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_spyse">
+          <widget class="QToolButton" name="buttonGetSpyse">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -1562,7 +1574,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_virustotal">
+          <widget class="QLineEdit" name="lineEditVirusTotal">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1581,7 +1593,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_getApiKey_virustotal">
+          <widget class="QToolButton" name="buttonGetVirusTotal">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -1628,7 +1640,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_14">
      <item>
-      <widget class="QPushButton" name="pushButton_save">
+      <widget class="QPushButton" name="buttonSave">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -1650,7 +1662,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_cancel">
+      <widget class="QPushButton" name="buttonCancel">
        <property name="minimumSize">
         <size>
          <width>0</width>

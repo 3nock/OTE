@@ -1,8 +1,10 @@
 #ifndef OSINTENUMERATOR_H
 #define OSINTENUMERATOR_H
 
-#include "src/core.h"
-
+#include "src/utils.h"
+#include <QObject>
+#include <QThread>
+#include <QLabel>
 
 namespace osint{
 
@@ -23,12 +25,6 @@ typedef struct ScanResults ScanResults;
 class Scanner: public QObject{
     Q_OBJECT
 
-    private:
-        osint::ScanArguments *m_scanArguments;
-        osint::ScanResults *m_scanResults;
-        //...
-        bool m_stopEnumeration = false;
-
     public:
         Scanner(osint::ScanArguments *scanArguments, osint::ScanResults *scanResults);
         ~Scanner();
@@ -45,6 +41,11 @@ class Scanner: public QObject{
         void scanResult(QString subdomain, QString ipAddress);
         //...
         void quitThread();
+
+    private:
+        osint::ScanArguments *m_scanArguments;
+        osint::ScanResults *m_scanResults;
+        bool m_stopEnumeration = false;
 };
 }
 #endif // OSINTENUMERATOR_H

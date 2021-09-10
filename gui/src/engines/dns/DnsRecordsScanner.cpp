@@ -1,8 +1,6 @@
 #include "DnsRecordsScanner.h"
+#include <QDnsLookup>
 
-/********************************************************************************
-                            DNS-RECORDS ENUMERATOR
-*********************************************************************************/
 
 records::Scanner::Scanner(ScanConfig *scanConfig, records::ScanArguments *scanArguments, records::ScanResults *scanResults)
     : m_scanConfig(scanConfig),
@@ -152,7 +150,6 @@ void records::Scanner::stopScan(){
     emit quitThread();
 }
 
-/******************************* RECORD-TYPES LOOKUP FINISHED *********************************/
 
 void records::Scanner::srvLookupFinished(){
     if(m_dns_srv->error() == QDnsLookup::NoError)
@@ -165,13 +162,13 @@ void records::Scanner::srvLookupFinished(){
                 ///
                 /// save to srv model...
                 ///
-                m_scanResults->resultsModel->records->model_srv->appendRow({new QStandardItem(record.name()), new QStandardItem(record.target()), new QStandardItem(QString::number(record.port()))});
+                m_scanResults->resultsModel->srvrecords->appendRow({new QStandardItem(record.name()), new QStandardItem(record.target()), new QStandardItem(QString::number(record.port()))});
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.name()<<record.target()<<m_dns_srv->name(), RESULTS::srv);
+                m_scanResults->resultsModel->project->addSRV(QList<QString>()<<record.name()<<record.target()<<m_dns_srv->name());
             }
-            m_scanResults->srvResultsLabel->setNum(m_scanResults->resultsModel->records->model_srv->rowCount());
+            m_scanResults->srvResultsLabel->setNum(m_scanResults->resultsModel->srvrecords->rowCount());
         }
     }
     ///
@@ -192,8 +189,8 @@ void records::Scanner::aLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
+            m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->rowCount());
         }
         const auto records = m_dns_a->hostAddressRecords();
         if(records.count())
@@ -205,7 +202,7 @@ void records::Scanner::aLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value().toString()<<m_dns_a->name(), RESULTS::a);
+                m_scanResults->resultsModel->project->addA(QList<QString>()<<record.value().toString()<<m_dns_a->name());
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -232,8 +229,8 @@ void records::Scanner::aaaaLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
+            m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->rowCount());
         }
         const auto records = m_dns_aaaa->hostAddressRecords();
         if(records.count())
@@ -245,7 +242,7 @@ void records::Scanner::aaaaLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value().toString()<<m_dns_aaaa->name(), RESULTS::aaaa);
+                m_scanResults->resultsModel->project->addAAAA(QList<QString>()<<record.value().toString()<<m_dns_aaaa->name());
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -272,8 +269,8 @@ void records::Scanner::mxLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
+            m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->rowCount());
         }
         const auto records = m_dns_mx->mailExchangeRecords();
         if(records.count())
@@ -285,7 +282,7 @@ void records::Scanner::mxLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.exchange()<<m_dns_mx->name(), RESULTS::mx);
+                m_scanResults->resultsModel->project->addMX(QList<QString>()<<record.exchange()<<m_dns_mx->name());
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -313,8 +310,8 @@ void records::Scanner::cnameLookupFinished()
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
+            m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->rowCount());
         }
         const auto records = m_dns_cname->canonicalNameRecords();
         if(records.count())
@@ -326,7 +323,7 @@ void records::Scanner::cnameLookupFinished()
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value()<<m_dns_cname->name(), RESULTS::cname);
+                m_scanResults->resultsModel->project->addCNAME(QList<QString>()<<record.value()<<m_dns_cname->name());
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -353,8 +350,8 @@ void records::Scanner::nsLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
+            m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->rowCount());
         }
         const auto records = m_dns_ns->nameServerRecords();
         if(records.count())
@@ -366,7 +363,7 @@ void records::Scanner::nsLookupFinished(){
                 ///
                 /// save to project model...
                 ///
-                m_scanResults->resultsModel->project->append(QList<QString>()<<record.value()<<m_dns_ns->name(), RESULTS::ns);
+                m_scanResults->resultsModel->project->addNS(QList<QString>()<<record.value()<<m_dns_ns->name());
             }
             m_dnsNameItem->appendRow(m_recordItem);
         }
@@ -393,8 +390,8 @@ void records::Scanner::txtLookupFinished(){
             //...
             m_dnsNameItem = new QStandardItem(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
             m_dnsNameItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            m_scanResults->resultsModel->records->rootItem->appendRow(m_dnsNameItem);
-            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->records->rootItem->rowCount());
+            m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->appendRow(m_dnsNameItem);
+            m_scanResults->resultsCountLabel->setNum(m_scanResults->resultsModel->dnsrecords->invisibleRootItem()->rowCount());
         }
         const auto records = m_dns_txt->textRecords();
         if(records.count())
@@ -409,7 +406,7 @@ void records::Scanner::txtLookupFinished(){
                     ///
                     /// save to project model...
                     ///
-                    m_scanResults->resultsModel->project->append(QList<QString>()<<value<<m_dns_txt->name(), RESULTS::txt);
+                    m_scanResults->resultsModel->project->addTXT(QList<QString>()<<value<<m_dns_txt->name());
                 }
             }
             m_dnsNameItem->appendRow(m_recordItem);

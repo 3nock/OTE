@@ -1,65 +1,17 @@
-#ifndef DNS_MAIN_H
-#define DNS_MAIN_H
+#ifndef UTILS_H
+#define UTILS_H
 
-/***************************************************
-                    HEADERS
-****************************************************/
-#include <QLineEdit>
-#include <QDesktopServices>
-#include <QDesktopWidget>
-#include <QListWidgetItem>
-#include <QListWidget>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QLabel>
-#include <QMenu>
-#include <QFont>
-#include <QtGui>
-//...
-#include <QThread>
-#include <QString>
-#include <QtCore>
-//...
-#include <QDir>
-#include <QFile>
-#include <QTemporaryFile>
-#include <QTextStream>
-//...
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonParseError>
-//...
-#include <QHostAddress>
 #include <QDnsLookup>
-#include <QHostInfo>
-#include <QTcpSocket>
-#include <QUrl>
-//...
-#include <QProgressBar>
-#include <QMainWindow>
-#include <QObject>
-#include <QWidget>
-//...
-#undef slots
-#include "Python.h"
-#define slots
-// self defined...
+#include <QListWidget>
+#include <QHostAddress>
+#include <QStandardItemModel>
 #include "src/project/ProjectDataModel.h"
 
 /***************************************************
                     MACROS
 ****************************************************/
-#define SINGLE_TARGET 0
-#define MULTIPLE_TARGETS 1
-//...
 #define NEWLINE "\n"
 #define EMPTY ""
-#define TITLE_ERROR "Error!"
-//...
-#define CURRENT_PATH "./"
-#define INFO_LOADFILE "Load File..."
-#define INFO_SAVETOFILE "Save To File..."
 //...
 #define WORDLIST_SPECIAL_SUBBRUTE "/wordlists/special_subBrute/names.txt"
 #define WORDLIST_SPECIAL_TLDBRUTE "/wordlists/special_tldBrute/names.txt"
@@ -119,22 +71,18 @@
 #define ENGINE_YAHOO "yahoo"
 // file's paths...
 #define FILE_CONFIG "/config/osint-config.json"
-#define FILE_APIKEYS "/config/osint-apiKeys.json"
 #define FILE_PROFILES "/config/osint-profiles.json"
 // configurations...
 #define CONFIG_THREADS "threads"
 #define CONFIG_TIMEOUT "timeout"
 #define CONFIG_MAX_PAGES "max_pages"
-
-/**********************************************
-                   enums
-***********************************************/
+//...
 #define OSINT_TRUE "1"
 #define OSINT_FALSE "0"
 
-/***************************************************
-                    ENUMERATORS
-****************************************************/
+/****************************************
+                ENUM
+*****************************************/
 enum ENGINE{
     // brute...
     BRUTE = 0,
@@ -170,37 +118,20 @@ enum CHOICE{
 /***************************************************
                     STRUCTURES
 ****************************************************/
+/*
 struct RecordsModel{
     QStandardItemModel *model_srv = nullptr;
     QStandardItemModel *model_records = nullptr;
     QStandardItem *rootItem = nullptr;
     int resultsCount = NULL;
 };
-typedef struct RecordsModel RecordsModel;
-
-struct ResultsModel{
-    QStandardItemModel *ip = nullptr;
-    QStandardItemModel *osint = nullptr;
-    QStandardItemModel *brute = nullptr;
-    QStandardItemModel *active = nullptr;
-    QStandardItemModel *level = nullptr;
-    QStandardItemModel *projectModel = nullptr;
-    //...
-    RecordsModel *records = nullptr;
-    ProjectDataModel *project = nullptr;
-};
-typedef struct ResultsModel ResultsModel;
-
-struct ScanStatus{
-    bool isRunning = false;
-    bool isStopped = false;
-    bool isPaused = false;
-};
-typedef struct ScanStatus ScanStatus;
-
+*/
 struct ScanConfig{
+    QString name = nullptr;
+    //...
     QDnsLookup::Type dnsRecordType = QDnsLookup::A;
     bool useCustomNameServers = false;
+    QStringList customNameServers;
     int threadsCount = 50;
     int timeout = 3000;
     //...
@@ -208,7 +139,43 @@ struct ScanConfig{
     bool hasWildcard = false;
     QString wildcardIp = nullptr;
 };
-typedef struct ScanConfig ScanConfig;
+
+struct ResultsModel{
+    QStandardItemModel *ip = nullptr;
+    QStandardItemModel *osint = nullptr;
+    QStandardItemModel *brute = nullptr;
+    QStandardItemModel *active = nullptr;
+    QStandardItemModel *level = nullptr;
+    QStandardItemModel *dnsrecords = nullptr;
+    QStandardItemModel *srvrecords = nullptr;
+    //...
+    ProjectDataModel *project = nullptr;
+};
+
+struct ScanStatus{
+    bool isRunning = false;
+    bool isStopped = false;
+    bool isPaused = false;
+    int activeThreads = 0;
+};
+
+struct GeneralStatus{
+    ScanStatus *osint = nullptr;
+    ScanStatus *brute = nullptr;
+    ScanStatus *active = nullptr;
+    ScanStatus *ip = nullptr;
+    ScanStatus *records = nullptr;
+    ScanStatus *level = nullptr;
+    //...
+    int totalThreadsInUse(){
+        return osint->activeThreads+
+                brute->activeThreads+
+                active->activeThreads+
+                ip->activeThreads+
+                records->activeThreads+
+                level->activeThreads;
+    }
+};
 
 /***************************************************
                     FUNCTIONS
@@ -229,4 +196,4 @@ QString filter(QString word);
 //...
 void loadFile(QListWidget& wordlist, int& count);
 
-#endif // _DNS_MAIN_H
+#endif // UTILS_H

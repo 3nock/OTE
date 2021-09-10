@@ -2,6 +2,7 @@
 #define ACTIVE_H
 
 #include "src/engines/Base.h"
+#include "src/utils.h"
 #include "ActiveScanner.h"
 
 namespace Ui {
@@ -12,38 +13,29 @@ class Active : public BaseClass{
         Q_OBJECT
 
     public:
-        explicit Active(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        Active(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Active();
-
-    private:
-        Ui::Active *ui;
-
-    private:
-        void startScan();
-        //...
-        active::ScanArguments *m_scanArguments;
 
     public slots:
         void scanResult(QString subdomain, QString ipAddress);
         void scanThreadEnded();
 
     private slots:
-        void on_pushButton_start_clicked();
-        void on_pushButton_pause_clicked();
-        void on_pushButton_stop_clicked();
-        void on_pushButton_get_clicked();
-        void on_pushButton_action_clicked();
-        void on_toolButton_config_clicked();
-        void on_pushButton_clearResults_clicked();
+        void on_buttonStart_clicked();
+        void on_buttonPause_clicked();
+        void on_buttonStop_clicked();
+        void on_buttonAction_clicked();
+        void on_buttonConfig_clicked();
+        void on_buttonClear_clicked();
         //...
-        void on_pushButton_removeTargets_clicked();
-        void on_pushButton_clearTargets_clicked();
-        void on_pushButton_loadTargets_clicked();
-        void on_pushButton_addTargets_clicked();
-        void on_lineEdit_targets_returnPressed();
+        void on_comboBoxOption_currentIndexChanged(int index);
+        void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
+
+    private:
+        Ui::Active *ui;
         //...
-        void on_comboBox_option_currentIndexChanged(int index);
-        void on_tableView_results_customContextMenuRequested(const QPoint &pos);
+        void startScan();
+        active::ScanArguments *m_scanArguments;
 };
 
 #endif // ACTIVE_H

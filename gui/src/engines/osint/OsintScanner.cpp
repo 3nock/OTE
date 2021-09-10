@@ -1,6 +1,11 @@
 #include "OsintScanner.h"
+//...
+#undef slots
+#include "Python.h"
+#define slots
+//...
+#include <QDir>
 
-/********************************* Constructor & Destructor **********************************/
 osint::Scanner::Scanner(osint::ScanArguments *scanArguments, osint::ScanResults *scanResults)
     : m_scanArguments(scanArguments), m_scanResults(scanResults)
 {

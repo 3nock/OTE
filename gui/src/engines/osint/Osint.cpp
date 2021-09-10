@@ -1,36 +1,39 @@
 #include "Osint.h"
 #include "ui_Osint.h"
+//...
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonParseError>
 
-/******************************* Constructor & Destructor ********************************/
-
-Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Osint),
+Osint::Osint(QWidget *parent, ResultsModel *resultsModel) : BaseClass(ENGINE::OSINT, resultsModel, parent), ui(new Ui::Osint),
     scanArguments(new osint::ScanArguments),
     scanResults(new osint::ScanResults)
 {
     ui->setupUi(this);
     ///
-    /// setting up targets widgets to the base class...
+    /// init...
     ///
-    widgets->listWidget_targets = ui->listWidget_targets;
-    widgets->label_targetsCount = ui->label_targetsCount;
-    widgets->lineEdit_targetInput = ui->lineEdit_multipleTargets;
-    widgets->listWidget_logs = ui->listWidget_logs;
+    ui->targets->init("Targets");
+    initBaseClass(ui->targets);
+    scanConfig->name = tr("ScanConfig-Osint");
     ///
-    /// other initializations...
+    /// ...
     ///
     currentPath = QDir::currentPath();
-    ui->lineEdit_domain->setPlaceholderText("eg. example.com");
-    ui->lineEdit_newProfile->setPlaceholderText("Enter New Profile's Name...");
-    ui->lineEdit_multipleTargets->setPlaceholderText("Enter a new Target...");
+    ui->lineEditTarget->setPlaceholderText("eg. example.com");
+    ui->lineEditNewProfile->setPlaceholderText("Enter New Profile's Name...");
     //...
-    resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
-    ui->tableView_results->setModel(resultsModel->osint);
+    resultsModel->osint->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    ui->tableViewResults->setModel(resultsModel->osint);
     //...
-    ui->pushButton_pause->setDisabled(true);
-    ui->pushButton_stop->setDisabled(true);
-    //...
+    ui->buttonPause->setDisabled(true);
+    ui->buttonStop->setDisabled(true);
+    ///
+    /// hide widgets...
+    ///
     ui->progressBar->hide();
-    ui->frame_targets->hide();
+    ui->targets->hide();
     ///
     /// equally seperate the widgets...
     ///
@@ -45,22 +48,21 @@ Osint::~Osint(){
     delete ui;
 }
 
-/************************************* Start Enumeration *********************************/
-void Osint::on_pushButton_start_clicked(){
-    if(ui->lineEdit_domain->text() != EMPTY){
+void Osint::on_buttonStart_clicked(){
+    if(ui->lineEditTarget->text() != EMPTY){
         getUserOptions(&scanArguments->choosenOptions);
         if(scanArguments->choosenOptions.count() == 0){
-            QMessageBox::warning(this, TITLE_ERROR, "Please Choose Osint Engine For subdomain Enumerations!");
+            QMessageBox::warning(this, "Error!", "Please Choose Osint Engine For subdomain Enumerations!");
             return;
         }
-        if(ui->lineEdit_domain->text().isEmpty()){
-            QMessageBox::warning(this, TITLE_ERROR, "Please Target Domain For Enumerations!");
+        if(ui->lineEditTarget->text().isEmpty()){
+            QMessageBox::warning(this, "Error!", "Please Target Domain For Enumerations!");
             return;
         }
         //...
-        ui->pushButton_start->setDisabled(true);
-        ui->pushButton_stop->setEnabled(true);
-        m_targetDomain = TargetNameFilter(ui->lineEdit_domain->text(), ENGINE::OSINT);
+        ui->buttonStart->setDisabled(true);
+        ui->buttonStop->setEnabled(true);
+        m_targetDomain = TargetNameFilter(ui->lineEditTarget->text(), ENGINE::OSINT);
         ///
         /// converting the QString domainName to char* for compatibility with the PyObject methods...
         ///
@@ -68,7 +70,7 @@ void Osint::on_pushButton_start_clicked(){
         strcpy(targetDomain, m_targetDomain.toStdString().c_str());
         //...
         scanArguments->targetDomain = targetDomain;
-        scanResults->label_subdomainsCount = ui->label_resultsCount;
+        scanResults->label_subdomainsCount = ui->labelResultsCount;
         scanResults->resultsCount = &subdomainsCount;
         scanResults->results_model = resultsModel->osint;
         //...
@@ -88,51 +90,48 @@ void Osint::on_pushButton_start_clicked(){
         //...
         cThread->start();
     }else{
-        QMessageBox::warning(this, TITLE_ERROR, "Please Enter Target Domain Name to Enumerate Subdomains!");
+        QMessageBox::warning(this, "Error!", "Please Enter Target Domain Name to Enumerate Subdomains!");
     }
 }
-void Osint::on_lineEdit_domain_returnPressed(){
-    on_pushButton_start_clicked();
+void Osint::on_lineEditTarget_returnPressed(){
+    on_buttonStart_clicked();
 }
 
-/****************************************** stop ****************************************/
-void Osint::on_pushButton_stop_clicked(){
+void Osint::on_buttonStop_clicked(){
     emit stopScan();
     sendStatus("[*] Stopping...");
 }
 
-/****************************** Enumeration Results  ************************************/
 void Osint::onEnumerationComplete(){
     //...
-    ui->pushButton_start->setEnabled(true);
-    ui->pushButton_stop->setDisabled(true);
+    ui->buttonStart->setEnabled(true);
+    ui->buttonStop->setDisabled(true);
     //...
     emit sendStatus("[END] Enumeration Complete!");
     logs("[END] Enumeration Complete!\n");
 }
 
-void Osint::on_pushButton_clear_clicked(){
+void Osint::on_buttonClear_clicked(){
     // clear subdomains...
-    if(ui->tabWidget->currentIndex() == 0){
+    if(ui->tabWidgetResults->currentIndex() == 0){
         resultsModel->osint->clear();
-        ui->label_resultsCount->clear();
+        ui->labelResultsCount->clear();
         subdomainsCount = 0;
         //...
         resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     }
     // clear logs...
     else{
-        ui->listWidget_logs->clear();
+        ui->listWidgetLogs->clear();
     }
 }
 
-/************************************ Scan Config (Dialogs) **************************************/
-void Osint::on_toolButton_keys_clicked(){
+void Osint::on_buttonKeys_clicked(){
     ApiKeysDialog *apiKeysDialog = new ApiKeysDialog(this);
     apiKeysDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     apiKeysDialog->show();
 }
-void Osint::on_toolButton_config_clicked(){
+void Osint::on_buttonConfig_clicked(){
     /*
     OsintConfigDialog *scanConfig = new OsintConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -140,32 +139,6 @@ void Osint::on_toolButton_config_clicked(){
     */
 }
 
-/*****************************************************************************************
-                            Multiple Targets
-*****************************************************************************************/
-void Osint::on_pushButton_removeTargets_clicked(){
-    removeTargets();
-}
-
-void Osint::on_pushButton_clearTargets_clicked(){
-    clearTargets();
-}
-
-void Osint::on_pushButton_loadTargets_clicked(){
-    loadTargetsFromFile();
-}
-
-void Osint::on_pushButton_addTargets_clicked(){
-    addTargets();
-}
-
-void Osint::on_lineEdit_multipleTargets_returnPressed(){
-    addTargets();
-}
-
-/******************************************************************
-                     OSINT ENGINES OPTIONS
-*******************************************************************/
 void Osint::getUserOptions(QStringList *choosenEngines){
     if(ui->checkBox_engine_threatminer->isChecked()){
         choosenEngines->append(ENGINE_THREATMINER);
@@ -297,7 +270,7 @@ void Osint::setupOsintProfiles(){
         QStringList profile_names = QJsonDocument::fromJson(osintProfiles.readAll(), &JsonParseError).object().keys();
         osintProfiles.close();
         for(int i = 0; i != profile_names.size(); i++){
-            ui->comboBox_profiles->addItem(profile_names[i]);
+            ui->comboBoxProfiles->addItem(profile_names[i]);
         }
     }else{
         logs("[Error] Failed To Open /config/osint-profiles.json File For Display on Profiles!");
@@ -311,22 +284,22 @@ void Osint::setupOsintProfiles(){
 ///
 /// show the frameWidget containing the profile's options...
 ///
-void Osint::on_checkBox_useProfiles_clicked(bool checked){
+void Osint::on_checkBoxUseProfiles_clicked(bool checked){
     if(checked){
         ui->frame_profiles->show();
     }else{
         ui->frame_profiles->hide();
     }
 }
-/****************** loading a profile... ***********************/
-void Osint::on_pushButton_loadProfile_clicked(){
+
+void Osint::on_buttonLoadProfile_clicked(){
     QFile osintProfiles(currentPath+FILE_PROFILES);
     osintProfiles.open(QIODevice::ReadOnly | QIODevice::Text);
     if(osintProfiles.isOpen()){
         QString keys = osintProfiles.readAll();
         osintProfiles.close();
         QJsonDocument apis = QJsonDocument::fromJson(keys.toUtf8());
-        QJsonObject keys_object = apis.object()[ui->comboBox_profiles->currentText()].toObject();
+        QJsonObject keys_object = apis.object()[ui->comboBoxProfiles->currentText()].toObject();
         //...
         if(keys_object.value(ENGINE_THREATMINER) == OSINT_TRUE){
             ui->checkBox_engine_threatminer->setChecked(true);
@@ -530,15 +503,15 @@ void Osint::on_pushButton_loadProfile_clicked(){
         logs("[Error] Failed To Open /config/osint-profiles.json File For Loading Profile!");
     }
 }
-/********************* Deleting a profile ****************************/
-void Osint::on_pushButton_deleteProfile_clicked(){
+
+void Osint::on_buttonDeleteProfile_clicked(){
     QFile osintProfiles(currentPath+FILE_PROFILES);
     osintProfiles.open(QIODevice::ReadOnly | QIODevice::Text);
     if(osintProfiles.isOpen()){
         QString keys = osintProfiles.readAll();
         osintProfiles.close();
         QJsonObject keys_object = QJsonDocument::fromJson(keys.toUtf8()).object();
-        keys_object.remove(ui->comboBox_profiles->currentText());
+        keys_object.remove(ui->comboBoxProfiles->currentText());
         //...
         QJsonDocument JsonDocument;
         JsonDocument.setObject(keys_object);
@@ -547,17 +520,17 @@ void Osint::on_pushButton_deleteProfile_clicked(){
             osintProfiles.write(JsonDocument.toJson());
             osintProfiles.close();
         }
-        ui->comboBox_profiles->removeItem(ui->comboBox_profiles->currentIndex());
+        ui->comboBoxProfiles->removeItem(ui->comboBoxProfiles->currentIndex());
     }else{
         logs("[Error] Failed To Open /config/osint-profiles.json File For Deleting a Profile!");
     }
 }
-/***************** creating a new profile *************************/
-void Osint::on_pushButton_newProfile_clicked(){
-    if(ui->lineEdit_newProfile->text() != EMPTY){
-        QString profile_name = ui->lineEdit_newProfile->text();
-        ui->comboBox_profiles->addItem(profile_name);
-        ui->lineEdit_newProfile->clear();
+
+void Osint::on_buttonNewProfile_clicked(){
+    if(ui->lineEditNewProfile->text() != EMPTY){
+        QString profile_name = ui->lineEditNewProfile->text();
+        ui->comboBoxProfiles->addItem(profile_name);
+        ui->lineEditNewProfile->clear();
         ///
         /// saving to profiles...
         ///
@@ -780,14 +753,12 @@ void Osint::on_pushButton_newProfile_clicked(){
                 logs("[Error] Failed To Open /config/osint-profiles.json File For Saving New Profile!");
             }
         }else{
-            QMessageBox::warning(this, TITLE_ERROR, "Please Enter New Profile's Name...");
+            QMessageBox::warning(this, "Error!", "Please Enter New Profile's Name...");
         }
     }
 }
 
-
-/*************************** Action-Button Context Menu **************************************/
-void Osint::on_pushButton_action_clicked(){
+void Osint::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
@@ -798,27 +769,25 @@ void Osint::on_pushButton_action_clicked(){
     /// getting the position of the action button to place the context menu and
     /// showing the context menu right by the side of the action button...
     ///
-    QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
-    contextMenu_actionButton(ENGINE::OSINT, pos);
+    QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
+    a_Menu->exec(QPoint(pos.x()+76, pos.y()));
 }
 
-/******************************** Right-Click Context Menu ****************************/
-void Osint::on_tableView_results_customContextMenuRequested(const QPoint &pos){
+void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
     ///
     /// check if user right clicked on items else dont show the context menu...
     ///
-    if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
+    if(!ui->tableViewResults->selectionModel()->isSelected(ui->tableViewResults->currentIndex())){
         return;
     }
-    contextMenu_rightClick(ui->tableView_results->selectionModel());
+    selectionModel = ui->tableViewResults->selectionModel();
+    c_Menu->exec(QCursor::pos());
 }
 
-void Osint::on_comboBox_target_currentIndexChanged(int index){
-    if(index){
-        ui->frame_targets->show();
-    }
-    else{
-        ui->frame_targets->hide();
-    }
+void Osint::on_checkBoxMultipleTargets_clicked(bool checked){
+    if(checked)
+        ui->targets->show();
+    else
+        ui->targets->hide();
 }

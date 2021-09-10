@@ -1,7 +1,7 @@
 #ifndef BASESCANNERS_H
 #define BASESCANNERS_H
 
-#include "src/core.h"
+#include "src/utils.h"
 #include "src/engines/brute/BruteScanner.h"
 
 /***************************************************************************************
@@ -9,9 +9,6 @@
 ****************************************************************************************/
 class TargetCheck: public QObject {
     Q_OBJECT
-    private:
-        int m_check = 0;
-        QDnsLookup *m_dns;
 
     public:
         TargetCheck(QObject *parent = nullptr);
@@ -26,6 +23,10 @@ class TargetCheck: public QObject {
         void lookupFinished();
         void lookup();
         void isTargetActive(QString target);
+
+    private:
+        int m_check = 0;
+        QDnsLookup *m_dns;
 };
 
 /***************************************************************************************
@@ -37,11 +38,6 @@ class TargetCheck: public QObject {
 *****************************************************************************************/
 class BruteEnumerator_Wildcards: public QObject {
     Q_OBJECT
-
-    private:
-        brute::ScanArguments *m_scanArguments;
-        ScanConfig *m_scanConfig;
-        QDnsLookup *m_dns;
 
     public:
         BruteEnumerator_Wildcards(ScanConfig *scanConfig, brute::ScanArguments *scanArguments);
@@ -55,6 +51,11 @@ class BruteEnumerator_Wildcards: public QObject {
 
     signals:
         void quitThread();
+
+    private:
+        brute::ScanArguments *m_scanArguments;
+        ScanConfig *m_scanConfig;
+        QDnsLookup *m_dns;
 };
 
 #endif // BASESCANNERS_H

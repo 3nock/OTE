@@ -1,14 +1,28 @@
 #include "Project.h"
 #include "ui_Project.h"
-
+//...
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QFile>
 
 Project::Project(QWidget *parent, ResultsModel *resultsModel) :QWidget(parent), ui(new Ui::Project),
     m_resultsModel(resultsModel),
     m_proxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
+    ///
+    /// for analysis tabs...
+    ///
+    general = new GeneralAnalysis(this);
+    specific = new SpecificAnalysis(this);
+    ui->tabWidgetProject->insertTab(1, general, "General");
+    ui->tabWidgetProject->insertTab(2, specific, "Specific");
+    ///
+    /// setting up signals and slots...
+    ///
     //...
-    m_proxyModel->setSourceModel(m_resultsModel->projectModel);
+    //...
+    m_proxyModel->setSourceModel(m_resultsModel->project->projectModel);
     m_proxyModel->setRecursiveFilteringEnabled(true);
     //...
     ui->treeView->setModel(m_proxyModel);
@@ -45,11 +59,11 @@ void Project::updateFilter(){
     ui->treeView->setModel(m_proxyModel);
 }
 
-/*********************************** IN-SCOPE **********************************/
 void Project::on_pushButton_clearInScope_clicked(){
     ui->listWidget_inScope->clear();
     updateFilter();
 }
+
 void Project::on_pushButton_removeInScope_clicked(){
     int selectionCount = ui->listWidget_inScope->selectedItems().count();
     if(selectionCount){
@@ -57,8 +71,9 @@ void Project::on_pushButton_removeInScope_clicked(){
     }
     updateFilter();
 }
+
 void Project::on_pushButton_loadInScope_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
+    QString filename = QFileDialog::getOpenFileName(this, "Load From File...", "./");
     if(filename.isEmpty()){
         return;
     }
@@ -70,10 +85,11 @@ void Project::on_pushButton_loadInScope_clicked(){
         }
         file.close();
     }else{
-        QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
+        QMessageBox::warning(this, "Error!", "Failed To Open the File!");
     }
     updateFilter();
 }
+
 void Project::on_pushButton_addInScope_clicked(){
     if(ui->lineEdit_inScope->text() == EMPTY){
         return;
@@ -91,11 +107,11 @@ void Project::on_pushButton_addInScope_clicked(){
     ui->lineEdit_inScope->clear();
     updateFilter();
 }
+
 void Project::on_lineEdit_inScope_returnPressed(){
     on_pushButton_addInScope_clicked();
 }
 
-/*************************************************************************************/
 void Project::on_checkBox_enableFilter_clicked(bool checked){
     if(checked){
         ui->frame_filter->show();
@@ -105,7 +121,6 @@ void Project::on_checkBox_enableFilter_clicked(bool checked){
     }
 }
 
-
 void Project::on_checkBox_columnIpAddress_clicked(bool checked){
     if(checked){
         ui->treeView->setColumnHidden(1, false);
@@ -114,6 +129,7 @@ void Project::on_checkBox_columnIpAddress_clicked(bool checked){
         ui->treeView->setColumnHidden(1, true);
     }
 }
+
 void Project::on_checkBox_columnScopeTarget_clicked(bool checked){
     if(checked){
         ui->treeView->setColumnHidden(2, false);
@@ -124,10 +140,8 @@ void Project::on_checkBox_columnScopeTarget_clicked(bool checked){
 }
 
 void Project::on_pushButton_filter_clicked(){
-    //...
     m_proxyModel->setFilterKeyColumn(ui->comboBox_filter->currentIndex());
     QRegExp regExp(ui->lineEdit_filter->text(), Qt::CaseInsensitive);
     m_proxyModel->setFilterRegExp(regExp);
     ui->treeView->setModel(m_proxyModel);
-
 }

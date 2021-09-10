@@ -1,7 +1,8 @@
 #include "ProjectDataModel.h"
 
-ProjectDataModel::ProjectDataModel(QStandardItemModel *projectModel):
-    m_projectModel(projectModel),
+ProjectDataModel::ProjectDataModel():
+    projectModel(new QStandardItemModel),
+    //...
     m_subdomains(new QStandardItem("Subdomains")),
     m_tlds(new QStandardItem("Tlds")),
     m_records(new QStandardItem("Records")),
@@ -14,10 +15,11 @@ ProjectDataModel::ProjectDataModel(QStandardItemModel *projectModel):
     m_cname(new QStandardItem("CNAME")),
     m_srv(new QStandardItem("SRV"))
 {
-    m_rootItem = m_projectModel->invisibleRootItem();
-    m_projectModel->setColumnCount(3);
-
-    //...
+    m_rootItem = projectModel->invisibleRootItem();
+    projectModel->setColumnCount(3);
+    ///
+    /// ...
+    ///
     m_subdomains->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_tlds->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_records->setIcon(QIcon(":/img/res/icons/folder2.png"));
@@ -28,11 +30,15 @@ ProjectDataModel::ProjectDataModel(QStandardItemModel *projectModel):
     m_txt->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_cname->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_srv->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    //...
+    ///
+    /// ...
+    ///
     m_rootItem->appendRow(m_subdomains);
     m_rootItem->appendRow(m_tlds);
     m_rootItem->appendRow(m_records);
-    //...
+    ///
+    /// ...
+    ///
     m_records->appendRow(m_a);
     m_records->appendRow(m_aaaa);
     m_records->appendRow(m_ns);
@@ -41,73 +47,92 @@ ProjectDataModel::ProjectDataModel(QStandardItemModel *projectModel):
     m_records->appendRow(m_cname);
     m_records->appendRow(m_srv);
 }
+ProjectDataModel::~ProjectDataModel(){
+    ///
+    /// save all files first using RAII model...
+    ///
 
-void ProjectDataModel::append(QStringList items, RESULTS resultsType){
     ///
-    /// checks...
+    /// then delete all items...
     ///
-    if(items.isEmpty()){
-        return;
-    }
-    ///
-    /// ...
-    ///
-    switch(resultsType){
-    case RESULTS::subdomains:
-        if(!m_subdomainsSet.contains(items[0])){
-            m_subdomainsSet.insert(items[0]);
-            m_subdomains->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
-        }
-        break;
-    case RESULTS::tlds:
-        if(!m_tldsSet.contains(items[0])){
-            m_tldsSet.insert(items[0]);
-            m_tlds->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
-        }
-        break;
-    case RESULTS::a:
-        if(!m_aSet.contains(items[0])){
-            m_aSet.insert(items[0]);
-            m_a->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
-        }
-        break;
-    case RESULTS::aaaa:
-        if(!m_aaaaSet.contains(items[0])){
-            m_aaaaSet.insert(items[0]);
-            m_aaaa->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
-        }
-        break;
-    case RESULTS::ns:
-        if(!m_nsSet.contains(items[0])){
-            m_nsSet.insert(items[0]);
-            m_ns->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
-        }
-        break;
-    case RESULTS::mx:
-        if(!m_mxSet.contains(items[0])){
-            m_mxSet.insert(items[0]);
-            m_mx->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
-        }
-        break;
-    case RESULTS::txt:
-        if(!m_txtSet.contains(items[0])){
-            m_txtSet.insert(items[0]);
-            m_txt->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
-        }
-        break;
-    case RESULTS::cname:
-        if(!m_cnameSet.contains(items[0])){
-            m_cnameSet.insert(items[0]);
-            m_cname->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
-        }
-        break;
-    case RESULTS::srv:
-        if(!m_srvSet.contains(items[0])){
-            m_srvSet.insert(items[0]);
-            m_srv->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
-        }
-        break;
-    }
+    delete projectModel;
+    //...
+    delete m_subdomains;
+    delete m_tlds;
+    delete m_records;
+    //...
+    delete m_a;
+    delete m_aaaa;
+    delete m_ns;
+    delete m_mx;
+    delete m_txt;
+    delete m_cname;
+    delete m_srv;
 }
 
+void ProjectDataModel::addSubdomain(QStringList items){
+    int prevSize = m_subdomainsSet.count();
+    m_subdomainsSet.insert(items[0]);
+    if(m_subdomainsSet.count() > prevSize)
+        m_subdomains->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
+}
 
+void ProjectDataModel::addTLD(QStringList items){
+    int prevSize = m_tldsSet.count();
+    m_tldsSet.insert(items[0]);
+    if(m_tldsSet.count() > prevSize)
+        m_tlds->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
+}
+
+void ProjectDataModel::addIp(QStringList items){
+    Q_UNUSED(items);
+}
+
+void ProjectDataModel::addA(QStringList items){
+    int prevSize = m_aSet.count();
+    m_aSet.insert(items[0]);
+    if(m_aSet.count() > prevSize)
+        m_a->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+}
+
+void ProjectDataModel::addAAAA(QStringList items){
+    int prevSize = m_aaaaSet.count();
+    m_aaaaSet.insert(items[0]);
+    if(m_aaaaSet.count() > prevSize)
+        m_aaaa->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+}
+
+void ProjectDataModel::addNS(QStringList items){
+    int prevSize = m_nsSet.count();
+    m_nsSet.insert(items[0]);
+    if(m_nsSet.count() > prevSize)
+        m_ns->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+}
+
+void ProjectDataModel::addMX(QStringList items){
+    int prevSize = m_mxSet.count();
+    m_mxSet.insert(items[0]);
+    if(m_mxSet.count() > prevSize)
+        m_mx->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+}
+
+void ProjectDataModel::addTXT(QStringList items){
+    int prevSize = m_txtSet.count();
+    m_txtSet.insert(items[0]);
+    if(m_txtSet.count() > prevSize)
+        m_txt->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+}
+
+void ProjectDataModel::addCNAME(QStringList items){
+    int prevSize = m_cnameSet.count();
+    m_cnameSet.insert(items[0]);
+    if(m_cnameSet.count() > prevSize)
+        m_cname->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+}
+
+void ProjectDataModel::addSRV(QStringList items){
+    int prevSize = m_tldsSet.count();
+    m_tldsSet.insert(items[0]);
+    if(m_tldsSet.count() > prevSize)
+        m_srv->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
+}

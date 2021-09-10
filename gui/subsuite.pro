@@ -26,6 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        src\engines\ContextMenu.cpp \
+        src\Logger.cpp \
+        src\project\general\GeneralAnalysis.cpp \
+        src\project\specific\SpecificAnalysis.cpp \
+        src\utils.cpp \
+        src\widgets\InputWidget.cpp \
+        src\widgets\ResultsWidget.cpp \
         src\engines\CommonScanners.cpp \
         src\project\ProjectDataModel.cpp \
         src\project\Project.cpp \
@@ -48,10 +55,18 @@ SOURCES += \
         src\dialogs\WordlistGeneratorDialog.cpp \
         src\SplashScreen.cpp \
         src\MainWindow.cpp \
-        src\core.cpp \
         src\main.cpp \
 
 HEADERS += \
+    src/Config.h \
+        src\engines\AbstractClass.h \
+        src\engines\ContextMenu.h \
+        src\Logger.h \
+        src\project\general\GeneralAnalysis.h \
+        src\project\specific\SpecificAnalysis.h \
+        src\utils.h \
+        src\widgets\InputWidget.h \
+        src\widgets\ResultsWidget.h \
         src\engines\CommonScanners.h \
         src\project\ProjectDataModel.h \
         src\project\Project.h \
@@ -74,9 +89,12 @@ HEADERS += \
         src\dialogs\WordlistGeneratorDialog.h \
         src\SplashScreen.h \
         src\MainWindow.h \
-        src\core.h
 
 FORMS += \
+        src\project\general\GeneralAnalysis.ui \
+        src\project\specific\SpecificAnalysis.ui \
+        src\widgets\InputWidget.ui \
+        src\widgets\ResultsWidget.ui \
         src\project\Project.ui \
         src\engines\ip\Ip.ui \
         src\engines\dns\DnsRecords.ui \

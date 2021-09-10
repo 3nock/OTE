@@ -1,7 +1,10 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include "src/core.h"
+#include <QSortFilterProxyModel>
+#include "src/utils.h"
+#include "general/GeneralAnalysis.h"
+#include "specific/SpecificAnalysis.h"
 
 namespace Ui {
     class Project;
@@ -16,11 +19,14 @@ class Project : public QWidget{
     public:
         void updateFilter();
         //...
-        ResultsModel *m_resultsModel;
+        GeneralAnalysis *general = nullptr;
+        SpecificAnalysis *specific = nullptr;
+        //...
+        const ResultsModel *m_resultsModel;
         QSortFilterProxyModel *m_proxyModel;
 
     public:
-        explicit Project(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        Project(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
         ~Project();
 
     private slots:

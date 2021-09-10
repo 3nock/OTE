@@ -2,25 +2,27 @@
 #define MODELS_H
 
 #include <QStandardItemModel>
-#include <QStandardItem>
 #include <QSet>
-#include <QString>
 
-/*************** ENUMS *******************/
-enum RESULTS{
-    subdomains = 0,
-    tlds = 1,
-    srv = 2,
-    a = 3,
-    aaaa = 4,
-    ns = 5,
-    mx = 6,
-    txt = 7,
-    cname = 8
-};
-
-/**************** CLASS ******************/
 class ProjectDataModel{
+
+    public:
+        ProjectDataModel();
+        ~ProjectDataModel();
+        //...
+        void addSubdomain(QStringList);
+        void addTLD(QStringList);
+        void addIp(QStringList);
+        void addA(QStringList);
+        void addAAAA(QStringList);
+        void addNS(QStringList);
+        void addMX(QStringList);
+        void addTXT(QStringList);
+        void addCNAME(QStringList);
+        void addSRV(QStringList);
+        //...
+        QStandardItemModel *projectModel;
+
     private:
         ///
         /// Sets containers that saves all enumerated results...
@@ -37,7 +39,6 @@ class ProjectDataModel{
         ///
         /// main items...
         ///
-        QStandardItemModel *m_projectModel;
         QStandardItem *m_rootItem;
         QStandardItem *m_subdomains;
         QStandardItem *m_tlds;
@@ -52,11 +53,6 @@ class ProjectDataModel{
         QStandardItem *m_txt;
         QStandardItem *m_cname;
         QStandardItem *m_srv;
-
-    public:
-        ProjectDataModel(QStandardItemModel *projectModel);
-        //...
-        void append(QStringList items, RESULTS resultType);
 };
 
 #endif // MODELS_H

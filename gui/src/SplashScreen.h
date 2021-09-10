@@ -2,8 +2,7 @@
 #define SPLASHSCREEN_H
 
 
-class SplashScreen
-{
+class SplashScreen{
     public:
         SplashScreen();
 };

@@ -1,7 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "src/core.h"
+#include <QMainWindow>
+#include <QSettings>
+//...
+#include "src/utils.h"
 #include "src/project/Project.h"
 #include "src/engines/ip/Ip.h"
 #include "src/engines/dns/DnsRecords.h"
@@ -17,17 +20,20 @@ namespace Ui {
 class MainWindow : public QMainWindow{
         Q_OBJECT
 
-    private:
-        Ui::MainWindow *ui;
-
-    public:
-        ResultsModel *resultsModel;
-
     public:
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         //...
-        QFile *logfile;
+        ScanStatus *statusOsint;
+        ScanStatus *statusBrute;
+        ScanStatus *statusActive;
+        ScanStatus *statusIp;
+        ScanStatus *statusRecords;
+        ScanStatus *statusLevel;
+        GeneralStatus *status;
+        //...
+        ResultsModel *resultsModel;
+        QSettings *config;
 
     public slots:
         void onReceiveLog(QString log);
@@ -39,6 +45,9 @@ class MainWindow : public QMainWindow{
         void onChangeTabToIp();
         void onChangeTabToRecords();
         void onChangeTabToLevel();
+
+    private:
+        Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H

@@ -1,5 +1,7 @@
 #include "MainWindow.h"
+#include "src/Config.h"
 #include <QApplication>
+#include <QDesktopWidget>
 
 ///
 /// perform some checkups when initializing eg. missing files...
@@ -39,6 +41,10 @@ int main(int argc, char *argv[]){
     QString styleSheet = QLatin1String(file.readAll());
     app.setStyleSheet(styleSheet);
     */
+    ///
+    /// setting configurations...
+    ///
+    Config::settings();
     ///
     /// starting the app...
     ///

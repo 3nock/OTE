@@ -2,8 +2,10 @@
 #include "ui_Brute.h"
 
 /*
+ tomorrow:
  use ini file settings...
 
+ **
  fix filter from what you have learned, it shud not be asocciated with scope...
 
  check if connected to the internet...
@@ -12,12 +14,6 @@
  Use QNetworkConfigurationManager::isOnline().
 
 */
-
-/*
- QSet contains size check...
-*/
-
-
 /*
  create a scrapper tab: use c++...
 */
@@ -51,29 +47,28 @@
  *
  */
 
-/*************************** Class Constructor & Deconstructor *************************/
-Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, resultsModel), ui(new Ui::Brute),
+Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(ENGINE::BRUTE, resultsModel, parent), ui(new Ui::Brute),
       m_scanArguments(new brute::ScanArguments)
 {
     ui->setupUi(this);
     ///
-    /// setting up targets widgets to the base class...
+    /// init...
     ///
-    widgets->listWidget_targets = ui->listWidget_targets;
-    widgets->label_targetsCount = ui->label_targetsCount;
-    widgets->lineEdit_targetInput = ui->lineEdit_multipleTargets;
-    widgets->listWidget_logs = ui->listWidget_logs;
+    ui->targets->init("Targets");
+    ui->wordlist->init("Wordlist");
+    initBaseClass(ui->targets);
+    scanConfig->name = tr("ScanConfig-Brute");
     ///
-    /// other initializations...
+    /// ...
     ///
-    ui->lineEdit_target->setPlaceholderText("eg. example.com");
-    ui->lineEdit_wordlist->setPlaceholderText("Enter a new Wordlist...");
-    ui->lineEdit_multipleTargets->setPlaceholderText("Enter a new Target...");
+    ui->lineEditTarget->setPlaceholderText("eg. example.com");
+    ///
+    /// ...
+    ///
+    ui->buttonStop->setDisabled(true);
+    ui->buttonPause->setDisabled(true);
     //...
-    ui->pushButton_stop->setDisabled(true);
-    ui->pushButton_pause->setDisabled(true);
-    //...
-    ui->frame_targets->hide();
+    ui->targets->hide();
     ui->progressBar->hide();
     ///
     /// equally seperate the widgets...
@@ -81,10 +76,10 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(parent, re
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
     //...
-    resultsModel->brute->setHorizontalHeaderLabels({"Subdomain Name:", "IpAddress"});
-    ui->tableView_results->setModel(resultsModel->brute);
+    resultsModel->brute->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    ui->tableViewResults->setModel(resultsModel->brute);
     //...
-    m_scanArguments->wordlist = ui->listWidget_wordlist;
+    m_scanArguments->wordlist = ui->wordlist->listWidget;
 }
 Brute::~Brute(){
     delete m_scanArguments;
@@ -92,30 +87,29 @@ Brute::~Brute(){
     delete ui;
 }
 
-/*********************************** START Enumeration **********************************/
-void Brute::on_pushButton_start_clicked(){
+void Brute::on_buttonStart_clicked(){
     ///
     /// checking if all requirements are satisfied before scan if not prompt error
     /// then exit function...
     ///
-    if(ui->comboBox_target->currentIndex() == 0 && ui->lineEdit_target->text().isEmpty()){
-        QMessageBox::warning(this, TITLE_ERROR, "Please Enter the Target for Enumeration!");
+    if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
+        QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
         return;
     }
-    if(ui->comboBox_target->currentIndex() == 1 && ui->listWidget_targets->count() < 1){
-        QMessageBox::warning(this, TITLE_ERROR, "Please Enter the Targets for Enumeration!");
+    if(ui->checkBoxMultipleTargets->isChecked() && ui->targets->listWidget->count() < 1){
+        QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
         return;
     }
-    if(ui->listWidget_wordlist->count() < 1){
-        QMessageBox::warning(this, TITLE_ERROR, "Please Enter the Wordlist for Enumeration!");
+    if(ui->wordlist->listWidget->count() < 1){
+        QMessageBox::warning(this, "Error!", "Please Enter the Wordlist for Enumeration!");
         return;
     }
     ///
     /// disabling & Enabling widgets...
     ///
-    ui->pushButton_start->setDisabled(true);
-    ui->pushButton_pause->setEnabled(true);
-    ui->pushButton_stop->setEnabled(true);
+    ui->buttonStart->setDisabled(true);
+    ui->buttonPause->setEnabled(true);
+    ui->buttonStop->setEnabled(true);
     ui->progressBar->show();
     ///
     /// Resetting the scan arguments values...
@@ -127,56 +121,56 @@ void Brute::on_pushButton_start_clicked(){
     m_scanArguments->progress = 0;
 
     /****** Processing targets if user chooses subdomain bruteForcing *******/
-    if(ui->radioButton_subBrute->isChecked())
+    if(ui->comboBoxBruteType->currentIndex() == 0)
     {
         m_scanArguments->subBrute = true;
         m_scanArguments->tldBrute = false;
 
-        if(ui->comboBox_target->currentIndex() == SINGLE_TARGET)
+        if(!ui->checkBoxMultipleTargets->isChecked())
         {
-            m_scanArguments->targetList.append(TargetNameFilter(ui->lineEdit_target->text(), ENGINE::SUBBRUTE));
+            m_scanArguments->targetList.append(TargetNameFilter(ui->lineEditTarget->text(), ENGINE::SUBBRUTE));
             ///
             /// for a single target, progress equals to the total number of wordlist...
             ///
-            ui->progressBar->setMaximum(ui->listWidget_wordlist->count());
+            ui->progressBar->setMaximum(ui->wordlist->listWidget->count());
         }
-        if(ui->comboBox_target->currentIndex() == MULTIPLE_TARGETS)
+        if(ui->checkBoxMultipleTargets->isChecked())
         {
-            for(int i = 0; i < ui->listWidget_targets->count(); i++)
+            for(int i = 0; i < ui->targets->listWidget->count(); i++)
             {
-                m_scanArguments->targetList.append(TargetNameFilter(ui->listWidget_targets->item(i)->text(), ENGINE::SUBBRUTE));
+                m_scanArguments->targetList.append(TargetNameFilter(ui->targets->listWidget->item(i)->text(), ENGINE::SUBBRUTE));
             }
             ///
             /// for multiple targets, progress equals to the total number of wordlist times the total number of targets...
             ///
-            ui->progressBar->setMaximum(ui->listWidget_wordlist->count()*m_scanArguments->targetList.count());
+            ui->progressBar->setMaximum(ui->wordlist->listWidget->count()*m_scanArguments->targetList.count());
         }
     }
 
     /****** Processing targets if user chooses TLD bruteForcing *******/
-    if(ui->radioButton_tldBrute->isChecked())
+    if(ui->comboBoxBruteType->currentIndex() == 1)
     {
         m_scanArguments->tldBrute = true;
         m_scanArguments->subBrute = false;
 
-        if(ui->comboBox_target->currentIndex() == SINGLE_TARGET)
+        if(!ui->checkBoxMultipleTargets->isChecked())
         {
-            m_scanArguments->targetList.append(TargetNameFilter(ui->lineEdit_target->text(), ENGINE::TLDBRUTE));
+            m_scanArguments->targetList.append(TargetNameFilter(ui->lineEditTarget->text(), ENGINE::TLDBRUTE));
             ///
             /// for a single target, progress equals to the total number of wordlist...
             ///
-            ui->progressBar->setMaximum(ui->listWidget_wordlist->count());
+            ui->progressBar->setMaximum(ui->wordlist->listWidget->count());
         }
-        if(ui->comboBox_target->currentIndex() == MULTIPLE_TARGETS)
+        if(ui->checkBoxMultipleTargets->isChecked())
         {
-            for(int i = 0; i < ui->listWidget_targets->count(); i++)
+            for(int i = 0; i < ui->targets->listWidget->count(); i++)
             {
-                m_scanArguments->targetList.append(TargetNameFilter(ui->listWidget_targets->item(i)->text(), ENGINE::TLDBRUTE));
+                m_scanArguments->targetList.append(TargetNameFilter(ui->targets->listWidget->item(i)->text(), ENGINE::TLDBRUTE));
             }
             ///
             /// for multiple targets, progress equals to the total number of wordlist times the total number of targets...
             ///
-            ui->progressBar->setMaximum(ui->listWidget_wordlist->count()*m_scanArguments->targetList.count());
+            ui->progressBar->setMaximum(ui->wordlist->listWidget->count()*m_scanArguments->targetList.count());
         }
     }
     ///
@@ -187,19 +181,18 @@ void Brute::on_pushButton_start_clicked(){
     sendStatus("[START] Started Subdomain Enumeration!");
     logs("[START] Started Subdomain Enumeration!");
 }
-void Brute::on_lineEdit_target_returnPressed(){
-    on_pushButton_start_clicked();
+void Brute::on_lineEditTarget_returnPressed(){
+    on_buttonStart_clicked();
 }
 
-/************************************* Pause/Stop Enumeration *************************************/
-void Brute::on_pushButton_pause_clicked(){
+void Brute::on_buttonPause_clicked(){
     ///
     /// if the scan was already paused, then this current click is to
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
     if(scanStatus->isPaused){
-        ui->pushButton_pause->setText("Pause");
+        ui->buttonPause->setText("Pause");
         scanStatus->isPaused = false;
         //...
         startScan();
@@ -214,7 +207,7 @@ void Brute::on_pushButton_pause_clicked(){
     }
 }
 
-void Brute::on_pushButton_stop_clicked(){
+void Brute::on_buttonStop_clicked(){
     emit stopScan();
     if(scanStatus->isPaused)
     {
@@ -223,9 +216,9 @@ void Brute::on_pushButton_stop_clicked(){
         scanStatus->isStopped = false;
         scanStatus->isRunning = false;
         //...
-        ui->pushButton_start->setEnabled(true);
-        ui->pushButton_pause->setDisabled(true);
-        ui->pushButton_stop->setDisabled(true);
+        ui->buttonStart->setEnabled(true);
+        ui->buttonPause->setDisabled(true);
+        ui->buttonStop->setDisabled(true);
         //...
         sendStatus("[*] Enumeration Complete!");
         logs("[END] Enumeration Complete!\n");
@@ -233,15 +226,13 @@ void Brute::on_pushButton_stop_clicked(){
     scanStatus->isStopped = true;
 }
 
-/************************************ Enumeration Method *********************************/
-
 void Brute::startScan(){
     ///
     /// if the numner of threads is greater than the number of wordlists, set the
     /// number of threads to use to the number of wordlists available to avoid
     /// creating more threads than needed...
     ///
-    int wordlistCount = ui->listWidget_wordlist->count();
+    int wordlistCount = ui->wordlist->listWidget->count();
     int threadsCount = scanConfig->threadsCount;
     if(threadsCount > wordlistCount)
     {
@@ -271,7 +262,6 @@ void Brute::startScan(){
     scanStatus->isRunning = true;
 }
 
-/************************************ Receiving Results ***********************************/
 void Brute::scanResult(QString subdomain, QString ipAddress, QString target){
     if(m_subdomainsSet.contains(subdomain)){
         return;
@@ -281,19 +271,18 @@ void Brute::scanResult(QString subdomain, QString ipAddress, QString target){
     /// save to brute model...
     ///
     resultsModel->brute->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ipAddress));
-    ui->label_resultsCount->setNum(resultsModel->brute->rowCount());
+    ui->labelResultsCount->setNum(resultsModel->brute->rowCount());
     ///
     /// save to Project model...
     ///
     if(m_scanArguments->tldBrute){
-        resultsModel->project->append(QStringList()<<subdomain<<ipAddress<<target, RESULTS::tlds);
+        resultsModel->project->addTLD(QStringList()<<subdomain<<ipAddress<<target);
     }
     if(m_scanArguments->subBrute){
-        resultsModel->project->append(QStringList()<<subdomain<<ipAddress<<target, RESULTS::subdomains);
+        resultsModel->project->addSubdomain(QStringList()<<subdomain<<ipAddress<<target);
     }
 }
 
-/********************************* Enumeration thread ended ********************************/
 void Brute::scanThreadEnded(){
     activeThreads--;
     ///
@@ -303,7 +292,7 @@ void Brute::scanThreadEnded(){
     {
         if(scanStatus->isPaused)
         {
-            ui->pushButton_pause->setText("Resume");
+            ui->buttonPause->setText("Resume");
             scanStatus->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
@@ -321,9 +310,9 @@ void Brute::scanThreadEnded(){
             scanStatus->isStopped = false;
             scanStatus->isRunning = false;
             //...
-            ui->pushButton_start->setEnabled(true);
-            ui->pushButton_pause->setDisabled(true);
-            ui->pushButton_stop->setDisabled(true);
+            ui->buttonStart->setEnabled(true);
+            ui->buttonPause->setDisabled(true);
+            ui->buttonStop->setDisabled(true);
             //...
             sendStatus("[*] Enumeration Complete!");
             logs("[END] Enumeration Complete!\n");
@@ -331,43 +320,21 @@ void Brute::scanThreadEnded(){
     }
 }
 
-/********************* Change Btn Subdomain & TLD Enumerations ****************************/
-void Brute::on_radioButton_tldBrute_clicked(){
-    ui->label_mainTitle->setText("(TLD)Top Level Domain(example.*) Enumeration By BruteForcing...");
-}
-
-void Brute::on_radioButton_subBrute_clicked(){
-    ui->label_mainTitle->setText("Subdomain(*.example.com) Enumeration By BruteForcing...");
-}
-
-/******************************** Scan Config Dialog ***************************************/
-void Brute::on_toolButton_config_clicked(){
+void Brute::on_buttonConfig_clicked(){
     ConfigDialog *configDialog = new ConfigDialog(this, scanConfig);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }
 
-void Brute::on_comboBox_target_currentIndexChanged(int index){
-    // index == 1 (Multiple-targets)..
-    if(index){
-        ui->frame_targets->show();
-    }
-    // index == 0 (Single targets)..
-    else{
-        ui->frame_targets->hide();
-    }
-}
-
-/**************************** Clear the Enumerated Subdomains *****************************/
-void Brute::on_pushButton_clearResults_clicked(){
+void Brute::on_buttonClear_clicked(){
     ///
     /// if the current tab is subdomains clear subdomains...
     ///
-    if(ui->tabWidget_results->currentIndex() == 0)
+    if(ui->tabWidgetResults->currentIndex() == 0)
     {
         m_subdomainsSet.clear();
         resultsModel->brute->clear();
-        ui->label_resultsCount->clear();
+        ui->labelResultsCount->clear();
         //...
         ui->progressBar->reset();
         ui->progressBar->hide();
@@ -379,51 +346,16 @@ void Brute::on_pushButton_clearResults_clicked(){
     ///
     else
     {
-        ui->listWidget_logs->clear();
+        ui->listWidgetLogs->clear();
     }
 }
 
-/*****************************************************************************************
-                            Multiple Targets
-*****************************************************************************************/
-void Brute::on_pushButton_removeTargets_clicked(){
-    removeTargets();
-}
-
-void Brute::on_pushButton_clearTargets_clicked(){
-    clearTargets();
-}
-
-void Brute::on_pushButton_loadTargets_clicked(){
-    loadTargetsFromFile();
-}
-
-void Brute::on_pushButton_addTargets_clicked(){
-    addTargets();
-}
-
-void Brute::on_lineEdit_multipleTargets_returnPressed(){
-    addTargets();
-}
-
-/******************************************************************************************
-                                Wordlists
-*******************************************************************************************/
-
-/******************************* Generate Wordlist (Dialog) ******************************/
-void Brute::on_pushButton_generateWordlist_clicked(){
-    WordListGeneratorDialog *wordlistgenerator = new WordListGeneratorDialog(this);
-    wordlistgenerator->setAttribute( Qt::WA_DeleteOnClose, true );
-    wordlistgenerator->show();
-}
-
-/**************************** Choose Wordlist To Use (Dialog) ****************************/
-void Brute::on_toolButton_wordlist_clicked(){
+void Brute::on_buttonWordlist_clicked(){
     WordListDialog *wordlistDialog = nullptr;
-    if(ui->radioButton_subBrute->isChecked()){
+    if(ui->comboBoxBruteType->currentIndex() == 0){
         wordlistDialog = new WordListDialog(this, ENGINE::SUBBRUTE);
     }
-    if(ui->radioButton_tldBrute->isChecked()){
+    if(ui->comboBoxBruteType->currentIndex() == 1){
         wordlistDialog = new WordListDialog(this, ENGINE::TLDBRUTE);
     }
     wordlistDialog->setAttribute( Qt::WA_DeleteOnClose, true );
@@ -432,70 +364,12 @@ void Brute::on_toolButton_wordlist_clicked(){
     wordlistDialog->show();
 }
 
-/********************* Receiving the Wordlist that the user choose ***************************/
 void Brute::choosenWordlist(QString wordlistFilename){
     QFile file(wordlistFilename);
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        QTextStream in(&file);
-        while (!in.atEnd()){
-            ui->listWidget_wordlist->addItem(in.readLine());
-        }
-        file.close();
-    }
-    ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
+    ui->wordlist->add(file);
 }
 
-/************************************ Loading Wordlist ***********************************/
-void Brute::on_pushButton_loadWordlist_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(filename.isEmpty()){
-        return;
-    }
-    QFile file(filename);
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        QTextStream in(&file);
-        while (!in.atEnd()){
-            ui->listWidget_wordlist->addItem(in.readLine());
-        }
-        ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
-        file.close();
-    }else{
-        QMessageBox::warning(this, TITLE_ERROR, "Failed To Open the File!");
-    }
-}
-
-/******************************** Add Item on the Wordlist *********************************/
-void Brute::on_pushButton_addWordlist_clicked(){
-    if(ui->lineEdit_wordlist->text() != EMPTY){
-        ui->listWidget_wordlist->addItem(ui->lineEdit_wordlist->text());
-        ui->lineEdit_wordlist->clear();
-        ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
-    }
-}
-void Brute::on_lineEdit_wordlist_returnPressed(){
-    on_pushButton_addWordlist_clicked();
-}
-
-/******************************** Clear The Wordlist **************************************/
-void Brute::on_pushButton_clearWordlist_clicked(){
-    ui->listWidget_wordlist->clear();
-    ui->label_wordlistCount->clear();
-}
-
-/***************************** Removing Item From Wordlist *********************************/
-void Brute::on_pushButton_removeWordlist_clicked(){
-    int selectionCount = ui->listWidget_wordlist->selectedItems().count();
-    if(selectionCount){
-        qDeleteAll(ui->listWidget_wordlist->selectedItems());
-    }
-    ui->label_wordlistCount->setNum(ui->listWidget_wordlist->count());
-}
-
-/***************************************************************************************
-                                    Context Menus
-****************************************************************************************/
-
-void Brute::on_pushButton_action_clicked(){
+void Brute::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
@@ -506,17 +380,25 @@ void Brute::on_pushButton_action_clicked(){
     /// getting the position of the action button to place the context menu and
     /// showing the context menu right by the side of the action button...
     ///
-    QPoint pos = ui->pushButton_action->mapToGlobal(QPoint(0,0));
-    contextMenu_actionButton(ENGINE::BRUTE, pos);
+    QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
+    a_Menu->exec(QPoint(pos.x()+76, pos.y()));
 }
 
-void Brute::on_tableView_results_customContextMenuRequested(const QPoint &pos){
+void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
     ///
     /// check if user right clicked on items else dont show the context menu...
     ///
-    if(!ui->tableView_results->selectionModel()->isSelected(ui->tableView_results->currentIndex())){
+    if(!ui->tableViewResults->selectionModel()->isSelected(ui->tableViewResults->currentIndex())){
         return;
     }
-    contextMenu_rightClick(ui->tableView_results->selectionModel());
+    selectionModel = ui->tableViewResults->selectionModel();
+    c_Menu->exec(QCursor::pos());
+}
+
+void Brute::on_checkBoxMultipleTargets_clicked(bool checked){
+    if(checked)
+        ui->targets->show();
+    else
+        ui->targets->hide();
 }

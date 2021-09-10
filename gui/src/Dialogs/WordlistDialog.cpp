@@ -1,12 +1,16 @@
 #include "WordlistDialog.h"
 #include "ui_WordlistDialog.h"
 
-/******************************** Constructor & Destructor *********************************/
+
 WordListDialog::WordListDialog(QWidget *parent, ENGINE engine)
     :QDialog(parent), ui(new Ui::WordListDialog),
       m_engine(engine)
 {
     ui->setupUi(this);
+    ///
+    /// initializations...
+    ///
+    ui->specialWordlist->init("Wordlist");
     ///
     /// hiding widgets for creating a new special wordlist untill user chooses to use custom nameservers...
     ///
@@ -14,47 +18,46 @@ WordListDialog::WordListDialog(QWidget *parent, ENGINE engine)
     WordListDialog::adjustSize();
     //...
     ui->label_title->setText("Choose Wordlist for "+EnumName(m_engine)+" subdomain Enumeration");
-    ui->lineEdit_specialName->setPlaceholderText("Enter Special wordlist Name...");
-    ui->lineEdit_add->setPlaceholderText("Enter new Item...");
+    ui->lineEditName->setPlaceholderText("Enter Special wordlist Name...");
     //...
-    m_setupSpecialWordlists();
+    setupSpecialWordlists();
 }
 WordListDialog::~WordListDialog(){
     delete ui;
 }
 
 /***************************** display all special wordlists ********************************/
-void WordListDialog::m_setupSpecialWordlists(){
+void WordListDialog::setupSpecialWordlists(){
     QFile profile_names(QDir::currentPath()+"/wordlists/special_"+EnumName(m_engine)+"/names.txt");
     profile_names.open(QIODevice::ReadOnly | QIODevice::Text);
     if(profile_names.isOpen()){
          QTextStream in(&profile_names);
          while (!in.atEnd()){
-            ui->comboBox_special->addItem(in.readLine());
+            ui->comboBoxSpecialWordlist->addItem(in.readLine());
          }
          profile_names.close();
     }
 }
 
 /********************** choosen wordlist filename(full path) is Emited ***********************/
-void WordListDialog::on_pushButton_ok_clicked(){
+void WordListDialog::on_buttonOk_clicked(){
     QString choosenWordlistfFile;
-    if(ui->radioButton_defaultWordlist->isChecked()){
-        choosenWordlistfFile = QDir::currentPath()+"/wordlists/"+EnumName(m_engine)+"_"+ui->comboBox_auto->currentText()+".txt";
+    if(ui->radioButtonDefaultWordlist->isChecked()){
+        choosenWordlistfFile = QDir::currentPath()+"/wordlists/"+EnumName(m_engine)+"_"+ui->comboBoxAutoWordlist->currentText()+".txt";
         emit choosenWordlist(choosenWordlistfFile);
     }
-    if(ui->radioButton_specialWordlist->isChecked()){
-        choosenWordlistfFile = QDir::currentPath()+"/wordlists/special_"+EnumName(m_engine)+"/"+ui->comboBox_special->currentText()+".txt";
+    if(ui->radioButtonSpecialWordlist->isChecked()){
+        choosenWordlistfFile = QDir::currentPath()+"/wordlists/special_"+EnumName(m_engine)+"/"+ui->comboBoxSpecialWordlist->currentText()+".txt";
         emit choosenWordlist(choosenWordlistfFile);
     }
     accept();
 }
-void WordListDialog::on_pushButton_cancel_clicked(){
+void WordListDialog::on_buttonCancel_clicked(){
     accept();
 }
 
 /************************** Operations On Creating New Special Wordlist **********************/
-void WordListDialog::on_checkBox_newSpecialWordlist_clicked(bool createNewWordlist){
+void WordListDialog::on_checkBoxNewSpecialWordlist_clicked(bool createNewWordlist){
     if(createNewWordlist){
         ui->frame_newSpecialWordlist->show();
         WordListDialog::adjustSize();
@@ -64,48 +67,18 @@ void WordListDialog::on_checkBox_newSpecialWordlist_clicked(bool createNewWordli
     }
 }
 
-void WordListDialog::on_pushButton_clear_clicked(){
-    ui->listWidget_specialWordlist->clear();
-}
-
-void WordListDialog::on_pushButton_remove_clicked(){
-    if(ui->listWidget_specialWordlist->selectedItems().count()){
-        qDeleteAll(ui->listWidget_specialWordlist->selectedItems());
-    }
-}
-
-void WordListDialog::on_pushButton_load_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, INFO_LOADFILE, CURRENT_PATH);
-    if(!filename.isEmpty()){
-        QFile file(filename);
-        if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-            QTextStream in(&file);
-            while (!in.atEnd()){
-                ui->listWidget_specialWordlist->addItem(in.readLine());
-            }
-            file.close();
-        }
-    }
-}
-
-// adding new entry in special wordlist...
-void WordListDialog::on_pushButton_add_clicked(){
-    ui->listWidget_specialWordlist->addItem(ui->lineEdit_add->text());
-    ui->lineEdit_add->clear();
-}
-
 // Creating the new special wordlist...
-void WordListDialog::on_pushButton_create_clicked(){
-    QString specialWordlistName = ui->lineEdit_specialName->text();
+void WordListDialog::on_buttonCreate_clicked(){
+    QString specialWordlistName = ui->lineEditName->text();
     ///
     /// saving the wordlists to the file...
     ///
     QFile file(QDir::currentPath()+"/wordlists/special_"+EnumName(m_engine)+"/"+specialWordlistName+".txt");
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     if(file.isOpen()){
-        int wordlistCount = ui->listWidget_specialWordlist->count();
+        int wordlistCount = ui->specialWordlist->listWidget->count();
         for(int i = 0; i != wordlistCount; ++i){
-            file.write((ui->listWidget_specialWordlist->item(i)->text()+NEWLINE).toUtf8());
+            file.write((ui->specialWordlist->listWidget->item(i)->text()+NEWLINE).toUtf8());
         }
         file.close();
     }
@@ -120,7 +93,6 @@ void WordListDialog::on_pushButton_create_clicked(){
         profile_names.close();
     }
     //...
-    ui->comboBox_special->addItem(specialWordlistName);
-    ui->lineEdit_specialName->clear();
-    ui->listWidget_specialWordlist->clear();
+    ui->comboBoxSpecialWordlist->addItem(specialWordlistName);
+    ui->lineEditName->clear();
 }

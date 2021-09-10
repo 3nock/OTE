@@ -1,8 +1,11 @@
 #ifndef IPENUMERATOR_H
 #define IPENUMERATOR_H
 
-#include "src/core.h"
-
+#include <QObject>
+#include <QThread>
+#include "src/utils.h"
+#include <QLabel>
+#include <QHostInfo>
 
 namespace ip{
 
@@ -19,14 +22,6 @@ typedef struct ScanArguments ScanArguments;
 
 class Scanner : public QObject{
     Q_OBJECT
-
-    private:
-        int m_currentTargetToEnumerate = 0;
-        //...
-        ScanConfig *m_scanConfig;
-        ip::ScanArguments *m_scanArguments;
-        //...
-        QHostInfo *hostInfo;
 
     public:
         Scanner(ScanConfig *scanConfig, ip::ScanArguments *scanArguments);
@@ -49,6 +44,14 @@ class Scanner : public QObject{
         void scanLog(QString log);
         //...
         void quitThread();
+
+    private:
+        int m_currentTargetToEnumerate = 0;
+        //...
+        ScanConfig *m_scanConfig;
+        ip::ScanArguments *m_scanArguments;
+        //...
+        QHostInfo *hostInfo;
 };
 }
 #endif // IPENUMERATOR_H

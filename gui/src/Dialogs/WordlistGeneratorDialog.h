@@ -1,15 +1,14 @@
 #ifndef WORDLISTGENERATORDIALOG_H
 #define WORDLISTGENERATORDIALOG_H
 
-// headers...
-#include "src/core.h"
+#include <QDialog>
 
 namespace Ui {
     class WordListGeneratorDialog;
 }
 
 class WordListGeneratorDialog : public QDialog{
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit WordListGeneratorDialog(QWidget *parent = nullptr);

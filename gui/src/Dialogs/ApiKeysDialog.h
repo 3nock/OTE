@@ -1,8 +1,7 @@
 #ifndef APIKEYS_H
 #define APIKEYS_H
 
-// headers...
-#include "src/core.h"
+#include <QDialog>
 
 namespace Ui {
     class ApiKeysDialog;
@@ -11,38 +10,36 @@ namespace Ui {
 class ApiKeysDialog : public QDialog{
     Q_OBJECT
 
-    private:
-        void m_setAvailableApiKeys();
-        QString currentPath;
-
     public:
         explicit ApiKeysDialog(QWidget *parent = nullptr);
         ~ApiKeysDialog();
 
     private slots:
-        void on_pushButton_save_clicked();
-        void on_pushButton_cancel_clicked();
+        void on_buttonSave_clicked();
+        void on_buttonCancel_clicked();
         ///
         /// the button to visit site for acquiring api keys...
         ///
-        void on_toolButton_getApiKey_censys_clicked();
-        void on_toolButton_getApiKey_virustotal_clicked();
-        void on_toolButton_getApiKey_github_clicked();
-        void on_toolButton_getApiKey_shodan_clicked();
-        void on_toolButton_getApiKey_cloudflare_clicked();
-        void on_toolButton_getApiKey_bing_clicked();
-        void on_toolButton_getApiKey_google_clicked();
-        void on_toolButton_getApiKey_hunter_clicked();
-        void on_toolButton_getApiKey_certspotter_clicked();
-        void on_toolButton_getApiKey_intelx_clicked();
-        void on_toolButton_getApiKey_securityTrails_clicked();
-        void on_toolButton_getApiKey_spyse_clicked();
-        void on_toolButton_getApiKey_riskiq_clicked();
-        void on_toolButton_getApiKey_pentesttools_clicked();
-        void on_toolButton_getApiKey_projectdiscovery_clicked();
+        void on_buttonGetCensys_clicked();
+        void on_buttonGetVirusTotal_clicked();
+        void on_buttonGetGithub_clicked();
+        void on_buttonGetShodan_clicked();
+        void on_buttonGetCloudflare_clicked();
+        void on_buttonGetBing_clicked();
+        void on_buttonGetGoogle_clicked();
+        void on_buttonGetHunter_clicked();
+        void on_buttonGetCertspotter_clicked();
+        void on_buttonGetIntelX_clicked();
+        void on_buttonGetSecurityTrails_clicked();
+        void on_buttonGetSpyse_clicked();
+        void on_buttonGetRiskIq_clicked();
+        void on_buttonGetPentestTools_clicked();
+        void on_buttonGetProjectDiscovery_clicked();
 
     private:
         Ui::ApiKeysDialog *ui;
+        //...
+        void loadApiKeys();
 };
 
 #endif // OSINTAPIKEYS_H

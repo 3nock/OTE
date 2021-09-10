@@ -1,11 +1,11 @@
 QScrollBar:vertical {
     background-color: transparent;
-    width: 12px;
+    width: 10px;
 }
 
 QScrollBar:horizontal {
     background-color: transparent;
-    height: 12px;
+    height: 10px;
 }
 
 QScrollBar::handle:vertical {
@@ -48,9 +48,9 @@ QStatusBar {
     border-style: solid;
     border-style: outset;
     border-width: 1px;
-    border-top-color: grey;
-    border-right-color: grey;
-    border-left-color: grey;
+    border-top-color: rgb(110,110,110);
+    border-right-color: rgb(110,110,110);
+    border-left-color: rgb(110,110,110);
     border-bottom-color: transparent;
 }
 
@@ -97,11 +97,12 @@ QToolButton:pressed {
 }
 
 QSpinBox {
-    border-style: outset;
+    border-style: inset;
+    border-width: 1px;
+    border-color: black;
     border-style: solid;
-    border-color: grey;
-    color: rgb(230,230,230);
-    background-color: rgb(57,57,57);
+    color: rgb(250,250,250);
+    background-color: rgba(65, 65, 65, 255);
 }
 
 QComboBox {
@@ -152,7 +153,7 @@ QFrame#frame, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers {
 }
 
 /******** QLabels ***********/
-QLabel#label_resultsCount, QLabel#label_targetsCount, QLabel#label_wordlistCount, QLabel#label_srvWordlistCount, QLabel#label_level, QLabel#label_srvResultsCount {
+QLabel#labelResultsCount, QLabel#label_level, QLabel#labelCount, QLabel#labelResultsCountSRV {
     background-color: rgb(42, 42, 42);
 }
 
@@ -198,20 +199,21 @@ QListWidget, QTreeView, QTableView, QColumnView{
     background-color:rgb(40, 40, 40);
     color: rgb(230,230,230);
     border-style: solid;
-    border-color: black;
+    border-color: rgb(25,25,25);
     border-width: 1px;
 }
 
 QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected{
-    background-color: rgba(144, 144, 109, 80);
-    color: white;
+    background-color: rgba(110,110,110,40);
+    color: rgb(220,220,220);
 }
 
 QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QColumnView::item:hover, QColumnView::item:hover {
     border-style: solid;
+    border-color: rgb(40, 40, 40);
     border-width: 1px;
-    border-color: rgb(144,144,109);
-    background-color: rgba(150, 150, 114, 80);
+    background-color: rgba(110,110,110,40);
+    color: rgb(220,220,220);
 }
 
 QHeaderView::section {
@@ -284,11 +286,11 @@ QProgressBar {
     border-radius: 10px;
     border-color: rgb(0,0,0);
     border-style: inset;
-    background-color: rgb(40,40,40);
+    background-color: rgb(50,50,50);
 }
 
 QProgressBar::chunk {
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:0.6 rgb(143, 143, 107));
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(67, 67, 67, 255), stop:0.6 rgba(143, 143, 107, 160));
 }
 
 QMenuBar {
@@ -319,16 +321,17 @@ QMenuBar::item:selected, QMenuBar::item:hover{
     color: white;
     border-style: solid;
     border-width: 1px;
-    border-color: grey;
-    background-color: rgba(144, 144, 109, 90);
+    border-color: rgb(100,100,100);
+    /*background-color: rgba(144, 144, 109, 90);*/
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(145, 145, 110, 180));
 }
 
 QMenu::item:selected {
     color: white;
     border-style: solid;
     border-width: 1px;
-    border-color: rgb(144,144,109);
-    background-color: rgba(144, 144, 109, 90);
+    border-color: rgb(100,100,100);
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(145, 145, 110, 120));
 }
 
 QMenu::​separator {

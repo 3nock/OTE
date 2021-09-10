@@ -1,8 +1,9 @@
 #ifndef BRUTESCANNER_H
 #define BRUTESCANNER_H
 
-
-#include "src/core.h"
+#include <QObject>
+#include <QThread>
+#include "src/utils.h"
 #include "src/dialogs/ConfigDialog.h"
 #include "src/dialogs/WordlistDialog.h"
 #include "src/dialogs/WordlistGeneratorDialog.h"
@@ -27,14 +28,6 @@ typedef ScanArguments ScanArguments;
 class Scanner : public QObject{
     Q_OBJECT
 
-    private:
-        int m_currentWordlistToEnumerate = 0;
-        int m_currentTargetToEnumerate = 0;
-        //...
-        brute::ScanArguments *m_scanArguments;
-        ScanConfig *m_scanConfig;
-        QDnsLookup *m_dns;
-
     public:
         Scanner(ScanConfig *scanConfig, brute::ScanArguments *scanArguments);
         ~Scanner();
@@ -56,7 +49,14 @@ class Scanner : public QObject{
         void scanLog(QString log);
         //...
         void quitThread();
-};
 
+    private:
+        int m_currentWordlistToEnumerate = 0;
+        int m_currentTargetToEnumerate = 0;
+        //...
+        brute::ScanArguments *m_scanArguments;
+        ScanConfig *m_scanConfig;
+        QDnsLookup *m_dns;
+};
 }
 #endif //BRUTE_H

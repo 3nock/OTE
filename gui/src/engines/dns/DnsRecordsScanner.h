@@ -1,8 +1,10 @@
 #ifndef DNSRECORDSSCANNER_H
 #define DNSRECORDSSCANNER_H
 
-#include "src/core.h"
-
+#include <QObject>
+#include <QThread>
+#include "src/utils.h"
+#include <QLabel>
 
 enum OPTION{
     ALLRECORDS = 0,
@@ -42,30 +44,6 @@ typedef struct ScanResults ScanResults;
 class Scanner: public QObject{
     Q_OBJECT
 
-    private:
-        ScanConfig *m_scanConfig;
-        records::ScanArguments *m_scanArguments;
-        records::ScanResults *m_scanResults;
-        //...
-        QStandardItem *m_dnsNameItem;
-        QStandardItem *m_recordItem;
-        //...
-        QDnsLookup *m_dns_srv;
-        QDnsLookup *m_dns_a;
-        QDnsLookup *m_dns_aaaa;
-        QDnsLookup *m_dns_mx;
-        QDnsLookup *m_dns_ns;
-        QDnsLookup *m_dns_txt;
-        QDnsLookup *m_dns_cname;
-        //...
-        int m_currentTargetToEnumerate = 0;
-        int m_currentSrvToEnumerate = 0;
-        //...
-        int m_activeLookups = 0;
-        bool m_firstToResolve = true;
-        //...
-        QString m_currentTarget;
-
     public:
         Scanner(ScanConfig *scanConfig, records::ScanArguments *scanArguments, records::ScanResults *scanResults);
         ~Scanner();
@@ -97,6 +75,30 @@ class Scanner: public QObject{
         //...
         void doLookup();
         void doLookup_srv();
+
+    private:
+        ScanConfig *m_scanConfig;
+        records::ScanArguments *m_scanArguments;
+        records::ScanResults *m_scanResults;
+        //...
+        QStandardItem *m_dnsNameItem;
+        QStandardItem *m_recordItem;
+        //...
+        QDnsLookup *m_dns_srv;
+        QDnsLookup *m_dns_a;
+        QDnsLookup *m_dns_aaaa;
+        QDnsLookup *m_dns_mx;
+        QDnsLookup *m_dns_ns;
+        QDnsLookup *m_dns_txt;
+        QDnsLookup *m_dns_cname;
+        //...
+        int m_currentTargetToEnumerate = 0;
+        int m_currentSrvToEnumerate = 0;
+        //...
+        int m_activeLookups = 0;
+        bool m_firstToResolve = true;
+        //...
+        QString m_currentTarget;
 };
 }
 #endif // DNSRECORDSSCANNER_H

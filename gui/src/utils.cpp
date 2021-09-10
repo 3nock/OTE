@@ -1,6 +1,15 @@
-#include "core.h"
+#include "utils.h"
+#include <QFile>
+#include <QDir>
+//...
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonParseError>
 
-// getting the enumerator name...
+///
+/// getting the enumerator name...
+///
 QString EnumName(ENGINE engine){
     if(engine == ENGINE::OSINT){
         return "osint";
@@ -14,6 +23,7 @@ QString EnumName(ENGINE engine){
     if(engine == ENGINE::ACTIVE){
         return "active";
     }
+    return "";
 }
 
 QHostAddress RandomNameserver(bool useCustomNameservers){
@@ -36,7 +46,9 @@ QHostAddress RandomNameserver(bool useCustomNameservers){
     return QHostAddress(nameservers[rand()%nameservers.length()]);
 }
 
-// filter for the domain target name...
+///
+/// filter for the domain target name...
+///
 QString TargetNameFilter(QString domainName, ENGINE engine){
     /******************* General Modification *******************/
     domainName = domainName.simplified();
