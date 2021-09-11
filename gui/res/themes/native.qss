@@ -182,7 +182,7 @@ QMainWindow {
 }
 
 QDialog {
-    background-color:rgb(70,70,70);
+    background-color:rgb(62,62,62);
 }
 
 QSplitter::handle:horizontal {

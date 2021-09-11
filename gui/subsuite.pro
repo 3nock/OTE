@@ -52,7 +52,6 @@ SOURCES += \
         src\dialogs\ConfigDialog.cpp \
         src\dialogs\ApiKeysDialog.cpp \
         src\dialogs\WordlistDialog.cpp \
-        src\dialogs\WordlistGeneratorDialog.cpp \
         src\SplashScreen.cpp \
         src\MainWindow.cpp \
         src\main.cpp \
@@ -86,7 +85,6 @@ HEADERS += \
         src\dialogs\ApiKeysDialog.h \
         src\dialogs\ConfigDialog.h \
         src\dialogs\WordlistDialog.h \
-        src\dialogs\WordlistGeneratorDialog.h \
         src\SplashScreen.h \
         src\MainWindow.h \
 
@@ -104,7 +102,6 @@ FORMS += \
         src\engines\active\Active.ui \
         src\dialogs\ConfigDialog.ui \
         src\dialogs\WordlistDialog.ui \
-        src\dialogs\WordlistGeneratorDialog.ui \
         src\dialogs\ApiKeysDialog.ui \
         src\MainWindow.ui
 

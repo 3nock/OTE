@@ -19,7 +19,6 @@ class WordListDialog : public QDialog{
         void on_buttonCancel_clicked();
         void on_buttonCreate_clicked();
         void on_buttonOk_clicked();
-        void on_checkBoxNewSpecialWordlist_clicked(bool);
 
     signals:
         void choosenWordlist(QString);
@@ -27,7 +26,10 @@ class WordListDialog : public QDialog{
     private:
         Ui::WordListDialog *ui;
         const ENGINE m_engine;
-        void setupSpecialWordlists();
+        void loadWordlists();
+        //...
+        QString m_defaultWordlist;
+        QString m_specialWordlist;
 };
 
 #endif // WORDLISTDIALOG_H

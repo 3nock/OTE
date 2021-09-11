@@ -47,6 +47,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::settings().endGroup();
     accept();
 }
+
 void ApiKeysDialog::on_buttonCancel_clicked(){
     accept();
 }

@@ -1,5 +1,7 @@
 #include "WordlistDialog.h"
 #include "ui_WordlistDialog.h"
+//...
+#include "src/Config.h"
 
 
 WordListDialog::WordListDialog(QWidget *parent, ENGINE engine)
@@ -11,88 +13,89 @@ WordListDialog::WordListDialog(QWidget *parent, ENGINE engine)
     /// initializations...
     ///
     ui->specialWordlist->init("Wordlist");
-    ///
-    /// hiding widgets for creating a new special wordlist untill user chooses to use custom nameservers...
-    ///
-    ui->frame_newSpecialWordlist->hide();
-    WordListDialog::adjustSize();
     //...
     ui->label_title->setText("Choose Wordlist for "+EnumName(m_engine)+" subdomain Enumeration");
     ui->lineEditName->setPlaceholderText("Enter Special wordlist Name...");
     //...
-    setupSpecialWordlists();
+    loadWordlists();
 }
 WordListDialog::~WordListDialog(){
     delete ui;
 }
 
-/***************************** display all special wordlists ********************************/
-void WordListDialog::setupSpecialWordlists(){
-    QFile profile_names(QDir::currentPath()+"/wordlists/special_"+EnumName(m_engine)+"/names.txt");
-    profile_names.open(QIODevice::ReadOnly | QIODevice::Text);
-    if(profile_names.isOpen()){
-         QTextStream in(&profile_names);
-         while (!in.atEnd()){
-            ui->comboBoxSpecialWordlist->addItem(in.readLine());
-         }
-         profile_names.close();
+void WordListDialog::loadWordlists(){
+    if(m_engine == ENGINE::SUBBRUTE){
+        m_defaultWordlist = "Subdomain-Wordlist";
+        m_specialWordlist = "Subdomain-SpecialWordlist";
     }
+    if(m_engine == ENGINE::TLDBRUTE){
+        m_defaultWordlist = "TLD-Wordlist";
+        m_specialWordlist = "TLD-SpecialWordlist";
+    }
+    QStringList keys;
+    ///
+    /// loading the worldists to the comboBox...
+    ///
+    Config::settings().beginGroup(m_defaultWordlist);
+    keys = Config::settings().allKeys();
+    for(int i = 0; i < keys.count(); i++)
+        ui->comboBoxDefaultWordlist->addItem(keys.at(i));
+    Config::settings().endGroup();
+    //...
+    Config::settings().beginGroup(m_specialWordlist);
+    keys = Config::settings().allKeys();
+    for(int i = 0; i < keys.count(); i++)
+        ui->comboBoxSpecialWordlist->addItem(keys.at(i));
+    Config::settings().endGroup();
 }
 
-/********************** choosen wordlist filename(full path) is Emited ***********************/
 void WordListDialog::on_buttonOk_clicked(){
     QString choosenWordlistfFile;
     if(ui->radioButtonDefaultWordlist->isChecked()){
-        choosenWordlistfFile = QDir::currentPath()+"/wordlists/"+EnumName(m_engine)+"_"+ui->comboBoxAutoWordlist->currentText()+".txt";
+        Config::settings().beginGroup(m_defaultWordlist);
+        choosenWordlistfFile = QDir::currentPath()+Config::settings().value(ui->comboBoxDefaultWordlist->currentText()).toString();
+        Config::settings().endGroup();
         emit choosenWordlist(choosenWordlistfFile);
     }
     if(ui->radioButtonSpecialWordlist->isChecked()){
-        choosenWordlistfFile = QDir::currentPath()+"/wordlists/special_"+EnumName(m_engine)+"/"+ui->comboBoxSpecialWordlist->currentText()+".txt";
+        Config::settings().beginGroup(m_specialWordlist);
+        choosenWordlistfFile = QDir::currentPath()+Config::settings().value(ui->comboBoxSpecialWordlist->currentText()).toString();
+        Config::settings().endGroup();
         emit choosenWordlist(choosenWordlistfFile);
     }
     accept();
 }
+
 void WordListDialog::on_buttonCancel_clicked(){
     accept();
 }
 
-/************************** Operations On Creating New Special Wordlist **********************/
-void WordListDialog::on_checkBoxNewSpecialWordlist_clicked(bool createNewWordlist){
-    if(createNewWordlist){
-        ui->frame_newSpecialWordlist->show();
-        WordListDialog::adjustSize();
-    }else{
-        ui->frame_newSpecialWordlist->hide();
-        WordListDialog::adjustSize();
-    }
-}
-
-// Creating the new special wordlist...
 void WordListDialog::on_buttonCreate_clicked(){
-    QString specialWordlistName = ui->lineEditName->text();
+    QString filePath;
+    QString name = ui->lineEditName->text();
+    if(name.isEmpty())
+        return;
     ///
     /// saving the wordlists to the file...
     ///
-    QFile file(QDir::currentPath()+"/wordlists/special_"+EnumName(m_engine)+"/"+specialWordlistName+".txt");
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if(file.isOpen()){
-        int wordlistCount = ui->specialWordlist->listWidget->count();
-        for(int i = 0; i != wordlistCount; ++i){
+    if(m_engine == ENGINE::SUBBRUTE)
+        filePath = "/wordlists/subdomain/"+name+".txt";
+    if(m_engine == ENGINE::TLDBRUTE)
+        filePath = "/wordlists/tld/"+name+".txt";
+
+    QFile file(QDir::currentPath()+filePath);
+    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        for(int i = 0; i != ui->specialWordlist->listWidget->count(); ++i)
             file.write((ui->specialWordlist->listWidget->item(i)->text()+NEWLINE).toUtf8());
-        }
         file.close();
     }
     ///
     /// saving the name of the new special wordlist profile...
     ///
-    QFile profile_names(QDir::currentPath()+"/wordlists/special_"+EnumName(m_engine)+"/names.txt");
-    profile_names.open(QIODevice::Append | QIODevice::Text);
-    if(profile_names.isOpen()){
-        QTextStream stream(&profile_names);
-        stream << NEWLINE+specialWordlistName;
-        profile_names.close();
-    }
-    //...
-    ui->comboBoxSpecialWordlist->addItem(specialWordlistName);
+    Config::settings().beginGroup(m_specialWordlist);
+    Config::settings().setValue(name, filePath);
+    Config::settings().endGroup();
+    ui->comboBoxSpecialWordlist->addItem(name);
     ui->lineEditName->clear();
 }

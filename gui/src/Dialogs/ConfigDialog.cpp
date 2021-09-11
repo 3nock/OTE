@@ -5,7 +5,8 @@
 
 
 /*
- * TODO:
+ * TODO: add option to view and choose default nameservers you want to use...
+ *       add site's own nameservers...
  *
  */
 ConfigDialog::ConfigDialog(QWidget *parent, ScanConfig *scanConfig) : QDialog(parent), ui(new Ui::ConfigDialog),
