@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QAction>
 
+
 class ContextMenu : public AbstractClass{
         Q_OBJECT
 

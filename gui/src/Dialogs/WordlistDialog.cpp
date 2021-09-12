@@ -4,6 +4,10 @@
 #include "src/Config.h"
 
 
+/*
+ * TODO: add wordlist generation functionality...
+ *       refactor to be better interactively...
+ */
 WordListDialog::WordListDialog(QWidget *parent, ENGINE engine)
     :QDialog(parent), ui(new Ui::WordListDialog),
       m_engine(engine)
@@ -13,8 +17,13 @@ WordListDialog::WordListDialog(QWidget *parent, ENGINE engine)
     /// initializations...
     ///
     ui->specialWordlist->init("Wordlist");
-    //...
-    ui->label_title->setText("Choose Wordlist for "+EnumName(m_engine)+" subdomain Enumeration");
+    ///
+    /// setting default texts...
+    ///
+    if(m_engine == ENGINE::TLDBRUTE)
+        ui->labelTitle->setText("TLD Wordlist");
+    if(m_engine == ENGINE::SUBBRUTE)
+        ui->labelTitle->setText("Subdomain Wordlist");
     ui->lineEditName->setPlaceholderText("Enter Special wordlist Name...");
     //...
     loadWordlists();

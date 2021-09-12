@@ -2,6 +2,9 @@
 #include "ui_Brute.h"
 
 /*
+ * change logs from listwidget to plaintext edit
+ * and input from listwidget to listview
+ *
  tomorrow:
  use ini file settings...
 

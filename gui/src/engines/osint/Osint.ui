@@ -613,7 +613,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QFrame" name="frame_profiles">
+          <widget class="QFrame" name="frameProfiles">
            <property name="styleSheet">
             <string notr="true"/>
            </property>

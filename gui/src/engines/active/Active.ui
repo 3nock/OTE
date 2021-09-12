@@ -321,7 +321,7 @@
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_23">
              <property name="spacing">
-              <number>5</number>
+              <number>4</number>
              </property>
              <property name="leftMargin">
               <number>2</number>
@@ -333,7 +333,7 @@
               <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>1</number>
              </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_18">

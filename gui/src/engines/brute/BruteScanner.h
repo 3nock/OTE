@@ -6,7 +6,6 @@
 #include "src/utils.h"
 #include "src/dialogs/ConfigDialog.h"
 #include "src/dialogs/WordlistDialog.h"
-#include "src/dialogs/WordlistGeneratorDialog.h"
 
 
 namespace brute {

@@ -91,9 +91,8 @@ void Project::on_pushButton_loadInScope_clicked(){
 }
 
 void Project::on_pushButton_addInScope_clicked(){
-    if(ui->lineEdit_inScope->text() == EMPTY){
+    if(ui->lineEdit_inScope->text().isEmpty())
         return;
-    }
     ///
     /// ...
     ///

@@ -3,6 +3,7 @@
 
 #include "src/utils.h"
 
+
 class AbstractClass : public QWidget{
         Q_OBJECT
 

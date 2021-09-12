@@ -451,6 +451,9 @@ QRadioButton:hover {
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>1</number>
+    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
