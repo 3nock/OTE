@@ -104,19 +104,6 @@
         <number>2</number>
        </property>
        <item>
-        <widget class="QPushButton" name="buttonClear">
-         <property name="minimumSize">
-          <size>
-           <width>75</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Clear</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="buttonRemove">
          <property name="minimumSize">
           <size>
@@ -126,6 +113,19 @@
          </property>
          <property name="text">
           <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonClear">
+         <property name="minimumSize">
+          <size>
+           <width>75</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Clear</string>
          </property>
         </widget>
        </item>

@@ -151,10 +151,6 @@ void ApiKeysDialog::loadApiKeys(){
 }
 
 
-/*********************************************************************
-               ACQUIRE API KEYS FROM RESPECTIVE SITES
-**********************************************************************/
-
 void ApiKeysDialog::on_buttonGetCensys_clicked(){
     QDesktopServices::openUrl(QUrl("https://censys.io/login", QUrl::TolerantMode));
 }

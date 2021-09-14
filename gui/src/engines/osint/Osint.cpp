@@ -10,8 +10,8 @@
 Osint::Osint(QWidget *parent, ResultsModel *resultsModel):
     BaseClass(ENGINE::OSINT, resultsModel, parent),
     ui(new Ui::Osint),
-    scanArguments(new osint::ScanArguments),
-    scanResults(new osint::ScanResults)
+    m_scanArguments(new osint::ScanArguments),
+    m_scanResults(new osint::ScanResults)
 {
     ui->setupUi(this);
     ///
@@ -47,15 +47,15 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel):
     initProfiles();
 }
 Osint::~Osint(){
-    delete scanArguments;
-    delete scanResults;
+    delete m_scanArguments;
+    delete m_scanResults;
     delete ui;
 }
 
 void Osint::on_buttonStart_clicked(){
     if(!ui->lineEditTarget->text().isEmpty()){
-        getUserOptions(&scanArguments->choosenOptions);
-        if(scanArguments->choosenOptions.count() == 0){
+        getUserOptions(&m_scanArguments->choosenOptions);
+        if(m_scanArguments->choosenOptions.count() == 0){
             QMessageBox::warning(this, "Error!", "Please Choose Osint Engine For subdomain Enumerations!");
             return;
         }
@@ -73,15 +73,15 @@ void Osint::on_buttonStart_clicked(){
         char *targetDomain = new char[m_targetDomain.length() + 1];
         strcpy(targetDomain, m_targetDomain.toStdString().c_str());
         //...
-        scanArguments->targetDomain = targetDomain;
-        scanResults->label_subdomainsCount = ui->labelResultsCount;
-        scanResults->resultsCount = &subdomainsCount;
-        scanResults->results_model = resultsModel->osint;
+        m_scanArguments->targetDomain = targetDomain;
+        m_scanResults->label_subdomainsCount = ui->labelResultsCount;
+        m_scanResults->resultsCount = &m_subdomainsCount;
+        m_scanResults->results_model = resultsModel->osint;
         //...
         emit sendStatus("[*] Enumerating "+m_targetDomain+" Subdomains with Osint...");
         logs("[START] Enumerating "+m_targetDomain+" Subdomains with Osint...");
         //...
-        osint::Scanner *scanner = new osint::Scanner(scanArguments, scanResults);
+        osint::Scanner *scanner = new osint::Scanner(m_scanArguments, m_scanResults);
         QThread *cThread = new QThread(this);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
@@ -115,12 +115,12 @@ void Osint::onEnumerationComplete(){
     logs("[END] Enumeration Complete!\n");
 }
 
-void Osint::on_buttonClear_clicked(){
+void Osint::on_buttonClearResults_clicked(){
     // clear subdomains...
     if(ui->tabWidgetResults->currentIndex() == 0){
         resultsModel->osint->clear();
         ui->labelResultsCount->clear();
-        subdomainsCount = 0;
+        m_subdomainsCount = 0;
         //...
         resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
     }

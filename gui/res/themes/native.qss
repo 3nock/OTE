@@ -64,7 +64,7 @@ QToolButton:!pressed {
     border-bottom-width: 1px;
     border-style: solid;
     border-radius: 15px;
-    color: rgb(190,190,190);
+    color: rgba(218, 218, 163, 250);
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(60, 60, 60, 255), stop:1 rgba(144, 144, 109, 90));
 }
 
@@ -78,7 +78,7 @@ QToolButton:hover {
     border-bottom-width: 1px;
     border-style: solid;
     border-radius: 15px;
-    color: white;
+    color: rgba(218, 218, 163, 255);
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(70, 70, 70, 255), stop:1 rgba(144, 144, 109, 90));
 }
 
@@ -195,9 +195,9 @@ QSplitter::handle:vertical{
     height: 5px
 }
 
-QListWidget, QTreeView, QTableView, QColumnView{
+QListWidget, QTableView, QTreeView, QColumnView{
     background-color:rgb(40, 40, 40);
-    color: rgb(230,230,230);
+    color: rgba(218, 218, 163, 180);
     border-style: solid;
     border-color: rgb(25,25,25);
     border-width: 1px;
@@ -205,7 +205,7 @@ QListWidget, QTreeView, QTableView, QColumnView{
 
 QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected{
     background-color: rgba(110,110,110,40);
-    color: rgb(220,220,220);
+    color: black;
 }
 
 QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QColumnView::item:hover, QColumnView::item:hover {
@@ -213,7 +213,6 @@ QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QColumnV
     border-color: rgb(40, 40, 40);
     border-width: 1px;
     background-color: rgba(110,110,110,40);
-    color: rgb(220,220,220);
 }
 
 QHeaderView::section {
@@ -238,7 +237,7 @@ QPushButton {
 }
 
 QPushButton:hover {
-    color: rgb(230,230,230);
+    color: rgb(250, 250, 250);
 }
 
 QPushButton:pressed {
@@ -275,7 +274,7 @@ QLineEdit:!read-only {
     border-color: rgb(27, 27, 27);
     border-style: inset;
     padding: 0 8px;
-    color: rgb(255, 255, 255);
+    color: rgb(218, 218, 163);
     background-color:rgb(42, 42, 42);
 }
 
@@ -284,7 +283,7 @@ QProgressBar {
     color: black;
     border-width: 1px;
     border-radius: 10px;
-    border-color: rgb(0,0,0);
+    border-color: rgb(25,25,25);
     border-style: inset;
     background-color: rgb(50,50,50);
 }

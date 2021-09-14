@@ -61,7 +61,7 @@ class Osint : public BaseClass{
 
     private slots:
         void on_buttonStart_clicked();
-        void on_buttonClear_clicked();
+        void on_buttonClearResults_clicked();
         void on_buttonAction_clicked();
         void on_buttonStop_clicked();
         void on_buttonConfig_clicked();
@@ -83,10 +83,10 @@ class Osint : public BaseClass{
         void getUserOptions(QStringList *choosenOptions);
         void initProfiles();
         //...
-        osint::ScanArguments *scanArguments;
-        osint::ScanResults *scanResults;
+        osint::ScanArguments *m_scanArguments;
+        osint::ScanResults *m_scanResults;
         //...
-        int subdomainsCount = 0;
+        int m_subdomainsCount = 0;
         //...
         QString currentPath;
         QString m_targetDomain;

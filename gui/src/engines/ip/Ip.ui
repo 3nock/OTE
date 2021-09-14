@@ -243,7 +243,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_17">
            <item>
-            <widget class="QPushButton" name="buttonClear">
+            <widget class="QPushButton" name="buttonClearResults">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -266,7 +266,7 @@
               <string notr="true"/>
              </property>
              <property name="text">
-              <string>Clear Output</string>
+              <string>Clear Results</string>
              </property>
             </widget>
            </item>
@@ -329,7 +329,7 @@
               <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>3</number>
              </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -470,6 +470,28 @@
                </attribute>
               </widget>
              </item>
+             <item>
+              <widget class="QProgressBar" name="progressBar">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>17</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>17</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
             </layout>
            </widget>
            <widget class="QWidget" name="tab_logs">
@@ -544,28 +566,6 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QProgressBar" name="progressBar">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>15</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>15</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
     </widget>
    </item>
   </layout>

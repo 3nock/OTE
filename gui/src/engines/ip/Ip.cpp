@@ -190,7 +190,7 @@ void Ip::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Ip::on_buttonClear_clicked(){
+void Ip::on_buttonClearResults_clicked(){
     ///
     /// if the current tab is subdomains clear subdomains...
     ///

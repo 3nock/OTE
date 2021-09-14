@@ -33,6 +33,19 @@ ProjectDataModel::ProjectDataModel():
     ///
     /// ...
     ///
+    m_subdomains->setForeground(Qt::white);
+    m_tlds->setForeground(Qt::white);
+    m_records->setForeground(Qt::white);
+    m_a->setForeground(Qt::white);
+    m_aaaa->setForeground(Qt::white);
+    m_ns->setForeground(Qt::white);
+    m_mx->setForeground(Qt::white);
+    m_txt->setForeground(Qt::white);
+    m_cname->setForeground(Qt::white);
+    m_srv->setForeground(Qt::white);
+    ///
+    /// ...
+    ///
     m_rootItem->appendRow(m_subdomains);
     m_rootItem->appendRow(m_tlds);
     m_rootItem->appendRow(m_records);

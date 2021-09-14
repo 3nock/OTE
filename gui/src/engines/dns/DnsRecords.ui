@@ -376,7 +376,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="QPushButton" name="buttonClear">
+            <widget class="QPushButton" name="buttonClearResults">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -459,7 +459,7 @@
               <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>3</number>
              </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -553,6 +553,34 @@
                <attribute name="headerVisible">
                 <bool>false</bool>
                </attribute>
+               <attribute name="headerMinimumSectionSize">
+                <number>200</number>
+               </attribute>
+               <attribute name="headerDefaultSectionSize">
+                <number>200</number>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QProgressBar" name="progressBar">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>17</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>17</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
               </widget>
              </item>
             </layout>
@@ -575,7 +603,7 @@
               <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>3</number>
              </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_14">
@@ -689,6 +717,25 @@
                </attribute>
               </widget>
              </item>
+             <item>
+              <widget class="QProgressBar" name="progressBarSRV">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>17</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>17</height>
+                </size>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
             </layout>
            </widget>
            <widget class="QWidget" name="tabLogs">
@@ -780,28 +827,6 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QProgressBar" name="progressBar">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>15</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>15</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
     </widget>
    </item>
   </layout>

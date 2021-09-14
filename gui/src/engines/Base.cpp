@@ -2,7 +2,7 @@
 
 
 BaseClass::BaseClass(ENGINE engineName, ResultsModel *resultsModel, QWidget *parent) :
-    ContextMenu (engineName, resultsModel, parent),
+    ContextMenu(engineName, resultsModel, parent),
     scanStatus(new ScanStatus),
     scanConfig(new ScanConfig)
 {

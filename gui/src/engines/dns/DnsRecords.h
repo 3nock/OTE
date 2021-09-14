@@ -18,6 +18,7 @@ class DnsRecords : public BaseClass{
 
     public slots:
         void scanThreadEnded();
+        void scanResult(records::Results);
 
     private slots:
         void on_buttonAction_clicked();
@@ -27,7 +28,7 @@ class DnsRecords : public BaseClass{
         void on_buttonConfig_clicked();
         void on_comboBoxOption_currentIndexChanged(int index);
         //...
-        void on_buttonClear_clicked();
+        void on_buttonClearResults_clicked();
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_tableViewSRV_customContextMenuRequested(const QPoint &pos);
 
@@ -37,7 +38,6 @@ class DnsRecords : public BaseClass{
         void startScan();
         void loadSrvWordlist();
         records::ScanArguments* m_scanArguments;
-        records::ScanResults* m_scanResults;
 };
 
 #endif // DNSRECORDS_H

@@ -226,7 +226,7 @@ void Active::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Active::on_buttonClear_clicked(){
+void Active::on_buttonClearResults_clicked(){
     ///
     /// if the current tab is subdomains clear subdomains...
     ///

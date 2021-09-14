@@ -29,7 +29,7 @@ class Brute : public BaseClass{
         void on_buttonStop_clicked();
         void on_buttonAction_clicked();
         void on_buttonConfig_clicked();
-        void on_buttonClear_clicked();
+        void on_buttonClearResults_clicked();
         void on_buttonWordlist_clicked();
         void on_lineEditTarget_returnPressed();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);

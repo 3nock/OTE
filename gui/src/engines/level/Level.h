@@ -27,7 +27,7 @@ class Level : public BaseClass{
         void on_buttonPause_clicked();
         void on_buttonStop_clicked();
         void on_buttonConfig_clicked();
-        void on_buttonClear_clicked();
+        void on_buttonClearResults_clicked();
         void on_buttonAction_clicked();
         void on_buttonWordlist_clicked();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
@@ -38,7 +38,7 @@ class Level : public BaseClass{
         void startScan();
         void nextLevel();
         level::ScanArguments *m_scanArguments;
-        int lastScanResultsCount = 0;
+        int m_lastScanResultsCount = 0;
 };
 
 #endif // LEVEL_H

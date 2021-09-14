@@ -3,8 +3,7 @@
 
 
 DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel) : BaseClass(ENGINE::RECORDS, resultsModel, parent), ui(new Ui::DnsRecords),
-      m_scanArguments(new records::ScanArguments),
-      m_scanResults(new records::ScanResults)
+      m_scanArguments(new records::ScanArguments)
 {
     ui->setupUi(this);
     ///
@@ -36,15 +35,12 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel) : BaseClass(
     m_scanArguments->targetList = ui->targets->listWidget;
     m_scanArguments->srvWordlist = ui->srvWordlist->listWidget;
     //...
-    m_scanResults->resultsModel = resultsModel;
-    m_scanResults->resultsCountLabel = ui->labelResultsCount;
-    m_scanResults->srvResultsLabel = ui->labelResultsCountSRV;
-    //...
     loadSrvWordlist();
+    //...
+    qRegisterMetaType<records::Results>("records::Results");
 }
 DnsRecords::~DnsRecords(){
     delete m_scanArguments;
-    delete m_scanResults;
     //...
     delete ui;
 }
@@ -85,6 +81,7 @@ void DnsRecords::on_buttonStart_clicked(){
     ///
     if(ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS)
     {
+        m_scanArguments->RecordType_srv = false;
         m_scanArguments->RecordType_a = ui->checkBoxA->isChecked();
         m_scanArguments->RecordType_aaaa = ui->checkBoxAAAA->isChecked();
         m_scanArguments->RecordType_mx = ui->checkBoxMX->isChecked();
@@ -100,8 +97,7 @@ void DnsRecords::on_buttonStart_clicked(){
     if(ui->comboBoxOption->currentIndex() == OPTION::SRV)
     {
         m_scanArguments->RecordType_srv = true;
-        //...
-        ui->progressBar->setMaximum(ui->targets->listWidget->count()*ui->srvWordlist->listWidget->count());
+        ui->progressBarSRV->setMaximum(ui->targets->listWidget->count()*ui->srvWordlist->listWidget->count());
     }
     ///
     /// start Enumeration...
@@ -163,7 +159,7 @@ void DnsRecords::startScan(){
     ///
     for(int i = 0; i < threadsCount; i++)
     {
-        records::Scanner *scanner = new records::Scanner(scanConfig, m_scanArguments, m_scanResults);
+        records::Scanner *scanner = new records::Scanner(scanConfig, m_scanArguments);
         QThread *cThread = new QThread(this);
         //...
         if(ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS){
@@ -174,8 +170,12 @@ void DnsRecords::startScan(){
         }
         scanner->moveToThread(cThread);
         //...
+        if(m_scanArguments->RecordType_srv)
+            connect(scanner, SIGNAL(scanProgress(int)), ui->progressBarSRV, SLOT(setValue(int)));
+        else
+            connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
         connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
+        connect(scanner, SIGNAL(scanResult(records::Results)), this, SLOT(scanResult(records::Results)));
         connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
         connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
         connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
@@ -234,7 +234,94 @@ void DnsRecords::scanThreadEnded(){
     }
 }
 
-void DnsRecords::on_buttonClear_clicked(){
+void DnsRecords::scanResult(records::Results results){
+    if(m_scanArguments->RecordType_srv)
+    {
+        resultsModel->srvrecords->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
+        resultsModel->project->addSRV(QStringList() <<results.srvName <<results.srvTarget <<results.domain);
+        ui->labelResultsCountSRV->setNum(resultsModel->srvrecords->rowCount());
+        return;
+    }
+    ///
+    /// for other record types...
+    ///
+    QStandardItem *domainItem = new QStandardItem(results.domain);
+    domainItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    domainItem->setForeground(Qt::white);
+    resultsModel->dnsrecords->invisibleRootItem()->appendRow(domainItem);
+    ui->labelResultsCount->setNum(resultsModel->dnsrecords->invisibleRootItem()->rowCount());
+    ///
+    /// ...
+    ///
+    if(m_scanArguments->RecordType_a && !results.A.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("A");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+        for(const QString &item: results.A)
+        {
+            recordItem->appendRow(new QStandardItem(item));
+            resultsModel->project->addA(QStringList()<<item<<results.domain);
+        }
+        domainItem->appendRow(recordItem);
+    }
+    if(m_scanArguments->RecordType_aaaa && !results.AAAA.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("AAAA");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+        for(QString item: results.AAAA)
+        {
+            recordItem->appendRow(new QStandardItem(item));
+            resultsModel->project->addAAAA(QStringList()<<item<<results.domain);
+        }
+        domainItem->appendRow(recordItem);
+    }
+    if(m_scanArguments->RecordType_ns  && !results.NS.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("NS");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+        for(QString item: results.NS)
+        {
+            recordItem->appendRow(new QStandardItem(item));
+            resultsModel->project->addNS(QStringList()<<item<<results.domain);
+        }
+        domainItem->appendRow(recordItem);
+    }
+    if(m_scanArguments->RecordType_mx && !results.MX.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("MX");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+        for(QString item: results.MX)
+        {
+            recordItem->appendRow(new QStandardItem(item));
+            resultsModel->project->addMX(QStringList()<<item<<results.domain);
+        }
+        domainItem->appendRow(recordItem);
+    }
+    if(m_scanArguments->RecordType_txt && !results.TXT.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("TXT");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+        for(QString item: results.TXT)
+        {
+            recordItem->appendRow(new QStandardItem(item));
+            resultsModel->project->addTXT(QStringList()<<item<<results.domain);
+        }
+        domainItem->appendRow(recordItem);
+    }
+    if(m_scanArguments->RecordType_cname  && !results.CNAME.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("CNAME");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+        for(QString item: results.CNAME)
+        {
+            recordItem->appendRow(new QStandardItem(item));
+            resultsModel->project->addCNAME(QStringList()<<item<<results.domain);
+        }
+        domainItem->appendRow(recordItem);
+    }
+}
+
+void DnsRecords::on_buttonClearResults_clicked(){
     switch (ui->tabWidgetResults->currentIndex()){
         case 0:
             resultsModel->dnsrecords->clear();
@@ -248,7 +335,7 @@ void DnsRecords::on_buttonClear_clicked(){
             ui->labelResultsCountSRV->clear();
             resultsModel->srvrecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
             //...
-            ui->progressBar->hide();
+            ui->progressBarSRV->hide();
             break;
         //...
         case 2:

@@ -329,7 +329,7 @@ void Brute::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Brute::on_buttonClear_clicked(){
+void Brute::on_buttonClearResults_clicked(){
     ///
     /// if the current tab is subdomains clear subdomains...
     ///

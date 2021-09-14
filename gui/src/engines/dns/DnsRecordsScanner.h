@@ -29,23 +29,30 @@ struct ScanArguments{
     bool RecordType_ns;
     bool RecordType_txt;
     bool RecordType_cname;
+    //...
+    int count;
 };
-typedef struct ScanArguments ScanArguments;
 
-struct ScanResults{
-    ResultsModel *resultsModel;
-    //..
-    QLabel *resultsCountLabel;
-    QLabel *srvResultsLabel;
+struct Results{
+    QString domain;
+    //...
+    QStringList A;
+    QStringList AAAA;
+    QStringList MX;
+    QStringList NS;
+    QStringList TXT;
+    QStringList CNAME;
+    //...
+    int srvPort = NULL;
+    QString srvName = nullptr;
+    QString srvTarget = nullptr;
 };
-typedef struct ScanResults ScanResults;
-
 
 class Scanner: public QObject{
     Q_OBJECT
 
     public:
-        Scanner(ScanConfig *scanConfig, records::ScanArguments *scanArguments, records::ScanResults *scanResults);
+        Scanner(ScanConfig *scanConfig, records::ScanArguments *scanArguments);
         ~Scanner();
         //...
         void startScan(QThread *cThread);
@@ -57,6 +64,7 @@ class Scanner: public QObject{
     private slots:
         void lookup();
         void lookup_srv();
+        void finish();
         //...
         void srvLookupFinished();
         void aLookupFinished();
@@ -68,6 +76,7 @@ class Scanner: public QObject{
 
     signals:
         void scanProgress(int value);
+        void scanResult(records::Results);
         void scanLog(QString log);
         //...
         void quitThread();
@@ -79,7 +88,7 @@ class Scanner: public QObject{
     private:
         ScanConfig *m_scanConfig;
         records::ScanArguments *m_scanArguments;
-        records::ScanResults *m_scanResults;
+        records::Results m_results;
         //...
         QStandardItem *m_dnsNameItem;
         QStandardItem *m_recordItem;
@@ -94,11 +103,10 @@ class Scanner: public QObject{
         //...
         int m_currentTargetToEnumerate = 0;
         int m_currentSrvToEnumerate = 0;
+        QString m_currentTarget;
         //...
         int m_activeLookups = 0;
-        bool m_firstToResolve = true;
-        //...
-        QString m_currentTarget;
+        bool hasAtleastOneRecord = false;
 };
 }
 #endif // DNSRECORDSSCANNER_H

@@ -67,7 +67,7 @@ void Level::on_buttonStart_clicked(){
     m_scanArguments->currentTargetToEnumerate = 0;
     m_scanArguments->currentWordlistToEnumerate = 0;
     m_scanArguments->maxLevel = ui->spinBoxLevels->value();
-    lastScanResultsCount = resultsModel->level->rowCount();
+    m_lastScanResultsCount = resultsModel->level->rowCount();
     ui->progressBar->setMaximum(ui->targets->listWidget->count()*ui->wordlist->listWidget->count());
     ///
     /// subdomain level check...
@@ -156,10 +156,10 @@ void Level::nextLevel(){
     /// then copy the newly enumerated subdomains from results model to the
     /// new targetList...
     ///
-    while(lastScanResultsCount < resultsModel->level->rowCount())
+    while(m_lastScanResultsCount < resultsModel->level->rowCount())
     {
-        ui->targets->add(resultsModel->level->item(lastScanResultsCount, 0)->text());
-        lastScanResultsCount++;
+        ui->targets->add(resultsModel->level->item(m_lastScanResultsCount, 0)->text());
+        m_lastScanResultsCount++;
     }
     ///
     /// Resetting the arguments....
@@ -168,7 +168,7 @@ void Level::nextLevel(){
     m_scanArguments->progress = 0;
     m_scanArguments->currentTargetToEnumerate = 0;
     m_scanArguments->currentWordlistToEnumerate = 0;
-    lastScanResultsCount = resultsModel->level->rowCount();
+    m_lastScanResultsCount = resultsModel->level->rowCount();
     ui->progressBar->setMaximum(ui->targets->listWidget->count()*ui->wordlist->listWidget->count());
     ///
     /// subdomain level check...
@@ -203,7 +203,7 @@ void Level::scanThreadEnd(){
         logs("[*] Scan Paused!\n");
         return;
     }
-    if(!scanStatus->isStopped && (m_scanArguments->currentLevel < m_scanArguments->maxLevel) && (lastScanResultsCount < resultsModel->level->rowCount()))
+    if(!scanStatus->isStopped && (m_scanArguments->currentLevel < m_scanArguments->maxLevel) && (m_lastScanResultsCount < resultsModel->level->rowCount()))
     {
         nextLevel();
     }
@@ -248,7 +248,7 @@ void Level::scanResult(QString subdomain, QString ipAddress){
 
 }
 
-void Level::on_buttonClear_clicked(){
+void Level::on_buttonClearResults_clicked(){
     ///
     /// if the current tab is subdomains clear subdomains...
     ///
