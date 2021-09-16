@@ -2,13 +2,22 @@
 #include "ui_Osint.h"
 //...
 #include "src/Config.h"
+#include "src/engines/osint/modules/Certspotter.h"
 
 #define TRUE "1"
 #define FALSE "0"
 
+/*
+ * url = "https://api.securitytrails.com/v1/ips/list"
+querystring = {"apikey":"your_api_key_here","page":"1"}
+payload = "{\"query\":\"ptr_part = 'cloudflare.com'\"}"
+response = requests.request("POST", url, data=payload, params=querystring)
+print(response.text)
 
-Osint::Osint(QWidget *parent, ResultsModel *resultsModel):
-    BaseClass(ENGINE::OSINT, resultsModel, parent),
+*/
+
+Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
+    BaseClass(ENGINE::OSINT, resultsModel, status, parent),
     ui(new Ui::Osint),
     m_scanArguments(new osint::ScanArguments),
     m_scanResults(new osint::ScanResults)
@@ -53,49 +62,21 @@ Osint::~Osint(){
 }
 
 void Osint::on_buttonStart_clicked(){
-    if(!ui->lineEditTarget->text().isEmpty()){
-        getUserOptions(&m_scanArguments->choosenOptions);
-        if(m_scanArguments->choosenOptions.count() == 0){
-            QMessageBox::warning(this, "Error!", "Please Choose Osint Engine For subdomain Enumerations!");
-            return;
-        }
-        if(ui->lineEditTarget->text().isEmpty()){
-            QMessageBox::warning(this, "Error!", "Please Target Domain For Enumerations!");
-            return;
-        }
-        //...
-        ui->buttonStart->setDisabled(true);
-        ui->buttonStop->setEnabled(true);
-        m_targetDomain = TargetNameFilter(ui->lineEditTarget->text(), ENGINE::OSINT);
-        ///
-        /// converting the QString domainName to char* for compatibility with the PyObject methods...
-        ///
-        char *targetDomain = new char[m_targetDomain.length() + 1];
-        strcpy(targetDomain, m_targetDomain.toStdString().c_str());
-        //...
-        m_scanArguments->targetDomain = targetDomain;
-        m_scanResults->label_subdomainsCount = ui->labelResultsCount;
-        m_scanResults->resultsCount = &m_subdomainsCount;
-        m_scanResults->results_model = resultsModel->osint;
-        //...
-        emit sendStatus("[*] Enumerating "+m_targetDomain+" Subdomains with Osint...");
-        logs("[START] Enumerating "+m_targetDomain+" Subdomains with Osint...");
-        //...
-        osint::Scanner *scanner = new osint::Scanner(m_scanArguments, m_scanResults);
-        QThread *cThread = new QThread(this);
-        scanner->startScan(cThread);
-        scanner->moveToThread(cThread);
-        //...
-        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(onEnumerationComplete()));
-        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
-        connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stopScan()), scanner, SLOT(onStopEnumeration()));
-        //...
-        cThread->start();
-    }else{
-        QMessageBox::warning(this, "Error!", "Please Enter Target Domain Name to Enumerate Subdomains!");
+    ///
+    /// checks...
+    ///
+    if(ui->lineEditTarget->text().isEmpty()){
+        QMessageBox::warning(this, "Error!", "Please Target Domain For Enumerations!");
+        return;
     }
+    ///
+    /// get target and other scan structures...
+    ///
+    m_targetDomain = TargetNameFilter(ui->lineEditTarget->text(), ENGINE::OSINT);
+    ///
+    /// enumerate...
+    ///
+    startScan();
 }
 void Osint::on_lineEditTarget_returnPressed(){
     on_buttonStart_clicked();
@@ -106,11 +87,55 @@ void Osint::on_buttonStop_clicked(){
     sendStatus("[*] Stopping...");
 }
 
+void Osint::startScan(){
+    if(ui->checkBox_engine_certspotter->isChecked())
+    {
+        Certspotter *certspotter = new Certspotter(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        certspotter->Enumerator(cThread);
+        certspotter->moveToThread(cThread);
+        //...
+        connect(certspotter, &Certspotter::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, certspotter, &Certspotter::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    ///
+    /// after starting all choosen enumerations...
+    ///
+    if(activeThreads)
+    {
+        ui->buttonStart->setDisabled(true);
+        ui->buttonStop->setEnabled(true);
+    }
+}
+
+void Osint::scanResults(QString subdomain){
+    int prevSize = m_results.count();
+    m_results.insert(subdomain);
+    if(m_results.count() > prevSize)
+        resultsModel->osint->appendRow(new QStandardItem(subdomain));
+}
+
+
 void Osint::onEnumerationComplete(){
-    //...
+    ///
+    /// check if no active thread...
+    ///
+    activeThreads--;
+    if(activeThreads)
+        return;
+    ///
+    /// reanabling the widgets...
+    ///
     ui->buttonStart->setEnabled(true);
     ui->buttonStop->setDisabled(true);
-    //...
+    ///
+    /// status...
+    ///
     emit sendStatus("[END] Enumeration Complete!");
     logs("[END] Enumeration Complete!\n");
 }
@@ -120,6 +145,7 @@ void Osint::on_buttonClearResults_clicked(){
     if(ui->tabWidgetResults->currentIndex() == 0){
         resultsModel->osint->clear();
         ui->labelResultsCount->clear();
+        m_results.clear();
         m_subdomainsCount = 0;
         //...
         resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});

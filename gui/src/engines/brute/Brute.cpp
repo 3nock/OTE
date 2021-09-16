@@ -5,9 +5,6 @@
  * change logs from listwidget to plaintext edit
  * and input from listwidget to listview
  *
- tomorrow:
- use ini file settings...
-
  **
  fix filter from what you have learned, it shud not be asocciated with scope...
 
@@ -50,8 +47,10 @@
  *
  */
 
-Brute::Brute(QWidget *parent, ResultsModel *resultsModel) : BaseClass(ENGINE::BRUTE, resultsModel, parent), ui(new Ui::Brute),
-      m_scanArguments(new brute::ScanArguments)
+Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
+    BaseClass(ENGINE::BRUTE, resultsModel, status, parent),
+    ui(new Ui::Brute),
+    m_scanArguments(new brute::ScanArguments)
 {
     ui->setupUi(this);
     ///
@@ -194,9 +193,9 @@ void Brute::on_buttonPause_clicked(){
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(scanStatus->isPaused){
+    if(status->brute->isPaused){
         ui->buttonPause->setText("Pause");
-        scanStatus->isPaused = false;
+        status->brute->isPaused = false;
         //...
         startScan();
         //...
@@ -205,19 +204,19 @@ void Brute::on_buttonPause_clicked(){
     }
     else
     {
-        scanStatus->isPaused = true;
+        status->brute->isPaused = true;
         emit stopScan();
     }
 }
 
 void Brute::on_buttonStop_clicked(){
     emit stopScan();
-    if(scanStatus->isPaused)
+    if(status->brute->isPaused)
     {
         m_scanArguments->targetList.clear();
-        scanStatus->isPaused = false;
-        scanStatus->isStopped = false;
-        scanStatus->isRunning = false;
+        status->brute->isPaused = false;
+        status->brute->isStopped = false;
+        status->brute->isRunning = false;
         //...
         ui->buttonStart->setEnabled(true);
         ui->buttonPause->setDisabled(true);
@@ -226,7 +225,7 @@ void Brute::on_buttonStop_clicked(){
         sendStatus("[*] Enumeration Complete!");
         logs("[END] Enumeration Complete!\n");
     }
-    scanStatus->isStopped = true;
+    status->brute->isStopped = true;
 }
 
 void Brute::startScan(){
@@ -262,7 +261,7 @@ void Brute::startScan(){
         //...
         cThread->start();
     }
-    scanStatus->isRunning = true;
+    status->brute->isRunning = true;
 }
 
 void Brute::scanResult(QString subdomain, QString ipAddress, QString target){
@@ -293,10 +292,10 @@ void Brute::scanThreadEnded(){
     ///
     if(activeThreads == 0)
     {
-        if(scanStatus->isPaused)
+        if(status->brute->isPaused)
         {
             ui->buttonPause->setText("Resume");
-            scanStatus->isRunning = false;
+            status->brute->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
             logs("[*] Scan Paused!\n");
@@ -305,13 +304,13 @@ void Brute::scanThreadEnded(){
         else
         {
             // set the progress bar to 100% just in case...
-            if(!scanStatus->isStopped){
+            if(!status->brute->isStopped){
                 ui->progressBar->setValue(ui->progressBar->maximum());
             }
             m_scanArguments->targetList.clear();
-            scanStatus->isPaused = false;
-            scanStatus->isStopped = false;
-            scanStatus->isRunning = false;
+            status->brute->isPaused = false;
+            status->brute->isStopped = false;
+            status->brute->isRunning = false;
             //...
             ui->buttonStart->setEnabled(true);
             ui->buttonPause->setDisabled(true);

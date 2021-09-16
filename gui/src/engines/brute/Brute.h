@@ -14,7 +14,7 @@ class Brute : public BaseClass{
     Q_OBJECT
 
     public:
-        Brute(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        Brute(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
         ~Brute();
 
     public slots:

@@ -55,12 +55,7 @@
        </item>
        <item>
         <property name="text">
-         <string> Whois Lookup </string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string> Ip to Asn</string>
+         <string>PTR</string>
         </property>
        </item>
       </widget>

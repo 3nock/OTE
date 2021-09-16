@@ -1,14 +1,14 @@
 #include "Base.h"
 
 
-BaseClass::BaseClass(ENGINE engineName, ResultsModel *resultsModel, QWidget *parent) :
+BaseClass::BaseClass(ENGINE engineName, ResultsModel *resultsModel, Status *status, QWidget *parent) :
     ContextMenu(engineName, resultsModel, parent),
-    scanStatus(new ScanStatus),
+    status(status),
     scanConfig(new ScanConfig)
 {
 }
 BaseClass::~BaseClass(){
-    delete scanStatus;
+    delete status;
     delete scanConfig;
 }
 
@@ -31,9 +31,6 @@ void BaseClass::onReceiveTargets(ENGINE engineName, CHOICE choice){
         break;
     case ENGINE::ACTIVE:
         model = resultsModel->active;
-        break;
-    case ENGINE::LEVEL:
-        model = resultsModel->level;
         break;
     case ENGINE::IP:
         model = resultsModel->ip;

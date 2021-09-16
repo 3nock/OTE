@@ -34,14 +34,14 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tabAnalysis">
+     <widget class="QWidget" name="tabWhoIs">
       <attribute name="title">
-       <string>Analysis</string>
+       <string>WhoIs</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tabCrawl">
+     <widget class="QWidget" name="tabScreenShot">
       <attribute name="title">
-       <string>Crawl</string>
+       <string>Screenshot</string>
       </attribute>
      </widget>
      <widget class="QWidget" name="tabAttack">

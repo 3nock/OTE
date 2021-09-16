@@ -27,24 +27,7 @@ enum ENGINE{
     // ...
     ACTIVE = 6,
     OSINT = 7,
-    IP = 8,
-    LEVEL = 9
-};
-
-enum CHOICE{
-    susbdomains = 0,
-    ipaddress = 1,
-    all = 2,
-    //...
-    srvName = 3,
-    srvTarget = 4,
-    //...
-    CNAME = 5,
-    TXT = 6,
-    NS = 7,
-    MX = 8,
-    A = 9,
-    AAAA = 10
+    IP = 8
 };
 
 /***************************************************
@@ -69,20 +52,11 @@ struct ResultsModel{
     QStandardItemModel *osint = nullptr;
     QStandardItemModel *brute = nullptr;
     QStandardItemModel *active = nullptr;
-    QStandardItemModel *level = nullptr;
     QStandardItemModel *dnsrecords = nullptr;
     QStandardItemModel *srvrecords = nullptr;
     //...
     ProjectDataModel *project = nullptr;
 };
-
-struct ScanStatus{
-    bool isRunning = false;
-    bool isStopped = false;
-    bool isPaused = false;
-    int activeThreads = 0;
-};
-
 
 
 /***************************************************

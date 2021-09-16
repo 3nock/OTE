@@ -855,7 +855,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>184</width>
-                  <height>654</height>
+                  <height>663</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -865,6 +865,20 @@
                  <property name="bottomMargin">
                   <number>5</number>
                  </property>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_certspotter">
+                   <property name="text">
+                    <string>CertSpotter</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="Line" name="line">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QCheckBox" name="checkBox_engine_ask">
                    <property name="text">
@@ -876,13 +890,6 @@
                   <widget class="QCheckBox" name="checkBox_engine_baidu">
                    <property name="text">
                     <string>Baidu</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="checkBox_engine_certspotter">
-                   <property name="text">
-                    <string>CertSpotter</string>
                    </property>
                   </widget>
                  </item>

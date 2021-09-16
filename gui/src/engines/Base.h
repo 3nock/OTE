@@ -5,21 +5,25 @@
 #include "ContextMenu.h"
 #include "src/widgets/InputWidget.h"
 
-struct GeneralStatus{
+struct ScanStatus{
+    bool isRunning = false;
+    bool isStopped = false;
+    bool isPaused = false;
+    int activeThreads = 0;
+};
+
+struct Status{
     ScanStatus *osint = nullptr;
     ScanStatus *brute = nullptr;
     ScanStatus *active = nullptr;
     ScanStatus *ip = nullptr;
     ScanStatus *records = nullptr;
-    ScanStatus *level = nullptr;
-    //...
     int totalThreadsInUse(){
         return osint->activeThreads+
                 brute->activeThreads+
                 active->activeThreads+
                 ip->activeThreads+
-                records->activeThreads+
-                level->activeThreads;
+                records->activeThreads;
     }
 };
 
@@ -27,12 +31,12 @@ class BaseClass :public  ContextMenu{
         Q_OBJECT
 
     public:
-        BaseClass(ENGINE engineName, ResultsModel *resultsModel, QWidget *parent = nullptr);
+        BaseClass(ENGINE engineName, ResultsModel *resultsModel, Status *status, QWidget *parent = nullptr);
         ~BaseClass();
         void initBaseClass(InputWidget* targets){m_targets = targets;}
 
     public:
-        ScanStatus *scanStatus;
+        Status *status;
         ScanConfig *scanConfig;
         int activeThreads = 0;
 
@@ -41,6 +45,7 @@ class BaseClass :public  ContextMenu{
         void pauseScan();
         //...
         void sendLog(QString log);
+        void sendNotes(QString notes);
         void sendStatus(QString status);
 
     public slots:

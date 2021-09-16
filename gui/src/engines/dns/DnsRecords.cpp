@@ -2,8 +2,10 @@
 #include "ui_DnsRecords.h"
 
 
-DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel) : BaseClass(ENGINE::RECORDS, resultsModel, parent), ui(new Ui::DnsRecords),
-      m_scanArguments(new records::ScanArguments)
+DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *status) :
+    BaseClass(ENGINE::RECORDS, resultsModel, status, parent),
+    ui(new Ui::DnsRecords),
+    m_scanArguments(new records::ScanArguments)
 {
     ui->setupUi(this);
     ///
@@ -21,6 +23,7 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel) : BaseClass(
     //...
     ui->srvWordlist->hide();
     ui->progressBar->hide();
+    ui->progressBarSRV->hide();
     ///
     /// equally seperate the widgets...
     ///
@@ -68,19 +71,20 @@ void DnsRecords::on_buttonStart_clicked(){
     ui->buttonStart->setDisabled(true);
     ui->buttonPause->setEnabled(true);
     ui->buttonStop->setEnabled(true);
-    ui->progressBar->show();
     ///
     /// Resetting the scan arguments values...
     ///
     m_scanArguments->currentSrvToEnumerate = 0;
     m_scanArguments->currentTargetToEnumerate = 0;
-    ui->progressBar->reset();
-    m_scanArguments->progress = 0;
     ///
     /// getting the arguments for Dns Records Scan...
     ///
     if(ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS)
     {
+        ui->progressBar->show();
+        ui->progressBar->reset();
+        m_scanArguments->progress = 0;
+        //...
         m_scanArguments->RecordType_srv = false;
         m_scanArguments->RecordType_a = ui->checkBoxA->isChecked();
         m_scanArguments->RecordType_aaaa = ui->checkBoxAAAA->isChecked();
@@ -96,6 +100,9 @@ void DnsRecords::on_buttonStart_clicked(){
     ///
     if(ui->comboBoxOption->currentIndex() == OPTION::SRV)
     {
+        ui->progressBarSRV->show();
+        ui->progressBarSRV->reset();
+        m_scanArguments->progress = 0;
         m_scanArguments->RecordType_srv = true;
         ui->progressBarSRV->setMaximum(ui->targets->listWidget->count()*ui->srvWordlist->listWidget->count());
     }
@@ -114,10 +121,10 @@ void DnsRecords::on_buttonPause_clicked(){
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(scanStatus->isPaused)
+    if(status->records->isPaused)
     {
         ui->buttonPause->setText("Pause");
-        scanStatus->isPaused = false;
+        status->records->isPaused = false;
         //...
         startScan();
         //...
@@ -126,14 +133,14 @@ void DnsRecords::on_buttonPause_clicked(){
     }
     else
     {
-        scanStatus->isPaused = true;
+        status->records->isPaused = true;
         emit stopScan();
     }
 }
 
 void DnsRecords::on_buttonStop_clicked(){
     emit stopScan();
-    scanStatus->isStopped = true;
+    status->records->isStopped = true;
 }
 
 void DnsRecords::startScan(){
@@ -183,7 +190,7 @@ void DnsRecords::startScan(){
         //...
         cThread->start();
     }
-    scanStatus->isRunning = true;
+    status->records->isRunning = true;
 }
 
 void DnsRecords::loadSrvWordlist(){
@@ -205,10 +212,10 @@ void DnsRecords::scanThreadEnded(){
     ///
     if(activeThreads == 0)
     {
-        if(scanStatus->isPaused)
+        if(status->records->isPaused)
         {
             ui->buttonPause->setText("Resume");
-            scanStatus->isRunning = false;
+            status->records->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
             logs("[*] Scan Paused!\n");
@@ -217,12 +224,12 @@ void DnsRecords::scanThreadEnded(){
         else
         {
             // set the progress bar to 100% just in case...
-            if(!scanStatus->isStopped){
+            if(!status->records->isStopped){
                 ui->progressBar->setValue(ui->progressBar->maximum());
             }
-            scanStatus->isPaused = false;
-            scanStatus->isStopped = false;
-            scanStatus->isRunning = false;
+            status->records->isPaused = false;
+            status->records->isStopped = false;
+            status->records->isRunning = false;
             //...
             ui->buttonStart->setEnabled(true);
             ui->buttonPause->setDisabled(true);

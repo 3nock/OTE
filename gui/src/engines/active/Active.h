@@ -13,7 +13,7 @@ class Active : public BaseClass{
         Q_OBJECT
 
     public:
-        Active(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        Active(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
         ~Active();
 
     public slots:
@@ -31,7 +31,9 @@ class Active : public BaseClass{
         void on_comboBoxOption_currentIndexChanged(int index);
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
 
-    private:
+        void on_checkBoxCustomActive_clicked(bool checked);
+
+private:
         Ui::Active *ui;
         //...
         void startScan();

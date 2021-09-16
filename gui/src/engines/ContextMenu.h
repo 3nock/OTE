@@ -1,11 +1,26 @@
 #ifndef CONTEXTMENU_H
 #define CONTEXTMENU_H
 
-#include "src/utils.h"
-#include "AbstractClass.h"
 #include <QMenu>
 #include <QAction>
+#include "src/utils.h"
+#include "AbstractClass.h"
 
+enum CHOICE{
+    susbdomains = 0,
+    ipaddress = 1,
+    all = 2,
+    //...
+    srvName = 3,
+    srvTarget = 4,
+    //...
+    CNAME = 5,
+    TXT = 6,
+    NS = 7,
+    MX = 8,
+    A = 9,
+    AAAA = 10
+};
 
 class ContextMenu : public AbstractClass{
         Q_OBJECT
@@ -26,7 +41,6 @@ class ContextMenu : public AbstractClass{
         void sendResultsToBrute(ENGINE, CHOICE);
         void sendResultsToRecord(ENGINE, CHOICE);
         void sendResultsToIp(ENGINE, CHOICE);
-        void sendResultsToLevel(ENGINE, CHOICE);
         void sendResultsToProject(ENGINE, CHOICE);
         //...
         void sendResultsToOsint(QItemSelectionModel*);
@@ -34,7 +48,6 @@ class ContextMenu : public AbstractClass{
         void sendResultsToBrute(QItemSelectionModel*);
         void sendResultsToRecord(QItemSelectionModel*);
         void sendResultsToIp(QItemSelectionModel*);
-        void sendResultsToLevel(QItemSelectionModel*);
         void sendResultsToProject(QItemSelectionModel*);
 
     private slots:
@@ -79,7 +92,6 @@ class ContextMenu : public AbstractClass{
         QAction a_actionSendToOsint{"Send To Osint"};
         QAction a_actionSendToActive{"Send To Active"};
         QAction a_actionSendToBrute{"Send To Brute"};
-        QAction a_actionSendToLevel{"Send To Level"};
         QAction a_actionSendToRecords{"Send To Records"};
         ///
         /// for selection right-click...
@@ -90,7 +102,6 @@ class ContextMenu : public AbstractClass{
         QAction c_actionSendToOsint{"Send To Osint"};
         QAction c_actionSendToActive{"Send To Active"};
         QAction c_actionSendToBrute{"Send To Brute"};
-        QAction c_actionSendToLevel{"Send To Level"};
         QAction c_actionSendToRecords{"Send To Records"};
         //...
         QAction actionOpenInBrowser{"Open in Browser"};

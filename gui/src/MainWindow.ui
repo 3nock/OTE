@@ -164,7 +164,7 @@ QFrame[frameShape=&quot;5&quot;] {
     background: transparent;
 }
 
-QFrame#frame, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers {
+QFrame#frame, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers{
     background-color: rgb(55, 55, 55);
 }
 
@@ -221,7 +221,7 @@ QListWidget, QTableView, QTreeView, QColumnView{
 
 QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected{
     background-color: rgba(110,110,110,40);
-    color: transparent;
+    color: rgb(230,230,230);
 }
 
 QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QColumnView::item:hover, QColumnView::item:hover {
@@ -426,14 +426,15 @@ QCheckBox::indicator:checked {
     border-style:solid;
     border-width:1px;
     border-color: rgb(47,47,47);
+    image: url(:/img/res/icons/checkBox2.png);
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(75, 75, 75, 255), stop:1 rgb(143, 143, 107));
 }
 
 QCheckBox::indicator:unchecked {
     border-style:solid;
     border-width:1px;
-    background-color: rgb(200,200,200);
-    border-color: rgb(90, 90, 90);
+    border-color: rgb(47,47,47);
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(75, 75, 75, 255), stop:1 rgb(143, 143, 107));
 }
 
 QRadioButton {

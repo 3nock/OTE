@@ -4,7 +4,9 @@
 #include <QThread>
 
 
-Active::Active(QWidget *parent, ResultsModel *resultsModel) : BaseClass(ENGINE::ACTIVE, resultsModel, parent), ui(new Ui::Active),
+Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
+    BaseClass(ENGINE::ACTIVE, resultsModel, status, parent),
+    ui(new Ui::Active),
     m_scanArguments(new active::ScanArguments)
 {
     ui->setupUi(this);
@@ -31,6 +33,12 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel) : BaseClass(ENGINE::
                                         << static_cast<int>((this->width() * 0.50)));
     //...
     m_scanArguments->targetList = ui->targets->listWidget;
+    ///
+    /// ...
+    ///
+    ui->frameCustom->hide();
+    ui->lineEditServiceName->setPlaceholderText("e.g SMTP");
+    ui->lineEditServicePort->setPlaceholderText("e.g 889");
 }
 Active::~Active(){
     delete m_scanArguments;
@@ -97,9 +105,9 @@ void Active::on_buttonPause_clicked(){
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(scanStatus->isPaused){
+    if(status->active->isPaused){
         ui->buttonPause->setText("Pause");
-        scanStatus->isPaused = false;
+        status->active->isPaused = false;
         //...
         startScan();
         //...
@@ -108,14 +116,14 @@ void Active::on_buttonPause_clicked(){
     }
     else
     {
-        scanStatus->isPaused = true;
+        status->active->isPaused = true;
         emit stopScan();
     }
 }
 
 void Active::on_buttonStop_clicked(){
     emit stopScan();
-    scanStatus->isStopped = true;
+    status->active->isStopped = true;
 }
 
 void Active::startScan(){
@@ -151,7 +159,7 @@ void Active::startScan(){
         //...
         cThread->start();
     }
-    scanStatus->isRunning = true;
+    status->active->isRunning = true;
 }
 
 void Active::scanResult(QString subdomain, QString ipAddress){
@@ -173,10 +181,10 @@ void Active::scanThreadEnded(){
     ///
     if(activeThreads == 0)
     {
-        if(scanStatus->isPaused)
+        if(status->active->isPaused)
         {
             ui->buttonPause->setText("Resume");
-            scanStatus->isRunning = false;
+            status->active->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
             logs("[*] Scan Paused!\n");
@@ -185,12 +193,12 @@ void Active::scanThreadEnded(){
         else
         {
             // set the progress bar to 100% just in case...
-            if(!scanStatus->isStopped){
+            if(!status->active->isStopped){
                 ui->progressBar->setValue(ui->progressBar->maximum());
             }
-            scanStatus->isPaused = false;
-            scanStatus->isStopped = false;
-            scanStatus->isRunning = false;
+            status->active->isPaused = false;
+            status->active->isStopped = false;
+            status->active->isRunning = false;
             //...
             ui->buttonStart->setEnabled(true);
             ui->buttonPause->setDisabled(true);
@@ -274,4 +282,14 @@ void Active::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     }
     selectionModel = ui->tableViewResults->selectionModel();
     c_Menu->exec(QCursor::pos());
+}
+
+void Active::on_checkBoxCustomActive_clicked(bool checked){
+    if(checked){
+        ui->frameDefault->hide();
+        ui->frameCustom->show();
+    }else{
+        ui->frameCustom->hide();
+        ui->frameDefault->show();
+    }
 }

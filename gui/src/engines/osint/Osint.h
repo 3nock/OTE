@@ -56,8 +56,11 @@ class Osint : public BaseClass{
     Q_OBJECT
 
     public:
-        Osint(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        Osint(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
         ~Osint();
+
+    public slots:
+        void scanResults(QString subdomain);
 
     private slots:
         void on_buttonStart_clicked();
@@ -82,6 +85,7 @@ class Osint : public BaseClass{
         //...
         void getUserOptions(QStringList *choosenOptions);
         void initProfiles();
+        void startScan();
         //...
         osint::ScanArguments *m_scanArguments;
         osint::ScanResults *m_scanResults;
@@ -90,6 +94,7 @@ class Osint : public BaseClass{
         //...
         QString currentPath;
         QString m_targetDomain;
+        QSet<QString> m_results;
 };
 
 #endif // OSINT_H

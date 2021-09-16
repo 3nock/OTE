@@ -26,7 +26,6 @@ class AbstractClass : public QWidget{
         void changeTabToActive();
         void changeTabToIp();
         void changeTabToRecords();
-        void changeTabToLevel();
         void changeTabToProject();
 };
 

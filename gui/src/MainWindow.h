@@ -8,7 +8,6 @@
 #include "src/project/Project.h"
 #include "src/engines/ip/Ip.h"
 #include "src/engines/dns/DnsRecords.h"
-#include "src/engines/level/Level.h"
 #include "src/engines/brute/Brute.h"
 #include "src/engines/osint/Osint.h"
 #include "src/engines/active/Active.h"
@@ -29,8 +28,7 @@ class MainWindow : public QMainWindow{
         ScanStatus *statusActive;
         ScanStatus *statusIp;
         ScanStatus *statusRecords;
-        ScanStatus *statusLevel;
-        GeneralStatus *status;
+        Status *status;
         //...
         ResultsModel *resultsModel;
         QSettings *config;
@@ -44,7 +42,6 @@ class MainWindow : public QMainWindow{
         void onChangeTabToBrute();
         void onChangeTabToIp();
         void onChangeTabToRecords();
-        void onChangeTabToLevel();
 
     private:
         Ui::MainWindow *ui;

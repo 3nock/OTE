@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    src/engines/osint/modules/Certspotter.cpp \
         src\engines\ContextMenu.cpp \
         src\Logger.cpp \
         src\project\general\GeneralAnalysis.cpp \
@@ -41,8 +42,6 @@ SOURCES += \
         src\engines\ip\IpScanner.cpp \
         src\engines\active\Active.cpp \
         src\engines\active\ActiveScanner.cpp \
-        src\engines\level\Level.cpp \
-        src\engines\level\LevelScanner.cpp \
         src\engines\dns\DnsRecords.cpp \
         src\engines\dns\DnsRecordsScanner.cpp \
         src\engines\brute\Brute.cpp \
@@ -58,6 +57,8 @@ SOURCES += \
 
 HEADERS += \
     src/Config.h \
+    src/engines/osint/modules/AbstractModule.h \
+    src/engines/osint/modules/Certspotter.h \
         src\engines\AbstractClass.h \
         src\engines\ContextMenu.h \
         src\Logger.h \
@@ -74,8 +75,6 @@ HEADERS += \
         src\engines\ip\IpScanner.h \
         src\engines\active\Active.h \
         src\engines\active\ActiveScanner.h \
-        src\engines\level\Level.h \
-        src\engines\level\LevelScanner.h \
         src\engines\dns\DnsRecords.h \
         src\engines\dns\DnsRecordsScanner.h \
         src\engines\brute\Brute.h \
@@ -96,7 +95,6 @@ FORMS += \
         src\project\Project.ui \
         src\engines\ip\Ip.ui \
         src\engines\dns\DnsRecords.ui \
-        src\engines\level\Level.ui \
         src\engines\brute\Brute.ui \
         src\engines\osint\Osint.ui \
         src\engines\active\Active.ui \

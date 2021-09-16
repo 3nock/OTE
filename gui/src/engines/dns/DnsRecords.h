@@ -13,7 +13,7 @@ class DnsRecords : public BaseClass{
     Q_OBJECT
 
     public:
-        DnsRecords(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        DnsRecords(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
         ~DnsRecords();
 
     public slots:

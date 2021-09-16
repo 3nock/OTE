@@ -1,7 +1,9 @@
 #include "Ip.h"
 #include "ui_Ip.h"
 
-Ip::Ip(QWidget *parent, ResultsModel *resultsModel) : BaseClass(ENGINE::IP, resultsModel, parent), ui(new Ui::Ip),
+Ip::Ip(QWidget *parent, ResultsModel *resultsModel, Status *status) :
+    BaseClass(ENGINE::IP, resultsModel, status, parent),
+    ui(new Ui::Ip),
     m_scanArguments(new ip::ScanArguments)
 {
     ui->setupUi(this);
@@ -78,10 +80,10 @@ void Ip::on_buttonPause_clicked(){
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
-    if(scanStatus->isPaused)
+    if(status->ip->isPaused)
     {
         ui->buttonPause->setText("Pause");
-        scanStatus->isPaused = false;
+        status->ip->isPaused = false;
         //...
         startScan();
         //...
@@ -90,14 +92,14 @@ void Ip::on_buttonPause_clicked(){
     }
     else
     {
-        scanStatus->isPaused = true;
+        status->ip->isPaused = true;
         emit stopScan();
     }
 }
 
 void Ip::on_buttonStop_clicked(){
     emit stopScan();
-    scanStatus->isStopped = true;
+    status->ip->isStopped = true;
 }
 
 void Ip::startScan(){
@@ -133,7 +135,7 @@ void Ip::startScan(){
         //...
         cThread->start();
     }
-    scanStatus->isRunning = true;
+    status->ip->isRunning = true;
 }
 
 void Ip::scanThreadEnded(){
@@ -143,10 +145,10 @@ void Ip::scanThreadEnded(){
     ///
     if(activeThreads == 0)
     {
-        if(scanStatus->isPaused)
+        if(status->ip->isPaused)
         {
             ui->buttonPause->setText("Resume");
-            scanStatus->isRunning = false;
+            status->ip->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
             logs("[*] Scan Paused!\n");
@@ -155,12 +157,12 @@ void Ip::scanThreadEnded(){
         else
         {
             // set the progress bar to 100% just in case...
-            if(!scanStatus->isStopped){
+            if(!status->ip->isStopped){
                 ui->progressBar->setValue(ui->progressBar->maximum());
             }
-            scanStatus->isPaused = false;
-            scanStatus->isStopped = false;
-            scanStatus->isRunning = false;
+            status->ip->isPaused = false;
+            status->ip->isStopped = false;
+            status->ip->isRunning = false;
             //...
             ui->buttonStart->setEnabled(true);
             ui->buttonPause->setDisabled(true);

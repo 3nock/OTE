@@ -64,7 +64,6 @@ void ContextMenu::initMenuA(){
     connect(&a_actionSendToBrute, &QAction::triggered, this, [=](){emit sendResultsToBrute(engineName, CHOICE::susbdomains); emit changeTabToBrute();});
     connect(&a_actionSendToActive, &QAction::triggered, this, [=](){emit sendResultsToActive(engineName, CHOICE::susbdomains); emit changeTabToActive();});
     connect(&a_actionSendToRecords, &QAction::triggered, this, [=](){emit sendResultsToRecord(engineName, CHOICE::susbdomains); emit changeTabToRecords();});
-    connect(&a_actionSendToLevel, &QAction::triggered, this, [=](){emit sendResultsToLevel(engineName, CHOICE::susbdomains); emit changeTabToLevel();});
     ///
     /// ADDING ACTIONS TO THE CONTEXT MENU...
     ///
@@ -89,7 +88,7 @@ void ContextMenu::initMenuA(){
         copyMenu->addAction(&actionCopySRVName);
         copyMenu->addAction(&actionCopySRVTarget);
     }
-    if(engineName == ENGINE::OSINT || engineName == ENGINE::BRUTE || engineName == ENGINE::ACTIVE || engineName == ENGINE::LEVEL || engineName == ENGINE::IP){
+    if(engineName == ENGINE::OSINT || engineName == ENGINE::BRUTE || engineName == ENGINE::ACTIVE || engineName == ENGINE::IP){
         saveMenu->addAction(&actionSaveSubdomains);
         saveMenu->addAction(&actionSaveIpAddresses);
         saveMenu->addAction(&actionSaveAll);
@@ -107,7 +106,6 @@ void ContextMenu::initMenuA(){
     a_Menu->addAction(&a_actionSendToBrute);
     a_Menu->addAction(&a_actionSendToActive);
     a_Menu->addAction(&a_actionSendToRecords);
-    a_Menu->addAction(&a_actionSendToLevel);
 }
 
 void ContextMenu::initMenuC(){
@@ -125,7 +123,6 @@ void ContextMenu::initMenuC(){
     connect(&c_actionSendToBrute, &QAction::triggered, this, [=](){emit sendResultsToBrute(selectionModel); emit changeTabToBrute();});
     connect(&c_actionSendToActive, &QAction::triggered, this, [=](){emit sendResultsToActive(selectionModel); emit changeTabToActive();});
     connect(&c_actionSendToRecords, &QAction::triggered, this, [=](){emit sendResultsToRecord(selectionModel); emit changeTabToRecords();});
-    connect(&c_actionSendToLevel, &QAction::triggered, this, [=](){emit sendResultsToLevel(selectionModel); emit changeTabToLevel();});
     ///
     /// ...
     ///
@@ -139,7 +136,6 @@ void ContextMenu::initMenuC(){
     c_Menu->addAction(&c_actionSendToBrute);
     c_Menu->addAction(&c_actionSendToActive);
     c_Menu->addAction(&c_actionSendToRecords);
-    c_Menu->addAction(&c_actionSendToLevel);
 }
 
 void ContextMenu::openInBrowser(QItemSelectionModel *selectionModel){
@@ -180,9 +176,6 @@ void ContextMenu::saveResults(CHOICE choice){
         break;
     case ENGINE::BRUTE:
         model = resultsModel->brute;
-        break;
-    case ENGINE::LEVEL:
-        model = resultsModel->level;
         break;
     case ENGINE::OSINT:
         model = resultsModel->osint;
@@ -410,9 +403,6 @@ void ContextMenu::copyResults(CHOICE choice){
         break;
     case ENGINE::BRUTE:
         model = resultsModel->brute;
-        break;
-    case ENGINE::LEVEL:
-        model = resultsModel->level;
         break;
     case ENGINE::OSINT:
         model = resultsModel->osint;

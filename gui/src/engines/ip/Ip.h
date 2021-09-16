@@ -14,7 +14,7 @@ class Ip : public BaseClass{
         Q_OBJECT
 
     public:
-        Ip(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
+        Ip(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
         ~Ip();
 
     public slots:
