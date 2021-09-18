@@ -25,12 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
+include(includes/gumbo/gumbo-parser.pri)
+
 SOURCES += \
     src/engines/osint/modules/Anubis.cpp \
     src/engines/osint/modules/Certspotter.cpp \
+    src/engines/osint/modules/Crtsh.cpp \
     src/engines/osint/modules/Dnsbufferoverun.cpp \
     src/engines/osint/modules/Hackertarget.cpp \
     src/engines/osint/modules/Otx.cpp \
+    src/engines/osint/modules/Projectdiscovery.cpp \
+    src/engines/osint/modules/Spyse.cpp \
     src/engines/osint/modules/Sublist3r.cpp \
     src/engines/osint/modules/Threatcrowd.cpp \
     src/engines/osint/modules/Threatminer.cpp \
@@ -67,9 +72,12 @@ HEADERS += \
     src/engines/osint/modules/AbstractModule.h \
     src/engines/osint/modules/Anubis.h \
     src/engines/osint/modules/Certspotter.h \
+    src/engines/osint/modules/Crtsh.h \
     src/engines/osint/modules/Dnsbufferoverun.h \
     src/engines/osint/modules/Hackertarget.h \
     src/engines/osint/modules/Otx.h \
+    src/engines/osint/modules/Projectdiscovery.h \
+    src/engines/osint/modules/Spyse.h \
     src/engines/osint/modules/Sublist3r.h \
     src/engines/osint/modules/Threatcrowd.h \
     src/engines/osint/modules/Threatminer.h \

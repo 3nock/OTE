@@ -878,6 +878,13 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QCheckBox" name="checkBox_engine_crtsh">
+                   <property name="text">
+                    <string>Crtsh</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QCheckBox" name="checkBox_engine_certspotter">
                    <property name="text">
                     <string>CertSpotter</string>
@@ -937,13 +944,6 @@
                   <widget class="QCheckBox" name="checkBox_engine_baidu">
                    <property name="text">
                     <string>Baidu</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="checkBox_engine_crtsh">
-                   <property name="text">
-                    <string>Crtsh</string>
                    </property>
                   </widget>
                  </item>
@@ -1171,6 +1171,20 @@
                   <number>5</number>
                  </property>
                  <item>
+                  <widget class="QCheckBox" name="checkBox_engine_spyse">
+                   <property name="text">
+                    <string>spyse</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_projectdiscovery">
+                   <property name="text">
+                    <string>ProjectDiscovery</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QCheckBox" name="checkBox_engine_bing">
                    <property name="text">
                     <string>Bing</string>
@@ -1227,23 +1241,9 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="checkBox_engine_projectdiscovery">
-                   <property name="text">
-                    <string>ProjectDiscovery</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QCheckBox" name="checkBox_engine_securitytrails">
                    <property name="text">
                     <string>SecurityTrails</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="checkBox_engine_spyse">
-                   <property name="text">
-                    <string>spyse</string>
                    </property>
                   </widget>
                  </item>

@@ -10,9 +10,18 @@
 #include "src/engines/osint/modules/Threatcrowd.h"
 #include "src/engines/osint/modules/Hackertarget.h"
 #include "src/engines/osint/modules/Dnsbufferoverun.h"
+#include "src/engines/osint/modules/Projectdiscovery.h"
+#include "src/engines/osint/modules/Spyse.h"
+#include "src/engines/osint/modules/Crtsh.h"
 
 #define TRUE "1"
 #define FALSE "0"
+
+/*
+ * emit a QStringList/QSet instead of individual list
+ * automatically group the subdmains with stars into one group, from cert scans
+ * for later multilevel scanning...
+ */
 
 /*
  * url = "https://api.securitytrails.com/v1/ips/list"
@@ -210,6 +219,51 @@ void Osint::startScan(){
         connect(anubis, &Anubis::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, anubis, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_projectdiscovery->isChecked())
+    {
+        Projectdiscovery *projectdiscovery = new Projectdiscovery(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        projectdiscovery->Enumerator(cThread);
+        projectdiscovery->moveToThread(cThread);
+        //...
+        connect(projectdiscovery, &Projectdiscovery::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, projectdiscovery, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_spyse->isChecked())
+    {
+        Spyse *spyse = new Spyse(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        spyse->Enumerator(cThread);
+        spyse->moveToThread(cThread);
+        //...
+        connect(spyse, &Spyse::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, spyse, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_crtsh->isChecked())
+    {
+        Crtsh *crtsh = new Crtsh(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        crtsh->Enumerator(cThread);
+        crtsh->moveToThread(cThread);
+        //...
+        connect(crtsh, &Crtsh::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, crtsh, &Otx::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
