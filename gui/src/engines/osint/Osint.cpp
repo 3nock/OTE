@@ -2,7 +2,14 @@
 #include "ui_Osint.h"
 //...
 #include "src/Config.h"
+#include "src/engines/osint/modules/Anubis.h"
 #include "src/engines/osint/modules/Certspotter.h"
+#include "src/engines/osint/modules/Otx.h"
+#include "src/engines/osint/modules/Sublist3r.h"
+#include "src/engines/osint/modules/Threatminer.h"
+#include "src/engines/osint/modules/Threatcrowd.h"
+#include "src/engines/osint/modules/Hackertarget.h"
+#include "src/engines/osint/modules/Dnsbufferoverun.h"
 
 #define TRUE "1"
 #define FALSE "0"
@@ -98,6 +105,111 @@ void Osint::startScan(){
         connect(certspotter, &Certspotter::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, certspotter, &Certspotter::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_otx->isChecked())
+    {
+        Otx *otx = new Otx(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        otx->Enumerator(cThread);
+        otx->moveToThread(cThread);
+        //...
+        connect(otx, &Otx::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, otx, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_sublist3r->isChecked())
+    {
+        Sublist3r *sublist3r = new Sublist3r(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        sublist3r->Enumerator(cThread);
+        sublist3r->moveToThread(cThread);
+        //...
+        connect(sublist3r, &Sublist3r::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, sublist3r, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_threatminer->isChecked())
+    {
+        Threatminer *threatminer = new Threatminer(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        threatminer->Enumerator(cThread);
+        threatminer->moveToThread(cThread);
+        //...
+        connect(threatminer, &Threatminer::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, threatminer, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_threatcrowd->isChecked())
+    {
+        Threatcrowd *threatcrowd = new Threatcrowd(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        threatcrowd->Enumerator(cThread);
+        threatcrowd->moveToThread(cThread);
+        //...
+        connect(threatcrowd, &Threatcrowd::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, threatcrowd, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_hackertarget->isChecked())
+    {
+        Hackertarget *hackertarget = new Hackertarget(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        hackertarget->Enumerator(cThread);
+        hackertarget->moveToThread(cThread);
+        //...
+        connect(hackertarget, &Hackertarget::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, hackertarget, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_dnsbufferoverrun->isChecked())
+    {
+        Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        dnsbufferoverun->Enumerator(cThread);
+        dnsbufferoverun->moveToThread(cThread);
+        //...
+        connect(dnsbufferoverun, &Dnsbufferoverun::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, dnsbufferoverun, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_anubis->isChecked())
+    {
+        Anubis *anubis = new Anubis(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        anubis->Enumerator(cThread);
+        anubis->moveToThread(cThread);
+        //...
+        connect(anubis, &Anubis::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, anubis, &Otx::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

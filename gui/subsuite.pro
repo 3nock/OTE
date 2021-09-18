@@ -26,7 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    src/engines/osint/modules/Anubis.cpp \
     src/engines/osint/modules/Certspotter.cpp \
+    src/engines/osint/modules/Dnsbufferoverun.cpp \
+    src/engines/osint/modules/Hackertarget.cpp \
+    src/engines/osint/modules/Otx.cpp \
+    src/engines/osint/modules/Sublist3r.cpp \
+    src/engines/osint/modules/Threatcrowd.cpp \
+    src/engines/osint/modules/Threatminer.cpp \
         src\engines\ContextMenu.cpp \
         src\Logger.cpp \
         src\project\general\GeneralAnalysis.cpp \
@@ -58,7 +65,14 @@ SOURCES += \
 HEADERS += \
     src/Config.h \
     src/engines/osint/modules/AbstractModule.h \
+    src/engines/osint/modules/Anubis.h \
     src/engines/osint/modules/Certspotter.h \
+    src/engines/osint/modules/Dnsbufferoverun.h \
+    src/engines/osint/modules/Hackertarget.h \
+    src/engines/osint/modules/Otx.h \
+    src/engines/osint/modules/Sublist3r.h \
+    src/engines/osint/modules/Threatcrowd.h \
+    src/engines/osint/modules/Threatminer.h \
         src\engines\AbstractClass.h \
         src\engines\ContextMenu.h \
         src\Logger.h \

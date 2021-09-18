@@ -23,6 +23,7 @@ class AbstractModule : public QObject
     signals:
         void quitThread();
         void scanError(QString error);
+        void scanStatus(QString status);
         void scanResults(QString subdomain);
 
     public slots:
