@@ -55,7 +55,7 @@
        </item>
        <item>
         <property name="text">
-         <string>PTR</string>
+         <string>Osint Reverse Lookup</string>
         </property>
        </item>
       </widget>

@@ -2,6 +2,9 @@
 #include "ui_Brute.h"
 
 /*
+ *have a tab to put all info/issue definitions,eg asn numbers and their respective
+ * owner, ip's and their respective owners...
+ *
  * change logs from listwidget to plaintext edit
  * and input from listwidget to listview
  *
@@ -42,6 +45,8 @@
 */
 
 /*
+ * have seperate stylesheet for each os, choose appropriate stylesheet during loading time
+ * using macro which indicates what os is compiled in for better visuals...
  *
  * must be project base, on launch asks if you want a quick scan or launch a project base...
  *

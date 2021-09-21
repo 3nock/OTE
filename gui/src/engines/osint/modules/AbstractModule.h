@@ -4,15 +4,15 @@
 #include <QObject>
 #include <QThread>
 #include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QNetworkAccessManager>
 
-class AbstractModule : public QObject
-{
+class AbstractModule : public QObject{
         Q_OBJECT
     public:
         explicit AbstractModule(QObject *parent = nullptr) : QObject(parent){}
         ///
-        /// the worker method that initiate scan...
+        /// the worker method that initiates the scan...
         ///
         void Enumerator(QThread* cThread) const
         {

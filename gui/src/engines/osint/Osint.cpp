@@ -13,14 +13,65 @@
 #include "src/engines/osint/modules/Projectdiscovery.h"
 #include "src/engines/osint/modules/Spyse.h"
 #include "src/engines/osint/modules/Crtsh.h"
+#include "src/engines/osint/modules/Dnsdumpster.h"
+#include "src/engines/osint/modules/Netcraft.h"
+#include "src/engines/osint/modules/Suip.h"
+#include "src/engines/osint/modules/Pkey.h"
+#include "src/engines/osint/modules/Rapiddns.h"
+#include "src/engines/osint/modules/GoogleCert.h"
+#include "src/engines/osint/modules/Omnisint.h"
+#include "src/engines/osint/modules/Qwant.h"
+#include "src/engines/osint/modules/VirusTotal.h"
+#include "src/engines/osint/modules/Urlscan.h"
+#include "src/engines/osint/modules/Waybackmachine.h"
+#include "src/engines/osint/modules/ArchiveToday.h"
 
 #define TRUE "1"
 #define FALSE "0"
 
 /*
+ * https://dnschecker.org/all-tools.php
+ * https://suip.biz/
+ * https://viewdns.info/api/
+ * https://rapiddns.io/tools
+ * pkey.in
+ * https://skrapp.io/api
+ * https://hunter.io/bulk-finders
+ *
+ * you can crawl the enumerated urls all eg from archives
+ * and return only the status codes of each url and show a graph
+ * of status codes eg like screaming frog crawler analysis
+ * eg. how many 200,301,404,501
+ * create its own seperate analysis tool...
+ *
+ * add option for certificates and on comboBox and their own
+ * modelView which show all cert n subdomain info
+ * graph of certificates
+ *
+ * create a dialog(program properties) that shows all api-calls url so
+ * user can be able to fix them without compiling..
+ *
  * emit a QStringList/QSet instead of individual list
  * automatically group the subdmains with stars into one group, from cert scans
  * for later multilevel scanning...
+ *
+ * create a Map structure that has a subdomain name, ip-address, banners & other info
+ * then only link the structure name to the modelview more additional info are to be
+ * added on the structure by other scan types...
+ *
+ * use treeView instead of tableView to display osint results..
+ * so every additional info on the structure adds on the tree view, which
+ * can be saved as a html file tree or json data.
+ *
+ * same data different model views eg general treeView, subdomain-ip table view, subdomain-ListView
+ * ip-listView
+ * all updated at the same time...
+ *
+ * osint config should contain every osint module with its options of what you
+ * want to enumerate
+ *
+ * active services eg HTTP should be boolean on the structure...
+ *
  */
 
 /*
@@ -143,7 +194,7 @@ void Osint::startScan(){
         //...
         connect(sublist3r, &Sublist3r::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, sublist3r, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, sublist3r, &Sublist3r::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -158,7 +209,7 @@ void Osint::startScan(){
         //...
         connect(threatminer, &Threatminer::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, threatminer, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, threatminer, &Threatminer::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -173,7 +224,7 @@ void Osint::startScan(){
         //...
         connect(threatcrowd, &Threatcrowd::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, threatcrowd, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, threatcrowd, &Threatcrowd::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -188,7 +239,7 @@ void Osint::startScan(){
         //...
         connect(hackertarget, &Hackertarget::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, hackertarget, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, hackertarget, &Hackertarget::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -203,7 +254,7 @@ void Osint::startScan(){
         //...
         connect(dnsbufferoverun, &Dnsbufferoverun::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, dnsbufferoverun, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, dnsbufferoverun, &Dnsbufferoverun::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -218,7 +269,7 @@ void Osint::startScan(){
         //...
         connect(anubis, &Anubis::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, anubis, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, anubis, &Anubis::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -233,7 +284,7 @@ void Osint::startScan(){
         //...
         connect(projectdiscovery, &Projectdiscovery::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, projectdiscovery, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, projectdiscovery, &Projectdiscovery::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -248,7 +299,7 @@ void Osint::startScan(){
         //...
         connect(spyse, &Spyse::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, spyse, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, spyse, &Spyse::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -263,7 +314,178 @@ void Osint::startScan(){
         //...
         connect(crtsh, &Crtsh::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, crtsh, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_dnsdumpster->isChecked())
+    {
+        Dnsdumpster *dnsdumpster = new Dnsdumpster(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        dnsdumpster->Enumerator(cThread);
+        dnsdumpster->moveToThread(cThread);
+        //...
+        connect(dnsdumpster, &Dnsdumpster::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, dnsdumpster, &Dnsdumpster::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_netcraft->isChecked())
+    {
+        Netcraft *netcraft = new Netcraft(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        netcraft->Enumerator(cThread);
+        netcraft->moveToThread(cThread);
+        //...
+        connect(netcraft, &Netcraft::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, netcraft, &Netcraft::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_suip->isChecked())
+    {
+        Suip *suip = new Suip(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        suip->Enumerator(cThread);
+        suip->moveToThread(cThread);
+        //...
+        connect(suip, &Suip::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, suip, &Suip::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_pkey->isChecked()){
+        Pkey *pkey = new Pkey(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        pkey->Enumerator(cThread);
+        pkey->moveToThread(cThread);
+        //...
+        connect(pkey, &Pkey::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, pkey, &Pkey::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_rapiddns->isChecked()){
+        Rapiddns *rapiddns = new Rapiddns(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        rapiddns->Enumerator(cThread);
+        rapiddns->moveToThread(cThread);
+        //...
+        connect(rapiddns, &Rapiddns::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, rapiddns, &Rapiddns::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_googleCert->isChecked()){
+        GoogleCert *googlecert = new GoogleCert(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        googlecert->Enumerator(cThread);
+        googlecert->moveToThread(cThread);
+        //...
+        connect(googlecert, &GoogleCert::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, googlecert, &GoogleCert::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_omnisint->isChecked()){
+        Omnisint *omnisint = new Omnisint(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        omnisint->Enumerator(cThread);
+        omnisint->moveToThread(cThread);
+        //...
+        connect(omnisint, &Omnisint::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, omnisint, &Omnisint::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_qwant->isChecked()){
+        Qwant *qwant = new Qwant(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        qwant->Enumerator(cThread);
+        qwant->moveToThread(cThread);
+        //...
+        connect(qwant, &Qwant::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, qwant, &Qwant::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_virustotalapi->isChecked()){
+        VirusTotal *virustotal = new VirusTotal(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        virustotal->Enumerator(cThread);
+        virustotal->moveToThread(cThread);
+        //...
+        connect(virustotal, &VirusTotal::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, virustotal, &VirusTotal::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_urlscan->isChecked()){
+        Urlscan *urlscan = new Urlscan(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        urlscan->Enumerator(cThread);
+        urlscan->moveToThread(cThread);
+        //...
+        connect(urlscan, &Urlscan::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, urlscan, &Urlscan::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_waybackmachine->isChecked()){
+        Waybackmachine *waybackmachine = new Waybackmachine(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        waybackmachine->Enumerator(cThread);
+        waybackmachine->moveToThread(cThread);
+        //...
+        connect(waybackmachine, &Waybackmachine::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, waybackmachine, &Waybackmachine::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_archiveToday->isChecked()){
+        ArchiveToday *archivetoday = new ArchiveToday(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        archivetoday->Enumerator(cThread);
+        archivetoday->moveToThread(cThread);
+        //...
+        connect(archivetoday, &ArchiveToday::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, archivetoday, &ArchiveToday::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -280,6 +502,7 @@ void Osint::startScan(){
 }
 
 void Osint::scanResults(QString subdomain){
+    //resultsModel->osint->appendRow(new QStandardItem(subdomain));
     int prevSize = m_results.count();
     m_results.insert(subdomain);
     if(m_results.count() > prevSize)
@@ -335,125 +558,6 @@ void Osint::on_buttonConfig_clicked(){
     */
 }
 
-void Osint::getUserOptions(QStringList *choosenEngines){
-    if(ui->checkBox_engine_threatminer->isChecked()){
-        choosenEngines->append(OSINT_THREATMINER);
-    }
-    if(ui->checkBox_engine_shodan->isChecked()){
-        choosenEngines->append(OSINT_SHODAN);
-    }
-    if(ui->checkBox_engine_otx->isChecked()){
-        choosenEngines->append(OSINT_OTX);
-    }
-    if(ui->checkBox_engine_netcraft->isChecked()){
-        choosenEngines->append(OSINT_NETCRAFT);
-    }
-    if(ui->checkBox_engine_censys->isChecked()){
-        choosenEngines->append(OSINT_CENSYS);
-    }
-    if(ui->checkBox_engine_github->isChecked()){
-        choosenEngines->append(OSINT_GITHUB);
-    }
-    if(ui->checkBox_engine_certspotter->isChecked()){
-        choosenEngines->append(OSINT_CERTSPOTTER);
-    }
-    if(ui->checkBox_engine_dogpile->isChecked()){
-        choosenEngines->append(OSINT_DOGPILE);
-    }
-    if(ui->checkBox_engine_duckduckgo->isChecked()){
-        choosenEngines->append(OSINT_DUCKDUCKGO);
-    }
-    if(ui->checkBox_engine_exalead->isChecked()){
-        choosenEngines->append(OSINT_EXALEAD);
-    }
-    if(ui->checkBox_engine_huntersearch->isChecked()){
-        choosenEngines->append(OSINT_HUNTERSEARCH);
-    }
-    if(ui->checkBox_engine_intelx->isChecked()){
-        choosenEngines->append(OSINT_INTELX);
-    }
-    if(ui->checkBox_engine_securitytrails->isChecked()){
-        choosenEngines->append(OSINT_SECURITYTRAILS);
-    }
-    if(ui->checkBox_engine_suip->isChecked()){
-        choosenEngines->append(OSINT_SUIP);
-    }
-    if(ui->checkBox_engine_trello->isChecked()){
-        choosenEngines->append(OSINT_TRELLO);
-    }
-    if(ui->checkBox_engine_san->isChecked()){
-        choosenEngines->append(OSINT_SAN);
-    }
-    if(ui->checkBox_engine_cloudflare->isChecked()){
-        choosenEngines->append(OSINT_CLOUDFLARE);
-    }
-    if(ui->checkBox_engine_threatcrowd->isChecked()){
-        choosenEngines->append(OSINT_THREATCROWD);
-    }
-    if(ui->checkBox_engine_dnsbufferoverrun->isChecked()){
-        choosenEngines->append(OSINT_DNSBUFFEROVERRUN);
-    }
-    if(ui->checkBox_engine_hackertarget->isChecked()){
-        choosenEngines->append(OSINT_HACKERTARGET);
-    }
-    if(ui->checkBox_engine_pkey->isChecked()){
-        choosenEngines->append(OSINT_PKEY);
-    }
-    if(ui->checkBox_engine_waybackmachine->isChecked()){
-        choosenEngines->append(OSINT_WAYBACKMACHINE);
-    }
-    if(ui->checkBox_engine_ask->isChecked()){
-        choosenEngines->append(OSINT_ASK);
-    }
-    if(ui->checkBox_engine_baidu->isChecked()){
-        choosenEngines->append(OSINT_BAIDU);
-    }
-    if(ui->checkBox_engine_bing->isChecked()){
-        choosenEngines->append(OSINT_BING);
-    }
-    if(ui->checkBox_engine_crtsh->isChecked()){
-        choosenEngines->append(OSINT_CRTSH);
-    }
-    if(ui->checkBox_engine_dnsdumpster->isChecked()){
-        choosenEngines->append(OSINT_DNSDUMPSTER);
-    }
-    if(ui->checkBox_engine_google->isChecked()){
-        choosenEngines->append(OSINT_GOOGLE);
-    }
-    if(ui->checkBox_engine_passivedns->isChecked()){
-        choosenEngines->append(OSINT_PASSIVEDNS);
-    }
-    if(ui->checkBox_engine_virustotal->isChecked()){
-        choosenEngines->append(OSINT_VIRUSTOTAL);
-    }
-    if(ui->checkBox_engine_yahoo->isChecked()){
-        choosenEngines->append(OSINT_YAHOO);
-    }
-    if(ui->checkBox_engine_virustotalapi->isChecked()){
-        choosenEngines->append(OSINT_VIRUSTOTALAPI);
-    }
-    if(ui->checkBox_engine_omnisint->isChecked()){
-        choosenEngines->append(OSINT_OMNISINT);
-    }
-    if(ui->checkBox_engine_qwant->isChecked()){
-        choosenEngines->append(OSINT_QWANT);
-    }
-    if(ui->checkBox_engine_rapiddns->isChecked()){
-        choosenEngines->append(OSINT_RAPIDDNS);
-    }
-    if(ui->checkBox_engine_urlscan->isChecked()){
-        choosenEngines->append(OSINT_URLSCAN);
-    }
-    if(ui->checkBox_engine_pentesttools->isChecked()){
-        choosenEngines->append(OSINT_PENTESTTOOLS);
-    }
-    if(ui->checkBox_engine_projectdiscovery->isChecked()){
-        choosenEngines->append(OSINT_PROJECTDISCOVERY);
-    }
-    if(ui->checkBox_engine_spyse->isChecked()){
-        choosenEngines->append(OSINT_SPYSE);
-    }
-}
 
 void Osint::initProfiles(){
     int size = Config::settings().beginReadArray("Osint-Profiles");
@@ -521,11 +625,6 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->checkBox_engine_intelx->setChecked(false);
     }
-    if(settings.value(OSINT_VIRUSTOTAL).toString() == TRUE){
-        ui->checkBox_engine_virustotal->setChecked(true);
-    }else{
-        ui->checkBox_engine_virustotal->setChecked(false);
-    }
     if(settings.value(OSINT_GOOGLE).toString() == TRUE){
         ui->checkBox_engine_google->setChecked(true);
     }else{
@@ -580,11 +679,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->checkBox_engine_trello->setChecked(true);
     }else{
         ui->checkBox_engine_trello->setChecked(false);
-    }
-    if(settings.value(OSINT_SAN).toString() == TRUE){
-        ui->checkBox_engine_san->setChecked(true);
-    }else{
-        ui->checkBox_engine_san->setChecked(false);
     }
     if(settings.value(OSINT_THREATCROWD).toString() == TRUE){
         ui->checkBox_engine_threatcrowd->setChecked(true);
@@ -800,11 +894,6 @@ void Osint::on_buttonNewProfile_clicked(){
     }else{
         settings.setValue(OSINT_TRELLO, FALSE);
     }
-    if(ui->checkBox_engine_san->isChecked()){
-        settings.setValue(OSINT_SAN, TRUE);
-    }else{
-        settings.setValue(OSINT_SAN, FALSE);
-    }
     if(ui->checkBox_engine_cloudflare->isChecked()){
         settings.setValue(OSINT_CLOUDFLARE, TRUE);
     }else{
@@ -869,11 +958,6 @@ void Osint::on_buttonNewProfile_clicked(){
         settings.setValue(OSINT_PASSIVEDNS, TRUE);
     }else{
         settings.setValue(OSINT_PASSIVEDNS, FALSE);
-    }
-    if(ui->checkBox_engine_virustotal->isChecked()){
-        settings.setValue(OSINT_VIRUSTOTAL, TRUE);
-    }else{
-        settings.setValue(OSINT_VIRUSTOTAL, FALSE);
     }
     if(ui->checkBox_engine_yahoo->isChecked()){
         settings.setValue(OSINT_YAHOO, TRUE);

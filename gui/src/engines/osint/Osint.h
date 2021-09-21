@@ -36,7 +36,6 @@
 #define OSINT_OTX "otx"
 #define OSINT_SUIP "suip"
 #define OSINT_TRELLO "trello"
-#define OSINT_SAN "san"
 #define OSINT_THREATCROWD "threatcrowd"
 #define OSINT_DNSBUFFEROVERRUN "dnsbufferoverrun"
 #define OSINT_HACKERTARGET "hackertarget"
@@ -83,7 +82,6 @@ class Osint : public BaseClass{
     private:
         Ui::Osint *ui;
         //...
-        void getUserOptions(QStringList *choosenOptions);
         void initProfiles();
         void startScan();
         //...

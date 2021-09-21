@@ -28,17 +28,31 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/dialogs/OsintConfigDialog.cpp \
     src/engines/osint/modules/Anubis.cpp \
+    src/engines/osint/modules/ArchiveIt.cpp \
+    src/engines/osint/modules/ArchiveToday.cpp \
     src/engines/osint/modules/Certspotter.cpp \
     src/engines/osint/modules/Crtsh.cpp \
     src/engines/osint/modules/Dnsbufferoverun.cpp \
+    src/engines/osint/modules/Dnsdumpster.cpp \
+    src/engines/osint/modules/GoogleCert.cpp \
     src/engines/osint/modules/Hackertarget.cpp \
+    src/engines/osint/modules/Netcraft.cpp \
+    src/engines/osint/modules/Omnisint.cpp \
     src/engines/osint/modules/Otx.cpp \
+    src/engines/osint/modules/Pkey.cpp \
     src/engines/osint/modules/Projectdiscovery.cpp \
+    src/engines/osint/modules/Qwant.cpp \
+    src/engines/osint/modules/Rapiddns.cpp \
     src/engines/osint/modules/Spyse.cpp \
     src/engines/osint/modules/Sublist3r.cpp \
+    src/engines/osint/modules/Suip.cpp \
     src/engines/osint/modules/Threatcrowd.cpp \
     src/engines/osint/modules/Threatminer.cpp \
+    src/engines/osint/modules/Urlscan.cpp \
+    src/engines/osint/modules/VirusTotal.cpp \
+    src/engines/osint/modules/Waybackmachine.cpp \
         src\engines\ContextMenu.cpp \
         src\Logger.cpp \
         src\project\general\GeneralAnalysis.cpp \
@@ -69,18 +83,32 @@ SOURCES += \
 
 HEADERS += \
     src/Config.h \
+    src/dialogs/OsintConfigDialog.h \
     src/engines/osint/modules/AbstractModule.h \
     src/engines/osint/modules/Anubis.h \
+    src/engines/osint/modules/ArchiveIt.h \
+    src/engines/osint/modules/ArchiveToday.h \
     src/engines/osint/modules/Certspotter.h \
     src/engines/osint/modules/Crtsh.h \
     src/engines/osint/modules/Dnsbufferoverun.h \
+    src/engines/osint/modules/Dnsdumpster.h \
+    src/engines/osint/modules/GoogleCert.h \
     src/engines/osint/modules/Hackertarget.h \
+    src/engines/osint/modules/Netcraft.h \
+    src/engines/osint/modules/Omnisint.h \
     src/engines/osint/modules/Otx.h \
+    src/engines/osint/modules/Pkey.h \
     src/engines/osint/modules/Projectdiscovery.h \
+    src/engines/osint/modules/Qwant.h \
+    src/engines/osint/modules/Rapiddns.h \
     src/engines/osint/modules/Spyse.h \
     src/engines/osint/modules/Sublist3r.h \
+    src/engines/osint/modules/Suip.h \
     src/engines/osint/modules/Threatcrowd.h \
     src/engines/osint/modules/Threatminer.h \
+    src/engines/osint/modules/Urlscan.h \
+    src/engines/osint/modules/VirusTotal.h \
+    src/engines/osint/modules/Waybackmachine.h \
         src\engines\AbstractClass.h \
         src\engines\ContextMenu.h \
         src\Logger.h \
@@ -110,6 +138,7 @@ HEADERS += \
         src\MainWindow.h \
 
 FORMS += \
+        src/dialogs/OsintConfigDialog.ui \
         src\project\general\GeneralAnalysis.ui \
         src\project\specific\SpecificAnalysis.ui \
         src\widgets\InputWidget.ui \

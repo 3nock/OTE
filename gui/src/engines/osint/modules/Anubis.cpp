@@ -18,20 +18,20 @@ void Anubis::start(){
     QNetworkRequest request;
     QUrl url("https://jldc.me/anubis/subdomains/"+target);
     request.setUrl(url);
+    //request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     manager->get(request);
 }
 
 void Anubis::replyFinished(QNetworkReply *reply){
-    if(reply->error())
-    {
-        // an error occured...
-    }
-    else
+    if(reply->error() == QNetworkReply::NoError)
     {
         QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
         QJsonArray subdomainList = jsonReply.array();
         foreach(const QJsonValue &value, subdomainList)
             emit scanResults(value.toString());
+    }
+    else{
+        emit scanResults(reply->errorString());
     }
     reply->deleteLater();
     emit quitThread();
