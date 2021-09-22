@@ -2,7 +2,7 @@
 #define WORDLISTDIALOG_H
 
 #include <QDialog>
-#include "src/utils.h"
+#include "src/utils/utils.h"
 
 namespace Ui {
     class WordListDialog;

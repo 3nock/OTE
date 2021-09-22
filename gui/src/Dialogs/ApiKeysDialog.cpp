@@ -1,7 +1,7 @@
 #include "ApiKeysDialog.h"
 #include "ui_ApiKeysDialog.h"
 //...
-#include "src/Config.h"
+#include "src/utils/Config.h"
 #include <QUrl>
 #include <QDesktopServices>
 
@@ -23,28 +23,28 @@ ApiKeysDialog::~ApiKeysDialog(){
 }
 
 void ApiKeysDialog::on_buttonSave_clicked(){
-    Config::settings().beginGroup("api-keys");
+    Config::generalConfig().beginGroup("api-keys");
     //....
-    Config::settings().setValue("bing", ui->lineEditBing->text());
-    Config::settings().setValue("censys_id", ui->lineEditCensysId->text());
-    Config::settings().setValue("censys_secret", ui->lineEditCensysSecret->text());
-    Config::settings().setValue("certspotter", ui->lineEditCertspotter->text());
-    Config::settings().setValue("cloudflare", ui->lineEditCloudflare->text());
-    Config::settings().setValue("github", ui->lineEditGithub->text());
-    Config::settings().setValue("google", ui->lineEditGoogle->text());
-    Config::settings().setValue("hunter", ui->lineEditHunter->text());
-    Config::settings().setValue("huntersearch", ui->lineEditHunter->text());
-    Config::settings().setValue("intelx", ui->lineEditIntelX->text());
-    Config::settings().setValue("pentesttools", ui->lineEditPentestTools->text());
-    Config::settings().setValue("projectdiscovery", ui->lineEditProjectDiscovery->text());
-    Config::settings().setValue("riskiq_key", ui->lineEditRiskIqKey->text());
-    Config::settings().setValue("riskiq_username", ui->lineEditRiskIqUsername->text());
-    Config::settings().setValue("securitytrails", ui->lineEditSecurityTrails->text());
-    Config::settings().setValue("shodan", ui->lineEditShodan->text());
-    Config::settings().setValue("spyse", ui->lineEditSpyse->text());
-    Config::settings().setValue("virustotalapi", ui->lineEditVirusTotal->text());
+    Config::generalConfig().setValue("bing", ui->lineEditBing->text());
+    Config::generalConfig().setValue("censys_id", ui->lineEditCensysId->text());
+    Config::generalConfig().setValue("censys_secret", ui->lineEditCensysSecret->text());
+    Config::generalConfig().setValue("certspotter", ui->lineEditCertspotter->text());
+    Config::generalConfig().setValue("cloudflare", ui->lineEditCloudflare->text());
+    Config::generalConfig().setValue("github", ui->lineEditGithub->text());
+    Config::generalConfig().setValue("google", ui->lineEditGoogle->text());
+    Config::generalConfig().setValue("hunter", ui->lineEditHunter->text());
+    Config::generalConfig().setValue("huntersearch", ui->lineEditHunter->text());
+    Config::generalConfig().setValue("intelx", ui->lineEditIntelX->text());
+    Config::generalConfig().setValue("pentesttools", ui->lineEditPentestTools->text());
+    Config::generalConfig().setValue("projectdiscovery", ui->lineEditProjectDiscovery->text());
+    Config::generalConfig().setValue("riskiq_key", ui->lineEditRiskIqKey->text());
+    Config::generalConfig().setValue("riskiq_username", ui->lineEditRiskIqUsername->text());
+    Config::generalConfig().setValue("securitytrails", ui->lineEditSecurityTrails->text());
+    Config::generalConfig().setValue("shodan", ui->lineEditShodan->text());
+    Config::generalConfig().setValue("spyse", ui->lineEditSpyse->text());
+    Config::generalConfig().setValue("virustotalapi", ui->lineEditVirusTotal->text());
     //...
-    Config::settings().endGroup();
+    Config::generalConfig().endGroup();
     accept();
 }
 
@@ -54,100 +54,100 @@ void ApiKeysDialog::on_buttonCancel_clicked(){
 
 void ApiKeysDialog::loadApiKeys(){
     QString key;
-    Config::settings().beginGroup("api-keys");
+    Config::generalConfig().beginGroup("api-keys");
     ///
     /// loading the keys....
     ///
-    key= Config::settings().value("bing").toString();
+    key= Config::generalConfig().value("bing").toString();
     if(!key.isEmpty()){
         ui->lineEditBing->setText(key);
         ui->buttonGetBing->hide();
     }
-    key = Config::settings().value("censys_id").toString();
+    key = Config::generalConfig().value("censys_id").toString();
     if(!key.isEmpty()){
         ui->lineEditCensysId->setText(key);
         ui->buttonGetCensys->hide();
     }
-    key = Config::settings().value("censys_secret").toString();
+    key = Config::generalConfig().value("censys_secret").toString();
     if(!key.isEmpty()){
         ui->lineEditCensysSecret->setText(key);
         ui->buttonGetCensys->hide();
     }
-    key = Config::settings().value("certspotter").toString();
+    key = Config::generalConfig().value("certspotter").toString();
     if(!key.isEmpty()){
         ui->lineEditCertspotter->setText(key);
         ui->buttonGetCertspotter->hide();
     }
-    key = Config::settings().value("cloudflare").toString();
+    key = Config::generalConfig().value("cloudflare").toString();
     if(!key.isEmpty()){
         ui->lineEditCloudflare->setText(key);
         ui->buttonGetCloudflare->hide();
     }
-    key = Config::settings().value("github").toString();
+    key = Config::generalConfig().value("github").toString();
     if(!key.isEmpty()){
         ui->lineEditGithub->setText(key);
         ui->buttonGetGithub->hide();
     }
-    key = Config::settings().value("google").toString();
+    key = Config::generalConfig().value("google").toString();
     if(!key.isEmpty()){
         ui->lineEditGoogle->setText(key);
         ui->buttonGetGoogle->hide();
     }
-    key = Config::settings().value("hunter").toString();
+    key = Config::generalConfig().value("hunter").toString();
     if(!key.isEmpty()){
         ui->lineEditHunter->setText(key);
         ui->buttonGetHunter->hide();
     }
-    key = Config::settings().value("huntersearch").toString();
+    key = Config::generalConfig().value("huntersearch").toString();
     if(!key.isEmpty()){
         ui->lineEditHunter->setText(key);
         ui->buttonGetHunter->hide();
     }
-    key = Config::settings().value("intelx").toString();
+    key = Config::generalConfig().value("intelx").toString();
     if(!key.isEmpty()){
         ui->lineEditIntelX->setText(key);
         ui->buttonGetIntelX->hide();
     }
-    key = Config::settings().value("pentesttools").toString();
+    key = Config::generalConfig().value("pentesttools").toString();
     if(!key.isEmpty()){
         ui->lineEditPentestTools->setText(key);
         ui->buttonGetPentestTools->hide();
     }
-    key = Config::settings().value("projectdiscovery").toString();
+    key = Config::generalConfig().value("projectdiscovery").toString();
     if(!key.isEmpty()){
         ui->lineEditProjectDiscovery->setText(key);
         ui->buttonGetProjectDiscovery->hide();
     }
-    key = Config::settings().value("riskiq_key").toString();
+    key = Config::generalConfig().value("riskiq_key").toString();
     if(!key.isEmpty()){
         ui->lineEditRiskIqKey->setText(key);
     }
-    key = Config::settings().value("riskiq_username").toString();
+    key = Config::generalConfig().value("riskiq_username").toString();
     if(!key.isEmpty()){
         ui->lineEditRiskIqUsername->setText(key);
         ui->buttonGetRiskIq->hide();
     }
-    key = Config::settings().value("securitytrails").toString();
+    key = Config::generalConfig().value("securitytrails").toString();
     if(!key.isEmpty()){
         ui->lineEditSecurityTrails->setText(key);
         ui->buttonGetSecurityTrails->hide();
     }
-    key = Config::settings().value("shodan").toString();
+    key = Config::generalConfig().value("shodan").toString();
     if(!key.isEmpty()){
         ui->lineEditShodan->setText(key);
         ui->buttonGetShodan->hide();
     }
-    key = Config::settings().value("spyse").toString();
+    key = Config::generalConfig().value("spyse").toString();
     if(!key.isEmpty()){
         ui->lineEditSpyse->setText(key);
         ui->buttonGetSpyse->hide();
     }
-    key = Config::settings().value("virustotalapi").toString();
+    key = Config::generalConfig().value("virustotalapi").toString();
     if(!key.isEmpty()){
         ui->lineEditVirusTotal->setText(key);
         ui->buttonGetVirusTotal->hide();
     }
-    Config::settings().endGroup();
+    Config::generalConfig().endGroup();
 }
 
 

@@ -2,7 +2,7 @@
 #define ACTIVE_H
 
 #include "src/engines/Base.h"
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "ActiveScanner.h"
 
 namespace Ui {

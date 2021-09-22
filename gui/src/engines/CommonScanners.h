@@ -1,7 +1,7 @@
 #ifndef BASESCANNERS_H
 #define BASESCANNERS_H
 
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "src/engines/brute/BruteScanner.h"
 
 /***************************************************************************************

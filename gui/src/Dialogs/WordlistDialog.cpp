@@ -1,7 +1,7 @@
 #include "WordlistDialog.h"
 #include "ui_WordlistDialog.h"
 //...
-#include "src/Config.h"
+#include "src/utils/Config.h"
 
 
 /*
@@ -45,31 +45,31 @@ void WordListDialog::loadWordlists(){
     ///
     /// loading the worldists to the comboBox...
     ///
-    Config::settings().beginGroup(m_defaultWordlist);
-    keys = Config::settings().allKeys();
+    Config::generalConfig().beginGroup(m_defaultWordlist);
+    keys = Config::generalConfig().allKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxDefaultWordlist->addItem(keys.at(i));
-    Config::settings().endGroup();
+    Config::generalConfig().endGroup();
     //...
-    Config::settings().beginGroup(m_specialWordlist);
-    keys = Config::settings().allKeys();
+    Config::generalConfig().beginGroup(m_specialWordlist);
+    keys = Config::generalConfig().allKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxSpecialWordlist->addItem(keys.at(i));
-    Config::settings().endGroup();
+    Config::generalConfig().endGroup();
 }
 
 void WordListDialog::on_buttonOk_clicked(){
     QString choosenWordlistfFile;
     if(ui->radioButtonDefaultWordlist->isChecked()){
-        Config::settings().beginGroup(m_defaultWordlist);
-        choosenWordlistfFile = QDir::currentPath()+Config::settings().value(ui->comboBoxDefaultWordlist->currentText()).toString();
-        Config::settings().endGroup();
+        Config::generalConfig().beginGroup(m_defaultWordlist);
+        choosenWordlistfFile = QDir::currentPath()+Config::generalConfig().value(ui->comboBoxDefaultWordlist->currentText()).toString();
+        Config::generalConfig().endGroup();
         emit choosenWordlist(choosenWordlistfFile);
     }
     if(ui->radioButtonSpecialWordlist->isChecked()){
-        Config::settings().beginGroup(m_specialWordlist);
-        choosenWordlistfFile = QDir::currentPath()+Config::settings().value(ui->comboBoxSpecialWordlist->currentText()).toString();
-        Config::settings().endGroup();
+        Config::generalConfig().beginGroup(m_specialWordlist);
+        choosenWordlistfFile = QDir::currentPath()+Config::generalConfig().value(ui->comboBoxSpecialWordlist->currentText()).toString();
+        Config::generalConfig().endGroup();
         emit choosenWordlist(choosenWordlistfFile);
     }
     accept();
@@ -102,9 +102,9 @@ void WordListDialog::on_buttonCreate_clicked(){
     ///
     /// saving the name of the new special wordlist profile...
     ///
-    Config::settings().beginGroup(m_specialWordlist);
-    Config::settings().setValue(name, filePath);
-    Config::settings().endGroup();
+    Config::generalConfig().beginGroup(m_specialWordlist);
+    Config::generalConfig().setValue(name, filePath);
+    Config::generalConfig().endGroup();
     ui->comboBoxSpecialWordlist->addItem(name);
     ui->lineEditName->clear();
 }

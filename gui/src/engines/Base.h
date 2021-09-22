@@ -1,7 +1,7 @@
 #ifndef BASECLASS_H
 #define BASECLASS_H
 
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "ContextMenu.h"
 #include "src/widgets/InputWidget.h"
 

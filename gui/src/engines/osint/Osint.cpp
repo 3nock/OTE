@@ -1,30 +1,32 @@
 #include "Osint.h"
 #include "ui_Osint.h"
 //...
-#include "src/Config.h"
-#include "src/engines/osint/modules/Anubis.h"
-#include "src/engines/osint/modules/Certspotter.h"
-#include "src/engines/osint/modules/Otx.h"
-#include "src/engines/osint/modules/Sublist3r.h"
-#include "src/engines/osint/modules/Threatminer.h"
-#include "src/engines/osint/modules/Threatcrowd.h"
-#include "src/engines/osint/modules/Hackertarget.h"
-#include "src/engines/osint/modules/Dnsbufferoverun.h"
-#include "src/engines/osint/modules/Projectdiscovery.h"
-#include "src/engines/osint/modules/Spyse.h"
-#include "src/engines/osint/modules/Crtsh.h"
-#include "src/engines/osint/modules/Dnsdumpster.h"
-#include "src/engines/osint/modules/Netcraft.h"
-#include "src/engines/osint/modules/Suip.h"
-#include "src/engines/osint/modules/Pkey.h"
-#include "src/engines/osint/modules/Rapiddns.h"
-#include "src/engines/osint/modules/GoogleCert.h"
-#include "src/engines/osint/modules/Omnisint.h"
-#include "src/engines/osint/modules/Qwant.h"
-#include "src/engines/osint/modules/VirusTotal.h"
-#include "src/engines/osint/modules/Urlscan.h"
-#include "src/engines/osint/modules/Waybackmachine.h"
-#include "src/engines/osint/modules/ArchiveToday.h"
+#include "src/utils/Config.h"
+#include "src/dialogs/OsintConfigDialog.h"
+//...
+#include "src/engines/osint/modules/api/Anubis.h"
+#include "src/engines/osint/modules/api/Otx.h"
+#include "src/engines/osint/modules/api/Sublist3r.h"
+#include "src/engines/osint/modules/api/Threatminer.h"
+#include "src/engines/osint/modules/api/Threatcrowd.h"
+#include "src/engines/osint/modules/api/Hackertarget.h"
+#include "src/engines/osint/modules/api/Dnsbufferoverun.h"
+#include "src/engines/osint/modules/api/Projectdiscovery.h"
+#include "src/engines/osint/modules/api/Spyse.h"
+#include "src/engines/osint/modules/api/Omnisint.h"
+#include "src/engines/osint/modules/api/Qwant.h"
+#include "src/engines/osint/modules/api/VirusTotal.h"
+#include "src/engines/osint/modules/api/Urlscan.h"
+#include "src/engines/osint/modules/archive/Waybackmachine.h"
+#include "src/engines/osint/modules/archive/ArchiveToday.h"
+#include "src/engines/osint/modules/site/Dnsdumpster.h"
+#include "src/engines/osint/modules/site/Netcraft.h"
+#include "src/engines/osint/modules/site/Suip.h"
+#include "src/engines/osint/modules/site/Pkey.h"
+#include "src/engines/osint/modules/site/Rapiddns.h"
+#include "src/engines/osint/modules/cert/Crtsh.h"
+#include "src/engines/osint/modules/cert/GoogleCert.h"
+#include "src/engines/osint/modules/cert/Certspotter.h"
 
 #define TRUE "1"
 #define FALSE "0"
@@ -37,6 +39,10 @@
  * pkey.in
  * https://skrapp.io/api
  * https://hunter.io/bulk-finders
+ *
+ * rename AbstractOsintModule to AbstractOsintModule
+ *
+ * create a json to QStandardItem Tree...
  *
  * you can crawl the enumerated urls all eg from archives
  * and return only the status codes of each url and show a graph
@@ -550,22 +556,21 @@ void Osint::on_buttonKeys_clicked(){
     apiKeysDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     apiKeysDialog->show();
 }
+
 void Osint::on_buttonConfig_clicked(){
-    /*
     OsintConfigDialog *scanConfig = new OsintConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
     scanConfig->show();
-    */
 }
 
 
 void Osint::initProfiles(){
-    int size = Config::settings().beginReadArray("Osint-Profiles");
+    int size = Config::generalConfig().beginReadArray("Osint-Profiles");
     for(int i = 0; i < size; i++){
-        Config::settings().setArrayIndex(i);
-        ui->comboBoxProfiles->addItem(Config::settings().value("value").toString());
+        Config::generalConfig().setArrayIndex(i);
+        ui->comboBoxProfiles->addItem(Config::generalConfig().value("value").toString());
     }
-    Config::settings().endArray();
+    Config::generalConfig().endArray();
 }
 
 void Osint::on_checkBoxUseProfiles_clicked(bool checked){
@@ -780,9 +785,9 @@ void Osint::on_buttonDeleteProfile_clicked(){
     ///
     /// remove the name of the profile from main config file...
     ///
-    Config::settings().beginWriteArray("Osint-Profiles");
-    Config::settings().remove(ui->comboBoxProfiles->currentText());
-    Config::settings().endArray();
+    Config::generalConfig().beginWriteArray("Osint-Profiles");
+    Config::generalConfig().remove(ui->comboBoxProfiles->currentText());
+    Config::generalConfig().endArray();
     ///
     /// remove the entire group(profile) from profiles...
     ///
@@ -807,12 +812,12 @@ void Osint::on_buttonNewProfile_clicked(){
     ui->comboBoxProfiles->addItem(profileName);
     ui->lineEditNewProfile->clear();
     //...
-    int size = Config::settings().beginReadArray("Osint-Profiles");
-    Config::settings().endArray();
-    Config::settings().beginWriteArray("Osint-Profiles");
-    Config::settings().setArrayIndex(size);
-    Config::settings().setValue("value", profileName);
-    Config::settings().endArray();
+    int size = Config::generalConfig().beginReadArray("Osint-Profiles");
+    Config::generalConfig().endArray();
+    Config::generalConfig().beginWriteArray("Osint-Profiles");
+    Config::generalConfig().setArrayIndex(size);
+    Config::generalConfig().setValue("value", profileName);
+    Config::generalConfig().endArray();
     ///
     /// saving to profiles...
     ///

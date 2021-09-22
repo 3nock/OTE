@@ -3,8 +3,8 @@
 
 #include <QMenu>
 #include <QAction>
-#include "src/utils.h"
-#include "AbstractClass.h"
+#include "src/utils/utils.h"
+#include "AbstractEngine.h"
 
 enum CHOICE{
     susbdomains = 0,
@@ -22,7 +22,12 @@ enum CHOICE{
     AAAA = 10
 };
 
-class ContextMenu : public AbstractClass{
+/*
+ * instead of sendResultsToActive be more specific
+ * eg sendSubdomainsToActive
+ */
+
+class ContextMenu : public AbstractEngine{
         Q_OBJECT
 
     public:

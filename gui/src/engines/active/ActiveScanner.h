@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <QTcpSocket>
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "src/dialogs/ConfigDialog.h"
 
 

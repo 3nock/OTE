@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QThread>
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include <QLabel>
 
 enum OPTION{

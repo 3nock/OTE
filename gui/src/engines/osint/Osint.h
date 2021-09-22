@@ -1,7 +1,7 @@
 #ifndef OSINT_H
 #define OSINT_H
 
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "src/engines/Base.h"
 #include "OsintScanner.h"
 #include "src/dialogs/ApiKeysDialog.h"

@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QSettings>
 //...
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "src/project/Project.h"
 #include "src/engines/ip/Ip.h"
 #include "src/engines/dns/DnsRecords.h"

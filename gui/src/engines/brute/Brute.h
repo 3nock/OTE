@@ -1,7 +1,7 @@
 #ifndef BRUTE_H
 #define BRUTE_H
 
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "src/engines/Base.h"
 #include "src/engines/CommonScanners.h"
 #include "BruteScanner.h"

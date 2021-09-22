@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QDnsLookup>
-#include "src/utils.h"
+#include "src/utils/utils.h"
 
 namespace Ui {
     class ConfigDialog;

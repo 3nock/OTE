@@ -1,5 +1,10 @@
 #include "ProjectDataModel.h"
 
+/*
+ * group the results into active and passive...
+ * if passive becomes active it is placed on the active
+ */
+
 ProjectDataModel::ProjectDataModel():
     projectModel(new QStandardItemModel),
     //...

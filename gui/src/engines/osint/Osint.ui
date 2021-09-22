@@ -821,7 +821,7 @@
                 <enum>QFrame::Raised</enum>
                </property>
                <property name="text">
-                <string>Don't Require API keys</string>
+                <string>Free Osint Engines</string>
                </property>
               </widget>
              </item>
@@ -858,7 +858,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-466</y>
+                  <y>0</y>
                   <width>184</width>
                   <height>776</height>
                  </rect>
@@ -1159,7 +1159,7 @@
                 <enum>QFrame::Raised</enum>
                </property>
                <property name="text">
-                <string>Require API keys</string>
+                <string>Paid Osint Engines</string>
                </property>
               </widget>
              </item>

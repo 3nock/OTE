@@ -1,7 +1,7 @@
 #ifndef IP_H
 #define IP_H
 
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "src/engines/Base.h"
 #include "IpScanner.h"
 #include "src/dialogs/ConfigDialog.h"

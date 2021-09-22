@@ -7,7 +7,7 @@
 #include <QUrl>
 
 ContextMenu::ContextMenu(ENGINE engineName, ResultsModel *resultsModel, QWidget *parent)
-    : AbstractClass(engineName, resultsModel, parent)
+    : AbstractEngine(engineName, resultsModel, parent)
 {
     initMenuC();
     initMenuA();

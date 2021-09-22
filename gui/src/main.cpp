@@ -1,5 +1,5 @@
 #include "MainWindow.h"
-#include "src/Config.h"
+#include "src/utils/Config.h"
 #include <QApplication>
 #include <QDesktopWidget>
 
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     ///
     /// setting configurations...
     ///
-    Config::settings();
+    Config::generalConfig();
     ///
     /// starting the app...
     ///

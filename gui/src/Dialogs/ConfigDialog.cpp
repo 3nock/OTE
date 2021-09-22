@@ -1,7 +1,7 @@
 #include "ConfigDialog.h"
 #include "ui_ConfigDialog.h"
 //...
-#include "src/Config.h"
+#include "src/utils/Config.h"
 
 
 /*
@@ -41,38 +41,38 @@ void ConfigDialog::loadConfigValues(){
     ///
     /// getting custom nameservers...
     ///
-    int size = Config::settings().beginReadArray("Custom-Nameservers");
+    int size = Config::generalConfig().beginReadArray("Custom-Nameservers");
     for(int i = 0; i < size; i++){
-        Config::settings().setArrayIndex(i);
-        ui->customNameservers->add(Config::settings().value("value").toString());
+        Config::generalConfig().setArrayIndex(i);
+        ui->customNameservers->add(Config::generalConfig().value("value").toString());
     }
-    Config::settings().endArray();
+    Config::generalConfig().endArray();
     ///
     /// other specific configurations...
     ///
-    Config::settings().beginGroup(m_scanConfig->name);
-    ui->lineEditThreads->setText(Config::settings().value("threads").toString());
-    ui->lineEditTimeout->setText(Config::settings().value("timeout").toString());
-    Config::settings().endGroup();
+    Config::generalConfig().beginGroup(m_scanConfig->name);
+    ui->lineEditThreads->setText(Config::generalConfig().value("threads").toString());
+    ui->lineEditTimeout->setText(Config::generalConfig().value("timeout").toString());
+    Config::generalConfig().endGroup();
 }
 
 void ConfigDialog::saveConfigValues(){
     ///
     /// saving the custom nameservers...
     ///
-    Config::settings().beginWriteArray("Custom-Nameservers");
+    Config::generalConfig().beginWriteArray("Custom-Nameservers");
     for(int i = 0; i < ui->customNameservers->listWidget->count(); i++){
-        Config::settings().setArrayIndex(i);
-        Config::settings().setValue("value", ui->customNameservers->listWidget->item(i)->text());
+        Config::generalConfig().setArrayIndex(i);
+        Config::generalConfig().setValue("value", ui->customNameservers->listWidget->item(i)->text());
     }
-    Config::settings().endArray();
+    Config::generalConfig().endArray();
     ///
     /// saving the custom nameservers...
     ///
-    Config::settings().beginGroup(m_scanConfig->name);
-    Config::settings().setValue("threads", ui->lineEditThreads->text());
-    Config::settings().setValue("timeout", ui->lineEditTimeout->text());
-    Config::settings().endGroup();
+    Config::generalConfig().beginGroup(m_scanConfig->name);
+    Config::generalConfig().setValue("threads", ui->lineEditThreads->text());
+    Config::generalConfig().setValue("timeout", ui->lineEditTimeout->text());
+    Config::generalConfig().endGroup();
 }
 
 void ConfigDialog::on_buttonOk_clicked(){

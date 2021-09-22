@@ -2,7 +2,7 @@
 #define PROJECT_H
 
 #include <QSortFilterProxyModel>
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "general/GeneralAnalysis.h"
 #include "specific/SpecificAnalysis.h"
 

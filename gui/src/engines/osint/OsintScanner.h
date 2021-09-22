@@ -1,7 +1,7 @@
 #ifndef OSINTENUMERATOR_H
 #define OSINTENUMERATOR_H
 
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include <QObject>
 #include <QThread>
 #include <QLabel>

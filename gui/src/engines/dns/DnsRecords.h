@@ -1,7 +1,7 @@
 #ifndef DNSRECORDS_H
 #define DNSRECORDS_H
 
-#include "src/utils.h"
+#include "src/utils/utils.h"
 #include "src/engines/Base.h"
 #include "DnsRecordsScanner.h"
 
