@@ -43,6 +43,8 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("shodan", ui->lineEditShodan->text());
     Config::generalConfig().setValue("spyse", ui->lineEditSpyse->text());
     Config::generalConfig().setValue("virustotalapi", ui->lineEditVirusTotal->text());
+    Config::generalConfig().setValue("binaryedge", ui->lineEditBinaryEdge->text());
+    Config::generalConfig().setValue("c99", ui->lineEditC99->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -147,6 +149,16 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditVirusTotal->setText(key);
         ui->buttonGetVirusTotal->hide();
     }
+    key = Config::generalConfig().value("binaryedge").toString();
+    if(!key.isEmpty()){
+        ui->lineEditBinaryEdge->setText(key);
+        ui->buttonGetBinaryEdge->hide();
+    }
+    key = Config::generalConfig().value("c99").toString();
+    if(!key.isEmpty()){
+        ui->lineEditC99->setText(key);
+        ui->buttonGetC99->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -209,4 +221,12 @@ void ApiKeysDialog::on_buttonGetPentestTools_clicked(){
 
 void ApiKeysDialog::on_buttonGetProjectDiscovery_clicked(){
     QDesktopServices::openUrl(QUrl("https://chaos.projectdiscovery.io/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetBinaryEdge_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.binaryedge.io/pricing.html", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetC99_clicked(){
+    QDesktopServices::openUrl(QUrl("http://api.c99.nl/dashboard/shop", QUrl::TolerantMode));
 }

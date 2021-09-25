@@ -4,6 +4,10 @@
 #include "src/utils/Config.h"
 #include "src/dialogs/OsintConfigDialog.h"
 //...
+#include "src/engines/osint/modules/api/CommonCrawl.h"
+#include "src/engines/osint/modules/api/C99.h"
+#include "src/engines/osint/modules/api/BinaryEdge.h"
+#include "src/engines/osint/modules/api/Bgpview.h"
 #include "src/engines/osint/modules/api/Anubis.h"
 #include "src/engines/osint/modules/api/Otx.h"
 #include "src/engines/osint/modules/api/Sublist3r.h"
@@ -19,6 +23,7 @@
 #include "src/engines/osint/modules/api/Urlscan.h"
 #include "src/engines/osint/modules/archive/Waybackmachine.h"
 #include "src/engines/osint/modules/archive/ArchiveToday.h"
+#include "src/engines/osint/modules/archive/ArchiveIt.h"
 #include "src/engines/osint/modules/site/Dnsdumpster.h"
 #include "src/engines/osint/modules/site/Netcraft.h"
 #include "src/engines/osint/modules/site/Suip.h"
@@ -27,6 +32,7 @@
 #include "src/engines/osint/modules/cert/Crtsh.h"
 #include "src/engines/osint/modules/cert/GoogleCert.h"
 #include "src/engines/osint/modules/cert/Certspotter.h"
+#include "src/engines/osint/modules/cert/CensysFree.h"
 
 #define TRUE "1"
 #define FALSE "0"
@@ -492,6 +498,90 @@ void Osint::startScan(){
         connect(archivetoday, &ArchiveToday::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, archivetoday, &ArchiveToday::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_archiveit->isChecked()){
+        ArchiveIt *archiveit = new ArchiveIt(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        archiveit->Enumerator(cThread);
+        archiveit->moveToThread(cThread);
+        //...
+        connect(archiveit, &ArchiveIt::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, archiveit, &ArchiveIt::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_censysFree->isChecked()){
+        CensysFree *censysfree = new CensysFree(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        censysfree->Enumerator(cThread);
+        censysfree->moveToThread(cThread);
+        //...
+        connect(censysfree, &CensysFree::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, censysfree, &CensysFree::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_bgpview->isChecked()){
+        Bgpview *bgpview = new Bgpview(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        bgpview->Enumerator(cThread);
+        bgpview->moveToThread(cThread);
+        //...
+        connect(bgpview, &Bgpview::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_binaryEdge->isChecked()){
+        BinaryEdge *binaryedge = new BinaryEdge(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        binaryedge->Enumerator(cThread);
+        binaryedge->moveToThread(cThread);
+        //...
+        connect(binaryedge, &BinaryEdge::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, binaryedge, &BinaryEdge::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_c99->isChecked()){
+        C99 *c99 = new C99(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        c99->Enumerator(cThread);
+        c99->moveToThread(cThread);
+        //...
+        connect(c99, &C99::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, c99, &C99::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_commonCrawl->isChecked()){
+        CommonCrawl *commonCrawl = new CommonCrawl(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        commonCrawl->Enumerator(cThread);
+        commonCrawl->moveToThread(cThread);
+        //...
+        connect(commonCrawl, &CommonCrawl::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, commonCrawl, &CommonCrawl::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

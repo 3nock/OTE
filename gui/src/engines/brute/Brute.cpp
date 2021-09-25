@@ -2,6 +2,12 @@
 #include "ui_Brute.h"
 
 /*
+ * homoglyphs - in wordlist creation...
+ * many sites are created from homoglyphs of existing ones
+ * eg example.com ==> exannple.com, exampl3.com, exqmple.com, exampls.com, exampke.com
+ *
+ * rename native.qss to stylesheet.qss
+ *
  *have a tab to put all info/issue definitions,eg asn numbers and their respective
  * owner, ip's and their respective owners...
  *

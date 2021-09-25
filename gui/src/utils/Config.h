@@ -8,6 +8,15 @@
  * settings for all engines
  */
 
+/*
+ *
+ * TODO: create a list of MARCOS that contain the configuration names...
+ *       eg #define CONFIG_OSINT_APIKEYS "api-keys"
+ *          #define CONFIG_GENERAL_APIKEYS "api-keys"
+ *          #define CONFIG_BRUTE_APIKEYS "api-keys"
+ *          #define CONFIG_PROJECT_APIKEYS "api-keys"
+ *
+ */
 class Config {
 
     public:

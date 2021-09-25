@@ -5,6 +5,8 @@
 #include <QJsonParseError>
 
 /*
+ * free for 100 queries an hour - keep track
+ *
  GET https://api.certspotter.com/v1/issuances?domain=example.com&expand=dns_names&expand=issuer&expand=cert
 [
     {

@@ -28,6 +28,11 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/engines/osint/modules/api/Bgpview.cpp \
+    src/engines/osint/modules/api/BinaryEdge.cpp \
+    src/engines/osint/modules/api/C99.cpp \
+    src/engines/osint/modules/api/Circl.cpp \
+    src/engines/osint/modules/api/CommonCrawl.cpp \
     src/engines/osint/modules/archive/ArchiveIt.cpp \
     src/engines/osint/modules/archive/ArchiveToday.cpp \
     src/engines/osint/modules/archive/Waybackmachine.cpp \
@@ -47,6 +52,7 @@ SOURCES += \
     src/engines/osint/modules/cert/Certspotter.cpp \
     src/engines/osint/modules/cert/Crtsh.cpp \
     src/engines/osint/modules/cert/GoogleCert.cpp \
+    src/engines/osint/modules/cert/CensysFree.cpp \
     src/engines/osint/modules/site/Dnsdumpster.cpp \
     src/engines/osint/modules/site/Netcraft.cpp \
     src/engines/osint/modules/site/Pkey.cpp \
@@ -69,6 +75,7 @@ SOURCES += \
     src/project/specific/SpecificAnalysis.cpp \
     src/project/ProjectDataModel.cpp \
     src/project/Project.cpp \
+    src/utils/JsonToTree.cpp \
     src/widgets/InputWidget.cpp \
     src/widgets/ResultsWidget.cpp \
     src/dialogs/ConfigDialog.cpp \
@@ -82,6 +89,11 @@ SOURCES += \
     src/main.cpp \
 
 HEADERS += \
+    src/engines/osint/modules/api/Bgpview.h \
+    src/engines/osint/modules/api/BinaryEdge.h \
+    src/engines/osint/modules/api/C99.h \
+    src/engines/osint/modules/api/Circl.h \
+    src/engines/osint/modules/api/CommonCrawl.h \
     src/engines/osint/modules/archive/ArchiveIt.h \
     src/engines/osint/modules/archive/ArchiveToday.h \
     src/engines/osint/modules/archive/Waybackmachine.h \
@@ -101,6 +113,7 @@ HEADERS += \
     src/engines/osint/modules/cert/Certspotter.h \
     src/engines/osint/modules/cert/Crtsh.h \
     src/engines/osint/modules/cert/GoogleCert.h \
+    src/engines/osint/modules/cert/CensysFree.h \
     src/engines/osint/modules/site/Dnsdumpster.h \
     src/engines/osint/modules/site/Netcraft.h \
     src/engines/osint/modules/site/Pkey.h \
@@ -125,6 +138,7 @@ HEADERS += \
     src/project/specific/SpecificAnalysis.h \
     src/project/ProjectDataModel.h \
     src/project/Project.h \
+    src/utils/JsonToTree.h \
     src/widgets/InputWidget.h \
     src/widgets/ResultsWidget.h \
     src/dialogs/ApiKeysDialog.h \

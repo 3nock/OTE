@@ -860,7 +860,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>184</width>
-                  <height>776</height>
+                  <height>845</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -881,6 +881,13 @@
                   <widget class="QCheckBox" name="checkBox_engine_crtsh">
                    <property name="text">
                     <string>Crtsh</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_censysFree">
+                   <property name="text">
+                    <string>Censys</string>
                    </property>
                   </widget>
                  </item>
@@ -909,6 +916,20 @@
                   <widget class="QCheckBox" name="checkBox_engine_anubis">
                    <property name="text">
                     <string>Anubis</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_bgpview">
+                   <property name="text">
+                    <string>Bgpview</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_commonCrawl">
+                   <property name="text">
+                    <string>CommonCrawl</string>
                    </property>
                   </widget>
                  </item>
@@ -1194,8 +1215,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>201</width>
-                  <height>310</height>
+                  <width>184</width>
+                  <height>332</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1205,6 +1226,20 @@
                  <property name="bottomMargin">
                   <number>5</number>
                  </property>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_binaryEdge">
+                   <property name="text">
+                    <string>BinaryEdge</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_c99">
+                   <property name="text">
+                    <string>C99</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QCheckBox" name="checkBox_engine_spyse">
                    <property name="text">

@@ -24,17 +24,23 @@ void Projectdiscovery::start(){
 }
 
 void Projectdiscovery::replyFinished(QNetworkReply *reply){
-    if(reply->error())
-    {
-        // an error occured...
-    }
-    else
+    if(reply->error() == QNetworkReply::NoError)
     {
         QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
         QJsonObject jsonObject = jsonReply.object();
-        QJsonArray subdomainList = jsonObject["subdomains"].toArray();
-        foreach(const QJsonValue &value, subdomainList)
-            emit scanResults(value.toString());
+        QString error = jsonObject["error"].toString();
+        if(error.isNull() || error.isEmpty()){
+            QJsonArray subdomainList = jsonObject["subdomains"].toArray();
+            foreach(const QJsonValue &value, subdomainList)
+                emit scanResults(value.toString());
+        }
+        else{
+            emit scanResults(error);
+        }
+    }
+    else
+    {
+        emit scanResults(reply->errorString());
     }
     reply->deleteLater();
     emit quitThread();

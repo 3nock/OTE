@@ -5,6 +5,11 @@
 #include <QMessageBox>
 #include <QFile>
 
+/*
+ * produce transforms-like graphs
+ * that can fetch more data/info by clicking on the node..
+ *
+ */
 Project::Project(QWidget *parent, ResultsModel *resultsModel) :QWidget(parent), ui(new Ui::Project),
     m_resultsModel(resultsModel),
     m_proxyModel(new QSortFilterProxyModel)

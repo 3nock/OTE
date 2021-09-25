@@ -35,8 +35,11 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetRiskIq_clicked();
         void on_buttonGetPentestTools_clicked();
         void on_buttonGetProjectDiscovery_clicked();
+        void on_buttonGetBinaryEdge_clicked();
 
-    private:
+        void on_buttonGetC99_clicked();
+
+private:
         Ui::ApiKeysDialog *ui;
         //...
         void loadApiKeys();
