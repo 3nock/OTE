@@ -4,6 +4,14 @@
 #include "src/utils/Config.h"
 #include "src/dialogs/OsintConfigDialog.h"
 //...
+#include "src/engines/osint/modules/api/Shodan.h"
+#include "src/engines/osint/modules/api/SecurityTrails.h"
+#include "src/engines/osint/modules/api/Robtex.h"
+#include "src/engines/osint/modules/api/RiskIq.h"
+#include "src/engines/osint/modules/api/Mnemonic.h"
+#include "src/engines/osint/modules/api/IpInfo.h"
+#include "src/engines/osint/modules/api/HunterSearch.h"
+#include "src/engines/osint/modules/api/Github.h"
 #include "src/engines/osint/modules/api/CommonCrawl.h"
 #include "src/engines/osint/modules/api/C99.h"
 #include "src/engines/osint/modules/api/BinaryEdge.h"
@@ -582,6 +590,118 @@ void Osint::startScan(){
         connect(commonCrawl, &CommonCrawl::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, commonCrawl, &CommonCrawl::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_github->isChecked()){
+        Github *github = new Github(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        github->Enumerator(cThread);
+        github->moveToThread(cThread);
+        //...
+        connect(github, &Github::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, github, &Github::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_huntersearch->isChecked()){
+        HunterSearch *huntersearch = new HunterSearch(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        huntersearch->Enumerator(cThread);
+        huntersearch->moveToThread(cThread);
+        //...
+        connect(huntersearch, &HunterSearch::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, huntersearch, &HunterSearch::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_ipInfo->isChecked()){
+        IpInfo *ipinfo = new IpInfo(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        ipinfo->Enumerator(cThread);
+        ipinfo->moveToThread(cThread);
+        //...
+        connect(ipinfo, &IpInfo::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_mnemonic->isChecked()){
+        Mnemonic *mnemonic = new Mnemonic(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        mnemonic->Enumerator(cThread);
+        mnemonic->moveToThread(cThread);
+        //...
+        connect(mnemonic, &Mnemonic::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, mnemonic, &Mnemonic::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_riskIq->isChecked()){
+        RiskIq *riskiq = new RiskIq(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        riskiq->Enumerator(cThread);
+        riskiq->moveToThread(cThread);
+        //...
+        connect(riskiq, &RiskIq::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, riskiq, &RiskIq::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_robtex->isChecked()){
+        Robtex *robtex = new Robtex(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        robtex->Enumerator(cThread);
+        robtex->moveToThread(cThread);
+        //...
+        connect(robtex, &Robtex::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, robtex, &Robtex::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_securitytrails->isChecked()){
+        SecurityTrails *securitytrails = new SecurityTrails(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        securitytrails->Enumerator(cThread);
+        securitytrails->moveToThread(cThread);
+        //...
+        connect(securitytrails, &SecurityTrails::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, securitytrails, &SecurityTrails::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_shodan->isChecked()){
+        Shodan *shodan = new Shodan(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        shodan->Enumerator(cThread);
+        shodan->moveToThread(cThread);
+        //...
+        connect(shodan, &Shodan::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, shodan, &Shodan::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

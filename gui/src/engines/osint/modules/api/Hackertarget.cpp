@@ -1,6 +1,10 @@
 #include "Hackertarget.h"
 
-
+/*
+ *  also asn lookup...
+ *      https://api.hackertarget.com/aslookup/?q=1.1.1.1
+ *
+ */
 Hackertarget::Hackertarget(QString _target, QObject *parent):
     AbstractOsintModule(parent)
 {

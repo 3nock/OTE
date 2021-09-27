@@ -39,6 +39,8 @@ class ApiKeysDialog : public QDialog{
 
         void on_buttonGetC99_clicked();
 
+        void on_buttonGetIpInfo_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         //...

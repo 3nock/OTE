@@ -45,6 +45,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("virustotalapi", ui->lineEditVirusTotal->text());
     Config::generalConfig().setValue("binaryedge", ui->lineEditBinaryEdge->text());
     Config::generalConfig().setValue("c99", ui->lineEditC99->text());
+    Config::generalConfig().setValue("ipinfo", ui->lineEditIpInfo->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -159,6 +160,11 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditC99->setText(key);
         ui->buttonGetC99->hide();
     }
+    key = Config::generalConfig().value("ipinfo").toString();
+    if(!key.isEmpty()){
+        ui->lineEditIpInfo->setText(key);
+        ui->buttonGetIpInfo->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -229,4 +235,8 @@ void ApiKeysDialog::on_buttonGetBinaryEdge_clicked(){
 
 void ApiKeysDialog::on_buttonGetC99_clicked(){
     QDesktopServices::openUrl(QUrl("http://api.c99.nl/dashboard/shop", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetIpInfo_clicked(){
+    QDesktopServices::openUrl(QUrl("https://ipinfo.io/pricing", QUrl::TolerantMode));
 }

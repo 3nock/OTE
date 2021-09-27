@@ -858,9 +858,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>0</y>
-                  <width>184</width>
-                  <height>845</height>
+                  <y>-556</y>
+                  <width>185</width>
+                  <height>914</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -948,9 +948,23 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QCheckBox" name="checkBox_engine_github">
+                   <property name="text">
+                    <string>Github</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QCheckBox" name="checkBox_engine_hackertarget">
                    <property name="text">
                     <string>HackerTarget</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_mnemonic">
+                   <property name="text">
+                    <string>Mnemonic</string>
                    </property>
                   </widget>
                  </item>
@@ -982,6 +996,13 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QCheckBox" name="checkBox_engine_pkey">
+                   <property name="text">
+                    <string>pKey</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QCheckBox" name="checkBox_engine_qwant">
                    <property name="text">
                     <string>Qwant</string>
@@ -996,16 +1017,23 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="checkBox_engine_suip">
+                  <widget class="QCheckBox" name="checkBox_engine_riskIq">
                    <property name="text">
-                    <string>Suip</string>
+                    <string>RiskIq (Community)</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="checkBox_engine_pkey">
+                  <widget class="QCheckBox" name="checkBox_engine_robtex">
                    <property name="text">
-                    <string>pKey</string>
+                    <string>Robtex</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_suip">
+                   <property name="text">
+                    <string>Suip</string>
                    </property>
                   </widget>
                  </item>
@@ -1083,13 +1111,6 @@
                   <widget class="QCheckBox" name="checkBox_engine_passivedns">
                    <property name="text">
                     <string>PassiveDns</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="checkBox_engine_shodan">
-                   <property name="text">
-                    <string>Shodan</string>
                    </property>
                   </widget>
                  </item>
@@ -1215,8 +1236,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>184</width>
-                  <height>332</height>
+                  <width>185</width>
+                  <height>355</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1237,6 +1258,20 @@
                   <widget class="QCheckBox" name="checkBox_engine_c99">
                    <property name="text">
                     <string>C99</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_huntersearch">
+                   <property name="text">
+                    <string>HunterSearch</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_ipInfo">
+                   <property name="text">
+                    <string>IpInfo</string>
                    </property>
                   </widget>
                  </item>
@@ -1262,6 +1297,20 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QCheckBox" name="checkBox_engine_securitytrails">
+                   <property name="text">
+                    <string>SecurityTrails</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_shodan">
+                   <property name="text">
+                    <string>Shodan</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QCheckBox" name="checkBox_engine_bing">
                    <property name="text">
                     <string>Bing</string>
@@ -1283,23 +1332,9 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="checkBox_engine_github">
-                   <property name="text">
-                    <string>Github</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QCheckBox" name="checkBox_engine_google">
                    <property name="text">
                     <string>Google</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="checkBox_engine_huntersearch">
-                   <property name="text">
-                    <string>HunterSearch</string>
                    </property>
                   </widget>
                  </item>
@@ -1314,13 +1349,6 @@
                   <widget class="QCheckBox" name="checkBox_engine_pentesttools">
                    <property name="text">
                     <string>pentest-tools</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="checkBox_engine_securitytrails">
-                   <property name="text">
-                    <string>SecurityTrails</string>
                    </property>
                   </widget>
                  </item>

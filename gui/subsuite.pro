@@ -33,6 +33,15 @@ SOURCES += \
     src/engines/osint/modules/api/C99.cpp \
     src/engines/osint/modules/api/Circl.cpp \
     src/engines/osint/modules/api/CommonCrawl.cpp \
+    src/engines/osint/modules/api/Github.cpp \
+    src/engines/osint/modules/api/HunterSearch.cpp \
+    src/engines/osint/modules/api/IpInfo.cpp \
+    src/engines/osint/modules/api/Mnemonic.cpp \
+    src/engines/osint/modules/api/RiskIq.cpp \
+    src/engines/osint/modules/api/Robtex.cpp \
+    src/engines/osint/modules/api/SecurityTrails.cpp \
+    src/engines/osint/modules/api/Shodan.cpp \
+    src/engines/osint/modules/api/ThreatBook.cpp \
     src/engines/osint/modules/archive/ArchiveIt.cpp \
     src/engines/osint/modules/archive/ArchiveToday.cpp \
     src/engines/osint/modules/archive/Waybackmachine.cpp \
@@ -94,6 +103,15 @@ HEADERS += \
     src/engines/osint/modules/api/C99.h \
     src/engines/osint/modules/api/Circl.h \
     src/engines/osint/modules/api/CommonCrawl.h \
+    src/engines/osint/modules/api/Github.h \
+    src/engines/osint/modules/api/HunterSearch.h \
+    src/engines/osint/modules/api/IpInfo.h \
+    src/engines/osint/modules/api/Mnemonic.h \
+    src/engines/osint/modules/api/RiskIq.h \
+    src/engines/osint/modules/api/Robtex.h \
+    src/engines/osint/modules/api/SecurityTrails.h \
+    src/engines/osint/modules/api/Shodan.h \
+    src/engines/osint/modules/api/ThreatBook.h \
     src/engines/osint/modules/archive/ArchiveIt.h \
     src/engines/osint/modules/archive/ArchiveToday.h \
     src/engines/osint/modules/archive/Waybackmachine.h \
