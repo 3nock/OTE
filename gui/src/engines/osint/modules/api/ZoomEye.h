@@ -1,13 +1,13 @@
-#ifndef THREATBOOK_H
-#define THREATBOOK_H
+#ifndef ZOOMEYE_H
+#define ZOOMEYE_H
 
 #include "src/engines/osint/modules/AbstractOsintModule.h"
 
-class ThreatBook: public AbstractOsintModule{
+class ZoomEye: public AbstractOsintModule{
 
     public:
-        ThreatBook(QString target = nullptr, QObject *parent = nullptr);
-        ~ThreatBook() override;
+        ZoomEye(QString target = nullptr, QObject *parent = nullptr);
+        ~ZoomEye() override;
 
     public slots:
         void start() override;
@@ -17,4 +17,4 @@ class ThreatBook: public AbstractOsintModule{
         QString m_key = nullptr;
 };
 
-#endif // THREATBOOK_H
+#endif // ZOOMEYE_H

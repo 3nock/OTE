@@ -1,13 +1,13 @@
-#ifndef THREATBOOK_H
-#define THREATBOOK_H
+#ifndef ZETALYTICS_H
+#define ZETALYTICS_H
 
 #include "src/engines/osint/modules/AbstractOsintModule.h"
 
-class ThreatBook: public AbstractOsintModule{
+class ZETAlytics: public AbstractOsintModule{
 
     public:
-        ThreatBook(QString target = nullptr, QObject *parent = nullptr);
-        ~ThreatBook() override;
+        ZETAlytics(QString target = nullptr, QObject *parent = nullptr);
+        ~ZETAlytics() override;
 
     public slots:
         void start() override;
@@ -17,4 +17,4 @@ class ThreatBook: public AbstractOsintModule{
         QString m_key = nullptr;
 };
 
-#endif // THREATBOOK_H
+#endif // ZETALYTICS_H

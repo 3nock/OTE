@@ -4,6 +4,12 @@
 #include "src/utils/Config.h"
 #include "src/dialogs/OsintConfigDialog.h"
 //...
+#include "src/engines/osint/modules/scrape/Ask.h"
+#include "src/engines/osint/modules/api/IpApi.h"
+#include "src/engines/osint/modules/api/ZoomEye.h"
+#include "src/engines/osint/modules/api/ZETAlytics.h"
+#include "src/engines/osint/modules/api/WhoisXmlApi.h"
+#include "src/engines/osint/modules/api/ThreatBook.h"
 #include "src/engines/osint/modules/api/Shodan.h"
 #include "src/engines/osint/modules/api/SecurityTrails.h"
 #include "src/engines/osint/modules/api/Robtex.h"
@@ -93,15 +99,6 @@
  * active services eg HTTP should be boolean on the structure...
  *
  */
-
-/*
- * url = "https://api.securitytrails.com/v1/ips/list"
-querystring = {"apikey":"your_api_key_here","page":"1"}
-payload = "{\"query\":\"ptr_part = 'cloudflare.com'\"}"
-response = requests.request("POST", url, data=payload, params=querystring)
-print(response.text)
-
-*/
 
 Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     BaseClass(ENGINE::OSINT, resultsModel, status, parent),
@@ -702,6 +699,90 @@ void Osint::startScan(){
         connect(shodan, &Shodan::scanResults, this, &Osint::scanResults);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, shodan, &Shodan::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_threatBook->isChecked()){
+        ThreatBook *threatbook = new ThreatBook(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        threatbook->Enumerator(cThread);
+        threatbook->moveToThread(cThread);
+        //...
+        connect(threatbook, &ThreatBook::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, threatbook, &ThreatBook::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_whoisXmlApi->isChecked()){
+        WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        whoisxmlapi->Enumerator(cThread);
+        whoisxmlapi->moveToThread(cThread);
+        //...
+        connect(whoisxmlapi, &WhoisXmlApi::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, whoisxmlapi, &WhoisXmlApi::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_zetalytics->isChecked()){
+        ZETAlytics *zetalytics = new ZETAlytics(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        zetalytics->Enumerator(cThread);
+        zetalytics->moveToThread(cThread);
+        //...
+        connect(zetalytics, &ZETAlytics::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, zetalytics, &ZETAlytics::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_zoomeye->isChecked()){
+        ZoomEye *zoomeye = new ZoomEye(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        zoomeye->Enumerator(cThread);
+        zoomeye->moveToThread(cThread);
+        //...
+        connect(zoomeye, &ZoomEye::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, zoomeye, &ZoomEye::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_ipApi->isChecked()){
+        IpApi *ipapi = new IpApi(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        ipapi->Enumerator(cThread);
+        ipapi->moveToThread(cThread);
+        //...
+        connect(ipapi, &IpApi::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ipapi, &IpApi::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        activeThreads++;
+    }
+    if(ui->checkBox_engine_ask->isChecked()){
+        Ask *ask = new Ask(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        ask->Enumerator(cThread);
+        ask->moveToThread(cThread);
+        //...
+        connect(ask, &Ask::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ask, &Ask::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

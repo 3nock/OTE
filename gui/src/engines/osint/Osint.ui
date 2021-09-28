@@ -858,7 +858,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-556</y>
+                  <y>0</y>
                   <width>185</width>
                   <height>914</height>
                  </rect>
@@ -1237,7 +1237,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>185</width>
-                  <height>355</height>
+                  <height>470</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1265,6 +1265,13 @@
                   <widget class="QCheckBox" name="checkBox_engine_huntersearch">
                    <property name="text">
                     <string>HunterSearch</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_ipApi">
+                   <property name="text">
+                    <string>IpApi</string>
                    </property>
                   </widget>
                  </item>
@@ -1307,6 +1314,34 @@
                   <widget class="QCheckBox" name="checkBox_engine_shodan">
                    <property name="text">
                     <string>Shodan</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_threatBook">
+                   <property name="text">
+                    <string>ThreatBook</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_whoisXmlApi">
+                   <property name="text">
+                    <string>WhoisXmlApi</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_zetalytics">
+                   <property name="text">
+                    <string>ZETAlytics</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_engine_zoomeye">
+                   <property name="text">
+                    <string>ZoomEye</string>
                    </property>
                   </widget>
                  </item>

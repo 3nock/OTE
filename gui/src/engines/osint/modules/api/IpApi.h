@@ -1,13 +1,13 @@
-#ifndef THREATBOOK_H
-#define THREATBOOK_H
+#ifndef IPAPI_H
+#define IPAPI_H
 
 #include "src/engines/osint/modules/AbstractOsintModule.h"
 
-class ThreatBook: public AbstractOsintModule{
+class IpApi: public AbstractOsintModule{
 
     public:
-        ThreatBook(QString target = nullptr, QObject *parent = nullptr);
-        ~ThreatBook() override;
+        IpApi(QString target = nullptr, QObject *parent = nullptr);
+        ~IpApi() override;
 
     public slots:
         void start() override;
@@ -17,4 +17,4 @@ class ThreatBook: public AbstractOsintModule{
         QString m_key = nullptr;
 };
 
-#endif // THREATBOOK_H
+#endif // IPAPI_H

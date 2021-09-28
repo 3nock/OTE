@@ -41,6 +41,16 @@ class ApiKeysDialog : public QDialog{
 
         void on_buttonGetIpInfo_clicked();
 
+        void on_buttonGetThreatBook_clicked();
+
+        void on_buttonGetWhoisXmlApi_clicked();
+
+        void on_buttonGetZETAlytics_clicked();
+
+        void on_buttonGetZoomEye_clicked();
+
+        void on_buttonGetIpApi_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         //...

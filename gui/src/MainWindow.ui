@@ -534,18 +534,27 @@ QRadioButton:hover {
     <addaction name="actiondocumentation"/>
     <addaction name="actionupdates"/>
     <addaction name="actionissues"/>
+    <addaction name="actionabout"/>
+    <addaction name="actionabout_Qt_2"/>
    </widget>
-   <widget class="QMenu" name="menuAbout">
+   <widget class="QMenu" name="menuPassive">
     <property name="title">
-     <string>About</string>
+     <string>Passive</string>
     </property>
-    <addaction name="actionabout_sub3_suite"/>
-    <addaction name="actionabout_Qt"/>
+    <addaction name="actionApi_Keys"/>
+    <addaction name="actionOsint_Engines"/>
+    <addaction name="actionConfig"/>
+   </widget>
+   <widget class="QMenu" name="menuActive">
+    <property name="title">
+     <string>Active</string>
+    </property>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuProject"/>
+   <addaction name="menuPassive"/>
+   <addaction name="menuActive"/>
    <addaction name="menuTools"/>
-   <addaction name="menuAbout"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -572,16 +581,6 @@ QRadioButton:hover {
   <action name="actionrename">
    <property name="text">
     <string>rename</string>
-   </property>
-  </action>
-  <action name="actionabout_sub3_suite">
-   <property name="text">
-    <string>about sub3 suite</string>
-   </property>
-  </action>
-  <action name="actionabout_Qt">
-   <property name="text">
-    <string>about Qt</string>
    </property>
   </action>
   <action name="actiondocumentation">
@@ -612,6 +611,31 @@ QRadioButton:hover {
   <action name="actionamass">
    <property name="text">
     <string>amass</string>
+   </property>
+  </action>
+  <action name="actionApi_Keys">
+   <property name="text">
+    <string>Api Keys</string>
+   </property>
+  </action>
+  <action name="actionOsint_Engines">
+   <property name="text">
+    <string>Osint Engines</string>
+   </property>
+  </action>
+  <action name="actionConfig">
+   <property name="text">
+    <string>Config</string>
+   </property>
+  </action>
+  <action name="actionabout">
+   <property name="text">
+    <string>about</string>
+   </property>
+  </action>
+  <action name="actionabout_Qt_2">
+   <property name="text">
+    <string>about Qt</string>
    </property>
   </action>
  </widget>

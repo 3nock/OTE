@@ -31,6 +31,7 @@ class AbstractOsintModule : public QObject{
         virtual void  replyFinished(QNetworkReply *reply) = 0;
 
     public:
+        int maxPages = 100;
         QString target = nullptr;
         QNetworkAccessManager *manager = nullptr;
 };

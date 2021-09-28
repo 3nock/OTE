@@ -45,7 +45,11 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("virustotalapi", ui->lineEditVirusTotal->text());
     Config::generalConfig().setValue("binaryedge", ui->lineEditBinaryEdge->text());
     Config::generalConfig().setValue("c99", ui->lineEditC99->text());
+    Config::generalConfig().setValue("ipapi", ui->lineEditIpApi->text());
     Config::generalConfig().setValue("ipinfo", ui->lineEditIpInfo->text());
+    Config::generalConfig().setValue("threatbook", ui->lineEditThreatBook->text());
+    Config::generalConfig().setValue("whoisxmlapi", ui->lineEditWhoisXmlApi->text());
+    Config::generalConfig().setValue("zoomeye", ui->lineEditZoomEye->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -165,6 +169,31 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditIpInfo->setText(key);
         ui->buttonGetIpInfo->hide();
     }
+    key = Config::generalConfig().value("threatbook").toString();
+    if(!key.isEmpty()){
+        ui->lineEditThreatBook->setText(key);
+        ui->buttonGetThreatBook->hide();
+    }
+    key = Config::generalConfig().value("whoisxmlapi").toString();
+    if(!key.isEmpty()){
+        ui->lineEditWhoisXmlApi->setText(key);
+        ui->buttonGetWhoisXmlApi->hide();
+    }
+    key = Config::generalConfig().value("zetalytics").toString();
+    if(!key.isEmpty()){
+        ui->lineEditZETAlytics->setText(key);
+        ui->buttonGetZETAlytics->hide();
+    }
+    key = Config::generalConfig().value("zoomeye").toString();
+    if(!key.isEmpty()){
+        ui->lineEditZoomEye->setText(key);
+        ui->buttonGetZoomEye->hide();
+    }
+    key = Config::generalConfig().value("ipapi").toString();
+    if(!key.isEmpty()){
+        ui->lineEditIpApi->setText(key);
+        ui->buttonGetIpApi->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -239,4 +268,24 @@ void ApiKeysDialog::on_buttonGetC99_clicked(){
 
 void ApiKeysDialog::on_buttonGetIpInfo_clicked(){
     QDesktopServices::openUrl(QUrl("https://ipinfo.io/pricing", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetThreatBook_clicked(){
+    QDesktopServices::openUrl(QUrl("https://x.threatbook.cn/api", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetWhoisXmlApi_clicked(){
+    QDesktopServices::openUrl(QUrl("https://main.whoisxmlapi.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetZETAlytics_clicked(){
+    QDesktopServices::openUrl(QUrl("https://zetalytics.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetZoomEye_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.zoomeye.org/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetIpApi_clicked(){
+    QDesktopServices::openUrl(QUrl("https://ipapi.com/", QUrl::TolerantMode));
 }

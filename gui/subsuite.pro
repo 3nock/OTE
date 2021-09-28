@@ -35,13 +35,18 @@ SOURCES += \
     src/engines/osint/modules/api/CommonCrawl.cpp \
     src/engines/osint/modules/api/Github.cpp \
     src/engines/osint/modules/api/HunterSearch.cpp \
+    src/engines/osint/modules/api/IpApi.cpp \
     src/engines/osint/modules/api/IpInfo.cpp \
     src/engines/osint/modules/api/Mnemonic.cpp \
+    src/engines/osint/modules/api/ReconDev.cpp \
     src/engines/osint/modules/api/RiskIq.cpp \
     src/engines/osint/modules/api/Robtex.cpp \
     src/engines/osint/modules/api/SecurityTrails.cpp \
     src/engines/osint/modules/api/Shodan.cpp \
     src/engines/osint/modules/api/ThreatBook.cpp \
+    src/engines/osint/modules/api/WhoisXmlApi.cpp \
+    src/engines/osint/modules/api/ZETAlytics.cpp \
+    src/engines/osint/modules/api/ZoomEye.cpp \
     src/engines/osint/modules/archive/ArchiveIt.cpp \
     src/engines/osint/modules/archive/ArchiveToday.cpp \
     src/engines/osint/modules/archive/Waybackmachine.cpp \
@@ -62,6 +67,7 @@ SOURCES += \
     src/engines/osint/modules/cert/Crtsh.cpp \
     src/engines/osint/modules/cert/GoogleCert.cpp \
     src/engines/osint/modules/cert/CensysFree.cpp \
+    src/engines/osint/modules/scrape/Ask.cpp \
     src/engines/osint/modules/site/Dnsdumpster.cpp \
     src/engines/osint/modules/site/Netcraft.cpp \
     src/engines/osint/modules/site/Pkey.cpp \
@@ -105,13 +111,18 @@ HEADERS += \
     src/engines/osint/modules/api/CommonCrawl.h \
     src/engines/osint/modules/api/Github.h \
     src/engines/osint/modules/api/HunterSearch.h \
+    src/engines/osint/modules/api/IpApi.h \
     src/engines/osint/modules/api/IpInfo.h \
     src/engines/osint/modules/api/Mnemonic.h \
+    src/engines/osint/modules/api/ReconDev.h \
     src/engines/osint/modules/api/RiskIq.h \
     src/engines/osint/modules/api/Robtex.h \
     src/engines/osint/modules/api/SecurityTrails.h \
     src/engines/osint/modules/api/Shodan.h \
     src/engines/osint/modules/api/ThreatBook.h \
+    src/engines/osint/modules/api/WhoisXmlApi.h \
+    src/engines/osint/modules/api/ZETAlytics.h \
+    src/engines/osint/modules/api/ZoomEye.h \
     src/engines/osint/modules/archive/ArchiveIt.h \
     src/engines/osint/modules/archive/ArchiveToday.h \
     src/engines/osint/modules/archive/Waybackmachine.h \
@@ -132,6 +143,7 @@ HEADERS += \
     src/engines/osint/modules/cert/Crtsh.h \
     src/engines/osint/modules/cert/GoogleCert.h \
     src/engines/osint/modules/cert/CensysFree.h \
+    src/engines/osint/modules/scrape/Ask.h \
     src/engines/osint/modules/site/Dnsdumpster.h \
     src/engines/osint/modules/site/Netcraft.h \
     src/engines/osint/modules/site/Pkey.h \
