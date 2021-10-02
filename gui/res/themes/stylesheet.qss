@@ -195,7 +195,7 @@ QSplitter::handle:vertical{
     height: 5px
 }
 
-QListWidget, QTableView, QTreeView, QColumnView{
+QListWidget, QTableView, QTreeView, QColumnView, QPlainTextEdit{
     background-color:rgb(40, 40, 40);
     color: rgba(218, 218, 163, 180);
     border-style: solid;
@@ -203,7 +203,7 @@ QListWidget, QTableView, QTreeView, QColumnView{
     border-width: 1px;
 }
 
-QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected{
+QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected {
     background-color: rgba(110,110,110,40);
     color: rgb(230,230,230);
 }

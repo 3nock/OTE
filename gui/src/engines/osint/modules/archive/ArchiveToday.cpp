@@ -83,7 +83,7 @@ void ArchiveToday::replyFinished(QNetworkReply *reply){
         emit scanResults(QString::fromUtf8(reply->readAll()));
     }
     else{
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
     reply->deleteLater();
     emit quitThread();

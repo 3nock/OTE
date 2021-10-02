@@ -42,7 +42,7 @@ void SecurityTrails::replyFinished(QNetworkReply *reply){
             emit scanResults(value.toString().append(".").append(target));
     }
     else{
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
     reply->deleteLater();
     emit quitThread();

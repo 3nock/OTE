@@ -52,9 +52,7 @@ void Certspotter::start(){
 void Certspotter::replyFinished(QNetworkReply *reply){
     if(reply->error())
     {
-        ///
-        /// error occured...
-        ///
+        emit errorLog(reply->errorString());
     }
     else
     {

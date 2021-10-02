@@ -11,6 +11,9 @@ void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice){
     /// engine targets are from...
     ///
     switch(engineName){
+    case ENGINE::OSINT:
+        model = resultsModel->osint;
+        break;
     case ENGINE::BRUTE:
         model = resultsModel->brute;
         break;
@@ -72,7 +75,7 @@ void AbstractEngine::onReceiveTargets(QItemSelectionModel *selectionModel){
         targets->add(index.data().toString());
 }
 
-void AbstractEngine::openInBrowser(QItemSelectionModel *){
+void AbstractEngine::openInBrowser(QItemSelectionModel *selectionModel){
     QString item;
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {

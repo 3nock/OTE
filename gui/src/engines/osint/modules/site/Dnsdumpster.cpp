@@ -27,7 +27,7 @@ void Dnsdumpster::replyFinished(QNetworkReply *reply){
     if(firstScanToGetToken){
         if(reply->error())
         {
-            // an error occured...
+            emit errorLog(reply->errorString());
         }
         else
         {

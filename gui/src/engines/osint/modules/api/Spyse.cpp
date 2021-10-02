@@ -249,7 +249,7 @@ void Spyse::start(){
 void Spyse::replyFinished(QNetworkReply *reply){
     if(reply->error())
     {
-        // an error occured...
+        emit errorLog(reply->errorString());
     }
     else
     {

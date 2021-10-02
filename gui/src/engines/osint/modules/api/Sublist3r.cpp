@@ -24,7 +24,7 @@ void Sublist3r::start(){
 void Sublist3r::replyFinished(QNetworkReply *reply){
     if(reply->error())
     {
-        // an error occured...
+        emit errorLog(reply->errorString());
     }
     else
     {

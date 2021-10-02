@@ -152,6 +152,8 @@ QComboBox QWidget::item {
     padding-bottom: 2px;
 }
 
+
+/********** Line *************/
 QFrame[frameShape=&quot;4&quot;] {
     border: none;
     background: rgb(40,40,40);
@@ -166,6 +168,7 @@ QFrame#frame, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers{
     background-color: rgb(55, 55, 55);
 }
 
+/******** QLabels ***********/
 QLabel#labelResultsCount, QLabel#label_level, QLabel#labelCount, QLabel#labelResultsCountSRV {
     background-color: rgb(42, 42, 42);
 }
@@ -208,7 +211,7 @@ QSplitter::handle:vertical{
     height: 5px
 }
 
-QListWidget, QTableView, QTreeView, QColumnView{
+QListWidget, QTableView, QTreeView, QColumnView, QPlainTextEdit{
     background-color:rgb(40, 40, 40);
     color: rgba(218, 218, 163, 180);
     border-style: solid;
@@ -216,7 +219,7 @@ QListWidget, QTableView, QTreeView, QColumnView{
     border-width: 1px;
 }
 
-QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected{
+QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected {
     background-color: rgba(110,110,110,40);
     color: rgb(230,230,230);
 }
@@ -333,6 +336,7 @@ QMenuBar::item:selected, QMenuBar::item:hover{
     border-style: solid;
     border-width: 1px;
     border-color: rgb(100,100,100);
+    /*background-color: rgba(144, 144, 109, 90);*/
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(57, 57, 57, 255), stop:1 rgba(145, 145, 110, 180));
 }
 
@@ -441,7 +445,8 @@ QRadioButton:hover {
      border-style:solid;
      border-width:1px;
      border-color: rgb(50,50,50);
-}</string>
+}
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">

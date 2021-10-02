@@ -26,7 +26,7 @@ void Hackertarget::start(){
 void Hackertarget::replyFinished(QNetworkReply *reply){
     if(reply->error())
     {
-        // an error occured...
+        emit errorLog(reply->errorString());
     }
     else
     {

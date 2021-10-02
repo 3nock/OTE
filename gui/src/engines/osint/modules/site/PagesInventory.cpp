@@ -33,7 +33,7 @@ void PagesInventory::replyFinished(QNetworkReply *reply){
     }
     else
     {
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
     reply->deleteLater();
     emit quitThread();

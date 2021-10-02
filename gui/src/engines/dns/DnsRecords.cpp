@@ -1,6 +1,7 @@
 #include "DnsRecords.h"
 #include "ui_DnsRecords.h"
 //...
+#include <QDateTime>
 #include <QClipboard>
 
 
@@ -41,22 +42,26 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *stat
     m_scanArguments->targetList = ui->targets->listWidget;
     m_scanArguments->srvWordlist = ui->srvWordlist->listWidget;
     //...
-    loadSrvWordlist();
+    this->loadSrvWordlist();
+    this->connectActions();
     //...
     qRegisterMetaType<records::Results>("records::Results");
 }
 DnsRecords::~DnsRecords(){
     delete m_scanArguments;
-    //...
     delete ui;
 }
 
 void DnsRecords::onInfoLog(QString log){
-
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
 }
 
 void DnsRecords::onErrorLog(QString log){
-
+    QString fontedLog;
+    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
 }
 
 void DnsRecords::on_buttonStart_clicked(){
@@ -224,6 +229,67 @@ void DnsRecords::loadSrvWordlist(){
     }
 }
 
+void DnsRecords::connectActions(){
+    connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResultsSrvRecords();});
+    ///
+    /// SAVE...
+    ///
+    connect(&actionSaveSRVName, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srvName);});
+    connect(&actionSaveSRVTarget, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srvTarget);});
+    ///
+    /// COPY...
+    ///
+    connect(&actionCopySRVName, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srvName);});
+    connect(&actionCopySRVTarget, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srvTarget);});
+    ///
+    /// ...
+    ///
+    connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResultsDnsRecords();});
+    connect(&actionExpandResults, &QAction::triggered, this, [=](){this->onExpandResultsDnsRecords();});
+    connect(&actionCollapseResults, &QAction::triggered, this, [=](){this->onCollapseResultsDnsRecords();});
+    ///
+    /// SAVE...
+    ///
+    connect(&actionSaveA, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::A);});
+    connect(&actionSaveAAAA, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::AAAA);});
+    connect(&actionSaveMX, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::MX);});
+    connect(&actionSaveNS, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::NS);});
+    connect(&actionSaveCNAME, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::CNAME);});
+    connect(&actionSaveTXT, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::TXT);});
+    ///
+    /// COPY...
+    ///
+    connect(&actionCopyA, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::A);});
+    connect(&actionCopyAAAA, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::AAAA);});
+    connect(&actionCopyMX, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::MX);});
+    connect(&actionCopyNS, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::NS);});
+    connect(&actionCopyCNAME, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::CNAME);});
+    connect(&actionCopyTXT, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::TXT);});
+    ///
+    /// SUBDOMAINS AND IPS...
+    ///
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::RECORDS, CHOICE::ipaddress); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToRecords();});
+
+    /**** For Right-Click Context Menu ****/
+    ///
+    /// ...
+    ///
+    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(selectionModel);});
+    //...
+    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
+    //...
+    connect(&actionSendToOsint_c, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
+    connect(&actionSendToIp_c, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
+    connect(&actionSendToBrute_c, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
+    connect(&actionSendToActive_c, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
+    connect(&actionSendToRecords_c, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+}
+
 void DnsRecords::onScanThreadEnded(){
     status->records->activeThreads--;
     ///
@@ -345,27 +411,42 @@ void DnsRecords::onScanResult(records::Results results){
     }
 }
 
-void DnsRecords::clearResults(){
-    switch (ui->tabWidgetResults->currentIndex()){
-        case 0:
-            resultsModel->dnsrecords->clear();
-            ui->labelResultsCount->clear();
-            //...
-            ui->progressBar->hide();
-            break;
-        //...
-        case 1:
-            resultsModel->srvrecords->clear();
-            ui->labelResultsCountSRV->clear();
-            resultsModel->srvrecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
-            //...
-            ui->progressBarSRV->hide();
-            break;
-        //...
-        case 2:
-            ui->listWidgetLogs->clear();
-            break;
-    }
+void DnsRecords::onExpandResultsDnsRecords(){
+    ui->treeViewResults->expandAll();
+}
+
+void DnsRecords::onCollapseResultsDnsRecords(){
+    ui->treeViewResults->collapseAll();
+}
+
+void DnsRecords::onClearResultsDnsRecords(){
+    ///
+    /// clear the results...
+    ///
+    resultsModel->dnsrecords->clear();
+    ui->labelResultsCount->clear();
+    ///
+    /// clear the progressbar...
+    ui->progressBar->clearMask();
+    ui->progressBar->reset();
+    ui->progressBar->hide();
+    ///
+    /// hide the action button...
+    ///
+    ui->buttonAction->hide();
+}
+
+void DnsRecords::onClearResultsSrvRecords(){
+    ///
+    /// clear the results...
+    ///
+    resultsModel->srvrecords->clear();
+    ui->labelResultsCountSRV->clear();
+    resultsModel->srvrecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+    ///
+    /// hide the action button...
+    ///
+    ui->progressBarSRV->hide();
 }
 
 void DnsRecords::on_buttonConfig_clicked(){
@@ -416,30 +497,14 @@ void DnsRecords::on_buttonAction_clicked(){
         saveMenu->setTitle("Save");
         copyMenu->setTitle("Copy");
         ///
-        /// SAVE...
-        ///
-        connect(&actionSaveSRVName, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srvName);});
-        connect(&actionSaveSRVTarget, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srvTarget);});
-        ///
-        /// COPY...
-        ///
-        connect(&actionCopySRVName, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srvName);});
-        connect(&actionCopySRVTarget, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srvTarget);});
-        ///
-        /// SUBDOMAINS AND IPS...
-        ///
-        connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToOsint();});
-        connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToBrute();});
-        connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToActive();});
-        connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToRecords();});
-        ///
         /// ADDING ACTIONS TO THE CONTEXT MENU...
         ///
-        saveMenu->addSeparator();
+        Menu->addAction(&actionClearResults);
+        Menu->addSeparator();
+        //...
         saveMenu->addAction(&actionSaveSRVName);
         saveMenu->addAction(&actionSaveSRVTarget);
         //...
-        copyMenu->addSeparator();
         copyMenu->addAction(&actionCopySRVName);
         copyMenu->addAction(&actionCopySRVTarget);
         ///
@@ -470,35 +535,9 @@ void DnsRecords::on_buttonAction_clicked(){
         saveMenu->setTitle("Save");
         copyMenu->setTitle("Copy");
         ///
-        /// SAVE...
-        ///
-        connect(&actionSaveA, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::A);});
-        connect(&actionSaveAAAA, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::AAAA);});
-        connect(&actionSaveMX, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::MX);});
-        connect(&actionSaveNS, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::NS);});
-        connect(&actionSaveCNAME, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::CNAME);});
-        connect(&actionSaveTXT, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::TXT);});
-        ///
-        /// COPY...
-        ///
-        connect(&actionCopyA, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::A);});
-        connect(&actionCopyAAAA, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::AAAA);});
-        connect(&actionCopyMX, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::MX);});
-        connect(&actionCopyNS, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::NS);});
-        connect(&actionCopyCNAME, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::CNAME);});
-        connect(&actionCopyTXT, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::TXT);});
-        ///
-        /// SUBDOMAINS AND IPS...
-        ///
-        connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::RECORDS, CHOICE::ipaddress); emit changeTabToIp();});
-        connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToOsint();});
-        connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToBrute();});
-        connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToActive();});
-        connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToRecords();});
-        ///
         /// ADDING ACTIONS TO THE CONTEXT MENU...
         ///
-        saveMenu->addSeparator();
+        ///
         saveMenu->addAction(&actionSaveA);
         saveMenu->addAction(&actionSaveAAAA);
         saveMenu->addAction(&actionSaveNS);
@@ -506,18 +545,20 @@ void DnsRecords::on_buttonAction_clicked(){
         saveMenu->addAction(&actionSaveTXT);
         saveMenu->addAction(&actionSaveCNAME);
         //...
-        copyMenu->addSeparator();
         copyMenu->addAction(&actionCopyA);
         copyMenu->addAction(&actionCopyAAAA);
         copyMenu->addAction(&actionCopyNS);
         copyMenu->addAction(&actionCopyMX);
         copyMenu->addAction(&actionCopyTXT);
         copyMenu->addAction(&actionCopyCNAME);
-        copyMenu->addAction(&actionCopySRVName);
-        copyMenu->addAction(&actionCopySRVTarget);
         ///
         /// ....
         ///
+        Menu->addAction(&actionClearResults);
+        Menu->addAction(&actionExpandResults);
+        Menu->addAction(&actionCollapseResults);
+        Menu->addSeparator();
+        //...
         Menu->addMenu(copyMenu);
         Menu->addMenu(saveMenu);
         //...
@@ -548,29 +589,16 @@ void DnsRecords::on_treeViewResults_customContextMenuRequested(const QPoint &pos
     ///
     /// ...
     ///
-    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(selectionModel);});
-    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(selectionModel);});
-    //...
-    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
-    //...
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
-    ///
-    /// ...
-    ///
     Menu->addAction(&actionCopy);
     Menu->addAction(&actionSave);
     Menu->addSeparator();
     Menu->addAction(&actionOpenInBrowser);
     Menu->addSeparator();
-    Menu->addAction(&actionSendToIp);
-    Menu->addAction(&actionSendToOsint);
-    Menu->addAction(&actionSendToBrute);
-    Menu->addAction(&actionSendToActive);
-    Menu->addAction(&actionSendToRecords);
+    Menu->addAction(&actionSendToIp_c);
+    Menu->addAction(&actionSendToOsint_c);
+    Menu->addAction(&actionSendToBrute_c);
+    Menu->addAction(&actionSendToActive_c);
+    Menu->addAction(&actionSendToRecords_c);
     ///
     /// showing the menu...
     ///
@@ -591,27 +619,15 @@ void DnsRecords::on_tableViewSRV_customContextMenuRequested(const QPoint &pos){
     ///
     /// ...
     ///
-    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(selectionModel);});
-    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(selectionModel);});
-    //...
-    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
-    //...
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
-    ///
-    /// ...
-    ///
     Menu->addAction(&actionCopy);
     Menu->addAction(&actionSave);
     Menu->addSeparator();
     Menu->addAction(&actionOpenInBrowser);
     Menu->addSeparator();
-    Menu->addAction(&actionSendToOsint);
-    Menu->addAction(&actionSendToBrute);
-    Menu->addAction(&actionSendToActive);
-    Menu->addAction(&actionSendToRecords);
+    Menu->addAction(&actionSendToOsint_c);
+    Menu->addAction(&actionSendToBrute_c);
+    Menu->addAction(&actionSendToActive_c);
+    Menu->addAction(&actionSendToRecords_c);
     ///
     /// showing the menu...
     ///
@@ -974,7 +990,7 @@ void DnsRecords::onSaveResultsSrvRecords(CHOICE choice){
     file.close();
 }
 
-void DnsRecords::onSaveResultsSrvRecords(QItemSelectionModel *){
+void DnsRecords::onSaveResultsSrvRecords(QItemSelectionModel *selectionModel){
     QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
     if(filename.isEmpty()){
         return;
@@ -1039,7 +1055,7 @@ void DnsRecords::onCopyResultsSrvRecords(CHOICE choice){
     clipboard->setText(clipboardData);
 }
 
-void DnsRecords::onCopyResultsSrvRecords(QItemSelectionModel *){
+void DnsRecords::onCopyResultsSrvRecords(QItemSelectionModel *selectionModel){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QSet<QString> itemSet;
     QString data;

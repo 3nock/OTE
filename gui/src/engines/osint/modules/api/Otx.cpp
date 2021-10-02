@@ -25,7 +25,7 @@ void Otx::start(){
 void Otx::replyFinished(QNetworkReply *reply){
     if(reply->error())
     {
-        // an error occured...
+        emit errorLog(reply->errorString());
     }
     else
     {

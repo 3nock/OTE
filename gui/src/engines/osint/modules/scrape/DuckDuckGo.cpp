@@ -33,7 +33,7 @@ void DuckDuckGo::replyFinished(QNetworkReply *reply){
         gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
     else{
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
     reply->deleteLater();
     activeRequests--;

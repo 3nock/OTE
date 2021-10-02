@@ -22,8 +22,8 @@ class AbstractOsintModule : public QObject{
 
     signals:
         void quitThread();
-        void scanError(QString error);
-        void scanStatus(QString status);
+        void infoLog(QString log);
+        void errorLog(QString error);
         void scanResults(QString subdomain);
 
     public slots:

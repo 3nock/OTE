@@ -24,6 +24,7 @@ class Osint : public AbstractEngine{
         void scanResults(QString subdomain);
 
     private slots:
+        void onClearResults();
         void onSaveResults(CHOICE);
         void onSaveResults(QItemSelectionModel*);
         void onCopyResults(CHOICE);
@@ -60,8 +61,8 @@ class Osint : public AbstractEngine{
         void startScan();
         void pauseScan();
         void ResumeScan();
-        void clearResults();
         void initProfiles();
+        void connectActions();
 };
 
 #endif // OSINT_H

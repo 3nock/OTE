@@ -63,7 +63,7 @@ void RiskIq::replyFinished(QNetworkReply *reply){
             emit scanResults(value.toString());
     }
     else{
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
     reply->deleteLater();
     emit quitThread();

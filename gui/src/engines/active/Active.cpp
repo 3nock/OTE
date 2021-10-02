@@ -2,6 +2,7 @@
 #include "ui_Active.h"
 //...
 #include <QThread>
+#include <QDateTime>
 #include <QClipboard>
 
 Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
@@ -40,6 +41,10 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     ui->frameCustom->hide();
     ui->lineEditServiceName->setPlaceholderText("e.g SMTP");
     ui->lineEditServicePort->setPlaceholderText("e.g 889");
+    ///
+    /// ...
+    ///
+    connectActions();
 }
 Active::~Active(){
     delete m_scanArguments;
@@ -47,11 +52,15 @@ Active::~Active(){
 }
 
 void Active::onInfoLog(QString log){
-
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
 }
 
 void Active::onErrorLog(QString log){
-
+    QString fontedLog;
+    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
 }
 
 void Active::on_buttonStart_clicked(){
@@ -131,6 +140,45 @@ void Active::pauseScan(){
 
 void Active::ResumeScan(){
 
+}
+
+void Active::connectActions(){
+    connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
+    ///
+    /// SAVE...
+    ///
+    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
+    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
+    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
+    ///
+    /// COPY...
+    ///
+    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
+    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
+    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
+    ///
+    /// SUBDOMAINS AND IPS...
+    ///
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::BRUTE, CHOICE::ipaddress); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToRecords();});
+
+    /***** For Right CLick *****/
+    ///
+    /// ...
+    ///
+    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
+    //...
+    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
+    //...
+    connect(&actionSendToOsint_c, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
+    connect(&actionSendToIp_c, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
+    connect(&actionSendToBrute_c, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
+    connect(&actionSendToActive_c, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
+    connect(&actionSendToRecords_c, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
 }
 
 void Active::on_buttonStop_clicked(){
@@ -249,27 +297,22 @@ void Active::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Active::clearResults(){
+void Active::onClearResults(){
     ///
-    /// if the current tab is subdomains clear subdomains...
+    /// clear the results...
     ///
-    if(ui->tabWidgetResults->currentIndex() == 0)
-    {
-        resultsModel->active->clear();
-        ui->labelResultsCount->clear();
-        resultsModel->active->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-        //...
-        ui->progressBar->clearMask();
-        ui->progressBar->reset();
-        ui->progressBar->hide();
-    }
+    resultsModel->active->clear();
+    ui->labelResultsCount->clear();
+    resultsModel->active->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
     ///
-    /// if current tab is logs-tab clear logs...
+    /// clear the progressbar...
+    ui->progressBar->clearMask();
+    ui->progressBar->reset();
+    ui->progressBar->hide();
     ///
-    else
-    {
-        ui->listWidgetLogs->clear();
-    }
+    /// hide the action button...
+    ///
+    ui->buttonAction->hide();
 }
 
 void Active::on_buttonAction_clicked(){
@@ -296,26 +339,6 @@ void Active::on_buttonAction_clicked(){
     saveMenu->setTitle("Save");
     copyMenu->setTitle("Copy");
     ///
-    /// SAVE...
-    ///
-    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
-    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
-    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
-    ///
-    /// COPY...
-    ///
-    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
-    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
-    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
-    ///
-    /// SUBDOMAINS AND IPS...
-    ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::ACTIVE, CHOICE::ipaddress); emit changeTabToIp();});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToRecords();});
-    ///
     /// ADDING ACTIONS TO THE CONTEXT MENU...
     ///
     saveMenu->addAction(&actionSaveSubdomains);
@@ -328,6 +351,9 @@ void Active::on_buttonAction_clicked(){
     ///
     /// ....
     ///
+    Menu->addAction(&actionClearResults);
+    Menu->addSeparator();
+    //...
     Menu->addMenu(copyMenu);
     Menu->addMenu(saveMenu);
     //...
@@ -363,29 +389,16 @@ void Active::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     ///
     /// ...
     ///
-    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
-    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
-    //...
-    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
-    //...
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
-    ///
-    /// ...
-    ///
     Menu->addAction(&actionCopy);
     Menu->addAction(&actionSave);
     Menu->addSeparator();
     Menu->addAction(&actionOpenInBrowser);
     Menu->addSeparator();
-    Menu->addAction(&actionSendToIp);
-    Menu->addAction(&actionSendToOsint);
-    Menu->addAction(&actionSendToBrute);
-    Menu->addAction(&actionSendToActive);
-    Menu->addAction(&actionSendToRecords);
+    Menu->addAction(&actionSendToIp_c);
+    Menu->addAction(&actionSendToOsint_c);
+    Menu->addAction(&actionSendToBrute_c);
+    Menu->addAction(&actionSendToActive_c);
+    Menu->addAction(&actionSendToRecords_c);
     ///
     /// showing the menu...
     ///
@@ -461,7 +474,7 @@ void Active::onSaveResults(CHOICE choice){
     file.close();
 }
 
-void Active::onSaveResults(QItemSelectionModel *){
+void Active::onSaveResults(QItemSelectionModel *selectionModel){
     QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
     if(filename.isEmpty()){
         return;
@@ -536,7 +549,7 @@ void Active::onCopyResults(CHOICE choice){
     clipboard->setText(clipboardData);
 }
 
-void Active::onCopyResults(QItemSelectionModel *){
+void Active::onCopyResults(QItemSelectionModel *selectionModel){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QSet<QString> itemSet;
     QString data;

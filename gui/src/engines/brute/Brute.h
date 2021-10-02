@@ -26,6 +26,7 @@ class Brute : public AbstractEngine{
         void onChoosenWordlist(QString);
 
     private slots:
+        void onClearResults();
         void onSaveResults(CHOICE);
         void onSaveResults(QItemSelectionModel*);
         void onCopyResults(CHOICE);
@@ -50,7 +51,8 @@ class Brute : public AbstractEngine{
         void startScan();
         void pauseScan();
         void resumeScan();
-        void clearResults();
+        //...
+        void connectActions();
 };
 
 #endif // BRUTE_H

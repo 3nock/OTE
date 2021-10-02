@@ -115,12 +115,26 @@ class AbstractEngine : public QWidget{
         void openInBrowser(QItemSelectionModel*);
 
     protected:
-        QAction actionSendToIp{"Send To Ip"};
-        QAction actionSendToOsint{"Send To Osint"};
-        QAction actionSendToActive{"Send To Active"};
-        QAction actionSendToBrute{"Send To Brute"};
-        QAction actionSendToRecords{"Send To Records"};
+        QAction actionClearResults{"Clear Results"};
+        QAction actionExpandResults{"Expand Results"};
+        QAction actionCollapseResults{"Collapse Results"};
+        ///
+        ///...
+        ///
+        QAction actionSendToIp{"Send Addresses To Ip"};
+        QAction actionSendToOsint{"Send Hostnames To Osint"};
+        QAction actionSendToActive{"Send Hostnames To Active"};
+        QAction actionSendToBrute{"Send Hostnames To Brute"};
+        QAction actionSendToRecords{"Send Hostnames To Records"};
+        //...
         QAction actionOpenInBrowser{"Open in Browser"};
+        //...
+        QAction actionSendToIp_c{"Send Selected To Ip"};
+        QAction actionSendToOsint_c{"Send Selected To Osint"};
+        QAction actionSendToActive_c{"Send Selected To Active"};
+        QAction actionSendToBrute_c{"Send Selected To Brute"};
+        QAction actionSendToRecords_c{"Send Selected To Records"};
+        QAction actionOpenInBrowser_c{"Open Selected in Browser"};
         ///
         /// save actions...
         ///

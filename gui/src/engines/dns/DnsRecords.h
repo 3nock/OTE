@@ -23,6 +23,10 @@ class DnsRecords : public AbstractEngine{
         void onScanResult(records::Results);
 
     private slots:
+        void onExpandResultsDnsRecords();
+        void onCollapseResultsDnsRecords();
+        void onClearResultsDnsRecords();
+        void onClearResultsSrvRecords();
         void onSaveResultsDnsRecords(CHOICE);
         void onSaveResultsDnsRecords(QItemSelectionModel*);
         void onCopyResultsDnsRecords(CHOICE);
@@ -49,8 +53,8 @@ class DnsRecords : public AbstractEngine{
         void startScan();
         void pauseScan();
         void ResumeScan();
-        void clearResults();
         void loadSrvWordlist();
+        void connectActions();
 };
 
 #endif // DNSRECORDS_H

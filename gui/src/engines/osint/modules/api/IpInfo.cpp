@@ -54,7 +54,7 @@ void IpInfo::replyFinished(QNetworkReply *reply){
         emit scanResults(hostname);
     }
     else{
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
     reply->deleteLater();
     emit quitThread();

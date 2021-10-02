@@ -1,6 +1,7 @@
 #include "Osint.h"
 #include "ui_Osint.h"
 //...
+#include <QDateTime>
 #include <QClipboard>
 #include "src/utils/Config.h"
 #include "src/dialogs/OsintConfigDialog.h"
@@ -152,8 +153,11 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     ///
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-    //...
-    initProfiles();
+    ///
+    /// ...
+    ///
+    this->initProfiles();
+    this->connectActions();
 }
 Osint::~Osint(){
     delete m_scanArguments;
@@ -162,11 +166,15 @@ Osint::~Osint(){
 }
 
 void Osint::onInfoLog(QString log){
-
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
 }
 
 void Osint::onErrorLog(QString log){
-
+    QString fontedLog;
+    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
 }
 
 void Osint::on_buttonStart_clicked(){
@@ -209,6 +217,8 @@ void Osint::startScan(){
         certspotter->moveToThread(cThread);
         //...
         connect(certspotter, &Certspotter::scanResults, this, &Osint::scanResults);
+        connect(certspotter, &Certspotter::errorLog, this, &Osint::onErrorLog);
+        connect(certspotter, &Certspotter::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, certspotter, &Certspotter::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -224,6 +234,8 @@ void Osint::startScan(){
         otx->moveToThread(cThread);
         //...
         connect(otx, &Otx::scanResults, this, &Osint::scanResults);
+        connect(otx, &Otx::errorLog, this, &Osint::onErrorLog);
+        connect(otx, &Otx::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, otx, &Otx::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -239,6 +251,8 @@ void Osint::startScan(){
         sublist3r->moveToThread(cThread);
         //...
         connect(sublist3r, &Sublist3r::scanResults, this, &Osint::scanResults);
+        connect(sublist3r, &Sublist3r::errorLog, this, &Osint::onErrorLog);
+        connect(sublist3r, &Sublist3r::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, sublist3r, &Sublist3r::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -254,6 +268,8 @@ void Osint::startScan(){
         threatminer->moveToThread(cThread);
         //...
         connect(threatminer, &Threatminer::scanResults, this, &Osint::scanResults);
+        connect(threatminer, &Threatminer::errorLog, this, &Osint::onErrorLog);
+        connect(threatminer, &Threatminer::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, threatminer, &Threatminer::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -269,6 +285,8 @@ void Osint::startScan(){
         threatcrowd->moveToThread(cThread);
         //...
         connect(threatcrowd, &Threatcrowd::scanResults, this, &Osint::scanResults);
+        connect(threatcrowd, &Threatcrowd::errorLog, this, &Osint::onErrorLog);
+        connect(threatcrowd, &Threatcrowd::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, threatcrowd, &Threatcrowd::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -284,6 +302,8 @@ void Osint::startScan(){
         hackertarget->moveToThread(cThread);
         //...
         connect(hackertarget, &Hackertarget::scanResults, this, &Osint::scanResults);
+        connect(hackertarget, &Hackertarget::errorLog, this, &Osint::onErrorLog);
+        connect(hackertarget, &Hackertarget::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, hackertarget, &Hackertarget::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -299,6 +319,8 @@ void Osint::startScan(){
         dnsbufferoverun->moveToThread(cThread);
         //...
         connect(dnsbufferoverun, &Dnsbufferoverun::scanResults, this, &Osint::scanResults);
+        connect(dnsbufferoverun, &Dnsbufferoverun::errorLog, this, &Osint::onErrorLog);
+        connect(dnsbufferoverun, &Dnsbufferoverun::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, dnsbufferoverun, &Dnsbufferoverun::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -314,6 +336,8 @@ void Osint::startScan(){
         anubis->moveToThread(cThread);
         //...
         connect(anubis, &Anubis::scanResults, this, &Osint::scanResults);
+        connect(anubis, &Anubis::errorLog, this, &Osint::onErrorLog);
+        connect(anubis, &Anubis::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, anubis, &Anubis::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -329,6 +353,8 @@ void Osint::startScan(){
         projectdiscovery->moveToThread(cThread);
         //...
         connect(projectdiscovery, &Projectdiscovery::scanResults, this, &Osint::scanResults);
+        connect(projectdiscovery, &Projectdiscovery::errorLog, this, &Osint::onErrorLog);
+        connect(projectdiscovery, &Projectdiscovery::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, projectdiscovery, &Projectdiscovery::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -344,6 +370,8 @@ void Osint::startScan(){
         spyse->moveToThread(cThread);
         //...
         connect(spyse, &Spyse::scanResults, this, &Osint::scanResults);
+        connect(spyse, &Spyse::errorLog, this, &Osint::onErrorLog);
+        connect(spyse, &Spyse::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, spyse, &Spyse::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -359,6 +387,8 @@ void Osint::startScan(){
         crtsh->moveToThread(cThread);
         //...
         connect(crtsh, &Crtsh::scanResults, this, &Osint::scanResults);
+        connect(crtsh, &Crtsh::errorLog, this, &Osint::onErrorLog);
+        connect(crtsh, &Crtsh::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -374,6 +404,8 @@ void Osint::startScan(){
         dnsdumpster->moveToThread(cThread);
         //...
         connect(dnsdumpster, &Dnsdumpster::scanResults, this, &Osint::scanResults);
+        connect(dnsdumpster, &Dnsdumpster::errorLog, this, &Osint::onErrorLog);
+        connect(dnsdumpster, &Dnsdumpster::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, dnsdumpster, &Dnsdumpster::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -389,6 +421,8 @@ void Osint::startScan(){
         netcraft->moveToThread(cThread);
         //...
         connect(netcraft, &Netcraft::scanResults, this, &Osint::scanResults);
+        connect(netcraft, &Netcraft::errorLog, this, &Osint::onErrorLog);
+        connect(netcraft, &Netcraft::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, netcraft, &Netcraft::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -404,6 +438,8 @@ void Osint::startScan(){
         suip->moveToThread(cThread);
         //...
         connect(suip, &Suip::scanResults, this, &Osint::scanResults);
+        connect(suip, &Suip::errorLog, this, &Osint::onErrorLog);
+        connect(suip, &Suip::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, suip, &Suip::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -418,6 +454,8 @@ void Osint::startScan(){
         pkey->moveToThread(cThread);
         //...
         connect(pkey, &Pkey::scanResults, this, &Osint::scanResults);
+        connect(pkey, &Pkey::errorLog, this, &Osint::onErrorLog);
+        connect(pkey, &Pkey::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, pkey, &Pkey::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -432,6 +470,8 @@ void Osint::startScan(){
         rapiddns->moveToThread(cThread);
         //...
         connect(rapiddns, &Rapiddns::scanResults, this, &Osint::scanResults);
+        connect(rapiddns, &Rapiddns::errorLog, this, &Osint::onErrorLog);
+        connect(rapiddns, &Rapiddns::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, rapiddns, &Rapiddns::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -446,6 +486,8 @@ void Osint::startScan(){
         googlecert->moveToThread(cThread);
         //...
         connect(googlecert, &GoogleCert::scanResults, this, &Osint::scanResults);
+        connect(googlecert, &GoogleCert::errorLog, this, &Osint::onErrorLog);
+        connect(googlecert, &GoogleCert::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, googlecert, &GoogleCert::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -460,6 +502,8 @@ void Osint::startScan(){
         omnisint->moveToThread(cThread);
         //...
         connect(omnisint, &Omnisint::scanResults, this, &Osint::scanResults);
+        connect(omnisint, &Omnisint::errorLog, this, &Osint::onErrorLog);
+        connect(omnisint, &Omnisint::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, omnisint, &Omnisint::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -474,6 +518,8 @@ void Osint::startScan(){
         qwant->moveToThread(cThread);
         //...
         connect(qwant, &Qwant::scanResults, this, &Osint::scanResults);
+        connect(qwant, &Qwant::errorLog, this, &Osint::onErrorLog);
+        connect(qwant, &Qwant::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, qwant, &Qwant::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -488,6 +534,8 @@ void Osint::startScan(){
         virustotal->moveToThread(cThread);
         //...
         connect(virustotal, &VirusTotal::scanResults, this, &Osint::scanResults);
+        connect(virustotal, &VirusTotal::errorLog, this, &Osint::onErrorLog);
+        connect(virustotal, &VirusTotal::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, virustotal, &VirusTotal::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -502,6 +550,8 @@ void Osint::startScan(){
         urlscan->moveToThread(cThread);
         //...
         connect(urlscan, &Urlscan::scanResults, this, &Osint::scanResults);
+        connect(urlscan, &Urlscan::errorLog, this, &Osint::onErrorLog);
+        connect(urlscan, &Urlscan::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, urlscan, &Urlscan::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -516,6 +566,8 @@ void Osint::startScan(){
         waybackmachine->moveToThread(cThread);
         //...
         connect(waybackmachine, &Waybackmachine::scanResults, this, &Osint::scanResults);
+        connect(waybackmachine, &Waybackmachine::errorLog, this, &Osint::onErrorLog);
+        connect(waybackmachine, &Waybackmachine::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, waybackmachine, &Waybackmachine::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -530,6 +582,8 @@ void Osint::startScan(){
         archivetoday->moveToThread(cThread);
         //...
         connect(archivetoday, &ArchiveToday::scanResults, this, &Osint::scanResults);
+        connect(archivetoday, &ArchiveToday::errorLog, this, &Osint::onErrorLog);
+        connect(archivetoday, &ArchiveToday::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, archivetoday, &ArchiveToday::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -544,6 +598,8 @@ void Osint::startScan(){
         archiveit->moveToThread(cThread);
         //...
         connect(archiveit, &ArchiveIt::scanResults, this, &Osint::scanResults);
+        connect(archiveit, &ArchiveIt::errorLog, this, &Osint::onErrorLog);
+        connect(archiveit, &ArchiveIt::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, archiveit, &ArchiveIt::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -558,6 +614,8 @@ void Osint::startScan(){
         censysfree->moveToThread(cThread);
         //...
         connect(censysfree, &CensysFree::scanResults, this, &Osint::scanResults);
+        connect(censysfree, &CensysFree::errorLog, this, &Osint::onErrorLog);
+        connect(censysfree, &CensysFree::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, censysfree, &CensysFree::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -572,6 +630,8 @@ void Osint::startScan(){
         bgpview->moveToThread(cThread);
         //...
         connect(bgpview, &Bgpview::scanResults, this, &Osint::scanResults);
+        connect(bgpview, &Bgpview::errorLog, this, &Osint::onErrorLog);
+        connect(bgpview, &Bgpview::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -586,6 +646,8 @@ void Osint::startScan(){
         binaryedge->moveToThread(cThread);
         //...
         connect(binaryedge, &BinaryEdge::scanResults, this, &Osint::scanResults);
+        connect(binaryedge, &BinaryEdge::errorLog, this, &Osint::onErrorLog);
+        connect(binaryedge, &BinaryEdge::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, binaryedge, &BinaryEdge::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -600,6 +662,8 @@ void Osint::startScan(){
         c99->moveToThread(cThread);
         //...
         connect(c99, &C99::scanResults, this, &Osint::scanResults);
+        connect(c99, &C99::errorLog, this, &Osint::onErrorLog);
+        connect(c99, &C99::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, c99, &C99::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -614,6 +678,8 @@ void Osint::startScan(){
         commonCrawl->moveToThread(cThread);
         //...
         connect(commonCrawl, &CommonCrawl::scanResults, this, &Osint::scanResults);
+        connect(commonCrawl, &CommonCrawl::errorLog, this, &Osint::onErrorLog);
+        connect(commonCrawl, &CommonCrawl::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, commonCrawl, &CommonCrawl::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -628,6 +694,8 @@ void Osint::startScan(){
         github->moveToThread(cThread);
         //...
         connect(github, &Github::scanResults, this, &Osint::scanResults);
+        connect(github, &Github::errorLog, this, &Osint::onErrorLog);
+        connect(github, &Github::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, github, &Github::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -642,6 +710,8 @@ void Osint::startScan(){
         huntersearch->moveToThread(cThread);
         //...
         connect(huntersearch, &HunterSearch::scanResults, this, &Osint::scanResults);
+        connect(huntersearch, &HunterSearch::errorLog, this, &Osint::onErrorLog);
+        connect(huntersearch, &HunterSearch::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, huntersearch, &HunterSearch::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -656,6 +726,8 @@ void Osint::startScan(){
         ipinfo->moveToThread(cThread);
         //...
         connect(ipinfo, &IpInfo::scanResults, this, &Osint::scanResults);
+        connect(ipinfo, &IpInfo::errorLog, this, &Osint::onErrorLog);
+        connect(ipinfo, &IpInfo::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -670,6 +742,8 @@ void Osint::startScan(){
         mnemonic->moveToThread(cThread);
         //...
         connect(mnemonic, &Mnemonic::scanResults, this, &Osint::scanResults);
+        connect(mnemonic, &Mnemonic::errorLog, this, &Osint::onErrorLog);
+        connect(mnemonic, &Mnemonic::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, mnemonic, &Mnemonic::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -684,6 +758,8 @@ void Osint::startScan(){
         riskiq->moveToThread(cThread);
         //...
         connect(riskiq, &RiskIq::scanResults, this, &Osint::scanResults);
+        connect(riskiq, &RiskIq::errorLog, this, &Osint::onErrorLog);
+        connect(riskiq, &RiskIq::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, riskiq, &RiskIq::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -698,6 +774,8 @@ void Osint::startScan(){
         robtex->moveToThread(cThread);
         //...
         connect(robtex, &Robtex::scanResults, this, &Osint::scanResults);
+        connect(robtex, &Robtex::errorLog, this, &Osint::onErrorLog);
+        connect(robtex, &Robtex::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, robtex, &Robtex::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -712,6 +790,8 @@ void Osint::startScan(){
         securitytrails->moveToThread(cThread);
         //...
         connect(securitytrails, &SecurityTrails::scanResults, this, &Osint::scanResults);
+        connect(securitytrails, &SecurityTrails::errorLog, this, &Osint::onErrorLog);
+        connect(securitytrails, &SecurityTrails::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, securitytrails, &SecurityTrails::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -726,6 +806,8 @@ void Osint::startScan(){
         shodan->moveToThread(cThread);
         //...
         connect(shodan, &Shodan::scanResults, this, &Osint::scanResults);
+        connect(shodan, &Shodan::errorLog, this, &Osint::onErrorLog);
+        connect(shodan, &Shodan::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, shodan, &Shodan::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -740,6 +822,8 @@ void Osint::startScan(){
         threatbook->moveToThread(cThread);
         //...
         connect(threatbook, &ThreatBook::scanResults, this, &Osint::scanResults);
+        connect(threatbook, &ThreatBook::errorLog, this, &Osint::onErrorLog);
+        connect(threatbook, &ThreatBook::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, threatbook, &ThreatBook::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -754,6 +838,8 @@ void Osint::startScan(){
         whoisxmlapi->moveToThread(cThread);
         //...
         connect(whoisxmlapi, &WhoisXmlApi::scanResults, this, &Osint::scanResults);
+        connect(whoisxmlapi, &WhoisXmlApi::errorLog, this, &Osint::onErrorLog);
+        connect(whoisxmlapi, &WhoisXmlApi::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, whoisxmlapi, &WhoisXmlApi::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -768,6 +854,8 @@ void Osint::startScan(){
         zetalytics->moveToThread(cThread);
         //...
         connect(zetalytics, &ZETAlytics::scanResults, this, &Osint::scanResults);
+        connect(zetalytics, &ZETAlytics::errorLog, this, &Osint::onErrorLog);
+        connect(zetalytics, &ZETAlytics::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, zetalytics, &ZETAlytics::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -782,6 +870,8 @@ void Osint::startScan(){
         zoomeye->moveToThread(cThread);
         //...
         connect(zoomeye, &ZoomEye::scanResults, this, &Osint::scanResults);
+        connect(zoomeye, &ZoomEye::errorLog, this, &Osint::onErrorLog);
+        connect(zoomeye, &ZoomEye::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, zoomeye, &ZoomEye::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -796,6 +886,8 @@ void Osint::startScan(){
         ipapi->moveToThread(cThread);
         //...
         connect(ipapi, &IpApi::scanResults, this, &Osint::scanResults);
+        connect(ipapi, &IpApi::errorLog, this, &Osint::onErrorLog);
+        connect(ipapi, &IpApi::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, ipapi, &IpApi::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -810,6 +902,8 @@ void Osint::startScan(){
         ask->moveToThread(cThread);
         //...
         connect(ask, &Ask::scanResults, this, &Osint::scanResults);
+        connect(ask, &Ask::errorLog, this, &Osint::onErrorLog);
+        connect(ask, &Ask::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, ask, &Ask::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -824,6 +918,8 @@ void Osint::startScan(){
         baidu->moveToThread(cThread);
         //...
         connect(baidu, &Baidu::scanResults, this, &Osint::scanResults);
+        connect(baidu, &Baidu::errorLog, this, &Osint::onErrorLog);
+        connect(baidu, &Baidu::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, baidu, &Baidu::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -838,6 +934,8 @@ void Osint::startScan(){
         dogpile->moveToThread(cThread);
         //...
         connect(dogpile, &DogPile::scanResults, this, &Osint::scanResults);
+        connect(dogpile, &DogPile::errorLog, this, &Osint::onErrorLog);
+        connect(dogpile, &DogPile::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, dogpile, &DogPile::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -852,6 +950,8 @@ void Osint::startScan(){
         duckduckgo->moveToThread(cThread);
         //...
         connect(duckduckgo, &DuckDuckGo::scanResults, this, &Osint::scanResults);
+        connect(duckduckgo, &DuckDuckGo::errorLog, this, &Osint::onErrorLog);
+        connect(duckduckgo, &DuckDuckGo::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, duckduckgo, &DuckDuckGo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -866,6 +966,8 @@ void Osint::startScan(){
         exalead->moveToThread(cThread);
         //...
         connect(exalead, &Exalead::scanResults, this, &Osint::scanResults);
+        connect(exalead, &Exalead::errorLog, this, &Osint::onErrorLog);
+        connect(exalead, &Exalead::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, exalead, &Exalead::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -880,6 +982,8 @@ void Osint::startScan(){
         trello->moveToThread(cThread);
         //...
         connect(trello, &Trello::scanResults, this, &Osint::scanResults);
+        connect(trello, &Trello::errorLog, this, &Osint::onErrorLog);
+        connect(trello, &Trello::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, trello, &Trello::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -894,6 +998,8 @@ void Osint::startScan(){
         yahoo->moveToThread(cThread);
         //...
         connect(yahoo, &Yahoo::scanResults, this, &Osint::scanResults);
+        connect(yahoo, &Yahoo::errorLog, this, &Osint::onErrorLog);
+        connect(yahoo, &Yahoo::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, yahoo, &Yahoo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -908,6 +1014,8 @@ void Osint::startScan(){
         bing->moveToThread(cThread);
         //...
         connect(bing, &Bing::scanResults, this, &Osint::scanResults);
+        connect(bing, &Bing::errorLog, this, &Osint::onErrorLog);
+        connect(bing, &Bing::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, bing, &Bing::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -922,6 +1030,8 @@ void Osint::startScan(){
         sitedossier->moveToThread(cThread);
         //...
         connect(sitedossier, &SiteDossier::scanResults, this, &Osint::scanResults);
+        connect(sitedossier, &SiteDossier::errorLog, this, &Osint::onErrorLog);
+        connect(sitedossier, &SiteDossier::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, sitedossier, &SiteDossier::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -936,6 +1046,8 @@ void Osint::startScan(){
         pagesinventory->moveToThread(cThread);
         //...
         connect(pagesinventory, &PagesInventory::scanResults, this, &Osint::scanResults);
+        connect(pagesinventory, &PagesInventory::errorLog, this, &Osint::onErrorLog);
+        connect(pagesinventory, &PagesInventory::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, pagesinventory, &PagesInventory::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -950,6 +1062,8 @@ void Osint::startScan(){
         viewdns->moveToThread(cThread);
         //...
         connect(viewdns, &ViewDns::scanResults, this, &Osint::scanResults);
+        connect(viewdns, &ViewDns::errorLog, this, &Osint::onErrorLog);
+        connect(viewdns, &ViewDns::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
         connect(cThread, &QThread::finished, viewdns, &ViewDns::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -998,20 +1112,22 @@ void Osint::onEnumerationComplete(){
     emit sendStatus("[END] Enumeration Complete!");
 }
 
-void Osint::clearResults(){
-    // clear subdomains...
-    if(ui->tabWidgetResults->currentIndex() == 0){
-        resultsModel->osint->clear();
-        ui->labelResultsCount->clear();
-        m_results.clear();
-        m_subdomainsCount = 0;
-        //...
-        resultsModel->osint->setHorizontalHeaderLabels({"Subdomain Name", "IpAddress"});
-    }
-    // clear logs...
-    else{
-        ui->listWidgetLogs->clear();
-    }
+void Osint::onClearResults(){
+    ///
+    /// clear the results...
+    ///
+    resultsModel->osint->clear();
+    ui->labelResultsCount->clear();
+    resultsModel->osint->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    ///
+    /// clear the progressbar...
+    ui->progressBar->clearMask();
+    ui->progressBar->reset();
+    ui->progressBar->hide();
+    ///
+    /// hide the action button...
+    ///
+    ui->buttonAction->hide();
 }
 
 void Osint::on_buttonKeys_clicked(){
@@ -1034,6 +1150,42 @@ void Osint::initProfiles(){
         ui->comboBoxProfiles->addItem(Config::generalConfig().value("value").toString());
     }
     Config::generalConfig().endArray();
+}
+
+void Osint::connectActions(){
+    connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
+    ///
+    /// SAVE...
+    ///
+    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
+    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
+    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
+    ///
+    /// COPY...
+    ///
+    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
+    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
+    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
+    ///
+    /// SUBDOMAINS AND IPS...
+    ///
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::OSINT, CHOICE::ipaddress); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToRecords();});
+
+    /**** For Right-Click ContextMenu ****/
+    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
+    //...
+    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
+    //...
+    connect(&actionSendToOsint_c, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
+    connect(&actionSendToIp_c, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
+    connect(&actionSendToBrute_c, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
+    connect(&actionSendToActive_c, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
+    connect(&actionSendToRecords_c, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
 }
 
 void Osint::on_checkBoxUseProfiles_clicked(bool checked){
@@ -1489,26 +1641,6 @@ void Osint::on_buttonAction_clicked(){
     saveMenu->setTitle("Save");
     copyMenu->setTitle("Copy");
     ///
-    /// SAVE...
-    ///
-    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
-    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
-    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
-    ///
-    /// COPY...
-    ///
-    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
-    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
-    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
-    ///
-    /// SUBDOMAINS AND IPS...
-    ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::OSINT, CHOICE::ipaddress); emit changeTabToIp();});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToRecords();});
-    ///
     /// ADDING ACTIONS TO THE CONTEXT MENU...
     ///
     saveMenu->addAction(&actionSaveSubdomains);
@@ -1521,6 +1653,9 @@ void Osint::on_buttonAction_clicked(){
     ///
     /// ....
     ///
+    Menu->addAction(&actionClearResults);
+    Menu->addSeparator();
+    //...
     Menu->addMenu(copyMenu);
     Menu->addMenu(saveMenu);
     //...
@@ -1553,29 +1688,16 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     ///
     /// ...
     ///
-    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
-    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
-    //...
-    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
-    //...
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
-    ///
-    /// ...
-    ///
     Menu->addAction(&actionCopy);
     Menu->addAction(&actionSave);
     Menu->addSeparator();
     Menu->addAction(&actionOpenInBrowser);
     Menu->addSeparator();
-    Menu->addAction(&actionSendToIp);
-    Menu->addAction(&actionSendToOsint);
-    Menu->addAction(&actionSendToBrute);
-    Menu->addAction(&actionSendToActive);
-    Menu->addAction(&actionSendToRecords);
+    Menu->addAction(&actionSendToIp_c);
+    Menu->addAction(&actionSendToOsint_c);
+    Menu->addAction(&actionSendToBrute_c);
+    Menu->addAction(&actionSendToActive_c);
+    Menu->addAction(&actionSendToRecords_c);
     ///
     /// showing the menu...
     ///
@@ -1648,7 +1770,7 @@ void Osint::onSaveResults(CHOICE choice){
     file.close();
 }
 
-void Osint::onSaveResults(QItemSelectionModel *){
+void Osint::onSaveResults(QItemSelectionModel *selectionModel){
     QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
     if(filename.isEmpty()){
         return;
@@ -1723,7 +1845,7 @@ void Osint::onCopyResults(CHOICE choice){
     clipboard->setText(clipboardData);
 }
 
-void Osint::onCopyResults(QItemSelectionModel *){
+void Osint::onCopyResults(QItemSelectionModel *selectionModel){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QSet<QString> itemSet;
     QString data;

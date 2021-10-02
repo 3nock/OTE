@@ -22,7 +22,7 @@ void Netcraft::start(){
 void Netcraft::replyFinished(QNetworkReply *reply){
     if(reply->error())
     {
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
     else
     {

@@ -25,7 +25,7 @@ void Threatminer::start(){
 void Threatminer::replyFinished(QNetworkReply *reply){
     if(reply->error())
     {
-        // an error occured...
+        emit errorLog(reply->errorString());
     }
     else
     {
@@ -33,14 +33,13 @@ void Threatminer::replyFinished(QNetworkReply *reply){
         QJsonObject jsonObject = jsonReply.object();
         if(jsonObject["status_code"].toString() == "200")
         {
-            emit scanStatus(jsonObject["status_message"].toString());
             QJsonArray results = jsonObject["results"].toArray();
             foreach(const QJsonValue &value, results)
                 emit scanResults(value.toString());
         }
         else
         {
-            emit scanError("An Error Ocurred: "+jsonObject["status_code"].toString());
+            emit errorLog("An Error Ocurred: "+jsonObject["status_code"].toString());
         }
     }
     reply->deleteLater();

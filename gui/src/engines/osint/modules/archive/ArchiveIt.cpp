@@ -26,7 +26,7 @@ void ArchiveIt::replyFinished(QNetworkReply *reply){
             emit scanResults(url);
     }
     else{
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
     reply->deleteLater();
     emit quitThread();

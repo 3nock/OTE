@@ -73,7 +73,7 @@ void BinaryEdge::replyFinished(QNetworkReply *reply){
         return;
     }
     else{
-        emit scanResults(reply->errorString());
+        emit errorLog(reply->errorString());
     }
 
 END:

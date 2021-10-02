@@ -24,6 +24,7 @@ class Ip : public AbstractEngine{
         void onScanResult(QString subdomain, QString ipAddress);
 
     private slots:
+        void onClearResults();
         void onSaveResults(CHOICE);
         void onSaveResults(QItemSelectionModel*);
         void onCopyResults(CHOICE);
@@ -45,7 +46,7 @@ class Ip : public AbstractEngine{
         void startScan();
         void pauseScan();
         void ResumeScan();
-        void clearResults();
+        void connectActions();
 };
 
 #endif // IP_H
