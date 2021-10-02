@@ -1,10 +1,7 @@
 #ifndef DNSRECORDSSCANNER_H
 #define DNSRECORDSSCANNER_H
 
-#include <QObject>
-#include <QThread>
-#include "src/utils/utils.h"
-#include <QLabel>
+#include "../AbstractScanner.h"
 
 enum OPTION{
     ALLRECORDS = 0,
@@ -48,21 +45,17 @@ struct Results{
     QString srvTarget = nullptr;
 };
 
-class Scanner: public QObject{
+class Scanner: public AbstractScanner{
     Q_OBJECT
 
     public:
         Scanner(ScanConfig *scanConfig, records::ScanArguments *scanArguments);
-        ~Scanner();
+        ~Scanner() override;
         //...
-        void startScan(QThread *cThread);
         void startScan_srv(QThread *cThread);
 
-    public slots:
-        void stopScan();
-
     private slots:
-        void lookup();
+        void lookup() override;
         void lookup_srv();
         void finish();
         //...
@@ -75,11 +68,7 @@ class Scanner: public QObject{
         void txtLookupFinished();
 
     signals:
-        void scanProgress(int value);
         void scanResult(records::Results);
-        void scanLog(QString log);
-        //...
-        void quitThread();
         void done();
         //...
         void doLookup();

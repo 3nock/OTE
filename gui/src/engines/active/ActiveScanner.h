@@ -1,10 +1,8 @@
 #ifndef ACTIVESCANNER_H
 #define ACTIVESCANNER_H
 
-#include <QObject>
-#include <QThread>
 #include <QTcpSocket>
-#include "src/utils/utils.h"
+#include "../AbstractScanner.h"
 #include "src/dialogs/ConfigDialog.h"
 
 
@@ -31,30 +29,21 @@ struct ScanArguments{
 typedef struct ScanArguments ScanArguments;
 
 
-class Scanner : public QObject{
+class Scanner : public AbstractScanner{
     Q_OBJECT
 
     public:
         Scanner(ScanConfig *scanConfig, active::ScanArguments *scanArguments);
-        ~Scanner();
-        //...
-        void startScan(QThread *cThread);
+        ~Scanner() override;
 
-    public slots:
-        void stopScan();
 
     private slots:
-        void lookup();
         void lookupFinished();
+        void lookup() override;
 
     signals:
         void anotherLookup();
-        //...
-        void scanProgress(int value);
         void scanResult(QString subdomain, QString ipAddress);
-        void scanLog(QString log);
-        //...
-        void quitThread();
 
     private:
         int m_currentTargetToEnumerate = 0;

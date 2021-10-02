@@ -50,11 +50,6 @@ records::Scanner::~Scanner(){
     delete m_dns_cname;
 }
 
-void records::Scanner::startScan(QThread *cThread){
-    connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
-    connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
-}
-
 void records::Scanner::startScan_srv(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup_srv()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
@@ -169,11 +164,6 @@ void records::Scanner::lookup_srv(){
         }
     }
 }
-
-void records::Scanner::stopScan(){
-    emit quitThread();
-}
-
 
 void records::Scanner::srvLookupFinished(){
     if(m_dns_srv->error() == QDnsLookup::NoError)

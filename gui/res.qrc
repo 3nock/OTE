@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/img">
         <file>res/icons/main.ico</file>
-        <file>res/icons/folder.png</file>
-        <file>res/icons/settings.png</file>
         <file>res/icons/folder2.png</file>
         <file>res/icons/arrow.png</file>
         <file>res/icons/checkBox2.png</file>
@@ -10,9 +8,9 @@
     <qresource prefix="/files">
         <file>res/files/nameservers.txt</file>
         <file>res/files/srv.txt</file>
+        <file>res/files/userAgents.txt</file>
     </qresource>
     <qresource prefix="/themes">
-        <file>res/themes/native.qss</file>
-        <file>res/themes/ice.qss</file>
+        <file>res/themes/stylesheet.qss</file>
     </qresource>
 </RCC>

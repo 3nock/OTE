@@ -44,6 +44,7 @@ SOURCES += \
     src/engines/osint/modules/api/SecurityTrails.cpp \
     src/engines/osint/modules/api/Shodan.cpp \
     src/engines/osint/modules/api/ThreatBook.cpp \
+    src/engines/osint/modules/api/ViewDns.cpp \
     src/engines/osint/modules/api/WhoisXmlApi.cpp \
     src/engines/osint/modules/api/ZETAlytics.cpp \
     src/engines/osint/modules/api/ZoomEye.cpp \
@@ -68,14 +69,20 @@ SOURCES += \
     src/engines/osint/modules/cert/GoogleCert.cpp \
     src/engines/osint/modules/cert/CensysFree.cpp \
     src/engines/osint/modules/scrape/Ask.cpp \
+    src/engines/osint/modules/scrape/Baidu.cpp \
+    src/engines/osint/modules/scrape/Bing.cpp \
+    src/engines/osint/modules/scrape/DogPile.cpp \
+    src/engines/osint/modules/scrape/DuckDuckGo.cpp \
+    src/engines/osint/modules/scrape/Exalead.cpp \
+    src/engines/osint/modules/scrape/Trello.cpp \
+    src/engines/osint/modules/scrape/Yahoo.cpp \
     src/engines/osint/modules/site/Dnsdumpster.cpp \
     src/engines/osint/modules/site/Netcraft.cpp \
+    src/engines/osint/modules/site/PagesInventory.cpp \
     src/engines/osint/modules/site/Pkey.cpp \
     src/engines/osint/modules/site/Rapiddns.cpp \
+    src/engines/osint/modules/site/SiteDossier.cpp \
     src/engines/osint/modules/site/Suip.cpp \
-    src/engines/ContextMenu.cpp \
-    src/engines/CommonScanners.cpp \
-    src/engines/Base.cpp \
     src/engines/ip/Ip.cpp \
     src/engines/ip/IpScanner.cpp \
     src/engines/active/Active.cpp \
@@ -86,6 +93,8 @@ SOURCES += \
     src/engines/brute/BruteScanner.cpp \
     src/engines/osint/Osint.cpp \
     src/engines/osint/OsintScanner.cpp \
+    src/engines/CommonScanners.cpp \
+    src/engines/AbstractEngine.cpp \
     src/project/general/GeneralAnalysis.cpp \
     src/project/specific/SpecificAnalysis.cpp \
     src/project/ProjectDataModel.cpp \
@@ -104,6 +113,7 @@ SOURCES += \
     src/main.cpp \
 
 HEADERS += \
+    src/engines/AbstractScanner.h \
     src/engines/osint/modules/api/Bgpview.h \
     src/engines/osint/modules/api/BinaryEdge.h \
     src/engines/osint/modules/api/C99.h \
@@ -120,6 +130,7 @@ HEADERS += \
     src/engines/osint/modules/api/SecurityTrails.h \
     src/engines/osint/modules/api/Shodan.h \
     src/engines/osint/modules/api/ThreatBook.h \
+    src/engines/osint/modules/api/ViewDns.h \
     src/engines/osint/modules/api/WhoisXmlApi.h \
     src/engines/osint/modules/api/ZETAlytics.h \
     src/engines/osint/modules/api/ZoomEye.h \
@@ -144,16 +155,21 @@ HEADERS += \
     src/engines/osint/modules/cert/GoogleCert.h \
     src/engines/osint/modules/cert/CensysFree.h \
     src/engines/osint/modules/scrape/Ask.h \
+    src/engines/osint/modules/scrape/Baidu.h \
+    src/engines/osint/modules/scrape/Bing.h \
+    src/engines/osint/modules/scrape/DogPile.h \
+    src/engines/osint/modules/scrape/DuckDuckGo.h \
+    src/engines/osint/modules/scrape/Exalead.h \
+    src/engines/osint/modules/scrape/Trello.h \
+    src/engines/osint/modules/scrape/Yahoo.h \
     src/engines/osint/modules/site/Dnsdumpster.h \
     src/engines/osint/modules/site/Netcraft.h \
+    src/engines/osint/modules/site/PagesInventory.h \
     src/engines/osint/modules/site/Pkey.h \
     src/engines/osint/modules/site/Rapiddns.h \
+    src/engines/osint/modules/site/SiteDossier.h \
     src/engines/osint/modules/site/Suip.h \
     src/engines/osint/modules/AbstractOsintModule.h \
-    src/engines/AbstractEngine.h \
-    src/engines/ContextMenu.h \
-    src/engines/CommonScanners.h \
-    src/engines/Base.h \
     src/engines/ip/Ip.h \
     src/engines/ip/IpScanner.h \
     src/engines/active/Active.h \
@@ -164,6 +180,8 @@ HEADERS += \
     src/engines/brute/BruteScanner.h \
     src/engines/osint/Osint.h \
     src/engines/osint/OsintScanner.h \
+    src/engines/AbstractEngine.h \
+    src/engines/CommonScanners.h \
     src/project/general/GeneralAnalysis.h \
     src/project/specific/SpecificAnalysis.h \
     src/project/ProjectDataModel.h \

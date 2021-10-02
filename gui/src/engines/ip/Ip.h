@@ -2,7 +2,7 @@
 #define IP_H
 
 #include "src/utils/utils.h"
-#include "src/engines/Base.h"
+#include "src/engines/AbstractEngine.h"
 #include "IpScanner.h"
 #include "src/dialogs/ConfigDialog.h"
 
@@ -10,7 +10,7 @@ namespace Ui {
     class Ip;
 }
 
-class Ip : public BaseClass{
+class Ip : public AbstractEngine{
         Q_OBJECT
 
     public:
@@ -18,25 +18,34 @@ class Ip : public BaseClass{
         ~Ip();
 
     public slots:
-        void scanResult(QString subdomain, QString ipAddress);
-        void scanThreadEnded();
+        void onScanThreadEnded();
+        void onInfoLog(QString log);
+        void onErrorLog(QString log);
+        void onScanResult(QString subdomain, QString ipAddress);
 
     private slots:
+        void onSaveResults(CHOICE);
+        void onSaveResults(QItemSelectionModel*);
+        void onCopyResults(CHOICE);
+        void onCopyResults(QItemSelectionModel*);
+        ///
+        /// ....
+        ///
         void on_buttonStart_clicked();
         void on_buttonStop_clicked();
-        void on_buttonPause_clicked();
         void on_buttonAction_clicked();
         void on_buttonConfig_clicked();
-        void on_buttonClearResults_clicked();
-        //...
         void on_comboBoxOption_currentIndexChanged(int index);
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
 
     private:
         Ui::Ip *ui;
-        //...
-        void startScan();
         ip::ScanArguments *m_scanArguments;
+        void stopScan();
+        void startScan();
+        void pauseScan();
+        void ResumeScan();
+        void clearResults();
 };
 
 #endif // IP_H

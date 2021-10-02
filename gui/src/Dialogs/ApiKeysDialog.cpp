@@ -50,6 +50,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("threatbook", ui->lineEditThreatBook->text());
     Config::generalConfig().setValue("whoisxmlapi", ui->lineEditWhoisXmlApi->text());
     Config::generalConfig().setValue("zoomeye", ui->lineEditZoomEye->text());
+    Config::generalConfig().setValue("viewdns", ui->lineEditViewDns->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -194,6 +195,11 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditIpApi->setText(key);
         ui->buttonGetIpApi->hide();
     }
+    key = Config::generalConfig().value("viewdns").toString();
+    if(!key.isEmpty()){
+        ui->lineEditViewDns->setText(key);
+        ui->buttonGetViewDns->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -288,4 +294,8 @@ void ApiKeysDialog::on_buttonGetZoomEye_clicked(){
 
 void ApiKeysDialog::on_buttonGetIpApi_clicked(){
     QDesktopServices::openUrl(QUrl("https://ipapi.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetViewDns_clicked(){
+    QDesktopServices::openUrl(QUrl("https://viewdns.info/", QUrl::TolerantMode));
 }

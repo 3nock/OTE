@@ -1,6 +1,7 @@
 #include "Brute.h"
 #include "ui_Brute.h"
 
+#include <QClipboard>
 /*
  * homoglyphs - in wordlist creation...
  * many sites are created from homoglyphs of existing ones
@@ -59,7 +60,7 @@
  */
 
 Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
-    BaseClass(ENGINE::BRUTE, resultsModel, status, parent),
+    AbstractEngine(parent, resultsModel, status),
     ui(new Ui::Brute),
     m_scanArguments(new brute::ScanArguments)
 {
@@ -69,7 +70,7 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     ///
     ui->targets->init("Targets");
     ui->wordlist->init("Wordlist");
-    initBaseClass(ui->targets);
+    targets = ui->targets;
     scanConfig->name = tr("ScanConfig-Brute");
     ///
     /// ...
@@ -79,8 +80,9 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     /// ...
     ///
     ui->buttonStop->setDisabled(true);
-    ui->buttonPause->setDisabled(true);
+    //ui->buttonPause->setDisabled(true);
     //...
+    ui->buttonAction->hide();
     ui->targets->hide();
     ui->progressBar->hide();
     ///
@@ -98,6 +100,14 @@ Brute::~Brute(){
     delete m_scanArguments;
     //...
     delete ui;
+}
+
+void Brute::onInfoLog(QString log){
+
+}
+
+void Brute::onErrorLog(QString log){
+
 }
 
 void Brute::on_buttonStart_clicked(){
@@ -121,7 +131,7 @@ void Brute::on_buttonStart_clicked(){
     /// disabling & Enabling widgets...
     ///
     ui->buttonStart->setDisabled(true);
-    ui->buttonPause->setEnabled(true);
+    //ui->buttonPause->setEnabled(true);
     ui->buttonStop->setEnabled(true);
     ui->progressBar->show();
     ///
@@ -190,34 +200,41 @@ void Brute::on_buttonStart_clicked(){
     /// Starting the scan...
     ///
     startScan();
+    ui->buttonAction->show();
     //...
     sendStatus("[START] Started Subdomain Enumeration!");
-    logs("[START] Started Subdomain Enumeration!");
 }
 void Brute::on_lineEditTarget_returnPressed(){
     on_buttonStart_clicked();
 }
 
-void Brute::on_buttonPause_clicked(){
+void Brute::stopScan(){
+
+}
+
+void Brute::pauseScan(){
     ///
     /// if the scan was already paused, then this current click is to
     /// Resume the scan, just call the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
     if(status->brute->isPaused){
-        ui->buttonPause->setText("Pause");
+        //ui->buttonPause->setText("Pause");
         status->brute->isPaused = false;
         //...
         startScan();
         //...
         sendStatus("[START] Resumed Subdomain Enumeration!");
-        logs("[START] Resumed Subdomain Enumeration!");
     }
     else
     {
         status->brute->isPaused = true;
         emit stopScan();
     }
+}
+
+void Brute::resumeScan(){
+
 }
 
 void Brute::on_buttonStop_clicked(){
@@ -230,11 +247,10 @@ void Brute::on_buttonStop_clicked(){
         status->brute->isRunning = false;
         //...
         ui->buttonStart->setEnabled(true);
-        ui->buttonPause->setDisabled(true);
+        //ui->buttonPause->setDisabled(true);
         ui->buttonStop->setDisabled(true);
         //...
         sendStatus("[*] Enumeration Complete!");
-        logs("[END] Enumeration Complete!\n");
     }
     status->brute->isStopped = true;
 }
@@ -251,7 +267,7 @@ void Brute::startScan(){
     {
         threadsCount = wordlistCount;
     }
-    activeThreads = threadsCount;
+    status->brute->activeThreads = threadsCount;
     ///
     /// loop to create threads for scan...
     ///
@@ -262,20 +278,21 @@ void Brute::startScan(){
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
         //...
-        connect(scanner, SIGNAL(scanResult(QString, QString, QString)), this, SLOT(scanResult(QString, QString, QString)));
-        connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
-        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
-        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
-        connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stopScan()), scanner, SLOT(stopScan()));
+        connect(scanner, &brute::Scanner::scanResult, this, &Brute::onScanResult);
+        connect(scanner, &brute::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &brute::Scanner::infoLog, this, &Brute::onInfoLog);
+        connect(scanner, &brute::Scanner::errorLog, this, &Brute::onErrorLog);
+        connect(cThread, &QThread::finished, this, &Brute::onScanThreadEnded);
+        connect(cThread, &QThread::finished, scanner, &brute::Scanner::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        connect(this, &Brute::stopScanThread, scanner, &brute::Scanner::onStopScan);
         //...
         cThread->start();
     }
     status->brute->isRunning = true;
 }
 
-void Brute::scanResult(QString subdomain, QString ipAddress, QString target){
+void Brute::onScanResult(QString subdomain, QString ipAddress, QString target){
     if(m_subdomainsSet.contains(subdomain)){
         return;
     }
@@ -296,20 +313,19 @@ void Brute::scanResult(QString subdomain, QString ipAddress, QString target){
     }
 }
 
-void Brute::scanThreadEnded(){
-    activeThreads--;
+void Brute::onScanThreadEnded(){
+    status->brute->activeThreads--;
     ///
     /// if all Scan Threads have finished...
     ///
-    if(activeThreads == 0)
+    if(status->brute->activeThreads == 0)
     {
         if(status->brute->isPaused)
         {
-            ui->buttonPause->setText("Resume");
+            //ui->buttonPause->setText("Resume");
             status->brute->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
-            logs("[*] Scan Paused!\n");
             return;
         }
         else
@@ -324,11 +340,10 @@ void Brute::scanThreadEnded(){
             status->brute->isRunning = false;
             //...
             ui->buttonStart->setEnabled(true);
-            ui->buttonPause->setDisabled(true);
+            //ui->buttonPause->setDisabled(true);
             ui->buttonStop->setDisabled(true);
             //...
             sendStatus("[*] Enumeration Complete!");
-            logs("[END] Enumeration Complete!\n");
         }
     }
 }
@@ -339,7 +354,7 @@ void Brute::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Brute::on_buttonClearResults_clicked(){
+void Brute::clearResults(){
     ///
     /// if the current tab is subdomains clear subdomains...
     ///
@@ -377,7 +392,7 @@ void Brute::on_buttonWordlist_clicked(){
     wordlistDialog->show();
 }
 
-void Brute::choosenWordlist(QString wordlistFilename){
+void Brute::onChoosenWordlist(QString wordlistFilename){
     QFile file(wordlistFilename);
     ui->wordlist->add(file);
 }
@@ -394,7 +409,63 @@ void Brute::on_buttonAction_clicked(){
     /// showing the context menu right by the side of the action button...
     ///
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
-    a_Menu->exec(QPoint(pos.x()+76, pos.y()));
+    pos = QPoint(pos.x()+65, pos.y());
+    ///
+    /// creating the context menu...
+    ///
+    QMenu *Menu = new QMenu(this);
+    QMenu *saveMenu = new QMenu(this);
+    QMenu *copyMenu = new QMenu(this);
+    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    //...
+    saveMenu->setTitle("Save");
+    copyMenu->setTitle("Copy");
+    ///
+    /// SAVE...
+    ///
+    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
+    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
+    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
+    ///
+    /// COPY...
+    ///
+    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
+    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
+    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
+    ///
+    /// SUBDOMAINS AND IPS...
+    ///
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::BRUTE, CHOICE::ipaddress); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToRecords();});
+    ///
+    /// ADDING ACTIONS TO THE CONTEXT MENU...
+    ///
+    saveMenu->addAction(&actionSaveSubdomains);
+    saveMenu->addAction(&actionSaveIpAddresses);
+    saveMenu->addAction(&actionSaveAll);
+    //...
+    copyMenu->addAction(&actionCopySubdomains);
+    copyMenu->addAction(&actionCopyIpAddresses);
+    copyMenu->addAction(&actionCopyAll);
+    ///
+    /// ....
+    ///
+    Menu->addMenu(copyMenu);
+    Menu->addMenu(saveMenu);
+    //...
+    Menu->addSeparator();
+    Menu->addAction(&actionSendToIp);
+    Menu->addAction(&actionSendToOsint);
+    Menu->addAction(&actionSendToBrute);
+    Menu->addAction(&actionSendToActive);
+    Menu->addAction(&actionSendToRecords);
+    ///
+    /// showing the context menu...
+    ///
+    Menu->exec(pos);
 }
 
 void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
@@ -406,7 +477,41 @@ void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         return;
     }
     selectionModel = ui->tableViewResults->selectionModel();
-    c_Menu->exec(QCursor::pos());
+    ///
+    /// creating the context menu...
+    ///
+    QMenu *Menu = new QMenu(this);
+    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    ///
+    /// ...
+    ///
+    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
+    //...
+    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
+    //...
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+    ///
+    /// ...
+    ///
+    Menu->addAction(&actionCopy);
+    Menu->addAction(&actionSave);
+    Menu->addSeparator();
+    Menu->addAction(&actionOpenInBrowser);
+    Menu->addSeparator();
+    Menu->addAction(&actionSendToIp);
+    Menu->addAction(&actionSendToOsint);
+    Menu->addAction(&actionSendToBrute);
+    Menu->addAction(&actionSendToActive);
+    Menu->addAction(&actionSendToRecords);
+    ///
+    /// showing the menu...
+    ///
+    Menu->exec(QCursor::pos());
 }
 
 void Brute::on_checkBoxMultipleTargets_clicked(bool checked){
@@ -414,4 +519,157 @@ void Brute::on_checkBoxMultipleTargets_clicked(bool checked){
         ui->targets->show();
     else
         ui->targets->hide();
+}
+
+void Brute::onSaveResults(CHOICE choice){
+    ///
+    /// checks...
+    ///
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        return;
+    }
+    ///
+    /// variable declarations...
+    ///
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// choice of item to save...
+    ///
+    switch(choice){
+    case CHOICE::susbdomains:
+        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        {
+            item = resultsModel->brute->item(i, 0)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+    case CHOICE::ipaddress:
+        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        {
+            item = resultsModel->brute->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+    case CHOICE::all:
+        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        {
+            item = resultsModel->brute->item(i, 0)->text()+":"+resultsModel->brute->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+
+    default:
+        break;
+    }
+    file.close();
+}
+
+void Brute::onSaveResults(QItemSelectionModel *){
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(file.isOpen())
+    {
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            item = index.data().toString();
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                data.append(item.append(NEWLINE));
+            }
+        }
+        file.write(data.toUtf8());
+        file.close();
+    }
+}
+
+void Brute::onCopyResults(CHOICE choice){
+    ///
+    /// variable declaration...
+    ///
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString clipboardData;
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// type of item to save...
+    ///
+    switch(choice){
+    case CHOICE::susbdomains:
+        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        {
+            item = resultsModel->brute->item(i, 0)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    case CHOICE::ipaddress:
+        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        {
+            item = resultsModel->brute->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    case CHOICE::all:
+        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        {
+            item = resultsModel->brute->item(i, 0)->text()+"|"+resultsModel->brute->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    clipboard->setText(clipboardData);
+}
+
+void Brute::onCopyResults(QItemSelectionModel *){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        item = index.data().toString();
+        if(!itemSet.contains(item)){
+            itemSet.insert(item);
+            data.append(item.append(NEWLINE));
+        }
+    }
+    clipboard->setText(data);
 }

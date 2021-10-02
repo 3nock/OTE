@@ -2,7 +2,7 @@
 #define BRUTE_H
 
 #include "src/utils/utils.h"
-#include "src/engines/Base.h"
+#include "src/engines/AbstractEngine.h"
 #include "src/engines/CommonScanners.h"
 #include "BruteScanner.h"
 
@@ -10,7 +10,7 @@ namespace Ui {
     class Brute;
 }
 
-class Brute : public BaseClass{
+class Brute : public AbstractEngine{
     Q_OBJECT
 
     public:
@@ -18,18 +18,25 @@ class Brute : public BaseClass{
         ~Brute();
 
     public slots:
-        void scanResult(QString subdomain, QString ipAddress, QString target);
-        void scanThreadEnded();
+        void onScanThreadEnded();
+        void onInfoLog(QString log);
+        void onErrorLog(QString log);
+        void onScanResult(QString subdomain, QString ipAddress, QString target);
         //...
-        void choosenWordlist(QString);
+        void onChoosenWordlist(QString);
 
     private slots:
+        void onSaveResults(CHOICE);
+        void onSaveResults(QItemSelectionModel*);
+        void onCopyResults(CHOICE);
+        void onCopyResults(QItemSelectionModel*);
+        ///
+        /// ....
+        ///
         void on_buttonStart_clicked();
-        void on_buttonPause_clicked();
         void on_buttonStop_clicked();
         void on_buttonAction_clicked();
         void on_buttonConfig_clicked();
-        void on_buttonClearResults_clicked();
         void on_buttonWordlist_clicked();
         void on_lineEditTarget_returnPressed();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
@@ -37,10 +44,13 @@ class Brute : public BaseClass{
 
     private:
         Ui::Brute *ui;
-        //...
-        void startScan();
         QSet<QString> m_subdomainsSet;
         brute::ScanArguments *m_scanArguments;
+        void stopScan();
+        void startScan();
+        void pauseScan();
+        void resumeScan();
+        void clearResults();
 };
 
 #endif // BRUTE_H

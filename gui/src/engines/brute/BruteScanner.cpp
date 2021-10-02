@@ -16,11 +16,6 @@ brute::Scanner::~Scanner(){
     delete m_dns;
 }
 
-void brute::Scanner::startScan(QThread *cThread){
-    connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
-    connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
-}
-
 void brute::Scanner::lookupFinished(){
     ///
     /// check the results of the lookup if no error occurred emit the results
@@ -47,15 +42,15 @@ void brute::Scanner::lookupFinished(){
             break;
         //...
         case QDnsLookup::InvalidReplyError:
-            emit scanLog("[ERROR] InvalidReplyError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            emit errorLog("[ERROR] InvalidReplyError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
             break;
         //...
         case QDnsLookup::InvalidRequestError:
-            emit scanLog("[ERROR] InvalidRequestError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            emit errorLog("[ERROR] InvalidRequestError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
             break;
         //...
         case QDnsLookup::ResolverError:
-            emit scanLog("[ERROR] ResolverError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            emit errorLog("[ERROR] ResolverError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
             break;
         //...
         default:
@@ -106,11 +101,4 @@ void brute::Scanner::lookup(){
             return;
         }
     }
-}
-
-void brute::Scanner::stopScan(){
-    ///
-    /// quiting all running threads upon receiving stop signal...
-    ///
-    emit quitThread();
 }

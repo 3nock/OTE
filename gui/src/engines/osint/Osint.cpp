@@ -1,10 +1,21 @@
 #include "Osint.h"
 #include "ui_Osint.h"
 //...
+#include <QClipboard>
 #include "src/utils/Config.h"
 #include "src/dialogs/OsintConfigDialog.h"
 //...
+#include "src/engines/osint/modules/site/PagesInventory.h"
+#include "src/engines/osint/modules/site/SiteDossier.h"
+#include "src/engines/osint/modules/scrape/Bing.h"
+#include "src/engines/osint/modules/scrape/Yahoo.h"
+#include "src/engines/osint/modules/scrape/Trello.h"
+#include "src/engines/osint/modules/scrape/Exalead.h"
+#include "src/engines/osint/modules/scrape/DuckDuckGo.h"
+#include "src/engines/osint/modules/scrape/DogPile.h"
+#include "src/engines/osint/modules/scrape/Baidu.h"
 #include "src/engines/osint/modules/scrape/Ask.h"
+#include "src/engines/osint/modules/api/ViewDns.h"
 #include "src/engines/osint/modules/api/IpApi.h"
 #include "src/engines/osint/modules/api/ZoomEye.h"
 #include "src/engines/osint/modules/api/ZETAlytics.h"
@@ -51,7 +62,10 @@
 #define TRUE "1"
 #define FALSE "0"
 
-/*
+/* log on every scan each module its results count
+ *
+ * http://ipv4info.com/account/register/
+ * https://riddler.io/auth/register
  * https://dnschecker.org/all-tools.php
  * https://suip.biz/
  * https://viewdns.info/api/
@@ -60,6 +74,7 @@
  * https://skrapp.io/api
  * https://hunter.io/bulk-finders
  *
+ * https://tools.epieos.com/email.php ->email-lookup
  * rename AbstractOsintModule to AbstractOsintModule
  *
  * create a json to QStandardItem Tree...
@@ -101,7 +116,7 @@
  */
 
 Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
-    BaseClass(ENGINE::OSINT, resultsModel, status, parent),
+    AbstractEngine(parent, resultsModel, status),
     ui(new Ui::Osint),
     m_scanArguments(new osint::ScanArguments),
     m_scanResults(new osint::ScanResults)
@@ -111,7 +126,7 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     /// init...
     ///
     ui->targets->init("Targets");
-    initBaseClass(ui->targets);
+    targets = ui->targets;
     scanConfig->name = tr("ScanConfig-Osint");
     ///
     /// ...
@@ -123,11 +138,12 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     resultsModel->osint->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
     ui->tableViewResults->setModel(resultsModel->osint);
     //...
-    ui->buttonPause->setDisabled(true);
+    //ui->buttonPause->setDisabled(true);
     ui->buttonStop->setDisabled(true);
     ///
     /// hide widgets...
     ///
+    ui->buttonAction->hide();
     ui->progressBar->hide();
     ui->targets->hide();
     ui->frameProfiles->hide();
@@ -143,6 +159,14 @@ Osint::~Osint(){
     delete m_scanArguments;
     delete m_scanResults;
     delete ui;
+}
+
+void Osint::onInfoLog(QString log){
+
+}
+
+void Osint::onErrorLog(QString log){
+
 }
 
 void Osint::on_buttonStart_clicked(){
@@ -161,6 +185,7 @@ void Osint::on_buttonStart_clicked(){
     /// enumerate...
     ///
     startScan();
+    ui->buttonAction->show();
 }
 void Osint::on_lineEditTarget_returnPressed(){
     on_buttonStart_clicked();
@@ -169,6 +194,10 @@ void Osint::on_lineEditTarget_returnPressed(){
 void Osint::on_buttonStop_clicked(){
     emit stopScan();
     sendStatus("[*] Stopping...");
+}
+
+void Osint::stopScan(){
+
 }
 
 void Osint::startScan(){
@@ -185,7 +214,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_otx->isChecked())
     {
@@ -200,7 +229,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_sublist3r->isChecked())
     {
@@ -215,7 +244,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_threatminer->isChecked())
     {
@@ -230,7 +259,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_threatcrowd->isChecked())
     {
@@ -245,7 +274,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_hackertarget->isChecked())
     {
@@ -260,7 +289,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_dnsbufferoverrun->isChecked())
     {
@@ -275,7 +304,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_anubis->isChecked())
     {
@@ -290,7 +319,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_projectdiscovery->isChecked())
     {
@@ -305,7 +334,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_spyse->isChecked())
     {
@@ -320,7 +349,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_crtsh->isChecked())
     {
@@ -335,7 +364,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_dnsdumpster->isChecked())
     {
@@ -350,7 +379,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_netcraft->isChecked())
     {
@@ -365,7 +394,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_suip->isChecked())
     {
@@ -380,7 +409,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_pkey->isChecked()){
         Pkey *pkey = new Pkey(ui->lineEditTarget->text());
@@ -394,7 +423,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_rapiddns->isChecked()){
         Rapiddns *rapiddns = new Rapiddns(ui->lineEditTarget->text());
@@ -408,7 +437,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_googleCert->isChecked()){
         GoogleCert *googlecert = new GoogleCert(ui->lineEditTarget->text());
@@ -422,7 +451,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_omnisint->isChecked()){
         Omnisint *omnisint = new Omnisint(ui->lineEditTarget->text());
@@ -436,7 +465,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_qwant->isChecked()){
         Qwant *qwant = new Qwant(ui->lineEditTarget->text());
@@ -450,7 +479,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_virustotalapi->isChecked()){
         VirusTotal *virustotal = new VirusTotal(ui->lineEditTarget->text());
@@ -464,7 +493,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_urlscan->isChecked()){
         Urlscan *urlscan = new Urlscan(ui->lineEditTarget->text());
@@ -478,7 +507,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_waybackmachine->isChecked()){
         Waybackmachine *waybackmachine = new Waybackmachine(ui->lineEditTarget->text());
@@ -492,7 +521,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_archiveToday->isChecked()){
         ArchiveToday *archivetoday = new ArchiveToday(ui->lineEditTarget->text());
@@ -506,7 +535,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_archiveit->isChecked()){
         ArchiveIt *archiveit = new ArchiveIt(ui->lineEditTarget->text());
@@ -520,7 +549,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_censysFree->isChecked()){
         CensysFree *censysfree = new CensysFree(ui->lineEditTarget->text());
@@ -534,7 +563,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_bgpview->isChecked()){
         Bgpview *bgpview = new Bgpview(ui->lineEditTarget->text());
@@ -548,7 +577,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_binaryEdge->isChecked()){
         BinaryEdge *binaryedge = new BinaryEdge(ui->lineEditTarget->text());
@@ -562,7 +591,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_c99->isChecked()){
         C99 *c99 = new C99(ui->lineEditTarget->text());
@@ -576,7 +605,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_commonCrawl->isChecked()){
         CommonCrawl *commonCrawl = new CommonCrawl(ui->lineEditTarget->text());
@@ -590,7 +619,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_github->isChecked()){
         Github *github = new Github(ui->lineEditTarget->text());
@@ -604,7 +633,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_huntersearch->isChecked()){
         HunterSearch *huntersearch = new HunterSearch(ui->lineEditTarget->text());
@@ -618,7 +647,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_ipInfo->isChecked()){
         IpInfo *ipinfo = new IpInfo(ui->lineEditTarget->text());
@@ -632,7 +661,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_mnemonic->isChecked()){
         Mnemonic *mnemonic = new Mnemonic(ui->lineEditTarget->text());
@@ -646,7 +675,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_riskIq->isChecked()){
         RiskIq *riskiq = new RiskIq(ui->lineEditTarget->text());
@@ -660,7 +689,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_robtex->isChecked()){
         Robtex *robtex = new Robtex(ui->lineEditTarget->text());
@@ -674,7 +703,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_securitytrails->isChecked()){
         SecurityTrails *securitytrails = new SecurityTrails(ui->lineEditTarget->text());
@@ -688,7 +717,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_shodan->isChecked()){
         Shodan *shodan = new Shodan(ui->lineEditTarget->text());
@@ -702,7 +731,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_threatBook->isChecked()){
         ThreatBook *threatbook = new ThreatBook(ui->lineEditTarget->text());
@@ -716,7 +745,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_whoisXmlApi->isChecked()){
         WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(ui->lineEditTarget->text());
@@ -730,7 +759,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_zetalytics->isChecked()){
         ZETAlytics *zetalytics = new ZETAlytics(ui->lineEditTarget->text());
@@ -744,7 +773,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_zoomeye->isChecked()){
         ZoomEye *zoomeye = new ZoomEye(ui->lineEditTarget->text());
@@ -758,7 +787,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_ipApi->isChecked()){
         IpApi *ipapi = new IpApi(ui->lineEditTarget->text());
@@ -772,7 +801,7 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
     }
     if(ui->checkBox_engine_ask->isChecked()){
         Ask *ask = new Ask(ui->lineEditTarget->text());
@@ -786,16 +815,160 @@ void Osint::startScan(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
-        activeThreads++;
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_baidu->isChecked()){
+        Baidu *baidu = new Baidu(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        baidu->Enumerator(cThread);
+        baidu->moveToThread(cThread);
+        //...
+        connect(baidu, &Baidu::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, baidu, &Baidu::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_dogpile->isChecked()){
+        DogPile *dogpile = new DogPile(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        dogpile->Enumerator(cThread);
+        dogpile->moveToThread(cThread);
+        //...
+        connect(dogpile, &DogPile::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, dogpile, &DogPile::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_duckduckgo->isChecked()){
+        DuckDuckGo *duckduckgo = new DuckDuckGo(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        duckduckgo->Enumerator(cThread);
+        duckduckgo->moveToThread(cThread);
+        //...
+        connect(duckduckgo, &DuckDuckGo::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, duckduckgo, &DuckDuckGo::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_exalead->isChecked()){
+        Exalead *exalead = new Exalead(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        exalead->Enumerator(cThread);
+        exalead->moveToThread(cThread);
+        //...
+        connect(exalead, &Exalead::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, exalead, &Exalead::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_trello->isChecked()){
+        Trello *trello = new Trello(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        trello->Enumerator(cThread);
+        trello->moveToThread(cThread);
+        //...
+        connect(trello, &Trello::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, trello, &Trello::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_yahoo->isChecked()){
+        Yahoo *yahoo = new Yahoo(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        yahoo->Enumerator(cThread);
+        yahoo->moveToThread(cThread);
+        //...
+        connect(yahoo, &Yahoo::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, yahoo, &Yahoo::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_bing->isChecked()){
+        Bing *bing = new Bing(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        bing->Enumerator(cThread);
+        bing->moveToThread(cThread);
+        //...
+        connect(bing, &Bing::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, bing, &Bing::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_sitedossier->isChecked()){
+        SiteDossier *sitedossier = new SiteDossier(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        sitedossier->Enumerator(cThread);
+        sitedossier->moveToThread(cThread);
+        //...
+        connect(sitedossier, &SiteDossier::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, sitedossier, &SiteDossier::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_pagesInventory->isChecked()){
+        PagesInventory *pagesinventory = new PagesInventory(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        pagesinventory->Enumerator(cThread);
+        pagesinventory->moveToThread(cThread);
+        //...
+        connect(pagesinventory, &PagesInventory::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, pagesinventory, &PagesInventory::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->checkBox_engine_viewDns->isChecked()){
+        ViewDns *viewdns = new ViewDns(ui->lineEditTarget->text());
+        QThread *cThread = new QThread(this);
+        viewdns->Enumerator(cThread);
+        viewdns->moveToThread(cThread);
+        //...
+        connect(viewdns, &ViewDns::scanResults, this, &Osint::scanResults);
+        connect(cThread, &QThread::finished, this, &Osint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, viewdns, &ViewDns::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
     }
     ///
     /// after starting all choosen enumerations...
     ///
-    if(activeThreads)
+    if(status->osint->activeThreads)
     {
         ui->buttonStart->setDisabled(true);
         ui->buttonStop->setEnabled(true);
     }
+}
+
+void Osint::ResumeScan(){
+
 }
 
 void Osint::scanResults(QString subdomain){
@@ -811,8 +984,8 @@ void Osint::onEnumerationComplete(){
     ///
     /// check if no active thread...
     ///
-    activeThreads--;
-    if(activeThreads)
+    status->osint->activeThreads--;
+    if(status->osint->activeThreads)
         return;
     ///
     /// reanabling the widgets...
@@ -823,10 +996,9 @@ void Osint::onEnumerationComplete(){
     /// status...
     ///
     emit sendStatus("[END] Enumeration Complete!");
-    logs("[END] Enumeration Complete!\n");
 }
 
-void Osint::on_buttonClearResults_clicked(){
+void Osint::clearResults(){
     // clear subdomains...
     if(ui->tabWidgetResults->currentIndex() == 0){
         resultsModel->osint->clear();
@@ -1015,11 +1187,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->checkBox_engine_dnsdumpster->setChecked(true);
     }else{
         ui->checkBox_engine_dnsdumpster->setChecked(false);
-    }
-    if(settings.value(OSINT_PASSIVEDNS).toString() == TRUE){
-        ui->checkBox_engine_passivedns->setChecked(true);
-    }else{
-        ui->checkBox_engine_passivedns->setChecked(false);
     }
     if(settings.value(OSINT_YAHOO).toString() == TRUE){
         ui->checkBox_engine_yahoo->setChecked(true);
@@ -1250,11 +1417,6 @@ void Osint::on_buttonNewProfile_clicked(){
     }else{
         settings.setValue(OSINT_GOOGLE, FALSE);
     }
-    if(ui->checkBox_engine_passivedns->isChecked()){
-        settings.setValue(OSINT_PASSIVEDNS, TRUE);
-    }else{
-        settings.setValue(OSINT_PASSIVEDNS, FALSE);
-    }
     if(ui->checkBox_engine_yahoo->isChecked()){
         settings.setValue(OSINT_YAHOO, TRUE);
     }else{
@@ -1315,7 +1477,63 @@ void Osint::on_buttonAction_clicked(){
     /// showing the context menu right by the side of the action button...
     ///
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
-    a_Menu->exec(QPoint(pos.x()+76, pos.y()));
+    pos = QPoint(pos.x()+65, pos.y());
+    ///
+    /// creating the context menu...
+    ///
+    QMenu *Menu = new QMenu(this);
+    QMenu *saveMenu = new QMenu(this);
+    QMenu *copyMenu = new QMenu(this);
+    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    //...
+    saveMenu->setTitle("Save");
+    copyMenu->setTitle("Copy");
+    ///
+    /// SAVE...
+    ///
+    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
+    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
+    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
+    ///
+    /// COPY...
+    ///
+    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
+    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
+    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
+    ///
+    /// SUBDOMAINS AND IPS...
+    ///
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::OSINT, CHOICE::ipaddress); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::OSINT, CHOICE::susbdomains); emit changeTabToRecords();});
+    ///
+    /// ADDING ACTIONS TO THE CONTEXT MENU...
+    ///
+    saveMenu->addAction(&actionSaveSubdomains);
+    saveMenu->addAction(&actionSaveIpAddresses);
+    saveMenu->addAction(&actionSaveAll);
+    //...
+    copyMenu->addAction(&actionCopySubdomains);
+    copyMenu->addAction(&actionCopyIpAddresses);
+    copyMenu->addAction(&actionCopyAll);
+    ///
+    /// ....
+    ///
+    Menu->addMenu(copyMenu);
+    Menu->addMenu(saveMenu);
+    //...
+    Menu->addSeparator();
+    Menu->addAction(&actionSendToIp);
+    Menu->addAction(&actionSendToOsint);
+    Menu->addAction(&actionSendToBrute);
+    Menu->addAction(&actionSendToActive);
+    Menu->addAction(&actionSendToRecords);
+    ///
+    /// showing the context menu...
+    ///
+    Menu->exec(pos);
 }
 
 void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
@@ -1327,7 +1545,41 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         return;
     }
     selectionModel = ui->tableViewResults->selectionModel();
-    c_Menu->exec(QCursor::pos());
+    ///
+    /// creating the context menu...
+    ///
+    QMenu *Menu = new QMenu(this);
+    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    ///
+    /// ...
+    ///
+    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
+    //...
+    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
+    //...
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+    ///
+    /// ...
+    ///
+    Menu->addAction(&actionCopy);
+    Menu->addAction(&actionSave);
+    Menu->addSeparator();
+    Menu->addAction(&actionOpenInBrowser);
+    Menu->addSeparator();
+    Menu->addAction(&actionSendToIp);
+    Menu->addAction(&actionSendToOsint);
+    Menu->addAction(&actionSendToBrute);
+    Menu->addAction(&actionSendToActive);
+    Menu->addAction(&actionSendToRecords);
+    ///
+    /// showing the menu...
+    ///
+    Menu->exec(QCursor::pos());
 }
 
 void Osint::on_checkBoxMultipleTargets_clicked(bool checked){
@@ -1335,4 +1587,157 @@ void Osint::on_checkBoxMultipleTargets_clicked(bool checked){
         ui->targets->show();
     else
         ui->targets->hide();
+}
+
+void Osint::onSaveResults(CHOICE choice){
+    ///
+    /// checks...
+    ///
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        return;
+    }
+    ///
+    /// variable declarations...
+    ///
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// choice of item to save...
+    ///
+    switch(choice){
+    case CHOICE::susbdomains:
+        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        {
+            item = resultsModel->osint->item(i, 0)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+    case CHOICE::ipaddress:
+        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        {
+            item = resultsModel->osint->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+    case CHOICE::all:
+        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        {
+            item = resultsModel->osint->item(i, 0)->text()+":"+resultsModel->osint->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+
+    default:
+        break;
+    }
+    file.close();
+}
+
+void Osint::onSaveResults(QItemSelectionModel *){
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(file.isOpen())
+    {
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            item = index.data().toString();
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                data.append(item.append(NEWLINE));
+            }
+        }
+        file.write(data.toUtf8());
+        file.close();
+    }
+}
+
+void Osint::onCopyResults(CHOICE choice){
+    ///
+    /// variable declaration...
+    ///
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString clipboardData;
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// type of item to save...
+    ///
+    switch(choice){
+    case CHOICE::susbdomains:
+        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        {
+            item = resultsModel->osint->item(i, 0)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    case CHOICE::ipaddress:
+        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        {
+            item = resultsModel->osint->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    case CHOICE::all:
+        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        {
+            item = resultsModel->osint->item(i, 0)->text()+"|"+resultsModel->osint->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    clipboard->setText(clipboardData);
+}
+
+void Osint::onCopyResults(QItemSelectionModel *){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        item = index.data().toString();
+        if(!itemSet.contains(item)){
+            itemSet.insert(item);
+            data.append(item.append(NEWLINE));
+        }
+    }
+    clipboard->setText(data);
 }

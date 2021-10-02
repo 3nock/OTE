@@ -1,8 +1,10 @@
 #include "Ip.h"
 #include "ui_Ip.h"
+//...
+#include <QClipboard>
 
 Ip::Ip(QWidget *parent, ResultsModel *resultsModel, Status *status) :
-    BaseClass(ENGINE::IP, resultsModel, status, parent),
+    AbstractEngine(parent, resultsModel, status),
     ui(new Ui::Ip),
     m_scanArguments(new ip::ScanArguments)
 {
@@ -11,15 +13,16 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     /// init...
     ///
     ui->targets->init("Target Ip");
-    initBaseClass(ui->targets);
+    targets = ui->targets;
     scanConfig->name = tr("ScanConfig-Ip");
     ///
     /// ...
     ///
     ui->progressBar->hide();
+    ui->buttonAction->hide();
     //...
     ui->buttonStop->setDisabled(true);
-    ui->buttonPause->setDisabled(true);
+    //ui->buttonPause->setDisabled(true);
     //...
     resultsModel->ip->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
     ui->tableViewResults->setModel(resultsModel->ip);
@@ -29,7 +32,6 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
     //...
-    m_scanArguments->label_resultsCount = ui->labelResultsCount;
     m_scanArguments->targetList = ui->targets->listWidget;
     m_scanArguments->model_results = resultsModel->ip;
 }
@@ -37,6 +39,14 @@ Ip::~Ip(){
     delete m_scanArguments;
     //...
     delete ui;
+}
+
+void Ip::onInfoLog(QString log){
+
+}
+
+void Ip::onErrorLog(QString log){
+
 }
 
 void Ip::on_buttonStart_clicked(){
@@ -52,7 +62,7 @@ void Ip::on_buttonStart_clicked(){
     /// disabling and Enabling widgets...
     ///
     ui->buttonStart->setDisabled(true);
-    ui->buttonPause->setEnabled(true);
+    //ui->buttonPause->setEnabled(true);
     ui->buttonStop->setEnabled(true);
     ui->progressBar->show();
     ///
@@ -69,12 +79,16 @@ void Ip::on_buttonStart_clicked(){
     /// start Ip subdomain enumeration...
     ///
     startScan();
+    ui->buttonAction->show();
     //...
     sendStatus("[*] Testing For Ip Subdomains...");
-    logs("[START] Testing For Ip Subdomains...");
 }
 
-void Ip::on_buttonPause_clicked(){
+void Ip::stopScan(){
+
+}
+
+void Ip::pauseScan(){
     ///
     /// if the scan was already paused, then this current click is to
     /// Resume the scan, just call the startScan, with the same arguments and
@@ -82,19 +96,22 @@ void Ip::on_buttonPause_clicked(){
     ///
     if(status->ip->isPaused)
     {
-        ui->buttonPause->setText("Pause");
+        //ui->buttonPause->setText("Pause");
         status->ip->isPaused = false;
         //...
         startScan();
         //...
         sendStatus("[START] Resumed Subdomain Enumeration!");
-        logs("[START] Resumed Subdomain Enumeration!");
     }
     else
     {
         status->ip->isPaused = true;
         emit stopScan();
     }
+}
+
+void Ip::ResumeScan(){
+
 }
 
 void Ip::on_buttonStop_clicked(){
@@ -114,7 +131,7 @@ void Ip::startScan(){
     {
         threadsCount = wordlistCount;
     }
-    activeThreads = threadsCount;
+    status->ip->activeThreads = threadsCount;
     ///
     /// loop to create threads for enumeration...
     ///
@@ -125,33 +142,33 @@ void Ip::startScan(){
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
         //...
-        connect(scanner, SIGNAL(scanResult(QString, QString)), this, SLOT(scanResult(QString, QString)));
-        connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
-        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
-        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
-        connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stopScan()), scanner, SLOT(stopScan()));
+        connect(scanner, &ip::Scanner::scanResult, this, &Ip::onScanResult);
+        connect(scanner, &ip::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &ip::Scanner::infoLog, this, &Ip::onInfoLog);
+        connect(scanner, &ip::Scanner::errorLog, this, &Ip::onErrorLog);
+        connect(cThread, &QThread::finished, this, &Ip::onScanThreadEnded);
+        connect(cThread, &QThread::finished, scanner, &ip::Scanner::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        connect(this, &Ip::stopScanThread, scanner, &ip::Scanner::onStopScan);
         //...
         cThread->start();
     }
     status->ip->isRunning = true;
 }
 
-void Ip::scanThreadEnded(){
-    activeThreads--;
+void Ip::onScanThreadEnded(){
+    status->ip->activeThreads--;
     ///
     /// if all Scan Threads have finished...
     ///
-    if(activeThreads == 0)
+    if(status->ip->activeThreads == 0)
     {
         if(status->ip->isPaused)
         {
-            ui->buttonPause->setText("Resume");
+            //ui->buttonPause->setText("Resume");
             status->ip->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
-            logs("[*] Scan Paused!\n");
             return;
         }
         else
@@ -165,21 +182,20 @@ void Ip::scanThreadEnded(){
             status->ip->isRunning = false;
             //...
             ui->buttonStart->setEnabled(true);
-            ui->buttonPause->setDisabled(true);
+            //ui->buttonPause->setDisabled(true);
             ui->buttonStop->setDisabled(true);
             //...
             sendStatus("[*] Enumeration Complete!");
-            logs("[END] Enumeration Complete!\n");
         }
     }
 }
 
-void Ip::scanResult(QString subdomain, QString ipAddress){
+void Ip::onScanResult(QString subdomain, QString ipAddress){
     ///
     /// save to ip model model...
     ///
     resultsModel->ip->appendRow(QList<QStandardItem*>() <<new QStandardItem(ipAddress) <<new QStandardItem(subdomain));
-    m_scanArguments->label_resultsCount->setNum(m_scanArguments->model_results->rowCount());
+    ui->labelResultsCount->setNum(m_scanArguments->model_results->rowCount());
     ///
     /// save to project model...
     ///
@@ -192,7 +208,7 @@ void Ip::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Ip::on_buttonClearResults_clicked(){
+void Ip::clearResults(){
     ///
     /// if the current tab is subdomains clear subdomains...
     ///
@@ -231,7 +247,63 @@ void Ip::on_buttonAction_clicked(){
     /// showing the context menu right by the side of the action button...
     ///
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
-    a_Menu->exec(QPoint(pos.x()+76, pos.y()));
+    pos = QPoint(pos.x()+65, pos.y());
+    ///
+    /// creating the context menu...
+    ///
+    QMenu *Menu = new QMenu(this);
+    QMenu *saveMenu = new QMenu(this);
+    QMenu *copyMenu = new QMenu(this);
+    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    //...
+    saveMenu->setTitle("Save");
+    copyMenu->setTitle("Copy");
+    ///
+    /// SAVE...
+    ///
+    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
+    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
+    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
+    ///
+    /// COPY...
+    ///
+    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
+    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
+    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
+    ///
+    /// SUBDOMAINS AND IPS...
+    ///
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::IP, CHOICE::ipaddress); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::IP, CHOICE::susbdomains); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::IP, CHOICE::susbdomains); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::IP, CHOICE::susbdomains); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::IP, CHOICE::susbdomains); emit changeTabToRecords();});
+    ///
+    /// ADDING ACTIONS TO THE CONTEXT MENU...
+    ///
+    saveMenu->addAction(&actionSaveSubdomains);
+    saveMenu->addAction(&actionSaveIpAddresses);
+    saveMenu->addAction(&actionSaveAll);
+    //...
+    copyMenu->addAction(&actionCopySubdomains);
+    copyMenu->addAction(&actionCopyIpAddresses);
+    copyMenu->addAction(&actionCopyAll);
+    ///
+    /// ....
+    ///
+    Menu->addMenu(copyMenu);
+    Menu->addMenu(saveMenu);
+    //...
+    Menu->addSeparator();
+    Menu->addAction(&actionSendToIp);
+    Menu->addAction(&actionSendToOsint);
+    Menu->addAction(&actionSendToBrute);
+    Menu->addAction(&actionSendToActive);
+    Menu->addAction(&actionSendToRecords);
+    ///
+    /// showing the context menu...
+    ///
+    Menu->exec(pos);
 }
 
 void Ip::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
@@ -243,5 +315,192 @@ void Ip::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         return;
     }
     selectionModel = ui->tableViewResults->selectionModel();
-    c_Menu->exec(QCursor::pos());
+    ///
+    /// creating the context menu...
+    ///
+    QMenu *Menu = new QMenu(this);
+    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    ///
+    /// ...
+    ///
+    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
+    //...
+    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
+    //...
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+    ///
+    /// ...
+    ///
+    Menu->addAction(&actionCopy);
+    Menu->addAction(&actionSave);
+    Menu->addSeparator();
+    Menu->addAction(&actionOpenInBrowser);
+    Menu->addSeparator();
+    Menu->addAction(&actionSendToIp);
+    Menu->addAction(&actionSendToOsint);
+    Menu->addAction(&actionSendToBrute);
+    Menu->addAction(&actionSendToActive);
+    Menu->addAction(&actionSendToRecords);
+    ///
+    /// showing the menu...
+    ///
+    Menu->exec(QCursor::pos());
+}
+
+void Ip::onSaveResults(CHOICE choice){
+    ///
+    /// checks...
+    ///
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        return;
+    }
+    ///
+    /// variable declarations...
+    ///
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// choice of item to save...
+    ///
+    switch(choice){
+    case CHOICE::susbdomains:
+        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        {
+            item = resultsModel->ip->item(i, 0)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+    case CHOICE::ipaddress:
+        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        {
+            item = resultsModel->ip->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+    case CHOICE::all:
+        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        {
+            item = resultsModel->ip->item(i, 0)->text()+":"+resultsModel->ip->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+
+    default:
+        break;
+    }
+    file.close();
+}
+
+void Ip::onSaveResults(QItemSelectionModel *){
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(file.isOpen())
+    {
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            item = index.data().toString();
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                data.append(item.append(NEWLINE));
+            }
+        }
+        file.write(data.toUtf8());
+        file.close();
+    }
+}
+
+void Ip::onCopyResults(CHOICE choice){
+    ///
+    /// variable declaration...
+    ///
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString clipboardData;
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// type of item to save...
+    ///
+    switch(choice){
+    case CHOICE::susbdomains:
+        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        {
+            item = resultsModel->ip->item(i, 0)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    case CHOICE::ipaddress:
+        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        {
+            item = resultsModel->ip->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    case CHOICE::all:
+        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        {
+            item = resultsModel->ip->item(i, 0)->text()+"|"+resultsModel->ip->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    clipboard->setText(clipboardData);
+}
+
+void Ip::onCopyResults(QItemSelectionModel *){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        item = index.data().toString();
+        if(!itemSet.contains(item)){
+            itemSet.insert(item);
+            data.append(item.append(NEWLINE));
+        }
+    }
+    clipboard->setText(data);
 }

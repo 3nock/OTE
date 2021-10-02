@@ -282,7 +282,6 @@ QProgressBar {
     text-align: center;
     color: black;
     border-width: 1px;
-    border-radius: 10px;
     border-color: rgb(25,25,25);
     border-style: inset;
     background-color: rgb(50,50,50);

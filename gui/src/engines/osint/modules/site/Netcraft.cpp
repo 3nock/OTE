@@ -1,5 +1,6 @@
 #include "Netcraft.h"
 
+
 Netcraft::Netcraft(QString _target, QObject *parent):
     AbstractOsintModule(parent)
 {

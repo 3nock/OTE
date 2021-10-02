@@ -4,7 +4,11 @@
 #include <QSettings>
 #include <QDateTime>
 
-
+/*
+ * about dialog like that of wireshark
+ *
+ * use https://www.qcustomplot.com/ for plots
+ */
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     statusOsint(new ScanStatus),
     statusBrute(new ScanStatus),
@@ -50,69 +54,69 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     Project *project = new Project(this, resultsModel);
 
     // BRUTE::Sending results...
-    connect(brute, SIGNAL(sendResultsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(brute, SIGNAL(sendResultsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(brute, SIGNAL(sendResultsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(brute, SIGNAL(sendResultsToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(brute, SIGNAL(sendResultsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(brute, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(brute, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(brute, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(brute, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(brute, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
     //...
-    connect(brute, SIGNAL(sendResultsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(brute, SIGNAL(sendResultsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(brute, SIGNAL(sendResultsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(brute, SIGNAL(sendResultsToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(brute, SIGNAL(sendResultsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(brute, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(brute, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(brute, SIGNAL(sendSubdomainsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(brute, SIGNAL(sendIpAddressesToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(brute, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // ACTIVE::Sending results...
-    connect(active, SIGNAL(sendResultsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(active, SIGNAL(sendResultsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(active, SIGNAL(sendResultsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(active, SIGNAL(sendResultsToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(active, SIGNAL(sendResultsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(active, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(active, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(active, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(active, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(active, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
     //...
-    connect(active, SIGNAL(sendResultsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(active, SIGNAL(sendResultsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(active, SIGNAL(sendResultsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(active, SIGNAL(sendResultsToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(active, SIGNAL(sendResultsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(active, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(active, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(active, SIGNAL(sendSubdomainsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(active, SIGNAL(sendIpAddressesToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(active, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // OSINT::Sending results...
-    connect(osint, SIGNAL(sendResultsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(osint, SIGNAL(sendResultsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(osint, SIGNAL(sendResultsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(osint, SIGNAL(sendResultsToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(osint, SIGNAL(sendResultsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(osint, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(osint, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(osint, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(osint, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(osint, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
     //...
-    connect(osint, SIGNAL(sendResultsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(osint, SIGNAL(sendResultsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(osint, SIGNAL(sendResultsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(osint, SIGNAL(sendResultsToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(osint, SIGNAL(sendResultsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(osint, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(osint, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(osint, SIGNAL(sendSubdomainsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(osint, SIGNAL(sendIpAddressesToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(osint, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // IP::Sending results...
-    connect(ip, SIGNAL(sendResultsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(ip, SIGNAL(sendResultsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(ip, SIGNAL(sendResultsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(ip, SIGNAL(sendResultsToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(ip, SIGNAL(sendResultsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(ip, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(ip, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(ip, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(ip, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(ip, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
     //...
-    connect(ip, SIGNAL(sendResultsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(ip, SIGNAL(sendResultsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(ip, SIGNAL(sendResultsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(ip, SIGNAL(sendResultsToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(ip, SIGNAL(sendResultsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(ip, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(ip, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(ip, SIGNAL(sendSubdomainsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(ip, SIGNAL(sendIpAddressesToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(ip, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // RECORDS::Sending results...
-    connect(records, SIGNAL(sendResultsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(records, SIGNAL(sendResultsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(records, SIGNAL(sendResultsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(records, SIGNAL(sendResultsToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(records, SIGNAL(sendResultsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(records, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(records, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(records, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(records, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(records, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
     //...
-    connect(records, SIGNAL(sendResultsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(records, SIGNAL(sendResultsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(records, SIGNAL(sendResultsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(records, SIGNAL(sendResultsToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
-    connect(records, SIGNAL(sendResultsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(records, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(records, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(records, SIGNAL(sendSubdomainsToBrute(QItemSelectionModel*)), brute, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(records, SIGNAL(sendIpAddressesToIp(QItemSelectionModel*)), ip, SLOT(onReceiveTargets(QItemSelectionModel*)));
+    connect(records, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // changing tabs to osint...
     connect(brute, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));

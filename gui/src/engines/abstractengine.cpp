@@ -1,25 +1,10 @@
-#include "Base.h"
+#include "AbstractEngine.h"
+#include <QDesktopServices>
 
-
-BaseClass::BaseClass(ENGINE engineName, ResultsModel *resultsModel, Status *status, QWidget *parent) :
-    ContextMenu(engineName, resultsModel, parent),
-    status(status),
-    scanConfig(new ScanConfig)
-{
-}
-BaseClass::~BaseClass(){
-    delete status;
-    delete scanConfig;
-}
-
-void BaseClass::logs(QString log){
-    Q_UNUSED(log);
-}
-
-void BaseClass::onReceiveTargets(ENGINE engineName, CHOICE choice){
-    ///
-    /// varible declaration...
-    ///
+/*
+ * use DNSRECORDS & SRVRECORDS for engineNames
+ */
+void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice){
     QStandardItemModel *model = nullptr;
     QString item;
     ///
@@ -44,12 +29,12 @@ void BaseClass::onReceiveTargets(ENGINE engineName, CHOICE choice){
                 if(choice == CHOICE::susbdomains && (model->item(i)->child(j)->text() == "CNAME" || model->item(i)->child(j)->text() == "MX" || model->item(i)->child(j)->text() == "NS"))
                 {
                     for(int k = 0; k < model->item(i)->child(j)->rowCount(); k++)
-                        m_targets->add(model->item(i)->child(j)->child(k)->text());
+                        targets->add(model->item(i)->child(j)->child(k)->text());
                 }
                 if(choice == CHOICE::ipaddress && (model->item(i)->child(j)->text() == "A" || model->item(i)->child(j)->text() == "AAAA"))
                 {
                     for(int k = 0; k < model->item(i)->child(j)->rowCount(); k++)
-                        m_targets->add(model->item(i)->child(j)->child(k)->text());
+                        targets->add(model->item(i)->child(j)->child(k)->text());
                 }
             }
         }
@@ -60,7 +45,7 @@ void BaseClass::onReceiveTargets(ENGINE engineName, CHOICE choice){
             return;
         model = resultsModel->dnsrecords;
         for(int i = 0; i < model->rowCount(); i++)
-            m_targets->add(model->item(i, 1)->text());
+            targets->add(model->item(i, 1)->text());
         return;
     default:
         break;
@@ -74,15 +59,25 @@ void BaseClass::onReceiveTargets(ENGINE engineName, CHOICE choice){
             item = model->item(i, 0)->text();
         if(choice == CHOICE::ipaddress)
             item = model->item(i, 1)->text();
-        m_targets->add(item);
+        targets->add(item);
     }
 }
 
-void BaseClass::onReceiveTargets(QItemSelectionModel *selectionModel){
+void AbstractEngine::onReceiveTargets(QItemSelectionModel *selectionModel){
     QString item;
     ///
     /// iterate and open each selected and append on the target's listwidget...
     ///
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-        m_targets->add(index.data().toString());
+        targets->add(index.data().toString());
+}
+
+void AbstractEngine::openInBrowser(QItemSelectionModel *){
+    QString item;
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        item = index.data().toString();
+        if(item != "A" && item != "AAAA" && item != "NS" && item != "MX" && item != "CNAME" && item != "TXT")
+            QDesktopServices::openUrl(QUrl("https://"+item, QUrl::TolerantMode));
+    }
 }

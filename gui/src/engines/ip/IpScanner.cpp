@@ -13,11 +13,6 @@ ip::Scanner::~Scanner(){
     delete hostInfo;
 }
 
-void ip::Scanner::startScan(QThread *cThread){
-    connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
-    connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
-}
-
 ///
 /// TODO: test the results if its is not simply an address using regular expression...
 ///
@@ -55,10 +50,6 @@ void ip::Scanner::lookup(){
         ///
         emit quitThread();
     }
-}
-
-void ip::Scanner::stopScan(){
-    emit quitThread();
 }
 
 /*

@@ -2,6 +2,7 @@
 #define APIKEYS_H
 
 #include <QDialog>
+#include "src/utils/utils.h"
 
 namespace Ui {
     class ApiKeysDialog;
@@ -50,6 +51,8 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetZoomEye_clicked();
 
         void on_buttonGetIpApi_clicked();
+
+        void on_buttonGetViewDns_clicked();
 
 private:
         Ui::ApiKeysDialog *ui;

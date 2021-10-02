@@ -2,56 +2,16 @@
 #define OSINT_H
 
 #include "src/utils/utils.h"
-#include "src/engines/Base.h"
+#include "src/engines/AbstractEngine.h"
 #include "OsintScanner.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ConfigDialog.h"
-
-// osint engines...
-#define OSINT_VIRUSTOTALAPI "virustotalapi"
-#define OSINT_OMNISINT "omnisint"
-#define OSINT_QWANT "qwant"
-#define OSINT_URLSCAN "urlscan"
-#define OSINT_RAPIDDNS "rapiddns"
-#define OSINT_PENTESTTOOLS "pentesttools"
-#define OSINT_PROJECTDISCOVERY "projectdiscovery"
-#define OSINT_SPYSE "spyse"
-#define OSINT_THREATMINER "threatminer"
-#define OSINT_SHODAN "shodan"
-#define OSINT_GOOGLE "google"
-#define OSINT_BING "bing"
-#define OSINT_GITHUB "github"
-#define OSINT_CENSYS "censys"
-#define OSINT_SECURITYTRAILS "securitytrails"
-#define OSINT_CLOUDFLARE "cloudflare"
-#define OSINT_INTELX "intelx"
-#define OSINT_VIRUSTOTAL "virustotal"
-#define OSINT_CERTSPOTTER "certspotter"
-#define OSINT_CRTSH "crtsh"
-#define OSINT_DOGPILE "dogpile"
-#define OSINT_DUCKDUCKGO "duckduckgo"
-#define OSINT_EXALEAD "exalead"
-#define OSINT_HUNTERSEARCH "huntersearch"
-#define OSINT_NETCRAFT "netcraft"
-#define OSINT_OTX "otx"
-#define OSINT_SUIP "suip"
-#define OSINT_TRELLO "trello"
-#define OSINT_THREATCROWD "threatcrowd"
-#define OSINT_DNSBUFFEROVERRUN "dnsbufferoverrun"
-#define OSINT_HACKERTARGET "hackertarget"
-#define OSINT_PKEY "pkey"
-#define OSINT_WAYBACKMACHINE "waybackmachine"
-#define OSINT_ASK "ask"
-#define OSINT_BAIDU "baidu"
-#define OSINT_DNSDUMPSTER "dnsdumpster"
-#define OSINT_PASSIVEDNS "passivedns"
-#define OSINT_YAHOO "yahoo"
 
 namespace Ui {
     class Osint;
 }
 
-class Osint : public BaseClass{
+class Osint : public AbstractEngine{
     Q_OBJECT
 
     public:
@@ -59,11 +19,19 @@ class Osint : public BaseClass{
         ~Osint();
 
     public slots:
+        void onInfoLog(QString log);
+        void onErrorLog(QString log);
         void scanResults(QString subdomain);
 
     private slots:
+        void onSaveResults(CHOICE);
+        void onSaveResults(QItemSelectionModel*);
+        void onCopyResults(CHOICE);
+        void onCopyResults(QItemSelectionModel*);
+        ///
+        /// ....
+        ///
         void on_buttonStart_clicked();
-        void on_buttonClearResults_clicked();
         void on_buttonAction_clicked();
         void on_buttonStop_clicked();
         void on_buttonConfig_clicked();
@@ -82,17 +50,18 @@ class Osint : public BaseClass{
     private:
         Ui::Osint *ui;
         //...
-        void initProfiles();
-        void startScan();
-        //...
         osint::ScanArguments *m_scanArguments;
         osint::ScanResults *m_scanResults;
-        //...
-        int m_subdomainsCount = 0;
-        //...
         QString currentPath;
         QString m_targetDomain;
         QSet<QString> m_results;
+        int m_subdomainsCount = 0;
+        void stopScan();
+        void startScan();
+        void pauseScan();
+        void ResumeScan();
+        void clearResults();
+        void initProfiles();
 };
 
 #endif // OSINT_H

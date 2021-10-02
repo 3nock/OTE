@@ -1,7 +1,7 @@
 #ifndef ACTIVE_H
 #define ACTIVE_H
 
-#include "src/engines/Base.h"
+#include "src/engines/AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "ActiveScanner.h"
 
@@ -9,7 +9,7 @@ namespace Ui {
     class Active;
 }
 
-class Active : public BaseClass{
+class Active : public AbstractEngine{
         Q_OBJECT
 
     public:
@@ -17,27 +17,35 @@ class Active : public BaseClass{
         ~Active();
 
     public slots:
-        void scanResult(QString subdomain, QString ipAddress);
-        void scanThreadEnded();
+        void onScanThreadEnded();
+        void onInfoLog(QString log);
+        void onErrorLog(QString log);
+        void onScanResult(QString subdomain, QString ipAddress);
 
     private slots:
+        void onSaveResults(CHOICE);
+        void onSaveResults(QItemSelectionModel*);
+        void onCopyResults(CHOICE);
+        void onCopyResults(QItemSelectionModel*);
+        ///
+        /// ....
+        ///
         void on_buttonStart_clicked();
-        void on_buttonPause_clicked();
         void on_buttonStop_clicked();
         void on_buttonAction_clicked();
         void on_buttonConfig_clicked();
-        void on_buttonClearResults_clicked();
-        //...
         void on_comboBoxOption_currentIndexChanged(int index);
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
-
         void on_checkBoxCustomActive_clicked(bool checked);
 
-private:
+    private:
         Ui::Active *ui;
-        //...
-        void startScan();
         active::ScanArguments *m_scanArguments;
+        void stopScan();
+        void startScan();
+        void pauseScan();
+        void ResumeScan();
+        void clearResults();
 };
 
 #endif // ACTIVE_H

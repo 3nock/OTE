@@ -1,9 +1,11 @@
 #include "DnsRecords.h"
 #include "ui_DnsRecords.h"
+//...
+#include <QClipboard>
 
 
 DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *status) :
-    BaseClass(ENGINE::RECORDS, resultsModel, status, parent),
+    AbstractEngine(parent, resultsModel, status),
     ui(new Ui::DnsRecords),
     m_scanArguments(new records::ScanArguments)
 {
@@ -13,17 +15,18 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *stat
     ///
     ui->targets->init("Targets");
     ui->srvWordlist->init("SRV");
-    initBaseClass(ui->targets);
+    targets = ui->targets;
     scanConfig->name = tr("ScanConfig-Records");
     ///
     /// other initializations...
     ///
     ui->buttonStop->setDisabled(true);
-    ui->buttonPause->setDisabled(true);
+    //ui->buttonPause->setDisabled(true);
     //...
     ui->srvWordlist->hide();
     ui->progressBar->hide();
     ui->progressBarSRV->hide();
+    ui->buttonAction->hide();
     ///
     /// equally seperate the widgets...
     ///
@@ -48,6 +51,14 @@ DnsRecords::~DnsRecords(){
     delete ui;
 }
 
+void DnsRecords::onInfoLog(QString log){
+
+}
+
+void DnsRecords::onErrorLog(QString log){
+
+}
+
 void DnsRecords::on_buttonStart_clicked(){
     ///
     /// checking if all requirements are satisfied before scan if not prompt error
@@ -69,7 +80,7 @@ void DnsRecords::on_buttonStart_clicked(){
     /// disabling & Enabling widgets...
     ///
     ui->buttonStart->setDisabled(true);
-    ui->buttonPause->setEnabled(true);
+    //ui->buttonPause->setEnabled(true);
     ui->buttonStop->setEnabled(true);
     ///
     /// Resetting the scan arguments values...
@@ -110,12 +121,16 @@ void DnsRecords::on_buttonStart_clicked(){
     /// start Enumeration...
     ///
     startScan();
+    ui->buttonAction->show();
     //...
     sendStatus("[START] Started Subdomain Enumeration!");
-    logs("[START] Started Subdomain Enumeration!");
 }
 
-void DnsRecords::on_buttonPause_clicked(){
+void DnsRecords::stopScan(){
+
+}
+
+void DnsRecords::pauseScan(){
     ///
     /// if the scan was already paused, then this current click is to
     /// Resume the scan, just call the startScan, with the same arguments and
@@ -123,19 +138,22 @@ void DnsRecords::on_buttonPause_clicked(){
     ///
     if(status->records->isPaused)
     {
-        ui->buttonPause->setText("Pause");
+        //ui->buttonPause->setText("Pause");
         status->records->isPaused = false;
         //...
         startScan();
         //...
         sendStatus("[START] Resumed Subdomain Enumeration!");
-        logs("[START] Resumed Subdomain Enumeration!");
     }
     else
     {
         status->records->isPaused = true;
         emit stopScan();
     }
+}
+
+void DnsRecords::ResumeScan(){
+
 }
 
 void DnsRecords::on_buttonStop_clicked(){
@@ -160,7 +178,7 @@ void DnsRecords::startScan(){
     {
         threadsCount = wordlistCount;
     }
-    activeThreads = threadsCount;
+    status->records->activeThreads = threadsCount;
     ///
     /// loop to create threads for scan...
     ///
@@ -178,15 +196,16 @@ void DnsRecords::startScan(){
         scanner->moveToThread(cThread);
         //...
         if(m_scanArguments->RecordType_srv)
-            connect(scanner, SIGNAL(scanProgress(int)), ui->progressBarSRV, SLOT(setValue(int)));
+            connect(scanner, &records::Scanner::scanProgress, ui->progressBarSRV, &QProgressBar::setValue);
         else
-            connect(scanner, SIGNAL(scanProgress(int)), ui->progressBar, SLOT(setValue(int)));
-        connect(scanner, SIGNAL(scanLog(QString)), this, SLOT(logs(QString)));
-        connect(scanner, SIGNAL(scanResult(records::Results)), this, SLOT(scanResult(records::Results)));
-        connect(cThread, SIGNAL(finished()), this, SLOT(scanThreadEnded()));
-        connect(cThread, SIGNAL(finished()), scanner, SLOT(deleteLater()));
-        connect(cThread, SIGNAL(finished()), cThread, SLOT(deleteLater()));
-        connect(this, SIGNAL(stopScan()), scanner, SLOT(stopScan()));
+            connect(scanner, &records::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &records::Scanner::infoLog, this, &DnsRecords::onInfoLog);
+        connect(scanner, &records::Scanner::errorLog, this, &DnsRecords::onErrorLog);
+        connect(scanner, &records::Scanner::scanResult, this, &DnsRecords::onScanResult);
+        connect(cThread, &QThread::finished, this, &DnsRecords::onScanThreadEnded);
+        connect(cThread, &QThread::finished, scanner, &QThread::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        connect(this, &DnsRecords::stopScanThread, scanner, &records::Scanner::onStopScan);
         //...
         cThread->start();
     }
@@ -205,20 +224,19 @@ void DnsRecords::loadSrvWordlist(){
     }
 }
 
-void DnsRecords::scanThreadEnded(){
-    activeThreads--;
+void DnsRecords::onScanThreadEnded(){
+    status->records->activeThreads--;
     ///
     /// if all Scan Threads have finished...
     ///
-    if(activeThreads == 0)
+    if(status->records->activeThreads == 0)
     {
         if(status->records->isPaused)
         {
-            ui->buttonPause->setText("Resume");
+            //ui->buttonPause->setText("Resume");
             status->records->isRunning = false;
             //...
             sendStatus("[*] Scan Paused!");
-            logs("[*] Scan Paused!\n");
             return;
         }
         else
@@ -232,16 +250,15 @@ void DnsRecords::scanThreadEnded(){
             status->records->isRunning = false;
             //...
             ui->buttonStart->setEnabled(true);
-            ui->buttonPause->setDisabled(true);
+            //ui->buttonPause->setDisabled(true);
             ui->buttonStop->setDisabled(true);
             //...
             sendStatus("[*] Enumeration Complete!");
-            logs("[END] Enumeration Complete!\n");
         }
     }
 }
 
-void DnsRecords::scanResult(records::Results results){
+void DnsRecords::onScanResult(records::Results results){
     if(m_scanArguments->RecordType_srv)
     {
         resultsModel->srvrecords->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
@@ -328,7 +345,7 @@ void DnsRecords::scanResult(records::Results results){
     }
 }
 
-void DnsRecords::on_buttonClearResults_clicked(){
+void DnsRecords::clearResults(){
     switch (ui->tabWidgetResults->currentIndex()){
         case 0:
             resultsModel->dnsrecords->clear();
@@ -353,7 +370,7 @@ void DnsRecords::on_buttonClearResults_clicked(){
 
 void DnsRecords::on_buttonConfig_clicked(){
     /*
-    ScanConfig *bruteconfig = new ScanConfig(this, m_scanConfig, ENGINE::ACTIVE);
+    ScanConfig *bruteconfig = new ScanConfig(this, m_scanConfig, ENGINE::RECORDS);
     bruteconfig->setAttribute( Qt::WA_DeleteOnClose, true );
     bruteconfig->show();
     */
@@ -386,11 +403,134 @@ void DnsRecords::on_buttonAction_clicked(){
     /// showing the context menu right by the side of the action button...
     ///
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
+    pos = QPoint(pos.x()+65, pos.y());
     if(ui->tabWidgetResults->currentIndex()){
-        a_Menu->exec(QPoint(pos.x()+76, pos.y()));
+        ///
+        /// creating the context menu...
+        ///
+        QMenu *Menu = new QMenu(this);
+        QMenu *saveMenu = new QMenu(this);
+        QMenu *copyMenu = new QMenu(this);
+        Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+        //...
+        saveMenu->setTitle("Save");
+        copyMenu->setTitle("Copy");
+        ///
+        /// SAVE...
+        ///
+        connect(&actionSaveSRVName, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srvName);});
+        connect(&actionSaveSRVTarget, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srvTarget);});
+        ///
+        /// COPY...
+        ///
+        connect(&actionCopySRVName, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srvName);});
+        connect(&actionCopySRVTarget, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srvTarget);});
+        ///
+        /// SUBDOMAINS AND IPS...
+        ///
+        connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToOsint();});
+        connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToBrute();});
+        connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToActive();});
+        connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToRecords();});
+        ///
+        /// ADDING ACTIONS TO THE CONTEXT MENU...
+        ///
+        saveMenu->addSeparator();
+        saveMenu->addAction(&actionSaveSRVName);
+        saveMenu->addAction(&actionSaveSRVTarget);
+        //...
+        copyMenu->addSeparator();
+        copyMenu->addAction(&actionCopySRVName);
+        copyMenu->addAction(&actionCopySRVTarget);
+        ///
+        /// ....
+        ///
+        Menu->addMenu(copyMenu);
+        Menu->addMenu(saveMenu);
+        //...
+        Menu->addSeparator();
+        Menu->addAction(&actionSendToOsint);
+        Menu->addAction(&actionSendToBrute);
+        Menu->addAction(&actionSendToActive);
+        Menu->addAction(&actionSendToRecords);
+        ///
+        /// showing the context menu...
+        ///
+        Menu->exec(pos);
     }
     else{
-        a_Menu->exec(QPoint(pos.x()+76, pos.y()));
+        ///
+        /// creating the context menu...
+        ///
+        QMenu *Menu = new QMenu(this);
+        QMenu *saveMenu = new QMenu(this);
+        QMenu *copyMenu = new QMenu(this);
+        Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+        //...
+        saveMenu->setTitle("Save");
+        copyMenu->setTitle("Copy");
+        ///
+        /// SAVE...
+        ///
+        connect(&actionSaveA, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::A);});
+        connect(&actionSaveAAAA, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::AAAA);});
+        connect(&actionSaveMX, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::MX);});
+        connect(&actionSaveNS, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::NS);});
+        connect(&actionSaveCNAME, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::CNAME);});
+        connect(&actionSaveTXT, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(CHOICE::TXT);});
+        ///
+        /// COPY...
+        ///
+        connect(&actionCopyA, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::A);});
+        connect(&actionCopyAAAA, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::AAAA);});
+        connect(&actionCopyMX, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::MX);});
+        connect(&actionCopyNS, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::NS);});
+        connect(&actionCopyCNAME, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::CNAME);});
+        connect(&actionCopyTXT, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(CHOICE::TXT);});
+        ///
+        /// SUBDOMAINS AND IPS...
+        ///
+        connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::RECORDS, CHOICE::ipaddress); emit changeTabToIp();});
+        connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToOsint();});
+        connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToBrute();});
+        connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToActive();});
+        connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToRecords();});
+        ///
+        /// ADDING ACTIONS TO THE CONTEXT MENU...
+        ///
+        saveMenu->addSeparator();
+        saveMenu->addAction(&actionSaveA);
+        saveMenu->addAction(&actionSaveAAAA);
+        saveMenu->addAction(&actionSaveNS);
+        saveMenu->addAction(&actionSaveMX);
+        saveMenu->addAction(&actionSaveTXT);
+        saveMenu->addAction(&actionSaveCNAME);
+        //...
+        copyMenu->addSeparator();
+        copyMenu->addAction(&actionCopyA);
+        copyMenu->addAction(&actionCopyAAAA);
+        copyMenu->addAction(&actionCopyNS);
+        copyMenu->addAction(&actionCopyMX);
+        copyMenu->addAction(&actionCopyTXT);
+        copyMenu->addAction(&actionCopyCNAME);
+        copyMenu->addAction(&actionCopySRVName);
+        copyMenu->addAction(&actionCopySRVTarget);
+        ///
+        /// ....
+        ///
+        Menu->addMenu(copyMenu);
+        Menu->addMenu(saveMenu);
+        //...
+        Menu->addSeparator();
+        Menu->addAction(&actionSendToIp);
+        Menu->addAction(&actionSendToOsint);
+        Menu->addAction(&actionSendToBrute);
+        Menu->addAction(&actionSendToActive);
+        Menu->addAction(&actionSendToRecords);
+        ///
+        /// showing the context menu...
+        ///
+        Menu->exec(pos);
     }
 }
 
@@ -400,7 +540,41 @@ void DnsRecords::on_treeViewResults_customContextMenuRequested(const QPoint &pos
         return;
     }
     selectionModel = ui->treeViewResults->selectionModel();
-    c_Menu->exec(QCursor::pos());
+    ///
+    /// creating the context menu...
+    ///
+    QMenu *Menu = new QMenu(this);
+    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    ///
+    /// ...
+    ///
+    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResultsDnsRecords(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResultsDnsRecords(selectionModel);});
+    //...
+    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
+    //...
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+    ///
+    /// ...
+    ///
+    Menu->addAction(&actionCopy);
+    Menu->addAction(&actionSave);
+    Menu->addSeparator();
+    Menu->addAction(&actionOpenInBrowser);
+    Menu->addSeparator();
+    Menu->addAction(&actionSendToIp);
+    Menu->addAction(&actionSendToOsint);
+    Menu->addAction(&actionSendToBrute);
+    Menu->addAction(&actionSendToActive);
+    Menu->addAction(&actionSendToRecords);
+    ///
+    /// showing the menu...
+    ///
+    Menu->exec(QCursor::pos());
 }
 
 void DnsRecords::on_tableViewSRV_customContextMenuRequested(const QPoint &pos){
@@ -409,5 +583,478 @@ void DnsRecords::on_tableViewSRV_customContextMenuRequested(const QPoint &pos){
         return;
     }
     selectionModel = ui->tableViewSRV->selectionModel();
-    c_Menu->exec(QCursor::pos());
+    ///
+    /// creating the context menu...
+    ///
+    QMenu *Menu = new QMenu(this);
+    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    ///
+    /// ...
+    ///
+    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(selectionModel);});
+    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(selectionModel);});
+    //...
+    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
+    //...
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+    ///
+    /// ...
+    ///
+    Menu->addAction(&actionCopy);
+    Menu->addAction(&actionSave);
+    Menu->addSeparator();
+    Menu->addAction(&actionOpenInBrowser);
+    Menu->addSeparator();
+    Menu->addAction(&actionSendToOsint);
+    Menu->addAction(&actionSendToBrute);
+    Menu->addAction(&actionSendToActive);
+    Menu->addAction(&actionSendToRecords);
+    ///
+    /// showing the menu...
+    ///
+    Menu->exec(QCursor::pos());
 }
+
+void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
+    ///
+    /// checks...
+    ///
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        return;
+    }
+    ///
+    /// variable declarations...
+    ///
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// choice of item to save...
+    ///
+    switch(choice){
+    case CHOICE::MX:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "MX"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            file.write(item.toUtf8());
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::NS:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "NS"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            file.write(item.toUtf8());
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::TXT:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "TXT"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            file.write(item.toUtf8());
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::CNAME:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "CNAME"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            file.write(item.toUtf8());
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::A:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "A"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            file.write(item.toUtf8());
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::AAAA:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "AAAA"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            file.write(item.toUtf8());
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    file.close();
+}
+
+void DnsRecords::onSaveResultsDnsRecords(QItemSelectionModel* selectionModel){
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(file.isOpen())
+    {
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            item = index.data().toString();
+            if(!itemSet.contains(item) && item != "A" && item != "AAAA" && item != "NS" && item != "MX" && item != "CNAME" && item != "TXT"){
+                itemSet.insert(item);
+                data.append(item.append(NEWLINE));
+            }
+        }
+        file.write(data.toUtf8());
+        file.close();
+    }
+}
+
+void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
+    ///
+    /// variable declaration...
+    ///
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString clipboardData;
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// type of item to save...
+    ///
+    switch(choice){
+    case CHOICE::MX:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "MX"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            clipboardData.append(item);
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::NS:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "NS"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            clipboardData.append(item);
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::TXT:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "TXT"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            clipboardData.append(item);
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::CNAME:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "CNAME"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            clipboardData.append(item);
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::A:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "A"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            clipboardData.append(item);
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case CHOICE::AAAA:
+        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        {
+            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            {
+                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "AAAA"){
+                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                    {
+                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        if(!itemSet.contains(item)){
+                            itemSet.insert(item);
+                            clipboardData.append(item);
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    clipboard->setText(clipboardData);
+}
+
+void DnsRecords::onCopyResultsDnsRecords(QItemSelectionModel* selectionModel){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        item = index.data().toString();
+        if(!itemSet.contains(item) && item != "A" && item != "AAAA" && item != "NS" && item != "MX" && item != "CNAME" && item != "TXT"){
+            itemSet.insert(item);
+            data.append(item.append(NEWLINE));
+        }
+    }
+    clipboard->setText(data);
+}
+
+void DnsRecords::onSaveResultsSrvRecords(CHOICE choice){
+    ///
+    /// checks...
+    ///
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        return;
+    }
+    ///
+    /// variable declarations...
+    ///
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// choice of item to save...
+    ///
+    switch(choice){
+    case CHOICE::srvName:
+        for(int i = 0; i != resultsModel->srvrecords->rowCount(); ++i)
+        {
+            item = resultsModel->srvrecords->item(i, 0)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+    case CHOICE::srvTarget:
+        for(int i = 0; i != resultsModel->srvrecords->rowCount(); ++i)
+        {
+            item = resultsModel->srvrecords->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    file.close();
+}
+
+void DnsRecords::onSaveResultsSrvRecords(QItemSelectionModel *){
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty()){
+        return;
+    }
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(file.isOpen())
+    {
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            item = index.data().toString();
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                data.append(item.append(NEWLINE));
+            }
+        }
+        file.write(data.toUtf8());
+        file.close();
+    }
+}
+
+void DnsRecords::onCopyResultsSrvRecords(CHOICE choice){
+    ///
+    /// variable declaration...
+    ///
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString clipboardData;
+    QSet<QString> itemSet;
+    QString item;
+    ///
+    /// type of item to save...
+    ///
+    switch(choice){
+    case CHOICE::srvName:
+        for(int i = 0; i != resultsModel->srvrecords->rowCount(); ++i)
+        {
+            item = resultsModel->srvrecords->item(i, 0)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    case CHOICE::srvTarget:
+        for(int i = 0; i != resultsModel->srvrecords->rowCount(); ++i)
+        {
+            item = resultsModel->srvrecords->item(i, 1)->text().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    clipboard->setText(clipboardData);
+}
+
+void DnsRecords::onCopyResultsSrvRecords(QItemSelectionModel *){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    ///
+    /// ...
+    ///
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        item = index.data().toString();
+        if(!itemSet.contains(item)){
+            itemSet.insert(item);
+            data.append(item.append(NEWLINE));
+        }
+    }
+    clipboard->setText(data);
+}
+

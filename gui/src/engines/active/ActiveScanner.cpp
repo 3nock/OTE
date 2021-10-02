@@ -2,7 +2,8 @@
 
 
 active::Scanner::Scanner(ScanConfig *scanConfig, active::ScanArguments *scanArguments)
-    : m_scanConfig(scanConfig),
+    : AbstractScanner (nullptr),
+      m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       //...
       m_dns(new QDnsLookup(this)),
@@ -10,18 +11,13 @@ active::Scanner::Scanner(ScanConfig *scanConfig, active::ScanArguments *scanArgu
 {
     m_dns->setType(scanConfig->dnsRecordType);
     m_dns->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    //...
+
     connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
     connect(this, SIGNAL(anotherLookup()), this, SLOT(lookup()));
 }
 active::Scanner::~Scanner(){
     delete m_dns;
     delete m_socket;
-}
-
-void active::Scanner::startScan(QThread *cThread){
-    connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
-    connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
 void active::Scanner::lookupFinished(){
@@ -55,15 +51,15 @@ void active::Scanner::lookupFinished(){
             break;
         //...
         case QDnsLookup::InvalidReplyError:
-            emit scanLog("[ERROR] InvalidReplyError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            emit errorLog("[ERROR] InvalidReplyError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
             break;
         //...
         case QDnsLookup::InvalidRequestError:
-            emit scanLog("[ERROR] InvalidRequestError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            emit errorLog("[ERROR] InvalidRequestError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
             break;
         //...
         case QDnsLookup::ResolverError:
-            emit scanLog("[ERROR] ResolverError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+            emit errorLog("[ERROR] ResolverError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
             break;
         //...
         default:
@@ -93,8 +89,4 @@ void active::Scanner::lookup(){
         ///
         emit quitThread();
     }
-}
-
-void active::Scanner::stopScan(){
-    emit quitThread();
 }
