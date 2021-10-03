@@ -8,7 +8,11 @@
 DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     AbstractEngine(parent, resultsModel, status),
     ui(new Ui::DnsRecords),
-    m_scanArguments(new records::ScanArguments)
+    m_scanArguments(new records::ScanArguments),
+    m_modelDnsRecords(resultsModel->dnsrecords),
+    m_modelSrvRecords(resultsModel->srvrecords),
+    m_proxyModelDnsRecords(resultsModel->proxy->dnsrecords),
+    m_proxyModelSrvRecords(resultsModel->proxy->srvrecords)
 {
     ui->setupUi(this);
     ///
@@ -28,16 +32,21 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *stat
     ui->progressBar->hide();
     ui->progressBarSRV->hide();
     ui->buttonAction->hide();
+    //...
+    ui->lineEditFilter->hide();
+    ui->buttonFilter->hide();
+    ui->comboBoxFilter->hide();
+    ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ///
     /// equally seperate the widgets...
     ///
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
     //...
-    resultsModel->srvrecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+    m_modelSrvRecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
     //...
-    ui->treeViewResults->setModel(resultsModel->dnsrecords);
-    ui->tableViewSRV->setModel(resultsModel->srvrecords);
+    ui->treeViewResults->setModel(m_proxyModelDnsRecords);
+    ui->tableViewSRV->setModel(m_proxyModelSrvRecords);
     //...
     m_scanArguments->targetList = ui->targets->listWidget;
     m_scanArguments->srvWordlist = ui->srvWordlist->listWidget;
@@ -46,6 +55,10 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *stat
     this->connectActions();
     //...
     qRegisterMetaType<records::Results>("records::Results");
+    m_proxyModelDnsRecords->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModelDnsRecords->setRecursiveFilteringEnabled(true);
+    m_proxyModelSrvRecords->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModelSrvRecords->setRecursiveFilteringEnabled(true);
 }
 DnsRecords::~DnsRecords(){
     delete m_scanArguments;
@@ -231,6 +244,8 @@ void DnsRecords::loadSrvWordlist(){
 
 void DnsRecords::connectActions(){
     connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResultsSrvRecords();});
+    connect(&actionShowFilter, &QAction::triggered, this, [=](){this->onShowFilter(true);});
+    connect(&actionHideFilter, &QAction::triggered, this, [=](){this->onShowFilter(false);});
     ///
     /// SAVE...
     ///
@@ -327,9 +342,9 @@ void DnsRecords::onScanThreadEnded(){
 void DnsRecords::onScanResult(records::Results results){
     if(m_scanArguments->RecordType_srv)
     {
-        resultsModel->srvrecords->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
+        m_modelSrvRecords->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
         resultsModel->project->addSRV(QStringList() <<results.srvName <<results.srvTarget <<results.domain);
-        ui->labelResultsCountSRV->setNum(resultsModel->srvrecords->rowCount());
+        ui->labelResultsCountSRV->setNum(m_modelSrvRecords->rowCount());
         return;
     }
     ///
@@ -338,8 +353,8 @@ void DnsRecords::onScanResult(records::Results results){
     QStandardItem *domainItem = new QStandardItem(results.domain);
     domainItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
     domainItem->setForeground(Qt::white);
-    resultsModel->dnsrecords->invisibleRootItem()->appendRow(domainItem);
-    ui->labelResultsCount->setNum(resultsModel->dnsrecords->invisibleRootItem()->rowCount());
+    m_modelDnsRecords->invisibleRootItem()->appendRow(domainItem);
+    ui->labelResultsCount->setNum(m_modelDnsRecords->invisibleRootItem()->rowCount());
     ///
     /// ...
     ///
@@ -411,6 +426,19 @@ void DnsRecords::onScanResult(records::Results results){
     }
 }
 
+void DnsRecords::onShowFilter(bool show){
+    if(show){
+        ui->buttonFilter->show();
+        ui->lineEditFilter->show();
+        ui->comboBoxFilter->show();
+    }
+    else{
+        ui->buttonFilter->hide();
+        ui->lineEditFilter->hide();
+        ui->comboBoxFilter->hide();
+    }
+}
+
 void DnsRecords::onExpandResultsDnsRecords(){
     ui->treeViewResults->expandAll();
 }
@@ -423,7 +451,7 @@ void DnsRecords::onClearResultsDnsRecords(){
     ///
     /// clear the results...
     ///
-    resultsModel->dnsrecords->clear();
+    m_modelDnsRecords->clear();
     ui->labelResultsCount->clear();
     ///
     /// clear the progressbar...
@@ -440,9 +468,9 @@ void DnsRecords::onClearResultsSrvRecords(){
     ///
     /// clear the results...
     ///
-    resultsModel->srvrecords->clear();
+    m_modelSrvRecords->clear();
     ui->labelResultsCountSRV->clear();
-    resultsModel->srvrecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+    m_modelSrvRecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
     ///
     /// hide the action button...
     ///
@@ -476,7 +504,7 @@ void DnsRecords::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(resultsModel->dnsrecords->rowCount() < 1 && resultsModel->srvrecords->rowCount() < 1){
+    if(m_modelDnsRecords->rowCount() < 1 && m_modelSrvRecords->rowCount() < 1){
         return;
     }
     ///
@@ -500,6 +528,11 @@ void DnsRecords::on_buttonAction_clicked(){
         /// ADDING ACTIONS TO THE CONTEXT MENU...
         ///
         Menu->addAction(&actionClearResults);
+        if(ui->lineEditFilter->isHidden() && ui->buttonFilter->isHidden()){
+            Menu->addAction(&actionShowFilter);
+        }else{
+            Menu->addAction(&actionHideFilter);
+        }
         Menu->addSeparator();
         //...
         saveMenu->addAction(&actionSaveSRVName);
@@ -557,6 +590,11 @@ void DnsRecords::on_buttonAction_clicked(){
         Menu->addAction(&actionClearResults);
         Menu->addAction(&actionExpandResults);
         Menu->addAction(&actionCollapseResults);
+        if(ui->lineEditFilter->isHidden() && ui->buttonFilter->isHidden()){
+            Menu->addAction(&actionShowFilter);
+        }else{
+            Menu->addAction(&actionHideFilter);
+        }
         Menu->addSeparator();
         //...
         Menu->addMenu(copyMenu);
@@ -657,14 +695,14 @@ void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::MX:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "MX"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "MX"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             file.write(item.toUtf8());
@@ -675,14 +713,14 @@ void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::NS:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "NS"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "NS"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             file.write(item.toUtf8());
@@ -693,14 +731,14 @@ void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::TXT:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "TXT"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "TXT"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             file.write(item.toUtf8());
@@ -711,14 +749,14 @@ void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::CNAME:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "CNAME"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "CNAME"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             file.write(item.toUtf8());
@@ -729,14 +767,14 @@ void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::A:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "A"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "A"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             file.write(item.toUtf8());
@@ -747,14 +785,14 @@ void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::AAAA:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "AAAA"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "AAAA"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             file.write(item.toUtf8());
@@ -810,14 +848,14 @@ void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::MX:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "MX"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "MX"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             clipboardData.append(item);
@@ -828,14 +866,14 @@ void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::NS:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "NS"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "NS"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             clipboardData.append(item);
@@ -846,14 +884,14 @@ void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::TXT:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "TXT"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "TXT"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             clipboardData.append(item);
@@ -864,14 +902,14 @@ void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::CNAME:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "CNAME"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "CNAME"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             clipboardData.append(item);
@@ -882,14 +920,14 @@ void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::A:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "A"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "A"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             clipboardData.append(item);
@@ -900,14 +938,14 @@ void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
         }
         break;
     case CHOICE::AAAA:
-        for(int i = 0; i < resultsModel->dnsrecords->rowCount(); i++)
+        for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
         {
-            for(int j = 0; j < resultsModel->dnsrecords->item(i)->rowCount(); j++)
+            for(int j = 0; j < m_modelDnsRecords->item(i)->rowCount(); j++)
             {
-                if(resultsModel->dnsrecords->item(i)->child(j)->text() == "AAAA"){
-                    for(int k = 0; k < resultsModel->dnsrecords->item(i)->child(j)->rowCount(); k++)
+                if(m_modelDnsRecords->item(i)->child(j)->text() == "AAAA"){
+                    for(int k = 0; k < m_modelDnsRecords->item(i)->child(j)->rowCount(); k++)
                     {
-                        item = resultsModel->dnsrecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
+                        item = m_modelDnsRecords->item(i)->child(j)->child(k)->text().append(NEWLINE);
                         if(!itemSet.contains(item)){
                             itemSet.insert(item);
                             clipboardData.append(item);
@@ -965,9 +1003,9 @@ void DnsRecords::onSaveResultsSrvRecords(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::srvName:
-        for(int i = 0; i != resultsModel->srvrecords->rowCount(); ++i)
+        for(int i = 0; i != m_modelSrvRecords->rowCount(); ++i)
         {
-            item = resultsModel->srvrecords->item(i, 0)->text().append(NEWLINE);
+            item = m_modelSrvRecords->item(i, 0)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -975,9 +1013,9 @@ void DnsRecords::onSaveResultsSrvRecords(CHOICE choice){
         }
         break;
     case CHOICE::srvTarget:
-        for(int i = 0; i != resultsModel->srvrecords->rowCount(); ++i)
+        for(int i = 0; i != m_modelSrvRecords->rowCount(); ++i)
         {
-            item = resultsModel->srvrecords->item(i, 1)->text().append(NEWLINE);
+            item = m_modelSrvRecords->item(i, 1)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -1030,9 +1068,9 @@ void DnsRecords::onCopyResultsSrvRecords(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::srvName:
-        for(int i = 0; i != resultsModel->srvrecords->rowCount(); ++i)
+        for(int i = 0; i != m_modelSrvRecords->rowCount(); ++i)
         {
-            item = resultsModel->srvrecords->item(i, 0)->text().append(NEWLINE);
+            item = m_modelSrvRecords->item(i, 0)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -1040,9 +1078,9 @@ void DnsRecords::onCopyResultsSrvRecords(CHOICE choice){
         }
         break;
     case CHOICE::srvTarget:
-        for(int i = 0; i != resultsModel->srvrecords->rowCount(); ++i)
+        for(int i = 0; i != m_modelSrvRecords->rowCount(); ++i)
         {
-            item = resultsModel->srvrecords->item(i, 1)->text().append(NEWLINE);
+            item = m_modelSrvRecords->item(i, 1)->text().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -1074,3 +1112,7 @@ void DnsRecords::onCopyResultsSrvRecords(QItemSelectionModel *selectionModel){
     clipboard->setText(data);
 }
 
+
+void DnsRecords::on_buttonFilter_clicked(){
+    QString keyword = ui->lineEditFilter->text();
+}

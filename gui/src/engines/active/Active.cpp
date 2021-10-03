@@ -8,7 +8,9 @@
 Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     AbstractEngine(parent, resultsModel, status),
     ui(new Ui::Active),
-    m_scanArguments(new active::ScanArguments)
+    m_scanArguments(new active::ScanArguments),
+    m_model(resultsModel->active),
+    m_proxyModel(resultsModel->proxy->active)
 {
     ui->setupUi(this);
     ///
@@ -27,7 +29,7 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     //ui->buttonPause->setDisabled(true);
     //...
     resultsModel->active->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-    ui->tableViewResults->setModel(resultsModel->active);
+    ui->tableViewResults->setModel(resultsModel->proxy->active);
     ///
     /// equally seperate the widgets...
     ///
@@ -39,12 +41,20 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     /// ...
     ///
     ui->frameCustom->hide();
+    //...
+    ui->lineEditFilter->hide();
+    ui->buttonFilter->hide();
+    ui->comboBoxFilter->hide();
+    //...
     ui->lineEditServiceName->setPlaceholderText("e.g SMTP");
     ui->lineEditServicePort->setPlaceholderText("e.g 889");
+    ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ///
     /// ...
     ///
     connectActions();
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->setRecursiveFilteringEnabled(true);
 }
 Active::~Active(){
     delete m_scanArguments;
@@ -144,6 +154,8 @@ void Active::ResumeScan(){
 
 void Active::connectActions(){
     connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
+    connect(&actionShowFilter, &QAction::triggered, this, [=](){this->onShowFilter(true);});
+    connect(&actionHideFilter, &QAction::triggered, this, [=](){this->onShowFilter(false);});
     ///
     /// SAVE...
     ///
@@ -159,11 +171,11 @@ void Active::connectActions(){
     ///
     /// SUBDOMAINS AND IPS...
     ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::BRUTE, CHOICE::ipaddress); emit changeTabToIp();});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToRecords();});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::ACTIVE, CHOICE::ipaddress); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToRecords();});
 
     /***** For Right CLick *****/
     ///
@@ -313,6 +325,25 @@ void Active::onClearResults(){
     /// hide the action button...
     ///
     ui->buttonAction->hide();
+    ///
+    /// hide the filter...
+    ///
+    ui->buttonFilter->hide();
+    ui->lineEditFilter->hide();
+    ui->comboBoxFilter->hide();
+}
+
+void Active::onShowFilter(bool show){
+    if(show){
+        ui->buttonFilter->show();
+        ui->lineEditFilter->show();
+        ui->comboBoxFilter->show();
+    }
+    else{
+        ui->buttonFilter->hide();
+        ui->lineEditFilter->hide();
+        ui->comboBoxFilter->hide();
+    }
 }
 
 void Active::on_buttonAction_clicked(){
@@ -352,6 +383,11 @@ void Active::on_buttonAction_clicked(){
     /// ....
     ///
     Menu->addAction(&actionClearResults);
+    if(ui->lineEditFilter->isHidden() && ui->buttonFilter->isHidden()){
+        Menu->addAction(&actionShowFilter);
+    }else{
+        Menu->addAction(&actionHideFilter);
+    }
     Menu->addSeparator();
     //...
     Menu->addMenu(copyMenu);
@@ -438,9 +474,9 @@ void Active::onSaveResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::susbdomains:
-        for(int i = 0; i != resultsModel->active->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->active->item(i, 0)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -448,9 +484,9 @@ void Active::onSaveResults(CHOICE choice){
         }
         break;
     case CHOICE::ipaddress:
-        for(int i = 0; i != resultsModel->active->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->active->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -458,9 +494,9 @@ void Active::onSaveResults(CHOICE choice){
         }
         break;
     case CHOICE::all:
-        for(int i = 0; i != resultsModel->active->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->active->item(i, 0)->text()+":"+resultsModel->active->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+":"+m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -514,9 +550,9 @@ void Active::onCopyResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::susbdomains:
-        for(int i = 0; i != resultsModel->active->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->active->item(i, 0)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -524,9 +560,9 @@ void Active::onCopyResults(CHOICE choice){
         }
         break;
     case CHOICE::ipaddress:
-        for(int i = 0; i != resultsModel->active->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->active->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -534,9 +570,9 @@ void Active::onCopyResults(CHOICE choice){
         }
         break;
     case CHOICE::all:
-        for(int i = 0; i != resultsModel->active->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->active->item(i, 0)->text()+"|"+resultsModel->active->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+"|"+m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -566,4 +602,11 @@ void Active::onCopyResults(QItemSelectionModel *selectionModel){
         }
     }
     clipboard->setText(data);
+}
+
+void Active::on_buttonFilter_clicked(){
+    QString filterKeyword = ui->lineEditFilter->text();
+    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+    m_proxyModel->setFilterRegExp(filterKeyword);
+    ui->tableViewResults->setModel(m_proxyModel);
 }

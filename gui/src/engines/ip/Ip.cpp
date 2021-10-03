@@ -7,7 +7,9 @@
 Ip::Ip(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     AbstractEngine(parent, resultsModel, status),
     ui(new Ui::Ip),
-    m_scanArguments(new ip::ScanArguments)
+    m_scanArguments(new ip::ScanArguments),
+    m_model(resultsModel->ip),
+    m_proxyModel(resultsModel->proxy->ip)
 {
     ui->setupUi(this);
     ///
@@ -22,11 +24,16 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     ui->progressBar->hide();
     ui->buttonAction->hide();
     //...
+    ui->lineEditFilter->hide();
+    ui->buttonFilter->hide();
+    ui->comboBoxFilter->hide();
+    //...
     ui->buttonStop->setDisabled(true);
     //ui->buttonPause->setDisabled(true);
     //...
-    resultsModel->ip->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
-    ui->tableViewResults->setModel(resultsModel->ip);
+    ui->lineEditFilter->setPlaceholderText("Enter filter...");
+    m_model->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
+    ui->tableViewResults->setModel(m_model);
     ///
     /// equally seperate the widgets...
     ///
@@ -34,11 +41,13 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel, Status *status) :
                                         << static_cast<int>((this->width() * 0.50)));
     //...
     m_scanArguments->targetList = ui->targets->listWidget;
-    m_scanArguments->model_results = resultsModel->ip;
+    m_scanArguments->model_results = m_model;
     ///
     /// ...
     ///
     this->connectActions();
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->setRecursiveFilteringEnabled(true);
 }
 Ip::~Ip(){
     delete m_scanArguments;
@@ -125,6 +134,8 @@ void Ip::ResumeScan(){
 
 void Ip::connectActions(){
     connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
+    connect(&actionShowFilter, &QAction::triggered, this, [=](){this->onShowFilter(true);});
+    connect(&actionHideFilter, &QAction::triggered, this, [=](){this->onShowFilter(false);});
     ///
     /// SAVE...
     ///
@@ -239,7 +250,7 @@ void Ip::onScanResult(QString subdomain, QString ipAddress){
     ///
     /// save to ip model model...
     ///
-    resultsModel->ip->appendRow(QList<QStandardItem*>() <<new QStandardItem(ipAddress) <<new QStandardItem(subdomain));
+    m_model->appendRow(QList<QStandardItem*>() <<new QStandardItem(ipAddress) <<new QStandardItem(subdomain));
     ui->labelResultsCount->setNum(m_scanArguments->model_results->rowCount());
     ///
     /// save to project model...
@@ -257,9 +268,9 @@ void Ip::onClearResults(){
     ///
     /// clear the results...
     ///
-    resultsModel->ip->clear();
+    m_model->clear();
     ui->labelResultsCount->clear();
-    resultsModel->ip->setHorizontalHeaderLabels({"IpAddress", "HostName"});
+    m_model->setHorizontalHeaderLabels({"IpAddress", "HostName"});
     ///
     /// clear the progressbar...
     ui->progressBar->clearMask();
@@ -269,6 +280,25 @@ void Ip::onClearResults(){
     /// hide the action button...
     ///
     ui->buttonAction->hide();
+    ///
+    /// hide the filter...
+    ///
+    ui->buttonFilter->hide();
+    ui->lineEditFilter->hide();
+    ui->comboBoxFilter->hide();
+}
+
+void Ip::onShowFilter(bool show){
+    if(show){
+        ui->buttonFilter->show();
+        ui->lineEditFilter->show();
+        ui->comboBoxFilter->show();
+    }
+    else{
+        ui->buttonFilter->hide();
+        ui->lineEditFilter->hide();
+        ui->comboBoxFilter->hide();
+    }
 }
 
 void Ip::on_comboBoxOption_currentIndexChanged(int index){
@@ -279,7 +309,7 @@ void Ip::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(resultsModel->ip->rowCount() < 1){
+    if(m_model->rowCount() < 1){
         return;
     }
     ///
@@ -312,6 +342,11 @@ void Ip::on_buttonAction_clicked(){
     /// ....
     ///
     Menu->addAction(&actionClearResults);
+    if(ui->lineEditFilter->isHidden() && ui->buttonFilter->isHidden()){
+        Menu->addAction(&actionShowFilter);
+    }else{
+        Menu->addAction(&actionHideFilter);
+    }
     Menu->addSeparator();
     //...
     Menu->addMenu(copyMenu);
@@ -385,9 +420,9 @@ void Ip::onSaveResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::susbdomains:
-        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->ip->item(i, 0)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -395,9 +430,9 @@ void Ip::onSaveResults(CHOICE choice){
         }
         break;
     case CHOICE::ipaddress:
-        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->ip->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -405,9 +440,9 @@ void Ip::onSaveResults(CHOICE choice){
         }
         break;
     case CHOICE::all:
-        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->ip->item(i, 0)->text()+":"+resultsModel->ip->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+":"+m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -461,9 +496,9 @@ void Ip::onCopyResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::susbdomains:
-        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->ip->item(i, 0)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -471,9 +506,9 @@ void Ip::onCopyResults(CHOICE choice){
         }
         break;
     case CHOICE::ipaddress:
-        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->ip->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -481,9 +516,9 @@ void Ip::onCopyResults(CHOICE choice){
         }
         break;
     case CHOICE::all:
-        for(int i = 0; i != resultsModel->ip->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->ip->item(i, 0)->text()+"|"+resultsModel->ip->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+"|"+m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -513,4 +548,11 @@ void Ip::onCopyResults(QItemSelectionModel *selectionModel){
         }
     }
     clipboard->setText(data);
+}
+
+void Ip::on_buttonFilter_clicked(){
+    QString filterKeyword = ui->lineEditFilter->text();
+    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+    m_proxyModel->setFilterRegExp(filterKeyword);
+    ui->tableViewResults->setModel(m_proxyModel);
 }

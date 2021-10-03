@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow{
         ScanStatus *statusRecords;
         Status *status;
         //...
+        ProxyModel *resultsProxyModel;
         ResultsModel *resultsModel;
         QSettings *config;
 

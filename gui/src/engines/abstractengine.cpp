@@ -5,26 +5,27 @@
  * use DNSRECORDS & SRVRECORDS for engineNames
  */
 void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice){
-    QStandardItemModel *model = nullptr;
+    QSortFilterProxyModel *model = nullptr;
     QString item;
     ///
     /// engine targets are from...
     ///
     switch(engineName){
     case ENGINE::OSINT:
-        model = resultsModel->osint;
+        model = resultsModel->proxy->osint;
         break;
     case ENGINE::BRUTE:
-        model = resultsModel->brute;
+        model = resultsModel->proxy->brute;
         break;
     case ENGINE::ACTIVE:
-        model = resultsModel->active;
+        model = resultsModel->proxy->active;
         break;
     case ENGINE::IP:
-        model = resultsModel->ip;
+        model = resultsModel->proxy->ip;
         break;
     case ENGINE::RECORDS:
-        model = resultsModel->dnsrecords;
+        /*
+        model = resultsModel->proxy->dnsrecords;
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
@@ -41,14 +42,15 @@ void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice){
                 }
             }
         }
+        */
         ///
         /// for srv records dont have ip-address...
         ///
         if(choice == CHOICE::ipaddress)
             return;
-        model = resultsModel->dnsrecords;
+        model = resultsModel->proxy->srvrecords;
         for(int i = 0; i < model->rowCount(); i++)
-            targets->add(model->item(i, 1)->text());
+            targets->add(model->data(model->index(i, 1)).toString());
         return;
     default:
         break;
@@ -59,9 +61,10 @@ void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice){
     for(int i = 0; i < model->rowCount(); i++)
     {
         if(choice == CHOICE::susbdomains)
-            item = model->item(i, 0)->text();
-        if(choice == CHOICE::ipaddress)
-            item = model->item(i, 1)->text();
+            item = model->data(model->index(i, 0)).toString();
+        if(choice == CHOICE::ipaddress){
+            item = model->data(model->index(i, 1)).toString();
+        }
         targets->add(item);
     }
 }

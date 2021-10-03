@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     statusRecords(new ScanStatus),
     status(new Status),
     //...
+    resultsProxyModel(new ProxyModel),
     resultsModel(new ResultsModel),
     ui(new Ui::MainWindow)
 {
@@ -34,6 +35,15 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     ///
     config = new QSettings(QDir::currentPath()+"subsuite.ini", QSettings::IniFormat);
     ///
+    /// creating the proxy models...
+    ///
+    resultsProxyModel->ip = new QSortFilterProxyModel;
+    resultsProxyModel->brute = new QSortFilterProxyModel;
+    resultsProxyModel->osint = new QSortFilterProxyModel;
+    resultsProxyModel->active = new QSortFilterProxyModel;
+    resultsProxyModel->dnsrecords = new QSortFilterProxyModel;
+    resultsProxyModel->srvrecords = new QSortFilterProxyModel;
+    ///
     /// creating the standard item models...
     ///
     resultsModel->ip = new QStandardItemModel;
@@ -43,6 +53,16 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     resultsModel->dnsrecords = new QStandardItemModel;
     resultsModel->srvrecords = new QStandardItemModel;
     resultsModel->project = new ProjectDataModel;
+    resultsModel->proxy = resultsProxyModel;
+    ///
+    /// setting source models...
+    ///
+    resultsProxyModel->ip->setSourceModel(resultsModel->ip);
+    resultsProxyModel->brute->setSourceModel(resultsModel->brute);
+    resultsProxyModel->osint->setSourceModel(resultsModel->osint);
+    resultsProxyModel->active->setSourceModel(resultsModel->active);
+    resultsProxyModel->dnsrecords->setSourceModel(resultsModel->dnsrecords);
+    resultsProxyModel->srvrecords->setSourceModel(resultsModel->srvrecords);
     ///
     /// creating and initiating the classes for the modules...
     ///
@@ -167,6 +187,7 @@ MainWindow::~MainWindow(){
     //...
     delete config;
     delete resultsModel;
+    delete resultsProxyModel;
     delete ui;
 }
 

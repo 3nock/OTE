@@ -60,7 +60,7 @@ class AbstractEngine : public QWidget{
             delete scanConfig;
         }
 
-    public:
+    protected:
         Status *status;
         ResultsModel *resultsModel;
         ScanConfig *scanConfig;
@@ -118,6 +118,8 @@ class AbstractEngine : public QWidget{
         QAction actionClearResults{"Clear Results"};
         QAction actionExpandResults{"Expand Results"};
         QAction actionCollapseResults{"Collapse Results"};
+        QAction actionShowFilter{"Show Filter"};
+        QAction actionHideFilter{"Hide Filter"};
         ///
         ///...
         ///

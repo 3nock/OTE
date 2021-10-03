@@ -23,6 +23,7 @@ class DnsRecords : public AbstractEngine{
         void onScanResult(records::Results);
 
     private slots:
+        void onShowFilter(bool);
         void onExpandResultsDnsRecords();
         void onCollapseResultsDnsRecords();
         void onClearResultsDnsRecords();
@@ -46,9 +47,15 @@ class DnsRecords : public AbstractEngine{
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_tableViewSRV_customContextMenuRequested(const QPoint &pos);
 
-    private:
+        void on_buttonFilter_clicked();
+
+private:
         Ui::DnsRecords *ui;
         records::ScanArguments* m_scanArguments;
+        QStandardItemModel *m_modelDnsRecords;
+        QStandardItemModel *m_modelSrvRecords;
+        QSortFilterProxyModel *m_proxyModelDnsRecords;
+        QSortFilterProxyModel *m_proxyModelSrvRecords;
         void stopScan();
         void startScan();
         void pauseScan();

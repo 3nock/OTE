@@ -120,7 +120,9 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     AbstractEngine(parent, resultsModel, status),
     ui(new Ui::Osint),
     m_scanArguments(new osint::ScanArguments),
-    m_scanResults(new osint::ScanResults)
+    m_scanResults(new osint::ScanResults),
+    m_model(resultsModel->osint),
+    m_proxyModel(resultsModel->proxy->osint)
 {
     ui->setupUi(this);
     ///
@@ -135,9 +137,10 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     currentPath = QDir::currentPath();
     ui->lineEditTarget->setPlaceholderText("eg. example.com");
     ui->lineEditNewProfile->setPlaceholderText("Enter New Profile's Name...");
+    ui->lineEditFilter->setPlaceholderText("Enter filter...");
     //...
-    resultsModel->osint->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-    ui->tableViewResults->setModel(resultsModel->osint);
+    m_model->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    ui->tableViewResults->setModel(m_proxyModel);
     //...
     //ui->buttonPause->setDisabled(true);
     ui->buttonStop->setDisabled(true);
@@ -148,6 +151,10 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     ui->progressBar->hide();
     ui->targets->hide();
     ui->frameProfiles->hide();
+    //...
+    ui->lineEditFilter->hide();
+    ui->buttonFilter->hide();
+    ui->comboBoxFilter->hide();
     ///
     /// equally seperate the widgets...
     ///
@@ -158,6 +165,8 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     ///
     this->initProfiles();
     this->connectActions();
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->setRecursiveFilteringEnabled(true);
 }
 Osint::~Osint(){
     delete m_scanArguments;
@@ -1086,11 +1095,11 @@ void Osint::ResumeScan(){
 }
 
 void Osint::scanResults(QString subdomain){
-    //resultsModel->osint->appendRow(new QStandardItem(subdomain));
+    //m_model->appendRow(new QStandardItem(subdomain));
     int prevSize = m_results.count();
     m_results.insert(subdomain);
     if(m_results.count() > prevSize)
-        resultsModel->osint->appendRow(new QStandardItem(subdomain));
+        m_model->appendRow(new QStandardItem(subdomain));
 }
 
 
@@ -1116,9 +1125,9 @@ void Osint::onClearResults(){
     ///
     /// clear the results...
     ///
-    resultsModel->osint->clear();
+    m_model->clear();
     ui->labelResultsCount->clear();
-    resultsModel->osint->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    m_model->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
     ///
     /// clear the progressbar...
     ui->progressBar->clearMask();
@@ -1128,6 +1137,25 @@ void Osint::onClearResults(){
     /// hide the action button...
     ///
     ui->buttonAction->hide();
+    ///
+    /// hide the filter...
+    ///
+    ui->buttonFilter->hide();
+    ui->lineEditFilter->hide();
+    ui->comboBoxFilter->hide();
+}
+
+void Osint::onShowFilter(bool show){
+    if(show){
+        ui->buttonFilter->show();
+        ui->lineEditFilter->show();
+        ui->comboBoxFilter->show();
+    }
+    else{
+        ui->buttonFilter->hide();
+        ui->lineEditFilter->hide();
+        ui->comboBoxFilter->hide();
+    }
 }
 
 void Osint::on_buttonKeys_clicked(){
@@ -1154,6 +1182,8 @@ void Osint::initProfiles(){
 
 void Osint::connectActions(){
     connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
+    connect(&actionShowFilter, &QAction::triggered, this, [=](){this->onShowFilter(true);});
+    connect(&actionHideFilter, &QAction::triggered, this, [=](){this->onShowFilter(false);});
     ///
     /// SAVE...
     ///
@@ -1621,7 +1651,7 @@ void Osint::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(resultsModel->osint->rowCount() < 1){
+    if(m_model->rowCount() < 1){
         return;
     }
     ///
@@ -1654,6 +1684,11 @@ void Osint::on_buttonAction_clicked(){
     /// ....
     ///
     Menu->addAction(&actionClearResults);
+    if(ui->lineEditFilter->isHidden() && ui->buttonFilter->isHidden()){
+        Menu->addAction(&actionShowFilter);
+    }else{
+        Menu->addAction(&actionHideFilter);
+    }
     Menu->addSeparator();
     //...
     Menu->addMenu(copyMenu);
@@ -1734,9 +1769,9 @@ void Osint::onSaveResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::susbdomains:
-        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->osint->item(i, 0)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -1744,9 +1779,9 @@ void Osint::onSaveResults(CHOICE choice){
         }
         break;
     case CHOICE::ipaddress:
-        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->osint->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -1754,9 +1789,9 @@ void Osint::onSaveResults(CHOICE choice){
         }
         break;
     case CHOICE::all:
-        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->osint->item(i, 0)->text()+":"+resultsModel->osint->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+":"+m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -1810,9 +1845,9 @@ void Osint::onCopyResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::susbdomains:
-        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->osint->item(i, 0)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -1820,9 +1855,9 @@ void Osint::onCopyResults(CHOICE choice){
         }
         break;
     case CHOICE::ipaddress:
-        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->osint->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -1830,9 +1865,9 @@ void Osint::onCopyResults(CHOICE choice){
         }
         break;
     case CHOICE::all:
-        for(int i = 0; i != resultsModel->osint->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->osint->item(i, 0)->text()+"|"+resultsModel->osint->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+"|"+m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -1862,4 +1897,11 @@ void Osint::onCopyResults(QItemSelectionModel *selectionModel){
         }
     }
     clipboard->setText(data);
+}
+
+void Osint::on_buttonFilter_clicked(){
+    QString filterKeyword = ui->lineEditFilter->text();
+    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+    m_proxyModel->setFilterRegExp(filterKeyword);
+    ui->tableViewResults->setModel(m_proxyModel);
 }

@@ -25,6 +25,7 @@ class Osint : public AbstractEngine{
 
     private slots:
         void onClearResults();
+        void onShowFilter(bool);
         void onSaveResults(CHOICE);
         void onSaveResults(QItemSelectionModel*);
         void onCopyResults(CHOICE);
@@ -48,11 +49,15 @@ class Osint : public AbstractEngine{
         void onEnumerationComplete();
         void on_checkBoxMultipleTargets_clicked(bool checked);
 
-    private:
+        void on_buttonFilter_clicked();
+
+private:
         Ui::Osint *ui;
         //...
         osint::ScanArguments *m_scanArguments;
         osint::ScanResults *m_scanResults;
+        QStandardItemModel *m_model;
+        QSortFilterProxyModel *m_proxyModel;
         QString currentPath;
         QString m_targetDomain;
         QSet<QString> m_results;

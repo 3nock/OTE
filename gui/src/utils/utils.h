@@ -5,6 +5,7 @@
 #include <QListWidget>
 #include <QHostAddress>
 #include <QStandardItemModel>
+#include <QSortFilterProxyModel>
 #include "src/project/ProjectDataModel.h"
 
 /***************************************************
@@ -91,6 +92,15 @@ struct ScanConfig{
     QString wildcardIp = nullptr;
 };
 
+struct ProxyModel{
+    QSortFilterProxyModel *ip = nullptr;
+    QSortFilterProxyModel *osint = nullptr;
+    QSortFilterProxyModel *brute = nullptr;
+    QSortFilterProxyModel *active = nullptr;
+    QSortFilterProxyModel *dnsrecords = nullptr;
+    QSortFilterProxyModel *srvrecords = nullptr;
+};
+
 struct ResultsModel{
     QStandardItemModel *ip = nullptr;
     QStandardItemModel *osint = nullptr;
@@ -98,7 +108,13 @@ struct ResultsModel{
     QStandardItemModel *active = nullptr;
     QStandardItemModel *dnsrecords = nullptr;
     QStandardItemModel *srvrecords = nullptr;
-    //...
+    ///
+    /// ...
+    ///
+    ProxyModel *proxy = nullptr;
+    ///
+    /// ...
+    ///
     ProjectDataModel *project = nullptr;
 };
 

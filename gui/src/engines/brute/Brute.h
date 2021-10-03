@@ -27,6 +27,7 @@ class Brute : public AbstractEngine{
 
     private slots:
         void onClearResults();
+        void onShowFilter(bool);
         void onSaveResults(CHOICE);
         void onSaveResults(QItemSelectionModel*);
         void onCopyResults(CHOICE);
@@ -43,10 +44,14 @@ class Brute : public AbstractEngine{
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
         void on_checkBoxMultipleTargets_clicked(bool checked);
 
-    private:
+        void on_buttonFilter_clicked();
+
+private:
         Ui::Brute *ui;
         QSet<QString> m_subdomainsSet;
         brute::ScanArguments *m_scanArguments;
+        QStandardItemModel *m_model;
+        QSortFilterProxyModel *m_proxyModel;
         void stopScan();
         void startScan();
         void pauseScan();

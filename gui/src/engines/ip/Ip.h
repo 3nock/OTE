@@ -25,6 +25,7 @@ class Ip : public AbstractEngine{
 
     private slots:
         void onClearResults();
+        void onShowFilter(bool);
         void onSaveResults(CHOICE);
         void onSaveResults(QItemSelectionModel*);
         void onCopyResults(CHOICE);
@@ -39,9 +40,13 @@ class Ip : public AbstractEngine{
         void on_comboBoxOption_currentIndexChanged(int index);
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
 
-    private:
+        void on_buttonFilter_clicked();
+
+private:
         Ui::Ip *ui;
         ip::ScanArguments *m_scanArguments;
+        QStandardItemModel *m_model;
+        QSortFilterProxyModel *m_proxyModel;
         void stopScan();
         void startScan();
         void pauseScan();

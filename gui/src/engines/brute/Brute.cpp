@@ -63,7 +63,9 @@
 Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     AbstractEngine(parent, resultsModel, status),
     ui(new Ui::Brute),
-    m_scanArguments(new brute::ScanArguments)
+    m_scanArguments(new brute::ScanArguments),
+    m_model(resultsModel->brute),
+    m_proxyModel(resultsModel->proxy->brute)
 {
     ui->setupUi(this);
     ///
@@ -77,6 +79,7 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     /// ...
     ///
     ui->lineEditTarget->setPlaceholderText("eg. example.com");
+    ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ///
     /// ...
     ///
@@ -86,20 +89,26 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     ui->buttonAction->hide();
     ui->targets->hide();
     ui->progressBar->hide();
+    //...
+    ui->lineEditFilter->hide();
+    ui->buttonFilter->hide();
+    ui->comboBoxFilter->hide();
     ///
     /// equally seperate the widgets...
     ///
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
     //...
-    resultsModel->brute->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-    ui->tableViewResults->setModel(resultsModel->brute);
+    m_model->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    ui->tableViewResults->setModel(m_proxyModel);
     //...
     m_scanArguments->wordlist = ui->wordlist->listWidget;
     ///
     /// ...
     ///
     this->connectActions();
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->setRecursiveFilteringEnabled(true);
 }
 Brute::~Brute(){
     delete m_scanArguments;
@@ -248,6 +257,8 @@ void Brute::resumeScan(){
 
 void Brute::connectActions(){
     connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
+    connect(&actionShowFilter, &QAction::triggered, this, [=](){this->onShowFilter(true);});
+    connect(&actionHideFilter, &QAction::triggered, this, [=](){this->onShowFilter(false);});
     ///
     /// SAVE...
     ///
@@ -348,8 +359,8 @@ void Brute::onScanResult(QString subdomain, QString ipAddress, QString target){
     ///
     /// save to brute model...
     ///
-    resultsModel->brute->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ipAddress));
-    ui->labelResultsCount->setNum(resultsModel->brute->rowCount());
+    m_model->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ipAddress));
+    ui->labelResultsCount->setNum(m_model->rowCount());
     ///
     /// save to Project model...
     ///
@@ -407,9 +418,9 @@ void Brute::onClearResults(){
     /// clear the results...
     ///
     m_subdomainsSet.clear();
-    resultsModel->brute->clear();
+    m_model->clear();
     ui->labelResultsCount->clear();
-    resultsModel->brute->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    m_model->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
     ///
     /// clear the progressbar...
     ui->progressBar->clearMask();
@@ -419,6 +430,25 @@ void Brute::onClearResults(){
     /// hide the action button...
     ///
     ui->buttonAction->hide();
+    ///
+    /// hide the filter...
+    ///
+    ui->buttonFilter->hide();
+    ui->lineEditFilter->hide();
+    ui->comboBoxFilter->hide();
+}
+
+void Brute::onShowFilter(bool show){
+    if(show){
+        ui->buttonFilter->show();
+        ui->lineEditFilter->show();
+        ui->comboBoxFilter->show();
+    }
+    else{
+        ui->buttonFilter->hide();
+        ui->lineEditFilter->hide();
+        ui->comboBoxFilter->hide();
+    }
 }
 
 void Brute::on_buttonWordlist_clicked(){
@@ -444,7 +474,7 @@ void Brute::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(resultsModel->brute->rowCount() < 1){
+    if(m_model->rowCount() < 1){
         return;
     }
     ///
@@ -477,6 +507,11 @@ void Brute::on_buttonAction_clicked(){
     /// ....
     ///
     Menu->addAction(&actionClearResults);
+    if(ui->lineEditFilter->isHidden() && ui->buttonFilter->isHidden()){
+        Menu->addAction(&actionShowFilter);
+    }else{
+        Menu->addAction(&actionHideFilter);
+    }
     Menu->addSeparator();
     //...
     Menu->addMenu(copyMenu);
@@ -557,9 +592,9 @@ void Brute::onSaveResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::susbdomains:
-        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->brute->item(i, 0)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -567,9 +602,9 @@ void Brute::onSaveResults(CHOICE choice){
         }
         break;
     case CHOICE::ipaddress:
-        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        for(int i = 0; i != m_model->rowCount(); ++i)
         {
-            item = resultsModel->brute->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -577,9 +612,9 @@ void Brute::onSaveResults(CHOICE choice){
         }
         break;
     case CHOICE::all:
-        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->brute->item(i, 0)->text()+":"+resultsModel->brute->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+":"+m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -633,9 +668,9 @@ void Brute::onCopyResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::susbdomains:
-        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->brute->item(i, 0)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -643,9 +678,9 @@ void Brute::onCopyResults(CHOICE choice){
         }
         break;
     case CHOICE::ipaddress:
-        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->brute->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -653,9 +688,9 @@ void Brute::onCopyResults(CHOICE choice){
         }
         break;
     case CHOICE::all:
-        for(int i = 0; i != resultsModel->brute->rowCount(); ++i)
+        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
         {
-            item = resultsModel->brute->item(i, 0)->text()+"|"+resultsModel->brute->item(i, 1)->text().append(NEWLINE);
+            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+"|"+m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -685,4 +720,11 @@ void Brute::onCopyResults(QItemSelectionModel *selectionModel){
         }
     }
     clipboard->setText(data);
+}
+
+void Brute::on_buttonFilter_clicked(){
+    QString filterKeyword = ui->lineEditFilter->text();
+    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+    m_proxyModel->setFilterRegExp(filterKeyword);
+    ui->tableViewResults->setModel(m_proxyModel);
 }
