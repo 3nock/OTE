@@ -39,9 +39,9 @@ void ip::Scanner::lookupFinished(QHostInfo info){
 void ip::Scanner::lookup(){
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     m_scanArguments->currentTargetToEnumerate++;
-    if(m_currentTargetToEnumerate < m_scanArguments->targetList->count())
+    if(m_currentTargetToEnumerate < m_scanArguments->targetList.count())
     {
-        hostInfo->lookupHost(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text(), this, SLOT(lookupFinished(QHostInfo)));
+        hostInfo->lookupHost(m_scanArguments->targetList.at(m_currentTargetToEnumerate), this, SLOT(lookupFinished(QHostInfo)));
     }
     else
     {

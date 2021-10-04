@@ -28,6 +28,7 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/dialogs/AboutDialog.cpp \
     src/engines/osint/modules/api/Bgpview.cpp \
     src/engines/osint/modules/api/BinaryEdge.cpp \
     src/engines/osint/modules/api/C99.cpp \
@@ -101,6 +102,7 @@ SOURCES += \
     src/project/Project.cpp \
     src/utils/JsonToTree.cpp \
     src/widgets/InputWidget.cpp \
+    src/widgets/OsintModulesWidget.cpp \
     src/widgets/ResultsWidget.cpp \
     src/dialogs/ConfigDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
@@ -113,6 +115,7 @@ SOURCES += \
     src/main.cpp \
 
 HEADERS += \
+    src/dialogs/AboutDialog.h \
     src/engines/AbstractScanner.h \
     src/engines/osint/modules/api/Bgpview.h \
     src/engines/osint/modules/api/BinaryEdge.h \
@@ -188,6 +191,7 @@ HEADERS += \
     src/project/Project.h \
     src/utils/JsonToTree.h \
     src/widgets/InputWidget.h \
+    src/widgets/OsintModulesWidget.h \
     src/widgets/ResultsWidget.h \
     src/dialogs/ApiKeysDialog.h \
     src/dialogs/ConfigDialog.h \
@@ -200,6 +204,7 @@ HEADERS += \
     src/MainWindow.h \
 
 FORMS += \
+    src/dialogs/AboutDialog.ui \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \
     src/project/specific/SpecificAnalysis.ui \
@@ -209,6 +214,7 @@ FORMS += \
     src/engines/osint/Osint.ui \
     src/engines/active/Active.ui \
     src/widgets/InputWidget.ui \
+    src/widgets/OsintModulesWidget.ui \
     src/widgets/ResultsWidget.ui \
     src/dialogs/ConfigDialog.ui \
     src/dialogs/WordlistDialog.ui \

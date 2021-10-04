@@ -136,7 +136,6 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     ///
     currentPath = QDir::currentPath();
     ui->lineEditTarget->setPlaceholderText("eg. example.com");
-    ui->lineEditNewProfile->setPlaceholderText("Enter New Profile's Name...");
     ui->lineEditFilter->setPlaceholderText("Enter filter...");
     //...
     m_model->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
@@ -150,7 +149,6 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     ui->buttonAction->hide();
     ui->progressBar->hide();
     ui->targets->hide();
-    ui->frameProfiles->hide();
     //...
     ui->lineEditFilter->hide();
     ui->buttonFilter->hide();
@@ -163,7 +161,6 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, Status *status):
     ///
     /// ...
     ///
-    this->initProfiles();
     this->connectActions();
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setRecursiveFilteringEnabled(true);
@@ -218,7 +215,10 @@ void Osint::stopScan(){
 }
 
 void Osint::startScan(){
-    if(ui->checkBox_engine_certspotter->isChecked())
+    OsintModules module;
+    ui->modules->getChoosenModules(module);
+
+    if(module.certspotter)
     {
         Certspotter *certspotter = new Certspotter(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -235,7 +235,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_otx->isChecked())
+    if(module.otx)
     {
         Otx *otx = new Otx(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -252,7 +252,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_sublist3r->isChecked())
+    if(module.sublist3r)
     {
         Sublist3r *sublist3r = new Sublist3r(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -269,7 +269,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_threatminer->isChecked())
+    if(module.threatminer)
     {
         Threatminer *threatminer = new Threatminer(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -286,7 +286,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_threatcrowd->isChecked())
+    if(module.threatcrowd)
     {
         Threatcrowd *threatcrowd = new Threatcrowd(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -303,7 +303,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_hackertarget->isChecked())
+    if(module.hackertarget)
     {
         Hackertarget *hackertarget = new Hackertarget(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -320,7 +320,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_dnsbufferoverrun->isChecked())
+    if(module.dnsbufferoverrun)
     {
         Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -337,7 +337,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_anubis->isChecked())
+    if(module.anubis)
     {
         Anubis *anubis = new Anubis(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -354,7 +354,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_projectdiscovery->isChecked())
+    if(module.projectdiscovery)
     {
         Projectdiscovery *projectdiscovery = new Projectdiscovery(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -371,7 +371,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_spyse->isChecked())
+    if(module.spyse)
     {
         Spyse *spyse = new Spyse(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -388,7 +388,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_crtsh->isChecked())
+    if(module.crtsh)
     {
         Crtsh *crtsh = new Crtsh(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -405,7 +405,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_dnsdumpster->isChecked())
+    if(module.dnsdumpster)
     {
         Dnsdumpster *dnsdumpster = new Dnsdumpster(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -422,7 +422,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_netcraft->isChecked())
+    if(module.netcraft)
     {
         Netcraft *netcraft = new Netcraft(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -439,7 +439,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_suip->isChecked())
+    if(module.suip)
     {
         Suip *suip = new Suip(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
@@ -456,7 +456,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_pkey->isChecked()){
+    if(module.pkey){
         Pkey *pkey = new Pkey(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         pkey->Enumerator(cThread);
@@ -472,7 +472,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_rapiddns->isChecked()){
+    if(module.rapiddns){
         Rapiddns *rapiddns = new Rapiddns(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         rapiddns->Enumerator(cThread);
@@ -488,7 +488,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_googleCert->isChecked()){
+    if(module.googleCert){
         GoogleCert *googlecert = new GoogleCert(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         googlecert->Enumerator(cThread);
@@ -504,7 +504,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_omnisint->isChecked()){
+    if(module.omnisint){
         Omnisint *omnisint = new Omnisint(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         omnisint->Enumerator(cThread);
@@ -520,7 +520,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_qwant->isChecked()){
+    if(module.qwant){
         Qwant *qwant = new Qwant(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         qwant->Enumerator(cThread);
@@ -536,7 +536,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_virustotalapi->isChecked()){
+    if(module.virustotalapi){
         VirusTotal *virustotal = new VirusTotal(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         virustotal->Enumerator(cThread);
@@ -552,7 +552,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_urlscan->isChecked()){
+    if(module.urlscan){
         Urlscan *urlscan = new Urlscan(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         urlscan->Enumerator(cThread);
@@ -568,7 +568,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_waybackmachine->isChecked()){
+    if(module.waybackmachine){
         Waybackmachine *waybackmachine = new Waybackmachine(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         waybackmachine->Enumerator(cThread);
@@ -584,7 +584,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_archiveToday->isChecked()){
+    if(module.archivetoday){
         ArchiveToday *archivetoday = new ArchiveToday(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         archivetoday->Enumerator(cThread);
@@ -600,7 +600,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_archiveit->isChecked()){
+    if(module.archiveit){
         ArchiveIt *archiveit = new ArchiveIt(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         archiveit->Enumerator(cThread);
@@ -616,7 +616,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_censysFree->isChecked()){
+    if(module.censysFree){
         CensysFree *censysfree = new CensysFree(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         censysfree->Enumerator(cThread);
@@ -632,7 +632,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_bgpview->isChecked()){
+    if(module.bgpview){
         Bgpview *bgpview = new Bgpview(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         bgpview->Enumerator(cThread);
@@ -648,7 +648,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_binaryEdge->isChecked()){
+    if(module.binaryEdge){
         BinaryEdge *binaryedge = new BinaryEdge(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         binaryedge->Enumerator(cThread);
@@ -664,7 +664,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_c99->isChecked()){
+    if(module.c99){
         C99 *c99 = new C99(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         c99->Enumerator(cThread);
@@ -680,7 +680,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_commonCrawl->isChecked()){
+    if(module.commoncrawl){
         CommonCrawl *commonCrawl = new CommonCrawl(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         commonCrawl->Enumerator(cThread);
@@ -696,7 +696,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_github->isChecked()){
+    if(module.github){
         Github *github = new Github(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         github->Enumerator(cThread);
@@ -712,7 +712,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_huntersearch->isChecked()){
+    if(module.huntersearch){
         HunterSearch *huntersearch = new HunterSearch(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         huntersearch->Enumerator(cThread);
@@ -728,7 +728,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_ipInfo->isChecked()){
+    if(module.ipinfo){
         IpInfo *ipinfo = new IpInfo(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         ipinfo->Enumerator(cThread);
@@ -744,7 +744,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_mnemonic->isChecked()){
+    if(module.mnemonic){
         Mnemonic *mnemonic = new Mnemonic(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         mnemonic->Enumerator(cThread);
@@ -760,7 +760,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_riskIq->isChecked()){
+    if(module.riskiq){
         RiskIq *riskiq = new RiskIq(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         riskiq->Enumerator(cThread);
@@ -776,7 +776,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_robtex->isChecked()){
+    if(module.robtex){
         Robtex *robtex = new Robtex(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         robtex->Enumerator(cThread);
@@ -792,7 +792,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_securitytrails->isChecked()){
+    if(module.securitytrails){
         SecurityTrails *securitytrails = new SecurityTrails(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         securitytrails->Enumerator(cThread);
@@ -808,7 +808,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_shodan->isChecked()){
+    if(module.shodan){
         Shodan *shodan = new Shodan(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         shodan->Enumerator(cThread);
@@ -824,7 +824,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_threatBook->isChecked()){
+    if(module.threatbook){
         ThreatBook *threatbook = new ThreatBook(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         threatbook->Enumerator(cThread);
@@ -840,7 +840,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_whoisXmlApi->isChecked()){
+    if(module.whoisxmlapi){
         WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         whoisxmlapi->Enumerator(cThread);
@@ -856,7 +856,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_zetalytics->isChecked()){
+    if(module.zetalytics){
         ZETAlytics *zetalytics = new ZETAlytics(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         zetalytics->Enumerator(cThread);
@@ -872,7 +872,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_zoomeye->isChecked()){
+    if(module.zoomeye){
         ZoomEye *zoomeye = new ZoomEye(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         zoomeye->Enumerator(cThread);
@@ -888,7 +888,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_ipApi->isChecked()){
+    if(module.ipapi){
         IpApi *ipapi = new IpApi(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         ipapi->Enumerator(cThread);
@@ -904,7 +904,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_ask->isChecked()){
+    if(module.ask){
         Ask *ask = new Ask(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         ask->Enumerator(cThread);
@@ -920,7 +920,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_baidu->isChecked()){
+    if(module.baidu){
         Baidu *baidu = new Baidu(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         baidu->Enumerator(cThread);
@@ -936,7 +936,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_dogpile->isChecked()){
+    if(module.dogpile){
         DogPile *dogpile = new DogPile(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         dogpile->Enumerator(cThread);
@@ -952,7 +952,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_duckduckgo->isChecked()){
+    if(module.duckduckgo){
         DuckDuckGo *duckduckgo = new DuckDuckGo(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         duckduckgo->Enumerator(cThread);
@@ -968,7 +968,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_exalead->isChecked()){
+    if(module.exalead){
         Exalead *exalead = new Exalead(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         exalead->Enumerator(cThread);
@@ -984,7 +984,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_trello->isChecked()){
+    if(module.trello){
         Trello *trello = new Trello(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         trello->Enumerator(cThread);
@@ -1000,7 +1000,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_yahoo->isChecked()){
+    if(module.yahoo){
         Yahoo *yahoo = new Yahoo(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         yahoo->Enumerator(cThread);
@@ -1016,7 +1016,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_bing->isChecked()){
+    if(module.bing){
         Bing *bing = new Bing(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         bing->Enumerator(cThread);
@@ -1032,7 +1032,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_sitedossier->isChecked()){
+    if(module.sitedossier){
         SiteDossier *sitedossier = new SiteDossier(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         sitedossier->Enumerator(cThread);
@@ -1048,7 +1048,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_pagesInventory->isChecked()){
+    if(module.pagesinventory){
         PagesInventory *pagesinventory = new PagesInventory(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         pagesinventory->Enumerator(cThread);
@@ -1064,7 +1064,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->checkBox_engine_viewDns->isChecked()){
+    if(module.viewDns){
         ViewDns *viewdns = new ViewDns(ui->lineEditTarget->text());
         QThread *cThread = new QThread(this);
         viewdns->Enumerator(cThread);
@@ -1170,16 +1170,6 @@ void Osint::on_buttonConfig_clicked(){
     scanConfig->show();
 }
 
-
-void Osint::initProfiles(){
-    int size = Config::generalConfig().beginReadArray("Osint-Profiles");
-    for(int i = 0; i < size; i++){
-        Config::generalConfig().setArrayIndex(i);
-        ui->comboBoxProfiles->addItem(Config::generalConfig().value("value").toString());
-    }
-    Config::generalConfig().endArray();
-}
-
 void Osint::connectActions(){
     connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
     connect(&actionShowFilter, &QAction::triggered, this, [=](){this->onShowFilter(true);});
@@ -1216,435 +1206,6 @@ void Osint::connectActions(){
     connect(&actionSendToBrute_c, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
     connect(&actionSendToActive_c, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
     connect(&actionSendToRecords_c, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
-}
-
-void Osint::on_checkBoxUseProfiles_clicked(bool checked){
-    if(checked){
-        ui->frameProfiles->show();
-    }else{
-        ui->frameProfiles->hide();
-    }
-}
-
-void Osint::on_buttonLoadProfile_clicked(){
-    ///
-    /// opening the file containing the profiles...
-    ///
-    QSettings settings(currentPath+"/profiles.ini", QSettings::IniFormat);
-    settings.beginGroup(ui->comboBoxProfiles->currentText());
-    ///
-    /// reading from file...
-    ///
-    if(settings.value(OSINT_THREATMINER).toString() == TRUE){
-        ui->checkBox_engine_threatminer->setChecked(true);
-    }else{
-        ui->checkBox_engine_threatminer->setChecked(false);
-    }
-    if(settings.value(OSINT_SHODAN).toString() == TRUE){
-        ui->checkBox_engine_shodan->setChecked(true);
-    }else{
-        ui->checkBox_engine_shodan->setChecked(false);
-    }
-    if(settings.value(OSINT_BING).toString() == TRUE){
-        ui->checkBox_engine_bing->setChecked(true);
-    }else{
-        ui->checkBox_engine_bing->setChecked(false);
-    }
-    if(settings.value(OSINT_GITHUB).toString() == TRUE){
-        ui->checkBox_engine_github->setChecked(true);
-    }else{
-        ui->checkBox_engine_github->setChecked(false);
-    }
-    if(settings.value(OSINT_CENSYS).toString() == TRUE){
-        ui->checkBox_engine_censys->setChecked(true);
-    }else{
-        ui->checkBox_engine_censys->setChecked(false);
-    }
-    if(settings.value(OSINT_SECURITYTRAILS).toString() == TRUE){
-        ui->checkBox_engine_securitytrails->setChecked(true);
-    }else{
-        ui->checkBox_engine_securitytrails->setChecked(false);
-    }
-    if(settings.value(OSINT_CLOUDFLARE).toString() == TRUE){
-        ui->checkBox_engine_cloudflare->setChecked(true);
-    }else{
-        ui->checkBox_engine_cloudflare->setChecked(false);
-    }
-    if(settings.value(OSINT_INTELX).toString() == TRUE){
-        ui->checkBox_engine_intelx->setChecked(true);
-    }else{
-        ui->checkBox_engine_intelx->setChecked(false);
-    }
-    if(settings.value(OSINT_GOOGLE).toString() == TRUE){
-        ui->checkBox_engine_google->setChecked(true);
-    }else{
-        ui->checkBox_engine_google->setChecked(false);
-    }
-    if(settings.value(OSINT_CERTSPOTTER).toString() == TRUE){
-        ui->checkBox_engine_certspotter->setChecked(true);
-    }else{
-        ui->checkBox_engine_certspotter->setChecked(false);
-    }
-    if(settings.value(OSINT_CRTSH).toString() == TRUE){
-        ui->checkBox_engine_crtsh->setChecked(true);
-    }else{
-        ui->checkBox_engine_crtsh->setChecked(false);
-    }
-    if(settings.value(OSINT_DOGPILE).toString() == TRUE){
-        ui->checkBox_engine_dogpile->setChecked(true);
-    }else{
-        ui->checkBox_engine_dogpile->setChecked(false);
-    }
-    if(settings.value(OSINT_DUCKDUCKGO).toString() == TRUE){
-        ui->checkBox_engine_duckduckgo->setChecked(true);
-    }else{
-        ui->checkBox_engine_duckduckgo->setChecked(false);
-    }
-    if(settings.value(OSINT_EXALEAD).toString() == TRUE){
-        ui->checkBox_engine_exalead->setChecked(true);
-    }else{
-        ui->checkBox_engine_exalead->setChecked(false);
-    }
-    if(settings.value(OSINT_HUNTERSEARCH).toString() == TRUE){
-        ui->checkBox_engine_huntersearch->setChecked(true);
-    }else{
-        ui->checkBox_engine_huntersearch->setChecked(false);
-    }
-    if(settings.value(OSINT_NETCRAFT).toString() == TRUE){
-        ui->checkBox_engine_netcraft->setChecked(true);
-    }else{
-        ui->checkBox_engine_netcraft->setChecked(false);
-    }
-    if(settings.value(OSINT_OTX).toString() == TRUE){
-        ui->checkBox_engine_otx->setChecked(true);
-    }else{
-        ui->checkBox_engine_otx->setChecked(false);
-    }
-    if(settings.value(OSINT_SUIP).toString() == TRUE){
-        ui->checkBox_engine_suip->setChecked(true);
-    }else{
-        ui->checkBox_engine_suip->setChecked(false);
-    }
-    if(settings.value(OSINT_TRELLO).toString() == TRUE){
-        ui->checkBox_engine_trello->setChecked(true);
-    }else{
-        ui->checkBox_engine_trello->setChecked(false);
-    }
-    if(settings.value(OSINT_THREATCROWD).toString() == TRUE){
-        ui->checkBox_engine_threatcrowd->setChecked(true);
-    }else{
-        ui->checkBox_engine_threatcrowd->setChecked(false);
-    }
-    if(settings.value(OSINT_DNSBUFFEROVERRUN).toString() == TRUE){
-        ui->checkBox_engine_dnsbufferoverrun->setChecked(true);
-    }else{
-        ui->checkBox_engine_dnsbufferoverrun->setChecked(false);
-    }
-    if(settings.value(OSINT_HACKERTARGET).toString() == TRUE){
-        ui->checkBox_engine_hackertarget->setChecked(true);
-    }else{
-        ui->checkBox_engine_hackertarget->setChecked(false);
-    }
-    if(settings.value(OSINT_PKEY).toString() == TRUE){
-        ui->checkBox_engine_pkey->setChecked(true);
-    }else{
-        ui->checkBox_engine_pkey->setChecked(false);
-    }
-    if(settings.value(OSINT_WAYBACKMACHINE).toString() == TRUE){
-        ui->checkBox_engine_waybackmachine->setChecked(true);
-    }else{
-        ui->checkBox_engine_waybackmachine->setChecked(false);
-    }
-    if(settings.value(OSINT_ASK).toString() == TRUE){
-        ui->checkBox_engine_ask->setChecked(true);
-    }else{
-        ui->checkBox_engine_ask->setChecked(false);
-    }
-    if(settings.value(OSINT_BAIDU).toString() == TRUE){
-        ui->checkBox_engine_baidu->setChecked(true);
-    }else{
-        ui->checkBox_engine_baidu->setChecked(false);
-    }
-    if(settings.value(OSINT_DNSDUMPSTER).toString() == TRUE){
-        ui->checkBox_engine_dnsdumpster->setChecked(true);
-    }else{
-        ui->checkBox_engine_dnsdumpster->setChecked(false);
-    }
-    if(settings.value(OSINT_YAHOO).toString() == TRUE){
-        ui->checkBox_engine_yahoo->setChecked(true);
-    }else{
-        ui->checkBox_engine_yahoo->setChecked(false);
-    }
-    if(settings.value(OSINT_VIRUSTOTALAPI).toString() == TRUE){
-        ui->checkBox_engine_virustotalapi->setChecked(true);
-    }else{
-        ui->checkBox_engine_virustotalapi->setChecked(false);
-    }
-    if(settings.value(OSINT_OMNISINT).toString() == TRUE){
-        ui->checkBox_engine_omnisint->setChecked(true);
-    }else{
-        ui->checkBox_engine_omnisint->setChecked(false);
-    }
-    if(settings.value(OSINT_QWANT).toString() == TRUE){
-        ui->checkBox_engine_qwant->setChecked(true);
-    }
-    else{
-        ui->checkBox_engine_qwant->setChecked(false);
-    }
-    if(settings.value(OSINT_URLSCAN).toString() == TRUE){
-        ui->checkBox_engine_urlscan->setChecked(true);
-    }else{
-        ui->checkBox_engine_urlscan->setChecked(false);
-    }
-    if(settings.value(OSINT_RAPIDDNS).toString() == TRUE){
-        ui->checkBox_engine_rapiddns->setChecked(true);
-    }
-    else{
-        ui->checkBox_engine_rapiddns->setChecked(false);
-    }
-    if(settings.value(OSINT_PROJECTDISCOVERY).toString() == TRUE){
-        ui->checkBox_engine_projectdiscovery->setChecked(true);
-    }
-    else{
-        ui->checkBox_engine_projectdiscovery->setChecked(false);
-    }
-    if(settings.value(OSINT_PENTESTTOOLS).toString() == TRUE){
-        ui->checkBox_engine_pentesttools->setChecked(true);
-    }else{
-        ui->checkBox_engine_pentesttools->setChecked(false);
-    }
-    if(settings.value(OSINT_SPYSE).toString() == TRUE){
-        ui->checkBox_engine_spyse->setChecked(true);
-    }else{
-        ui->checkBox_engine_spyse->setChecked(false);
-    }
-    settings.endGroup();
-}
-
-void Osint::on_buttonDeleteProfile_clicked(){
-    ///
-    /// remove the name of the profile from main config file...
-    ///
-    Config::generalConfig().beginWriteArray("Osint-Profiles");
-    Config::generalConfig().remove(ui->comboBoxProfiles->currentText());
-    Config::generalConfig().endArray();
-    ///
-    /// remove the entire group(profile) from profiles...
-    ///
-    QSettings settings(currentPath+"/profiles.ini", QSettings::IniFormat);
-    settings.remove(ui->comboBoxProfiles->currentText());
-    ///
-    /// remove name from comboBox...
-    ///
-    ui->comboBoxProfiles->removeItem(ui->comboBoxProfiles->currentIndex());
-}
-
-void Osint::on_buttonNewProfile_clicked(){
-    ///
-    /// checks...
-    ///
-    if(ui->lineEditNewProfile->text().isEmpty())
-        return;
-    ///
-    /// appending profile name on comboBox and config file...
-    ///
-    QString profileName = ui->lineEditNewProfile->text();
-    ui->comboBoxProfiles->addItem(profileName);
-    ui->lineEditNewProfile->clear();
-    //...
-    int size = Config::generalConfig().beginReadArray("Osint-Profiles");
-    Config::generalConfig().endArray();
-    Config::generalConfig().beginWriteArray("Osint-Profiles");
-    Config::generalConfig().setArrayIndex(size);
-    Config::generalConfig().setValue("value", profileName);
-    Config::generalConfig().endArray();
-    ///
-    /// saving to profiles...
-    ///
-    QSettings settings(currentPath+"/profiles.ini", QSettings::IniFormat);
-    settings.beginGroup(profileName);
-    //...
-    if(ui->checkBox_engine_censys->isChecked()){
-        settings.setValue(OSINT_CENSYS, TRUE);
-    }else{
-        settings.setValue(OSINT_CENSYS, FALSE);
-    }
-    if(ui->checkBox_engine_threatminer->isChecked()){
-        settings.setValue(OSINT_THREATMINER, TRUE);
-    }else{
-        settings.setValue(OSINT_THREATMINER, FALSE);
-    }
-    if(ui->checkBox_engine_shodan->isChecked()){
-        settings.setValue(OSINT_SHODAN, TRUE);
-    }else{
-        settings.setValue(OSINT_SHODAN, FALSE);
-    }
-    if(ui->checkBox_engine_github->isChecked()){
-        settings.setValue(OSINT_GITHUB, TRUE);
-    }else{
-        settings.setValue(OSINT_GITHUB, FALSE);
-    }
-    if(ui->checkBox_engine_certspotter->isChecked()){
-        settings.setValue(OSINT_CERTSPOTTER, TRUE);
-    }else{
-        settings.setValue(OSINT_CERTSPOTTER, FALSE);
-    }
-    if(ui->checkBox_engine_dogpile->isChecked()){
-        settings.setValue(OSINT_DOGPILE, TRUE);
-    }else{
-        settings.setValue(OSINT_DOGPILE, FALSE);
-    }
-    if(ui->checkBox_engine_duckduckgo->isChecked()){
-        settings.setValue(OSINT_DUCKDUCKGO, TRUE);
-    }else{
-        settings.setValue(OSINT_DUCKDUCKGO, FALSE);
-    }
-    if(ui->checkBox_engine_exalead->isChecked()){
-        settings.setValue(OSINT_EXALEAD, TRUE);
-    }else{
-        settings.setValue(OSINT_EXALEAD, FALSE);
-    }
-    if(ui->checkBox_engine_huntersearch->isChecked()){
-        settings.setValue(OSINT_HUNTERSEARCH, TRUE);
-    }else{
-        settings.setValue(OSINT_HUNTERSEARCH, FALSE);
-    }
-    if(ui->checkBox_engine_intelx->isChecked()){
-        settings.setValue(OSINT_INTELX, TRUE);
-    }else{
-        settings.setValue(OSINT_INTELX, FALSE);
-    }
-    if(ui->checkBox_engine_netcraft->isChecked()){
-        settings.setValue(OSINT_NETCRAFT, TRUE);
-    }else{
-        settings.setValue(OSINT_NETCRAFT, FALSE);
-    }
-    if(ui->checkBox_engine_otx->isChecked()){
-        settings.setValue(OSINT_OTX, TRUE);
-    }else{
-        settings.setValue(OSINT_OTX, FALSE);
-    }
-    if(ui->checkBox_engine_securitytrails->isChecked()){
-        settings.setValue(OSINT_SECURITYTRAILS, TRUE);
-    }else{
-        settings.setValue(OSINT_SECURITYTRAILS, FALSE);
-    }
-    if(ui->checkBox_engine_suip->isChecked()){
-        settings.setValue(OSINT_SUIP, TRUE);
-    }else{
-        settings.setValue(OSINT_SUIP, FALSE);
-    }
-    if(ui->checkBox_engine_trello->isChecked()){
-        settings.setValue(OSINT_TRELLO, TRUE);
-    }else{
-        settings.setValue(OSINT_TRELLO, FALSE);
-    }
-    if(ui->checkBox_engine_cloudflare->isChecked()){
-        settings.setValue(OSINT_CLOUDFLARE, TRUE);
-    }else{
-        settings.setValue(OSINT_CLOUDFLARE, FALSE);
-    }
-    if(ui->checkBox_engine_threatcrowd->isChecked()){
-        settings.setValue(OSINT_THREATCROWD, TRUE);
-    }else{
-        settings.setValue(OSINT_THREATCROWD, FALSE);
-    }
-    if(ui->checkBox_engine_dnsbufferoverrun->isChecked()){
-        settings.setValue(OSINT_DNSBUFFEROVERRUN, TRUE);
-    }else{
-        settings.setValue(OSINT_DNSBUFFEROVERRUN, FALSE);
-    }
-    if(ui->checkBox_engine_hackertarget->isChecked()){
-        settings.setValue(OSINT_HACKERTARGET, TRUE);
-    }else{
-        settings.setValue(OSINT_HACKERTARGET, FALSE);
-    }
-    if(ui->checkBox_engine_pkey->isChecked()){
-        settings.setValue(OSINT_PKEY, TRUE);
-    }else{
-        settings.setValue(OSINT_PKEY, FALSE);
-    }
-    if(ui->checkBox_engine_waybackmachine->isChecked()){
-        settings.setValue(OSINT_WAYBACKMACHINE, TRUE);
-    }else{
-        settings.setValue(OSINT_WAYBACKMACHINE, FALSE);
-    }
-    if(ui->checkBox_engine_ask->isChecked()){
-        settings.setValue(OSINT_ASK, TRUE);
-    }else{
-        settings.setValue(OSINT_ASK, FALSE);
-    }
-    if(ui->checkBox_engine_baidu->isChecked()){
-        settings.setValue(OSINT_BAIDU, TRUE);
-    }else{
-        settings.setValue(OSINT_BAIDU, FALSE);
-    }
-    if(ui->checkBox_engine_bing->isChecked()){
-        settings.setValue(OSINT_BING, TRUE);
-    }else{
-        settings.setValue(OSINT_BING, FALSE);
-    }
-    if(ui->checkBox_engine_crtsh->isChecked()){
-        settings.setValue(OSINT_CRTSH, TRUE);
-    }else{
-        settings.setValue(OSINT_CRTSH, FALSE);
-    }
-    if(ui->checkBox_engine_dnsdumpster->isChecked()){
-        settings.setValue(OSINT_DNSDUMPSTER, TRUE);
-    }else{
-        settings.setValue(OSINT_DNSDUMPSTER, FALSE);
-    }
-    if(ui->checkBox_engine_google->isChecked()){
-        settings.setValue(OSINT_GOOGLE, TRUE);
-    }else{
-        settings.setValue(OSINT_GOOGLE, FALSE);
-    }
-    if(ui->checkBox_engine_yahoo->isChecked()){
-        settings.setValue(OSINT_YAHOO, TRUE);
-    }else{
-        settings.setValue(OSINT_YAHOO, FALSE);
-    }
-    if(ui->checkBox_engine_virustotalapi->isChecked()){
-        settings.setValue(OSINT_VIRUSTOTALAPI, TRUE);
-    }else{
-        settings.setValue(OSINT_VIRUSTOTALAPI, FALSE);
-    }
-    if(ui->checkBox_engine_omnisint->isChecked()){
-        settings.setValue(OSINT_OMNISINT, TRUE);
-    }else{
-        settings.setValue(OSINT_OMNISINT, FALSE);
-    }
-    if(ui->checkBox_engine_qwant->isChecked()){
-        settings.setValue(OSINT_QWANT, TRUE);
-    }else{
-        settings.setValue(OSINT_QWANT, FALSE);
-    }
-    if(ui->checkBox_engine_rapiddns->isChecked()){
-        settings.setValue(OSINT_RAPIDDNS, TRUE);
-    }else{
-        settings.setValue(OSINT_RAPIDDNS, FALSE);
-    }
-    if(ui->checkBox_engine_urlscan->isChecked()){
-        settings.setValue(OSINT_URLSCAN, TRUE);
-    }else{
-        settings.setValue(OSINT_URLSCAN, FALSE);
-    }
-    if(ui->checkBox_engine_pentesttools->isChecked()){
-        settings.setValue(OSINT_PENTESTTOOLS, TRUE);
-    }else{
-        settings.setValue(OSINT_PENTESTTOOLS, FALSE);
-    }
-    if(ui->checkBox_engine_projectdiscovery->isChecked()){
-        settings.setValue(OSINT_PROJECTDISCOVERY, TRUE);
-    }else{
-        settings.setValue(OSINT_PROJECTDISCOVERY, FALSE);
-    }
-    if(ui->checkBox_engine_spyse->isChecked()){
-        settings.setValue(OSINT_SPYSE, TRUE);
-    }else{
-        settings.setValue(OSINT_SPYSE, FALSE);
-    }
-    settings.endGroup();
 }
 
 void Osint::on_buttonAction_clicked(){

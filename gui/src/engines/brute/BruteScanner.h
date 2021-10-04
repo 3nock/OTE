@@ -10,7 +10,7 @@ namespace brute {
 
 struct ScanArguments{
     QStringList targetList;
-    QListWidget *wordlist;
+    QStringList wordlist;
     //...
     bool tldBrute;
     bool subBrute;

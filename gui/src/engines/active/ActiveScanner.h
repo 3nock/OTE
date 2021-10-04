@@ -18,7 +18,7 @@ enum ACTIVE{
 namespace active {
 
 struct ScanArguments{
-    QListWidget *targetList;
+    QStringList targetList;
     //...
     int progress;
     int currentTargetToEnumerate;
@@ -54,6 +54,5 @@ class Scanner : public AbstractScanner{
         QDnsLookup *m_dns;
         QTcpSocket *m_socket;
 };
-
 }
 #endif // ACTIVESCANNER_H

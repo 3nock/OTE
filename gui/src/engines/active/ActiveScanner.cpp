@@ -77,9 +77,9 @@ void active::Scanner::lookupFinished(){
 void active::Scanner::lookup(){
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     m_scanArguments->currentTargetToEnumerate++;
-    if(m_currentTargetToEnumerate < m_scanArguments->targetList->count())
+    if(m_currentTargetToEnumerate < m_scanArguments->targetList.count())
     {
-        m_dns->setName(m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text());
+        m_dns->setName(m_scanArguments->targetList.at(m_currentTargetToEnumerate));
         m_dns->lookup();
     }
     else

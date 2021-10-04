@@ -211,7 +211,7 @@ QSplitter::handle:vertical{
     height: 5px
 }
 
-QListWidget, QTableView, QTreeView, QColumnView, QPlainTextEdit{
+QListWidget, QTableView, QTreeView, QListView, QColumnView, QPlainTextEdit{
     background-color:rgb(40, 40, 40);
     color: rgba(218, 218, 163, 180);
     border-style: solid;
@@ -219,12 +219,12 @@ QListWidget, QTableView, QTreeView, QColumnView, QPlainTextEdit{
     border-width: 1px;
 }
 
-QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QColumnView::item:selected {
+QListWidget::item:selected, QTreeView::item:selected, QTableView::item:selected, QListView::item:selected, QColumnView::item:selected {
     background-color: rgba(110,110,110,40);
     color: rgb(230,230,230);
 }
 
-QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QColumnView::item:hover, QColumnView::item:hover {
+QListWidget::item:hover, QTreeView::item:hover, QTableView::item:hover, QListView::item:hover, QColumnView::item:hover, QColumnView::item:hover {
     border-style: solid;
     border-color: rgb(40, 40, 40);
     border-width: 1px;
@@ -509,7 +509,9 @@ QRadioButton:hover {
     </property>
     <addaction name="actionopen_project"/>
     <addaction name="actionrecent_projects"/>
-    <addaction name="actionexit"/>
+    <addaction name="actionclose"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuProject">
     <property name="title">
@@ -523,8 +525,6 @@ QRadioButton:hover {
      <string>Tools</string>
     </property>
     <addaction name="actionfavourites"/>
-    <addaction name="actionmass_scan"/>
-    <addaction name="actionamass"/>
     <addaction name="actionDorker"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -533,9 +533,13 @@ QRadioButton:hover {
     </property>
     <addaction name="actiondocumentation"/>
     <addaction name="actionupdates"/>
+    <addaction name="separator"/>
+    <addaction name="actionwebsite"/>
     <addaction name="actionissues"/>
-    <addaction name="actionabout"/>
-    <addaction name="actionabout_Qt_2"/>
+    <addaction name="actioncheck_for_updates"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
    </widget>
    <widget class="QMenu" name="menuPassive">
     <property name="title">
@@ -560,15 +564,15 @@ QRadioButton:hover {
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionopen_project">
    <property name="text">
-    <string>open project</string>
+    <string>open</string>
    </property>
   </action>
   <action name="actionrecent_projects">
    <property name="text">
-    <string>recent projects</string>
+    <string>open recent</string>
    </property>
   </action>
-  <action name="actionexit">
+  <action name="actionExit">
    <property name="text">
     <string>exit</string>
    </property>
@@ -585,17 +589,17 @@ QRadioButton:hover {
   </action>
   <action name="actiondocumentation">
    <property name="text">
-    <string>documentation</string>
+    <string>user manual</string>
    </property>
   </action>
   <action name="actionupdates">
    <property name="text">
-    <string>updates</string>
+    <string>api documentation</string>
    </property>
   </action>
   <action name="actionissues">
    <property name="text">
-    <string>issues</string>
+    <string>chat on telegram</string>
    </property>
   </action>
   <action name="actionfavourites">
@@ -628,19 +632,34 @@ QRadioButton:hover {
     <string>Config</string>
    </property>
   </action>
-  <action name="actionabout">
+  <action name="actionAbout">
    <property name="text">
     <string>about</string>
    </property>
   </action>
-  <action name="actionabout_Qt_2">
+  <action name="actionAboutQt">
    <property name="text">
     <string>about Qt</string>
    </property>
   </action>
   <action name="actionDorker">
    <property name="text">
-    <string>Dorker</string>
+    <string>dorker</string>
+   </property>
+  </action>
+  <action name="actioncheck_for_updates">
+   <property name="text">
+    <string>check for updates</string>
+   </property>
+  </action>
+  <action name="actionwebsite">
+   <property name="text">
+    <string>website</string>
+   </property>
+  </action>
+  <action name="actionclose">
+   <property name="text">
+    <string>close</string>
    </property>
   </action>
  </widget>

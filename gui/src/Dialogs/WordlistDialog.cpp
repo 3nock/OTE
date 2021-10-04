@@ -95,8 +95,8 @@ void WordListDialog::on_buttonCreate_clicked(){
     QFile file(QDir::currentPath()+filePath);
     if(file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        for(int i = 0; i != ui->specialWordlist->listWidget->count(); ++i)
-            file.write((ui->specialWordlist->listWidget->item(i)->text()+NEWLINE).toUtf8());
+        for(int i = 0; i != ui->specialWordlist->listModel->rowCount(); ++i)
+            file.write((ui->specialWordlist->listModel->stringList().at(i)+NEWLINE).toUtf8());
         file.close();
     }
     ///

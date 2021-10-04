@@ -39,9 +39,6 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     ///
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-    //...
-    m_scanArguments->targetList = ui->targets->listWidget;
-    m_scanArguments->model_results = m_model;
     ///
     /// ...
     ///
@@ -72,7 +69,7 @@ void Ip::on_buttonStart_clicked(){
     /// checking if all requirements are satisfied before scan if not prompt error
     /// then exit function...
     ///
-    if(!(ui->targets->listWidget->count() > 0)){
+    if(!(ui->targets->listModel->rowCount() > 0)){
         QMessageBox::warning(this, "Error!", "Please Enter the subdomains Wordlist for Enumeration!");
         return;
     }
@@ -86,13 +83,14 @@ void Ip::on_buttonStart_clicked(){
     ///
     /// Resetting the scan arguments values...
     ///
+    m_scanArguments->targetList = ui->targets->listModel->stringList();
     m_scanArguments->currentTargetToEnumerate = 0;
     m_scanArguments->progress = 0;
     ui->progressBar->reset();
     ///
     /// Getting scan arguments....
     ///
-    ui->progressBar->setMaximum(ui->targets->listWidget->count());
+    ui->progressBar->setMaximum(ui->targets->listModel->rowCount());
     ///
     /// start Ip subdomain enumeration...
     ///
@@ -181,7 +179,7 @@ void Ip::startScan(){
     /// number of threads to use to the number of wordlists available to avoid
     /// creating more threads than needed...
     ///
-    int wordlistCount = ui->targets->listWidget->count();
+    int wordlistCount = ui->targets->listModel->rowCount();
     int threadsCount = scanConfig->threadsCount;
     if(threadsCount > wordlistCount)
     {
@@ -251,7 +249,7 @@ void Ip::onScanResult(QString subdomain, QString ipAddress){
     /// save to ip model model...
     ///
     m_model->appendRow(QList<QStandardItem*>() <<new QStandardItem(ipAddress) <<new QStandardItem(subdomain));
-    ui->labelResultsCount->setNum(m_scanArguments->model_results->rowCount());
+    ui->labelResultsCount->setNum(m_model->rowCount());
     ///
     /// save to project model...
     ///

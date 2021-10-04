@@ -44,7 +44,14 @@ class MainWindow : public QMainWindow{
         void onChangeTabToIp();
         void onChangeTabToRecords();
 
-    private:
+private slots:
+        void on_actionAbout_triggered();
+
+        void on_actionAboutQt_triggered();
+
+        void on_actionExit_triggered();
+
+private:
         Ui::MainWindow *ui;
 };
 

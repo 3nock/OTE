@@ -3,6 +3,7 @@
 //...
 #include <QSettings>
 #include <QDateTime>
+#include "src/dialogs/AboutDialog.h"
 
 /*
  * about dialog like that of wireshark
@@ -222,4 +223,22 @@ void MainWindow::onChangeTabToRecords(){
 }
 void MainWindow::onChangeTabToIp(){
     ui->tabWidget_mainTab->setCurrentIndex(4);
+}
+
+/****************************************************************************
+                                Actions
+*****************************************************************************/
+
+void MainWindow::on_actionAbout_triggered(){
+    AboutDialog *aboutDialog = new AboutDialog(this);
+    aboutDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    aboutDialog->show();
+}
+
+void MainWindow::on_actionAboutQt_triggered(){
+    QMessageBox::aboutQt(this, "aboutQt");
+}
+
+void MainWindow::on_actionExit_triggered(){
+    QApplication::exit();
 }

@@ -64,9 +64,9 @@ void records::Scanner::lookup(){
     ///
     /// ...
     ///
-    if(m_currentTargetToEnumerate < m_scanArguments->targetList->count())
+    if(m_currentTargetToEnumerate < m_scanArguments->targetList.count())
     {
-        m_currentTarget = m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text();
+        m_currentTarget = m_scanArguments->targetList.at(m_currentTargetToEnumerate);
         m_results.domain = m_currentTarget;
         hasAtleastOneRecord = false;
         ///
@@ -140,10 +140,10 @@ void records::Scanner::lookup_srv(){
     ///
     /// ...
     ///
-    if(m_currentSrvToEnumerate < m_scanArguments->srvWordlist->count())
+    if(m_currentSrvToEnumerate < m_scanArguments->srvWordlist.count())
     {
-        m_currentTarget = m_scanArguments->srvWordlist->item(m_currentSrvToEnumerate)->text()+"."+m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text();
-        m_results.domain = m_scanArguments->targetList->item(m_currentTargetToEnumerate)->text();
+        m_currentTarget = m_scanArguments->srvWordlist.at(m_currentSrvToEnumerate)+"."+m_scanArguments->targetList.at(m_currentTargetToEnumerate);
+        m_results.domain = m_scanArguments->targetList.at(m_currentTargetToEnumerate);
         m_dns_srv->setName(m_currentTarget);
         m_dns_srv->lookup();
     }
@@ -152,7 +152,7 @@ void records::Scanner::lookup_srv(){
     ///
     else
     {
-        if(m_scanArguments->currentTargetToEnumerate < m_scanArguments->targetList->count()-1)
+        if(m_scanArguments->currentTargetToEnumerate < m_scanArguments->targetList.count()-1)
         {
             m_scanArguments->currentTargetToEnumerate++;
             m_scanArguments->currentSrvToEnumerate = 0;

@@ -48,9 +48,6 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *stat
     ui->treeViewResults->setModel(m_proxyModelDnsRecords);
     ui->tableViewSRV->setModel(m_proxyModelSrvRecords);
     //...
-    m_scanArguments->targetList = ui->targets->listWidget;
-    m_scanArguments->srvWordlist = ui->srvWordlist->listWidget;
-    //...
     this->loadSrvWordlist();
     this->connectActions();
     //...
@@ -82,7 +79,7 @@ void DnsRecords::on_buttonStart_clicked(){
     /// checking if all requirements are satisfied before scan if not prompt error
     /// then exit function...
     ///
-    if(ui->targets->listWidget->count() < 1){
+    if(ui->targets->listModel->rowCount() < 1){
         QMessageBox::warning(this, "Error!", "Please Enter Target Subdomains For Enumeration!");
         return;
     }
@@ -90,7 +87,7 @@ void DnsRecords::on_buttonStart_clicked(){
         QMessageBox::warning(this, "Error!", "Please Choose DNS Record To Enumerate!");
         return;
     }
-    if((ui->comboBoxOption->currentIndex() == OPTION::SRV)&& (ui->srvWordlist->listWidget->count() < 1)){
+    if((ui->comboBoxOption->currentIndex() == OPTION::SRV)&& (ui->srvWordlist->listModel->rowCount() < 1)){
         QMessageBox::warning(this, "Error!", "Please Enter SRV Wordlist For Enumeration!");
         return;
     }
@@ -103,6 +100,8 @@ void DnsRecords::on_buttonStart_clicked(){
     ///
     /// Resetting the scan arguments values...
     ///
+    m_scanArguments->targetList = ui->targets->listModel->stringList();
+    m_scanArguments->srvWordlist = ui->srvWordlist->listModel->stringList();
     m_scanArguments->currentSrvToEnumerate = 0;
     m_scanArguments->currentTargetToEnumerate = 0;
     ///
@@ -122,7 +121,7 @@ void DnsRecords::on_buttonStart_clicked(){
         m_scanArguments->RecordType_txt = ui->checkBoxTXT->isChecked();
         m_scanArguments->RecordType_cname = ui->checkBoxCNAME->isChecked();
         //...
-        ui->progressBar->setMaximum(ui->targets->listWidget->count());
+        ui->progressBar->setMaximum(ui->targets->listModel->rowCount());
     }
     ///
     /// getting arguments for SRV DNS Records Scan...
@@ -133,7 +132,7 @@ void DnsRecords::on_buttonStart_clicked(){
         ui->progressBarSRV->reset();
         m_scanArguments->progress = 0;
         m_scanArguments->RecordType_srv = true;
-        ui->progressBarSRV->setMaximum(ui->targets->listWidget->count()*ui->srvWordlist->listWidget->count());
+        ui->progressBarSRV->setMaximum(ui->targets->listModel->rowCount()*ui->srvWordlist->listModel->rowCount());
     }
     ///
     /// start Enumeration...
@@ -185,8 +184,8 @@ void DnsRecords::startScan(){
     /// number of threads to use to the number of wordlists available to avoid
     /// creating more threads than needed...
     ///
-    int wordlistCount = ui->targets->listWidget->count();
-    int srvWordlistCount = ui->srvWordlist->listWidget->count();
+    int wordlistCount = ui->targets->listModel->rowCount();
+    int srvWordlistCount = ui->srvWordlist->listModel->rowCount();
     int threadsCount = scanConfig->threadsCount;
     if((ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS) && (threadsCount > wordlistCount))
     {

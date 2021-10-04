@@ -8,13 +8,10 @@
  * many sites are created from homoglyphs of existing ones
  * eg example.com ==> exannple.com, exampl3.com, exqmple.com, exampls.com, exampke.com
  *
- * rename native.qss to stylesheet.qss
  *
  *have a tab to put all info/issue definitions,eg asn numbers and their respective
  * owner, ip's and their respective owners...
  *
- * change logs from listwidget to plaintext edit
- * and input from listwidget to listview
  *
  **
  fix filter from what you have learned, it shud not be asocciated with scope...
@@ -101,8 +98,6 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     //...
     m_model->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
     ui->tableViewResults->setModel(m_proxyModel);
-    //...
-    m_scanArguments->wordlist = ui->wordlist->listWidget;
     ///
     /// ...
     ///
@@ -137,11 +132,11 @@ void Brute::on_buttonStart_clicked(){
         QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
         return;
     }
-    if(ui->checkBoxMultipleTargets->isChecked() && ui->targets->listWidget->count() < 1){
+    if(ui->checkBoxMultipleTargets->isChecked() && ui->targets->listModel->rowCount() < 1){
         QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
         return;
     }
-    if(ui->wordlist->listWidget->count() < 1){
+    if(ui->wordlist->listModel->rowCount() < 1){
         QMessageBox::warning(this, "Error!", "Please Enter the Wordlist for Enumeration!");
         return;
     }
@@ -155,6 +150,7 @@ void Brute::on_buttonStart_clicked(){
     ///
     /// Resetting the scan arguments values...
     ///
+    m_scanArguments->wordlist = ui->wordlist->listModel->stringList();
     m_scanArguments->currentWordlistToEnumerate = 0;
     m_scanArguments->currentTargetToEnumerate = 0;
     m_scanArguments->targetList.clear();
@@ -173,18 +169,15 @@ void Brute::on_buttonStart_clicked(){
             ///
             /// for a single target, progress equals to the total number of wordlist...
             ///
-            ui->progressBar->setMaximum(ui->wordlist->listWidget->count());
+            ui->progressBar->setMaximum(ui->wordlist->listModel->rowCount());
         }
         if(ui->checkBoxMultipleTargets->isChecked())
         {
-            for(int i = 0; i < ui->targets->listWidget->count(); i++)
-            {
-                m_scanArguments->targetList.append(TargetNameFilter(ui->targets->listWidget->item(i)->text(), ENGINE::SUBBRUTE));
-            }
+            m_scanArguments->targetList = ui->targets->listModel->stringList();
             ///
             /// for multiple targets, progress equals to the total number of wordlist times the total number of targets...
             ///
-            ui->progressBar->setMaximum(ui->wordlist->listWidget->count()*m_scanArguments->targetList.count());
+            ui->progressBar->setMaximum(ui->wordlist->listModel->rowCount()*m_scanArguments->targetList.count());
         }
     }
 
@@ -200,18 +193,15 @@ void Brute::on_buttonStart_clicked(){
             ///
             /// for a single target, progress equals to the total number of wordlist...
             ///
-            ui->progressBar->setMaximum(ui->wordlist->listWidget->count());
+            ui->progressBar->setMaximum(ui->wordlist->listModel->rowCount());
         }
         if(ui->checkBoxMultipleTargets->isChecked())
         {
-            for(int i = 0; i < ui->targets->listWidget->count(); i++)
-            {
-                m_scanArguments->targetList.append(TargetNameFilter(ui->targets->listWidget->item(i)->text(), ENGINE::TLDBRUTE));
-            }
+            m_scanArguments->targetList = ui->targets->listModel->stringList();
             ///
             /// for multiple targets, progress equals to the total number of wordlist times the total number of targets...
             ///
-            ui->progressBar->setMaximum(ui->wordlist->listWidget->count()*m_scanArguments->targetList.count());
+            ui->progressBar->setMaximum(ui->wordlist->listModel->rowCount()*m_scanArguments->targetList.count());
         }
     }
     ///
@@ -320,7 +310,7 @@ void Brute::startScan(){
     /// number of threads to use to the number of wordlists available to avoid
     /// creating more threads than needed...
     ///
-    int wordlistCount = ui->wordlist->listWidget->count();
+    int wordlistCount = ui->wordlist->listModel->rowCount();
     int threadsCount = scanConfig->threadsCount;
     if(threadsCount > wordlistCount)
     {
@@ -461,7 +451,7 @@ void Brute::on_buttonWordlist_clicked(){
     }
     wordlistDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     //...
-    connect(wordlistDialog, SIGNAL(choosenWordlist(QString)), this, SLOT(choosenWordlist(QString)));
+    connect(wordlistDialog, &WordListDialog::choosenWordlist, this, &Brute::onChoosenWordlist);
     wordlistDialog->show();
 }
 

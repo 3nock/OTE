@@ -61,9 +61,9 @@ void ConfigDialog::saveConfigValues(){
     /// saving the custom nameservers...
     ///
     Config::generalConfig().beginWriteArray("Custom-Nameservers");
-    for(int i = 0; i < ui->customNameservers->listWidget->count(); i++){
+    for(int i = 0; i < ui->customNameservers->listModel->rowCount(); i++){
         Config::generalConfig().setArrayIndex(i);
-        Config::generalConfig().setValue("value", ui->customNameservers->listWidget->item(i)->text());
+        Config::generalConfig().setValue("value", ui->customNameservers->listModel->stringList().at(i));
     }
     Config::generalConfig().endArray();
     ///
@@ -88,10 +88,10 @@ void ConfigDialog::on_buttonOk_clicked(){
     if(ui->checkBoxCheckWildcards->isChecked()){
         m_scanConfig->checkWildcard = true;
     }
-    if(ui->checkBoxCustomNameServers->isChecked() && ui->customNameservers->listWidget->count() > 0)
+    if(ui->checkBoxCustomNameServers->isChecked() && ui->customNameservers->listModel->rowCount() > 0)
     {
-        for(int i = 0; i != ui->customNameservers->listWidget->count(); ++i)
-            m_scanConfig->customNameServers.append(ui->customNameservers->listWidget->item(i)->text());
+        for(int i = 0; i != ui->customNameservers->listModel->rowCount(); ++i)
+            m_scanConfig->customNameServers.append(ui->customNameservers->listModel->stringList().at(i));
         m_scanConfig->useCustomNameServers = true;
     }
     else{

@@ -12,8 +12,8 @@ enum OPTION{
 namespace records{
 
 struct ScanArguments{
-    QListWidget *srvWordlist;
-    QListWidget *targetList;
+    QStringList srvWordlist;
+    QStringList targetList;
     //...
     int currentTargetToEnumerate;
     int currentSrvToEnumerate;

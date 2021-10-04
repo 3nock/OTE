@@ -71,15 +71,15 @@ void brute::Scanner::lookup(){
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     m_scanArguments->currentWordlistToEnumerate++;
     //...
-    if(m_currentWordlistToEnumerate < m_scanArguments->wordlist->count())
+    if(m_currentWordlistToEnumerate < m_scanArguments->wordlist.count())
     {
         if(m_scanArguments->subBrute)
         {
-            m_dns->setName(m_scanArguments->wordlist->item(m_currentWordlistToEnumerate)->text()+"."+m_scanArguments->targetList[m_currentTargetToEnumerate]);
+            m_dns->setName(m_scanArguments->wordlist.at(m_currentWordlistToEnumerate)+"."+m_scanArguments->targetList.at(m_currentTargetToEnumerate));
         }
         if(m_scanArguments->tldBrute)
         {
-            m_dns->setName(m_scanArguments->targetList[m_currentTargetToEnumerate]+"."+m_scanArguments->wordlist->item(m_currentWordlistToEnumerate)->text());
+            m_dns->setName(m_scanArguments->targetList.at(m_currentTargetToEnumerate)+"."+m_scanArguments->wordlist.at(m_currentWordlistToEnumerate));
         }
         m_dns->lookup();
     }

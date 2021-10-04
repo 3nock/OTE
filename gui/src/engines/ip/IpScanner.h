@@ -7,8 +7,7 @@
 namespace ip{
 
 struct ScanArguments{
-    QListWidget *targetList;
-    QStandardItemModel *model_results;
+    QStringList targetList;
     //...
     int progress;
     int currentTargetToEnumerate;

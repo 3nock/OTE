@@ -96,7 +96,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QListWidget" name="listWidget"/>
+      <widget class="QListView" name="listView"/>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
