@@ -3,7 +3,6 @@
 
 #include "src/utils/utils.h"
 #include "src/engines/AbstractEngine.h"
-#include "src/engines/CommonScanners.h"
 #include "BruteScanner.h"
 
 namespace Ui {

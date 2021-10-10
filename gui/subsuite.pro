@@ -28,6 +28,10 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/modules/check/HostActiveCheck.cpp \
+    src/modules/check/InternetCheck.cpp \
+    src/modules/check/NameserverCheck.cpp \
+    src/modules/check/WildcardCheck.cpp \
     src/tools/raw/RawOsint.cpp \
     src/modules/osint/api/Bgpview.cpp \
     src/modules/osint/api/BinaryEdge.cpp \
@@ -94,7 +98,6 @@ SOURCES += \
     src/engines/brute/BruteScanner.cpp \
     src/engines/osint/Osint.cpp \
     src/engines/osint/OsintScanner.cpp \
-    src/engines/CommonScanners.cpp \
     src/engines/AbstractEngine.cpp \
     src/project/general/GeneralAnalysis.cpp \
     src/project/specific/SpecificAnalysis.cpp \
@@ -116,6 +119,10 @@ SOURCES += \
 
 HEADERS += \
     src/engines/AbstractScanner.h \
+    src/modules/check/HostActiveCheck.h \
+    src/modules/check/InternetCheck.h \
+    src/modules/check/NameserverCheck.h \
+    src/modules/check/WildcardCheck.h \
     src/tools/raw/RawOsint.h \
     src/modules/osint/api/Bgpview.h \
     src/modules/osint/api/BinaryEdge.h \
@@ -184,7 +191,6 @@ HEADERS += \
     src/engines/osint/Osint.h \
     src/engines/osint/OsintScanner.h \
     src/engines/AbstractEngine.h \
-    src/engines/CommonScanners.h \
     src/project/general/GeneralAnalysis.h \
     src/project/specific/SpecificAnalysis.h \
     src/project/ProjectDataModel.h \
