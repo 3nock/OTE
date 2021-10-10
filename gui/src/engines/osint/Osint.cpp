@@ -6,62 +6,59 @@
 #include "src/utils/Config.h"
 #include "src/dialogs/OsintConfigDialog.h"
 //...
-#include "src/engines/osint/modules/site/PagesInventory.h"
-#include "src/engines/osint/modules/site/SiteDossier.h"
-#include "src/engines/osint/modules/scrape/Bing.h"
-#include "src/engines/osint/modules/scrape/Yahoo.h"
-#include "src/engines/osint/modules/scrape/Trello.h"
-#include "src/engines/osint/modules/scrape/Exalead.h"
-#include "src/engines/osint/modules/scrape/DuckDuckGo.h"
-#include "src/engines/osint/modules/scrape/DogPile.h"
-#include "src/engines/osint/modules/scrape/Baidu.h"
-#include "src/engines/osint/modules/scrape/Ask.h"
-#include "src/engines/osint/modules/api/ViewDns.h"
-#include "src/engines/osint/modules/api/IpApi.h"
-#include "src/engines/osint/modules/api/ZoomEye.h"
-#include "src/engines/osint/modules/api/ZETAlytics.h"
-#include "src/engines/osint/modules/api/WhoisXmlApi.h"
-#include "src/engines/osint/modules/api/ThreatBook.h"
-#include "src/engines/osint/modules/api/Shodan.h"
-#include "src/engines/osint/modules/api/SecurityTrails.h"
-#include "src/engines/osint/modules/api/Robtex.h"
-#include "src/engines/osint/modules/api/RiskIq.h"
-#include "src/engines/osint/modules/api/Mnemonic.h"
-#include "src/engines/osint/modules/api/IpInfo.h"
-#include "src/engines/osint/modules/api/HunterSearch.h"
-#include "src/engines/osint/modules/api/Github.h"
-#include "src/engines/osint/modules/api/CommonCrawl.h"
-#include "src/engines/osint/modules/api/C99.h"
-#include "src/engines/osint/modules/api/BinaryEdge.h"
-#include "src/engines/osint/modules/api/Bgpview.h"
-#include "src/engines/osint/modules/api/Anubis.h"
-#include "src/engines/osint/modules/api/Otx.h"
-#include "src/engines/osint/modules/api/Sublist3r.h"
-#include "src/engines/osint/modules/api/Threatminer.h"
-#include "src/engines/osint/modules/api/Threatcrowd.h"
-#include "src/engines/osint/modules/api/Hackertarget.h"
-#include "src/engines/osint/modules/api/Dnsbufferoverun.h"
-#include "src/engines/osint/modules/api/Projectdiscovery.h"
-#include "src/engines/osint/modules/api/Spyse.h"
-#include "src/engines/osint/modules/api/Omnisint.h"
-#include "src/engines/osint/modules/api/Qwant.h"
-#include "src/engines/osint/modules/api/VirusTotal.h"
-#include "src/engines/osint/modules/api/Urlscan.h"
-#include "src/engines/osint/modules/archive/Waybackmachine.h"
-#include "src/engines/osint/modules/archive/ArchiveToday.h"
-#include "src/engines/osint/modules/archive/ArchiveIt.h"
-#include "src/engines/osint/modules/site/Dnsdumpster.h"
-#include "src/engines/osint/modules/site/Netcraft.h"
-#include "src/engines/osint/modules/site/Suip.h"
-#include "src/engines/osint/modules/site/Pkey.h"
-#include "src/engines/osint/modules/site/Rapiddns.h"
-#include "src/engines/osint/modules/cert/Crtsh.h"
-#include "src/engines/osint/modules/cert/GoogleCert.h"
-#include "src/engines/osint/modules/cert/Certspotter.h"
-#include "src/engines/osint/modules/cert/CensysFree.h"
-
-#define TRUE "1"
-#define FALSE "0"
+#include "src/modules/osint/site/PagesInventory.h"
+#include "src/modules/osint/site/SiteDossier.h"
+#include "src/modules/osint/scrape/Bing.h"
+#include "src/modules/osint/scrape/Yahoo.h"
+#include "src/modules/osint/scrape/Trello.h"
+#include "src/modules/osint/scrape/Exalead.h"
+#include "src/modules/osint/scrape/DuckDuckGo.h"
+#include "src/modules/osint/scrape/DogPile.h"
+#include "src/modules/osint/scrape/Baidu.h"
+#include "src/modules/osint/scrape/Ask.h"
+#include "src/modules/osint/api/ViewDns.h"
+#include "src/modules/osint/api/IpApi.h"
+#include "src/modules/osint/api/ZoomEye.h"
+#include "src/modules/osint/api/ZETAlytics.h"
+#include "src/modules/osint/api/WhoisXmlApi.h"
+#include "src/modules/osint/api/ThreatBook.h"
+#include "src/modules/osint/api/Shodan.h"
+#include "src/modules/osint/api/SecurityTrails.h"
+#include "src/modules/osint/api/Robtex.h"
+#include "src/modules/osint/api/RiskIq.h"
+#include "src/modules/osint/api/Mnemonic.h"
+#include "src/modules/osint/api/IpInfo.h"
+#include "src/modules/osint/api/HunterSearch.h"
+#include "src/modules/osint/api/Github.h"
+#include "src/modules/osint/api/C99.h"
+#include "src/modules/osint/api/BinaryEdge.h"
+#include "src/modules/osint/api/Bgpview.h"
+#include "src/modules/osint/api/Anubis.h"
+#include "src/modules/osint/api/Otx.h"
+#include "src/modules/osint/api/Sublist3r.h"
+#include "src/modules/osint/api/Threatminer.h"
+#include "src/modules/osint/api/Threatcrowd.h"
+#include "src/modules/osint/api/Hackertarget.h"
+#include "src/modules/osint/api/Dnsbufferoverun.h"
+#include "src/modules/osint/api/Projectdiscovery.h"
+#include "src/modules/osint/api/Spyse.h"
+#include "src/modules/osint/api/Omnisint.h"
+#include "src/modules/osint/api/Qwant.h"
+#include "src/modules/osint/api/VirusTotal.h"
+#include "src/modules/osint/api/Urlscan.h"
+#include "src/modules/osint/archive/Waybackmachine.h"
+#include "src/modules/osint/archive/ArchiveToday.h"
+#include "src/modules/osint/archive/CommonCrawl.h"
+#include "src/modules/osint/archive/ArchiveIt.h"
+#include "src/modules/osint/site/Dnsdumpster.h"
+#include "src/modules/osint/site/Netcraft.h"
+#include "src/modules/osint/site/Suip.h"
+#include "src/modules/osint/site/Pkey.h"
+#include "src/modules/osint/site/Rapiddns.h"
+#include "src/modules/osint/cert/Crtsh.h"
+#include "src/modules/osint/cert/GoogleCert.h"
+#include "src/modules/osint/cert/Certspotter.h"
+#include "src/modules/osint/cert/CensysFree.h"
 
 /* log on every scan each module its results count
  *
@@ -76,9 +73,6 @@
  * https://hunter.io/bulk-finders
  *
  * https://tools.epieos.com/email.php ->email-lookup
- * rename AbstractOsintModule to AbstractOsintModule
- *
- * create a json to QStandardItem Tree...
  *
  * you can crawl the enumerated urls all eg from archives
  * and return only the status codes of each url and show a graph
@@ -218,9 +212,18 @@ void Osint::startScan(){
     OsintModules module;
     ui->modules->getChoosenModules(module);
 
+    ScanArgs *scanArgs = new ScanArgs;
+    scanArgs->target = ui->lineEditTarget->text();
+    scanArgs->ip = false;
+    scanArgs->raw = false;
+    scanArgs->urls = false;
+    scanArgs->emails = false;
+    scanArgs->subdomains = false;
+    scanArgs->subdomainsAndIp = false;
+
     if(module.certspotter)
     {
-        Certspotter *certspotter = new Certspotter(ui->lineEditTarget->text());
+        Certspotter *certspotter = new Certspotter(scanArgs);
         QThread *cThread = new QThread(this);
         certspotter->Enumerator(cThread);
         certspotter->moveToThread(cThread);
@@ -237,7 +240,7 @@ void Osint::startScan(){
     }
     if(module.otx)
     {
-        Otx *otx = new Otx(ui->lineEditTarget->text());
+        Otx *otx = new Otx(scanArgs);
         QThread *cThread = new QThread(this);
         otx->Enumerator(cThread);
         otx->moveToThread(cThread);
@@ -254,7 +257,7 @@ void Osint::startScan(){
     }
     if(module.sublist3r)
     {
-        Sublist3r *sublist3r = new Sublist3r(ui->lineEditTarget->text());
+        Sublist3r *sublist3r = new Sublist3r(scanArgs);
         QThread *cThread = new QThread(this);
         sublist3r->Enumerator(cThread);
         sublist3r->moveToThread(cThread);
@@ -271,7 +274,7 @@ void Osint::startScan(){
     }
     if(module.threatminer)
     {
-        Threatminer *threatminer = new Threatminer(ui->lineEditTarget->text());
+        Threatminer *threatminer = new Threatminer(scanArgs);
         QThread *cThread = new QThread(this);
         threatminer->Enumerator(cThread);
         threatminer->moveToThread(cThread);
@@ -288,7 +291,7 @@ void Osint::startScan(){
     }
     if(module.threatcrowd)
     {
-        Threatcrowd *threatcrowd = new Threatcrowd(ui->lineEditTarget->text());
+        Threatcrowd *threatcrowd = new Threatcrowd(scanArgs);
         QThread *cThread = new QThread(this);
         threatcrowd->Enumerator(cThread);
         threatcrowd->moveToThread(cThread);
@@ -305,7 +308,7 @@ void Osint::startScan(){
     }
     if(module.hackertarget)
     {
-        Hackertarget *hackertarget = new Hackertarget(ui->lineEditTarget->text());
+        Hackertarget *hackertarget = new Hackertarget(scanArgs);
         QThread *cThread = new QThread(this);
         hackertarget->Enumerator(cThread);
         hackertarget->moveToThread(cThread);
@@ -322,7 +325,7 @@ void Osint::startScan(){
     }
     if(module.dnsbufferoverrun)
     {
-        Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(ui->lineEditTarget->text());
+        Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(scanArgs);
         QThread *cThread = new QThread(this);
         dnsbufferoverun->Enumerator(cThread);
         dnsbufferoverun->moveToThread(cThread);
@@ -339,7 +342,7 @@ void Osint::startScan(){
     }
     if(module.anubis)
     {
-        Anubis *anubis = new Anubis(ui->lineEditTarget->text());
+        Anubis *anubis = new Anubis(scanArgs);
         QThread *cThread = new QThread(this);
         anubis->Enumerator(cThread);
         anubis->moveToThread(cThread);
@@ -356,7 +359,7 @@ void Osint::startScan(){
     }
     if(module.projectdiscovery)
     {
-        Projectdiscovery *projectdiscovery = new Projectdiscovery(ui->lineEditTarget->text());
+        Projectdiscovery *projectdiscovery = new Projectdiscovery(scanArgs);
         QThread *cThread = new QThread(this);
         projectdiscovery->Enumerator(cThread);
         projectdiscovery->moveToThread(cThread);
@@ -373,7 +376,7 @@ void Osint::startScan(){
     }
     if(module.spyse)
     {
-        Spyse *spyse = new Spyse(ui->lineEditTarget->text());
+        Spyse *spyse = new Spyse(scanArgs);
         QThread *cThread = new QThread(this);
         spyse->Enumerator(cThread);
         spyse->moveToThread(cThread);
@@ -390,7 +393,7 @@ void Osint::startScan(){
     }
     if(module.crtsh)
     {
-        Crtsh *crtsh = new Crtsh(ui->lineEditTarget->text());
+        Crtsh *crtsh = new Crtsh(scanArgs);
         QThread *cThread = new QThread(this);
         crtsh->Enumerator(cThread);
         crtsh->moveToThread(cThread);
@@ -407,7 +410,7 @@ void Osint::startScan(){
     }
     if(module.dnsdumpster)
     {
-        Dnsdumpster *dnsdumpster = new Dnsdumpster(ui->lineEditTarget->text());
+        Dnsdumpster *dnsdumpster = new Dnsdumpster(scanArgs);
         QThread *cThread = new QThread(this);
         dnsdumpster->Enumerator(cThread);
         dnsdumpster->moveToThread(cThread);
@@ -424,7 +427,7 @@ void Osint::startScan(){
     }
     if(module.netcraft)
     {
-        Netcraft *netcraft = new Netcraft(ui->lineEditTarget->text());
+        Netcraft *netcraft = new Netcraft(scanArgs);
         QThread *cThread = new QThread(this);
         netcraft->Enumerator(cThread);
         netcraft->moveToThread(cThread);
@@ -441,7 +444,7 @@ void Osint::startScan(){
     }
     if(module.suip)
     {
-        Suip *suip = new Suip(ui->lineEditTarget->text());
+        Suip *suip = new Suip(scanArgs);
         QThread *cThread = new QThread(this);
         suip->Enumerator(cThread);
         suip->moveToThread(cThread);
@@ -457,7 +460,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.pkey){
-        Pkey *pkey = new Pkey(ui->lineEditTarget->text());
+        Pkey *pkey = new Pkey(scanArgs);
         QThread *cThread = new QThread(this);
         pkey->Enumerator(cThread);
         pkey->moveToThread(cThread);
@@ -473,7 +476,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.rapiddns){
-        Rapiddns *rapiddns = new Rapiddns(ui->lineEditTarget->text());
+        Rapiddns *rapiddns = new Rapiddns(scanArgs);
         QThread *cThread = new QThread(this);
         rapiddns->Enumerator(cThread);
         rapiddns->moveToThread(cThread);
@@ -489,7 +492,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.googleCert){
-        GoogleCert *googlecert = new GoogleCert(ui->lineEditTarget->text());
+        GoogleCert *googlecert = new GoogleCert(scanArgs);
         QThread *cThread = new QThread(this);
         googlecert->Enumerator(cThread);
         googlecert->moveToThread(cThread);
@@ -505,7 +508,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.omnisint){
-        Omnisint *omnisint = new Omnisint(ui->lineEditTarget->text());
+        Omnisint *omnisint = new Omnisint(scanArgs);
         QThread *cThread = new QThread(this);
         omnisint->Enumerator(cThread);
         omnisint->moveToThread(cThread);
@@ -521,7 +524,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.qwant){
-        Qwant *qwant = new Qwant(ui->lineEditTarget->text());
+        Qwant *qwant = new Qwant(scanArgs);
         QThread *cThread = new QThread(this);
         qwant->Enumerator(cThread);
         qwant->moveToThread(cThread);
@@ -537,7 +540,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.virustotalapi){
-        VirusTotal *virustotal = new VirusTotal(ui->lineEditTarget->text());
+        VirusTotal *virustotal = new VirusTotal(scanArgs);
         QThread *cThread = new QThread(this);
         virustotal->Enumerator(cThread);
         virustotal->moveToThread(cThread);
@@ -553,7 +556,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.urlscan){
-        Urlscan *urlscan = new Urlscan(ui->lineEditTarget->text());
+        Urlscan *urlscan = new Urlscan(scanArgs);
         QThread *cThread = new QThread(this);
         urlscan->Enumerator(cThread);
         urlscan->moveToThread(cThread);
@@ -569,7 +572,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.waybackmachine){
-        Waybackmachine *waybackmachine = new Waybackmachine(ui->lineEditTarget->text());
+        Waybackmachine *waybackmachine = new Waybackmachine(scanArgs);
         QThread *cThread = new QThread(this);
         waybackmachine->Enumerator(cThread);
         waybackmachine->moveToThread(cThread);
@@ -585,7 +588,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.archivetoday){
-        ArchiveToday *archivetoday = new ArchiveToday(ui->lineEditTarget->text());
+        ArchiveToday *archivetoday = new ArchiveToday(scanArgs);
         QThread *cThread = new QThread(this);
         archivetoday->Enumerator(cThread);
         archivetoday->moveToThread(cThread);
@@ -601,7 +604,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.archiveit){
-        ArchiveIt *archiveit = new ArchiveIt(ui->lineEditTarget->text());
+        ArchiveIt *archiveit = new ArchiveIt(scanArgs);
         QThread *cThread = new QThread(this);
         archiveit->Enumerator(cThread);
         archiveit->moveToThread(cThread);
@@ -617,7 +620,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.censysFree){
-        CensysFree *censysfree = new CensysFree(ui->lineEditTarget->text());
+        CensysFree *censysfree = new CensysFree(scanArgs);
         QThread *cThread = new QThread(this);
         censysfree->Enumerator(cThread);
         censysfree->moveToThread(cThread);
@@ -633,7 +636,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.bgpview){
-        Bgpview *bgpview = new Bgpview(ui->lineEditTarget->text());
+        Bgpview *bgpview = new Bgpview(scanArgs);
         QThread *cThread = new QThread(this);
         bgpview->Enumerator(cThread);
         bgpview->moveToThread(cThread);
@@ -649,7 +652,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.binaryEdge){
-        BinaryEdge *binaryedge = new BinaryEdge(ui->lineEditTarget->text());
+        BinaryEdge *binaryedge = new BinaryEdge(scanArgs);
         QThread *cThread = new QThread(this);
         binaryedge->Enumerator(cThread);
         binaryedge->moveToThread(cThread);
@@ -665,7 +668,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.c99){
-        C99 *c99 = new C99(ui->lineEditTarget->text());
+        C99 *c99 = new C99(scanArgs);
         QThread *cThread = new QThread(this);
         c99->Enumerator(cThread);
         c99->moveToThread(cThread);
@@ -681,7 +684,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.commoncrawl){
-        CommonCrawl *commonCrawl = new CommonCrawl(ui->lineEditTarget->text());
+        CommonCrawl *commonCrawl = new CommonCrawl(scanArgs);
         QThread *cThread = new QThread(this);
         commonCrawl->Enumerator(cThread);
         commonCrawl->moveToThread(cThread);
@@ -697,7 +700,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.github){
-        Github *github = new Github(ui->lineEditTarget->text());
+        Github *github = new Github(scanArgs);
         QThread *cThread = new QThread(this);
         github->Enumerator(cThread);
         github->moveToThread(cThread);
@@ -713,7 +716,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.huntersearch){
-        HunterSearch *huntersearch = new HunterSearch(ui->lineEditTarget->text());
+        HunterSearch *huntersearch = new HunterSearch(scanArgs);
         QThread *cThread = new QThread(this);
         huntersearch->Enumerator(cThread);
         huntersearch->moveToThread(cThread);
@@ -729,7 +732,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.ipinfo){
-        IpInfo *ipinfo = new IpInfo(ui->lineEditTarget->text());
+        IpInfo *ipinfo = new IpInfo(scanArgs);
         QThread *cThread = new QThread(this);
         ipinfo->Enumerator(cThread);
         ipinfo->moveToThread(cThread);
@@ -745,7 +748,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.mnemonic){
-        Mnemonic *mnemonic = new Mnemonic(ui->lineEditTarget->text());
+        Mnemonic *mnemonic = new Mnemonic(scanArgs);
         QThread *cThread = new QThread(this);
         mnemonic->Enumerator(cThread);
         mnemonic->moveToThread(cThread);
@@ -761,7 +764,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.riskiq){
-        RiskIq *riskiq = new RiskIq(ui->lineEditTarget->text());
+        RiskIq *riskiq = new RiskIq(scanArgs);
         QThread *cThread = new QThread(this);
         riskiq->Enumerator(cThread);
         riskiq->moveToThread(cThread);
@@ -777,7 +780,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.robtex){
-        Robtex *robtex = new Robtex(ui->lineEditTarget->text());
+        Robtex *robtex = new Robtex(scanArgs);
         QThread *cThread = new QThread(this);
         robtex->Enumerator(cThread);
         robtex->moveToThread(cThread);
@@ -793,7 +796,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.securitytrails){
-        SecurityTrails *securitytrails = new SecurityTrails(ui->lineEditTarget->text());
+        SecurityTrails *securitytrails = new SecurityTrails(scanArgs);
         QThread *cThread = new QThread(this);
         securitytrails->Enumerator(cThread);
         securitytrails->moveToThread(cThread);
@@ -809,7 +812,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.shodan){
-        Shodan *shodan = new Shodan(ui->lineEditTarget->text());
+        Shodan *shodan = new Shodan(scanArgs);
         QThread *cThread = new QThread(this);
         shodan->Enumerator(cThread);
         shodan->moveToThread(cThread);
@@ -825,7 +828,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.threatbook){
-        ThreatBook *threatbook = new ThreatBook(ui->lineEditTarget->text());
+        ThreatBook *threatbook = new ThreatBook(scanArgs);
         QThread *cThread = new QThread(this);
         threatbook->Enumerator(cThread);
         threatbook->moveToThread(cThread);
@@ -841,7 +844,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.whoisxmlapi){
-        WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(ui->lineEditTarget->text());
+        WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(scanArgs);
         QThread *cThread = new QThread(this);
         whoisxmlapi->Enumerator(cThread);
         whoisxmlapi->moveToThread(cThread);
@@ -857,7 +860,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.zetalytics){
-        ZETAlytics *zetalytics = new ZETAlytics(ui->lineEditTarget->text());
+        ZETAlytics *zetalytics = new ZETAlytics(scanArgs);
         QThread *cThread = new QThread(this);
         zetalytics->Enumerator(cThread);
         zetalytics->moveToThread(cThread);
@@ -873,7 +876,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.zoomeye){
-        ZoomEye *zoomeye = new ZoomEye(ui->lineEditTarget->text());
+        ZoomEye *zoomeye = new ZoomEye(scanArgs);
         QThread *cThread = new QThread(this);
         zoomeye->Enumerator(cThread);
         zoomeye->moveToThread(cThread);
@@ -889,7 +892,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.ipapi){
-        IpApi *ipapi = new IpApi(ui->lineEditTarget->text());
+        IpApi *ipapi = new IpApi(scanArgs);
         QThread *cThread = new QThread(this);
         ipapi->Enumerator(cThread);
         ipapi->moveToThread(cThread);
@@ -905,7 +908,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.ask){
-        Ask *ask = new Ask(ui->lineEditTarget->text());
+        Ask *ask = new Ask(scanArgs);
         QThread *cThread = new QThread(this);
         ask->Enumerator(cThread);
         ask->moveToThread(cThread);
@@ -921,7 +924,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.baidu){
-        Baidu *baidu = new Baidu(ui->lineEditTarget->text());
+        Baidu *baidu = new Baidu(scanArgs);
         QThread *cThread = new QThread(this);
         baidu->Enumerator(cThread);
         baidu->moveToThread(cThread);
@@ -937,7 +940,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.dogpile){
-        DogPile *dogpile = new DogPile(ui->lineEditTarget->text());
+        DogPile *dogpile = new DogPile(scanArgs);
         QThread *cThread = new QThread(this);
         dogpile->Enumerator(cThread);
         dogpile->moveToThread(cThread);
@@ -953,7 +956,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.duckduckgo){
-        DuckDuckGo *duckduckgo = new DuckDuckGo(ui->lineEditTarget->text());
+        DuckDuckGo *duckduckgo = new DuckDuckGo(scanArgs);
         QThread *cThread = new QThread(this);
         duckduckgo->Enumerator(cThread);
         duckduckgo->moveToThread(cThread);
@@ -969,7 +972,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.exalead){
-        Exalead *exalead = new Exalead(ui->lineEditTarget->text());
+        Exalead *exalead = new Exalead(scanArgs);
         QThread *cThread = new QThread(this);
         exalead->Enumerator(cThread);
         exalead->moveToThread(cThread);
@@ -985,7 +988,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.trello){
-        Trello *trello = new Trello(ui->lineEditTarget->text());
+        Trello *trello = new Trello(scanArgs);
         QThread *cThread = new QThread(this);
         trello->Enumerator(cThread);
         trello->moveToThread(cThread);
@@ -1001,7 +1004,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.yahoo){
-        Yahoo *yahoo = new Yahoo(ui->lineEditTarget->text());
+        Yahoo *yahoo = new Yahoo(scanArgs);
         QThread *cThread = new QThread(this);
         yahoo->Enumerator(cThread);
         yahoo->moveToThread(cThread);
@@ -1017,7 +1020,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.bing){
-        Bing *bing = new Bing(ui->lineEditTarget->text());
+        Bing *bing = new Bing(scanArgs);
         QThread *cThread = new QThread(this);
         bing->Enumerator(cThread);
         bing->moveToThread(cThread);
@@ -1033,7 +1036,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.sitedossier){
-        SiteDossier *sitedossier = new SiteDossier(ui->lineEditTarget->text());
+        SiteDossier *sitedossier = new SiteDossier(scanArgs);
         QThread *cThread = new QThread(this);
         sitedossier->Enumerator(cThread);
         sitedossier->moveToThread(cThread);
@@ -1049,7 +1052,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.pagesinventory){
-        PagesInventory *pagesinventory = new PagesInventory(ui->lineEditTarget->text());
+        PagesInventory *pagesinventory = new PagesInventory(scanArgs);
         QThread *cThread = new QThread(this);
         pagesinventory->Enumerator(cThread);
         pagesinventory->moveToThread(cThread);
@@ -1065,7 +1068,7 @@ void Osint::startScan(){
         status->osint->activeThreads++;
     }
     if(module.viewDns){
-        ViewDns *viewdns = new ViewDns(ui->lineEditTarget->text());
+        ViewDns *viewdns = new ViewDns(scanArgs);
         QThread *cThread = new QThread(this);
         viewdns->Enumerator(cThread);
         viewdns->moveToThread(cThread);

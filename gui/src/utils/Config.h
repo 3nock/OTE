@@ -3,19 +3,18 @@
 
 #include <QSettings>
 
+#define CONFIG_OSINT_APIKEYS "api-keys"
+#define CONFIG_SUBDOMAIN_WORDLIST "Subdomain-Wordlist"
+#define CONFIG_SUBDOMAIN_SPECIALWORDLIST "Subdomain-SpecialWordlist"
+#define CONFIG_TLD_WORDLIST "TLD-Wordlist"
+#define CONFIG_TLD_SPECIALWORDLIST "TLD-SpecialWordlist"
+#define CONFIG_DEFAULT_NAMESERVERS "Default-Nameservers"
+#define CONFIG_CUSTOM_NAMESERVERS "Custom-Nameservers"
+
+
 /*
  * A singleton class that saves & retrieves all the configuration
  * settings for all engines
- */
-
-/*
- *
- * TODO: create a list of MARCOS that contain the configuration names...
- *       eg #define CONFIG_OSINT_APIKEYS "api-keys"
- *          #define CONFIG_GENERAL_APIKEYS "api-keys"
- *          #define CONFIG_BRUTE_APIKEYS "api-keys"
- *          #define CONFIG_PROJECT_APIKEYS "api-keys"
- *
  */
 class Config {
 

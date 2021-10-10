@@ -203,7 +203,7 @@
          <string notr="true"/>
         </property>
         <property name="text">
-         <string>Config..</string>
+         <string>Config...</string>
         </property>
        </widget>
       </item>

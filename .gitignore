@@ -21,3 +21,5 @@
 cov-int*
 *.pdb
 ui_*
+include/
+gui/includes

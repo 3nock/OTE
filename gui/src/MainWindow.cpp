@@ -4,6 +4,7 @@
 #include <QSettings>
 #include <QDateTime>
 #include "src/dialogs/AboutDialog.h"
+#include "src/tools/raw/RawOsint.h"
 
 /*
  * about dialog like that of wireshark
@@ -241,4 +242,11 @@ void MainWindow::on_actionAboutQt_triggered(){
 
 void MainWindow::on_actionExit_triggered(){
     QApplication::exit();
+}
+
+
+void MainWindow::on_actionRawOsint_triggered(){
+    RawOsint *rawOsint = new RawOsint(this);
+    rawOsint->setAttribute(Qt::WA_DeleteOnClose, true);
+    rawOsint->show();
 }

@@ -28,62 +28,62 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
-    src/dialogs/AboutDialog.cpp \
-    src/engines/osint/modules/api/Bgpview.cpp \
-    src/engines/osint/modules/api/BinaryEdge.cpp \
-    src/engines/osint/modules/api/C99.cpp \
-    src/engines/osint/modules/api/Circl.cpp \
-    src/engines/osint/modules/api/CommonCrawl.cpp \
-    src/engines/osint/modules/api/Github.cpp \
-    src/engines/osint/modules/api/HunterSearch.cpp \
-    src/engines/osint/modules/api/IpApi.cpp \
-    src/engines/osint/modules/api/IpInfo.cpp \
-    src/engines/osint/modules/api/Mnemonic.cpp \
-    src/engines/osint/modules/api/ReconDev.cpp \
-    src/engines/osint/modules/api/RiskIq.cpp \
-    src/engines/osint/modules/api/Robtex.cpp \
-    src/engines/osint/modules/api/SecurityTrails.cpp \
-    src/engines/osint/modules/api/Shodan.cpp \
-    src/engines/osint/modules/api/ThreatBook.cpp \
-    src/engines/osint/modules/api/ViewDns.cpp \
-    src/engines/osint/modules/api/WhoisXmlApi.cpp \
-    src/engines/osint/modules/api/ZETAlytics.cpp \
-    src/engines/osint/modules/api/ZoomEye.cpp \
-    src/engines/osint/modules/archive/ArchiveIt.cpp \
-    src/engines/osint/modules/archive/ArchiveToday.cpp \
-    src/engines/osint/modules/archive/Waybackmachine.cpp \
-    src/engines/osint/modules/api/Anubis.cpp \
-    src/engines/osint/modules/api/Dnsbufferoverun.cpp \
-    src/engines/osint/modules/api/Hackertarget.cpp \
-    src/engines/osint/modules/api/Omnisint.cpp \
-    src/engines/osint/modules/api/Otx.cpp \
-    src/engines/osint/modules/api/Projectdiscovery.cpp \
-    src/engines/osint/modules/api/Qwant.cpp \
-    src/engines/osint/modules/api/Spyse.cpp \
-    src/engines/osint/modules/api/Sublist3r.cpp \
-    src/engines/osint/modules/api/Threatcrowd.cpp \
-    src/engines/osint/modules/api/Threatminer.cpp \
-    src/engines/osint/modules/api/Urlscan.cpp \
-    src/engines/osint/modules/api/VirusTotal.cpp \
-    src/engines/osint/modules/cert/Certspotter.cpp \
-    src/engines/osint/modules/cert/Crtsh.cpp \
-    src/engines/osint/modules/cert/GoogleCert.cpp \
-    src/engines/osint/modules/cert/CensysFree.cpp \
-    src/engines/osint/modules/scrape/Ask.cpp \
-    src/engines/osint/modules/scrape/Baidu.cpp \
-    src/engines/osint/modules/scrape/Bing.cpp \
-    src/engines/osint/modules/scrape/DogPile.cpp \
-    src/engines/osint/modules/scrape/DuckDuckGo.cpp \
-    src/engines/osint/modules/scrape/Exalead.cpp \
-    src/engines/osint/modules/scrape/Trello.cpp \
-    src/engines/osint/modules/scrape/Yahoo.cpp \
-    src/engines/osint/modules/site/Dnsdumpster.cpp \
-    src/engines/osint/modules/site/Netcraft.cpp \
-    src/engines/osint/modules/site/PagesInventory.cpp \
-    src/engines/osint/modules/site/Pkey.cpp \
-    src/engines/osint/modules/site/Rapiddns.cpp \
-    src/engines/osint/modules/site/SiteDossier.cpp \
-    src/engines/osint/modules/site/Suip.cpp \
+    src/tools/raw/RawOsint.cpp \
+    src/modules/osint/api/Bgpview.cpp \
+    src/modules/osint/api/BinaryEdge.cpp \
+    src/modules/osint/api/C99.cpp \
+    src/modules/osint/api/Circl.cpp \
+    src/modules/osint/api/Github.cpp \
+    src/modules/osint/api/HunterSearch.cpp \
+    src/modules/osint/api/IpApi.cpp \
+    src/modules/osint/api/IpInfo.cpp \
+    src/modules/osint/api/Mnemonic.cpp \
+    src/modules/osint/api/ReconDev.cpp \
+    src/modules/osint/api/RiskIq.cpp \
+    src/modules/osint/api/Robtex.cpp \
+    src/modules/osint/api/SecurityTrails.cpp \
+    src/modules/osint/api/Shodan.cpp \
+    src/modules/osint/api/ThreatBook.cpp \
+    src/modules/osint/api/ViewDns.cpp \
+    src/modules/osint/api/WhoisXmlApi.cpp \
+    src/modules/osint/api/ZETAlytics.cpp \
+    src/modules/osint/api/ZoomEye.cpp \
+    src/modules/osint/api/Anubis.cpp \
+    src/modules/osint/api/Dnsbufferoverun.cpp \
+    src/modules/osint/api/Hackertarget.cpp \
+    src/modules/osint/api/Omnisint.cpp \
+    src/modules/osint/api/Otx.cpp \
+    src/modules/osint/api/Projectdiscovery.cpp \
+    src/modules/osint/api/Qwant.cpp \
+    src/modules/osint/api/Spyse.cpp \
+    src/modules/osint/api/Sublist3r.cpp \
+    src/modules/osint/api/Threatcrowd.cpp \
+    src/modules/osint/api/Threatminer.cpp \
+    src/modules/osint/api/Urlscan.cpp \
+    src/modules/osint/api/VirusTotal.cpp \
+    src/modules/osint/archive/ArchiveIt.cpp \
+    src/modules/osint/archive/ArchiveToday.cpp \
+    src/modules/osint/archive/CommonCrawl.cpp \
+    src/modules/osint/archive/Waybackmachine.cpp \
+    src/modules/osint/cert/Certspotter.cpp \
+    src/modules/osint/cert/Crtsh.cpp \
+    src/modules/osint/cert/GoogleCert.cpp \
+    src/modules/osint/cert/CensysFree.cpp \
+    src/modules/osint/scrape/Ask.cpp \
+    src/modules/osint/scrape/Baidu.cpp \
+    src/modules/osint/scrape/Bing.cpp \
+    src/modules/osint/scrape/DogPile.cpp \
+    src/modules/osint/scrape/DuckDuckGo.cpp \
+    src/modules/osint/scrape/Exalead.cpp \
+    src/modules/osint/scrape/Trello.cpp \
+    src/modules/osint/scrape/Yahoo.cpp \
+    src/modules/osint/site/Dnsdumpster.cpp \
+    src/modules/osint/site/Netcraft.cpp \
+    src/modules/osint/site/PagesInventory.cpp \
+    src/modules/osint/site/Pkey.cpp \
+    src/modules/osint/site/Rapiddns.cpp \
+    src/modules/osint/site/SiteDossier.cpp \
+    src/modules/osint/site/Suip.cpp \
     src/engines/ip/Ip.cpp \
     src/engines/ip/IpScanner.cpp \
     src/engines/active/Active.cpp \
@@ -100,10 +100,10 @@ SOURCES += \
     src/project/specific/SpecificAnalysis.cpp \
     src/project/ProjectDataModel.cpp \
     src/project/Project.cpp \
-    src/utils/JsonToTree.cpp \
     src/widgets/InputWidget.cpp \
     src/widgets/OsintModulesWidget.cpp \
-    src/widgets/ResultsWidget.cpp \
+    src/widgets/WordlistGeneratorWidget.cpp \
+    src/dialogs/AboutDialog.cpp \
     src/dialogs/ConfigDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
     src/dialogs/WordlistDialog.cpp \
@@ -112,67 +112,67 @@ SOURCES += \
     src/utils/Logger.cpp \
     src/SplashScreen.cpp \
     src/MainWindow.cpp \
-    src/main.cpp \
+    src/main.cpp
 
 HEADERS += \
-    src/dialogs/AboutDialog.h \
     src/engines/AbstractScanner.h \
-    src/engines/osint/modules/api/Bgpview.h \
-    src/engines/osint/modules/api/BinaryEdge.h \
-    src/engines/osint/modules/api/C99.h \
-    src/engines/osint/modules/api/Circl.h \
-    src/engines/osint/modules/api/CommonCrawl.h \
-    src/engines/osint/modules/api/Github.h \
-    src/engines/osint/modules/api/HunterSearch.h \
-    src/engines/osint/modules/api/IpApi.h \
-    src/engines/osint/modules/api/IpInfo.h \
-    src/engines/osint/modules/api/Mnemonic.h \
-    src/engines/osint/modules/api/ReconDev.h \
-    src/engines/osint/modules/api/RiskIq.h \
-    src/engines/osint/modules/api/Robtex.h \
-    src/engines/osint/modules/api/SecurityTrails.h \
-    src/engines/osint/modules/api/Shodan.h \
-    src/engines/osint/modules/api/ThreatBook.h \
-    src/engines/osint/modules/api/ViewDns.h \
-    src/engines/osint/modules/api/WhoisXmlApi.h \
-    src/engines/osint/modules/api/ZETAlytics.h \
-    src/engines/osint/modules/api/ZoomEye.h \
-    src/engines/osint/modules/archive/ArchiveIt.h \
-    src/engines/osint/modules/archive/ArchiveToday.h \
-    src/engines/osint/modules/archive/Waybackmachine.h \
-    src/engines/osint/modules/api/Anubis.h \
-    src/engines/osint/modules/api/Dnsbufferoverun.h \
-    src/engines/osint/modules/api/Hackertarget.h \
-    src/engines/osint/modules/api/Omnisint.h \
-    src/engines/osint/modules/api/Otx.h \
-    src/engines/osint/modules/api/Projectdiscovery.h \
-    src/engines/osint/modules/api/Qwant.h \
-    src/engines/osint/modules/api/Spyse.h \
-    src/engines/osint/modules/api/Sublist3r.h \
-    src/engines/osint/modules/api/Threatcrowd.h \
-    src/engines/osint/modules/api/Threatminer.h \
-    src/engines/osint/modules/api/Urlscan.h \
-    src/engines/osint/modules/api/VirusTotal.h \
-    src/engines/osint/modules/cert/Certspotter.h \
-    src/engines/osint/modules/cert/Crtsh.h \
-    src/engines/osint/modules/cert/GoogleCert.h \
-    src/engines/osint/modules/cert/CensysFree.h \
-    src/engines/osint/modules/scrape/Ask.h \
-    src/engines/osint/modules/scrape/Baidu.h \
-    src/engines/osint/modules/scrape/Bing.h \
-    src/engines/osint/modules/scrape/DogPile.h \
-    src/engines/osint/modules/scrape/DuckDuckGo.h \
-    src/engines/osint/modules/scrape/Exalead.h \
-    src/engines/osint/modules/scrape/Trello.h \
-    src/engines/osint/modules/scrape/Yahoo.h \
-    src/engines/osint/modules/site/Dnsdumpster.h \
-    src/engines/osint/modules/site/Netcraft.h \
-    src/engines/osint/modules/site/PagesInventory.h \
-    src/engines/osint/modules/site/Pkey.h \
-    src/engines/osint/modules/site/Rapiddns.h \
-    src/engines/osint/modules/site/SiteDossier.h \
-    src/engines/osint/modules/site/Suip.h \
-    src/engines/osint/modules/AbstractOsintModule.h \
+    src/tools/raw/RawOsint.h \
+    src/modules/osint/api/Bgpview.h \
+    src/modules/osint/api/BinaryEdge.h \
+    src/modules/osint/api/C99.h \
+    src/modules/osint/api/Circl.h \
+    src/modules/osint/api/Github.h \
+    src/modules/osint/api/HunterSearch.h \
+    src/modules/osint/api/IpApi.h \
+    src/modules/osint/api/IpInfo.h \
+    src/modules/osint/api/Mnemonic.h \
+    src/modules/osint/api/ReconDev.h \
+    src/modules/osint/api/RiskIq.h \
+    src/modules/osint/api/Robtex.h \
+    src/modules/osint/api/SecurityTrails.h \
+    src/modules/osint/api/Shodan.h \
+    src/modules/osint/api/ThreatBook.h \
+    src/modules/osint/api/ViewDns.h \
+    src/modules/osint/api/WhoisXmlApi.h \
+    src/modules/osint/api/ZETAlytics.h \
+    src/modules/osint/api/ZoomEye.h \
+    src/modules/osint/api/Anubis.h \
+    src/modules/osint/api/Dnsbufferoverun.h \
+    src/modules/osint/api/Hackertarget.h \
+    src/modules/osint/api/Omnisint.h \
+    src/modules/osint/api/Otx.h \
+    src/modules/osint/api/Projectdiscovery.h \
+    src/modules/osint/api/Qwant.h \
+    src/modules/osint/api/Spyse.h \
+    src/modules/osint/api/Sublist3r.h \
+    src/modules/osint/api/Threatcrowd.h \
+    src/modules/osint/api/Threatminer.h \
+    src/modules/osint/api/Urlscan.h \
+    src/modules/osint/api/VirusTotal.h \
+    src/modules/osint/archive/ArchiveIt.h \
+    src/modules/osint/archive/ArchiveToday.h \
+    src/modules/osint/archive/CommonCrawl.h \
+    src/modules/osint/archive/Waybackmachine.h \
+    src/modules/osint/cert/Certspotter.h \
+    src/modules/osint/cert/Crtsh.h \
+    src/modules/osint/cert/GoogleCert.h \
+    src/modules/osint/cert/CensysFree.h \
+    src/modules/osint/scrape/Ask.h \
+    src/modules/osint/scrape/Baidu.h \
+    src/modules/osint/scrape/Bing.h \
+    src/modules/osint/scrape/DogPile.h \
+    src/modules/osint/scrape/DuckDuckGo.h \
+    src/modules/osint/scrape/Exalead.h \
+    src/modules/osint/scrape/Trello.h \
+    src/modules/osint/scrape/Yahoo.h \
+    src/modules/osint/site/Dnsdumpster.h \
+    src/modules/osint/site/Netcraft.h \
+    src/modules/osint/site/PagesInventory.h \
+    src/modules/osint/site/Pkey.h \
+    src/modules/osint/site/Rapiddns.h \
+    src/modules/osint/site/SiteDossier.h \
+    src/modules/osint/site/Suip.h \
+    src/modules/osint/AbstractOsintModule.h \
     src/engines/ip/Ip.h \
     src/engines/ip/IpScanner.h \
     src/engines/active/Active.h \
@@ -189,10 +189,10 @@ HEADERS += \
     src/project/specific/SpecificAnalysis.h \
     src/project/ProjectDataModel.h \
     src/project/Project.h \
-    src/utils/JsonToTree.h \
     src/widgets/InputWidget.h \
     src/widgets/OsintModulesWidget.h \
-    src/widgets/ResultsWidget.h \
+    src/widgets/WordlistGeneratorWidget.h \
+    src/dialogs/AboutDialog.h \
     src/dialogs/ApiKeysDialog.h \
     src/dialogs/ConfigDialog.h \
     src/dialogs/WordlistDialog.h \
@@ -201,10 +201,10 @@ HEADERS += \
     src/utils/Config.h \
     src/utils/Logger.h \
     src/SplashScreen.h \
-    src/MainWindow.h \
+    src/MainWindow.h
 
 FORMS += \
-    src/dialogs/AboutDialog.ui \
+    src/tools/raw/RawOsint.ui \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \
     src/project/specific/SpecificAnalysis.ui \
@@ -215,7 +215,8 @@ FORMS += \
     src/engines/active/Active.ui \
     src/widgets/InputWidget.ui \
     src/widgets/OsintModulesWidget.ui \
-    src/widgets/ResultsWidget.ui \
+    src/widgets/WordlistGeneratorWidget.ui \
+    src/dialogs/AboutDialog.ui \
     src/dialogs/ConfigDialog.ui \
     src/dialogs/WordlistDialog.ui \
     src/dialogs/ApiKeysDialog.ui \

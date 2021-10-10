@@ -526,6 +526,7 @@ QRadioButton:hover {
     </property>
     <addaction name="actionfavourites"/>
     <addaction name="actionDorker"/>
+    <addaction name="actionRawOsint"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -554,10 +555,16 @@ QRadioButton:hover {
      <string>Active</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuArsernal">
+    <property name="title">
+     <string>Arsernal</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuProject"/>
    <addaction name="menuPassive"/>
    <addaction name="menuActive"/>
+   <addaction name="menuArsernal"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -660,6 +667,16 @@ QRadioButton:hover {
   <action name="actionclose">
    <property name="text">
     <string>close</string>
+   </property>
+  </action>
+  <action name="actionRaw">
+   <property name="text">
+    <string>Raw</string>
+   </property>
+  </action>
+  <action name="actionRawOsint">
+   <property name="text">
+    <string>raw-osint</string>
    </property>
   </action>
  </widget>

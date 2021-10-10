@@ -369,6 +369,23 @@
       <attribute name="title">
        <string>Generate</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="WordlistGeneratorWidget" name="wordlistGenerator" native="true"/>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
@@ -379,6 +396,12 @@
    <class>InputWidget</class>
    <extends>QWidget</extends>
    <header>src/widgets/InputWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>WordlistGeneratorWidget</class>
+   <extends>QWidget</extends>
+   <header>src/widgets/WordlistGeneratorWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

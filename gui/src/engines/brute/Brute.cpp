@@ -9,7 +9,7 @@
  * eg example.com ==> exannple.com, exampl3.com, exqmple.com, exampls.com, exampke.com
  *
  *
- *have a tab to put all info/issue definitions,eg asn numbers and their respective
+ * have a tab to put all info/issue definitions,eg asn numbers and their respective
  * owner, ip's and their respective owners...
  *
  *

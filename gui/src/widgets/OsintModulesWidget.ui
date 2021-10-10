@@ -321,13 +321,6 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="moduleCommonCrawl">
-             <property name="text">
-              <string>CommonCrawl</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QCheckBox" name="moduleDnsbufferoverrun">
              <property name="text">
               <string>DnsBufferOverRun</string>
@@ -547,6 +540,13 @@
             <widget class="QLabel" name="label_15">
              <property name="text">
               <string>Archives</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleCommonCrawl">
+             <property name="text">
+              <string>CommonCrawl</string>
              </property>
             </widget>
            </item>

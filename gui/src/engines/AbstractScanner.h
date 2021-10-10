@@ -6,8 +6,13 @@
 #include "src/utils/utils.h"
 
 /*
- * count and keep log of all the failed(Error) lookups...
+ * count and keep log of all the Error lookups...
  */
+
+struct ScanStats{
+    unsigned int successfulLookups;
+    unsigned int errorLookups;
+};
 
 class AbstractScanner : public QObject{
     Q_OBJECT
@@ -25,6 +30,9 @@ class AbstractScanner : public QObject{
             connect(cThread, &QThread::started, this, &AbstractScanner::lookup);
             connect(this, &AbstractScanner::quitThread, cThread, &QThread::quit);
         }
+
+    protected:
+        ScanStats *scanStats;
 
     public slots:
         ///
