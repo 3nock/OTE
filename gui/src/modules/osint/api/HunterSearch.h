@@ -3,6 +3,22 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct HunterSearch{
+        QString name = "Hunter";
+        QString url = "https://hunter.io/";
+        QString summary = "Hunter lets you find professional email addresses in seconds and \n"
+                          "connect with the people that matter for your business.";
+
+        QMap<QString, QString> flags = {{"Domain Search", "domain name"},
+                                        {"Email Finder", "domain name"},
+                                        {"Author Finder", "url"},
+                                        {"Email Verifier", "email"},
+                                        {"Email Count", "domain name"},
+                                        {"Account Information", ""}};
+    };
+}
+
 class HunterSearch: public AbstractOsintModule{
 
     public:

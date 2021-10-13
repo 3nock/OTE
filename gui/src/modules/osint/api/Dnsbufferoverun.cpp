@@ -16,7 +16,14 @@ Dnsbufferoverun::~Dnsbufferoverun(){
 
 void Dnsbufferoverun::start(){
     QNetworkRequest request;
-    QUrl url("https://dns.bufferover.run/dns?q="+args->target);
+
+    QUrl url;
+    if(args->raw){
+        url.setUrl("https://dns.bufferover.run/dns?q="+args->target);
+    }else{
+        url.setUrl("https://dns.bufferover.run/dns?q="+args->target);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

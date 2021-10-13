@@ -3,6 +3,15 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct Qwant{
+        QString name = "Qwant";
+        QString url = "https://www.qwant.com/";
+        QString summary = "Qwant";
+        QMap<QString, QString> flags = {{"web", "domain name"}};
+    };
+}
+
 class Qwant: public AbstractOsintModule{
 
     public:

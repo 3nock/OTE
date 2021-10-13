@@ -4,15 +4,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-/*
- *
- * is an email finder and verifier...
- * find email on a domain using first and last name
- *          https://api.hunter.io/v2/email-finder?domain=reddit.com&first_name=Alexis&last_name=Ohanian&api_key=974523c651df0e318c73b26bc316b2c3c5c27163
- * to verify email:
- *          https://api.hunter.io/v2/email-verifier?email=patrick@stripe.com&api_key=974523c651df0e318c73b26bc316b2c3c5c27163
- *
- */
 
 HunterSearch::HunterSearch(ScanArgs *args):
     AbstractOsintModule(args)
@@ -32,7 +23,25 @@ HunterSearch::~HunterSearch(){
 
 void HunterSearch::start(){
     QNetworkRequest request;
-    QUrl url("https://api.hunter.io/v2/domain-search?domain="+args->target+"&api_key="+m_key);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "Domain Search")
+            url.setUrl("https://api.hunter.io/v2/domain-search?domain="+args->target+"&api_key="+m_key);
+        if(args->option == "Email Finder")
+            url.setUrl("https://api.hunter.io/v2/email-finder?domain="+args->target+"&api_key="+m_key);
+        if(args->option == "Author Finder")
+            url.setUrl("https://api.hunter.io/v2/author-finder?url="+args->target+"&api_key="+m_key);
+        if(args->option == "Email Verifier")
+            url.setUrl("https://api.hunter.io/v2/email-verifier?email="+args->target+"&api_key="+m_key);
+        if(args->option == "Email Count")
+            url.setUrl("https://api.hunter.io/v2/email-count?domain="+args->target);
+        if(args->option == "Account Information")
+            url.setUrl("https://api.hunter.io/v2/account?api_key="+m_key);
+    }else{
+        url.setUrl("https://api.hunter.io/v2/domain-search?domain="+args->target+"&api_key="+m_key);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

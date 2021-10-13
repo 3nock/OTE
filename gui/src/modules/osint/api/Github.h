@@ -3,6 +3,15 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct Github{
+        QString name = "Github";
+        QString url = "https://github.com/";
+        QString summary = "Github API";
+        QMap<QString, QString> flags = {{"domains", "domain name"}};
+    };
+}
+
 class Github: public AbstractOsintModule{
 
     public:

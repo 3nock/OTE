@@ -27,7 +27,21 @@ IpInfo::~IpInfo(){
 
 void IpInfo::start(){
     QNetworkRequest request;
-    QUrl url("https://ipinfo.io/"+args->target+"/json?token="+m_key);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "IP")
+            url.setUrl("https://ipinfo.io/"+args->target+"/json?token="+m_key);
+        if(args->option == "ASN")
+            url.setUrl("https://ipinfo.io/AS"+args->target+"/json?token="+m_key);
+        if(args->option == "Ranges")
+            url.setUrl("https://ipinfo.io/ranges/"+args->target+"/json?token="+m_key);
+        if(args->option == "Hosted Domains")
+            url.setUrl("https://ipinfo.io/domains"+args->target+"/json?token="+m_key);
+    }else{
+        url.setUrl("https://ipinfo.io/"+args->target+"/json?token="+m_key);
+    }
+
     request.setRawHeader("Accept", "application/json");
     request.setUrl(url);
     manager->get(request);

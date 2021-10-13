@@ -26,7 +26,33 @@ RiskIq::~RiskIq(){
 
 void RiskIq::start(){
     QNetworkRequest request;
-    QUrl url("https://api.riskiq.net/v0/pdns/name?name="+args->target+"&type=A");
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "pdns ip")
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+args->target);
+        if(args->option == "pdns name")
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+args->target);
+        if(args->option == "pdns raw")
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/raw?hex="+args->target);
+        if(args->option == "whois address")
+            url.setUrl("https://api.riskiq.net/v0/whois/address?address="+args->target);
+        if(args->option == "whois domain")
+            url.setUrl("https://api.riskiq.net/v0/whois/domain?domain="+args->target);
+        if(args->option == "whois email")
+            url.setUrl("https://api.riskiq.net/v0/whois/email?email="+args->target);
+        if(args->option == "whois name")
+            url.setUrl("https://api.riskiq.net/v0/whois/name?name="+args->target);
+        if(args->option == "whois nameserver")
+            url.setUrl("https://api.riskiq.net/v0/whois/nameserver?nameserver="+args->target);
+        if(args->option == "whois org")
+            url.setUrl("https://api.riskiq.net/v0/whois/org?org="+args->target);
+        if(args->option == "whois phone")
+            url.setUrl("https://api.riskiq.net/v0/whois/phone?phone="+args->target);
+    }else{
+        url.setUrl("https://api.riskiq.net/v0/pdns/name?name="+args->target+"&type=A");
+    }
+
     request.setUrl(url);
     request.setRawHeader("Accept", "application/json");
     ///

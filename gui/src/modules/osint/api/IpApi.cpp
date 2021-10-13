@@ -28,7 +28,19 @@ IpApi::~IpApi(){
 
 void IpApi::start(){
     QNetworkRequest request;
-    QUrl url("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "Standard Lookup")
+            url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
+        if(args->option == "Bulk Lookup")
+            url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
+        if(args->option == "")
+            url.setUrl("https://api.ipapi.com/api/check?access_key="+m_key);
+    }else{
+        url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

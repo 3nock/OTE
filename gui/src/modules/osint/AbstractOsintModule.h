@@ -15,6 +15,8 @@ struct OsintScanStat{
 struct ScanArgs{
     QString target;
     QString module;
+    QString option;
+
     bool subdomains = false;
     bool subdomainsAndIp = false;
     bool ip = false;
@@ -24,17 +26,15 @@ struct ScanArgs{
 };
 
 struct meta{
-    /*
-    'name': "Web Analytics Extractor",
-    'summary': "Identify web analytics IDs in scraped webpages and DNS TXT records.",
-    'flags': [""],
-    'useCases': ["Footprint", "Investigate", "Passive"],
-    'categories': ["Content Analysis"]
-    */
+    QString moduleName;
+    QString summary;
+    QStringList useCases;
+    QStringList flags;
 };
 
-class AbstractOsintModule : public QObject{
+class AbstractOsintModule : public QObject {
         Q_OBJECT
+
     public:
         explicit AbstractOsintModule(ScanArgs *args)
             : QObject(nullptr),

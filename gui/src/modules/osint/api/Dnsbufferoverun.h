@@ -3,6 +3,15 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct Dnsbufferoverun{
+        QString name = "Dnsbufferoverun";
+        QString url = "https://dns.bufferover.run/";
+        QString summary = "Subdomain enumeration from rapid7 sonar project";
+        QMap<QString, QString> flags = {{"subdomains", "domain name"}};
+    };
+}
+
 class Dnsbufferoverun: public AbstractOsintModule{
 
     public:

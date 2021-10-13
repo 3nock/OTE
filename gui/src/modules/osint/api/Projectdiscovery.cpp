@@ -16,7 +16,15 @@ Projectdiscovery::~Projectdiscovery(){
 
 void Projectdiscovery::start(){
     QNetworkRequest request;
-    QUrl url("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "subdomains")
+            url.setUrl("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");
+    }else{
+        url.setUrl("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");
+    }
+
     request.setUrl(url);
     request.setRawHeader("Authorization", "key");
     manager->get(request);

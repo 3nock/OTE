@@ -3,7 +3,9 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-
+/*
+ * now section used is general
+ */
 Otx::Otx(ScanArgs *args):
     AbstractOsintModule(args)
 {
@@ -16,7 +18,23 @@ Otx::~Otx(){
 
 void Otx::start(){
     QNetworkRequest request;
-    QUrl url("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/passive_dns");
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "indicator ipv4")
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+args->target+"/general");
+        if(args->option == "indicator ipv6")
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+args->target+"/general");
+        if(args->option == "indicator domain")
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/general");
+        if(args->option == "indicator hostname")
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+args->target+"/general");
+        if(args->option == "indicator url")
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/url/"+args->target+"/general");
+    }else{
+        url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/passive_dns");
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

@@ -8,6 +8,7 @@
  * many sites are created from homoglyphs of existing ones
  * eg example.com ==> exannple.com, exampl3.com, exqmple.com, exampls.com, exampke.com
  *
+ * use a hash-table instead of QSet to to save already present data
  *
  * have a tab to put all info/issue definitions,eg asn numbers and their respective
  * owner, ip's and their respective owners...

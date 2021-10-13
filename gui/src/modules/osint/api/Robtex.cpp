@@ -22,7 +22,21 @@ Robtex::~Robtex(){
 
 void Robtex::start(){
     QNetworkRequest request;
-    QUrl url("https://freeapi.robtex.com/pdns/forward/"+args->target);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "ipquery")
+            url.setUrl("https://freeapi.robtex.com/ipquery/"+args->target);
+        if(args->option == "asquery")
+            url.setUrl("https://freeapi.robtex.com/asquery/"+args->target);
+        if(args->option == "pdns forward")
+            url.setUrl("https://freeapi.robtex.com/pdns/forward/"+args->target);
+        if(args->option == "pdns reverse")
+            url.setUrl("https://freeapi.robtex.com/pdns/reverse/"+args->target);
+    }else{
+        url.setUrl("https://freeapi.robtex.com/pdns/forward/"+args->target);
+    }
+
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
     manager->get(request);

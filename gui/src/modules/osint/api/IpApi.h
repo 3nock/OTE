@@ -3,6 +3,18 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct IpApi{
+        QString name = "IpApi";
+        QString url = "https://ipapi.com/";
+        QString summary = "Real-time Geolocation & Reverse IP Lookup REST API";
+
+        QMap<QString, QString> flags = {{"Standard Lookup", "ip-address"},
+                                        {"Bulk Lookup", "ip-address,ip-address,ip-address"},
+                                        {"Origin Lookup", ""}};
+    };
+}
+
 class IpApi: public AbstractOsintModule{
 
     public:

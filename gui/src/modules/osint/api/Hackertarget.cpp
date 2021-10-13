@@ -5,6 +5,10 @@
  *      https://api.hackertarget.com/aslookup/?q=1.1.1.1
  *
  */
+
+/*
+ * contains subdomain,ip-address
+ */
 Hackertarget::Hackertarget(ScanArgs *args):
     AbstractOsintModule(args)
 {
@@ -17,7 +21,17 @@ Hackertarget::~Hackertarget(){
 
 void Hackertarget::start(){
     QNetworkRequest request;
-    QUrl url("https://api.hackertarget.com/hostsearch/?q="+args->target);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "subdomains&Ip")
+            url.setUrl("https://api.hackertarget.com/hostsearch/?q="+args->target);
+        if(args->option == "asnLookup")
+            url.setUrl("https://api.hackertarget.com/aslookup/?q="+args->target);
+    }else{
+        url.setUrl("https://api.hackertarget.com/hostsearch/?q="+args->target);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }
@@ -35,9 +49,7 @@ void Hackertarget::replyFinished(QNetworkReply *reply){
             emit quitThread();
             return;
         }
-        /*
-         * contains subdomain,ip-address
-         */
+
         QString results = reply->readAll();
         QStringList subdomainList = results.split("\n");
         foreach(const QString &subdomain, subdomainList)

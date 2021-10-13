@@ -17,7 +17,6 @@ void Anubis::start(){
     QNetworkRequest request;
     QUrl url("https://jldc.me/anubis/subdomains/"+args->target);
     request.setUrl(url);
-    //request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     manager->get(request);
 }
 

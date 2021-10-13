@@ -3,18 +3,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-/*
- * https://api.bgpview.io/asn/as_number
- * https://api.bgpview.io/asn/as_number/prefixes
- * https://api.bgpview.io/asn/as_number/peers
- * https://api.bgpview.io/asn/as_number/upstreams
- * https://api.bgpview.io/asn/as_number/downstreams
- * https://api.bgpview.io/asn/as_number/ixs
- * https://api.bgpview.io/prefix/ip_address/cidr
- * https://api.bgpview.io/ip/ip_address
- * https://api.bgpview.io/ix/ix_id
- * https://api.bgpview.io/search?query_term=query_term
- */
 
 Bgpview::Bgpview(ScanArgs *args):
     AbstractOsintModule(args)
@@ -28,7 +16,31 @@ Bgpview::~Bgpview(){
 
 void Bgpview::start(){
     QNetworkRequest request;
-    QUrl url("https://api.bgpview.io/search?query_term="+args->target);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "ip")
+            url.setUrl("https://api.bgpview.io/ip/"+args->target);
+        if(args->option == "ip prefix")
+            url.setUrl("https://api.bgpview.io/prefix/"+args->target);
+        if(args->option == "asn")
+            url.setUrl("https://api.bgpview.io/asn/"+args->target);
+        if(args->option == "asn prefixes")
+            url.setUrl("https://api.bgpview.io/asn/"+args->target+"/prefixes");
+        if(args->option == "asn peers")
+            url.setUrl("https://api.bgpview.io/asn/"+args->target+"/peers");
+        if(args->option == "asn upstreams")
+            url.setUrl("https://api.bgpview.io/asn/"+args->target+"/upstreams");
+        if(args->option == "asn downstreams")
+            url.setUrl("https://api.bgpview.io/asn/"+args->target+"/downstreams");
+        if(args->option == "asn ixs")
+            url.setUrl("https://api.bgpview.io/asn/"+args->target+"/ixs");
+        if(args->option == "query")
+            url.setUrl("https://api.bgpview.io/search?query_term="+args->target);
+    }else{
+        url.setUrl("https://api.bgpview.io/search?query_term="+args->target);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

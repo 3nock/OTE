@@ -5,13 +5,13 @@
 
 class InternetCheck : public QObject
 {
-    Q_OBJECT
-public:
-    explicit InternetCheck(QObject *parent = nullptr);
+        Q_OBJECT
+    public:
+        explicit InternetCheck(QObject *parent = nullptr);
 
-signals:
+    signals:
 
-public slots:
+    public slots:
 };
 
 #endif // INTERNETCHECK_H

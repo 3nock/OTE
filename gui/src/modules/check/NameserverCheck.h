@@ -5,13 +5,13 @@
 
 class NameserverCheck : public QObject
 {
-    Q_OBJECT
-public:
-    explicit NameserverCheck(QObject *parent = nullptr);
+        Q_OBJECT
+    public:
+        explicit NameserverCheck(QObject *parent = nullptr);
 
-signals:
+    signals:
 
-public slots:
+    public slots:
 };
 
 #endif // NAMESERVERCHECK_H

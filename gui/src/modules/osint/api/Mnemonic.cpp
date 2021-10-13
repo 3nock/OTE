@@ -20,10 +20,17 @@ Mnemonic::~Mnemonic(){
 
 void Mnemonic::start(){
     QNetworkRequest request;
-    /* any of dns record can be queried...
-    QUrl url("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999&rrType=A&rrType=AAAA&rrType=PTR&rrType=CNAME&rrType=MX");
-    */
-    QUrl url("https://api.mnemonic.no/pdns/v3/"+args->target+"?limit=999");
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "ip")
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?limit=999");
+        if(args->option == "domain")
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?limit=999");
+    }else{
+        url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?limit=999");
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

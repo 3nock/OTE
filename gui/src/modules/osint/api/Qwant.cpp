@@ -20,8 +20,16 @@ Qwant::~Qwant(){
 
 void Qwant::start(){
     QNetworkRequest request;
+
+    QUrl url;
     m_offset = 0;
-    QUrl url("https://api.qwant.com/api/search/web?count=10&offset="+QString::number(m_offset)+"&q="+args->target+"&t=web&r=US&device=desktop&safesearch=0&locale=en_US&uiv=4");
+    if(args->raw){
+        if(args->option == "web")
+            url.setUrl("https://api.qwant.com/api/search/web?count=10&offset="+QString::number(m_offset)+"&q="+args->target+"&t=web&r=US&device=desktop&safesearch=0&locale=en_US&uiv=4");
+    }else{
+        url.setUrl("https://api.qwant.com/api/search/web?count=10&offset="+QString::number(m_offset)+"&q="+args->target+"&t=web&r=US&device=desktop&safesearch=0&locale=en_US&uiv=4");
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

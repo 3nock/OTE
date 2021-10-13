@@ -14,6 +14,10 @@
  * later on use custom icons to indicate this is a string, array or object instead
  * of numbers in the jsonarray..
  */
+
+/*
+ * save a list of QStandardItems b4 treeArray & treeObject for later on analysis...
+ */
 RawOsint::RawOsint(QWidget *parent) : QDialog(parent), ui(new Ui::RawOsint),
     m_model(new QStandardItemModel),
     m_scanArgs(new ScanArgs)
@@ -38,6 +42,12 @@ RawOsint::RawOsint(QWidget *parent) : QDialog(parent), ui(new Ui::RawOsint),
     m_model->setHorizontalHeaderItem(0, new QStandardItem("Key"));
     m_model->setHorizontalHeaderItem(0, new QStandardItem("Value"));
     */
+    ///
+    /// ...
+    ///
+    ui->labelUrl->setTextFormat(Qt::RichText);
+    ui->labelUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    ui->labelUrl->setOpenExternalLinks(true);
 }
 RawOsint::~RawOsint(){
     delete m_scanArgs;
@@ -193,6 +203,7 @@ void RawOsint::loadEngines(){
 
 void RawOsint::startScan(){
 
+    m_scanArgs->option = ui->comboBoxOptions->currentText();
     m_scanArgs->module = ui->comboBoxModule->currentText();
     m_scanArgs->target = ui->lineEditTarget->text();
     m_scanArgs->raw = true;
@@ -788,11 +799,12 @@ void RawOsint::on_buttonStart_clicked(){
     ///
     /// checks...
     ///
+    /*
     if(ui->lineEditTarget->text().isEmpty()){
         QMessageBox::warning(this, "Error!", "Please Target Domain For Enumerations!");
         return;
     }
-
+    */
     ui->buttonStart->setDisabled(true);
     ui->buttonStop->setEnabled(true);
     this->startScan();
@@ -877,4 +889,190 @@ void RawOsint::on_lineEditFind_textEdited(const QString &searchTerm){
     }
 
     this->find(searchTerm, flags);
+}
+
+void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
+    ui->comboBoxOptions->clear();
+    ui->lineEditTarget->clear();
+    ///
+    /// ...
+    ///
+    switch(index){
+    case 1:
+    {
+        ModuleInfo::Otx meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 5:
+    {
+        ModuleInfo::Hackertarget meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 6:
+    {
+        ModuleInfo::Dnsbufferoverun meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 7:
+    {
+        ModuleInfo::Anubis meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 8:
+    {
+        ModuleInfo::Projectdiscovery meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 11:
+    {
+        ModuleInfo::Omnisint meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 12:
+    {
+        ModuleInfo::Qwant meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 18:
+    {
+        ModuleInfo::Bgpview meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 19:
+    {
+        ModuleInfo::BinaryEdge meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 20:
+    {
+        ModuleInfo::C99 meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 22:
+    {
+        ModuleInfo::Github meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 23:
+    {
+        ModuleInfo::HunterSearch meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 24:
+    {
+        ModuleInfo::IpInfo meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 25:
+    {
+        ModuleInfo::Mnemonic meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 26:
+    {
+        ModuleInfo::RiskIq meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 27:
+    {
+        ModuleInfo::Robtex meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 28:
+    {
+        ModuleInfo::SecurityTrails meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 29:
+    {
+        ModuleInfo::Shodan meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 34:
+    {
+        ModuleInfo::IpApi meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    }
+}
+
+void RawOsint::on_comboBoxOptions_currentIndexChanged(const QString &arg1){
+    ui->lineEditTarget->clear();
+    ui->lineEditTarget->setPlaceholderText(m_optionSet.value(arg1));
 }
