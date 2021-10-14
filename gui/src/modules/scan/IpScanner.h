@@ -1,7 +1,7 @@
 #ifndef IPENUMERATOR_H
 #define IPENUMERATOR_H
 
-#include "../AbstractScanner.h"
+#include "AbstractScanner.h"
 #include <QHostInfo>
 
 namespace ip{

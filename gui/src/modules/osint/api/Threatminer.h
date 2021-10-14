@@ -4,6 +4,23 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct Threatminer{
+        QString name = "Threatminer";
+        QString url = "https://threatminer.org/";
+        QString summary = "Data Mining for threat Intelligence";
+        QMap<QString, QString> flags = {{"domain whois", "domain name"},
+                                        {"domain passive dns", "domain name"},
+                                        {"domain subdomains", "domain name"},
+                                        {"domain Query URI", "domain name"},
+                                        {"ip whois", "ip-address"},
+                                        {"ip passive dns", "ip-address"},
+                                        {"ip Query URI", "ip-address"},
+                                        {"SSL Certificates", "ip-address"},
+                                        {"SSL Hosts", "cert id"}};
+    };
+}
+
 class Threatminer: public AbstractOsintModule{
 
     public:

@@ -3,6 +3,19 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct VirusTotal{
+        QString name = "VirusTotal";
+        QString url = "https://www.virustotal.com/";
+        QString summary = "Analyze suspicious files and URLs to detect types of malware, \n"
+                          "automatically share them with the security community";
+        QMap<QString, QString> flags = {{"urls", "url"},
+                                        {"domains", "domain name"},
+                                        {"resolution", "domain name/ip-address"},
+                                        {"ip-addresses", "ip-addresses"}};
+    };
+}
+
 class VirusTotal: public AbstractOsintModule{
 
     public:
@@ -12,6 +25,9 @@ class VirusTotal: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinished(QNetworkReply *) override;
+
+    private:
+        QString m_key;
 };
 
 #endif // VIRUSTOTAL_H

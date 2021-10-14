@@ -5,52 +5,7 @@
 
 /*
  * does not produce clean results yet...
- *
-{
-  "results": [
-    {
-      "indexedAt": "2021-09-21T18:05:39.615Z",
-      "task": {
-        "visibility": "public",
-        "method": "automatic",
-        "domain": "www.smtpauth.diamart.sk",
-        "time": "2021-09-21T18:05:31.619Z",
-        "source": "certstream-suspicious",
-        "uuid": "c884f5eb-dc4a-416e-95a0-18905f3dcb88",
-        "url": "https://www.smtpauth.diamart.sk"
-      },
-      "stats": {
-        "uniqIPs": 8,
-        "consoleMsgs": 0,
-        "uniqCountries": 3,
-        "dataLength": 7797947,
-        "encodedDataLength": 6329650,
-        "requests": 39
-      },
-      "page": {
-        "country": "CZ",
-        "server": "nginx",
-        "domain": "diamart.webnode.cz",
-        "ip": "85.132.152.107",
-        "mimeType": "text/html",
-        "asnname": "FASTER-AS, CZ",
-        "asn": "AS24641",
-        "url": "https://diamart.webnode.cz/",
-        "ptr": "web-1030.webnode.com",
-        "status": "200"
-      },
-      "_id": "c884f5eb-dc4a-416e-95a0-18905f3dcb88",
-      "sort": [
-        1632247531619,
-        "c884f5eb-dc4a-416e-95a0-18905f3dcb88"
-      ],
-      "result": "https://urlscan.io/api/v1/result/c884f5eb-dc4a-416e-95a0-18905f3dcb88/",
-      "screenshot": "https://urlscan.io/screenshots/c884f5eb-dc4a-416e-95a0-18905f3dcb88.png"
-    }
-    ]
-}
-*/
-
+ */
 Urlscan::Urlscan(ScanArgs *args):
     AbstractOsintModule(args)
 {
@@ -63,7 +18,15 @@ Urlscan::~Urlscan(){
 
 void Urlscan::start(){
     QNetworkRequest request;
-    QUrl url("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "domain")
+            url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
+    }else{
+        url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

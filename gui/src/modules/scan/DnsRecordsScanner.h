@@ -1,7 +1,7 @@
 #ifndef DNSRECORDSSCANNER_H
 #define DNSRECORDSSCANNER_H
 
-#include "../AbstractScanner.h"
+#include "AbstractScanner.h"
 
 enum OPTION{
     ALLRECORDS = 0,

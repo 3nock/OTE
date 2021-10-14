@@ -3,6 +3,15 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct ZoomEye{
+        QString name = "ZoomEye";
+        QString url = "https://www.zoomeye.org/";
+        QString summary = "ZoomEye";
+        QMap<QString, QString> flags = {{"domain", "domain name"}};
+    };
+}
+
 class ZoomEye: public AbstractOsintModule{
 
     public:

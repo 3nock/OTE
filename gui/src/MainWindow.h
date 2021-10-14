@@ -6,11 +6,11 @@
 //...
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
-#include "src/engines/ip/Ip.h"
-#include "src/engines/dns/DnsRecords.h"
-#include "src/engines/brute/Brute.h"
-#include "src/engines/osint/Osint.h"
-#include "src/engines/active/Active.h"
+#include "src/engines/Ip.h"
+#include "src/engines/DnsRecords.h"
+#include "src/engines/Brute.h"
+#include "src/engines/Osint.h"
+#include "src/engines/Active.h"
 
 namespace Ui {
     class MainWindow;

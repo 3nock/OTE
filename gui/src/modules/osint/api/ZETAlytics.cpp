@@ -4,8 +4,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-/* Not well implemented yet...*/
 
+/* Not well implemented yet...*/
 ZETAlytics::ZETAlytics(ScanArgs *args):
     AbstractOsintModule(args)
 {
@@ -24,7 +24,13 @@ ZETAlytics::~ZETAlytics(){
 
 void ZETAlytics::start(){
     QNetworkRequest request;
-    QUrl url("https://zonecruncher.com/api/v1/subdomains?q="+args->target+"&token="+m_key);
+
+    QUrl url;
+    if(args->raw){
+
+    }else{
+        url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+args->target+"&token="+m_key);
+    }
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
     manager->get(request);

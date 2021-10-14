@@ -27,7 +27,15 @@ ZoomEye::~ZoomEye(){
 
 void ZoomEye::start(){
     QNetworkRequest request;
-    QUrl url("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "domain")
+            url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+    }else{
+        url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+    }
+
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("API-KEY", m_key.toUtf8());

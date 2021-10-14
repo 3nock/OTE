@@ -898,9 +898,45 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     /// ...
     ///
     switch(index){
+    case 0:
+    {
+        ModuleInfo::Certspotter meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
     case 1:
     {
         ModuleInfo::Otx meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 2:
+    {
+        ModuleInfo::Sublist3r meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 3:
+    {
+        ModuleInfo::Threatminer meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 4:
+    {
+        ModuleInfo::Threatcrowd meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());
@@ -943,6 +979,24 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
         m_optionSet = meta.flags;
         break;
     }
+    case 9:
+    {
+        ModuleInfo::Spyse meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 10:
+    {
+        ModuleInfo::GoogleCert meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
     case 11:
     {
         ModuleInfo::Omnisint meta;
@@ -955,6 +1009,33 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     case 12:
     {
         ModuleInfo::Qwant meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 13:
+    {
+        ModuleInfo::VirusTotal meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 14:
+    {
+        ModuleInfo::Urlscan meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 15:
+    {
+        ModuleInfo::Waybackmachine meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());
@@ -982,6 +1063,15 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     case 20:
     {
         ModuleInfo::C99 meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 21:
+    {
+        ModuleInfo::CommonCrawl meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());
@@ -1060,9 +1150,54 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
         m_optionSet = meta.flags;
         break;
     }
+    case 30:
+    {
+        ModuleInfo::ThreatBook meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 31:
+    {
+        ModuleInfo::WhoisXmlApi meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 32:
+    {
+        ModuleInfo::ZETAlytics meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 33:
+    {
+        ModuleInfo::ZoomEye meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
     case 34:
     {
         ModuleInfo::IpApi meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 35:
+    {
+        ModuleInfo::ViewDns meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());

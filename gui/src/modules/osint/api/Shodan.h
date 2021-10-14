@@ -9,18 +9,17 @@ namespace ModuleInfo {
         QString url = "https://www.shodan.io/";
         QString summary = "Search Engine for the Internet of Everything";
 
-        QMap<QString, QString> flags = {{"dns history", "domain name"},
-                                        {"subdomains", "domain name"},
-                                        {"whois", "domain name"},
-                                        {"whois history", "domain name"},
-                                        {"associated domains", "domain name"},
-                                        {"associated ips", "domain name"},
-                                        {"domain", "domain name"},
-                                        {"company", "domain name"},
-                                        {"ssl cert", "domain name"},
-                                        {"ip whois", "nameserver address"},
-                                        {"ping", ""},
-                                        {"account", ""}};
+        QMap<QString, QString> flags = {{"host ip", "ip-address"},
+                                        {"host count", "query"},
+                                        {"host search", "query"},
+                                        {"host search facets", ""},
+                                        {"host search filters", ""},
+                                        {"host search tokens", "query"},
+                                        {"bulk data", "dataset"},
+                                        {"account profile", ""},
+                                        {"dns domain", "domain name"},
+                                        {"dns resolve", "domain name, domain name"},
+                                        {"dns reverse", "ip-address, ip-address"}};
     };
 }
 

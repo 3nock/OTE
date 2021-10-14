@@ -25,7 +25,35 @@ Shodan::~Shodan(){
 
 void Shodan::start(){
     QNetworkRequest request;
-    QUrl url("https://api.shodan.io/dns/domain/"+args->target+"?key="+m_key);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "host ip")
+            url.setUrl("https://api.shodan.io/shodan/host/"+args->target+"?key="+m_key);
+        if(args->option == "host count")
+            url.setUrl("https://api.shodan.io/shodan/host/count?key="+m_key+"&query="+args->target+"&facets=org,os");
+        if(args->option == "host search")
+            url.setUrl("https://api.shodan.io/shodan/host/search?key="+m_key+"&query="+args->target+"&facets=country");
+        if(args->option == "host search facets")
+            url.setUrl("https://api.shodan.io/shodan/host/search/facets?key="+m_key);
+        if(args->option == "host search filters")
+            url.setUrl("https://api.shodan.io/shodan/host/search/filters?key="+m_key);
+        if(args->option == "host search tokens")
+            url.setUrl("https://api.shodan.io/shodan/host/search/tokens?key="+m_key+"&query="+args->target);
+        if(args->option == "bulk data")
+            url.setUrl("https://api.shodan.io/shodan/data/"+args->target+"?key="+m_key);
+        if(args->option == "account profile")
+            url.setUrl("https://api.shodan.io/account/profile?key="+m_key);
+        if(args->option == "dns domain")
+            url.setUrl("https://api.shodan.io/dns/domain/"+args->target+"?key="+m_key);
+        if(args->option == "dns resolve")
+            url.setUrl("https://api.shodan.io/dns/resolve?hostnames="+args->target+"&key="+m_key);
+        if(args->option == "dns reverse")
+            url.setUrl("https://api.shodan.io/dns/reverse?ips="+args->target+"&key="+m_key);
+    }else{
+        url.setUrl("https://api.shodan.io/dns/domain/"+args->target+"?key="+m_key);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

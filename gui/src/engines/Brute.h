@@ -1,26 +1,28 @@
-#ifndef ACTIVE_H
-#define ACTIVE_H
+#ifndef BRUTE_H
+#define BRUTE_H
 
-#include "src/engines/AbstractEngine.h"
+#include "AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "ActiveScanner.h"
+#include "src/modules/scan/BruteScanner.h"
 
 namespace Ui {
-    class Active;
+    class Brute;
 }
 
-class Active : public AbstractEngine{
-        Q_OBJECT
+class Brute : public AbstractEngine{
+    Q_OBJECT
 
     public:
-        Active(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
-        ~Active();
+        Brute(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
+        ~Brute();
 
     public slots:
         void onScanThreadEnded();
         void onInfoLog(QString log);
         void onErrorLog(QString log);
-        void onScanResult(QString subdomain, QString ipAddress);
+        void onScanResult(QString subdomain, QString ipAddress, QString target);
+        //...
+        void onChoosenWordlist(QString);
 
     private slots:
         void onClearResults();
@@ -36,23 +38,25 @@ class Active : public AbstractEngine{
         void on_buttonStop_clicked();
         void on_buttonAction_clicked();
         void on_buttonConfig_clicked();
-        void on_comboBoxOption_currentIndexChanged(int index);
+        void on_buttonWordlist_clicked();
+        void on_lineEditTarget_returnPressed();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
-        void on_checkBoxCustomActive_clicked(bool checked);
+        void on_checkBoxMultipleTargets_clicked(bool checked);
 
         void on_buttonFilter_clicked();
 
-    private:
-        Ui::Active *ui;
-        active::ScanArguments *m_scanArguments;
+private:
+        Ui::Brute *ui;
+        QSet<QString> m_subdomainsSet;
+        brute::ScanArguments *m_scanArguments;
         QStandardItemModel *m_model;
         QSortFilterProxyModel *m_proxyModel;
         void stopScan();
         void startScan();
         void pauseScan();
-        void ResumeScan();
+        void resumeScan();
         //...
         void connectActions();
 };
 
-#endif // ACTIVE_H
+#endif // BRUTE_H

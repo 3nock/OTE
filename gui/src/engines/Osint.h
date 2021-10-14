@@ -1,10 +1,10 @@
 #ifndef OSINT_H
 #define OSINT_H
 
+#include "AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/engines/AbstractEngine.h"
 #include "src/widgets/OsintModulesWidget.h"
-#include "OsintScanner.h"
+#include "src/modules/scan/OsintScanner.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ConfigDialog.h"
 

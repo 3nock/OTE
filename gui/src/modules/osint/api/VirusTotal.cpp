@@ -4,30 +4,46 @@
 #include <QJsonObject>
 #include "src/utils/Config.h"
 
+
 VirusTotal::VirusTotal(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new QNetworkAccessManager(this);
     connect(manager, &QNetworkAccessManager::finished, this, &VirusTotal::replyFinished);
+    ///
+    /// obtain apikey...
+    ///
+    Config::generalConfig().beginGroup("api-keys");
+    m_key = Config::generalConfig().value("virustotalapi").toString();
+    Config::generalConfig().endGroup();
 }
 VirusTotal::~VirusTotal(){
     delete manager;
 }
 
 void VirusTotal::start(){
-    ///
-    /// obtain apikey...
-    ///
-    Config::generalConfig().beginGroup("api-keys");
-    QString apikey = Config::generalConfig().value("virustotalapi").toString();
-    Config::generalConfig().endGroup();
-    ///
-    /// sending request...
-    ///
     QNetworkRequest request;
-    QUrl url("https://www.virustotal.com/vtapi/v2/domain/report?apikey="+apikey+"&domain="+args->target);
-    request.setUrl(url);
-    manager->get(request);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "urls")
+            url.setUrl("https://www.virustotal.com/api/v3/urls/"+args->target);
+        if(args->option == "domains")
+            url.setUrl("https://www.virustotal.com/api/v3/domains/"+args->target);
+        if(args->option == "resolutions")
+            url.setUrl("https://www.virustotal.com/api/v3/resolutions/"+args->target);
+        if(args->option == "ip-addresses")
+            url.setUrl("https://www.virustotal.com/api/v3/ip_addresses/"+args->target);
+
+        request.setUrl(url);
+        request.setRawHeader("x-apikey", m_key.toUtf8());
+        manager->get(request);
+
+    }else{
+        url.setUrl("https://www.virustotal.com/vtapi/v2/domain/report?apikey="+m_key+"&domain="+args->target);
+        request.setUrl(url);
+        manager->get(request);
+    }
 }
 
 void VirusTotal::replyFinished(QNetworkReply *reply){

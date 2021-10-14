@@ -33,6 +33,12 @@ void CommonCrawl::replyFinished(QNetworkReply *reply){
     {
         if(getArchive){
             getArchive = false;
+            if(args->raw && args->option == "index"){
+                emit rawResults(reply->readAll());
+                reply->deleteLater();
+                emit quitThread();
+                return;
+            }
             QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
             QJsonArray subdomainList = jsonReply.array();
             foreach(const QJsonValue &value, subdomainList){

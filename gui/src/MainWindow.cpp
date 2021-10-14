@@ -4,7 +4,7 @@
 #include <QSettings>
 #include <QDateTime>
 #include "src/dialogs/AboutDialog.h"
-#include "src/tools/raw/RawOsint.h"
+#include "src/tools/RawOsint.h"
 
 /*
  * about dialog like that of wireshark

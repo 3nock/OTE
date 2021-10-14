@@ -28,11 +28,16 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/tools/RawOsint.cpp \
+    src/modules/scan/BruteScanner.cpp \
+    src/modules/scan/OsintScanner.cpp \
+    src/modules/scan/DnsRecordsScanner.cpp \
+    src/modules/scan/ActiveScanner.cpp \
+    src/modules/scan/IpScanner.cpp \
     src/modules/check/HostActiveCheck.cpp \
     src/modules/check/InternetCheck.cpp \
     src/modules/check/NameserverCheck.cpp \
     src/modules/check/WildcardCheck.cpp \
-    src/tools/raw/RawOsint.cpp \
     src/modules/osint/api/Bgpview.cpp \
     src/modules/osint/api/BinaryEdge.cpp \
     src/modules/osint/api/C99.cpp \
@@ -88,16 +93,11 @@ SOURCES += \
     src/modules/osint/site/Rapiddns.cpp \
     src/modules/osint/site/SiteDossier.cpp \
     src/modules/osint/site/Suip.cpp \
-    src/engines/ip/Ip.cpp \
-    src/engines/ip/IpScanner.cpp \
-    src/engines/active/Active.cpp \
-    src/engines/active/ActiveScanner.cpp \
-    src/engines/dns/DnsRecords.cpp \
-    src/engines/dns/DnsRecordsScanner.cpp \
-    src/engines/brute/Brute.cpp \
-    src/engines/brute/BruteScanner.cpp \
-    src/engines/osint/Osint.cpp \
-    src/engines/osint/OsintScanner.cpp \
+    src/engines/Ip.cpp \
+    src/engines/Active.cpp \
+    src/engines/DnsRecords.cpp \
+    src/engines/Brute.cpp \
+    src/engines/Osint.cpp \
     src/engines/AbstractEngine.cpp \
     src/project/general/GeneralAnalysis.cpp \
     src/project/specific/SpecificAnalysis.cpp \
@@ -118,12 +118,17 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
-    src/engines/AbstractScanner.h \
+    src/tools/RawOsint.h \
+    src/modules/scan/OsintScanner.h \
+    src/modules/scan/BruteScanner.h \
+    src/modules/scan/DnsRecordsScanner.h \
+    src/modules/scan/ActiveScanner.h \
+    src/modules/scan/IpScanner.h \
+    src/modules/scan/AbstractScanner.h \
     src/modules/check/HostActiveCheck.h \
     src/modules/check/InternetCheck.h \
     src/modules/check/NameserverCheck.h \
     src/modules/check/WildcardCheck.h \
-    src/tools/raw/RawOsint.h \
     src/modules/osint/api/Bgpview.h \
     src/modules/osint/api/BinaryEdge.h \
     src/modules/osint/api/C99.h \
@@ -180,16 +185,11 @@ HEADERS += \
     src/modules/osint/site/SiteDossier.h \
     src/modules/osint/site/Suip.h \
     src/modules/osint/AbstractOsintModule.h \
-    src/engines/ip/Ip.h \
-    src/engines/ip/IpScanner.h \
-    src/engines/active/Active.h \
-    src/engines/active/ActiveScanner.h \
-    src/engines/dns/DnsRecords.h \
-    src/engines/dns/DnsRecordsScanner.h \
-    src/engines/brute/Brute.h \
-    src/engines/brute/BruteScanner.h \
-    src/engines/osint/Osint.h \
-    src/engines/osint/OsintScanner.h \
+    src/engines/Ip.h \
+    src/engines/Active.h \
+    src/engines/DnsRecords.h \
+    src/engines/Brute.h \
+    src/engines/Osint.h \
     src/engines/AbstractEngine.h \
     src/project/general/GeneralAnalysis.h \
     src/project/specific/SpecificAnalysis.h \
@@ -210,15 +210,15 @@ HEADERS += \
     src/MainWindow.h
 
 FORMS += \
-    src/tools/raw/RawOsint.ui \
+    src/tools/RawOsint.ui \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \
     src/project/specific/SpecificAnalysis.ui \
-    src/engines/ip/Ip.ui \
-    src/engines/dns/DnsRecords.ui \
-    src/engines/brute/Brute.ui \
-    src/engines/osint/Osint.ui \
-    src/engines/active/Active.ui \
+    src/engines/Ip.ui \
+    src/engines/DnsRecords.ui \
+    src/engines/Brute.ui \
+    src/engines/Osint.ui \
+    src/engines/Active.ui \
     src/widgets/InputWidget.ui \
     src/widgets/OsintModulesWidget.ui \
     src/widgets/WordlistGeneratorWidget.ui \

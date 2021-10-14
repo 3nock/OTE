@@ -3,6 +3,18 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct WhoisXmlApi{
+        QString name = "WhoisXmlApi";
+        QString url = "https://otx.alienvault.com/";
+        QString summary = "The World’s First Truly Open Threat Intelligence Community";
+        QMap<QString, QString> flags = {{"whois", "domain name"},
+                                        {"ipWhois", "ip-address"},
+                                        {"DNS Lookup", "domain name"},
+                                        {"Email Verification", "email"}};
+    };
+}
+
 class WhoisXmlApi: public AbstractOsintModule{
 
     public:

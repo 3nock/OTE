@@ -27,7 +27,21 @@ WhoisXmlApi::~WhoisXmlApi(){
 
 void WhoisXmlApi::start(){
     QNetworkRequest request;
-    QUrl url("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "whois")
+            url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&outputFormat=JSON&domainName="+args->target);
+        if(args->option == "ipWhois")
+            url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&ipWhois=1&ip=1&domainName="+args->target);
+        if(args->option == "DNS Lookup")
+            url.setUrl("https://www.whoisxmlapi.com/whoisserver/DNSService?apiKey="+m_key+"&domainName="+args->target+"&type=_all");
+        if(args->option == "Email Verification")
+            url.setUrl("https://emailverification.whoisxmlapi.com/api/v1?apiKey="+m_key+"&emailAddress="+args->target);
+    }else{
+        url.setUrl("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+    }
+
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
     manager->get(request);

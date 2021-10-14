@@ -1,7 +1,7 @@
 #ifndef BRUTESCANNER_H
 #define BRUTESCANNER_H
 
-#include "../AbstractScanner.h"
+#include "AbstractScanner.h"
 #include "src/dialogs/ConfigDialog.h"
 #include "src/dialogs/WordlistDialog.h"
 

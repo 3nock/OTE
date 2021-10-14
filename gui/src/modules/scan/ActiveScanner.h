@@ -2,7 +2,7 @@
 #define ACTIVESCANNER_H
 
 #include <QTcpSocket>
-#include "../AbstractScanner.h"
+#include "AbstractScanner.h"
 #include "src/dialogs/ConfigDialog.h"
 
 

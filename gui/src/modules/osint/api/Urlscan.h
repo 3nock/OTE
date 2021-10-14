@@ -3,6 +3,15 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct Urlscan{
+        QString name = "Urlscan";
+        QString url = "https://urlscan.io/";
+        QString summary = "A sandbox for the web";
+        QMap<QString, QString> flags = {{"domain", "domain name"}};
+    };
+}
+
 class Urlscan: public AbstractOsintModule{
 
     public:

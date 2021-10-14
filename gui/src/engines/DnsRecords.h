@@ -1,9 +1,9 @@
 #ifndef DNSRECORDS_H
 #define DNSRECORDS_H
 
+#include "AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/engines/AbstractEngine.h"
-#include "DnsRecordsScanner.h"
+#include "src/modules/scan/DnsRecordsScanner.h"
 
 namespace Ui {
     class DnsRecords;

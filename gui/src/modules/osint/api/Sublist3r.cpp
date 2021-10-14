@@ -15,7 +15,15 @@ Sublist3r::~Sublist3r(){
 
 void Sublist3r::start(){
     QNetworkRequest request;
-    QUrl url("https://api.sublist3r.com/search.php?domain="+args->target);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "subdomains")
+            url.setUrl("https://api.sublist3r.com/search.php?domain="+args->target);
+    }else{
+        url.setUrl("https://api.sublist3r.com/search.php?domain="+args->target);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }

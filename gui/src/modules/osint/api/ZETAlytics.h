@@ -3,6 +3,15 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct ZETAlytics{
+        QString name = "ZETAlytics";
+        QString url = "https://zetalytics.com/";
+        QString summary = "https://zetalytics.com/";
+        QMap<QString, QString> flags = {};
+    };
+}
+
 class ZETAlytics: public AbstractOsintModule{
 
     public:

@@ -1,9 +1,9 @@
 #ifndef IP_H
 #define IP_H
 
+#include "AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/engines/AbstractEngine.h"
-#include "IpScanner.h"
+#include "src/modules/scan/IpScanner.h"
 #include "src/dialogs/ConfigDialog.h"
 
 namespace Ui {

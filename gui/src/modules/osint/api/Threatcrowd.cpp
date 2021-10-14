@@ -16,7 +16,23 @@ Threatcrowd::~Threatcrowd(){
 
 void Threatcrowd::start(){
     QNetworkRequest request;
-    QUrl url("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+args->target);
+
+    QUrl url;
+    if(args->raw){
+        if(args->option == "email")
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+args->target);
+        if(args->option == "domain")
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+args->target);
+        if(args->option == "ip")
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/ip/report/?ip="+args->target);
+        if(args->option == "antivirus")
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/antivirus/report/?antivirus="+args->target);
+        if(args->option == "file")
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/file/report/?resource="+args->target);
+    }else{
+        url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+args->target);
+    }
+
     request.setUrl(url);
     manager->get(request);
 }
