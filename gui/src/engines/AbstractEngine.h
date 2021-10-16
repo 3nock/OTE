@@ -1,25 +1,27 @@
 #ifndef ABSTRACTCLASS_H
 #define ABSTRACTCLASS_H
-
+//...
 #include <QMenu>
 #include <QAction>
 #include "src/utils/utils.h"
+#include "src/utils/ResultsModels.h"
 #include "src/widgets/InputWidget.h"
+#include "src/project/ProjectDataModel.h"
 
 enum CHOICE{
-    susbdomains = 0,
-    ipaddress = 1,
-    all = 2,
-    //...
-    srvName = 3,
-    srvTarget = 4,
-    //...
-    CNAME = 5,
-    TXT = 6,
-    NS = 7,
-    MX = 8,
-    A = 9,
-    AAAA = 10
+    subdomainIp,
+    subdomain,
+    ip,
+    email,
+    url,
+    asn,
+    srv,
+    CNAME,
+    TXT,
+    NS,
+    MX,
+    A,
+    AAAA,
 };
 
 struct ScanStatus{
@@ -29,29 +31,51 @@ struct ScanStatus{
     int activeThreads = 0;
 };
 
-struct Status{
-    ScanStatus *osint = nullptr;
-    ScanStatus *brute = nullptr;
-    ScanStatus *active = nullptr;
-    ScanStatus *ip = nullptr;
-    ScanStatus *records = nullptr;
-    int totalThreadsInUse(){
-        return osint->activeThreads+
-                brute->activeThreads+
-                active->activeThreads+
-                ip->activeThreads+
-                records->activeThreads;
-    }
+class Status{
+
+    public:
+        Status()
+            : osint(new ScanStatus),
+              brute(new ScanStatus),
+              active(new ScanStatus),
+              ip(new ScanStatus),
+              records(new ScanStatus)
+        {
+        }
+        ~Status(){
+            delete osint;
+            delete brute;
+            delete active;
+            delete ip;
+            delete records;
+        }
+        ScanStatus *osint;
+        ScanStatus *brute;
+        ScanStatus *active;
+        ScanStatus *ip;
+        ScanStatus *records;
+        //...
+        int totalThreadsInUse(){
+            return osint->activeThreads+
+                    brute->activeThreads+
+                    active->activeThreads+
+                    ip->activeThreads+
+                    records->activeThreads;
+        }
 };
 
 class AbstractEngine : public QWidget{
         Q_OBJECT
 
     public:
-        AbstractEngine(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr)
+        AbstractEngine(QWidget *parent = nullptr,
+                       ResultsModel *resultsModel = nullptr,
+                       ProjectDataModel *project = nullptr,
+                       Status *status = nullptr)
             : QWidget(parent),
               status(status),
-              resultsModel(resultsModel),
+              project(project),
+              result(resultsModel),
               scanConfig(new ScanConfig)
         {
         }
@@ -62,7 +86,8 @@ class AbstractEngine : public QWidget{
 
     protected:
         Status *status;
-        ResultsModel *resultsModel;
+        ProjectDataModel *project;
+        ResultsModel *result;
         ScanConfig *scanConfig;
         InputWidget* targets = nullptr;
         QItemSelectionModel *selectionModel = nullptr;
@@ -95,12 +120,12 @@ class AbstractEngine : public QWidget{
  *
  */
     signals:
-        void sendIpAddressesToIp(ENGINE, CHOICE);
-        void sendSubdomainsToBrute(ENGINE, CHOICE);
-        void sendSubdomainsToOsint(ENGINE, CHOICE);
-        void sendSubdomainsToActive(ENGINE, CHOICE);
-        void sendSubdomainsToRecord(ENGINE, CHOICE);
-        void sendSubdomainsToProject(ENGINE, CHOICE);
+        void sendIpAddressesToIp(ENGINE, CHOICE, PROXYMODEL_TYPE);
+        void sendSubdomainsToBrute(ENGINE, CHOICE, PROXYMODEL_TYPE);
+        void sendSubdomainsToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE);
+        void sendSubdomainsToActive(ENGINE, CHOICE, PROXYMODEL_TYPE);
+        void sendSubdomainsToRecord(ENGINE, CHOICE, PROXYMODEL_TYPE);
+        void sendSubdomainsToProject(ENGINE, CHOICE, PROXYMODEL_TYPE);
         //...
         void sendIpAddressesToIp(QItemSelectionModel*);
         void sendSubdomainsToBrute(QItemSelectionModel*);
@@ -110,7 +135,7 @@ class AbstractEngine : public QWidget{
         void sendSubdomainsToProject(QItemSelectionModel*);
 
     public slots:
-        void onReceiveTargets(ENGINE, CHOICE);
+        void onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE);
         void onReceiveTargets(QItemSelectionModel*);
         void openInBrowser(QItemSelectionModel*);
 
@@ -129,6 +154,22 @@ class AbstractEngine : public QWidget{
         QAction actionSendToBrute{"Send Hostnames To Brute"};
         QAction actionSendToRecords{"Send Hostnames To Records"};
         //...
+        QAction actionSendToIp_ip{"Send Addresses To Ip"};
+        QAction actionSendToOsint_subdomain{"Send Hostnames To Osint"};
+        QAction actionSendToActive_subdomain{"Send Hostnames To Active"};
+        QAction actionSendToBrute_subdomain{"Send Hostnames To Brute"};
+        QAction actionSendToRecords_subdomain{"Send Hostnames To Records"};
+        //...
+        QAction actionSendToOsint_dns{"Send Hostnames To Osint"};
+        QAction actionSendToActive_dns{"Send Hostnames To Active"};
+        QAction actionSendToBrute_dns{"Send Hostnames To Brute"};
+        QAction actionSendToRecords_dns{"Send Hostnames To Records"};
+        //...
+        QAction actionSendToOsint_srv{"Send Hostnames To Osint"};
+        QAction actionSendToActive_srv{"Send Hostnames To Active"};
+        QAction actionSendToBrute_srv{"Send Hostnames To Brute"};
+        QAction actionSendToRecords_srv{"Send Hostnames To Records"};
+        //...
         QAction actionOpenInBrowser{"Open in Browser"};
         //...
         QAction actionSendToIp_c{"Send Selected To Ip"};
@@ -144,6 +185,11 @@ class AbstractEngine : public QWidget{
         QAction actionSaveAll{"subdomain | ip"};
         QAction actionSaveSubdomains{"subdomains"};
         QAction actionSaveIpAddresses{"ip-addresses"};
+        QAction actionSaveEmails{"emails"};
+        QAction actionSaveUrls{"urls"};
+        //...
+        QAction actionSaveSubdomains_subdomain{"subdomains"};
+        QAction actionSaveIpAddresses_ip{"ip-addresses"};
         // for dns-records...
         QAction actionSaveA{"A Records"};
         QAction actionSaveAAAA{"AAAA Records"};
@@ -151,7 +197,7 @@ class AbstractEngine : public QWidget{
         QAction actionSaveNS{"NS Records"};
         QAction actionSaveCNAME{"CNAME Records"};
         QAction actionSaveTXT{"TXT Records"};
-        QAction actionSaveSRVTarget{"SRV Targets"};
+        QAction actionSaveSRV{"SRV Targets"};
         QAction actionSaveSRVName{"SRV Names"};
         ///
         /// copy actions...
@@ -160,6 +206,11 @@ class AbstractEngine : public QWidget{
         QAction actionCopyAll{"subdomain | ip"};
         QAction actionCopySubdomains{"subdomains"};
         QAction actionCopyIpAddresses{"ip-addresses"};
+        QAction actionCopyEmails{"emails"};
+        QAction actionCopyUrls{"urls"};
+        //...
+        QAction actionCopySubdomains_subdomain{"subdomains"};
+        QAction actionCopyIpAddresses_ip{"ip-addresses"};
         // for dns-records...
         QAction actionCopyA{"A Records"};
         QAction actionCopyAAAA{"AAAA Records"};
@@ -167,7 +218,7 @@ class AbstractEngine : public QWidget{
         QAction actionCopyNS{"NS Records"};
         QAction actionCopyCNAME{"CNAME Records"};
         QAction actionCopyTXT{"TXT Records"};
-        QAction actionCopySRVTarget{"SRV Targets"};
+        QAction actionCopySRV{"SRV Targets"};
         QAction actionCopySRVName{"SRV Names"};
 };
 

@@ -10,7 +10,7 @@ namespace ModuleInfo {
         QString summary = "Quality APIs for Osint";
         QMap <QString, QString> flags = {{"Subdomain Finder", "domain name"}, {"Phone Lookup", "phone number"},
                                          {"Skype Resolver", "username"}, {"Ip 2 Skype", "ip-address"},
-                                         {"Firewall Technology Detector", "domain name"},
+                                         {"FirewsubdomainIp Technology Detector", "domain name"},
                                          {"Multiple port scanner", "ip-address"},
                                          {"Nmap Scanner", "ip-address"}, {"Ping", "ip-address"},
                                          {"IP to Host", "ip-address"}, {"Host to IP", "domain name"},

@@ -56,12 +56,12 @@
        </property>
        <item>
         <property name="text">
-         <string> Subdomain</string>
+         <string> Subdomain &amp; Ip</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Subdomain &amp; Ip</string>
+         <string> Subdomain</string>
         </property>
        </item>
        <item>
@@ -76,7 +76,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Urls</string>
+         <string> Urls</string>
         </property>
        </item>
       </widget>
@@ -530,19 +530,6 @@
              <item>
               <widget class="QLineEdit" name="lineEditFilter"/>
              </item>
-             <item>
-              <widget class="QPushButton" name="buttonFilter">
-               <property name="minimumSize">
-                <size>
-                 <width>75</width>
-                 <height>23</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Filter</string>
-               </property>
-              </widget>
-             </item>
             </layout>
            </item>
           </layout>
@@ -590,7 +577,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="Line" name="line_5">

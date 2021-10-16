@@ -8,7 +8,7 @@
 /*
  * TODO: fix hunter..
  *       add more api keys..
- *       modify such that more info can be shown eg(api calls left)
+ *       modify such that more info can be shown eg(api csubdomainIps left)
  *       save the urls in the .ini file instead of hardcoding them...
  *       also add a widget to display those url so they can be modifiable
  */

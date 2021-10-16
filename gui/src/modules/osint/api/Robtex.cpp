@@ -7,7 +7,7 @@
  * FIX:
  *      it returns a file instead of json
  * Use as model for ip-scans...
- * returns all record types for particular domain, especially A & AAAA, also NS & MX
+ * returns subdomainIp record types for particular domain, especisubdomainIpy A & AAAA, also NS & MX
  * Mostly for ip-info and domain to ips
  */
 Robtex::Robtex(ScanArgs *args):
@@ -60,7 +60,7 @@ void Robtex::replyFinished(QNetworkReply *reply){
             QString ip = json.object()["rrdata"].toString();
             QString name = json.object()["rrname"].toString();
             if(recordType == "A" || recordType == "AAAA")
-                emit scanResults(ip);
+                emit subdomain(ip);
         }
     }
     else{

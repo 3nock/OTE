@@ -34,8 +34,8 @@ void C99::start(){
             url.setUrl("https://api.c99.nl/skyperesolver?key="+m_key+"&username="+args->target+"&json");
         if(args->option == "Ip 2 Skype")
             url.setUrl("https://api.c99.nl/ip2skype?key="+m_key+"&ip="+args->target+"&json");
-        if(args->option == "Firewall Technology Detector")
-            url.setUrl("https://api.c99.nl/firewalldetector?key="+m_key+"&url="+args->target+"&json");
+        if(args->option == "FirewsubdomainIp Technology Detector")
+            url.setUrl("https://api.c99.nl/firewsubdomainIpdetector?key="+m_key+"&url="+args->target+"&json");
         if(args->option == "Multiple port scanner")
             url.setUrl("https://api.c99.nl/portscanner?key="+m_key+"&host="+args->target+"&json");
         if(args->option == "Nmap Scanner")
@@ -106,11 +106,11 @@ void C99::replyFinished(QNetworkReply *reply){
         if(success){
             QJsonArray subdomainList = jsonObject["subdomains"].toArray();
             foreach(const QJsonValue &value, subdomainList)
-                emit scanResults(value.toString());
+                emit subdomain(value.toString());
         }
         else{
             QString error = jsonObject["error"].toString();
-            emit scanResults(error);
+            emit subdomain(error);
         }
     }
     else{

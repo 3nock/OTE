@@ -13,7 +13,10 @@ class Active : public AbstractEngine{
         Q_OBJECT
 
     public:
-        Active(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
+        Active(QWidget *parent = nullptr,
+               ResultsModel *resultsModel = nullptr,
+               ProjectDataModel *project = nullptr,
+               Status *status = nullptr);
         ~Active();
 
     public slots:
@@ -45,8 +48,6 @@ class Active : public AbstractEngine{
     private:
         Ui::Active *ui;
         active::ScanArguments *m_scanArguments;
-        QStandardItemModel *m_model;
-        QSortFilterProxyModel *m_proxyModel;
         void stopScan();
         void startScan();
         void pauseScan();

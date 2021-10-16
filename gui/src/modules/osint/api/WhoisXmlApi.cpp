@@ -6,7 +6,7 @@
 
 
 /*
- * After Sign Up you automatically get a free subscription plan limited to 500 queries per month.
+ * After Sign Up you automaticsubdomainIpy get a free subscription plan limited to 500 queries per month.
  * has a well parsed whois data...
  */
 WhoisXmlApi::WhoisXmlApi(ScanArgs *args):
@@ -35,7 +35,7 @@ void WhoisXmlApi::start(){
         if(args->option == "ipWhois")
             url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&ipWhois=1&ip=1&domainName="+args->target);
         if(args->option == "DNS Lookup")
-            url.setUrl("https://www.whoisxmlapi.com/whoisserver/DNSService?apiKey="+m_key+"&domainName="+args->target+"&type=_all");
+            url.setUrl("https://www.whoisxmlapi.com/whoisserver/DNSService?apiKey="+m_key+"&domainName="+args->target+"&type=_subdomainIp");
         if(args->option == "Email Verification")
             url.setUrl("https://emailverification.whoisxmlapi.com/api/v1?apiKey="+m_key+"&emailAddress="+args->target);
     }else{
@@ -61,7 +61,7 @@ void WhoisXmlApi::replyFinished(QNetworkReply *reply){
         if(result["count"].toInt()){
             QJsonArray records = result["records"].toArray();
             foreach(const QJsonValue &value, records)
-                emit scanResults(value.toObject()["domain"].toString());
+                emit subdomain(value.toObject()["domain"].toString());
         }
     }
     else{

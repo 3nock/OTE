@@ -88,7 +88,7 @@ void PagesInventory::getSubdomains(GumboNode *node){
                         results.append(",").append(QString::fromUtf8(ipv6->v.text.text));
                 }
             }
-            emit scanResults(results);
+            emit subdomain(results);
         }
         return;
     }

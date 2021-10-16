@@ -53,7 +53,7 @@ void ThreatBook::replyFinished(QNetworkReply *reply){
         QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
         QJsonArray subdomainList = jsonReply.object()["data"].toObject()["sub_domains"].toObject()["data"].toArray();
         foreach(const QJsonValue &value, subdomainList)
-            emit scanResults(value.toString());
+            emit subdomain(value.toString());
     }
     else{
         emit errorLog(reply->errorString());

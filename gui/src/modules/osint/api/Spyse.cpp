@@ -61,7 +61,7 @@ void Spyse::replyFinished(QNetworkReply *reply){
         QJsonObject dataObject = jsonReply.object()["data"].toObject();
         QJsonArray items = dataObject["items"].toArray();
         foreach(const QJsonValue &value, items)
-            emit scanResults(value["name"].toString());
+            emit subdomain(value["name"].toString());
 
         /*
                       Emails
@@ -69,7 +69,7 @@ void Spyse::replyFinished(QNetworkReply *reply){
         QJsonObject dataObject = jsonReply.object()["data"].toObject();
         QJsonArray items = dataObject["items"].toArray();
         foreach(const QJsonValue &value, items)
-            emit scanResults(value["email"].toString());
+            emit subdomain(value["email"].toString());
 
          */
     }

@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "src/utils/utils.h"
-#include "src/engines/brute/BruteScanner.h"
+#include "src/modules/scan/BruteScanner.h"
 
 class WildcardCheck: public QObject {
     Q_OBJECT

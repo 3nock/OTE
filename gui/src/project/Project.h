@@ -2,6 +2,7 @@
 #define PROJECT_H
 
 #include <QSortFilterProxyModel>
+#include "ProjectDataModel.h"
 #include "src/utils/utils.h"
 #include "general/GeneralAnalysis.h"
 #include "specific/SpecificAnalysis.h"
@@ -13,21 +14,15 @@ namespace Ui {
 class Project : public QWidget{
         Q_OBJECT
 
-    private:
-        Ui::Project *ui;
-
     public:
+        Project(QWidget *parent = nullptr, ProjectDataModel *projectDataModel = nullptr);
+        ~Project();
+        ///
+        /// ...
+        ///
         void updateFilter();
-        //...
         GeneralAnalysis *general = nullptr;
         SpecificAnalysis *specific = nullptr;
-        //...
-        const ResultsModel *m_resultsModel;
-        QSortFilterProxyModel *m_proxyModel;
-
-    public:
-        Project(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr);
-        ~Project();
 
     private slots:
         void on_pushButton_clearInScope_clicked();
@@ -39,6 +34,11 @@ class Project : public QWidget{
         void on_checkBox_columnIpAddress_clicked(bool checked);
         void on_checkBox_columnScopeTarget_clicked(bool checked);
         void on_pushButton_filter_clicked();
+
+    private:
+        Ui::Project *ui;
+        ProjectDataModel *m_projectDataModel;
+        QSortFilterProxyModel *m_proxyModel;
 };
 
 #endif // PROJECT_H

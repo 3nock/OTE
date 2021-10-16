@@ -63,7 +63,7 @@ void HunterSearch::replyFinished(QNetworkReply *reply){
         QJsonArray emailList = data["emails"].toArray();
         foreach(const QJsonValue &value, emailList){
             QString email = value["value"].toString();
-            emit scanResults(email);
+            emit subdomain(email);
             /*
              * getting where the email was extracted from
              *

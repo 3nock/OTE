@@ -894,9 +894,7 @@ void RawOsint::on_lineEditFind_textEdited(const QString &searchTerm){
 void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     ui->comboBoxOptions->clear();
     ui->lineEditTarget->clear();
-    ///
-    /// ...
-    ///
+
     switch(index){
     case 0:
     {

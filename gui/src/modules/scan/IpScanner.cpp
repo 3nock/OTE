@@ -1,6 +1,6 @@
  #include "IpScanner.h"
 
-ip::Scanner::Scanner(ScanConfig *scanConfig, ip::ScanArguments *scanArguments)
+ipEngine::Scanner::Scanner(ScanConfig *scanConfig, ipEngine::ScanArguments *scanArguments)
     : m_scanConfig(scanConfig),
       m_scanArguments(scanArguments),
       //...
@@ -9,14 +9,14 @@ ip::Scanner::Scanner(ScanConfig *scanConfig, ip::ScanArguments *scanArguments)
     //...
     connect(this, SIGNAL(anotherLookup()), this, SLOT(lookup()));
 }
-ip::Scanner::~Scanner(){
+ipEngine::Scanner::~Scanner(){
     delete hostInfo;
 }
 
 ///
 /// TODO: test the results if its is not simply an address using regular expression...
 ///
-void ip::Scanner::lookupFinished(QHostInfo info){
+void ipEngine::Scanner::lookupFinished(QHostInfo info){
     ///
     /// check the results of the lookup if no error occurred save the results
     /// if error occurred emit appropriate response...
@@ -36,7 +36,7 @@ void ip::Scanner::lookupFinished(QHostInfo info){
     emit anotherLookup();
 }
 
-void ip::Scanner::lookup(){
+void ipEngine::Scanner::lookup(){
     m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
     m_scanArguments->currentTargetToEnumerate++;
     if(m_currentTargetToEnumerate < m_scanArguments->targetList.count())

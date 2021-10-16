@@ -46,12 +46,12 @@ void Github::replyFinished(QNetworkReply *reply){
             emit quitThread();
             return;
         }
-        emit scanResults(QString::fromUtf8(reply->readAll()));
+        emit subdomain(QString::fromUtf8(reply->readAll()));
         /*
         QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
         QJsonArray subdomainList = jsonReply.array();
         foreach(const QJsonValue &value, subdomainList)
-            emit scanResults(value.toString());
+            emit subdomain(value.toString());
         */
     }
     else{

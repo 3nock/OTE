@@ -16,7 +16,7 @@ osint::Scanner::~Scanner(){
 }
 
 ///
-/// called from osint, connects to the QThread...
+/// csubdomainIped from osint, connects to the QThread...
 ///
 void osint::Scanner::startScan(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(worker()));
@@ -27,6 +27,7 @@ void osint::Scanner::startScan(QThread *cThread){
 ///  the main function runned on the QThread...
 ///
 void osint::Scanner::lookup(){
+    /*
     ///
     /// initialize python intepreter Enviroment...
     ///
@@ -54,7 +55,7 @@ void osint::Scanner::lookup(){
         pModule = PyImport_ImportModule("main");
         pFunction = PyObject_GetAttrString(pModule, osintEngine.toUtf8());
         pArguments = PyTuple_Pack(1, PyUnicode_FromString(m_scanArguments->targetDomain));
-        pReturnValue = PyObject_CallObject(pFunction, pArguments);
+        pReturnValue = PyObject_CsubdomainIpObject(pFunction, pArguments);
         ///
         /// processing results...
         ///
@@ -103,6 +104,7 @@ void osint::Scanner::lookup(){
     ///
     m_scanArguments->choosenOptions.clear();
     emit quitThread();
+    */
 }
 
 void osint::Scanner::stopScan(){

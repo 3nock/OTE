@@ -13,7 +13,10 @@ class Brute : public AbstractEngine{
     Q_OBJECT
 
     public:
-        Brute(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
+        Brute(QWidget *parent = nullptr,
+              ResultsModel *resultsModel = nullptr,
+              ProjectDataModel *project = nullptr,
+              Status *status = nullptr);
         ~Brute();
 
     public slots:
@@ -49,8 +52,6 @@ private:
         Ui::Brute *ui;
         QSet<QString> m_subdomainsSet;
         brute::ScanArguments *m_scanArguments;
-        QStandardItemModel *m_model;
-        QSortFilterProxyModel *m_proxyModel;
         void stopScan();
         void startScan();
         void pauseScan();

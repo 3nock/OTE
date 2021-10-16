@@ -70,7 +70,7 @@ void IpInfo::replyFinished(QNetworkReply *reply){
         ///
         /// send results...
         ///
-        emit scanResults(hostname);
+        emit subdomain(hostname);
     }
     else{
         emit errorLog(reply->errorString());

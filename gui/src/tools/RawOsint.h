@@ -68,6 +68,8 @@ class RawOsint : public QDialog{
         void on_buttonClear_clicked();
         void on_buttonCopy_clicked();
         void on_buttonSave_clicked();
+        void on_comboBoxModule_currentIndexChanged(int index);
+        void on_comboBoxOptions_currentIndexChanged(const QString &arg1);
         ///
         /// for Find...
         ///
@@ -75,11 +77,7 @@ class RawOsint : public QDialog{
         void on_buttonPrev_clicked();
         void on_lineEditFind_textEdited(const QString &arg1);
 
-        void on_comboBoxModule_currentIndexChanged(int index);
-
-        void on_comboBoxOptions_currentIndexChanged(const QString &arg1);
-
-private:
+    private:
         Ui::RawOsint *ui;
         QStandardItemModel *m_model;
         ScanArgs *m_scanArgs;

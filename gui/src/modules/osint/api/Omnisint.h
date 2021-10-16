@@ -12,7 +12,7 @@ namespace ModuleInfo {
 
         QMap<QString, QString> flags = {{"subdomains", "domain name"},
                                         {"tlds", "domain name"},
-                                        {"all", "domain name"},
+                                        {"subdomainIp", "domain name"},
                                         {"reverse", "ip-address or ip/cdir"}};
     };
 }

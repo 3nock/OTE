@@ -12,7 +12,7 @@ ArchiveIt::~ArchiveIt(){
 
 void ArchiveIt::start(){
     QNetworkRequest request;
-    QUrl url("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+args->target);
+    QUrl url("https://wayback.archive-it.org/subdomainIp/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+args->target);
     request.setUrl(url);
     manager->get(request);
 }
@@ -28,7 +28,7 @@ void ArchiveIt::replyFinished(QNetworkReply *reply){
         QString document = QString::fromUtf8(reply->readAll());
         QStringList urlList = document.remove(" ").split("\n");
         foreach(const QString &url, urlList)
-            emit scanResults(url);
+            emit subdomain(url);
     }
     else{
         emit errorLog(reply->errorString());

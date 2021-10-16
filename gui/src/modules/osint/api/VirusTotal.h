@@ -8,7 +8,7 @@ namespace ModuleInfo {
         QString name = "VirusTotal";
         QString url = "https://www.virustotal.com/";
         QString summary = "Analyze suspicious files and URLs to detect types of malware, \n"
-                          "automatically share them with the security community";
+                          "automaticsubdomainIpy share them with the security community";
         QMap<QString, QString> flags = {{"urls", "url"},
                                         {"domains", "domain name"},
                                         {"resolution", "domain name/ip-address"},

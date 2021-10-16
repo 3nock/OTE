@@ -7,8 +7,8 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 
-struct OsintScanStat{
-    QString moduleName;
+struct ScanStat{
+    QString name;
     unsigned int resultsCount;
 };
 
@@ -16,20 +16,14 @@ struct ScanArgs{
     QString target;
     QString module;
     QString option;
-
+    //...
+    bool asn = false;
     bool subdomains = false;
     bool subdomainsAndIp = false;
     bool ip = false;
     bool emails = false;
     bool urls = false;
     bool raw = false;
-};
-
-struct meta{
-    QString moduleName;
-    QString summary;
-    QStringList useCases;
-    QStringList flags;
 };
 
 class AbstractOsintModule : public QObject {
@@ -51,20 +45,18 @@ class AbstractOsintModule : public QObject {
         }
 
     protected:
-        OsintScanStat *scanStat;
         ScanArgs *args;
 
     signals:
         void quitThread();
+        //...
         void infoLog(QString log);
         void errorLog(QString error);
-        void scanResults(QString subdomain);
-        //...
         void ip(QString ip);
-        void subdomains(QString subdomain);
+        void subdomain(QString subdomain);
         void subdomainIp(QString subdomain, QString ip);
-        void emails(QString email);
-        void urls(QString url);
+        void email(QString email);
+        void url(QString url);
         void rawResults(QByteArray reply);
 
     public slots:

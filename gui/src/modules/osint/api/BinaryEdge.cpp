@@ -80,10 +80,10 @@ void BinaryEdge::replyFinished(QNetworkReply *reply){
         if(subdomainList.isEmpty())
             goto END;
         ///
-        /// if not get all subdomains...
+        /// if not get subdomainIp subdomains...
         ///
         foreach(const QJsonValue &value, subdomainList)
-            emit scanResults(value.toString());
+            emit subdomain(value.toString());
         ///
         /// next query...
         ///

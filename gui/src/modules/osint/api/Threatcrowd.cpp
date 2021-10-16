@@ -58,17 +58,17 @@ void Threatcrowd::replyFinished(QNetworkReply *reply){
                             FOR IP-ADDRESS
             QJsonArray resolutions = jsonObject["resolutions"].toArray();
             foreach(const QJsonValue &value, resolutions)
-                emit scanResults(value["ip_address"].toString());
+                emit subdomain(value["ip_address"].toString());
 
                               FOR EMAILS
             QJsonArray emails = jsonObject["emails"].toArray();
             foreach(const QJsonValue &value, emails)
-                emit scanResults(value.toString());
+                emit subdomain(value.toString());
             */
 
             QJsonArray subdomains = jsonObject["subdomains"].toArray();
             foreach(const QJsonValue &value, subdomains)
-                emit scanResults(value.toString());
+                emit subdomain(value.toString());
         }
     }
     reply->deleteLater();

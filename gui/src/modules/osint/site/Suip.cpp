@@ -26,7 +26,7 @@ void Suip::start(){
 void Suip::replyFinished(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
-        emit scanResults(QString::fromUtf8(reply->readAll()));
+        emit subdomain(QString::fromUtf8(reply->readAll()));
     }
     else{
         emit errorLog(reply->errorString());

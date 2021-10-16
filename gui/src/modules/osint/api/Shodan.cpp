@@ -77,10 +77,10 @@ void Shodan::replyFinished(QNetworkReply *reply){
             QString type = value.toObject()["type"].toString();
             QString hostname = value.toObject()["value"].toString();
             if(type == "MX" || type == "NS" || type == "CNAME")
-                emit scanResults(hostname);
+                emit subdomain(hostname);
         }
         foreach(const QJsonValue &value, subdomains)
-            emit scanResults(value.toString());
+            emit subdomain(value.toString());
     }
     else{
         emit errorLog(reply->errorString());

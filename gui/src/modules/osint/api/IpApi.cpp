@@ -88,7 +88,7 @@ void IpApi::replyFinished(QNetworkReply *reply){
         "country_flag": "https://assets.ipstack.com/flags/au.svg",
         "country_flag_emoji": "\ud83c\udde6\ud83c\uddfa",
         "country_flag_emoji_unicode": "U+1F1E6 U+1F1FA",
-        "calling_code": "61", "is_eu": false
+        "csubdomainIping_code": "61", "is_eu": false
     }
 }
  OR
@@ -119,7 +119,7 @@ void IpApi::replyFinished(QNetworkReply *reply){
         "country_flag": "http://assets.ipapi.com/flags/us.svg",
         "country_flag_emoji": "🇺🇸",
         "country_flag_emoji_unicode": "U+1F1FA U+1F1F8",
-        "calling_code": "1",
+        "csubdomainIping_code": "1",
         "is_eu": false
     },
     "time_zone": {

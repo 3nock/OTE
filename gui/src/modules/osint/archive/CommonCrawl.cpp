@@ -71,7 +71,7 @@ void CommonCrawl::replyFinished(QNetworkReply *reply){
             foreach(const QString &value, urlList){
                     QString url = value;
                     url.chop(2);
-                    emit scanResults(url.remove(0, 9));
+                    emit subdomain(url.remove(0, 9));
             }
         }
     }

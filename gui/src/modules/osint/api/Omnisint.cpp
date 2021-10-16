@@ -23,13 +23,13 @@ void Omnisint::start(){
             url.setUrl("https://sonar.omnisint.io/subdomains/"+args->target);
         if(args->option == "tlds")
             url.setUrl("https://sonar.omnisint.io/tlds/"+args->target);
-        if(args->option == "all")
-            url.setUrl("https://sonar.omnisint.io/all/"+args->target);
+        if(args->option == "subdomainIp")
+            url.setUrl("https://sonar.omnisint.io/subdomainIp/"+args->target);
         if(args->option == "reverse")
             url.setUrl("https://sonar.omnisint.io/reverse/"+args->target);
     }else{
         m_page = 1;
-        url.setUrl("https://sonar.omnisint.io/all/"+args->target+"?page="+QString::number(m_page));
+        url.setUrl("https://sonar.omnisint.io/subdomainIp/"+args->target+"?page="+QString::number(m_page));
     }
 
     request.setUrl(url);
@@ -49,16 +49,16 @@ void Omnisint::replyFinished(QNetworkReply *reply){
         QJsonArray subdomains = jsonReply.array();
         if(!subdomains.isEmpty()){
             ///
-            /// obtain all subdomains...
+            /// obtain subdomainIp subdomains...
             ///
             foreach(const QJsonValue &value, subdomains)
-                emit scanResults(value.toString());
+                emit subdomain(value.toString());
             ///
             /// send another request for other comming pages...
             ///
             m_page++;
             QNetworkRequest request;
-            QUrl url("https://sonar.omnisint.io/all/"+args->target+"?page="+QString::number(m_page));
+            QUrl url("https://sonar.omnisint.io/subdomainIp/"+args->target+"?page="+QString::number(m_page));
             request.setUrl(url);
             manager->get(request);
             ///

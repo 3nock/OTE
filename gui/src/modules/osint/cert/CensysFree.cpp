@@ -4,7 +4,7 @@
  * Also has ip Search
  *
  * getting various infos,
- * eg all smtp names list...
+ * eg subdomainIp smtp names list...
  *
  * available:
  *      443.https.tls.certificate.parsed.names -> domain names
@@ -71,9 +71,9 @@ void CensysFree::getSubdomains(GumboNode *node){
             if(tr->type == GUMBO_NODE_ELEMENT && tr->v.element.tag == GUMBO_TAG_TR && tr->v.element.children.length >1){
                 GumboNode *nameTD = static_cast<GumboNode*>(tr->v.element.children.data[1]);
                 if(nameTD->type == GUMBO_NODE_ELEMENT && nameTD->v.element.tag == GUMBO_TAG_TD && nameTD->v.element.children.length > 2){
-                    GumboNode *small = static_cast<GumboNode*>(nameTD->v.element.children.data[2]);
-                    if(small->type == GUMBO_NODE_ELEMENT && small->v.element.tag == GUMBO_TAG_SMALL && small->v.element.children.length > 0){
-                        GumboNode* b = static_cast<GumboNode*>(small->v.element.children.data[0]);
+                    GumboNode *smsubdomainIp = static_cast<GumboNode*>(nameTD->v.element.children.data[2]);
+                    if(smsubdomainIp->type == GUMBO_NODE_ELEMENT && smsubdomainIp->v.element.tag == GUMBO_TAG_SMALL && smsubdomainIp->v.element.children.length > 0){
+                        GumboNode* b = static_cast<GumboNode*>(smsubdomainIp->v.element.children.data[0]);
                         if(b->type == GUMBO_NODE_ELEMENT && b->v.element.tag == GUMBO_TAG_B && b->v.element.children.length > 0){
                             GumboNode *name = static_cast<GumboNode*>(b->v.element.children.data[0]);
                             if(name->type == GUMBO_NODE_TEXT){
@@ -98,7 +98,7 @@ void CensysFree::getSubdomains(GumboNode *node){
                                                 smtpNames = smtpNames.simplified().remove(" ");
                                                 QStringList smtpNamesList = smtpNames.split(",");
                                                 foreach(const QString &smtp, smtpNamesList)
-                                                    emit scanResults(smtp);
+                                                    emit subdomain(smtp);
                                             }
                                         }
                                     }

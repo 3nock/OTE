@@ -1,86 +1,34 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 //...
-#include <QSettings>
-#include <QDateTime>
 #include "src/dialogs/AboutDialog.h"
 #include "src/tools/RawOsint.h"
 
 /*
- * about dialog like that of wireshark
- *
  * use https://www.qcustomplot.com/ for plots
  */
-MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
-    statusOsint(new ScanStatus),
-    statusBrute(new ScanStatus),
-    statusActive(new ScanStatus),
-    statusIp(new ScanStatus),
-    statusRecords(new ScanStatus),
+MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow),
     status(new Status),
-    //...
-    resultsProxyModel(new ProxyModel),
     resultsModel(new ResultsModel),
-    ui(new Ui::MainWindow)
+    projectDataModel(new ProjectDataModel)
 {
     ui->setupUi(this);
     ///
-    /// setting statuses...
-    ///
-    status->osint = statusOsint;
-    status->brute = statusBrute;
-    status->active = statusActive;
-    status->ip = statusIp;
-    status->records = statusRecords;
-    ///
-    /// initializing program configuration file settings...
-    ///
-    config = new QSettings(QDir::currentPath()+"subsuite.ini", QSettings::IniFormat);
-    ///
-    /// creating the proxy models...
-    ///
-    resultsProxyModel->ip = new QSortFilterProxyModel;
-    resultsProxyModel->brute = new QSortFilterProxyModel;
-    resultsProxyModel->osint = new QSortFilterProxyModel;
-    resultsProxyModel->active = new QSortFilterProxyModel;
-    resultsProxyModel->dnsrecords = new QSortFilterProxyModel;
-    resultsProxyModel->srvrecords = new QSortFilterProxyModel;
-    ///
-    /// creating the standard item models...
-    ///
-    resultsModel->ip = new QStandardItemModel;
-    resultsModel->brute = new QStandardItemModel;
-    resultsModel->osint = new QStandardItemModel;
-    resultsModel->active = new QStandardItemModel;
-    resultsModel->dnsrecords = new QStandardItemModel;
-    resultsModel->srvrecords = new QStandardItemModel;
-    resultsModel->project = new ProjectDataModel;
-    resultsModel->proxy = resultsProxyModel;
-    ///
-    /// setting source models...
-    ///
-    resultsProxyModel->ip->setSourceModel(resultsModel->ip);
-    resultsProxyModel->brute->setSourceModel(resultsModel->brute);
-    resultsProxyModel->osint->setSourceModel(resultsModel->osint);
-    resultsProxyModel->active->setSourceModel(resultsModel->active);
-    resultsProxyModel->dnsrecords->setSourceModel(resultsModel->dnsrecords);
-    resultsProxyModel->srvrecords->setSourceModel(resultsModel->srvrecords);
-    ///
     /// creating and initiating the classes for the modules...
     ///
-    Ip *ip = new Ip(this, resultsModel, status);
-    Osint *osint = new Osint(this, resultsModel, status);
-    Brute *brute = new Brute(this, resultsModel, status);
-    Active *active = new Active(this, resultsModel, status);
-    DnsRecords *records = new DnsRecords(this, resultsModel, status);
-    Project *project = new Project(this, resultsModel);
+    ip = new Ip(this, resultsModel, projectDataModel, status);
+    osint = new Osint(this, resultsModel, projectDataModel, status);
+    brute = new Brute(this, resultsModel, projectDataModel, status);
+    active = new Active(this, resultsModel, projectDataModel, status);
+    records = new DnsRecords(this, resultsModel, projectDataModel, status);
+    project = new Project(this, projectDataModel);
 
     // BRUTE::Sending results...
-    connect(brute, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(brute, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(brute, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(brute, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(brute, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(brute, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(brute, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE, PROXYMODEL_TYPE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(brute, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE, PROXYMODEL_TYPE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(brute, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE, PROXYMODEL_TYPE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(brute, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE, PROXYMODEL_TYPE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
     //...
     connect(brute, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
     connect(brute, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
@@ -89,11 +37,11 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     connect(brute, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // ACTIVE::Sending results...
-    connect(active, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(active, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(active, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(active, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(active, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(active, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(active, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE, PROXYMODEL_TYPE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(active, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE, PROXYMODEL_TYPE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(active, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE, PROXYMODEL_TYPE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(active, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE, PROXYMODEL_TYPE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
     //...
     connect(active, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
     connect(active, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
@@ -102,11 +50,11 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     connect(active, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // OSINT::Sending results...
-    connect(osint, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(osint, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(osint, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(osint, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(osint, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(osint, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(osint, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE, PROXYMODEL_TYPE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(osint, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE, PROXYMODEL_TYPE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(osint, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE, PROXYMODEL_TYPE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(osint, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE, PROXYMODEL_TYPE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
     //...
     connect(osint, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
     connect(osint, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
@@ -115,11 +63,11 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     connect(osint, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // IP::Sending results...
-    connect(ip, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(ip, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(ip, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(ip, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(ip, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(ip, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(ip, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE, PROXYMODEL_TYPE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(ip, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE, PROXYMODEL_TYPE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(ip, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE, PROXYMODEL_TYPE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(ip, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE, PROXYMODEL_TYPE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
     //...
     connect(ip, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
     connect(ip, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
@@ -128,11 +76,11 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     connect(ip, SIGNAL(sendSubdomainsToRecord(QItemSelectionModel*)), records, SLOT(onReceiveTargets(QItemSelectionModel*)));
 
     // RECORDS::Sending results...
-    connect(records, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(records, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(records, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(records, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE)));
-    connect(records, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE)));
+    connect(records, SIGNAL(sendSubdomainsToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE)), osint, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(records, SIGNAL(sendSubdomainsToActive(ENGINE, CHOICE, PROXYMODEL_TYPE)), active, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(records, SIGNAL(sendSubdomainsToBrute(ENGINE, CHOICE, PROXYMODEL_TYPE)), brute, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(records, SIGNAL(sendIpAddressesToIp(ENGINE, CHOICE, PROXYMODEL_TYPE)), ip, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
+    connect(records, SIGNAL(sendSubdomainsToRecord(ENGINE, CHOICE, PROXYMODEL_TYPE)), records, SLOT(onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE)));
     //...
     connect(records, SIGNAL(sendSubdomainsToOsint(QItemSelectionModel*)), osint, SLOT(onReceiveTargets(QItemSelectionModel*)));
     connect(records, SIGNAL(sendSubdomainsToActive(QItemSelectionModel*)), active, SLOT(onReceiveTargets(QItemSelectionModel*)));
@@ -175,21 +123,22 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     ui->tabWidget_mainTab->insertTab(5, project, "Project");
     //...
     ui->tabWidget_mainTab->setCurrentIndex(0);
-
-    // Welcome...
+    ///
+    /// Welcome...
+    ///
     ui->statusbar->showMessage("Welcome!", 5000);
 }
 MainWindow::~MainWindow(){
-    delete statusOsint;
-    delete statusBrute;
-    delete statusActive;
-    delete statusIp;
-    delete statusRecords;
-    delete status;
+    delete ip;
+    delete osint;
+    delete brute;
+    delete active;
+    delete records;
+    delete project;
     //...
-    delete config;
+    delete status;
     delete resultsModel;
-    delete resultsProxyModel;
+    delete projectDataModel;
     delete ui;
 }
 
@@ -226,10 +175,9 @@ void MainWindow::onChangeTabToIp(){
     ui->tabWidget_mainTab->setCurrentIndex(4);
 }
 
-/****************************************************************************
-                                Actions
-*****************************************************************************/
-
+///
+/// Actions...
+///
 void MainWindow::on_actionAbout_triggered(){
     AboutDialog *aboutDialog = new AboutDialog(this);
     aboutDialog->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -243,7 +191,6 @@ void MainWindow::on_actionAboutQt_triggered(){
 void MainWindow::on_actionExit_triggered(){
     QApplication::exit();
 }
-
 
 void MainWindow::on_actionRawOsint_triggered(){
     RawOsint *rawOsint = new RawOsint(this);

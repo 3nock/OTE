@@ -366,7 +366,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Scan From all Nameservers</string>
+           <string>Scan From subdomainIp Nameservers</string>
           </property>
          </widget>
         </item>

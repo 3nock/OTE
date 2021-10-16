@@ -32,7 +32,7 @@ void Anubis::replyFinished(QNetworkReply *reply){
         QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
         QJsonArray subdomainList = jsonReply.array();
         foreach(const QJsonValue &value, subdomainList)
-            emit scanResults(value.toString());
+            emit subdomain(value.toString());
     }
     else{
         emit errorLog(reply->errorString());

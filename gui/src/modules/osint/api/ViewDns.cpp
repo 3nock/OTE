@@ -5,7 +5,7 @@
 #include <QJsonArray>
 
 /*
- * only 250 api calls available for free...
+ * only 250 api csubdomainIps available for free...
  */
 ViewDns::ViewDns(ScanArgs *args):
     AbstractOsintModule(args)

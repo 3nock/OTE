@@ -16,20 +16,27 @@ class Osint : public AbstractEngine{
     Q_OBJECT
 
     public:
-        Osint(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
+        Osint(QWidget *parent = nullptr,
+              ResultsModel *resultsModel = nullptr,
+              ProjectDataModel *project = nullptr,
+              Status *status = nullptr);
         ~Osint();
 
     public slots:
+        void onScanThreadEnded();
         void onInfoLog(QString log);
         void onErrorLog(QString log);
-        void scanResults(QString subdomain);
+        void onResultSubdomainIp(QString subdomain, QString ip);
+        void onResultSubdomain(QString subdomain);
+        void onResultIp(QString ip);
+        void onResultEmail(QString email);
+        void onResultUrl(QString url);
 
     private slots:
         void onClearResults();
-        void onShowFilter(bool);
-        void onSaveResults(CHOICE);
+        void onSaveResults(CHOICE, PROXYMODEL_TYPE);
         void onSaveResults(QItemSelectionModel*);
-        void onCopyResults(CHOICE);
+        void onCopyResults(CHOICE, PROXYMODEL_TYPE);
         void onCopyResults(QItemSelectionModel*);
         ///
         /// ....
@@ -41,23 +48,22 @@ class Osint : public AbstractEngine{
         void on_buttonKeys_clicked();
         void on_lineEditTarget_returnPressed();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
-        //...
-        void onEnumerationComplete();
         void on_checkBoxMultipleTargets_clicked(bool checked);
-
-        void on_buttonFilter_clicked();
+        void on_comboBoxOption_currentIndexChanged(int index);
+        void on_lineEditFilter_textChanged(const QString &arg1);
 
 private:
         Ui::Osint *ui;
         //...
         osint::ScanArguments *m_scanArguments;
         osint::ScanResults *m_scanResults;
-        QStandardItemModel *m_model;
-        QSortFilterProxyModel *m_proxyModel;
-        QString currentPath;
-        QString m_targetDomain;
-        QSet<QString> m_results;
-        int m_subdomainsCount = 0;
+        //...
+        QString m_currentPath;
+        QSet<QString> m_subdomainIpSet;
+        QSet<QString> m_subdomainSet;
+        QSet<QString> m_ipSet;
+        QSet<QString> m_emailSet;
+        QSet<QString> m_urlSet;
         void stopScan();
         void startScan();
         void pauseScan();

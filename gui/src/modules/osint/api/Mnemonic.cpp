@@ -60,13 +60,13 @@ void Mnemonic::replyFinished(QNetworkReply *reply){
                 /// sending results...
                 ///
                 if(recordType == "a" || recordType == "aaaa")
-                    emit scanResults(answer);
+                    emit subdomain(answer);
                 if(recordType == "mx")
-                    emit scanResults(answer);
+                    emit subdomain(answer);
                 if(recordType == "cname")
-                    emit scanResults(answer);
+                    emit subdomain(answer);
                 if(recordType == "ptr")
-                    emit scanResults(answer);
+                    emit subdomain(answer);
             }
         }
     }

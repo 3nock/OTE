@@ -45,12 +45,12 @@ void Urlscan::replyFinished(QNetworkReply *reply){
         QJsonArray resultsArray = jsonObject["results"].toArray();
         foreach(const QJsonValue &value, resultsArray){
             QJsonObject page = value["page"].toObject();
-            emit scanResults(page["domain"].toString());
+            emit subdomain(page["domain"].toString());
             /*
-            emit scanResults(page["server"].toString());
-            emit scanResults(page["asn"].toString());
-            emit scanResults(page["url"].toString());
-            emit scanResults(page["ptr"].toString());
+            emit subdomain(page["server"].toString());
+            emit subdomain(page["asn"].toString());
+            emit subdomain(page["url"].toString());
+            emit subdomain(page["ptr"].toString());
             */
         }
     }

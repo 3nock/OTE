@@ -5,12 +5,15 @@
 #include <QDateTime>
 #include <QClipboard>
 
-Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
-    AbstractEngine(parent, resultsModel, status),
+
+/*
+ * store all wildcard ip into a database & check if domain check by the
+ * active modules contains either of the wildcard ip
+ */
+Active::Active(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, resultsModel, project, status),
     ui(new Ui::Active),
-    m_scanArguments(new active::ScanArguments),
-    m_model(resultsModel->active),
-    m_proxyModel(resultsModel->proxy->active)
+    m_scanArguments(new active::ScanArguments)
 {
     ui->setupUi(this);
     ///
@@ -28,10 +31,10 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     ui->buttonStop->setDisabled(true);
     //ui->buttonPause->setDisabled(true);
     //...
-    resultsModel->active->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-    ui->tableViewResults->setModel(resultsModel->proxy->active);
+    result->active->subdomainIp->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    ui->tableViewResults->setModel(result->active->subdomainIpProxy);
     ///
-    /// equally seperate the widgets...
+    /// equsubdomainIpy seperate the widgets...
     ///
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
@@ -51,8 +54,8 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     /// ...
     ///
     connectActions();
-    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModel->setRecursiveFilteringEnabled(true);
+    result->active->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    result->active->subdomainIpProxy->setRecursiveFilteringEnabled(true);
 }
 Active::~Active(){
     delete m_scanArguments;
@@ -73,7 +76,7 @@ void Active::onErrorLog(QString log){
 
 void Active::on_buttonStart_clicked(){
     ///
-    /// checking if all requirements are satisfied before scan if not prompt error
+    /// checking if subdomainIp requirements are satisfied before scan if not prompt error
     /// then exit function...
     ///
     if(!(ui->targets->listModel->rowCount() > 0)){
@@ -129,7 +132,7 @@ void Active::on_buttonStart_clicked(){
 void Active::pauseScan(){
     ///
     /// if the scan was already paused, then this current click is to
-    /// Resume the scan, just call the startScan, with the same arguments and
+    /// Resume the scan, just csubdomainIp the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
     if(status->active->isPaused){
@@ -158,23 +161,23 @@ void Active::connectActions(){
     ///
     /// SAVE...
     ///
-    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
-    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
-    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
+    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomain);});
+    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ip);});
+    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomainIp);});
     ///
     /// COPY...
     ///
-    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
-    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
-    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
+    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomain);});
+    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ip);});
+    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomainIp);});
     ///
     /// SUBDOMAINS AND IPS...
     ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::ACTIVE, CHOICE::ipaddress); emit changeTabToIp();});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::ACTIVE, CHOICE::susbdomains); emit changeTabToRecords();});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::ACTIVE, CHOICE::ip, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::ACTIVE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::ACTIVE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::ACTIVE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::ACTIVE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToRecords();});
 
     /***** For Right CLick *****/
     ///
@@ -242,18 +245,18 @@ void Active::onScanResult(QString subdomain, QString ipAddress){
     ///
     /// save to active model...
     ///
-    resultsModel->active->appendRow(QList<QStandardItem*>() << new QStandardItem(subdomain) << new QStandardItem(ipAddress));
-    ui->labelResultsCount->setNum(resultsModel->active->rowCount());
+    result->active->subdomainIp->appendRow(QList<QStandardItem*>() << new QStandardItem(subdomain) << new QStandardItem(ipAddress));
+    ui->labelResultsCount->setNum(result->active->subdomainIp->rowCount());
     ///
     /// save to project model...
     ///
-    resultsModel->project->addSubdomain(QStringList()<<subdomain<<ipAddress<<subdomain);
+    project->addActiveSubdomain(QStringList()<<subdomain<<ipAddress<<subdomain);
 }
 
 void Active::onScanThreadEnded(){
     status->active->activeThreads--;
     ///
-    /// if all Scan Threads have finished...
+    /// if subdomainIp Scan Threads have finished...
     ///
     if(status->active->activeThreads == 0)
     {
@@ -312,9 +315,9 @@ void Active::onClearResults(){
     ///
     /// clear the results...
     ///
-    resultsModel->active->clear();
+    result->active->subdomainIp->clear();
     ui->labelResultsCount->clear();
-    resultsModel->active->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    result->active->subdomainIp->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
     ///
     /// clear the progressbar...
     ui->progressBar->clearMask();
@@ -349,7 +352,7 @@ void Active::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(resultsModel->active->rowCount() < 1){
+    if(result->active->subdomainIp->rowCount() < 1){
         return;
     }
     ///
@@ -472,30 +475,30 @@ void Active::onSaveResults(CHOICE choice){
     /// choice of item to save...
     ///
     switch(choice){
-    case CHOICE::susbdomains:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::subdomain:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
             }
         }
         break;
-    case CHOICE::ipaddress:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::ip:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
             }
         }
         break;
-    case CHOICE::all:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::subdomainIp:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+":"+m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString()+":"+result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -548,30 +551,30 @@ void Active::onCopyResults(CHOICE choice){
     /// type of item to save...
     ///
     switch(choice){
-    case CHOICE::susbdomains:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::subdomain:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
             }
         }
         break;
-    case CHOICE::ipaddress:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::ip:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
             }
         }
         break;
-    case CHOICE::all:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::subdomainIp:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+"|"+m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString()+"|"+result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -605,7 +608,7 @@ void Active::onCopyResults(QItemSelectionModel *selectionModel){
 
 void Active::on_buttonFilter_clicked(){
     QString filterKeyword = ui->lineEditFilter->text();
-    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
-    m_proxyModel->setFilterRegExp(filterKeyword);
-    ui->tableViewResults->setModel(m_proxyModel);
+    result->active->subdomainIpProxy->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+    result->active->subdomainIpProxy->setFilterRegExp(filterKeyword);
+    ui->tableViewResults->setModel(result->active->subdomainIpProxy);
 }

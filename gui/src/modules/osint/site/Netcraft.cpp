@@ -49,10 +49,10 @@ void Netcraft::getSubdomains(GumboNode *node){
             if(QString::fromUtf8(class_attribute->value) == "results-table__host")
             {
                 GumboAttribute *href_attribute = static_cast<GumboAttribute*>(a->v.element.attributes.data[0]);
-                QString subdomain = QString::fromUtf8(href_attribute->value);
-                subdomain.remove("http://");
-                subdomain.remove("/");
-                emit scanResults(subdomain);
+                QString item = QString::fromUtf8(href_attribute->value);
+                item.remove("http://");
+                item.remove("/");
+                emit subdomain(item);
             }
         }
     }

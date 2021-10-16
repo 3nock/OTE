@@ -19,20 +19,16 @@ namespace Ui {
 class MainWindow : public QMainWindow{
         Q_OBJECT
 
+    private:
+        Ui::MainWindow *ui;
+
     public:
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         //...
-        ScanStatus *statusOsint;
-        ScanStatus *statusBrute;
-        ScanStatus *statusActive;
-        ScanStatus *statusIp;
-        ScanStatus *statusRecords;
         Status *status;
-        //...
-        ProxyModel *resultsProxyModel;
         ResultsModel *resultsModel;
-        QSettings *config;
+        ProjectDataModel *projectDataModel;
 
     public slots:
         void onReceiveLog(QString log);
@@ -51,7 +47,12 @@ class MainWindow : public QMainWindow{
         void on_actionRawOsint_triggered();
 
     private:
-        Ui::MainWindow *ui;
+        Ip *ip = nullptr;
+        Osint *osint = nullptr;
+        Brute *brute = nullptr;
+        Active *active = nullptr;
+        DnsRecords *records = nullptr;
+        Project *project = nullptr;
 };
 
 #endif // MAINWINDOW_H

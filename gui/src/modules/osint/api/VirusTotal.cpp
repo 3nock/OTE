@@ -62,20 +62,20 @@ void VirusTotal::replyFinished(QNetworkReply *reply){
         ///
         QJsonArray subdomains = jsonObject["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains)
-            emit scanResults(value.toString());
+            emit subdomain(value.toString());
         /*
         ///
         /// ip-addresses...
         ///
         QJsonArray resolutions = jsonObject["resolutions"].toArray();
         foreach(const QJsonValue &value, resolutions)
-            emit scanResults(value.toObject()["ip_address"].toString());
+            emit subdomain(value.toObject()["ip_address"].toString());
         ///
         /// detected-urls...
         ///
         QJsonArray urls = jsonObject["detected_urls"].toArray();
         foreach(const QJsonValue &value, urls)
-            emit scanResults(value.toObject()["url"].toString());
+            emit subdomain(value.toObject()["url"].toString());
         */
     }
     else

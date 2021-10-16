@@ -5,14 +5,10 @@
 #include <QClipboard>
 
 
-DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *status) :
-    AbstractEngine(parent, resultsModel, status),
+DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, resultsModel, project, status),
     ui(new Ui::DnsRecords),
-    m_scanArguments(new records::ScanArguments),
-    m_modelDnsRecords(resultsModel->dnsrecords),
-    m_modelSrvRecords(resultsModel->srvrecords),
-    m_proxyModelDnsRecords(resultsModel->proxy->dnsrecords),
-    m_proxyModelSrvRecords(resultsModel->proxy->srvrecords)
+    m_scanArguments(new records::ScanArguments)
 {
     ui->setupUi(this);
     ///
@@ -38,24 +34,24 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, Status *stat
     ui->comboBoxFilter->hide();
     ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ///
-    /// equally seperate the widgets...
+    /// equsubdomainIpy seperate the widgets...
     ///
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
     //...
-    m_modelSrvRecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+    result->records->dns->setHorizontalHeaderLabels({"Name", "Target", "Port"});
     //...
-    ui->treeViewResults->setModel(m_proxyModelDnsRecords);
-    ui->tableViewSRV->setModel(m_proxyModelSrvRecords);
+    ui->treeViewResults->setModel(result->records->dns);
+    ui->tableViewSRV->setModel(result->records->srv);
     //...
     this->loadSrvWordlist();
     this->connectActions();
     //...
     qRegisterMetaType<records::Results>("records::Results");
-    m_proxyModelDnsRecords->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModelDnsRecords->setRecursiveFilteringEnabled(true);
-    m_proxyModelSrvRecords->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModelSrvRecords->setRecursiveFilteringEnabled(true);
+    result->records->dnsProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    result->records->dnsProxy->setRecursiveFilteringEnabled(true);
+    result->records->srvProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    result->records->srvProxy->setRecursiveFilteringEnabled(true);
 }
 DnsRecords::~DnsRecords(){
     delete m_scanArguments;
@@ -76,7 +72,7 @@ void DnsRecords::onErrorLog(QString log){
 
 void DnsRecords::on_buttonStart_clicked(){
     ///
-    /// checking if all requirements are satisfied before scan if not prompt error
+    /// checking if subdomainIp requirements are satisfied before scan if not prompt error
     /// then exit function...
     ///
     if(ui->targets->listModel->rowCount() < 1){
@@ -150,7 +146,7 @@ void DnsRecords::stopScan(){
 void DnsRecords::pauseScan(){
     ///
     /// if the scan was already paused, then this current click is to
-    /// Resume the scan, just call the startScan, with the same arguments and
+    /// Resume the scan, just csubdomainIp the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
     if(status->records->isPaused)
@@ -248,13 +244,11 @@ void DnsRecords::connectActions(){
     ///
     /// SAVE...
     ///
-    connect(&actionSaveSRVName, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srvName);});
-    connect(&actionSaveSRVTarget, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srvTarget);});
+    connect(&actionSaveSRV, &QAction::triggered, this, [=](){this->onSaveResultsSrvRecords(CHOICE::srv);});
     ///
     /// COPY...
     ///
-    connect(&actionCopySRVName, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srvName);});
-    connect(&actionCopySRVTarget, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srvTarget);});
+    connect(&actionCopySRV, &QAction::triggered, this, [=](){this->onCopyResultsSrvRecords(CHOICE::srv);});
     ///
     /// ...
     ///
@@ -282,11 +276,17 @@ void DnsRecords::connectActions(){
     ///
     /// SUBDOMAINS AND IPS...
     ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::RECORDS, CHOICE::ipaddress); emit changeTabToIp();});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::RECORDS, CHOICE::susbdomains); emit changeTabToRecords();});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::RECORDS, CHOICE::ip, PROXYMODEL_TYPE::dnsProxy); emit changeTabToIp();});
+    //...
+    connect(&actionSendToOsint_dns, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::RECORDS, CHOICE::subdomain, PROXYMODEL_TYPE::dnsProxy); emit changeTabToOsint();});
+    connect(&actionSendToBrute_dns, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::RECORDS, CHOICE::subdomain, PROXYMODEL_TYPE::dnsProxy); emit changeTabToBrute();});
+    connect(&actionSendToActive_dns, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::RECORDS, CHOICE::subdomain, PROXYMODEL_TYPE::dnsProxy); emit changeTabToActive();});
+    connect(&actionSendToRecords_dns, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::RECORDS, CHOICE::subdomain, PROXYMODEL_TYPE::dnsProxy); emit changeTabToRecords();});
+    //...
+    connect(&actionSendToOsint_srv, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::RECORDS, CHOICE::subdomain, PROXYMODEL_TYPE::srvProxy); emit changeTabToOsint();});
+    connect(&actionSendToBrute_srv, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::RECORDS, CHOICE::subdomain, PROXYMODEL_TYPE::srvProxy); emit changeTabToBrute();});
+    connect(&actionSendToActive_srv, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::RECORDS, CHOICE::subdomain, PROXYMODEL_TYPE::srvProxy); emit changeTabToActive();});
+    connect(&actionSendToRecords_srv, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::RECORDS, CHOICE::subdomain, PROXYMODEL_TYPE::srvProxy); emit changeTabToRecords();});
 
     /**** For Right-Click Context Menu ****/
     ///
@@ -307,7 +307,7 @@ void DnsRecords::connectActions(){
 void DnsRecords::onScanThreadEnded(){
     status->records->activeThreads--;
     ///
-    /// if all Scan Threads have finished...
+    /// if subdomainIp Scan Threads have finished...
     ///
     if(status->records->activeThreads == 0)
     {
@@ -341,9 +341,9 @@ void DnsRecords::onScanThreadEnded(){
 void DnsRecords::onScanResult(records::Results results){
     if(m_scanArguments->RecordType_srv)
     {
-        m_modelSrvRecords->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
-        resultsModel->project->addSRV(QStringList() <<results.srvName <<results.srvTarget <<results.domain);
-        ui->labelResultsCountSRV->setNum(m_modelSrvRecords->rowCount());
+        result->records->srv->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
+        project->addActiveSRV(QStringList() <<results.srvName <<results.srvTarget <<results.domain);
+        ui->labelResultsCountSRV->setNum(result->records->srv->rowCount());
         return;
     }
     ///
@@ -352,8 +352,8 @@ void DnsRecords::onScanResult(records::Results results){
     QStandardItem *domainItem = new QStandardItem(results.domain);
     domainItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
     domainItem->setForeground(Qt::white);
-    m_modelDnsRecords->invisibleRootItem()->appendRow(domainItem);
-    ui->labelResultsCount->setNum(m_modelDnsRecords->invisibleRootItem()->rowCount());
+    result->records->dns->invisibleRootItem()->appendRow(domainItem);
+    ui->labelResultsCount->setNum(result->records->dns->invisibleRootItem()->rowCount());
     ///
     /// ...
     ///
@@ -364,7 +364,7 @@ void DnsRecords::onScanResult(records::Results results){
         for(const QString &item: results.A)
         {
             recordItem->appendRow(new QStandardItem(item));
-            resultsModel->project->addA(QStringList()<<item<<results.domain);
+            project->addActiveA(QStringList()<<item<<results.domain);
         }
         domainItem->appendRow(recordItem);
     }
@@ -375,7 +375,7 @@ void DnsRecords::onScanResult(records::Results results){
         for(QString item: results.AAAA)
         {
             recordItem->appendRow(new QStandardItem(item));
-            resultsModel->project->addAAAA(QStringList()<<item<<results.domain);
+            project->addActiveAAAA(QStringList()<<item<<results.domain);
         }
         domainItem->appendRow(recordItem);
     }
@@ -386,7 +386,7 @@ void DnsRecords::onScanResult(records::Results results){
         for(QString item: results.NS)
         {
             recordItem->appendRow(new QStandardItem(item));
-            resultsModel->project->addNS(QStringList()<<item<<results.domain);
+            project->addActiveNS(QStringList()<<item<<results.domain);
         }
         domainItem->appendRow(recordItem);
     }
@@ -397,7 +397,7 @@ void DnsRecords::onScanResult(records::Results results){
         for(QString item: results.MX)
         {
             recordItem->appendRow(new QStandardItem(item));
-            resultsModel->project->addMX(QStringList()<<item<<results.domain);
+            project->addActiveMX(QStringList()<<item<<results.domain);
         }
         domainItem->appendRow(recordItem);
     }
@@ -408,7 +408,7 @@ void DnsRecords::onScanResult(records::Results results){
         for(QString item: results.TXT)
         {
             recordItem->appendRow(new QStandardItem(item));
-            resultsModel->project->addTXT(QStringList()<<item<<results.domain);
+            project->addActiveTXT(QStringList()<<item<<results.domain);
         }
         domainItem->appendRow(recordItem);
     }
@@ -419,7 +419,7 @@ void DnsRecords::onScanResult(records::Results results){
         for(QString item: results.CNAME)
         {
             recordItem->appendRow(new QStandardItem(item));
-            resultsModel->project->addCNAME(QStringList()<<item<<results.domain);
+            project->addActiveCNAME(QStringList()<<item<<results.domain);
         }
         domainItem->appendRow(recordItem);
     }
@@ -450,7 +450,7 @@ void DnsRecords::onClearResultsDnsRecords(){
     ///
     /// clear the results...
     ///
-    m_modelDnsRecords->clear();
+    result->records->dns->clear();
     ui->labelResultsCount->clear();
     ///
     /// clear the progressbar...
@@ -467,9 +467,9 @@ void DnsRecords::onClearResultsSrvRecords(){
     ///
     /// clear the results...
     ///
-    m_modelSrvRecords->clear();
+    result->records->srv->clear();
     ui->labelResultsCountSRV->clear();
-    m_modelSrvRecords->setHorizontalHeaderLabels({"Name", "Target", "Port"});
+    result->records->srv->setHorizontalHeaderLabels({"Name", "Target", "Port"});
     ///
     /// hide the action button...
     ///
@@ -503,7 +503,7 @@ void DnsRecords::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(m_modelDnsRecords->rowCount() < 1 && m_modelSrvRecords->rowCount() < 1){
+    if(result->records->dns->rowCount() < 1 && result->records->srv->rowCount() < 1){
         return;
     }
     ///
@@ -535,10 +535,10 @@ void DnsRecords::on_buttonAction_clicked(){
         Menu->addSeparator();
         //...
         saveMenu->addAction(&actionSaveSRVName);
-        saveMenu->addAction(&actionSaveSRVTarget);
+        //saveMenu->addAction(&actionSaveSRVTarget);
         //...
         copyMenu->addAction(&actionCopySRVName);
-        copyMenu->addAction(&actionCopySRVTarget);
+        //copyMenu->addAction(&actionCopySRVTarget);
         ///
         /// ....
         ///
@@ -692,6 +692,7 @@ void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
     ///
     /// choice of item to save...
     ///
+    /*
     switch(choice){
     case CHOICE::MX:
         for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
@@ -805,6 +806,7 @@ void DnsRecords::onSaveResultsDnsRecords(CHOICE choice){
         break;
     }
     file.close();
+    */
 }
 
 void DnsRecords::onSaveResultsDnsRecords(QItemSelectionModel* selectionModel){
@@ -845,6 +847,7 @@ void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
     ///
     /// type of item to save...
     ///
+    /*
     switch(choice){
     case CHOICE::MX:
         for(int i = 0; i < m_modelDnsRecords->rowCount(); i++)
@@ -958,6 +961,7 @@ void DnsRecords::onCopyResultsDnsRecords(CHOICE choice){
         break;
     }
     clipboard->setText(clipboardData);
+    */
 }
 
 void DnsRecords::onCopyResultsDnsRecords(QItemSelectionModel* selectionModel){
@@ -1000,29 +1004,13 @@ void DnsRecords::onSaveResultsSrvRecords(CHOICE choice){
     ///
     /// choice of item to save...
     ///
-    switch(choice){
-    case CHOICE::srvName:
-        for(int i = 0; i != m_modelSrvRecords->rowCount(); ++i)
-        {
-            item = m_modelSrvRecords->item(i, 0)->text().append(NEWLINE);
-            if(!itemSet.contains(item)){
-                itemSet.insert(item);
-                file.write(item.toUtf8());
-            }
+    for(int i = 0; i != result->records->srvProxy->rowCount(); ++i)
+    {
+        item = result->records->srvProxy->data(result->records->srvProxy->index(i, 1)).toString().append(NEWLINE);
+        if(!itemSet.contains(item)){
+            itemSet.insert(item);
+            file.write(item.toUtf8());
         }
-        break;
-    case CHOICE::srvTarget:
-        for(int i = 0; i != m_modelSrvRecords->rowCount(); ++i)
-        {
-            item = m_modelSrvRecords->item(i, 1)->text().append(NEWLINE);
-            if(!itemSet.contains(item)){
-                itemSet.insert(item);
-                file.write(item.toUtf8());
-            }
-        }
-        break;
-    default:
-        break;
     }
     file.close();
 }
@@ -1065,31 +1053,14 @@ void DnsRecords::onCopyResultsSrvRecords(CHOICE choice){
     ///
     /// type of item to save...
     ///
-    switch(choice){
-    case CHOICE::srvName:
-        for(int i = 0; i != m_modelSrvRecords->rowCount(); ++i)
-        {
-            item = m_modelSrvRecords->item(i, 0)->text().append(NEWLINE);
-            if(!itemSet.contains(item)){
-                itemSet.insert(item);
-                clipboardData.append(item);
-            }
+    for(int i = 0; i != result->records->srvProxy->rowCount(); ++i)
+    {
+        item = result->records->srvProxy->data(result->records->srvProxy->index(i, 1)).toString().append(NEWLINE);
+        if(!itemSet.contains(item)){
+            itemSet.insert(item);
+            clipboardData.append(item);
         }
-        break;
-    case CHOICE::srvTarget:
-        for(int i = 0; i != m_modelSrvRecords->rowCount(); ++i)
-        {
-            item = m_modelSrvRecords->item(i, 1)->text().append(NEWLINE);
-            if(!itemSet.contains(item)){
-                itemSet.insert(item);
-                clipboardData.append(item);
-            }
-        }
-        break;
-    default:
-        break;
     }
-    clipboard->setText(clipboardData);
 }
 
 void DnsRecords::onCopyResultsSrvRecords(QItemSelectionModel *selectionModel){

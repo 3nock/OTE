@@ -56,7 +56,7 @@ void Otx::replyFinished(QNetworkReply *reply){
         QJsonObject jsonObject = jsonReply.object();
         QJsonArray passive_dns = jsonObject["passive_dns"].toArray();
         foreach(const QJsonValue &value, passive_dns)
-            emit scanResults(value["hostname"].toString());
+            emit subdomain(value["hostname"].toString());
     }
     reply->deleteLater();
     emit quitThread();

@@ -55,11 +55,11 @@ void ZoomEye::replyFinished(QNetworkReply *reply){
         if(jsonReply.object()["total"].toInt()){
             QJsonArray matches = jsonReply.object()["matches"].toArray();
             foreach(const QJsonValue &value, matches)
-                emit scanResults(value.toObject()["rdns"].toString());
+                emit subdomain(value.toObject()["rdns"].toString());
             /*
                 IP
             foreach(const QJsonValue &value, matches)
-                emit scanResults(value.toObject()["ip"].toString());
+                emit subdomain(value.toObject()["ip"].toString());
 
                 ASN & ORGANIZATION
             foreach(const QJsonValue &value, matches){

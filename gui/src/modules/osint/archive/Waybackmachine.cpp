@@ -49,7 +49,7 @@ void Waybackmachine::replyFinished(QNetworkReply *reply){
         QJsonArray mainArray = jsonReply.array();
         mainArray.removeFirst();
         foreach(const QJsonValue &value, mainArray)
-            emit scanResults(value.toArray()[0].toString());
+            emit subdomain(value.toArray()[0].toString());
     }
     reply->deleteLater();
     emit quitThread();

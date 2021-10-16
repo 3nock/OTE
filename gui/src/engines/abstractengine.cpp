@@ -4,38 +4,90 @@
 /*
  * use DNSRECORDS & SRVRECORDS for engineNames
  */
-void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice){
+void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice, PROXYMODEL_TYPE proxyModelType){
     QSortFilterProxyModel *model = nullptr;
     QString item;
-    ///
-    /// engine targets are from...
-    ///
-    switch(engineName){
-    case ENGINE::OSINT:
-        model = resultsModel->proxy->osint;
+
+
+    switch (proxyModelType) {
+
+    case subdomainIpProxy:
+        switch(engineName){
+            case ENGINE::OSINT:
+                model = result->osint->subdomainIpProxy;
+                break;
+            case ENGINE::BRUTE:
+                model = result->brute->subdomainIpProxy;
+                break;
+            case ENGINE::ACTIVE:
+                model = result->active->subdomainIpProxy;
+                break;
+            case ENGINE::IP:
+                model = result->ip->subdomainIpProxy;
+                break;
+            default:
+                return;
+        }
+        for(int i = 0; i < model->rowCount(); i++)
+        {
+            if(choice == CHOICE::subdomain)
+                item = model->data(model->index(i, 0)).toString();
+            if(choice == CHOICE::ip){
+                item = model->data(model->index(i, 1)).toString();
+            }
+            targets->add(item);
+        }
+        return;
+
+    case subdomainProxy:
+        model = result->osint->subdomainProxy;
+        for(int i = 0; i < model->rowCount(); i++)
+        {
+            ///
+            /// only subdomains...
+            ///
+            item = model->data(model->index(i, 0)).toString();
+            targets->add(item);
+        }
+        return;
+
+    case ipProxy:
+        model = result->osint->ipProxy;
+        for(int i = 0; i < model->rowCount(); i++)
+        {
+            ///
+            /// only ip-addresses...
+            ///
+            item = model->data(model->index(i, 1)).toString();
+            targets->add(item);
+        }
         break;
-    case ENGINE::BRUTE:
-        model = resultsModel->proxy->brute;
-        break;
-    case ENGINE::ACTIVE:
-        model = resultsModel->proxy->active;
-        break;
-    case ENGINE::IP:
-        model = resultsModel->proxy->ip;
-        break;
-    case ENGINE::RECORDS:
+
+    case srvProxy:
+        model = result->records->srvProxy;
+        for(int i = 0; i < model->rowCount(); i++)
+        {
+            ///
+            /// only hostnames...
+            ///
+            item = model->data(model->index(i, 1)).toString();
+            targets->add(item);
+        }
+        return;
+
+    case dnsProxy:
         /*
         model = resultsModel->proxy->dnsrecords;
         for(int i = 0; i < model->rowCount(); i++)
         {
             for(int j = 0; j < model->item(i)->rowCount(); j++)
             {
-                if(choice == CHOICE::susbdomains && (model->item(i)->child(j)->text() == "CNAME" || model->item(i)->child(j)->text() == "MX" || model->item(i)->child(j)->text() == "NS"))
+                if(choice == CHOICE::subdomain && (model->item(i)->child(j)->text() == "CNAME" || model->item(i)->child(j)->text() == "MX" || model->item(i)->child(j)->text() == "NS"))
                 {
                     for(int k = 0; k < model->item(i)->child(j)->rowCount(); k++)
                         targets->add(model->item(i)->child(j)->child(k)->text());
                 }
-                if(choice == CHOICE::ipaddress && (model->item(i)->child(j)->text() == "A" || model->item(i)->child(j)->text() == "AAAA"))
+                if(choice == CHOICE::ip && (model->item(i)->child(j)->text() == "A" || model->item(i)->child(j)->text() == "AAAA"))
                 {
                     for(int k = 0; k < model->item(i)->child(j)->rowCount(); k++)
                         targets->add(model->item(i)->child(j)->child(k)->text());
@@ -43,29 +95,10 @@ void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice){
             }
         }
         */
-        ///
-        /// for srv records dont have ip-address...
-        ///
-        if(choice == CHOICE::ipaddress)
-            return;
-        model = resultsModel->proxy->srvrecords;
-        for(int i = 0; i < model->rowCount(); i++)
-            targets->add(model->data(model->index(i, 1)).toString());
         return;
+
     default:
         break;
-    }
-    ///
-    /// for any other engine...
-    ///
-    for(int i = 0; i < model->rowCount(); i++)
-    {
-        if(choice == CHOICE::susbdomains)
-            item = model->data(model->index(i, 0)).toString();
-        if(choice == CHOICE::ipaddress){
-            item = model->data(model->index(i, 1)).toString();
-        }
-        targets->add(item);
     }
 }
 

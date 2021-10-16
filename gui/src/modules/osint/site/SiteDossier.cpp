@@ -53,9 +53,9 @@ void SiteDossier::getSubdomains(GumboNode *node){
             if(tiChild->type == GUMBO_NODE_ELEMENT && tiChild->v.element.tag == GUMBO_TAG_A){
                 GumboNode *link = static_cast<GumboNode*>(tiChild->v.element.children.data[0]);
                 if(link->type == GUMBO_NODE_TEXT){
-                    QString subdomain = QString::fromUtf8(link->v.text.text);
-                    subdomain = subdomain.remove(0, 7).remove("/");
-                    emit scanResults(subdomain);
+                    QString item = QString::fromUtf8(link->v.text.text);
+                    item = item.remove(0, 7).remove("/");
+                    emit subdomain(item);
                 }
             }
         }

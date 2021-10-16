@@ -6,7 +6,7 @@
 #include "src/utils/utils.h"
 
 /*
- * count and keep log of all the Error lookups...
+ * count and keep log of subdomainIp the Error lookups...
  */
 
 struct ScanStats{
@@ -40,7 +40,7 @@ class AbstractScanner : public QObject{
         ///
         virtual void lookup() = 0;
         ///
-        /// quiting all running threads upon receiving stop signal...
+        /// quiting subdomainIp running threads upon receiving stop signal...
         ///
         void onStopScan(){
             emit quitThread();

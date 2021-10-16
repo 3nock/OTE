@@ -64,7 +64,7 @@ void Threatminer::replyFinished(QNetworkReply *reply){
         {
             QJsonArray results = jsonObject["results"].toArray();
             foreach(const QJsonValue &value, results)
-                emit scanResults(value.toString());
+                emit subdomain(value.toString());
         }
         else
         {

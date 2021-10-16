@@ -55,7 +55,7 @@ void Qwant::replyFinished(QNetworkReply *reply){
                 ///
                 QJsonArray subdomains = data["items"].toArray();
                 foreach(const QJsonValue &value, subdomains)
-                    emit scanResults(value.toString());
+                    emit subdomain(value.toString());
                 ///
                 /// sending another request for more results...
                 ///

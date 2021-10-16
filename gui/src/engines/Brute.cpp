@@ -3,14 +3,21 @@
 //...
 #include <QDateTime>
 #include <QClipboard>
+
 /*
+ * option to resolve both A & AAAA, 3 models, one for A one for AAAA & one for A&AAAA
+ *
+ * {"www", "online", "webserver", "ns", "ns1", "mail", "smtp", "webmail", "shop", "dev",
+            "prod", "test", "vpn", "ftp", "ssh", "secure", "whm", "admin", "webdisk", "mobile",
+            "remote", "server", "cpanel", "cloud", "autodiscover", "api", "m", "blog"}
+
  * homoglyphs - in wordlist creation...
  * many sites are created from homoglyphs of existing ones
  * eg example.com ==> exannple.com, exampl3.com, exqmple.com, exampls.com, exampke.com
  *
  * use a hash-table instead of QSet to to save already present data
  *
- * have a tab to put all info/issue definitions,eg asn numbers and their respective
+ * have a tab to put subdomainIp info/issue definitions,eg asn numbers and their respective
  * owner, ip's and their respective owners...
  *
  *
@@ -30,7 +37,7 @@
 
 /*
 
-  add an advanced option that resolves an item on wordlist with all nameservers..
+  add an advanced option that resolves an item on wordlist with subdomainIp nameservers..
   first obtains the server from the domain name, then uses those nameservers as default nameservers
   for the scan...
 
@@ -45,7 +52,7 @@
 
 /*
 
- create a notes tab that takes all notes for the related scans of the project...
+ create a notes tab that takes subdomainIp notes for the related scans of the project...
  each new domain enumerated and its x-stics are to be recorded...
  use of wildcard in each phase...
 */
@@ -58,12 +65,10 @@
  *
  */
 
-Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
-    AbstractEngine(parent, resultsModel, status),
+Brute::Brute(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, resultsModel, project, status),
     ui(new Ui::Brute),
-    m_scanArguments(new brute::ScanArguments),
-    m_model(resultsModel->brute),
-    m_proxyModel(resultsModel->proxy->brute)
+    m_scanArguments(new brute::ScanArguments)
 {
     ui->setupUi(this);
     ///
@@ -92,19 +97,19 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, Status *status) :
     ui->buttonFilter->hide();
     ui->comboBoxFilter->hide();
     ///
-    /// equally seperate the widgets...
+    /// equsubdomainIpy seperate the widgets...
     ///
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
     //...
-    m_model->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-    ui->tableViewResults->setModel(m_proxyModel);
+    result->brute->subdomainIp->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    ui->tableViewResults->setModel(result->brute->subdomainIpProxy);
     ///
     /// ...
     ///
     this->connectActions();
-    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModel->setRecursiveFilteringEnabled(true);
+    result->brute->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    result->brute->subdomainIpProxy->setRecursiveFilteringEnabled(true);
 }
 Brute::~Brute(){
     delete m_scanArguments;
@@ -126,7 +131,7 @@ void Brute::onErrorLog(QString log){
 
 void Brute::on_buttonStart_clicked(){
     ///
-    /// checking if all requirements are satisfied before scan if not prompt error
+    /// checking if subdomainIp requirements are satisfied before scan if not prompt error
     /// then exit function...
     ///
     if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
@@ -224,7 +229,7 @@ void Brute::stopScan(){
 void Brute::pauseScan(){
     ///
     /// if the scan was already paused, then this current click is to
-    /// Resume the scan, just call the startScan, with the same arguments and
+    /// Resume the scan, just csubdomainIp the startScan, with the same arguments and
     /// it will continue at where it ended...
     ///
     if(status->brute->isPaused){
@@ -253,23 +258,23 @@ void Brute::connectActions(){
     ///
     /// SAVE...
     ///
-    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::susbdomains);});
-    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ipaddress);});
-    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::all);});
+    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomain);});
+    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ip);});
+    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomainIp);});
     ///
     /// COPY...
     ///
-    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::susbdomains);});
-    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ipaddress);});
-    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::all);});
+    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomain);});
+    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ip);});
+    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomainIp);});
     ///
     /// SUBDOMAINS AND IPS...
     ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::BRUTE, CHOICE::ipaddress); emit changeTabToIp();});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::BRUTE, CHOICE::susbdomains); emit changeTabToRecords();});
+    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::BRUTE, CHOICE::ip, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToIp();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::BRUTE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::BRUTE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::BRUTE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::BRUTE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToRecords();});
 
     /***** For Right CLick *****/
     ///
@@ -350,23 +355,23 @@ void Brute::onScanResult(QString subdomain, QString ipAddress, QString target){
     ///
     /// save to brute model...
     ///
-    m_model->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ipAddress));
-    ui->labelResultsCount->setNum(m_model->rowCount());
+    result->brute->subdomainIp->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ipAddress));
+    ui->labelResultsCount->setNum(result->brute->subdomainIp->rowCount());
     ///
     /// save to Project model...
     ///
     if(m_scanArguments->tldBrute){
-        resultsModel->project->addTLD(QStringList()<<subdomain<<ipAddress<<target);
+        project->addActiveTLD(QStringList()<<subdomain<<ipAddress<<target);
     }
     if(m_scanArguments->subBrute){
-        resultsModel->project->addSubdomain(QStringList()<<subdomain<<ipAddress<<target);
+        project->addActiveSubdomain(QStringList()<<subdomain<<ipAddress<<target);
     }
 }
 
 void Brute::onScanThreadEnded(){
     status->brute->activeThreads--;
     ///
-    /// if all Scan Threads have finished...
+    /// if subdomainIp Scan Threads have finished...
     ///
     if(status->brute->activeThreads == 0)
     {
@@ -409,9 +414,9 @@ void Brute::onClearResults(){
     /// clear the results...
     ///
     m_subdomainsSet.clear();
-    m_model->clear();
+    result->brute->subdomainIp->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    result->brute->subdomainIp->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
     ///
     /// clear the progressbar...
     ui->progressBar->clearMask();
@@ -465,7 +470,7 @@ void Brute::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(m_model->rowCount() < 1){
+    if(result->brute->subdomainIp->rowCount() < 1){
         return;
     }
     ///
@@ -582,30 +587,30 @@ void Brute::onSaveResults(CHOICE choice){
     /// choice of item to save...
     ///
     switch(choice){
-    case CHOICE::susbdomains:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::subdomain:
+        for(int i = 0; i != result->brute->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
+            item = result->brute->subdomainIpProxy->data(result->brute->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
             }
         }
         break;
-    case CHOICE::ipaddress:
-        for(int i = 0; i != m_model->rowCount(); ++i)
+    case CHOICE::ip:
+        for(int i = 0; i != result->brute->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
+            item = result->brute->subdomainIpProxy->data(result->brute->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
             }
         }
         break;
-    case CHOICE::all:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::subdomainIp:
+        for(int i = 0; i != result->brute->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+":"+m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
+            item = result->brute->subdomainIpProxy->data(result->brute->subdomainIpProxy->index(i, 0)).toString()+":"+result->brute->subdomainIpProxy->data(result->brute->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
@@ -658,30 +663,30 @@ void Brute::onCopyResults(CHOICE choice){
     /// type of item to save...
     ///
     switch(choice){
-    case CHOICE::susbdomains:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::subdomain:
+        for(int i = 0; i != result->brute->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString().append(NEWLINE);
+            item = result->brute->subdomainIpProxy->data(result->brute->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
             }
         }
         break;
-    case CHOICE::ipaddress:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::ip:
+        for(int i = 0; i != result->brute->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
+            item = result->brute->subdomainIpProxy->data(result->brute->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
             }
         }
         break;
-    case CHOICE::all:
-        for(int i = 0; i != m_proxyModel->rowCount(); ++i)
+    case CHOICE::subdomainIp:
+        for(int i = 0; i != result->brute->subdomainIpProxy->rowCount(); ++i)
         {
-            item = m_proxyModel->data(m_proxyModel->index(i, 0)).toString()+"|"+m_proxyModel->data(m_proxyModel->index(i, 1)).toString().append(NEWLINE);
+            item = result->brute->subdomainIpProxy->data(result->brute->subdomainIpProxy->index(i, 0)).toString()+"|"+result->brute->subdomainIpProxy->data(result->brute->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
@@ -715,7 +720,7 @@ void Brute::onCopyResults(QItemSelectionModel *selectionModel){
 
 void Brute::on_buttonFilter_clicked(){
     QString filterKeyword = ui->lineEditFilter->text();
-    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
-    m_proxyModel->setFilterRegExp(filterKeyword);
-    ui->tableViewResults->setModel(m_proxyModel);
+    result->brute->subdomainIpProxy->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+    result->brute->subdomainIpProxy->setFilterRegExp(filterKeyword);
+    ui->tableViewResults->setModel(result->brute->subdomainIpProxy);
 }

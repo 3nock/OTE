@@ -52,7 +52,7 @@ void GoogleCert::replyFinished(QNetworkReply *reply){
             QString intValue2 = value.toArray()[4].toString();
             QString shaValue = value.toArray()[5].toString();
             */
-            emit scanResults(hostname);
+            emit subdomain(hostname);
         }
         ///
         /// getting the token...

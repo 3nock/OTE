@@ -14,7 +14,10 @@ class Ip : public AbstractEngine{
         Q_OBJECT
 
     public:
-        Ip(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
+        Ip(QWidget *parent = nullptr,
+           ResultsModel *resultsModel = nullptr,
+           ProjectDataModel *project = nullptr,
+           Status *status = nullptr);
         ~Ip();
 
     public slots:
@@ -26,9 +29,9 @@ class Ip : public AbstractEngine{
     private slots:
         void onClearResults();
         void onShowFilter(bool);
-        void onSaveResults(CHOICE);
+        void onSaveResults(CHOICE, PROXYMODEL_TYPE);
         void onSaveResults(QItemSelectionModel*);
-        void onCopyResults(CHOICE);
+        void onCopyResults(CHOICE, PROXYMODEL_TYPE);
         void onCopyResults(QItemSelectionModel*);
         ///
         /// ....
@@ -44,9 +47,7 @@ class Ip : public AbstractEngine{
 
 private:
         Ui::Ip *ui;
-        ip::ScanArguments *m_scanArguments;
-        QStandardItemModel *m_model;
-        QSortFilterProxyModel *m_proxyModel;
+        ipEngine::ScanArguments *m_scanArguments;
         void stopScan();
         void startScan();
         void pauseScan();

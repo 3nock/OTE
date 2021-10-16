@@ -52,9 +52,9 @@ void DogPile::getLinks(GumboNode *node){
         {
             GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
             if(child->type == GUMBO_NODE_TEXT){
-                QString subdomain = QString::fromUtf8(child->v.text.text);
-                subdomain = subdomain.split("/")[0];
-                emit scanResults(subdomain);
+                QString item = QString::fromUtf8(child->v.text.text);
+                item = item.split("/")[0];
+                emit subdomain(item);
             }
         }
     }

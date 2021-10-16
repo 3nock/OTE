@@ -46,11 +46,11 @@ void Dnsbufferoverun::replyFinished(QNetworkReply *reply){
 
         QJsonArray FDNS_A = jsonObject["FDNS_A"].toArray();
         foreach(const QJsonValue &value, FDNS_A)
-            emit scanResults(value.toString());
+            emit subdomain(value.toString());
 
         QJsonArray RDNS = jsonObject["RDNS"].toArray();
         foreach(const QJsonValue &value, RDNS)
-            emit scanResults(value.toString());
+            emit subdomain(value.toString());
     }
     reply->deleteLater();
     emit quitThread();

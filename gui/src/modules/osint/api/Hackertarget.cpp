@@ -52,8 +52,8 @@ void Hackertarget::replyFinished(QNetworkReply *reply){
 
         QString results = reply->readAll();
         QStringList subdomainList = results.split("\n");
-        foreach(const QString &subdomain, subdomainList)
-            emit scanResults(subdomain);
+        foreach(const QString &item, subdomainList)
+            emit subdomain(item);
     }
     reply->deleteLater();
     emit quitThread();

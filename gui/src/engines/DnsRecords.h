@@ -13,7 +13,10 @@ class DnsRecords : public AbstractEngine{
     Q_OBJECT
 
     public:
-        DnsRecords(QWidget *parent = nullptr, ResultsModel *resultsModel = nullptr, Status *status = nullptr);
+        DnsRecords(QWidget *parent = nullptr,
+                   ResultsModel *resultsModel = nullptr,
+                   ProjectDataModel *project = nullptr,
+                   Status *status = nullptr);
         ~DnsRecords();
 
     public slots:
@@ -52,10 +55,6 @@ class DnsRecords : public AbstractEngine{
 private:
         Ui::DnsRecords *ui;
         records::ScanArguments* m_scanArguments;
-        QStandardItemModel *m_modelDnsRecords;
-        QStandardItemModel *m_modelSrvRecords;
-        QSortFilterProxyModel *m_proxyModelDnsRecords;
-        QSortFilterProxyModel *m_proxyModelSrvRecords;
         void stopScan();
         void startScan();
         void pauseScan();

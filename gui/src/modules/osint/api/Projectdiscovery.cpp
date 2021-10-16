@@ -45,10 +45,10 @@ void Projectdiscovery::replyFinished(QNetworkReply *reply){
         if(error.isNull() || error.isEmpty()){
             QJsonArray subdomainList = jsonObject["subdomains"].toArray();
             foreach(const QJsonValue &value, subdomainList)
-                emit scanResults(value.toString());
+                emit subdomain(value.toString());
         }
         else{
-            emit scanResults(error);
+            emit subdomain(error);
         }
     }
     else

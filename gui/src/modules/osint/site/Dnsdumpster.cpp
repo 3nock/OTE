@@ -107,7 +107,7 @@ void Dnsdumpster::getSubdomains(GumboNode *node){
             {
                 GumboNode *tdChild = static_cast<GumboNode*>(node->v.element.children.data[i]);
                 if(tdChild->type == GUMBO_NODE_TEXT)
-                    emit scanResults(QString::fromUtf8(tdChild->v.text.text));
+                    emit subdomain(QString::fromUtf8(tdChild->v.text.text));
 
                 ///
                 /// if the particular subdomain has any banner...
@@ -138,7 +138,7 @@ void Dnsdumpster::getSubdomains(GumboNode *node){
             {
                 GumboNode *td = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 if(td->type == GUMBO_NODE_TEXT)
-                    emit scanResults(QString::fromUtf8(td->v.text.text));
+                    emit subdomain(QString::fromUtf8(td->v.text.text));
             }
         }
         */

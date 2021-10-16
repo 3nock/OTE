@@ -4,7 +4,7 @@
 #include "AbstractScanner.h"
 #include <QHostInfo>
 
-namespace ip{
+namespace ipEngine{
 
 struct ScanArguments{
     QStringList targetList;
@@ -19,7 +19,7 @@ class Scanner : public AbstractScanner{
     Q_OBJECT
 
     public:
-        Scanner(ScanConfig *scanConfig, ip::ScanArguments *scanArguments);
+        Scanner(ScanConfig *scanConfig, ipEngine::ScanArguments *scanArguments);
         ~Scanner() override;
 
     private slots:
@@ -34,7 +34,7 @@ class Scanner : public AbstractScanner{
         int m_currentTargetToEnumerate = 0;
         //...
         ScanConfig *m_scanConfig;
-        ip::ScanArguments *m_scanArguments;
+        ipEngine::ScanArguments *m_scanArguments;
         //...
         QHostInfo *hostInfo;
 };

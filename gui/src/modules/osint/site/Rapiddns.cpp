@@ -46,9 +46,9 @@ void Rapiddns::getSubdomains(GumboNode *node){
             if(trNode->type == GUMBO_NODE_ELEMENT && trNode->v.element.tag == GUMBO_TAG_TR && trNode->v.element.children.length > 1){
                 GumboNode *td = static_cast<GumboNode*>(trNode->v.element.children.data[3]);
                 if(td->type == GUMBO_NODE_ELEMENT && td->v.element.tag == GUMBO_TAG_TD && td->v.element.children.length >0){
-                    GumboNode *subdomain = static_cast<GumboNode*>(td->v.element.children.data[0]);
-                    if(subdomain->type == GUMBO_NODE_TEXT)
-                        emit scanResults(QString::fromUtf8(subdomain->v.text.text));
+                    GumboNode *item = static_cast<GumboNode*>(td->v.element.children.data[0]);
+                    if(item->type == GUMBO_NODE_TEXT)
+                        emit subdomain(QString::fromUtf8(item->v.text.text));
                 }
             }
         }

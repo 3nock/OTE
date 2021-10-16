@@ -59,8 +59,8 @@ void Certspotter::replyFinished(QNetworkReply *reply){
         {
             certObj = value.toObject();
             dns_names = certObj["dns_names"].toArray();
-            foreach(const QJsonValue &subdomain, dns_names)
-                emit scanResults(subdomain.toString());
+            foreach(const QJsonValue &item, dns_names)
+                emit subdomain(item.toString());
         }
     }
     reply->deleteLater();

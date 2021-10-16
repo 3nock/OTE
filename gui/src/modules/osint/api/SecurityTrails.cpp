@@ -5,7 +5,7 @@
 #include <QJsonArray>
 
 /*
- * Limited to 2000 results for the Free plan and to 10000 for all paid subscriptions.
+ * Limited to 2000 results for the Free plan and to 10000 for subdomainIp paid subscriptions.
  */
 SecurityTrails::SecurityTrails(ScanArgs *args):
     AbstractOsintModule(args)
@@ -75,7 +75,7 @@ void SecurityTrails::replyFinished(QNetworkReply *reply){
         QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
         QJsonArray subdomainList = jsonReply.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomainList)
-            emit scanResults(value.toString().append(".").append(args->target));
+            emit subdomain(value.toString().append(".").append(args->target));
     }
     else{
         emit errorLog(reply->errorString());

@@ -6,12 +6,14 @@
 #include <QFile>
 
 /*
+ * option to remove all passives that are in active...
+ *
  * produce transforms-like graphs
  * that can fetch more data/info by clicking on the node..
  *
  */
-Project::Project(QWidget *parent, ResultsModel *resultsModel) :QWidget(parent), ui(new Ui::Project),
-    m_resultsModel(resultsModel),
+Project::Project(QWidget *parent, ProjectDataModel *projectDataModel) :QWidget(parent), ui(new Ui::Project),
+    m_projectDataModel(projectDataModel),
     m_proxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
@@ -27,7 +29,7 @@ Project::Project(QWidget *parent, ResultsModel *resultsModel) :QWidget(parent), 
     ///
     //...
     //...
-    m_proxyModel->setSourceModel(m_resultsModel->project->projectModel);
+    m_proxyModel->setSourceModel(m_projectDataModel->projectModel);
     m_proxyModel->setRecursiveFilteringEnabled(true);
     //...
     ui->treeView->setModel(m_proxyModel);

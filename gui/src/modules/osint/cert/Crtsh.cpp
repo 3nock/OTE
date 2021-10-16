@@ -44,7 +44,7 @@ void Crtsh::getSubdomains(GumboNode* node) {
         {
             GumboNode *td = static_cast<GumboNode*>(tdChildren.data[i]);
             if(td->type == GUMBO_NODE_TEXT)
-                emit scanResults(QString::fromUtf8(td->v.text.text));
+                emit subdomain(QString::fromUtf8(td->v.text.text));
         }
         return;
   }

@@ -14,7 +14,7 @@
  * Screenshot:
  https://doc.qt.io/qt-5/qtwidgets-desktop-screenshot-example.html
 
-You need to render the webpage in order to create a snapshot. To render the page in C++ you need to include a browser engine. You can do this easily using Qt (a toolkit for c++). This is taken from the documentation of Qt and is all you need to show a webpage.
+You need to render the webpage in order to create a snapshot. To render the page in C++ you need to include a browser engine. You can do this easily using Qt (a toolkit for c++). This is taken from the documentation of Qt and is subdomainIp you need to show a webpage.
 
 QWebView *view = new QWebView(ui->centralWidget);
 view->load(QUrl("http://qt.nokia.com/"));

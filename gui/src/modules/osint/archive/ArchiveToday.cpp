@@ -85,7 +85,7 @@ void ArchiveToday::replyFinished(QNetworkReply *reply){
             emit quitThread();
             return;
         }
-        emit scanResults(QString::fromUtf8(reply->readAll()));
+        emit subdomain(QString::fromUtf8(reply->readAll()));
     }
     else{
         emit errorLog(reply->errorString());
