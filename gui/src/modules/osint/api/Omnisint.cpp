@@ -7,8 +7,8 @@ Omnisint::Omnisint(ScanArgs *args):
     AbstractOsintModule(args)
 {
     ;
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Omnisint::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Omnisint::replyFinished);
 }
 Omnisint::~Omnisint(){
     delete manager;

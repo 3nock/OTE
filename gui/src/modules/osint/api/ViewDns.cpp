@@ -10,8 +10,8 @@
 ViewDns::ViewDns(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &ViewDns::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinished);
     ///
     /// get api key...
     ///

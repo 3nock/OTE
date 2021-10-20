@@ -22,6 +22,37 @@ OsintModulesWidget::~OsintModulesWidget(){
 }
 
 void OsintModulesWidget::getChoosenModules(OsintModules &modules){
+    /*
+     * ...
+     */
+    if(ui->moduleAnubis->isChecked()){
+        modules.anubis = true;
+    }else{
+        modules.anubis = false;
+    }
+    if(ui->moduleBgpview->isChecked()){
+        modules.bgpview = true;
+    }else{
+        modules.bgpview = false;
+    }
+    if(ui->moduleBinaryEdge->isChecked()){
+        modules.binaryEdge = true;
+    }else{
+        modules.binaryEdge = false;
+    }
+    if(ui->moduleHackerTargetFree->isChecked()){
+        modules.hackertargetfree = true;
+    }else{
+        modules.hackertargetfree = false;
+    }
+    if(ui->moduleHackerTargetPaid->isChecked()){
+        modules.hackertargetpaid = true;
+    }else{
+        modules.hackertargetpaid = false;
+    }
+    /*
+     * ...
+     */
     if(ui->moduleCensys->isChecked()){
         modules.censysFree = true;
     }else{
@@ -111,11 +142,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
         modules.dnsbufferoverrun = true;
     }else{
         modules.dnsbufferoverrun = false;
-    }
-    if(ui->moduleHackertarget->isChecked()){
-        modules.hackertarget = true;
-    }else{
-        modules.hackertarget = false;
     }
     if(ui->modulePkey->isChecked()){
         modules.pkey = true;
@@ -221,6 +247,37 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     ///
     /// reading from file...
     ///
+    /*
+     * ...
+     */
+    if(settings.value("anubis").toString() == TRUE){
+        ui->moduleAnubis->setChecked(true);
+    }else{
+        ui->moduleAnubis->setChecked(false);
+    }
+    if(settings.value("bgpview").toString() == TRUE){
+        ui->moduleBgpview->setChecked(true);
+    }else{
+        ui->moduleBgpview->setChecked(false);
+    }
+    if(settings.value("binaryedge").toString() == TRUE){
+        ui->moduleBinaryEdge->setChecked(true);
+    }else{
+        ui->moduleBinaryEdge->setChecked(false);
+    }
+    if(settings.value("hackertargetfree").toString() == TRUE){
+        ui->moduleHackerTargetFree->setChecked(true);
+    }else{
+        ui->moduleHackerTargetFree->setChecked(false);
+    }
+    if(settings.value("hackertargetpaid").toString() == TRUE){
+        ui->moduleHackerTargetPaid->setChecked(true);
+    }else{
+        ui->moduleHackerTargetPaid->setChecked(false);
+    }
+    /*
+     * ...
+     */
     if(settings.value(OSINT_THREATMINER).toString() == TRUE){
         ui->moduleThreatminer->setChecked(true);
     }else{
@@ -326,11 +383,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleDnsbufferoverrun->setChecked(false);
     }
-    if(settings.value(OSINT_HACKERTARGET).toString() == TRUE){
-        ui->moduleHackertarget->setChecked(true);
-    }else{
-        ui->moduleHackertarget->setChecked(false);
-    }
     if(settings.value(OSINT_PKEY).toString() == TRUE){
         ui->modulePkey->setChecked(true);
     }else{
@@ -431,7 +483,32 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
     ///
     QSettings settings(currentPath+"/profiles.ini", QSettings::IniFormat);
     settings.beginGroup(profileName);
-    //...
+    /*
+     * ...
+     */
+    if(ui->moduleAnubis->isChecked()){
+        settings.setValue("anubis", TRUE);
+    }else{
+        settings.setValue("anubis", FALSE);
+    }
+    if(ui->moduleBgpview->isChecked()){
+        settings.setValue("bgpview", TRUE);
+    }else{
+        settings.setValue("bgpview", FALSE);
+    }
+    if(ui->moduleBinaryEdge->isChecked()){
+        settings.setValue("binaryedge", TRUE);
+    }else{
+        settings.setValue("binaryedge", FALSE);
+    }
+    if(ui->moduleHackerTargetFree->isChecked()){
+        settings.setValue("hackertargetfree", TRUE);
+    }else{
+        settings.setValue("hackertargetfree", FALSE);
+    }
+    /*
+     * ...
+     */
     if(ui->moduleCensys->isChecked()){
         settings.setValue(OSINT_CENSYS, TRUE);
     }else{
@@ -521,11 +598,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_DNSBUFFEROVERRUN, TRUE);
     }else{
         settings.setValue(OSINT_DNSBUFFEROVERRUN, FALSE);
-    }
-    if(ui->moduleHackertarget->isChecked()){
-        settings.setValue(OSINT_HACKERTARGET, TRUE);
-    }else{
-        settings.setValue(OSINT_HACKERTARGET, FALSE);
     }
     if(ui->modulePkey->isChecked()){
         settings.setValue(OSINT_PKEY, TRUE);

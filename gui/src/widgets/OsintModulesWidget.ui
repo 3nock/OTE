@@ -335,9 +335,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="moduleHackertarget">
+            <widget class="QCheckBox" name="moduleHackerTargetFree">
              <property name="text">
-              <string>HackerTarget</string>
+              <string>HackerTarget (Free)</string>
              </property>
             </widget>
            </item>
@@ -652,7 +652,7 @@
             <x>0</x>
             <y>0</y>
             <width>161</width>
-            <height>493</height>
+            <height>539</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -673,6 +673,13 @@
             <widget class="QCheckBox" name="moduleC99">
              <property name="text">
               <string>C99</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleHackerTargetPaid">
+             <property name="text">
+              <string>HackerTarget</string>
              </property>
             </widget>
            </item>
@@ -743,6 +750,13 @@
             <widget class="QCheckBox" name="moduleViewDns">
              <property name="text">
               <string>ViewDns</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleWebResolver">
+             <property name="text">
+              <string>WebResolver</string>
              </property>
             </widget>
            </item>

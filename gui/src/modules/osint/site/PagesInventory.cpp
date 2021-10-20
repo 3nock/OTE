@@ -8,8 +8,8 @@
 PagesInventory::PagesInventory(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &PagesInventory::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &PagesInventory::replyFinished);
 }
 PagesInventory::~PagesInventory(){
     delete manager;

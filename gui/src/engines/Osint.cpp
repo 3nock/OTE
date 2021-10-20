@@ -38,7 +38,8 @@
 #include "src/modules/osint/api/Sublist3r.h"
 #include "src/modules/osint/api/Threatminer.h"
 #include "src/modules/osint/api/Threatcrowd.h"
-#include "src/modules/osint/api/Hackertarget.h"
+#include "src/modules/osint/api/HackerTargetFree.h"
+#include "src/modules/osint/api/HackerTargetPaid.h"
 #include "src/modules/osint/api/Dnsbufferoverun.h"
 #include "src/modules/osint/api/Projectdiscovery.h"
 #include "src/modules/osint/api/Spyse.h"
@@ -65,6 +66,7 @@
 #define IP 2
 #define EMAIL 3
 #define URL 4
+#define ASN 5
 
 /* log on every scan each module its results count
  *
@@ -141,8 +143,9 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     result->osint->ip->setHorizontalHeaderLabels({"IpAddresses"});
     result->osint->email->setHorizontalHeaderLabels({"Emails"});
     result->osint->url->setHorizontalHeaderLabels({"Urls"});
+    result->osint->asn->setHorizontalHeaderLabels({"Asn", "Name"});
     //...
-    ui->tableViewResults->setModel(result->osint->subdomainProxy);
+    ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
     //...
     //ui->buttonPause->setDisabled(true);
     ui->buttonStop->setDisabled(true);
@@ -199,7 +202,7 @@ void Osint::onResultIp(QString ip){
     m_ipSet.insert(ip);
     if(m_ipSet.count() > prevSize){
         result->osint->ip->appendRow(new QStandardItem(ip));
-        project->addPassiveA({ip});
+        project->addPassiveIp({ip});
         ui->labelResultsCount->setNum(result->osint->ipProxy->rowCount());
     }
 }
@@ -221,6 +224,56 @@ void Osint::onResultUrl(QString url){
         result->osint->url->appendRow(new QStandardItem(url));
         project->addPassiveUrl({url});
         ui->labelResultsCount->setNum(result->osint->urlProxy->rowCount());
+    }
+}
+
+void Osint::onResultAsn(QString asnValue, QString asnName){
+    int prevSize = m_asnSet.count();
+    m_asnSet.insert(asnValue);
+    if(m_asnSet.count() > prevSize){
+        result->osint->asn->appendRow({new QStandardItem(asnValue), new QStandardItem(asnName)});
+        project->addPassiveAsn({asnValue, asnName});
+        ui->labelResultsCount->setNum(result->osint->asnProxy->rowCount());
+    }
+}
+
+void Osint::onResultA(QString A){
+    int prevSize = m_ipSet.count();
+    m_ipSet.insert(A);
+    if(m_ipSet.count() > prevSize){
+        result->osint->ip->appendRow(new QStandardItem(A));
+        project->addPassiveA({A});
+        ui->labelResultsCount->setNum(result->osint->ipProxy->rowCount());
+    }
+}
+
+void Osint::onResultAAAA(QString AAAA){
+    int prevSize = m_ipSet.count();
+    m_ipSet.insert(AAAA);
+    if(m_ipSet.count() > prevSize){
+        result->osint->ip->appendRow(new QStandardItem(AAAA));
+        project->addPassiveAAAA({AAAA});
+        ui->labelResultsCount->setNum(result->osint->ipProxy->rowCount());
+    }
+}
+
+void Osint::onResultMX(QString MX){
+    int prevSize = m_subdomainSet.count();
+    m_subdomainSet.insert(MX);
+    if(m_subdomainSet.count() > prevSize){
+        result->osint->subdomain->appendRow(new QStandardItem(MX));
+        project->addPassiveMX({MX});
+        ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
+    }
+}
+
+void Osint::onResultNS(QString NS){
+    int prevSize = m_subdomainSet.count();
+    m_subdomainSet.insert(NS);
+    if(m_subdomainSet.count() > prevSize){
+        result->osint->subdomain->appendRow(new QStandardItem(NS));
+        project->addPassiveNS({NS});
+        ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
     }
 }
 
@@ -250,13 +303,166 @@ void Osint::startScan(){
 
     ScanArgs *scanArgs = new ScanArgs;
     scanArgs->target = ui->lineEditTarget->text();
-    scanArgs->ip = false;
-    scanArgs->raw = false;
-    scanArgs->urls = false;
-    scanArgs->emails = false;
-    scanArgs->subdomains = false;
-    scanArgs->subdomainsAndIp = false;
+    scanArgs->inputDomain = true;
 
+    switch(ui->comboBoxOption->currentIndex()){
+    case 0:
+        scanArgs->outputSubdomainIp = true;
+        break;
+    case 1:
+        scanArgs->outputSubdomain = true;
+        break;
+    case 2:
+        scanArgs->outputIp = true;
+        break;
+    case 3:
+        scanArgs->outputEmail = true;
+        break;
+    case 4:
+        scanArgs->outputUrl = true;
+        break;
+    case 5:
+        scanArgs->outputAsn = true;
+    }
+
+    if(module.anubis)
+    {
+        Anubis *anubis = new Anubis(scanArgs);
+        QThread *cThread = new QThread(this);
+        anubis->Enumerator(cThread);
+        anubis->moveToThread(cThread);
+        //...
+        connect(anubis, &Anubis::subdomain, this, &Osint::onResultSubdomain);
+        connect(anubis, &Anubis::errorLog, this, &Osint::onErrorLog);
+        connect(anubis, &Anubis::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, anubis, &Anubis::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.bgpview){
+        Bgpview *bgpview = new Bgpview(scanArgs);
+        QThread *cThread = new QThread(this);
+        bgpview->Enumerator(cThread);
+        bgpview->moveToThread(cThread);
+        //...
+        connect(bgpview, &Bgpview::subdomain, this, &Osint::onResultSubdomain);
+        connect(bgpview, &Bgpview::ip, this, &Osint::onResultIp);
+        connect(bgpview, &Bgpview::ipA, this, &Osint::onResultA);
+        connect(bgpview, &Bgpview::ipAAAA, this, &Osint::onResultAAAA);
+        connect(bgpview, &Bgpview::email, this, &Osint::onResultEmail);
+        connect(bgpview, &Bgpview::asn, this, &Osint::onResultAsn);
+        connect(bgpview, &Bgpview::errorLog, this, &Osint::onErrorLog);
+        connect(bgpview, &Bgpview::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.binaryEdge){
+        BinaryEdge *binaryedge = new BinaryEdge(scanArgs);
+        QThread *cThread = new QThread(this);
+        binaryedge->Enumerator(cThread);
+        binaryedge->moveToThread(cThread);
+        //...
+        connect(binaryedge, &BinaryEdge::subdomain, this, &Osint::onResultSubdomain);
+        connect(binaryedge, &BinaryEdge::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(binaryedge, &BinaryEdge::ipA, this, &Osint::onResultA);
+        connect(binaryedge, &BinaryEdge::ipAAAA, this, &Osint::onResultAAAA);
+        connect(binaryedge, &BinaryEdge::NS, this, &Osint::onResultNS);
+        connect(binaryedge, &BinaryEdge::MX, this, &Osint::onResultMX);
+        connect(binaryedge, &BinaryEdge::errorLog, this, &Osint::onErrorLog);
+        connect(binaryedge, &BinaryEdge::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, binaryedge, &BinaryEdge::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.c99){
+        C99 *c99 = new C99(scanArgs);
+        QThread *cThread = new QThread(this);
+        c99->Enumerator(cThread);
+        c99->moveToThread(cThread);
+        //...
+        connect(c99, &C99::subdomain, this, &Osint::onResultSubdomain);
+        connect(c99, &C99::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(c99, &C99::ip, this, &Osint::onResultIp);
+        connect(c99, &C99::email, this, &Osint::onResultEmail);
+        connect(c99, &C99::url, this, &Osint::onResultUrl);
+        connect(c99, &C99::errorLog, this, &Osint::onErrorLog);
+        connect(c99, &C99::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, c99, &C99::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.dnsbufferoverrun)
+    {
+        Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(scanArgs);
+        QThread *cThread = new QThread(this);
+        dnsbufferoverun->Enumerator(cThread);
+        dnsbufferoverun->moveToThread(cThread);
+        //...
+        connect(dnsbufferoverun, &Dnsbufferoverun::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(dnsbufferoverun, &Dnsbufferoverun::subdomain, this, &Osint::onResultSubdomain);
+        connect(dnsbufferoverun, &Dnsbufferoverun::ip, this, &Osint::onResultIp);
+        connect(dnsbufferoverun, &Dnsbufferoverun::errorLog, this, &Osint::onErrorLog);
+        connect(dnsbufferoverun, &Dnsbufferoverun::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, dnsbufferoverun, &Dnsbufferoverun::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.github){
+        Github *github = new Github(scanArgs);
+        QThread *cThread = new QThread(this);
+        github->Enumerator(cThread);
+        github->moveToThread(cThread);
+        //...
+        connect(github, &Github::subdomain, this, &Osint::onResultSubdomain);
+        connect(github, &Github::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(github, &Github::ip, this, &Osint::onResultIp);
+        connect(github, &Github::email, this, &Osint::onResultEmail);
+        connect(github, &Github::url, this, &Osint::onResultUrl);
+        connect(github, &Github::errorLog, this, &Osint::onErrorLog);
+        connect(github, &Github::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, github, &Github::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.hackertargetfree)
+    {
+        HackerTargetFree *hackertarget = new HackerTargetFree(scanArgs);
+        QThread *cThread = new QThread(this);
+        hackertarget->Enumerator(cThread);
+        hackertarget->moveToThread(cThread);
+        //...
+        connect(hackertarget, &HackerTargetFree::subdomain, this, &Osint::onResultSubdomain);
+        connect(hackertarget, &HackerTargetFree::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(hackertarget, &HackerTargetFree::ip, this, &Osint::onResultIp);
+        connect(hackertarget, &HackerTargetFree::asn, this, &Osint::onResultAsn);
+        connect(hackertarget, &HackerTargetFree::errorLog, this, &Osint::onErrorLog);
+        connect(hackertarget, &HackerTargetFree::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, hackertarget, &HackerTargetFree::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(module.certspotter)
     {
         Certspotter *certspotter = new Certspotter(scanArgs);
@@ -357,69 +563,6 @@ void Osint::startScan(){
         connect(threatcrowd, &Threatcrowd::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, threatcrowd, &Threatcrowd::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.hackertarget)
-    {
-        Hackertarget *hackertarget = new Hackertarget(scanArgs);
-        QThread *cThread = new QThread(this);
-        hackertarget->Enumerator(cThread);
-        hackertarget->moveToThread(cThread);
-        //...
-        connect(hackertarget, &Hackertarget::subdomain, this, &Osint::onResultSubdomain);
-        connect(hackertarget, &Hackertarget::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(hackertarget, &Hackertarget::ip, this, &Osint::onResultIp);
-        connect(hackertarget, &Hackertarget::email, this, &Osint::onResultEmail);
-        connect(hackertarget, &Hackertarget::url, this, &Osint::onResultUrl);
-        connect(hackertarget, &Hackertarget::errorLog, this, &Osint::onErrorLog);
-        connect(hackertarget, &Hackertarget::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, hackertarget, &Hackertarget::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.dnsbufferoverrun)
-    {
-        Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(scanArgs);
-        QThread *cThread = new QThread(this);
-        dnsbufferoverun->Enumerator(cThread);
-        dnsbufferoverun->moveToThread(cThread);
-        //...
-        connect(dnsbufferoverun, &Dnsbufferoverun::subdomain, this, &Osint::onResultSubdomain);
-        connect(dnsbufferoverun, &Dnsbufferoverun::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(dnsbufferoverun, &Dnsbufferoverun::ip, this, &Osint::onResultIp);
-        connect(dnsbufferoverun, &Dnsbufferoverun::email, this, &Osint::onResultEmail);
-        connect(dnsbufferoverun, &Dnsbufferoverun::url, this, &Osint::onResultUrl);
-        connect(dnsbufferoverun, &Dnsbufferoverun::errorLog, this, &Osint::onErrorLog);
-        connect(dnsbufferoverun, &Dnsbufferoverun::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, dnsbufferoverun, &Dnsbufferoverun::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.anubis)
-    {
-        Anubis *anubis = new Anubis(scanArgs);
-        QThread *cThread = new QThread(this);
-        anubis->Enumerator(cThread);
-        anubis->moveToThread(cThread);
-        //...
-        connect(anubis, &Anubis::subdomain, this, &Osint::onResultSubdomain);
-        connect(anubis, &Anubis::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(anubis, &Anubis::ip, this, &Osint::onResultIp);
-        connect(anubis, &Anubis::email, this, &Osint::onResultEmail);
-        connect(anubis, &Anubis::url, this, &Osint::onResultUrl);
-        connect(anubis, &Anubis::errorLog, this, &Osint::onErrorLog);
-        connect(anubis, &Anubis::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, anubis, &Anubis::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -766,66 +909,6 @@ void Osint::startScan(){
         connect(censysfree, &CensysFree::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, censysfree, &CensysFree::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.bgpview){
-        Bgpview *bgpview = new Bgpview(scanArgs);
-        QThread *cThread = new QThread(this);
-        bgpview->Enumerator(cThread);
-        bgpview->moveToThread(cThread);
-        //...
-        connect(bgpview, &Bgpview::subdomain, this, &Osint::onResultSubdomain);
-        connect(bgpview, &Bgpview::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(bgpview, &Bgpview::ip, this, &Osint::onResultIp);
-        connect(bgpview, &Bgpview::email, this, &Osint::onResultEmail);
-        connect(bgpview, &Bgpview::url, this, &Osint::onResultUrl);
-        connect(bgpview, &Bgpview::errorLog, this, &Osint::onErrorLog);
-        connect(bgpview, &Bgpview::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.binaryEdge){
-        BinaryEdge *binaryedge = new BinaryEdge(scanArgs);
-        QThread *cThread = new QThread(this);
-        binaryedge->Enumerator(cThread);
-        binaryedge->moveToThread(cThread);
-        //...
-        connect(binaryedge, &BinaryEdge::subdomain, this, &Osint::onResultSubdomain);
-        connect(binaryedge, &BinaryEdge::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(binaryedge, &BinaryEdge::ip, this, &Osint::onResultIp);
-        connect(binaryedge, &BinaryEdge::email, this, &Osint::onResultEmail);
-        connect(binaryedge, &BinaryEdge::url, this, &Osint::onResultUrl);
-        connect(binaryedge, &BinaryEdge::errorLog, this, &Osint::onErrorLog);
-        connect(binaryedge, &BinaryEdge::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, binaryedge, &BinaryEdge::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.c99){
-        C99 *c99 = new C99(scanArgs);
-        QThread *cThread = new QThread(this);
-        c99->Enumerator(cThread);
-        c99->moveToThread(cThread);
-        //...
-        connect(c99, &C99::subdomain, this, &Osint::onResultSubdomain);
-        connect(c99, &C99::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(c99, &C99::ip, this, &Osint::onResultIp);
-        connect(c99, &C99::email, this, &Osint::onResultEmail);
-        connect(c99, &C99::url, this, &Osint::onResultUrl);
-        connect(c99, &C99::errorLog, this, &Osint::onErrorLog);
-        connect(c99, &C99::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, c99, &C99::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -1385,6 +1468,10 @@ void Osint::onClearResults(){
         result->osint->url->clear();
         result->osint->url->setHorizontalHeaderLabels({"Urls"});
         break;
+    case ASN:
+        result->osint->asn->clear();
+        result->osint->asn->setHorizontalHeaderLabels({"Asn", "Name"});
+        break;
     }
     ui->labelResultsCount->clear();
     ///
@@ -1418,6 +1505,7 @@ void Osint::connectActions(){
     connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomainIp, PROXYMODEL_TYPE::subdomainIpProxy);});
     connect(&actionSaveEmails, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::email, PROXYMODEL_TYPE::emailProxy);});
     connect(&actionSaveUrls, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::url, PROXYMODEL_TYPE::urlProxy);});
+    connect(&actionSaveAsns, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::asn, PROXYMODEL_TYPE::asnProxy);});
     //...
     connect(&actionSaveSubdomains_subdomain, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy);});
     connect(&actionSaveIpAddresses_ip, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ip, PROXYMODEL_TYPE::ipProxy);});
@@ -1430,6 +1518,7 @@ void Osint::connectActions(){
     connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomainIp, PROXYMODEL_TYPE::subdomainIpProxy);});
     connect(&actionCopyEmails, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::email, PROXYMODEL_TYPE::emailProxy);});
     connect(&actionCopyUrls, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::url, PROXYMODEL_TYPE::urlProxy);});
+    connect(&actionCopyAsns, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::asn, PROXYMODEL_TYPE::asnProxy);});
     //...
     connect(&actionCopySubdomains_subdomain, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy);});
     connect(&actionCopyIpAddresses_ip, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ip, PROXYMODEL_TYPE::ipProxy);});
@@ -1484,6 +1573,10 @@ void Osint::on_buttonAction_clicked(){
         if(result->osint->url->rowCount() < 1)
             return;
         break;
+    case ASN:
+        if(result->osint->asn->rowCount() < 1)
+            return;
+        break;
     }
 
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
@@ -1524,7 +1617,10 @@ void Osint::on_buttonAction_clicked(){
         saveMenu->addAction(&actionSaveUrls);
         copyMenu->addAction(&actionCopyUrls);
     }
-
+    if(option == ASN){
+        saveMenu->addAction(&actionSaveAsns);
+        copyMenu->addAction(&actionCopyAsns);
+    }
     Menu->addAction(&actionClearResults);
     Menu->addSeparator();
     Menu->addMenu(copyMenu);
@@ -1533,6 +1629,7 @@ void Osint::on_buttonAction_clicked(){
     if(option == IP)
         Menu->addAction(&actionSendToIp_ip);
     if(option == SUBDOMAINIP){
+        Menu->addAction(&actionSendToIp);
         Menu->addAction(&actionSendToOsint);
         Menu->addAction(&actionSendToBrute);
         Menu->addAction(&actionSendToActive);
@@ -1676,6 +1773,14 @@ void Osint::onSaveResults(CHOICE choice, PROXYMODEL_TYPE proxyType){
         }
         break;
 
+    case PROXYMODEL_TYPE::asnProxy:
+        for(int i = 0; i != result->osint->asnProxy->rowCount(); ++i)
+        {
+            item = result->osint->asnProxy->data(result->osint->asnProxy->index(i, 0)).toString().append(NEWLINE);
+            file.write(item.toUtf8());
+        }
+        break;
+
     default:
         break;
     }
@@ -1776,6 +1881,14 @@ void Osint::onCopyResults(CHOICE choice, PROXYMODEL_TYPE proxyType){
         }
         break;
 
+    case PROXYMODEL_TYPE::asnProxy:
+        for(int i = 0; i != result->osint->asnProxy->rowCount(); ++i)
+        {
+            item = result->osint->asnProxy->data(result->osint->asnProxy->index(i, 0)).toString().append(NEWLINE);
+            clipboardData.append(item);
+        }
+        break;
+
     default:
         break;
     }
@@ -1799,6 +1912,8 @@ void Osint::on_comboBoxOption_currentIndexChanged(int index){
     case SUBDOMAINIP:
         ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
         ui->labelResultsCount->setNum(result->osint->subdomainIpProxy->rowCount());
+        ui->comboBoxFilter->clear();
+        ui->comboBoxFilter->addItems({"Subdomain", "Ip"});
         ui->comboBoxFilter->show();
         break;
     case SUBDOMAIN:
@@ -1820,6 +1935,13 @@ void Osint::on_comboBoxOption_currentIndexChanged(int index){
         ui->tableViewResults->setModel(result->osint->urlProxy);
         ui->labelResultsCount->setNum(result->osint->urlProxy->rowCount());
         ui->comboBoxFilter->hide();
+        break;
+    case ASN:
+        ui->tableViewResults->setModel(result->osint->asnProxy);
+        ui->labelResultsCount->setNum(result->osint->asnProxy->rowCount());
+        ui->comboBoxFilter->clear();
+        ui->comboBoxFilter->addItems({"ASN", "Name"});
+        ui->comboBoxFilter->show();
         break;
     }
 }
@@ -1851,6 +1973,12 @@ void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
         result->osint->urlProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->urlProxy);
         ui->labelResultsCount->setNum(result->osint->urlProxy->rowCount());
+        break;
+    case ASN:
+        result->osint->asnProxy->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+        result->osint->asnProxy->setFilterRegExp(filterKeyword);
+        ui->tableViewResults->setModel(result->osint->asnProxy);
+        ui->labelResultsCount->setNum(result->osint->asnProxy->rowCount());
         break;
     }
 }

@@ -8,8 +8,8 @@
 Rapiddns::Rapiddns(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Rapiddns::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Rapiddns::replyFinished);
 }
 Rapiddns::~Rapiddns(){
     delete manager;

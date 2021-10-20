@@ -4,8 +4,8 @@
 Yahoo::Yahoo(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Yahoo::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Yahoo::replyFinished);
 }
 Yahoo::~Yahoo(){
     delete manager;

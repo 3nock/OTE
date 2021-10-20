@@ -3,12 +3,14 @@
 
 #include "../AbstractOsintModule.h"
 
+#define SUBDOMAIN 0
+
 namespace ModuleInfo {
     struct Anubis{
         QString name = "Anubis";
         QString url = "https://jldc.me/anubis/";
         QString summary = "Subdomain enumeration and information gathering tool";
-        QMap<QString, QString> flags = {{"subdomains", "domain name"}};
+        QMap<QString, QString> flags = {{"subdomain", "domain name"}};
     };
 }
 
@@ -20,7 +22,7 @@ class Anubis: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
 };
 
 #endif // ANUBIS_H

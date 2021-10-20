@@ -4,8 +4,8 @@
 Dnsdumpster::Dnsdumpster(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Dnsdumpster::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Dnsdumpster::replyFinished);
 }
 Dnsdumpster::~Dnsdumpster(){
     delete manager;

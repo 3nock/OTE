@@ -4,8 +4,8 @@
 Exalead::Exalead(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Exalead::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Exalead::replyFinished);
 }
 Exalead::~Exalead(){
     delete manager;

@@ -9,8 +9,8 @@
 Urlscan::Urlscan(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Urlscan::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinished);
 }
 Urlscan::~Urlscan(){
     delete manager;

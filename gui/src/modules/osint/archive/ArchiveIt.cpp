@@ -3,8 +3,8 @@
 ArchiveIt::ArchiveIt(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &ArchiveIt::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveIt::replyFinished);
 }
 ArchiveIt::~ArchiveIt(){
     delete manager;

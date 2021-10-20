@@ -11,8 +11,8 @@
 Qwant::Qwant(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Qwant::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Qwant::replyFinished);
 }
 Qwant::~Qwant(){
     delete manager;

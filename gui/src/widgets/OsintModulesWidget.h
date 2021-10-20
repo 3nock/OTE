@@ -13,7 +13,6 @@ struct OsintModules{
     bool sublist3r = false;
     bool threatminer = false;
     bool threatcrowd = false;
-    bool hackertarget = false;
     bool dnsbufferoverrun = false;
     bool anubis = false;
     bool projectdiscovery = false;
@@ -65,6 +64,9 @@ struct OsintModules{
     bool cloudflare = false;
     bool google = false;
     bool pentesttools = false;
+    bool hackertargetfree = false;
+    bool hackertargetpaid = false;
+    bool webresolver = false;
 };
 
 class OsintModulesWidget : public QWidget

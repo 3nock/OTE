@@ -12,8 +12,8 @@
 ZoomEye::ZoomEye(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &ZoomEye::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinished);
     ///
     /// get api key...
     ///

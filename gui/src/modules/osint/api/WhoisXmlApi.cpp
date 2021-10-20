@@ -12,8 +12,8 @@
 WhoisXmlApi::WhoisXmlApi(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinished);
     ///
     /// get api key...
     ///

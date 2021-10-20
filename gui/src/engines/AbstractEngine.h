@@ -187,6 +187,7 @@ class AbstractEngine : public QWidget{
         QAction actionSaveIpAddresses{"ip-addresses"};
         QAction actionSaveEmails{"emails"};
         QAction actionSaveUrls{"urls"};
+        QAction actionSaveAsns{"Asns"};
         //...
         QAction actionSaveSubdomains_subdomain{"subdomains"};
         QAction actionSaveIpAddresses_ip{"ip-addresses"};
@@ -208,6 +209,7 @@ class AbstractEngine : public QWidget{
         QAction actionCopyIpAddresses{"ip-addresses"};
         QAction actionCopyEmails{"emails"};
         QAction actionCopyUrls{"urls"};
+        QAction actionCopyAsns{"Asns"};
         //...
         QAction actionCopySubdomains_subdomain{"subdomains"};
         QAction actionCopyIpAddresses_ip{"ip-addresses"};

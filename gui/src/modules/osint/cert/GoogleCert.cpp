@@ -10,8 +10,8 @@
 GoogleCert::GoogleCert(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &GoogleCert::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &GoogleCert::replyFinished);
 }
 GoogleCert::~GoogleCert(){
     delete manager;

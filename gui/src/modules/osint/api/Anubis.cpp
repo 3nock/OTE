@@ -6,8 +6,10 @@
 Anubis::Anubis(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Anubis::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    //...
+    log.moduleName = "Anubis";
+    log.resultsCount = 0;
 }
 Anubis::~Anubis(){
     delete manager;
@@ -15,28 +17,36 @@ Anubis::~Anubis(){
 
 void Anubis::start(){
     QNetworkRequest request;
-    QUrl url("https://jldc.me/anubis/subdomains/"+args->target);
-    request.setUrl(url);
-    manager->get(request);
+
+    if(args->raw){
+        QUrl url("https://jldc.me/anubis/subdomains/"+args->target);
+        request.setUrl(url);
+        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedRaw);
+        manager->get(request);
+        activeRequests++;
+    }
+
+    if(args->inputDomain){
+        QUrl url("https://jldc.me/anubis/subdomains/"+args->target);
+        request.setUrl(url);
+        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void Anubis::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
+void Anubis::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error())
+        this->onError(reply);
+    else
     {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray subdomainList = jsonReply.array();
-        foreach(const QJsonValue &value, subdomainList)
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray subdomainList = document.array();
+        foreach(const QJsonValue &value, subdomainList){
             emit subdomain(value.toString());
+            log.resultsCount++;
+        }
     }
-    else{
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
+
+    this->end(reply);
 }

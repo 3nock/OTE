@@ -18,11 +18,13 @@ class Osint{
               ip(new QStandardItemModel),
               email(new QStandardItemModel),
               url(new QStandardItemModel),
+              asn(new QStandardItemModel),
               subdomainIpProxy(new QSortFilterProxyModel),
               subdomainProxy(new QSortFilterProxyModel),
               ipProxy(new QSortFilterProxyModel),
               emailProxy(new QSortFilterProxyModel),
-              urlProxy(new QSortFilterProxyModel)
+              urlProxy(new QSortFilterProxyModel),
+              asnProxy(new QSortFilterProxyModel)
         {
             subdomainIpProxy->setSourceModel(subdomainIp);
             subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -44,6 +46,10 @@ class Osint{
             urlProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
             urlProxy->setRecursiveFilteringEnabled(true);
             urlProxy->setFilterKeyColumn(0);
+            asnProxy->setSourceModel(asn);
+            asnProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            asnProxy->setRecursiveFilteringEnabled(true);
+            asnProxy->setFilterKeyColumn(0);
         }
         ~Osint(){
             delete subdomainIp;
@@ -51,11 +57,13 @@ class Osint{
             delete ip;
             delete email;
             delete url;
+            delete asn;
             delete subdomainIpProxy;
             delete subdomainProxy;
             delete ipProxy;
             delete emailProxy;
             delete urlProxy;
+            delete asnProxy;
         }
         ///
         /// the models...
@@ -65,11 +73,13 @@ class Osint{
         QStandardItemModel *ip;
         QStandardItemModel *email;
         QStandardItemModel *url;
+        QStandardItemModel *asn;
         QSortFilterProxyModel *subdomainIpProxy;
         QSortFilterProxyModel *subdomainProxy;
         QSortFilterProxyModel *ipProxy;
         QSortFilterProxyModel *emailProxy;
         QSortFilterProxyModel *urlProxy;
+        QSortFilterProxyModel *asnProxy;
 };
 
 class Ip{

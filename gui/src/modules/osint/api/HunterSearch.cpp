@@ -8,8 +8,8 @@
 HunterSearch::HunterSearch(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &HunterSearch::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &HunterSearch::replyFinished);
     ///
     /// getting api-key...
     ///

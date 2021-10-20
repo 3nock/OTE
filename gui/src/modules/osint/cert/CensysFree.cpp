@@ -28,8 +28,8 @@
 CensysFree::CensysFree(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &CensysFree::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &CensysFree::replyFinished);
 }
 CensysFree::~CensysFree(){
     delete manager;

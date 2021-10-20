@@ -10,8 +10,8 @@
 RiskIq::RiskIq(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &RiskIq::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinished);
     ///
     /// getting api-key...
     ///

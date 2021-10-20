@@ -7,8 +7,8 @@
 Spyse::Spyse(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Spyse::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinished);
 }
 Spyse::~Spyse(){
     delete manager;

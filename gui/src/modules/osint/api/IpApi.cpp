@@ -13,8 +13,8 @@
 IpApi::IpApi(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &IpApi::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinished);
     ///
     /// get api key...
     ///

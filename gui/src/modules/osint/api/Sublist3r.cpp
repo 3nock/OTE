@@ -6,8 +6,8 @@
 Sublist3r::Sublist3r(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Sublist3r::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinished);
 }
 Sublist3r::~Sublist3r(){
     delete manager;

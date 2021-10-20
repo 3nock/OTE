@@ -7,8 +7,8 @@
 Threatcrowd::Threatcrowd(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Threatcrowd::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinished);
 }
 Threatcrowd::~Threatcrowd(){
     delete manager;

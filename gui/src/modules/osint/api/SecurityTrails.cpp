@@ -10,8 +10,8 @@
 SecurityTrails::SecurityTrails(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &SecurityTrails::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinished);
     ///
     /// get api key....
     ///

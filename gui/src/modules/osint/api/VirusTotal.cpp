@@ -8,8 +8,8 @@
 VirusTotal::VirusTotal(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &VirusTotal::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinished);
     ///
     /// obtain apikey...
     ///

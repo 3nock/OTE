@@ -11,8 +11,8 @@
 Mnemonic::Mnemonic(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Mnemonic::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Mnemonic::replyFinished);
 }
 Mnemonic::~Mnemonic(){
     delete manager;

@@ -14,8 +14,8 @@
 CommonCrawl::CommonCrawl(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &CommonCrawl::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &CommonCrawl::replyFinished);
 }
 CommonCrawl::~CommonCrawl(){
     delete manager;

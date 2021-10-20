@@ -3,8 +3,8 @@
 Ask::Ask(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Ask::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinished);
 }
 Ask::~Ask(){
     delete manager;

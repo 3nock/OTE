@@ -62,8 +62,8 @@ QUrl QNAMRedirect::redirectUrl(const QUrl& possibleRedirectUrl,
 ArchiveToday::ArchiveToday(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &ArchiveToday::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveToday::replyFinished);
 }
 ArchiveToday::~ArchiveToday(){
     delete manager;

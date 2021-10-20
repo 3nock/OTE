@@ -3,8 +3,8 @@
 DogPile::DogPile(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &DogPile::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &DogPile::replyFinished);
 }
 DogPile::~DogPile(){
     delete manager;

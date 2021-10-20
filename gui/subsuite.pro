@@ -28,6 +28,10 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/modules/osint/api/HackerTargetFree.cpp \
+    src/modules/osint/api/HackerTargetPaid.cpp \
+    src/modules/osint/api/WebResolver.cpp \
+    src/tools/BannerGrabber.cpp \
     src/tools/RawOsint.cpp \
     src/modules/scan/BruteScanner.cpp \
     src/modules/scan/OsintScanner.cpp \
@@ -59,7 +63,6 @@ SOURCES += \
     src/modules/osint/api/ZoomEye.cpp \
     src/modules/osint/api/Anubis.cpp \
     src/modules/osint/api/Dnsbufferoverun.cpp \
-    src/modules/osint/api/Hackertarget.cpp \
     src/modules/osint/api/Omnisint.cpp \
     src/modules/osint/api/Otx.cpp \
     src/modules/osint/api/Projectdiscovery.cpp \
@@ -118,6 +121,10 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+    src/modules/osint/api/HackerTargetFree.h \
+    src/modules/osint/api/HackerTargetPaid.h \
+    src/modules/osint/api/WebResolver.h \
+    src/tools/BannerGrabber.h \
     src/tools/RawOsint.h \
     src/modules/scan/OsintScanner.h \
     src/modules/scan/BruteScanner.h \
@@ -150,7 +157,6 @@ HEADERS += \
     src/modules/osint/api/ZoomEye.h \
     src/modules/osint/api/Anubis.h \
     src/modules/osint/api/Dnsbufferoverun.h \
-    src/modules/osint/api/Hackertarget.h \
     src/modules/osint/api/Omnisint.h \
     src/modules/osint/api/Otx.h \
     src/modules/osint/api/Projectdiscovery.h \
@@ -211,6 +217,7 @@ HEADERS += \
     src/MainWindow.h
 
 FORMS += \
+    src/tools/BannerGrabber.ui \
     src/tools/RawOsint.ui \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \

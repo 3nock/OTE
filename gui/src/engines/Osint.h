@@ -31,6 +31,12 @@ class Osint : public AbstractEngine{
         void onResultIp(QString ip);
         void onResultEmail(QString email);
         void onResultUrl(QString url);
+        void onResultAsn(QString asnValue, QString asnName);
+        /* dns */
+        void onResultA(QString A);
+        void onResultAAAA(QString AAAA);
+        void onResultMX(QString MX);
+        void onResultNS(QString NS);
 
     private slots:
         void onClearResults();
@@ -64,6 +70,7 @@ private:
         QSet<QString> m_ipSet;
         QSet<QString> m_emailSet;
         QSet<QString> m_urlSet;
+        QSet<QString> m_asnSet;
         void stopScan();
         void startScan();
         void pauseScan();

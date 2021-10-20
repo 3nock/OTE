@@ -9,8 +9,8 @@
 Otx::Otx(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Otx::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Otx::replyFinished);
 }
 Otx::~Otx(){
     delete manager;

@@ -9,8 +9,8 @@
 ZETAlytics::ZETAlytics(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &ZETAlytics::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinished);
     ///
     /// get api key...
     ///

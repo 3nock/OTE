@@ -4,8 +4,8 @@
 Trello::Trello(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Trello::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Trello::replyFinished);
 }
 Trello::~Trello(){
     delete manager;

@@ -8,8 +8,8 @@
 ThreatBook::ThreatBook(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &ThreatBook::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &ThreatBook::replyFinished);
     ///
     /// get api key...
     ///

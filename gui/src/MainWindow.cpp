@@ -3,6 +3,7 @@
 //...
 #include "src/dialogs/AboutDialog.h"
 #include "src/tools/RawOsint.h"
+#include "src/tools/BannerGrabber.h"
 
 /*
  * use https://www.qcustomplot.com/ for plots
@@ -196,4 +197,10 @@ void MainWindow::on_actionRawOsint_triggered(){
     RawOsint *rawOsint = new RawOsint(this);
     rawOsint->setAttribute(Qt::WA_DeleteOnClose, true);
     rawOsint->show();
+}
+
+void MainWindow::on_actionBannerGrab_triggered(){
+    BannerGrabber *bannergrab = new BannerGrabber(this);
+    bannergrab->setAttribute(Qt::WA_DeleteOnClose, true);
+    bannergrab->show();
 }

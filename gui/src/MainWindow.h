@@ -46,7 +46,9 @@ class MainWindow : public QMainWindow{
         void on_actionExit_triggered();
         void on_actionRawOsint_triggered();
 
-    private:
+        void on_actionBannerGrab_triggered();
+
+private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;
         Brute *brute = nullptr;

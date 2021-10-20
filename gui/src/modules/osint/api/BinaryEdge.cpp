@@ -8,11 +8,13 @@
 BinaryEdge::BinaryEdge(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &BinaryEdge::replyFinished);
-    ///
-    /// getting the api-key...
-    ///
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &BinaryEdge::replyFinished);
+    //...
+    log.moduleName = "BinaryEdge";
+    log.resultsCount = 0;
+
+    /* getting the api-key... */
     Config::generalConfig().beginGroup("api-keys");
     m_key = Config::generalConfig().value("binaryedge").toString();
     Config::generalConfig().endGroup();
@@ -23,88 +25,184 @@ BinaryEdge::~BinaryEdge(){
 
 void BinaryEdge::start(){
     QNetworkRequest request;
+    request.setRawHeader("X-KEY", m_key.toUtf8());
+    request.setRawHeader("Content-Type", "application/json");
     QUrl url;
 
     if(args->raw){
-        if(args->option == "host ip")
-            url.setUrl("https://api.binaryedge.io/v2/query/ip/"+args->target);
-        if(args->option == "host historical")
-            url.setUrl("https://api.binaryedge.io/v2/query/ip/historical/"+args->target);
-        if(args->option == "host search")
-            url.setUrl("https://api.binaryedge.io/v2/query/search?query="+args->target);
-        if(args->option == "host search stats")
-            url.setUrl("https://api.binaryedge.io/v2/query/search/stats?query="+args->target);
-        if(args->option == "domains subdomain")
-            url.setUrl("https://api.binaryedge.io/v2/query/domains/subdomain/"+args->target);
-        if(args->option == "domains dns")
+        switch (args->rawOption) {
+        case 0: // domain dns
             url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+args->target);
-        if(args->option == "domains ip")
-            url.setUrl("https://api.binaryedge.io/v2/query/domains/ip/"+args->target);
-        if(args->option == "domains search")
-            url.setUrl("https://api.binaryedge.io/v2/query/domains/search?query="+args->target);
-        if(args->option == "domains enumeration")
+            break;
+        case 1: // domain enumeration
             url.setUrl("https://api.binaryedge.io/v2/query/domains/enumeration/"+args->target);
-        if(args->option == "domains homoglyphs")
+            break;
+        case 2: //domain hymoglyphs
             url.setUrl("https://api.binaryedge.io/v2/query/domains/homoglyphs/"+args->target);
-    }else{
-        url.setUrl("https://api.binaryedge.io/v2/query/domains/subdomain/"+args->target+"?page="+QString::number(m_page));
+            break;
+        case 3: // domain ip
+            url.setUrl("https://api.binaryedge.io/v2/query/domains/ip/"+args->target);
+            break;
+        case 4: // domain search
+            url.setUrl("https://api.binaryedge.io/v2/query/domains/search?query="+args->target);
+            break;
+        case 5: // domain subdomains
+            url.setUrl("https://api.binaryedge.io/v2/query/domains/subdomain/"+args->target);
+            break;
+        case 6: // host historical
+            url.setUrl("https://api.binaryedge.io/v2/query/ip/historical/"+args->target);
+            break;
+        case 7: // host ip
+            url.setUrl("https://api.binaryedge.io/v2/query/ip/"+args->target);
+            break;
+        case 8: // host search
+            url.setUrl("https://api.binaryedge.io/v2/query/search?query="+args->target);
+            break;
+        case 9: //host search stats
+            url.setUrl("https://api.binaryedge.io/v2/query/search/stats?query="+args->target);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    request.setRawHeader("X-KEY", m_key.toUtf8());
-    request.setRawHeader("Content-Type", "application/json");
-    manager->get(request);
+    /* if the input is an ip-address */
+    if(args->inputIp){
+        url.setUrl("https://api.binaryedge.io/v2/query/ip/"+args->target);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    /* if input is a domain name */
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            url.setUrl("https://api.binaryedge.io/v2/query/domains/subdomain/"+args->target+"?page="+QString::number(m_page));
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+
+            url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+args->target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+
+        if(args->outputSubdomainIp || args->outputIp){
+            url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+args->target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
 void BinaryEdge::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
+    log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if(reply->error())
+        this->onError(reply);
+    else
     {
         if(args->raw){
             emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject jsonObject = jsonReply.object();
-        /*
-         * QString currentPage = jsonObject["page"].toString();
-         * QString pageSize = jsonObject["pagesize"].toString();
-         * QString totalSubdomains = jsonObject["total"].toString();
-         *
-         */
-        QJsonArray subdomainList = jsonObject["events"].toArray();
-        ///
-        /// if the end of the list exit...
-        ///
-        if(subdomainList.isEmpty())
             goto END;
-        ///
-        /// if not get subdomainIp subdomains...
-        ///
-        foreach(const QJsonValue &value, subdomainList)
-            emit subdomain(value.toString());
-        ///
-        /// next query...
-        ///
-        m_page++;
-        QNetworkRequest request;
-        QUrl url("https://api.binaryedge.io/v2/query/domains/subdomain/"+args->target+"?page="+QString::number(m_page));
-        request.setUrl(url);
-        request.setRawHeader("X-KEY", m_key.toUtf8());
-        request.setRawHeader("Content-Type", "application/json");
-        manager->get(request);
-        ///
-        /// cleanup and exit function...
-        ///
-        reply->deleteLater();
-        return;
-    }
-    else{
-        emit errorLog(reply->errorString());
+        }
+
+        /* all the json replies results are in the events array */
+        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray events = jsonReply.object()["events"].toArray();
+
+        /* for subdomain results */
+        if(args->outputSubdomain){
+            if(args->inputDomain){
+                foreach(const QJsonValue &value, events){
+                    if(value.isString()){
+                        emit subdomain(value.toString());
+                        log.resultsCount++;
+                    }
+                    if(value.isObject()){
+                        QString domain = value.toObject()["domain"].toString();
+                        emit subdomain(domain);
+                        log.resultsCount++;
+
+                        foreach(const QJsonValue &value, value.toObject()["NS"].toArray()){
+                            emit NS(value.toString());
+                            log.resultsCount++;
+                        }
+                        foreach(const QJsonValue &value, value.toObject()["MX"].toArray()){
+                            emit MX(value.toString());
+                            log.resultsCount++;
+                        }
+                    }
+                }
+                goto END;
+            }
+
+            if(args->inputIp){
+                foreach(const QJsonValue &value, events){
+                    QString domain = value.toObject()["domain"].toString();
+                    emit subdomain(domain);
+                    log.resultsCount++;
+
+                    foreach(const QJsonValue &value, value.toObject()["NS"].toArray()){
+                        emit NS(value.toString());
+                        log.resultsCount++;
+                    }
+                    foreach(const QJsonValue &value, value.toObject()["MX"].toArray()){
+                        emit MX(value.toString());
+                        log.resultsCount++;
+                    }
+                }
+                goto END;
+            }
+        }
+
+        /* for subdomainIp resuts */
+        if(args->outputSubdomainIp){
+            foreach(const QJsonValue &value, events){
+                QString domain = value.toObject()["domain"].toString();
+                QString A = value.toObject()["A"].toArray().at(0).toString();
+                QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
+                if(!A.isEmpty()){
+                    emit subdomainIp(domain, A);
+                    log.resultsCount++;
+                }
+                if(!AAAA.isEmpty()){
+                    emit subdomainIp(domain, AAAA);
+                    log.resultsCount++;
+                }
+            }
+            goto END;
+        }
+
+        /* for ip results... */
+        if(args->outputIp){
+            foreach(const QJsonValue &value, events){
+                QString A = value.toObject()["A"].toArray().at(0).toString();
+                QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
+                if(!A.isEmpty()){
+                    emit ipA(A);
+                    log.resultsCount++;
+                }
+                if(!AAAA.isEmpty()){
+                    emit ipAAAA(AAAA);
+                    log.resultsCount++;
+                }
+            }
+            goto END;
+        }
+
     }
 
 END:
     reply->deleteLater();
-    emit quitThread();
+    activeRequests--;
+    if(activeRequests == 0){
+        //emit infoLog(log);
+        emit quitThread();
+    }
 }

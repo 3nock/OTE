@@ -7,8 +7,8 @@
 Projectdiscovery::Projectdiscovery(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Projectdiscovery::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinished);
 }
 Projectdiscovery::~Projectdiscovery(){
     delete manager;

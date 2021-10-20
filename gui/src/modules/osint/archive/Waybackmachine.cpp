@@ -18,8 +18,8 @@
 Waybackmachine::Waybackmachine(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Waybackmachine::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Waybackmachine::replyFinished);
 }
 Waybackmachine::~Waybackmachine(){
     delete manager;

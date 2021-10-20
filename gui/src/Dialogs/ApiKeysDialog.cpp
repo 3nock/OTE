@@ -51,6 +51,8 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("whoisxmlapi", ui->lineEditWhoisXmlApi->text());
     Config::generalConfig().setValue("zoomeye", ui->lineEditZoomEye->text());
     Config::generalConfig().setValue("viewdns", ui->lineEditViewDns->text());
+    Config::generalConfig().setValue("hackertarget", ui->lineEditHackerTarget->text());
+    Config::generalConfig().setValue("webresolver", ui->lineEditWebResolver->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -200,6 +202,16 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditViewDns->setText(key);
         ui->buttonGetViewDns->hide();
     }
+    key = Config::generalConfig().value("hackertarget").toString();
+    if(!key.isEmpty()){
+        ui->lineEditHackerTarget->setText(key);
+        ui->buttonGetHackerTarget->hide();
+    }
+    key = Config::generalConfig().value("webresolver").toString();
+    if(!key.isEmpty()){
+        ui->lineEditWebResolver->setText(key);
+        ui->buttonGetWebResolver->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -298,4 +310,12 @@ void ApiKeysDialog::on_buttonGetIpApi_clicked(){
 
 void ApiKeysDialog::on_buttonGetViewDns_clicked(){
     QDesktopServices::openUrl(QUrl("https://viewdns.info/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetHackerTarget_clicked(){
+    QDesktopServices::openUrl(QUrl("https://hackertarget.com/ip-tools/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetWebResolver_clicked(){
+    QDesktopServices::openUrl(QUrl("https://webresolver.nl/", QUrl::TolerantMode));
 }

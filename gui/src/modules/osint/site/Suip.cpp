@@ -3,8 +3,8 @@
 Suip::Suip(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Suip::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Suip::replyFinished);
 }
 Suip::~Suip(){
     delete manager;

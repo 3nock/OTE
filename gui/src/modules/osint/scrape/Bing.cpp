@@ -4,8 +4,8 @@
 Bing::Bing(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Bing::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Bing::replyFinished);
 }
 Bing::~Bing(){
     delete manager;

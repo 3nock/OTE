@@ -8,11 +8,13 @@
 Github::Github(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Github::replyFinished);
-    ///
-    /// getting the api-key...
-    ///
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinished);
+    //...
+    log.moduleName = "Github";
+    log.resultsCount = 0;
+
+    /* getting the api-key... */
     Config::generalConfig().beginGroup("api-keys");
     m_key = Config::generalConfig().value("github").toString();
     Config::generalConfig().endGroup();
@@ -23,42 +25,47 @@ Github::~Github(){
 
 void Github::start(){
     QNetworkRequest request;
+    request.setRawHeader("Authorization", "token "+m_key.toUtf8());
+    request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
     if(args->raw){
         url.setUrl("https://api.github.com/search/code?q="+args->target+"&page=1&per_page=100");
-    }else{
+    }
+    if(args->subdomains){
         url.setUrl("https://api.github.com/search/code?q="+args->target+"&page=1&per_page=100");
     }
 
     request.setUrl(url);
-    request.setRawHeader("Authorization", "token "+m_key.toUtf8());
-    request.setRawHeader("Content-Type", "application/json");
     manager->get(request);
+    activeRequests++;
 }
 
 void Github::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
+    log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if(reply->error())
+        this->onError(reply);
+    else
     {
         if(args->raw){
             emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
+            goto END;
         }
-        emit subdomain(QString::fromUtf8(reply->readAll()));
-        /*
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray subdomainList = jsonReply.array();
-        foreach(const QJsonValue &value, subdomainList)
-            emit subdomain(value.toString());
-        */
+        if(args->outputSubdomain){
+            /*
+                Not yet implemented...
+            */
+        }
     }
-    else{
-        emit errorLog(reply->errorString());
-    }
+
+END:
     reply->deleteLater();
-    emit quitThread();
+    activeRequests--;
+    if(activeRequests == 0){
+        //emit infoLog(log);
+        emit quitThread();
+    }
 }
 
 /*
@@ -97,4 +104,4 @@ void Github::replyFinished(QNetworkReply *reply){
   "user_repositories_url": "https://api.github.com/users/{user}/repos{?type,page,per_page,sort}",
   "user_search_url": "https://api.github.com/search/users?q={query}{&page,per_page,sort,order}"
 }
- */
+*/

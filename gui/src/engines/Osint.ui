@@ -79,6 +79,11 @@
          <string> Urls</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string> Asn</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -218,6 +223,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string>Autosave to Project</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label">
         <property name="text">
          <string>*Scan Config</string>
@@ -317,7 +332,7 @@
             <number>0</number>
            </property>
            <property name="bottomMargin">
-            <number>0</number>
+            <number>2</number>
            </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -511,7 +526,7 @@
               <widget class="QComboBox" name="comboBoxFilter">
                <property name="minimumSize">
                 <size>
-                 <width>110</width>
+                 <width>90</width>
                  <height>0</height>
                 </size>
                </property>

@@ -168,7 +168,7 @@ void RawOsint::loadEngines(){
                                  "sublist3r",
                                  "threatminer",
                                  "threatcrowd",
-                                 "hackertarget",
+                                 "hackertarget(Free)",
                                  "dnsbufferoverrun",
                                  "anubis",
                                  "projectdiscovery",
@@ -198,7 +198,8 @@ void RawOsint::loadEngines(){
                                  "zetalytics",
                                  "zoomeye",
                                  "ipapi",
-                                 "viewDns"});
+                                 "viewDns",
+                                 "webresolver"});
 }
 
 void RawOsint::startScan(){
@@ -293,15 +294,15 @@ void RawOsint::startScan(){
     }
     case 5:
     {
-        Hackertarget *hackertarget = new Hackertarget(m_scanArgs);
+        HackerTargetFree *hackertarget = new HackerTargetFree(m_scanArgs);
         hackertarget->Enumerator(cThread);
         hackertarget->moveToThread(cThread);
         //...
-        connect(hackertarget, &Hackertarget::rawResults, this, &RawOsint::onResults);
-        connect(hackertarget, &Hackertarget::errorLog, this, &RawOsint::onErrorLog);
-        connect(hackertarget, &Hackertarget::infoLog, this, &RawOsint::onInfoLog);
+        connect(hackertarget, &HackerTargetFree::rawResults, this, &RawOsint::onResults);
+        connect(hackertarget, &HackerTargetFree::errorLog, this, &RawOsint::onErrorLog);
+        connect(hackertarget, &HackerTargetFree::infoLog, this, &RawOsint::onInfoLog);
         connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, hackertarget, &Hackertarget::deleteLater);
+        connect(cThread, &QThread::finished, hackertarget, &HackerTargetFree::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -788,6 +789,22 @@ void RawOsint::startScan(){
         cThread->start();
         break;
     }
+    case 36:
+    {
+        WebResolver *webresolver = new WebResolver(m_scanArgs);
+        webresolver->Enumerator(cThread);
+        webresolver->moveToThread(cThread);
+        //...
+        connect(webresolver, &WebResolver::rawResults, this, &RawOsint::onResults);
+        connect(webresolver, &WebResolver::errorLog, this, &RawOsint::onErrorLog);
+        connect(webresolver, &WebResolver::infoLog, this, &RawOsint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, webresolver, &WebResolver::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        break;
+    }
     default:
         ui->buttonStart->setEnabled(true);
         ui->buttonStop->setDisabled(true);
@@ -943,7 +960,7 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     }
     case 5:
     {
-        ModuleInfo::Hackertarget meta;
+        ModuleInfo::HackerTargetFree meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());
@@ -1196,6 +1213,15 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     case 35:
     {
         ModuleInfo::ViewDns meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 36:
+    {
+        ModuleInfo::WebResolver meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());

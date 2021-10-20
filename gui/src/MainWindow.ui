@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Sub Suite</string>
+   <string>sub 3 suite</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QScrollBar:vertical {
@@ -524,9 +524,8 @@ QRadioButton:hover {
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionfavourites"/>
-    <addaction name="actionDorker"/>
     <addaction name="actionRawOsint"/>
+    <addaction name="actionBannerGrab"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -677,6 +676,11 @@ QRadioButton:hover {
   <action name="actionRawOsint">
    <property name="text">
     <string>raw-osint</string>
+   </property>
+  </action>
+  <action name="actionBannerGrab">
+   <property name="text">
+    <string>banner-grabber</string>
    </property>
   </action>
  </widget>

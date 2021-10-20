@@ -4,8 +4,8 @@
 Baidu::Baidu(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new QNetworkAccessManager(this);
-    connect(manager, &QNetworkAccessManager::finished, this, &Baidu::replyFinished);
+    manager = new MyNetworkAccessManager(this);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Baidu::replyFinished);
 }
 Baidu::~Baidu(){
     delete manager;

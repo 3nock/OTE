@@ -27,7 +27,7 @@
 #include "src/modules/osint/api/Sublist3r.h"
 #include "src/modules/osint/api/Threatminer.h"
 #include "src/modules/osint/api/Threatcrowd.h"
-#include "src/modules/osint/api/Hackertarget.h"
+#include "src/modules/osint/api/HackerTargetFree.h"
 #include "src/modules/osint/api/Dnsbufferoverun.h"
 #include "src/modules/osint/api/Projectdiscovery.h"
 #include "src/modules/osint/api/Spyse.h"
@@ -42,6 +42,7 @@
 #include "src/modules/osint/cert/Crtsh.h"
 #include "src/modules/osint/cert/GoogleCert.h"
 #include "src/modules/osint/cert/Certspotter.h"
+#include "src/modules/osint/api/WebResolver.h"
 
 namespace Ui {
     class RawOsint;

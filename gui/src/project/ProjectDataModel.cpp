@@ -169,7 +169,7 @@ void ProjectDataModel::addPassiveSubdomain(QStringList items){
     int prevSize = m_passiveSubdomainSet.count();
     m_passiveSubdomainSet.insert(items[0]);
     if(m_passiveSubdomainSet.count() > prevSize)
-        m_passiveSubdomains->appendRow(new QStandardItem(items[0]));//, new QStandardItem(items[1]), new QStandardItem(items[2])});
+        m_passiveSubdomains->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addActiveTLD(QStringList items){
@@ -182,7 +182,26 @@ void ProjectDataModel::addPassiveTLD(QStringList items){
     int prevSize = m_passiveTldSet.count();
     m_passiveTldSet.insert(items[0]);
     if(m_passiveTldSet.count() > prevSize)
-        m_passiveTlds->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
+        m_passiveTlds->appendRow(new QStandardItem(items[0]));
+}
+
+/* if you arent sure what type of ip it is */
+void ProjectDataModel::addActiveIp(QStringList items){
+    Q_UNUSED(items)
+}
+void ProjectDataModel::addPassiveIp(QStringList items){
+    if(items[0].contains(":")){
+        int prevSize = m_passiveAAAASet.count();
+        m_passiveAAAASet.insert(items[0]);
+        if(m_passiveAAAASet.count() > prevSize)
+            m_passiveAAAA->appendRow(new QStandardItem(items[0]));
+    }
+    else{
+        int prevSize = m_passiveASet.count();
+        m_passiveASet.insert(items[0]);
+        if(m_passiveASet.count() > prevSize)
+            m_passiveA->appendRow(new QStandardItem(items[0]));
+    }
 }
 
 void ProjectDataModel::addActiveA(QStringList items){
@@ -195,7 +214,7 @@ void ProjectDataModel::addPassiveA(QStringList items){
     int prevSize = m_passiveASet.count();
     m_passiveASet.insert(items[0]);
     if(m_passiveASet.count() > prevSize)
-        m_passiveA->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveA->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addActiveAAAA(QStringList items){
@@ -208,7 +227,7 @@ void ProjectDataModel::addPassiveAAAA(QStringList items){
     int prevSize = m_passiveAAAASet.count();
     m_passiveAAAASet.insert(items[0]);
     if(m_passiveAAAASet.count() > prevSize)
-        m_passiveAAAA->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveAAAA->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addActiveNS(QStringList items){
@@ -221,7 +240,7 @@ void ProjectDataModel::addPassiveNS(QStringList items){
     int prevSize = m_passiveNSSet.count();
     m_passiveNSSet.insert(items[0]);
     if(m_passiveNSSet.count() > prevSize)
-        m_passiveNS->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveNS->appendRow(new QStandardItem(items[0]));//, nullptr, new QStandardItem(items[1])});
 }
 
 void ProjectDataModel::addActiveMX(QStringList items){
@@ -234,7 +253,7 @@ void ProjectDataModel::addPassiveMX(QStringList items){
     int prevSize = m_passiveMXSet.count();
     m_passiveMXSet.insert(items[0]);
     if(m_passiveMXSet.count() > prevSize)
-        m_passiveMX->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveMX->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addActiveTXT(QStringList items){
@@ -247,7 +266,7 @@ void ProjectDataModel::addPassiveTXT(QStringList items){
     int prevSize = m_passiveTXTSet.count();
     m_passiveTXTSet.insert(items[0]);
     if(m_passiveTXTSet.count() > prevSize)
-        m_passiveTXT->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveTXT->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addActiveCNAME(QStringList items){
@@ -260,7 +279,7 @@ void ProjectDataModel::addPassiveCNAME(QStringList items){
     int prevSize = m_passiveCNAMESet.count();
     m_passiveCNAMESet.insert(items[0]);
     if(m_passiveCNAMESet.count() > prevSize)
-        m_passiveCNAME->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveCNAME->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addActiveSRV(QStringList items){
@@ -273,26 +292,26 @@ void ProjectDataModel::addPassiveSRV(QStringList items){
     int prevSize = m_passiveSRVSet.count();
     m_passiveSRVSet.insert(items[0]);
     if(m_passiveSRVSet.count() > prevSize)
-        m_passiveSRV->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
+        m_passiveSRV->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addPassiveEMail(QStringList items){
     int prevSize = m_passiveEmailSet.count();
     m_passiveEmailSet.insert(items[0]);
     if(m_passiveEmailSet.count() > prevSize)
-        m_passiveEmail->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveEmail->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addPassiveUrl(QStringList items){
     int prevSize = m_passiveUrlSet.count();
     m_passiveUrlSet.insert(items[0]);
     if(m_passiveUrlSet.count() > prevSize)
-        m_passiveUrl->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveUrl->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addPassiveAsn(QStringList items){
     int prevSize = m_passiveAsnSet.count();
     m_passiveAsnSet.insert(items[0]);
     if(m_passiveAsnSet.count() > prevSize)
-        m_passiveAsn->appendRow({new QStandardItem(items[0]), nullptr, new QStandardItem(items[1])});
+        m_passiveAsn->appendRow(new QStandardItem(items[0]));
 }
