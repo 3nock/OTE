@@ -3,6 +3,8 @@
 
 #include "../AbstractOsintModule.h"
 
+#define SUBOMAINS 0
+
 namespace ModuleInfo {
     struct Dnsbufferoverun{
         QString name = "Dnsbufferoverun";
@@ -20,7 +22,9 @@ class Dnsbufferoverun: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomainIp(QNetworkReply *reply) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
 };
 
 #endif // DNSBUFFEROVERUN_H

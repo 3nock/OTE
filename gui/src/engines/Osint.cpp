@@ -136,7 +136,7 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     ///
     m_currentPath = QDir::currentPath();
     ui->lineEditTarget->setPlaceholderText("eg. example.com");
-    ui->lineEditFilter->setPlaceholderText("Filter Results...");
+    ui->lineEditFilter->setPlaceholderText("Filter...");
     //...
     result->osint->subdomainIp->setHorizontalHeaderLabels({"Subdomains", "IpAddresses"});
     result->osint->subdomain->setHorizontalHeaderLabels({"Subdomains"});

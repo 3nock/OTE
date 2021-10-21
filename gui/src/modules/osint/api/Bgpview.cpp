@@ -4,11 +4,21 @@
 #include <QJsonArray>
 
 
-Bgpview::Bgpview(ScanArgs *args):
-    AbstractOsintModule(args)
+Bgpview::Bgpview(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Bgpview";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedSubdomain);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedIp);
+    if(args->outputAsn)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
+    if(args->outputEmail)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
 }
 Bgpview::~Bgpview(){
     delete manager;
@@ -20,8 +30,6 @@ void Bgpview::start(){
 
     QUrl url;
     if(args->raw){
-        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedRaw);
-        //...
         switch(args->rawOption){
         case ASN:
             url.setUrl("https://api.bgpview.io/asn/"+args->target);
@@ -58,13 +66,6 @@ void Bgpview::start(){
     }
 
     if(args->inputDomain){
-        if(args->outputIp)
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedIp);
-        if(args->outputAsn)
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
-        if(args->outputEmail)
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
-        //...
         url.setUrl("https://api.bgpview.io/search?query_term="+args->target);
         request.setAttribute(QNetworkRequest::User, QUERY);
         request.setUrl(url);
@@ -74,13 +75,6 @@ void Bgpview::start(){
     }
 
     if(args->inputIp){
-        if(args->outputIp)
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedIp);
-        if(args->outputAsn)
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
-        if(args->outputEmail)
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
-        //...
         url.setUrl("https://api.bgpview.io/ip/"+args->target);
         request.setAttribute(QNetworkRequest::User, IP);
         request.setUrl(url);
@@ -91,7 +85,6 @@ void Bgpview::start(){
 
     if(args->inputAsn){
         if(args->outputSubdomain){
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedSubdomain);
             url.setUrl("https://api.bgpview.io/asn/"+args->target);
             request.setAttribute(QNetworkRequest::User, ASN);
             request.setUrl(url);
@@ -100,7 +93,6 @@ void Bgpview::start(){
             return;
         }
         if(args->outputEmail){
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
             url.setUrl("https://api.bgpview.io/asn/"+args->target);
             request.setAttribute(QNetworkRequest::User, ASN);
             request.setUrl(url);
@@ -109,7 +101,6 @@ void Bgpview::start(){
             return;
         }
         if(args->outputIp){
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedIp);
             url.setUrl("https://api.bgpview.io/asn/"+args->target+"/prefixes");
             request.setAttribute(QNetworkRequest::User, ASN_PREFIXES);
             request.setUrl(url);
@@ -118,7 +109,6 @@ void Bgpview::start(){
             return;
         }
         if(args->outputAsn){
-            connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
             url.setUrl("https://api.bgpview.io/asn/"+args->target+"/peers");
             request.setAttribute(QNetworkRequest::User, ASN_PEERS);
             request.setUrl(url);

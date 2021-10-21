@@ -9,9 +9,14 @@ C99::C99(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &C99::replyFinished);
+    log.moduleName = "C99";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &C99::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
     ///
-    /// get api key....
+    /// getting api key...
     ///
     Config::generalConfig().beginGroup("api-keys");
     m_key = Config::generalConfig().value("c99").toString();
@@ -27,85 +32,85 @@ void C99::start(){
     QUrl url;
     if(args->raw){
         switch (args->rawOption) {
-        case 0: // alexa rank checker
+        case ALEXA_RANK:
             url.setUrl("https://api.c99.nl/alexarank?key="+m_key+"&url="+args->target+"&json");
             break;
-        case 1: // disposable mail check
+        case DISPOSABLE_MAIL_CHECK:
             url.setUrl("https://api.c99.nl/disposablemailchecker?key="+m_key+"&email="+args->target+"&json");
             break;
-        case 2: // domain checker
+        case DOMAIN_CHECKER:
             url.setUrl("https://api.c99.nl/domainchecker?key="+m_key+"&domain="+args->target+"&json");
             break;
-        case 3: // domain history checker
+        case DOMAIN_HISTORY_CHECKER:
             url.setUrl("https://api.c99.nl/domainhistory?key="+m_key+"&domain="+args->target+"&json");
             break;
-        case 4: // email validator
+        case EMAIL_VALIDATOR:
             url.setUrl("https://api.c99.nl/emailvalidator?key="+m_key+"&email="+args->target+"&json");
             break;
-        case 5: // WAF checker
+        case WAF_CHECKER:
             url.setUrl("https://api.c99.nl/firewsubdomainIpdetector?key="+m_key+"&url="+args->target+"&json");
             break;
-        case 6: // GeoIp
+        case GEOIP:
             url.setUrl("https://api.c99.nl/geoip?key="+m_key+"&host="+args->target+"&json");
             break;
-        case 7: // Host to Ip
+        case HOST_TO_IP:
             url.setUrl("https://api.c99.nl/dnsresolver?key="+m_key+"&host="+args->target+"&json");
             break;
-        case 8: // Ip 2 domains
+        case IP_2_DOMAINS:
             url.setUrl("https://api.c99.nl/ip2domains?key="+m_key+"&ip="+args->target+"&json");
             break;
-        case 9: // Ip Logger
+        case IP_LOGGER:
             url.setUrl("https://api.c99.nl/iplogger?key="+m_key+"&action=viewloggers&json");
             break;
-        case 10: // IP validator
+        case IP_VALIDATOR:
             url.setUrl("https://api.c99.nl/ipvalidator?key="+m_key+"&ip="+args->target+"&json");
             break;
-        case 11: // Ip 2 Host
+        case IP_2_HOST:
             url.setUrl("https://api.c99.nl/gethostname?key="+m_key+"&host="+args->target+"&json");
             break;
-        case 12: // IP 2 Skype
+        case IP_2_SKYPE:
             url.setUrl("https://api.c99.nl/ip2skype?key="+m_key+"&ip="+args->target+"&json");
             break;
-        case 13: // link backup
+        case LINK_BACKUP:
             url.setUrl("https://api.c99.nl/linkbackup?key="+m_key+"&url="+args->target+"&json");
             break;
-        case 14: // multiple port scanner
+        case MULTIPLE_PORT_SCANNER:
             url.setUrl("https://api.c99.nl/portscanner?key="+m_key+"&host="+args->target+"&json");
             break;
-        case 15: // nmap scanner
+        case NMAP_SCANNER:
             url.setUrl("https://api.c99.nl/nmap?key="+m_key+"&host="+args->target+"&json");
             break;
-        case 16: // phone lookup
+        case PHONE_LOOKUP:
             url.setUrl("https://api.c99.nl/phonelookup?key="+m_key+"&number="+args->target+"&json");
             break;
-        case 17: // ping
+        case PING:
             url.setUrl("https://api.c99.nl/ping?key="+m_key+"&host="+args->target+"&json");
             break;
-        case 18: // proxy detector
+        case PROXY_DETECTOR:
             url.setUrl("https://api.c99.nl/proxydetector?key="+m_key+"&ip="+args->target+"&json");
             break;
-        case 19: // screenshot tool
+        case SCREENSHOT_TOOL:
             url.setUrl("https://api.c99.nl/createscreenshot?key="+m_key+"&url="+args->target+"&json");
             break;
-        case 20: // Site/URL Reputation Checker
+        case SITE_REPUTATION_CHECKER:
             url.setUrl("https://api.c99.nl/reputationchecker?key="+m_key+"&url="+args->target+"&json");
             break;
-        case 21: // Skype Resolver
+        case SKYPE_RESOLVER:
             url.setUrl("https://api.c99.nl/skyperesolver?key="+m_key+"&username="+args->target+"&json");
             break;
-        case 22: // Subdomain Finder
+        case SUBDOMAIN_FINDER:
             url.setUrl("https://api.c99.nl/subdomainfinder?key="+m_key+"&domain="+args->target+"&json");
             break;
-        case 23: // tor checker
+        case TOR_CHECKER:
             url.setUrl("https://api.c99.nl/torchecker?key="+m_key+"&ip="+args->target+"&json");
             break;
-        case 24: // Website Headers
+        case WEBSITE_HEADERS:
             url.setUrl("https://api.c99.nl/getheaders?key="+m_key+"&host="+args->target+"&json");
             break;
-        case 25: // Website Up or Down Checker
+        case WEBSITE_UP_OR_DOWN_CHECKER:
             url.setUrl("https://api.c99.nl/upordown?key="+m_key+"&host="+args->target+"&json");
             break;
-        case 26: // Whois Checker
+        case WHOIS_CHECKER:
             url.setUrl("https://api.c99.nl/whois?key="+m_key+"&domain="+args->target+"&json");
             break;
         }
@@ -113,29 +118,30 @@ void C99::start(){
         manager->get(request);
         activeRequests++;
     }
+
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            request.setUrl(url);
+            request.setAttribute(QNetworkRequest::User, SUBDOMAIN_FINDER);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
     /*
      * Others not yet implemented...
      */
 }
 
-void C99::replyFinished(QNetworkReply *reply){
-    log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
+void C99::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error())
         this->onError(reply);
     else
     {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            goto END;
-        }
+        int requestType = reply->property(REQUEST_TYPE).toInt();
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonObject jsonObject = document.object();
 
-        /* jsonObject */
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject jsonObject = jsonReply.object();
-
-        /* For subdomains results */
-        if(args->outputSubdomain){
+        if(requestType == SUBDOMAIN_FINDER){
             bool success = jsonObject["success"].toBool();
             if(success){
                 QJsonArray subdomainList = jsonObject["subdomains"].toArray();
@@ -143,15 +149,6 @@ void C99::replyFinished(QNetworkReply *reply){
                     emit subdomain(value.toString());
             }
         }
-
-        /* Others not yet Implemented */
     }
-
-END:
-    reply->deleteLater();
-    activeRequests--;
-    if(activeRequests == 0){
-        //emit infoLog(log);
-        emit quitThread();
-    }
+    end(reply);
 }

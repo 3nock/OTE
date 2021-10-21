@@ -3,11 +3,15 @@
 #include <QJsonArray>
 
 
-Anubis::Anubis(ScanArgs *args):
-    AbstractOsintModule(args)
+Anubis::Anubis(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Anubis";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
 }
 Anubis::~Anubis(){
     delete manager;
@@ -19,7 +23,6 @@ void Anubis::start(){
     if(args->raw){
         QUrl url("https://jldc.me/anubis/subdomains/"+args->target);
         request.setUrl(url);
-        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedRaw);
         manager->get(request);
         activeRequests++;
     }
@@ -27,7 +30,6 @@ void Anubis::start(){
     if(args->inputDomain){
         QUrl url("https://jldc.me/anubis/subdomains/"+args->target);
         request.setUrl(url);
-        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
         manager->get(request);
         activeRequests++;
     }
