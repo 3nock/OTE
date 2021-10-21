@@ -80,12 +80,6 @@ class AbstractOsintModule : public QObject {
         }
 
     protected:
-        int activeRequests = 0;
-        ScanArgs *args;
-        ScanLog log;
-        ///
-        /// ...
-        ///
         void onError(QNetworkReply *reply){
             log.message = reply->errorString();
             //emit errorLog(log);
@@ -132,26 +126,26 @@ class AbstractOsintModule : public QObject {
     public slots:
         virtual void start() = 0;
         virtual void replyFinished(QNetworkReply*){}
-        virtual void replyFinishedSubdomainIp(QNetworkReply*){}
-        virtual void replyFinishedSubdomain(QNetworkReply*){}
-        virtual void replyFinishedIp(QNetworkReply*){}
-        virtual void replyFinishedASn(QNetworkReply*){}
-        virtual void replyFinishedEmail(QNetworkReply*){}
-        virtual void replyFinishedUrl(QNetworkReply*){}
-        ///
-        /// for raw results...
-        ///
-        virtual void replyFinishedRaw(QNetworkReply *reply)
+        virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
+        virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains
+        virtual void replyFinishedIp(QNetworkReply*){} // returns ip-addresses
+        virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
+        virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails
+        virtual void replyFinishedUrl(QNetworkReply*){} // returns URLs
+        virtual void replyFinishedRaw(QNetworkReply *reply) // returns raw results...
         {
             if(reply->error())
                 this->onError(reply);
             else
                 emit rawResults(reply->readAll());
-            // the end...
-            this->end(reply);
+
+            end(reply);
         }
 
-    public:
+    protected:
+        int activeRequests = 0;
+        ScanArgs *args;
+        ScanLog log;
         int maxPages = 100;
         MyNetworkAccessManager *manager = nullptr;
 };

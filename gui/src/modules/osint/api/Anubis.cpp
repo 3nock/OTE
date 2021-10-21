@@ -7,9 +7,7 @@ Anubis::Anubis(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    //...
     log.moduleName = "Anubis";
-    log.resultsCount = 0;
 }
 Anubis::~Anubis(){
     delete manager;
@@ -47,6 +45,5 @@ void Anubis::replyFinishedSubdomain(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
-
-    this->end(reply);
+    end(reply);
 }
