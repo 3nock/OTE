@@ -49,7 +49,11 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetHackerTarget_clicked();
         void on_buttonGetWebResolver_clicked();
 
-    private:
+        void on_buttonGetCircl_clicked();
+
+        void on_buttonGetMnemonic_clicked();
+
+private:
         Ui::ApiKeysDialog *ui;
         void loadApiKeys();
 };

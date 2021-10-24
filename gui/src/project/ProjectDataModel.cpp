@@ -32,7 +32,8 @@ ProjectDataModel::ProjectDataModel():
     m_passiveSRV(new QStandardItem("SRV")),
     m_passiveEmail(new QStandardItem("Emails")),
     m_passiveUrl(new QStandardItem("Urls")),
-    m_passiveAsn(new QStandardItem("ASN"))
+    m_passiveAsn(new QStandardItem("ASN")),
+    m_passiveSSLCert(new QStandardItem("SSL Certs"))
 {
     m_rootItem = projectModel->invisibleRootItem();
     projectModel->setColumnCount(3);
@@ -63,6 +64,7 @@ ProjectDataModel::ProjectDataModel():
     m_passiveEmail->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_passiveUrl->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_passiveAsn->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    m_passiveSSLCert->setIcon(QIcon(":/img/res/icons/folder2.png"));
     ///
     /// for active...
     ///
@@ -90,6 +92,7 @@ ProjectDataModel::ProjectDataModel():
     m_passiveEmail->setForeground(Qt::white);
     m_passiveUrl->setForeground(Qt::white);
     m_passiveAsn->setForeground(Qt::white);
+    m_passiveSSLCert->setForeground(Qt::white);
     ///
     /// ...
     ///
@@ -122,6 +125,7 @@ ProjectDataModel::ProjectDataModel():
     m_passive->appendRow(m_passiveEmail);
     m_passive->appendRow(m_passiveUrl);
     m_passive->appendRow(m_passiveAsn);
+    m_passive->appendRow(m_passiveSSLCert);
 }
 ProjectDataModel::~ProjectDataModel(){
     ///
@@ -157,6 +161,7 @@ ProjectDataModel::~ProjectDataModel(){
     delete m_passiveEmail;
     delete m_passiveUrl;
     delete m_passiveAsn;
+    delete m_passiveSSLCert;
 }
 
 void ProjectDataModel::addActiveSubdomain(QStringList items){
@@ -314,4 +319,11 @@ void ProjectDataModel::addPassiveAsn(QStringList items){
     m_passiveAsnSet.insert(items[0]);
     if(m_passiveAsnSet.count() > prevSize)
         m_passiveAsn->appendRow(new QStandardItem(items[0]));
+}
+
+void ProjectDataModel::addPassiveSSLCert(QStringList items){
+    int prevSize = m_passiveSSLCertSet.count();
+    m_passiveSSLCertSet.insert(items[0]);
+    if(m_passiveSSLCertSet.count() > prevSize)
+        m_passiveSSLCert->appendRow(new QStandardItem(items[0]));
 }

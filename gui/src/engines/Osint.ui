@@ -41,7 +41,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>110</width>
+         <width>16777215</width>
          <height>16777215</height>
         </size>
        </property>
@@ -82,6 +82,11 @@
        <item>
         <property name="text">
          <string> Asn</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string> SSL Certs</string>
         </property>
        </item>
       </widget>
@@ -241,6 +246,18 @@
       </item>
       <item>
        <widget class="QToolButton" name="buttonConfig">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>18</height>
+         </size>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -280,6 +297,12 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
           <height>18</height>
          </size>
         </property>

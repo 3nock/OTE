@@ -3,6 +3,15 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define ASN 0
+#define ASN_DOWNSTREAM 1
+#define ASN_IXS 2
+#define ASN_PEERS 3
+#define ASN_PREFIXES 4
+#define ASN_UPSTREAMS 5
+#define IP 6
+#define IP_PREFIXES 7
+#define QUERY 8
 
 Bgpview::Bgpview(ScanArgs *args): AbstractOsintModule(args)
 {

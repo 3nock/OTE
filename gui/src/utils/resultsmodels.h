@@ -19,12 +19,14 @@ class Osint{
               email(new QStandardItemModel),
               url(new QStandardItemModel),
               asn(new QStandardItemModel),
+              sslCert(new QStandardItemModel),
               subdomainIpProxy(new QSortFilterProxyModel),
               subdomainProxy(new QSortFilterProxyModel),
               ipProxy(new QSortFilterProxyModel),
               emailProxy(new QSortFilterProxyModel),
               urlProxy(new QSortFilterProxyModel),
-              asnProxy(new QSortFilterProxyModel)
+              asnProxy(new QSortFilterProxyModel),
+              sslCertProxy(new QSortFilterProxyModel)
         {
             subdomainIpProxy->setSourceModel(subdomainIp);
             subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -50,6 +52,10 @@ class Osint{
             asnProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
             asnProxy->setRecursiveFilteringEnabled(true);
             asnProxy->setFilterKeyColumn(0);
+            sslCertProxy->setSourceModel(sslCert);
+            sslCertProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            sslCertProxy->setRecursiveFilteringEnabled(true);
+            sslCertProxy->setFilterKeyColumn(0);
         }
         ~Osint(){
             delete subdomainIp;
@@ -58,12 +64,14 @@ class Osint{
             delete email;
             delete url;
             delete asn;
+            delete sslCert;
             delete subdomainIpProxy;
             delete subdomainProxy;
             delete ipProxy;
             delete emailProxy;
             delete urlProxy;
             delete asnProxy;
+            delete sslCertProxy;
         }
         ///
         /// the models...
@@ -74,12 +82,14 @@ class Osint{
         QStandardItemModel *email;
         QStandardItemModel *url;
         QStandardItemModel *asn;
+        QStandardItemModel *sslCert;
         QSortFilterProxyModel *subdomainIpProxy;
         QSortFilterProxyModel *subdomainProxy;
         QSortFilterProxyModel *ipProxy;
         QSortFilterProxyModel *emailProxy;
         QSortFilterProxyModel *urlProxy;
         QSortFilterProxyModel *asnProxy;
+        QSortFilterProxyModel *sslCertProxy;
 };
 
 class Ip{
@@ -228,7 +238,8 @@ enum PROXYMODEL_TYPE{
     urlProxy,
     asnProxy,
     dnsProxy,
-    srvProxy
+    srvProxy,
+    sslCertProxy
 };
 
 #endif // RESULTSMODELS_H

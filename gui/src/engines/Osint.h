@@ -35,8 +35,10 @@ class Osint : public AbstractEngine{
         /* dns */
         void onResultA(QString A);
         void onResultAAAA(QString AAAA);
+        void onResultCNAME(QString CNAME);
         void onResultMX(QString MX);
         void onResultNS(QString NS);
+        void onResultCertFingerprint(QString certId);
 
     private slots:
         void onClearResults();
@@ -71,6 +73,7 @@ private:
         QSet<QString> m_emailSet;
         QSet<QString> m_urlSet;
         QSet<QString> m_asnSet;
+        QSet<QString> m_sslCertSet;
         void stopScan();
         void startScan();
         void pauseScan();

@@ -29,7 +29,7 @@ class HunterSearch: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedEmail(QNetworkReply *) override;
 
     private:
         QString m_key;

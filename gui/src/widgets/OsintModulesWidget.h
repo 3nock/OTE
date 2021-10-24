@@ -39,7 +39,6 @@ struct OsintModules{
     bool huntersearch = false;
     bool ipinfo = false;
     bool github = false;
-    bool mnemonic = false;
     bool robtex = false;
     bool riskiq = false;
     bool securitytrails = false;
@@ -66,7 +65,10 @@ struct OsintModules{
     bool pentesttools = false;
     bool hackertargetfree = false;
     bool hackertargetpaid = false;
+    bool mnemonicfree = false;
+    bool mnemonicpaid = false;
     bool webresolver = false;
+    bool circl = false;
 };
 
 class OsintModulesWidget : public QWidget

@@ -2,6 +2,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 
+#define SUBDOMAIN 0
 
 Anubis::Anubis(ScanArgs *args): AbstractOsintModule(args)
 {

@@ -38,6 +38,7 @@ class ProjectDataModel{
         void addPassiveEMail(QStringList);
         void addPassiveUrl(QStringList);
         void addPassiveAsn(QStringList);
+        void addPassiveSSLCert(QStringList);
         ///
         /// the projectModel...
         ///
@@ -68,6 +69,7 @@ class ProjectDataModel{
         QSet<QString> m_passiveEmailSet;
         QSet<QString> m_passiveUrlSet;
         QSet<QString> m_passiveAsnSet;
+        QSet<QString> m_passiveSSLCertSet;
 
     private:
         QStandardItem *m_rootItem;
@@ -100,6 +102,7 @@ class ProjectDataModel{
         QStandardItem *m_passiveEmail;
         QStandardItem *m_passiveUrl;
         QStandardItem *m_passiveAsn;
+        QStandardItem *m_passiveSSLCert;
 };
 
 #endif // MODELS_H

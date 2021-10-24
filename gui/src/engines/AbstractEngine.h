@@ -22,6 +22,7 @@ enum CHOICE{
     MX,
     A,
     AAAA,
+    cert
 };
 
 struct ScanStatus{
@@ -188,6 +189,7 @@ class AbstractEngine : public QWidget{
         QAction actionSaveEmails{"emails"};
         QAction actionSaveUrls{"urls"};
         QAction actionSaveAsns{"Asns"};
+        QAction actionSaveCerts{"SSL Certs"};
         //...
         QAction actionSaveSubdomains_subdomain{"subdomains"};
         QAction actionSaveIpAddresses_ip{"ip-addresses"};
@@ -210,6 +212,7 @@ class AbstractEngine : public QWidget{
         QAction actionCopyEmails{"emails"};
         QAction actionCopyUrls{"urls"};
         QAction actionCopyAsns{"Asns"};
+        QAction actionCopyCerts{"SSL Certs"};
         //...
         QAction actionCopySubdomains_subdomain{"subdomains"};
         QAction actionCopyIpAddresses_ip{"ip-addresses"};

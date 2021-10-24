@@ -15,7 +15,8 @@
 #include "src/modules/osint/api/SecurityTrails.h"
 #include "src/modules/osint/api/Robtex.h"
 #include "src/modules/osint/api/RiskIq.h"
-#include "src/modules/osint/api/Mnemonic.h"
+#include "src/modules/osint/api/MnemonicFree.h"
+#include "src/modules/osint/api/MnemonicPaid.h"
 #include "src/modules/osint/api/IpInfo.h"
 #include "src/modules/osint/api/HunterSearch.h"
 #include "src/modules/osint/api/Github.h"
@@ -28,6 +29,7 @@
 #include "src/modules/osint/api/Threatminer.h"
 #include "src/modules/osint/api/Threatcrowd.h"
 #include "src/modules/osint/api/HackerTargetFree.h"
+#include "src/modules/osint/api/HackerTargetPaid.h"
 #include "src/modules/osint/api/Dnsbufferoverun.h"
 #include "src/modules/osint/api/Projectdiscovery.h"
 #include "src/modules/osint/api/Spyse.h"
@@ -43,6 +45,7 @@
 #include "src/modules/osint/cert/GoogleCert.h"
 #include "src/modules/osint/cert/Certspotter.h"
 #include "src/modules/osint/api/WebResolver.h"
+#include "src/modules/osint/api/Circl.h"
 
 namespace Ui {
     class RawOsint;
@@ -59,7 +62,8 @@ class RawOsint : public QDialog{
         void onEnumerationComplete();
         void onErrorLog(QString log);
         void onInfoLog(QString log);
-        void onResults(QByteArray);
+        void onResults(QByteArray); // for Json results
+        void onResultsTxt(QByteArray); // for normal txt results
 
     signals:
         void stopScanThread();

@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>1000</width>
-    <height>689</height>
+    <height>691</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>sub 3 suite</string>
+   <string>sub3suite</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QScrollBar:vertical {

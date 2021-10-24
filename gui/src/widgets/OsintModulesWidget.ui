@@ -254,7 +254,7 @@
             <x>0</x>
             <y>0</y>
             <width>162</width>
-            <height>979</height>
+            <height>956</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -328,13 +328,6 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="moduleGithub">
-             <property name="text">
-              <string>Github</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QCheckBox" name="moduleHackerTargetFree">
              <property name="text">
               <string>HackerTarget (Free)</string>
@@ -342,16 +335,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="moduleMnemonic">
+            <widget class="QCheckBox" name="moduleMnemonicFree">
              <property name="text">
-              <string>Mnemonic</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="moduleOtx">
-             <property name="text">
-              <string>Otx</string>
+              <string>Mnemonic (Free)</string>
              </property>
             </widget>
            </item>
@@ -359,6 +345,13 @@
             <widget class="QCheckBox" name="moduleOmnisint">
              <property name="text">
               <string>Omnisint</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleOtx">
+             <property name="text">
+              <string>Otx</string>
              </property>
             </widget>
            </item>
@@ -652,7 +645,7 @@
             <x>0</x>
             <y>0</y>
             <width>161</width>
-            <height>539</height>
+            <height>608</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -673,6 +666,20 @@
             <widget class="QCheckBox" name="moduleC99">
              <property name="text">
               <string>C99</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleCircl">
+             <property name="text">
+              <string>Circl</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleGithub">
+             <property name="text">
+              <string>Github</string>
              </property>
             </widget>
            </item>
@@ -701,6 +708,13 @@
             <widget class="QCheckBox" name="moduleIpInfo">
              <property name="text">
               <string>IpInfo</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleMnemonicPaid">
+             <property name="text">
+              <string>Mnemonic</string>
              </property>
             </widget>
            </item>

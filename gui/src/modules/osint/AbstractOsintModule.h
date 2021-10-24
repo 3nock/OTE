@@ -30,7 +30,9 @@ struct ScanArgs{
     bool inputAsn = false;
     bool inputEmail = false;
     bool inputDomain = false;
+    bool inputCertFingerprint = false;
     //...
+    bool outputCertFingerprint = false;
     bool outputSubdomainIp = false;
     bool outputSubdomain = false;
     bool outputEmail = false;
@@ -107,6 +109,7 @@ class AbstractOsintModule : public QObject {
         /* void infoLog(ScanLog log);
            void errorLog(ScanLog error);
         */
+        void certFingerprint(QString certId);
         void ip(QString ip);
         void subdomain(QString subdomain);
         void subdomainIp(QString subdomain, QString ip);
@@ -119,6 +122,7 @@ class AbstractOsintModule : public QObject {
         void ipAAAA(QString ip);
         void NS(QString NS);
         void MX(QString MX);
+        void CNAME(QString CNAME);
         /* old */
         void errorLog(QString log);
         void infoLog(QString log);
@@ -126,13 +130,14 @@ class AbstractOsintModule : public QObject {
     public slots:
         virtual void start() = 0;
         virtual void replyFinished(QNetworkReply*){}
+        virtual void replyFinishedCertFingerprint(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
         virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
         virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains
         virtual void replyFinishedIp(QNetworkReply*){} // returns ip-addresses
         virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
         virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails
         virtual void replyFinishedUrl(QNetworkReply*){} // returns URLs
-        virtual void replyFinishedRaw(QNetworkReply *reply) // returns raw results...
+        virtual void replyFinishedRaw(QNetworkReply *reply) // returns raw results
         {
             if(reply->error())
                 this->onError(reply);

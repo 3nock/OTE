@@ -78,6 +78,11 @@ void RawOsint::onResults(QByteArray reply){
     setJsonTree(document);
 }
 
+void RawOsint::onResultsTxt(QByteArray results){
+    if(!results.isNull() && !results.isEmpty())
+        ui->plainTextEdit->appendPlainText(results);
+}
+
 void RawOsint::setJsonText(QJsonDocument &results){
     if(!results.isNull() && !results.isEmpty())
         ui->plainTextEdit->appendPlainText(results.toJson());
@@ -188,7 +193,7 @@ void RawOsint::loadEngines(){
                                  "github",
                                  "huntersearch",
                                  "ipinfo",
-                                 "mnemonic",
+                                 "mnemonic(Free)",
                                  "riskiq",
                                  "robtex",
                                  "securitytrails",
@@ -199,11 +204,14 @@ void RawOsint::loadEngines(){
                                  "zoomeye",
                                  "ipapi",
                                  "viewDns",
-                                 "webresolver"});
+                                 "webresolver",
+                                 "Circl",
+                                 "HackerTarget(Paid)",
+                                 "mnemonic(Paid)"});
 }
 
 void RawOsint::startScan(){
-
+    m_scanArgs->rawOption = ui->comboBoxOptions->currentIndex();
     m_scanArgs->option = ui->comboBoxOptions->currentText();
     m_scanArgs->module = ui->comboBoxModule->currentText();
     m_scanArgs->target = ui->lineEditTarget->text();
@@ -298,7 +306,7 @@ void RawOsint::startScan(){
         hackertarget->Enumerator(cThread);
         hackertarget->moveToThread(cThread);
         //...
-        connect(hackertarget, &HackerTargetFree::rawResults, this, &RawOsint::onResults);
+        connect(hackertarget, &HackerTargetFree::rawResults, this, &RawOsint::onResultsTxt);
         connect(hackertarget, &HackerTargetFree::errorLog, this, &RawOsint::onErrorLog);
         connect(hackertarget, &HackerTargetFree::infoLog, this, &RawOsint::onInfoLog);
         connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
@@ -615,15 +623,15 @@ void RawOsint::startScan(){
         break;
     }
     case 25:{
-        Mnemonic *mnemonic = new Mnemonic(m_scanArgs);
+        MnemonicFree *mnemonic = new MnemonicFree(m_scanArgs);
         mnemonic->Enumerator(cThread);
         mnemonic->moveToThread(cThread);
         //...
-        connect(mnemonic, &Mnemonic::rawResults, this, &RawOsint::onResults);
-        connect(mnemonic, &Mnemonic::errorLog, this, &RawOsint::onErrorLog);
-        connect(mnemonic, &Mnemonic::infoLog, this, &RawOsint::onInfoLog);
+        connect(mnemonic, &MnemonicFree::rawResults, this, &RawOsint::onResults);
+        connect(mnemonic, &MnemonicFree::errorLog, this, &RawOsint::onErrorLog);
+        connect(mnemonic, &MnemonicFree::infoLog, this, &RawOsint::onInfoLog);
         connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, mnemonic, &Mnemonic::deleteLater);
+        connect(cThread, &QThread::finished, mnemonic, &MnemonicFree::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -800,6 +808,53 @@ void RawOsint::startScan(){
         connect(webresolver, &WebResolver::infoLog, this, &RawOsint::onInfoLog);
         connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
         connect(cThread, &QThread::finished, webresolver, &WebResolver::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        break;
+    }
+    case 37:
+    {
+        Circl *circl = new Circl(m_scanArgs);
+        circl->Enumerator(cThread);
+        circl->moveToThread(cThread);
+        //...
+        connect(circl, &Circl::rawResults, this, &RawOsint::onResults);
+        connect(circl, &Circl::errorLog, this, &RawOsint::onErrorLog);
+        connect(circl, &Circl::infoLog, this, &RawOsint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, circl, &Circl::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        break;
+    }
+    case 38:
+    {
+        HackerTargetPaid *hackertarget = new HackerTargetPaid(m_scanArgs);
+        hackertarget->Enumerator(cThread);
+        hackertarget->moveToThread(cThread);
+        //...
+        connect(hackertarget, &HackerTargetPaid::rawResults, this, &RawOsint::onResultsTxt);
+        connect(hackertarget, &HackerTargetPaid::errorLog, this, &RawOsint::onErrorLog);
+        connect(hackertarget, &HackerTargetPaid::infoLog, this, &RawOsint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, hackertarget, &HackerTargetPaid::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        break;
+    }
+    case 39:{
+        MnemonicPaid *mnemonic = new MnemonicPaid(m_scanArgs);
+        mnemonic->Enumerator(cThread);
+        mnemonic->moveToThread(cThread);
+        //...
+        connect(mnemonic, &MnemonicPaid::rawResults, this, &RawOsint::onResults);
+        connect(mnemonic, &MnemonicPaid::errorLog, this, &RawOsint::onErrorLog);
+        connect(mnemonic, &MnemonicPaid::infoLog, this, &RawOsint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, mnemonic, &MnemonicPaid::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -1122,7 +1177,7 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     }
     case 25:
     {
-        ModuleInfo::Mnemonic meta;
+        ModuleInfo::MnemonicFree meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());
@@ -1222,6 +1277,33 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     case 36:
     {
         ModuleInfo::WebResolver meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 37:
+    {
+        ModuleInfo::Circl meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 38:
+    {
+        ModuleInfo::HackerTargetPaid meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 39:
+    {
+        ModuleInfo::MnemonicPaid meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());

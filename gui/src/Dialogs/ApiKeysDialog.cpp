@@ -53,6 +53,9 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("viewdns", ui->lineEditViewDns->text());
     Config::generalConfig().setValue("hackertarget", ui->lineEditHackerTarget->text());
     Config::generalConfig().setValue("webresolver", ui->lineEditWebResolver->text());
+    Config::generalConfig().setValue("circlUser", ui->lineEditCirclUser->text());
+    Config::generalConfig().setValue("circlPwd", ui->lineEditCirclPwd->text());
+    Config::generalConfig().setValue("mnemonic", ui->lineEditMnemonic->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -212,6 +215,22 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditWebResolver->setText(key);
         ui->buttonGetWebResolver->hide();
     }
+    key = Config::generalConfig().value("circlUser").toString();
+    if(!key.isEmpty()){
+        ui->lineEditCirclUser->setText(key);
+        /*
+         */
+    }
+    key = Config::generalConfig().value("circlPwd").toString();
+    if(!key.isEmpty()){
+        ui->lineEditCirclPwd->setText(key);
+        ui->buttonGetCircl->hide();
+    }
+    key = Config::generalConfig().value("mnemonic").toString();
+    if(!key.isEmpty()){
+        ui->lineEditMnemonic->setText(key);
+        ui->buttonGetMnemonic->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -318,4 +337,12 @@ void ApiKeysDialog::on_buttonGetHackerTarget_clicked(){
 
 void ApiKeysDialog::on_buttonGetWebResolver_clicked(){
     QDesktopServices::openUrl(QUrl("https://webresolver.nl/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetCircl_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.circl.lu/services/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetMnemonic_clicked(){
+    QDesktopServices::openUrl(QUrl("https://mnemonic.no/", QUrl::TolerantMode));
 }

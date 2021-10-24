@@ -26,7 +26,8 @@
 #include "src/modules/osint/api/SecurityTrails.h"
 #include "src/modules/osint/api/Robtex.h"
 #include "src/modules/osint/api/RiskIq.h"
-#include "src/modules/osint/api/Mnemonic.h"
+#include "src/modules/osint/api/MnemonicFree.h"
+#include "src/modules/osint/api/MnemonicPaid.h"
 #include "src/modules/osint/api/IpInfo.h"
 #include "src/modules/osint/api/HunterSearch.h"
 #include "src/modules/osint/api/Github.h"
@@ -47,6 +48,7 @@
 #include "src/modules/osint/api/Qwant.h"
 #include "src/modules/osint/api/VirusTotal.h"
 #include "src/modules/osint/api/Urlscan.h"
+#include "src/modules/osint/api/Circl.h"
 #include "src/modules/osint/archive/Waybackmachine.h"
 #include "src/modules/osint/archive/ArchiveToday.h"
 #include "src/modules/osint/archive/CommonCrawl.h"
@@ -67,6 +69,7 @@
 #define EMAIL 3
 #define URL 4
 #define ASN 5
+#define SSLCERT 6
 
 /* log on every scan each module its results count
  *
@@ -135,7 +138,7 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     /// ...
     ///
     m_currentPath = QDir::currentPath();
-    ui->lineEditTarget->setPlaceholderText("eg. example.com");
+    ui->lineEditTarget->setPlaceholderText("eg. example.com, 1.1.1.1, <asn number>, <SHA1 certificate fingerprint>");
     ui->lineEditFilter->setPlaceholderText("Filter...");
     //...
     result->osint->subdomainIp->setHorizontalHeaderLabels({"Subdomains", "IpAddresses"});
@@ -144,6 +147,7 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     result->osint->email->setHorizontalHeaderLabels({"Emails"});
     result->osint->url->setHorizontalHeaderLabels({"Urls"});
     result->osint->asn->setHorizontalHeaderLabels({"Asn", "Name"});
+    result->osint->sslCert->setHorizontalHeaderLabels({"SSL Certs SHA-1 FingerPrints"});
     //...
     ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
     //...
@@ -257,6 +261,16 @@ void Osint::onResultAAAA(QString AAAA){
     }
 }
 
+void Osint::onResultCNAME(QString CNAME){
+    int prevSize = m_subdomainSet.count();
+    m_subdomainSet.insert(CNAME);
+    if(m_subdomainSet.count() > prevSize){
+        result->osint->subdomain->appendRow(new QStandardItem(CNAME));
+        project->addPassiveCNAME({CNAME});
+        ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
+    }
+}
+
 void Osint::onResultMX(QString MX){
     int prevSize = m_subdomainSet.count();
     m_subdomainSet.insert(MX);
@@ -274,6 +288,16 @@ void Osint::onResultNS(QString NS){
         result->osint->subdomain->appendRow(new QStandardItem(NS));
         project->addPassiveNS({NS});
         ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
+    }
+}
+
+void Osint::onResultCertFingerprint(QString certId){
+    int prevSize = m_sslCertSet.count();
+    m_sslCertSet.insert(certId);
+    if(m_sslCertSet.count() > prevSize){
+        result->osint->sslCert->appendRow(new QStandardItem(certId));
+        project->addPassiveSSLCert({certId});
+        ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
     }
 }
 
@@ -306,23 +330,27 @@ void Osint::startScan(){
     scanArgs->inputDomain = true;
 
     switch(ui->comboBoxOption->currentIndex()){
-    case 0:
+    case SUBDOMAINIP:
         scanArgs->outputSubdomainIp = true;
         break;
-    case 1:
+    case SUBDOMAIN:
         scanArgs->outputSubdomain = true;
         break;
-    case 2:
+    case IP:
         scanArgs->outputIp = true;
         break;
-    case 3:
+    case EMAIL:
         scanArgs->outputEmail = true;
         break;
-    case 4:
+    case URL:
         scanArgs->outputUrl = true;
         break;
-    case 5:
+    case ASN:
         scanArgs->outputAsn = true;
+        break;
+    case SSLCERT:
+        scanArgs->outputCertFingerprint = true;
+        break;
     }
 
     if(module.anubis)
@@ -404,6 +432,28 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(module.circl){
+        Circl *circl = new Circl(scanArgs);
+        QThread *cThread = new QThread(this);
+        circl->Enumerator(cThread);
+        circl->moveToThread(cThread);
+        //...
+        connect(circl, &Circl::ipA, this, &Osint::onResultA);
+        connect(circl, &Circl::ipAAAA, this, &Osint::onResultAAAA);
+        connect(circl, &Circl::MX, this, &Osint::onResultMX);
+        connect(circl, &Circl::NS, this, &Osint::onResultNS);
+        connect(circl, &Circl::CNAME, this, &Osint::onResultCNAME);
+        connect(circl, &Circl::asn, this, &Osint::onResultAsn);
+        connect(circl, &Circl::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(circl, &Circl::errorLog, this, &Osint::onErrorLog);
+        connect(circl, &Circl::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, circl, &Circl::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(module.dnsbufferoverrun)
     {
         Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(scanArgs);
@@ -430,10 +480,6 @@ void Osint::startScan(){
         github->moveToThread(cThread);
         //...
         connect(github, &Github::subdomain, this, &Osint::onResultSubdomain);
-        connect(github, &Github::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(github, &Github::ip, this, &Osint::onResultIp);
-        connect(github, &Github::email, this, &Osint::onResultEmail);
-        connect(github, &Github::url, this, &Osint::onResultUrl);
         connect(github, &Github::errorLog, this, &Osint::onErrorLog);
         connect(github, &Github::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -452,12 +498,106 @@ void Osint::startScan(){
         //...
         connect(hackertarget, &HackerTargetFree::subdomain, this, &Osint::onResultSubdomain);
         connect(hackertarget, &HackerTargetFree::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(hackertarget, &HackerTargetFree::ip, this, &Osint::onResultIp);
+        connect(hackertarget, &HackerTargetFree::ipA, this, &Osint::onResultA);
+        connect(hackertarget, &HackerTargetFree::ipAAAA, this, &Osint::onResultAAAA);
         connect(hackertarget, &HackerTargetFree::asn, this, &Osint::onResultAsn);
         connect(hackertarget, &HackerTargetFree::errorLog, this, &Osint::onErrorLog);
         connect(hackertarget, &HackerTargetFree::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, hackertarget, &HackerTargetFree::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.hackertargetpaid)
+    {
+        HackerTargetPaid *hackertarget = new HackerTargetPaid(scanArgs);
+        QThread *cThread = new QThread(this);
+        hackertarget->Enumerator(cThread);
+        hackertarget->moveToThread(cThread);
+        //...
+        connect(hackertarget, &HackerTargetPaid::subdomain, this, &Osint::onResultSubdomain);
+        connect(hackertarget, &HackerTargetPaid::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(hackertarget, &HackerTargetPaid::ipA, this, &Osint::onResultA);
+        connect(hackertarget, &HackerTargetPaid::ipAAAA, this, &Osint::onResultAAAA);
+        connect(hackertarget, &HackerTargetPaid::asn, this, &Osint::onResultAsn);
+        connect(hackertarget, &HackerTargetPaid::errorLog, this, &Osint::onErrorLog);
+        connect(hackertarget, &HackerTargetPaid::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, hackertarget, &HackerTargetPaid::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.huntersearch){
+        HunterSearch *huntersearch = new HunterSearch(scanArgs);
+        QThread *cThread = new QThread(this);
+        huntersearch->Enumerator(cThread);
+        huntersearch->moveToThread(cThread);
+        //...
+        connect(huntersearch, &HunterSearch::email, this, &Osint::onResultEmail);
+        connect(huntersearch, &HunterSearch::errorLog, this, &Osint::onErrorLog);
+        connect(huntersearch, &HunterSearch::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, huntersearch, &HunterSearch::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.mnemonicfree){
+        MnemonicFree *mnemonic = new MnemonicFree(scanArgs);
+        QThread *cThread = new QThread(this);
+        mnemonic->Enumerator(cThread);
+        mnemonic->moveToThread(cThread);
+        //...
+        connect(mnemonic, &MnemonicFree::ipA, this, &Osint::onResultA);
+        connect(mnemonic, &MnemonicFree::ipAAAA, this, &Osint::onResultAAAA);
+        connect(mnemonic, &MnemonicFree::CNAME, this, &Osint::onResultCNAME);
+        connect(mnemonic, &MnemonicFree::MX, this, &Osint::onResultMX);
+        connect(mnemonic, &MnemonicFree::NS, this, &Osint::onResultNS);
+        connect(mnemonic, &MnemonicFree::errorLog, this, &Osint::onErrorLog);
+        connect(mnemonic, &MnemonicFree::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, mnemonic, &MnemonicFree::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.mnemonicpaid){
+        MnemonicPaid *mnemonic = new MnemonicPaid(scanArgs);
+        QThread *cThread = new QThread(this);
+        mnemonic->Enumerator(cThread);
+        mnemonic->moveToThread(cThread);
+        //...
+        connect(mnemonic, &MnemonicPaid::ipA, this, &Osint::onResultA);
+        connect(mnemonic, &MnemonicPaid::ipAAAA, this, &Osint::onResultAAAA);
+        connect(mnemonic, &MnemonicPaid::CNAME, this, &Osint::onResultCNAME);
+        connect(mnemonic, &MnemonicPaid::MX, this, &Osint::onResultMX);
+        connect(mnemonic, &MnemonicPaid::NS, this, &Osint::onResultNS);
+        connect(mnemonic, &MnemonicPaid::errorLog, this, &Osint::onErrorLog);
+        connect(mnemonic, &MnemonicPaid::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, mnemonic, &MnemonicPaid::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.omnisint){
+        Omnisint *omnisint = new Omnisint(scanArgs);
+        QThread *cThread = new QThread(this);
+        omnisint->Enumerator(cThread);
+        omnisint->moveToThread(cThread);
+        //...
+        connect(omnisint, &Omnisint::subdomain, this, &Osint::onResultSubdomain);
+        connect(omnisint, &Omnisint::errorLog, this, &Osint::onErrorLog);
+        connect(omnisint, &Omnisint::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, omnisint, &Omnisint::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -754,26 +894,6 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.omnisint){
-        Omnisint *omnisint = new Omnisint(scanArgs);
-        QThread *cThread = new QThread(this);
-        omnisint->Enumerator(cThread);
-        omnisint->moveToThread(cThread);
-        //...
-        connect(omnisint, &Omnisint::subdomain, this, &Osint::onResultSubdomain);
-        connect(omnisint, &Omnisint::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(omnisint, &Omnisint::ip, this, &Osint::onResultIp);
-        connect(omnisint, &Omnisint::email, this, &Osint::onResultEmail);
-        connect(omnisint, &Omnisint::url, this, &Osint::onResultUrl);
-        connect(omnisint, &Omnisint::errorLog, this, &Osint::onErrorLog);
-        connect(omnisint, &Omnisint::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, omnisint, &Omnisint::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
     if(module.qwant){
         Qwant *qwant = new Qwant(scanArgs);
         QThread *cThread = new QThread(this);
@@ -954,26 +1074,6 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.huntersearch){
-        HunterSearch *huntersearch = new HunterSearch(scanArgs);
-        QThread *cThread = new QThread(this);
-        huntersearch->Enumerator(cThread);
-        huntersearch->moveToThread(cThread);
-        //...
-        connect(huntersearch, &HunterSearch::subdomain, this, &Osint::onResultSubdomain);
-        connect(huntersearch, &HunterSearch::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(huntersearch, &HunterSearch::ip, this, &Osint::onResultIp);
-        connect(huntersearch, &HunterSearch::email, this, &Osint::onResultEmail);
-        connect(huntersearch, &HunterSearch::url, this, &Osint::onResultUrl);
-        connect(huntersearch, &HunterSearch::errorLog, this, &Osint::onErrorLog);
-        connect(huntersearch, &HunterSearch::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, huntersearch, &HunterSearch::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
     if(module.ipinfo){
         IpInfo *ipinfo = new IpInfo(scanArgs);
         QThread *cThread = new QThread(this);
@@ -989,26 +1089,6 @@ void Osint::startScan(){
         connect(ipinfo, &IpInfo::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.mnemonic){
-        Mnemonic *mnemonic = new Mnemonic(scanArgs);
-        QThread *cThread = new QThread(this);
-        mnemonic->Enumerator(cThread);
-        mnemonic->moveToThread(cThread);
-        //...
-        connect(mnemonic, &Mnemonic::subdomain, this, &Osint::onResultSubdomain);
-        connect(mnemonic, &Mnemonic::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(mnemonic, &Mnemonic::ip, this, &Osint::onResultIp);
-        connect(mnemonic, &Mnemonic::email, this, &Osint::onResultEmail);
-        connect(mnemonic, &Mnemonic::url, this, &Osint::onResultUrl);
-        connect(mnemonic, &Mnemonic::errorLog, this, &Osint::onErrorLog);
-        connect(mnemonic, &Mnemonic::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, mnemonic, &Mnemonic::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -1472,6 +1552,10 @@ void Osint::onClearResults(){
         result->osint->asn->clear();
         result->osint->asn->setHorizontalHeaderLabels({"Asn", "Name"});
         break;
+    case SSLCERT:
+        result->osint->sslCert->clear();
+        result->osint->sslCert->setHorizontalHeaderLabels({"Asn", "Name"});
+        break;
     }
     ui->labelResultsCount->clear();
     ///
@@ -1506,6 +1590,7 @@ void Osint::connectActions(){
     connect(&actionSaveEmails, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::email, PROXYMODEL_TYPE::emailProxy);});
     connect(&actionSaveUrls, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::url, PROXYMODEL_TYPE::urlProxy);});
     connect(&actionSaveAsns, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::asn, PROXYMODEL_TYPE::asnProxy);});
+    connect(&actionSaveCerts, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::cert, PROXYMODEL_TYPE::sslCertProxy);});
     //...
     connect(&actionSaveSubdomains_subdomain, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy);});
     connect(&actionSaveIpAddresses_ip, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ip, PROXYMODEL_TYPE::ipProxy);});
@@ -1519,6 +1604,7 @@ void Osint::connectActions(){
     connect(&actionCopyEmails, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::email, PROXYMODEL_TYPE::emailProxy);});
     connect(&actionCopyUrls, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::url, PROXYMODEL_TYPE::urlProxy);});
     connect(&actionCopyAsns, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::asn, PROXYMODEL_TYPE::asnProxy);});
+    connect(&actionCopyCerts, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::cert, PROXYMODEL_TYPE::sslCertProxy);});
     //...
     connect(&actionCopySubdomains_subdomain, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy);});
     connect(&actionCopyIpAddresses_ip, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ip, PROXYMODEL_TYPE::ipProxy);});
@@ -1554,27 +1640,31 @@ void Osint::on_buttonAction_clicked(){
 
     switch(option){
     case SUBDOMAINIP:
-        if(result->osint->subdomainIp->rowCount() < 1)
+        if(result->osint->subdomainIpProxy->rowCount() < 1)
             return;
         break;
     case SUBDOMAIN:
-        if(result->osint->subdomain->rowCount() < 1)
+        if(result->osint->subdomainProxy->rowCount() < 1)
             return;
         break;
     case IP:
-        if(result->osint->ip->rowCount() < 1)
+        if(result->osint->ipProxy->rowCount() < 1)
             return;
         break;
     case EMAIL:
-        if(result->osint->email->rowCount() < 1)
+        if(result->osint->emailProxy->rowCount() < 1)
             return;
         break;
     case URL:
-        if(result->osint->url->rowCount() < 1)
+        if(result->osint->urlProxy->rowCount() < 1)
             return;
         break;
     case ASN:
-        if(result->osint->asn->rowCount() < 1)
+        if(result->osint->asnProxy->rowCount() < 1)
+            return;
+        break;
+    case SSLCERT:
+        if(result->osint->sslCertProxy->rowCount() < 1)
             return;
         break;
     }
@@ -1620,6 +1710,10 @@ void Osint::on_buttonAction_clicked(){
     if(option == ASN){
         saveMenu->addAction(&actionSaveAsns);
         copyMenu->addAction(&actionCopyAsns);
+    }
+    if(option == SSLCERT){
+        saveMenu->addAction(&actionSaveCerts);
+        copyMenu->addAction(&actionCopyCerts);
     }
     Menu->addAction(&actionClearResults);
     Menu->addSeparator();
@@ -1781,6 +1875,14 @@ void Osint::onSaveResults(CHOICE choice, PROXYMODEL_TYPE proxyType){
         }
         break;
 
+    case PROXYMODEL_TYPE::sslCertProxy:
+        for(int i = 0; i != result->osint->sslCertProxy->rowCount(); ++i)
+        {
+            item = result->osint->sslCertProxy->data(result->osint->sslCertProxy->index(i, 0)).toString().append(NEWLINE);
+            file.write(item.toUtf8());
+        }
+        break;
+
     default:
         break;
     }
@@ -1889,6 +1991,14 @@ void Osint::onCopyResults(CHOICE choice, PROXYMODEL_TYPE proxyType){
         }
         break;
 
+    case PROXYMODEL_TYPE::sslCertProxy:
+        for(int i = 0; i != result->osint->sslCertProxy->rowCount(); ++i)
+        {
+            item = result->osint->sslCertProxy->data(result->osint->sslCertProxy->index(i, 0)).toString().append(NEWLINE);
+            clipboardData.append(item);
+        }
+        break;
+
     default:
         break;
     }
@@ -1943,6 +2053,12 @@ void Osint::on_comboBoxOption_currentIndexChanged(int index){
         ui->comboBoxFilter->addItems({"ASN", "Name"});
         ui->comboBoxFilter->show();
         break;
+    case SSLCERT:
+        ui->tableViewResults->setModel(result->osint->sslCertProxy);
+        ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
+        ui->comboBoxFilter->clear();
+        ui->comboBoxFilter->hide();
+        break;
     }
 }
 
@@ -1979,6 +2095,11 @@ void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
         result->osint->asnProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->asnProxy);
         ui->labelResultsCount->setNum(result->osint->asnProxy->rowCount());
+        break;
+    case SSLCERT:
+        result->osint->sslCertProxy->setFilterRegExp(filterKeyword);
+        ui->tableViewResults->setModel(result->osint->sslCertProxy);
+        ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
         break;
     }
 }

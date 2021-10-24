@@ -3,8 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-#define SUBOMAINS 0
-
 namespace ModuleInfo {
     struct Dnsbufferoverun{
         QString name = "Dnsbufferoverun";

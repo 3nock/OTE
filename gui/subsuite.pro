@@ -30,6 +30,8 @@ include(includes/gumbo/gumbo-parser.pri)
 SOURCES += \
     src/modules/osint/api/HackerTargetFree.cpp \
     src/modules/osint/api/HackerTargetPaid.cpp \
+    src/modules/osint/api/MnemonicFree.cpp \
+    src/modules/osint/api/MnemonicPaid.cpp \
     src/modules/osint/api/WebResolver.cpp \
     src/tools/BannerGrabber.cpp \
     src/tools/RawOsint.cpp \
@@ -50,7 +52,6 @@ SOURCES += \
     src/modules/osint/api/HunterSearch.cpp \
     src/modules/osint/api/IpApi.cpp \
     src/modules/osint/api/IpInfo.cpp \
-    src/modules/osint/api/Mnemonic.cpp \
     src/modules/osint/api/ReconDev.cpp \
     src/modules/osint/api/RiskIq.cpp \
     src/modules/osint/api/Robtex.cpp \
@@ -123,6 +124,8 @@ SOURCES += \
 HEADERS += \
     src/modules/osint/api/HackerTargetFree.h \
     src/modules/osint/api/HackerTargetPaid.h \
+    src/modules/osint/api/MnemonicFree.h \
+    src/modules/osint/api/MnemonicPaid.h \
     src/modules/osint/api/WebResolver.h \
     src/tools/BannerGrabber.h \
     src/tools/RawOsint.h \
@@ -144,7 +147,6 @@ HEADERS += \
     src/modules/osint/api/HunterSearch.h \
     src/modules/osint/api/IpApi.h \
     src/modules/osint/api/IpInfo.h \
-    src/modules/osint/api/Mnemonic.h \
     src/modules/osint/api/ReconDev.h \
     src/modules/osint/api/RiskIq.h \
     src/modules/osint/api/Robtex.h \

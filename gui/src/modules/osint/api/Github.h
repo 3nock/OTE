@@ -8,7 +8,7 @@ namespace ModuleInfo {
         QString name = "Github";
         QString url = "https://github.com/";
         QString summary = "Github API";
-        QMap<QString, QString> flags = {{"domains", "domain name"}};
+        QMap<QString, QString> flags = {{"code", "domain name"}};
     };
 }
 
@@ -20,7 +20,7 @@ class Github: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *) override;
 
     private:
         QString m_key = nullptr;

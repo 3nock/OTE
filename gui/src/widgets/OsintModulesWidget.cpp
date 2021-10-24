@@ -50,6 +50,31 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
     }else{
         modules.hackertargetpaid = false;
     }
+    if(ui->moduleCircl->isChecked()){
+        modules.circl = true;
+    }else{
+        modules.circl = false;
+    }
+    if(ui->moduleHuntersearch->isChecked()){
+        modules.huntersearch = true;
+    }else{
+        modules.huntersearch = false;
+    }
+    if(ui->moduleMnemonicFree->isChecked()){
+        modules.mnemonicfree = true;
+    }else{
+        modules.mnemonicfree = false;
+    }
+    if(ui->moduleMnemonicPaid->isChecked()){
+        modules.mnemonicpaid = true;
+    }else{
+        modules.mnemonicpaid = false;
+    }
+    if(ui->moduleOmnisint->isChecked()){
+        modules.omnisint = true;
+    }else{
+        modules.omnisint = false;
+    }
     /*
      * ...
      */
@@ -92,11 +117,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
         modules.exalead = true;
     }else{
         modules.exalead = false;
-    }
-    if(ui->moduleHuntersearch->isChecked()){
-        modules.huntersearch = true;
-    }else{
-        modules.huntersearch = false;
     }
     if(ui->moduleIntelx->isChecked()){
         modules.intelx = true;
@@ -193,11 +213,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
     }else{
         modules.virustotalapi = false;
     }
-    if(ui->moduleOmnisint->isChecked()){
-        modules.omnisint = true;
-    }else{
-        modules.omnisint = false;
-    }
     if(ui->moduleQwant->isChecked()){
         modules.qwant = true;
     }else{
@@ -275,6 +290,31 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleHackerTargetPaid->setChecked(false);
     }
+    if(settings.value("circl").toString() == TRUE){
+        ui->moduleCircl->setChecked(true);
+    }else{
+        ui->moduleCircl->setChecked(false);
+    }
+    if(settings.value(OSINT_HUNTERSEARCH).toString() == TRUE){
+        ui->moduleHuntersearch->setChecked(true);
+    }else{
+        ui->moduleHuntersearch->setChecked(false);
+    }
+    if(settings.value("mnemonicfree").toString() == TRUE){
+        ui->moduleMnemonicFree->setChecked(true);
+    }else{
+        ui->moduleMnemonicFree->setChecked(false);
+    }
+    if(settings.value("mnemonicpaid").toString() == TRUE){
+        ui->moduleMnemonicPaid->setChecked(true);
+    }else{
+        ui->moduleMnemonicPaid->setChecked(false);
+    }
+    if(settings.value(OSINT_OMNISINT).toString() == TRUE){
+        ui->moduleOmnisint->setChecked(true);
+    }else{
+        ui->moduleOmnisint->setChecked(false);
+    }
     /*
      * ...
      */
@@ -348,11 +388,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleExalead->setChecked(false);
     }
-    if(settings.value(OSINT_HUNTERSEARCH).toString() == TRUE){
-        ui->moduleHuntersearch->setChecked(true);
-    }else{
-        ui->moduleHuntersearch->setChecked(false);
-    }
     if(settings.value(OSINT_NETCRAFT).toString() == TRUE){
         ui->moduleNetcraft->setChecked(true);
     }else{
@@ -417,11 +452,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
         ui->moduleVirustotalapi->setChecked(true);
     }else{
         ui->moduleVirustotalapi->setChecked(false);
-    }
-    if(settings.value(OSINT_OMNISINT).toString() == TRUE){
-        ui->moduleOmnisint->setChecked(true);
-    }else{
-        ui->moduleOmnisint->setChecked(false);
     }
     if(settings.value(OSINT_QWANT).toString() == TRUE){
         ui->moduleQwant->setChecked(true);
@@ -506,6 +536,31 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue("hackertargetfree", FALSE);
     }
+    if(ui->moduleCircl->isChecked()){
+        settings.setValue("circl", TRUE);
+    }else{
+        settings.setValue("circl", FALSE);
+    }
+    if(ui->moduleHuntersearch->isChecked()){
+        settings.setValue(OSINT_HUNTERSEARCH, TRUE);
+    }else{
+        settings.setValue(OSINT_HUNTERSEARCH, FALSE);
+    }
+    if(ui->moduleMnemonicFree->isChecked()){
+        settings.setValue("mnemonicfree", TRUE);
+    }else{
+        settings.setValue("mnemonicfree", FALSE);
+    }
+    if(ui->moduleMnemonicPaid->isChecked()){
+        settings.setValue("mnemonicpaid", TRUE);
+    }else{
+        settings.setValue("mnemonicpaid", FALSE);
+    }
+    if(ui->moduleOmnisint->isChecked()){
+        settings.setValue(OSINT_OMNISINT, TRUE);
+    }else{
+        settings.setValue(OSINT_OMNISINT, FALSE);
+    }
     /*
      * ...
      */
@@ -548,11 +603,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_EXALEAD, TRUE);
     }else{
         settings.setValue(OSINT_EXALEAD, FALSE);
-    }
-    if(ui->moduleHuntersearch->isChecked()){
-        settings.setValue(OSINT_HUNTERSEARCH, TRUE);
-    }else{
-        settings.setValue(OSINT_HUNTERSEARCH, FALSE);
     }
     if(ui->moduleIntelx->isChecked()){
         settings.setValue(OSINT_INTELX, TRUE);
@@ -648,11 +698,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_VIRUSTOTALAPI, TRUE);
     }else{
         settings.setValue(OSINT_VIRUSTOTALAPI, FALSE);
-    }
-    if(ui->moduleOmnisint->isChecked()){
-        settings.setValue(OSINT_OMNISINT, TRUE);
-    }else{
-        settings.setValue(OSINT_OMNISINT, FALSE);
     }
     if(ui->moduleQwant->isChecked()){
         settings.setValue(OSINT_QWANT, TRUE);

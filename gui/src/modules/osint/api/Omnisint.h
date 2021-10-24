@@ -12,8 +12,8 @@ namespace ModuleInfo {
 
         QMap<QString, QString> flags = {{"subdomains", "domain name"},
                                         {"tlds", "domain name"},
-                                        {"subdomainIp", "domain name"},
-                                        {"reverse", "ip-address or ip/cdir"}};
+                                        {"all", "domain name"},
+                                        {"reverse ip", "ip-address or ip/cdir"}};
     };
 }
 
@@ -25,10 +25,7 @@ class Omnisint: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
-
-    private:
-        int m_page = 1;
+        void replyFinishedSubdomain(QNetworkReply *) override;
 };
 
 #endif // OMNISINT_H

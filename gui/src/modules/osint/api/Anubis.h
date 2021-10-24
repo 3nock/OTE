@@ -3,8 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-#define SUBDOMAIN 0
-
 namespace ModuleInfo {
     struct Anubis{
         QString name = "Anubis";

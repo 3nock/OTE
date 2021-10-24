@@ -20,10 +20,12 @@ Project::Project(QWidget *parent, ProjectDataModel *projectDataModel) :QWidget(p
     ///
     /// for analysis tabs...
     ///
+    /*
     general = new GeneralAnalysis(this);
     specific = new SpecificAnalysis(this);
     ui->tabWidgetProject->insertTab(1, general, "General");
     ui->tabWidgetProject->insertTab(2, specific, "Specific");
+    */
     ///
     /// setting up signals and slots...
     ///

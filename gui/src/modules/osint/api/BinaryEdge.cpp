@@ -4,6 +4,16 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define DOMAIN_DNS 0
+#define DOMAIN_ENUMERATION 1
+#define DOMAIN_HYMOGLYPHS 2
+#define DOMAIN_IP 3
+#define DOMAIN_SEARCH 4
+#define DOMAIN_SUBDOMAIN 5
+#define HOST_HISTORICAL 6
+#define HOST_IP 7
+#define HOST_SEARCH 8
+#define HOST_SEARCHSTAT 9
 
 BinaryEdge::BinaryEdge(ScanArgs *args): AbstractOsintModule(args)
 {

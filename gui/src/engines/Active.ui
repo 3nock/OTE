@@ -34,7 +34,7 @@
      <item>
       <widget class="QFrame" name="frameDefault">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
@@ -332,7 +332,13 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>18</height>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>19</height>
          </size>
         </property>
         <property name="styleSheet">

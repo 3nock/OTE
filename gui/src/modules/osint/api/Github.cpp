@@ -4,17 +4,21 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define CODE 0
 
 Github::Github(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinished);
-    //...
     log.moduleName = "Github";
-    log.resultsCount = 0;
 
-    /* getting the api-key... */
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinishedSubdomain);
+    ///
+    /// getting the api-key...
+    ///
     Config::generalConfig().beginGroup("api-keys");
     m_key = Config::generalConfig().value("github").toString();
     Config::generalConfig().endGroup();
@@ -30,42 +34,36 @@ void Github::start(){
 
     QUrl url;
     if(args->raw){
-        url.setUrl("https://api.github.com/search/code?q="+args->target+"&page=1&per_page=100");
+        switch(args->rawOption){
+        case CODE:
+            url.setUrl("https://api.github.com/search/code?q="+args->target+"&type=Code&page=1&per_page=100");
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
-    if(args->subdomains){
-        url.setUrl("https://api.github.com/search/code?q="+args->target+"&page=1&per_page=100");
+    if(args->inputDomain){
+        url.setUrl("https://api.github.com/search/code?q="+args->target+"&type=Code&page=1&per_page=100");
+        request.setUrl(url);
+        request.setAttribute(QNetworkRequest::User, CODE);
+        manager->get(request);
+        activeRequests++;
     }
 
-    request.setUrl(url);
-    manager->get(request);
-    activeRequests++;
 }
 
-void Github::replyFinished(QNetworkReply *reply){
-    log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
+void Github::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error())
         this->onError(reply);
     else
     {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            goto END;
-        }
-        if(args->outputSubdomain){
-            /*
-                Not yet implemented...
-            */
-        }
+        /*
+         * Not Yet Implemented...
+         */
     }
-
-END:
-    reply->deleteLater();
-    activeRequests--;
-    if(activeRequests == 0){
-        //emit infoLog(log);
-        emit quitThread();
-    }
+    end(reply);
 }
 
 /*

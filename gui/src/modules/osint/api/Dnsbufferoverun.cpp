@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#define SUBOMAINS 0
 
 Dnsbufferoverun::Dnsbufferoverun(ScanArgs *args):
     AbstractOsintModule(args)
