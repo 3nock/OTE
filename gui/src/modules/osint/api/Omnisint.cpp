@@ -7,8 +7,7 @@
 #define SUBDOMAIN 2
 #define TLD 3
 
-Omnisint::Omnisint(ScanArgs *args):
-    AbstractOsintModule(args)
+Omnisint::Omnisint(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Omnisint";

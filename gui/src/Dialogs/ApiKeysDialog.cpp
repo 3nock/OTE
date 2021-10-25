@@ -56,6 +56,8 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("circlUser", ui->lineEditCirclUser->text());
     Config::generalConfig().setValue("circlPwd", ui->lineEditCirclPwd->text());
     Config::generalConfig().setValue("mnemonic", ui->lineEditMnemonic->text());
+    Config::generalConfig().setValue("robtex", ui->lineEditRobtex->text());
+    Config::generalConfig().setValue("otx", ui->lineEditRobtex->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -231,6 +233,16 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditMnemonic->setText(key);
         ui->buttonGetMnemonic->hide();
     }
+    key = Config::generalConfig().value("robtex").toString();
+    if(!key.isEmpty()){
+        ui->lineEditRobtex->setText(key);
+        ui->buttonGetRobtex->hide();
+    }
+    key = Config::generalConfig().value("otx").toString();
+    if(!key.isEmpty()){
+        ui->lineEditOtx->setText(key);
+        ui->buttonGetOtx->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -345,4 +357,12 @@ void ApiKeysDialog::on_buttonGetCircl_clicked(){
 
 void ApiKeysDialog::on_buttonGetMnemonic_clicked(){
     QDesktopServices::openUrl(QUrl("https://mnemonic.no/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetRobtex_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.robtex.com/api/#pro_api", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetOtx_clicked(){
+    QDesktopServices::openUrl(QUrl("https://otx.alienvault.com/", QUrl::TolerantMode));
 }

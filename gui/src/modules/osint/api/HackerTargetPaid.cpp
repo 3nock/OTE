@@ -18,8 +18,7 @@
 #define ZONETRANSFER 14
 
 
-HackerTargetPaid::HackerTargetPaid(ScanArgs *args):
-    AbstractOsintModule(args)
+HackerTargetPaid::HackerTargetPaid(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "HackerTarget";

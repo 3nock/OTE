@@ -32,8 +32,13 @@ SOURCES += \
     src/modules/osint/api/HackerTargetPaid.cpp \
     src/modules/osint/api/MnemonicFree.cpp \
     src/modules/osint/api/MnemonicPaid.cpp \
+    src/modules/osint/api/OtxFree.cpp \
+    src/modules/osint/api/OtxPaid.cpp \
+    src/modules/osint/api/RobtexFree.cpp \
+    src/modules/osint/api/RobtexPaid.cpp \
     src/modules/osint/api/WebResolver.cpp \
     src/tools/BannerGrabber.cpp \
+    src/tools/FastAnalysis.cpp \
     src/tools/RawOsint.cpp \
     src/modules/scan/BruteScanner.cpp \
     src/modules/scan/OsintScanner.cpp \
@@ -52,9 +57,7 @@ SOURCES += \
     src/modules/osint/api/HunterSearch.cpp \
     src/modules/osint/api/IpApi.cpp \
     src/modules/osint/api/IpInfo.cpp \
-    src/modules/osint/api/ReconDev.cpp \
     src/modules/osint/api/RiskIq.cpp \
-    src/modules/osint/api/Robtex.cpp \
     src/modules/osint/api/SecurityTrails.cpp \
     src/modules/osint/api/Shodan.cpp \
     src/modules/osint/api/ThreatBook.cpp \
@@ -65,9 +68,7 @@ SOURCES += \
     src/modules/osint/api/Anubis.cpp \
     src/modules/osint/api/Dnsbufferoverun.cpp \
     src/modules/osint/api/Omnisint.cpp \
-    src/modules/osint/api/Otx.cpp \
     src/modules/osint/api/Projectdiscovery.cpp \
-    src/modules/osint/api/Qwant.cpp \
     src/modules/osint/api/Spyse.cpp \
     src/modules/osint/api/Sublist3r.cpp \
     src/modules/osint/api/Threatcrowd.cpp \
@@ -126,8 +127,13 @@ HEADERS += \
     src/modules/osint/api/HackerTargetPaid.h \
     src/modules/osint/api/MnemonicFree.h \
     src/modules/osint/api/MnemonicPaid.h \
+    src/modules/osint/api/OtxFree.h \
+    src/modules/osint/api/OtxPaid.h \
+    src/modules/osint/api/RobtexFree.h \
+    src/modules/osint/api/RobtexPaid.h \
     src/modules/osint/api/WebResolver.h \
     src/tools/BannerGrabber.h \
+    src/tools/FastAnalysis.h \
     src/tools/RawOsint.h \
     src/modules/scan/OsintScanner.h \
     src/modules/scan/BruteScanner.h \
@@ -147,9 +153,7 @@ HEADERS += \
     src/modules/osint/api/HunterSearch.h \
     src/modules/osint/api/IpApi.h \
     src/modules/osint/api/IpInfo.h \
-    src/modules/osint/api/ReconDev.h \
     src/modules/osint/api/RiskIq.h \
-    src/modules/osint/api/Robtex.h \
     src/modules/osint/api/SecurityTrails.h \
     src/modules/osint/api/Shodan.h \
     src/modules/osint/api/ThreatBook.h \
@@ -160,9 +164,7 @@ HEADERS += \
     src/modules/osint/api/Anubis.h \
     src/modules/osint/api/Dnsbufferoverun.h \
     src/modules/osint/api/Omnisint.h \
-    src/modules/osint/api/Otx.h \
     src/modules/osint/api/Projectdiscovery.h \
-    src/modules/osint/api/Qwant.h \
     src/modules/osint/api/Spyse.h \
     src/modules/osint/api/Sublist3r.h \
     src/modules/osint/api/Threatcrowd.h \
@@ -220,6 +222,7 @@ HEADERS += \
 
 FORMS += \
     src/tools/BannerGrabber.ui \
+    src/tools/FastAnalysis.ui \
     src/tools/RawOsint.ui \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \

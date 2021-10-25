@@ -109,7 +109,8 @@ class AbstractOsintModule : public QObject {
         /* void infoLog(ScanLog log);
            void errorLog(ScanLog error);
         */
-        void certFingerprint(QString certId);
+        void certFingerprint(QString certId); // change to sslCert
+        void ipCdir(QString ip);
         void ip(QString ip);
         void subdomain(QString subdomain);
         void subdomainIp(QString subdomain, QString ip);

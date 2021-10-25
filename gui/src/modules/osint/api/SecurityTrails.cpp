@@ -4,6 +4,19 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define ACCOUNT 0
+#define ASSOCIATED_DOMAINS 1
+#define ASSOCIATED_IPS 2
+#define COMPANY 3
+#define DNS_HISTORY 4
+#define DOMAINS 5
+#define IP_WHOIS 6
+#define PING 7
+#define SSL_CERT 8
+#define SUBDOMAINS 9
+#define WHOIS 10
+#define WHOIS_HISTORY 11
+
 /*
  * Limited to 2000 results for the Free plan and to 10000 for subdomainIp paid subscriptions.
  */
@@ -11,7 +24,10 @@ SecurityTrails::SecurityTrails(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinished);
+    log.moduleName = "SecurityTrails";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedRaw);
     ///
     /// get api key....
     ///
@@ -25,42 +41,61 @@ SecurityTrails::~SecurityTrails(){
 
 void SecurityTrails::start(){
     QNetworkRequest request;
+    request.setRawHeader("apikey", m_key.toUtf8());
+    request.setRawHeader("Accept", "application/json");
 
     QUrl url;
     if(args->raw){
-        if(args->option == "dns history")
+        switch (args->rawOption) {
+        case DNS_HISTORY:
             url.setUrl("https://api.securitytrails.com/v1/history/"+args->target+"/dns/any");
-        if(args->option == "subdomains")
+            break;
+        case SUBDOMAINS:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/subdomains?children_only=false&include_inactive=true");
-        if(args->option == "whois history")
+            break;
+        case WHOIS_HISTORY:
             url.setUrl("https://api.securitytrails.com/v1/history/"+args->target+"/whois");
-        if(args->option == "whois")
+            break;
+        case WHOIS:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/whois");
-        if(args->option == "associated domains")
+            break;
+        case ASSOCIATED_DOMAINS:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/associated");
-        if(args->option == "associated ips")
+            break;
+        case ASSOCIATED_IPS:
             url.setUrl("https://api.securitytrails.com/v1/company/"+args->target+"/associated-ips");
-        if(args->option == "domain")
+            break;
+        case DOMAINS:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target);
-        if(args->option == "company")
+            break;
+        case COMPANY:
             url.setUrl("https://api.securitytrails.com/v1/company/"+args->target);
-        if(args->option == "ssl cert")
+            break;
+        case SSL_CERT:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/ssl?include_subdomains=false&status=valid");
-        if(args->option == "ip whois")
+            break;
+        case IP_WHOIS:
             url.setUrl("https://api.securitytrails.com/v1/ips/"+args->target+"/whois");
-        if(args->option == "ping")
+            break;
+        case PING:
             url.setUrl("https://api.securitytrails.com/v1/ping");
-        if(args->option == "account")
+            break;
+        case ACCOUNT:
             url.setUrl("https://api.securitytrails.com/v1/account/usage");
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
-    else{
+
+    if(args->inputIp){
         url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/subdomains?children_only=false&include_inactive=true");
     }
 
-    request.setUrl(url);
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("apikey", m_key.toUtf8());
-    manager->get(request);
+    if(args->inputDomain){
+
+    }
 }
 
 void SecurityTrails::replyFinished(QNetworkReply *reply){

@@ -75,6 +75,36 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
     }else{
         modules.omnisint = false;
     }
+    if(ui->moduleOtxFree->isChecked()){
+        modules.otxfree = true;
+    }else{
+        modules.otxfree = false;
+    }
+    if(ui->moduleOtxPaid->isChecked()){
+        modules.otxpaid = true;
+    }else{
+        modules.otxpaid = false;
+    }
+    if(ui->moduleProjectdiscovery->isChecked()){
+        modules.projectdiscovery = true;
+    }else{
+        modules.projectdiscovery = false;
+    }
+    if(ui->moduleRiskIq->isChecked()){
+        modules.riskiq = true;
+    }else{
+        modules.riskiq = false;
+    }
+    if(ui->moduleRobtexFree->isChecked()){
+        modules.robtexfree = true;
+    }else{
+        modules.robtexfree = false;
+    }
+    if(ui->moduleRobtexPaid->isChecked()){
+        modules.robtexpaid = true;
+    }else{
+        modules.robtexpaid = false;
+    }
     /*
      * ...
      */
@@ -127,11 +157,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
         modules.netcraft = true;
     }else{
         modules.netcraft = false;
-    }
-    if(ui->moduleOtx->isChecked()){
-        modules.otx = true;
-    }else{
-        modules.otx = false;
     }
     if(ui->moduleSecuritytrails->isChecked()){
         modules.securitytrails = true;
@@ -213,11 +238,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
     }else{
         modules.virustotalapi = false;
     }
-    if(ui->moduleQwant->isChecked()){
-        modules.qwant = true;
-    }else{
-        modules.qwant = false;
-    }
     if(ui->moduleRapiddns->isChecked()){
         modules.rapiddns = true;
     }else{
@@ -232,11 +252,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
         modules.pentesttools = true;
     }else{
         modules.pentesttools = false;
-    }
-    if(ui->moduleProjectdiscovery->isChecked()){
-        modules.projectdiscovery = true;
-    }else{
-        modules.projectdiscovery = false;
     }
     if(ui->moduleSpyse->isChecked()){
         modules.spyse = true;
@@ -314,6 +329,40 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
         ui->moduleOmnisint->setChecked(true);
     }else{
         ui->moduleOmnisint->setChecked(false);
+    }
+    if(settings.value("otxfree").toString() == TRUE){
+        ui->moduleOtxFree->setChecked(true);
+    }else{
+        ui->moduleOtxFree->setChecked(false);
+    }
+    if(settings.value("otxpaid").toString() == TRUE){
+        ui->moduleOtxPaid->setChecked(true);
+    }else{
+        ui->moduleOtxPaid->setChecked(false);
+    }
+    if(settings.value(OSINT_PROJECTDISCOVERY).toString() == TRUE){
+        ui->moduleProjectdiscovery->setChecked(true);
+    }
+    else{
+        ui->moduleProjectdiscovery->setChecked(false);
+    }
+    if(settings.value("riskiq").toString() == TRUE){
+        ui->moduleRiskIq->setChecked(true);
+    }
+    else{
+        ui->moduleRiskIq->setChecked(false);
+    }
+    if(settings.value("robtexfree").toString() == TRUE){
+        ui->moduleRobtexFree->setChecked(true);
+    }
+    else{
+        ui->moduleRobtexFree->setChecked(false);
+    }
+    if(settings.value("robtexpaid").toString() == TRUE){
+        ui->moduleRobtexPaid->setChecked(true);
+    }
+    else{
+        ui->moduleRobtexPaid->setChecked(false);
     }
     /*
      * ...
@@ -393,11 +442,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleNetcraft->setChecked(false);
     }
-    if(settings.value(OSINT_OTX).toString() == TRUE){
-        ui->moduleOtx->setChecked(true);
-    }else{
-        ui->moduleOtx->setChecked(false);
-    }
     if(settings.value(OSINT_SUIP).toString() == TRUE){
         ui->moduleSuip->setChecked(true);
     }else{
@@ -453,12 +497,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleVirustotalapi->setChecked(false);
     }
-    if(settings.value(OSINT_QWANT).toString() == TRUE){
-        ui->moduleQwant->setChecked(true);
-    }
-    else{
-        ui->moduleQwant->setChecked(false);
-    }
     if(settings.value(OSINT_URLSCAN).toString() == TRUE){
         ui->moduleUrlscan->setChecked(true);
     }else{
@@ -469,12 +507,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }
     else{
         ui->moduleRapiddns->setChecked(false);
-    }
-    if(settings.value(OSINT_PROJECTDISCOVERY).toString() == TRUE){
-        ui->moduleProjectdiscovery->setChecked(true);
-    }
-    else{
-        ui->moduleProjectdiscovery->setChecked(false);
     }
     if(settings.value(OSINT_PENTESTTOOLS).toString() == TRUE){
         ui->modulePentesttools->setChecked(true);
@@ -561,6 +593,36 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_OMNISINT, FALSE);
     }
+    if(ui->moduleOtxFree->isChecked()){
+        settings.setValue("otxfree", TRUE);
+    }else{
+        settings.setValue("otxfree", FALSE);
+    }
+    if(ui->moduleOtxPaid->isChecked()){
+        settings.setValue("otxpaid", TRUE);
+    }else{
+        settings.setValue("otxpaid", FALSE);
+    }
+    if(ui->moduleProjectdiscovery->isChecked()){
+        settings.setValue(OSINT_PROJECTDISCOVERY, TRUE);
+    }else{
+        settings.setValue(OSINT_PROJECTDISCOVERY, FALSE);
+    }
+    if(ui->moduleRiskIq->isChecked()){
+        settings.setValue("riskiq", TRUE);
+    }else{
+        settings.setValue("riskiq", FALSE);
+    }
+    if(ui->moduleRobtexFree->isChecked()){
+        settings.setValue("robtexfree", TRUE);
+    }else{
+        settings.setValue("robtexfree", FALSE);
+    }
+    if(ui->moduleRobtexPaid->isChecked()){
+        settings.setValue("robtexpaid", TRUE);
+    }else{
+        settings.setValue("robtexpaid", FALSE);
+    }
     /*
      * ...
      */
@@ -613,11 +675,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_NETCRAFT, TRUE);
     }else{
         settings.setValue(OSINT_NETCRAFT, FALSE);
-    }
-    if(ui->moduleOtx->isChecked()){
-        settings.setValue(OSINT_OTX, TRUE);
-    }else{
-        settings.setValue(OSINT_OTX, FALSE);
     }
     if(ui->moduleSecuritytrails->isChecked()){
         settings.setValue(OSINT_SECURITYTRAILS, TRUE);
@@ -699,11 +756,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_VIRUSTOTALAPI, FALSE);
     }
-    if(ui->moduleQwant->isChecked()){
-        settings.setValue(OSINT_QWANT, TRUE);
-    }else{
-        settings.setValue(OSINT_QWANT, FALSE);
-    }
     if(ui->moduleRapiddns->isChecked()){
         settings.setValue(OSINT_RAPIDDNS, TRUE);
     }else{
@@ -718,11 +770,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_PENTESTTOOLS, TRUE);
     }else{
         settings.setValue(OSINT_PENTESTTOOLS, FALSE);
-    }
-    if(ui->moduleProjectdiscovery->isChecked()){
-        settings.setValue(OSINT_PROJECTDISCOVERY, TRUE);
-    }else{
-        settings.setValue(OSINT_PROJECTDISCOVERY, FALSE);
     }
     if(ui->moduleSpyse->isChecked()){
         settings.setValue(OSINT_SPYSE, TRUE);

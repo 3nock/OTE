@@ -180,7 +180,7 @@ void RawOsint::loadEngines(){
                                  "spyse",
                                  "googleCert",
                                  "omnisint",
-                                 "qwant",
+                                 "robtex(Pro)",
                                  "urlscan",
                                  "virustotalapi",
                                  "waybackmachine",
@@ -237,16 +237,15 @@ void RawOsint::startScan(){
     }
     case 1:
     {
-        Otx *otx = new Otx(m_scanArgs);
-
+        OtxFree *otx = new OtxFree(m_scanArgs);
         otx->Enumerator(cThread);
         otx->moveToThread(cThread);
         //...
-        connect(otx, &Otx::rawResults, this, &RawOsint::onResults);
-        connect(otx, &Otx::errorLog, this, &RawOsint::onErrorLog);
-        connect(otx, &Otx::infoLog, this, &RawOsint::onInfoLog);
+        connect(otx, &OtxFree::rawResults, this, &RawOsint::onResults);
+        connect(otx, &OtxFree::errorLog, this, &RawOsint::onErrorLog);
+        connect(otx, &OtxFree::infoLog, this, &RawOsint::onInfoLog);
         connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, otx, &Otx::deleteLater);
+        connect(cThread, &QThread::finished, otx, &OtxFree::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -415,16 +414,15 @@ void RawOsint::startScan(){
     }
     case 12:
     {
-        Qwant *qwant = new Qwant(m_scanArgs);
-
-        qwant->Enumerator(cThread);
-        qwant->moveToThread(cThread);
+        RobtexPaid *robtex = new RobtexPaid(m_scanArgs);
+        robtex->Enumerator(cThread);
+        robtex->moveToThread(cThread);
         //...
-        connect(qwant, &Qwant::rawResults, this, &RawOsint::onResults);
-        connect(qwant, &Qwant::errorLog, this, &RawOsint::onErrorLog);
-        connect(qwant, &Qwant::infoLog, this, &RawOsint::onInfoLog);
+        connect(robtex, &RobtexPaid::rawResults, this, &RawOsint::onResults);
+        connect(robtex, &RobtexPaid::errorLog, this, &RawOsint::onErrorLog);
+        connect(robtex, &RobtexPaid::infoLog, this, &RawOsint::onInfoLog);
         connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, qwant, &Qwant::deleteLater);
+        connect(cThread, &QThread::finished, robtex, &RobtexPaid::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -655,15 +653,15 @@ void RawOsint::startScan(){
     }
     case 27:
     {
-        Robtex *robtex = new Robtex(m_scanArgs);
+        RobtexFree *robtex = new RobtexFree(m_scanArgs);
         robtex->Enumerator(cThread);
         robtex->moveToThread(cThread);
         //...
-        connect(robtex, &Robtex::rawResults, this, &RawOsint::onResults);
-        connect(robtex, &Robtex::errorLog, this, &RawOsint::onErrorLog);
-        connect(robtex, &Robtex::infoLog, this, &RawOsint::onInfoLog);
+        connect(robtex, &RobtexFree::rawResults, this, &RawOsint::onResults);
+        connect(robtex, &RobtexFree::errorLog, this, &RawOsint::onErrorLog);
+        connect(robtex, &RobtexFree::infoLog, this, &RawOsint::onInfoLog);
         connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
-        connect(cThread, &QThread::finished, robtex, &Robtex::deleteLater);
+        connect(cThread, &QThread::finished, robtex, &RobtexFree::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -845,7 +843,8 @@ void RawOsint::startScan(){
         cThread->start();
         break;
     }
-    case 39:{
+    case 39:
+    {
         MnemonicPaid *mnemonic = new MnemonicPaid(m_scanArgs);
         mnemonic->Enumerator(cThread);
         mnemonic->moveToThread(cThread);
@@ -855,6 +854,22 @@ void RawOsint::startScan(){
         connect(mnemonic, &MnemonicPaid::infoLog, this, &RawOsint::onInfoLog);
         connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
         connect(cThread, &QThread::finished, mnemonic, &MnemonicPaid::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        break;
+    }
+    case 40:
+    {
+        OtxPaid *otx = new OtxPaid(m_scanArgs);
+        otx->Enumerator(cThread);
+        otx->moveToThread(cThread);
+        //...
+        connect(otx, &OtxPaid::rawResults, this, &RawOsint::onResults);
+        connect(otx, &OtxPaid::errorLog, this, &RawOsint::onErrorLog);
+        connect(otx, &OtxPaid::infoLog, this, &RawOsint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &RawOsint::onEnumerationComplete);
+        connect(cThread, &QThread::finished, otx, &OtxPaid::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -979,7 +994,7 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     }
     case 1:
     {
-        ModuleInfo::Otx meta;
+        ModuleInfo::OtxFree meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());
@@ -1078,7 +1093,7 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     }
     case 12:
     {
-        ModuleInfo::Qwant meta;
+        ModuleInfo::RobtexPaid meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());
@@ -1195,7 +1210,7 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     }
     case 27:
     {
-        ModuleInfo::Robtex meta;
+        ModuleInfo::RobtexFree meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());
@@ -1304,6 +1319,15 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
     case 39:
     {
         ModuleInfo::MnemonicPaid meta;
+        ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+        ui->labelSummary->setText(meta.summary);
+        ui->comboBoxOptions->addItems(meta.flags.keys());
+        m_optionSet = meta.flags;
+        break;
+    }
+    case 40:
+    {
+        ModuleInfo::OtxPaid meta;
         ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
         ui->labelSummary->setText(meta.summary);
         ui->comboBoxOptions->addItems(meta.flags.keys());

@@ -5,8 +5,7 @@
 
 #define SUBOMAINS 0
 
-Dnsbufferoverun::Dnsbufferoverun(ScanArgs *args):
-    AbstractOsintModule(args)
+Dnsbufferoverun::Dnsbufferoverun(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "DnsBufferoverRun";

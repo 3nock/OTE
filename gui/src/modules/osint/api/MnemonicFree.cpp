@@ -14,8 +14,7 @@
  * access passive-dns, 1000 queries per day for public usage
  * you can query for any dns record type
  */
-MnemonicFree::MnemonicFree(ScanArgs *args):
-    AbstractOsintModule(args)
+MnemonicFree::MnemonicFree(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Mnemonic";

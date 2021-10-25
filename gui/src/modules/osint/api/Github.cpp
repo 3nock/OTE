@@ -6,8 +6,7 @@
 
 #define CODE 0
 
-Github::Github(ScanArgs *args):
-    AbstractOsintModule(args)
+Github::Github(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Github";

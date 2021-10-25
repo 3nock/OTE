@@ -11,8 +11,7 @@
 #define EMAIL_FINDER 4
 #define EMAIL_VERIFIER 5
 
-HunterSearch::HunterSearch(ScanArgs *args):
-    AbstractOsintModule(args)
+HunterSearch::HunterSearch(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Hunter";

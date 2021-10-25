@@ -254,7 +254,7 @@
             <x>0</x>
             <y>0</y>
             <width>162</width>
-            <height>956</height>
+            <height>910</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -349,30 +349,16 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="moduleOtx">
+            <widget class="QCheckBox" name="moduleOtxFree">
              <property name="text">
-              <string>Otx</string>
+              <string>Otx (Free)</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="moduleQwant">
+            <widget class="QCheckBox" name="moduleRobtexFree">
              <property name="text">
-              <string>Qwant</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="moduleRiskIq">
-             <property name="text">
-              <string>RiskIq (Community)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="moduleRobtex">
-             <property name="text">
-              <string>Robtex</string>
+              <string>Robtex (Free)</string>
              </property>
             </widget>
            </item>
@@ -645,7 +631,7 @@
             <x>0</x>
             <y>0</y>
             <width>161</width>
-            <height>608</height>
+            <height>677</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -733,9 +719,30 @@
             </widget>
            </item>
            <item>
+            <widget class="QCheckBox" name="moduleOtxPaid">
+             <property name="text">
+              <string>Otx</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QCheckBox" name="moduleProjectdiscovery">
              <property name="text">
               <string>ProjectDiscovery</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleRiskIq">
+             <property name="text">
+              <string>RiskIq</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="moduleRobtexPaid">
+             <property name="text">
+              <string>Robtex</string>
              </property>
             </widget>
            </item>

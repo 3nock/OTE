@@ -4,14 +4,39 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define CERT_HOST 0
+#define CERT_NAME 1
+#define CERT_SERIAL 2
+#define CERT_SHA1 3
+#define PDNS_IP 4
+#define PDNS_NAME 5
+#define PDNS_RAW 6
+#define WHOIS_ADDRESS 7
+#define WHOIS_DOMAIN 8
+#define WHOIS_EMAIL 9
+#define WHOIS_NAME 10
+#define WHOIS_NAMESERVER 11
+#define WHOIS_ORG 12
+#define WHOIS_PHONE 13
+
 /*
  * Error in Basic Authentication
  */
-RiskIq::RiskIq(ScanArgs *args):
-    AbstractOsintModule(args)
+RiskIq::RiskIq(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinished);
+    log.moduleName = "RiskIq";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedRaw);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedIp);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomain);
+    if(args->outputSubdomainIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomainIp);
+    if(args->outputCertFingerprint)
+        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedCertFingerprint);
     ///
     /// getting api-key...
     ///
@@ -26,205 +51,246 @@ RiskIq::~RiskIq(){
 
 void RiskIq::start(){
     QNetworkRequest request;
-
-    QUrl url;
-    if(args->raw){
-        if(args->option == "pdns ip")
-            url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+args->target);
-        if(args->option == "pdns name")
-            url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+args->target);
-        if(args->option == "pdns raw")
-            url.setUrl("https://api.riskiq.net/v0/pdns/data/raw?hex="+args->target);
-        if(args->option == "whois address")
-            url.setUrl("https://api.riskiq.net/v0/whois/address?address="+args->target);
-        if(args->option == "whois domain")
-            url.setUrl("https://api.riskiq.net/v0/whois/domain?domain="+args->target);
-        if(args->option == "whois email")
-            url.setUrl("https://api.riskiq.net/v0/whois/email?email="+args->target);
-        if(args->option == "whois name")
-            url.setUrl("https://api.riskiq.net/v0/whois/name?name="+args->target);
-        if(args->option == "whois nameserver")
-            url.setUrl("https://api.riskiq.net/v0/whois/nameserver?nameserver="+args->target);
-        if(args->option == "whois org")
-            url.setUrl("https://api.riskiq.net/v0/whois/org?org="+args->target);
-        if(args->option == "whois phone")
-            url.setUrl("https://api.riskiq.net/v0/whois/phone?phone="+args->target);
-    }else{
-        url.setUrl("https://api.riskiq.net/v0/pdns/name?name="+args->target+"&type=A");
-    }
-
-    request.setUrl(url);
     request.setRawHeader("Accept", "application/json");
     ///
     /// HTTP Basic authentication header value: base64(username:password)
     ///
     QString concatenated = m_name+":"+m_key;
     QByteArray data = concatenated.toLocal8Bit().toBase64();
-    /*
-    QString headerData = "basic " + data;
-    request.setRawHeader("Authorization", headerData.toLocal8Bit());
-    */
     request.setRawHeader("Authorization", "Basic "+data);
-    manager->get(request);
+
+    QUrl url;
+    if(args->raw){
+        switch (args->rawOption) {
+        case CERT_HOST:
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);
+            break;
+        case CERT_NAME:
+            url.setUrl("https://api.riskiq.net /v1/ssl/cert/name?name="+args->target);
+            break;
+        case CERT_SERIAL:
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/serial?serial="+args->target);
+            break;
+        case CERT_SHA1:
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+args->target);
+            break;
+        case PDNS_IP:
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+args->target);
+            break;
+        case PDNS_NAME:
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+args->target);
+            break;
+        case PDNS_RAW:
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/raw?hex="+args->target);
+            break;
+        case WHOIS_ADDRESS:
+            url.setUrl("https://api.riskiq.net/v0/whois/address?address="+args->target);
+            break;
+        case WHOIS_DOMAIN:
+            url.setUrl("https://api.riskiq.net/v0/whois/domain?domain="+args->target);
+            break;
+        case WHOIS_EMAIL:
+            url.setUrl("https://api.riskiq.net/v0/whois/email?email="+args->target);
+            break;
+        case WHOIS_NAME:
+            url.setUrl("https://api.riskiq.net/v0/whois/name?name="+args->target);
+            break;
+        case WHOIS_NAMESERVER:
+            url.setUrl("https://api.riskiq.net/v0/whois/nameserver?nameserver="+args->target);
+            break;
+        case WHOIS_ORG:
+            url.setUrl("https://api.riskiq.net/v0/whois/org?org="+args->target);
+            break;
+        case WHOIS_PHONE:
+            url.setUrl("https://api.riskiq.net/v0/whois/phone?phone="+args->target);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->inputIp){
+        if(args->outputIp || args->outputSubdomain || args->outputSubdomainIp){
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+args->target);
+            request.setAttribute(QNetworkRequest::User, PDNS_IP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args->outputCertFingerprint){
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);
+            request.setAttribute(QNetworkRequest::User, CERT_HOST);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        return;
+    }
+
+    if(args->inputDomain){
+        if(args->outputIp || args->outputSubdomain || args->outputSubdomainIp){
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+args->target);
+            request.setAttribute(QNetworkRequest::User, PDNS_NAME);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args->outputCertFingerprint){
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);
+            request.setAttribute(QNetworkRequest::User, CERT_HOST);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        return;
+    }
+
+    if(args->inputCertFingerprint){
+        if(args->outputIp || args->outputCertFingerprint){
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+args->target);
+            request.setAttribute(QNetworkRequest::User, CERT_SHA1);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
-void RiskIq::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
+void RiskIq::replyFinishedSubdomainIp(QNetworkReply *reply){
+    if(reply->error())
+        this->onError(reply);
+    else
     {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject results = jsonReply.object();
-        int count = results["recordCount"].toInt();
-        if(count){
-            QJsonArray records = results["records"].toArray();
-            foreach(const QJsonValue &value, records)
-            {
-                QJsonArray data = value.toObject()["data"].toArray();
-                foreach(const QJsonValue &value, data)
-                    emit subdomain(value.toString());
+        int requestType = reply->property(REQUEST_TYPE).toInt();
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray records = document.object()["records"].toArray();
+
+        if(requestType == PDNS_IP || requestType == PDNS_NAME){
+            foreach(const QJsonValue &record, records){
+                QString rrtype = record.toObject()["rrtype"].toString();
+                if(rrtype == "A" || rrtype == "AAAA"){
+                    QJsonArray data = record.toObject()["data"].toArray();
+                    QString name = record.toObject()["name"].toString();
+                    foreach(const QJsonValue &value, data){
+                        emit subdomainIp(name, value.toString());
+                        log.resultsCount++;
+                    }
+                }
             }
         }
-        QJsonArray subdomainList = jsonReply.array();
-        foreach(const QJsonValue &value, subdomainList)
-            emit subdomain(value.toString());
     }
-    else{
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
+    end(reply);
 }
 
-/* DNS
- * https://api.riskiq.net/v0/pdns/name?name=riskiq.net&type=A
- * https://api.riskiq.net/v0/pdns/data/ip?ip=8.8.8.8
- * https://api.riskiq.net/v0/pdns/data/raw?hex=00cf
- * https://api.riskiq.net/v0/pdns/data/name?name=riskiq.net
-RESPONSE:
-{
-  "recordCount": 5,
-  "records": [
+void RiskIq::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error())
+        this->onError(reply);
+    else
     {
-      "count": 5,
-      "firstSeen": "2009-10-21T14:23:09.000-0700",
-      "lastSeen": "2013-01-04T11:35:05.000-0800",
-      "name": "riskiq.net.",
-      "data": [
-        "70.32.68.247"
-      ],
-      "rrtype": "A"
-    },
-    {
-      "count": 1,
-      "firstSeen": "2013-07-19T08:54:00.000-0700",
-      "lastSeen": "2013-07-19T08:54:00.000-0700",
-      "name": "riskiq.net.",
-      "data": [
-        "162.209.9.7"
-      ],
-      "rrtype": "A"
-    },
-    {
-      "count": 411,
-      "firstSeen": "2010-08-29T05:06:00.000-0700",
-      "lastSeen": "2013-07-06T15:55:37.000-0700",
-      "name": "riskiq.net.",
-      "data": [
-        "70.32.68.247"
-      ],
-      "rrtype": "A"
-    },
-    {
-      "count": 301065,
-      "firstSeen": "2015-07-23T10:33:27.000-0700",
-      "lastSeen": "2016-07-21T06:34:05.000-0700",
-      "name": "riskiq.net.",
-      "data": [
-        "162.209.8.240"
-      ],
-      "rrtype": "A"
-    },
-    {
-      "count": 1848,
-      "firstSeen": "2013-07-19T08:54:00.000-0700",
-      "lastSeen": "2015-07-22T06:08:27.000-0700",
-      "name": "riskiq.net.",
-      "data": [
-        "162.209.9.7"
-      ],
-      "rrtype": "A"
+        int requestType = reply->property(REQUEST_TYPE).toInt();
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray records = document.object()["records"].toArray();
+
+        if(requestType == PDNS_IP || requestType == PDNS_NAME){
+            foreach(const QJsonValue &record, records){
+                QString rrtype = record.toObject()["rrtype"].toString();
+                if(rrtype == "A" || rrtype == "AAAA"){
+                    QString name = record.toObject()["name"].toString();
+                    emit subdomain(name);
+                    log.resultsCount++;
+                }
+                if(rrtype == "NS"){
+                    QJsonArray data = record.toObject()["data"].toArray();
+                    foreach(const QJsonValue &value, data){
+                        emit NS(value.toString());
+                        log.resultsCount++;
+                    }
+                }
+                if(rrtype == "MX"){
+                    QJsonArray data = record.toObject()["data"].toArray();
+                    foreach(const QJsonValue &value, data){
+                        emit MX(value.toString());
+                        log.resultsCount++;
+                    }
+                }
+                if(rrtype == "CNAME"){
+                    QJsonArray data = record.toObject()["data"].toArray();
+                    foreach(const QJsonValue &value, data){
+                        emit CNAME(value.toString());
+                        log.resultsCount++;
+                    }
+                }
+            }
+        }
     }
-  ]
+    end(reply);
 }
 
- *
- * WHOIS
- * https://api.riskiq.net/v0/whois/domain?domain=
- * https://api.riskiq.net/v0/whois/address
- * https://api.riskiq.net/v0/whois/email
- * https://api.riskiq.net/v0/whois/name
- * https://api.riskiq.net/v0/whois/nameserver
- * https://api.riskiq.net/v0/whois/org
- * https://api.riskiq.net/v0/whois/phone
-RESPONSE:
-{
-  "results": 1,
-  "domains": [
+void RiskIq::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error())
+        this->onError(reply);
+    else
     {
-      "domain": "riskiq.com",
-      "registrar": "GODADDY.COM, LLC",
-      "whoisServer": "whois.godaddy.com",
-      "registered": "2006-01-11T16:00:00.000-0800",
-      "registryUpdatedAt": "2014-12-08T16:00:00.000-0800",
-      "expiresAt": "2017-01-11T16:00:00.000-0800",
-      "contactEmail": "domains@riskiq.com",
-      "nameServers": [
-        "luke.ns.cloudflare.com",
-        "serena.ns.cloudflare.com"
-      ],
-      "registrant": {
-        "email": "domains@riskiq.com",
-        "name": "Risk IQ",
-        "organization": "RiskIQ, Inc.",
-        "street": "22 Battery Street\n10th Floor",
-        "city": "San Francisco",
-        "state": "California",
-        "postalCode": "94111",
-        "country": "US",
-        "telephone": "18884154447"
-      },
-      "admin": {
-        "email": "domains@riskiq.com",
-        "name": "Risk IQ",
-        "organization": "RiskIQ, Inc.",
-        "street": "22 Battery Street\n10th Floor",
-        "city": "San Francisco",
-        "state": "California",
-        "postalCode": "94111",
-        "country": "US",
-        "telephone": "18884154447"
-      },
-      "billing": {},
-      "tech": {
-        "email": "domains@riskiq.com",
-        "name": "Risk IQ",
-        "organization": "RiskIQ, Inc.",
-        "street": "22 Battery Street\n10th Floor",
-        "city": "San Francisco",
-        "state": "California",
-        "postalCode": "94111",
-        "country": "US",
-        "telephone": "18884154447"
-      },
-      "zone": {},
-      "text": "Whois Server Version 2.0\n\nDomain names in the .com and .net domains can now be registered\nwith many different competing registrars. Go to http://www.internic.net\nfor detailed information.\n\n   Domain Name: RISKIQ.COM\n   Registrar: GODADDY.COM, LLC\n   Sponsoring Registrar IANA ID: 146\n   Whois Server: whois.godaddy.com\n   Referral URL: http://www.godaddy.com\n   Name Server: LUKE.NS.CLOUDFLARE.COM\n   Name Server: SERENA.NS.CLOUDFLARE.COM\n   Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited\n   Status: clientRenewProhibited https://icann.org/epp#clientRenewProhibited\n   Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited\n   Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited\n   Updated Date: 09-dec-2014\n   Creation Date: 12-jan-2006\n   Expiration Date: 12-jan-2017\n\n>>> Last update of whois database: Wed, 22 Jun 2016 22:24:21 GMT <<<\n\nFor more information on Whois status codes, please visit https://icann.org/epp\n\nNOTICE: The expiration date displayed in this record is the date the\nregistrar's sponsorship of the domain name registration in the registry is\ncurrently set to expire. This date does not necessarily reflect the expiration\ndate of the domain name registrant's agreement with the sponsoring\nregistrar.  Users may consult the sponsoring registrar's Whois database to\nview the registrar's reported date of expiration for this registration.\n\nTERMS OF USE: You are not authorized to access or query our Whois\ndatabase through the use of electronic processes that are high-volume and\nautomated except as reasonably necessary to register domain names or\nmodify existing registrations; the Data in VeriSign Global Registry\nServices' (\"VeriSign\") Whois database is provided by VeriSign for\ninformation purposes only, and to assist persons in obtaining information\nabout or related to a domain name registration record. VeriSign does not\nguarantee its accuracy. By submitting a Whois query, you agree to abide\nby the following terms of use: You agree that you may use this Data only\nfor lawful purposes and that under no circumstances will you use this Data\nto: (1) subdomainIpow, enable, or otherwise support the transmission of mass\nunsolicited, commercial advertising or solicitations via e-mail, telephone,\nor facsimile; or (2) enable high volume, automated, electronic processes\nthat apply to VeriSign (or its computer systems). The compilation,\nrepackaging, dissemination or other use of this Data is expressly\nprohibited without the prior written consent of VeriSign. You agree not to\nuse electronic processes that are automated and high-volume to access or\nquery the Whois database except as reasonably necessary to register\ndomain names or modify existing registrations. VeriSign reserves the right\nto restrict your access to the Whois database in its sole discretion to ensure\noperational stability.  VeriSign may restrict or terminate your access to the\nWhois database for failure to abide by these terms of use. VeriSign\nreserves the right to modify these terms at any time.\n\nThe Registry database contains ONLY .COM, .NET, .EDU domains and\nRegistrars.\n\nDomain Name: RISKIQ.COM\nRegistry Domain ID: 314061295_DOMAIN_COM-VRSN\nRegistrar WHOIS Server: whois.godaddy.com\nRegistrar URL: http://www.godaddy.com\nUpdate Date: 2014-12-09T00:34:46Z\nCreation Date: 2006-01-12T19:33:26Z\nRegistrar Registration Expiration Date: 2017-01-12T19:33:26Z\nRegistrar: GoDaddy.com, LLC\nRegistrar IANA ID: 146\nRegistrar Abuse Contact Email: abuse@godaddy.com\nRegistrar Abuse Contact Phone: +1.4806242505\nDomain Status: clientTransferProhibited http://www.icann.org/epp#clientTransferProhibited\nDomain Status: clientUpdateProhibited http://www.icann.org/epp#clientUpdateProhibited\nDomain Status: clientRenewProhibited http://www.icann.org/epp#clientRenewProhibited\nDomain Status: clientDeleteProhibited http://www.icann.org/epp#clientDeleteProhibited\nRegistry Registrant ID: Not Available From Registry\nRegistrant Name: Risk IQ\nRegistrant Organization: RiskIQ, Inc.\nRegistrant Street: 22 Battery Street\nRegistrant Street: 10th Floor\nRegistrant City: San Francisco\nRegistrant State/Province: California\nRegistrant Postal Code: 94111\nRegistrant Country: US\nRegistrant Phone: +1.8884154447\nRegistrant Phone Ext: \nRegistrant Fax: \nRegistrant Fax Ext: \nRegistrant Email: domains@riskiq.com\nRegistry Admin ID: Not Available From Registry\nAdmin Name: Risk IQ\nAdmin Organization: RiskIQ, Inc.\nAdmin Street: 22 Battery Street\nAdmin Street: 10th Floor\nAdmin City: San Francisco\nAdmin State/Province: California\nAdmin Postal Code: 94111\nAdmin Country: US\nAdmin Phone: +1.8884154447\nAdmin Phone Ext: \nAdmin Fax: \nAdmin Fax Ext: \nAdmin Email: domains@riskiq.com\nRegistry Tech ID: Not Available From Registry\nTech Name: Risk IQ\nTech Organization: RiskIQ, Inc.\nTech Street: 22 Battery Street\nTech Street: 10th Floor\nTech City: San Francisco\nTech State/Province: California\nTech Postal Code: 94111\nTech Country: US\nTech Phone: +1.8884154447\nTech Phone Ext: \nTech Fax: \nTech Fax Ext: \nTech Email: domains@riskiq.com\nName Server: LUKE.NS.CLOUDFLARE.COM\nName Server: SERENA.NS.CLOUDFLARE.COM\nDNSSEC: unsigned\nURL of the ICANN WHOIS Data Problem Reporting System: http://wdprs.internic.net/\n>>> Last update of WHOIS database: 2016-06-22T22:00:00Z <<<\n\nFor more information on Whois status codes, please visit https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en\n\nThe data contained in GoDaddy.com, LLC's WhoIs database,\nwhile believed by the company to be reliable, is provided \"as is\"\nwith no guarantee or warranties regarding its accuracy.  This\ninformation is provided for the sole purpose of assisting you\nin obtaining information about domain name registration records.\nAny use of this data for any other purpose is expressly forbidden without the prior written\npermission of GoDaddy.com, LLC.  By submitting an inquiry,\nyou agree to these terms of usage and limitations of warranty.  In particular,\nyou agree not to use this data to subdomainIpow, enable, or otherwise make possible,\ndissemination or collection of this data, in part or in its entirety, for any\npurpose, such as the transmission of unsolicited advertising and\nand solicitations of any kind, including spam.  You further agree\nnot to use this data to enable high volume, automated or robotic electronic\nprocesses designed to collect or compile this data for any purpose,\nincluding mining this data for your own personal or commercial purposes. \n\nPlease note: the registrant of the domain name is specified\nin the \"registrant\" section.  In most cases, GoDaddy.com, LLC \nis not the registrant of domain names listed in this database.",
-      "lastLoadedAt": "2016-06-25T08:22:11.800-0700"
+        int requestType = reply->property(REQUEST_TYPE).toInt();
+
+        if(requestType == PDNS_IP || requestType == PDNS_NAME){
+            QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+            QJsonArray records = document.object()["records"].toArray();
+
+            foreach(const QJsonValue &record, records){
+                QString rrtype = record.toObject()["rrtype"].toString();
+                if(rrtype == "A"){
+                    QJsonArray data = record.toObject()["data"].toArray();
+                    foreach(const QJsonValue &value, data){
+                        emit ipA(value.toString());
+                        log.resultsCount++;
+                    }
+                }
+                if(rrtype == "AAAA"){
+                    QJsonArray data = record.toObject()["data"].toArray();
+                    foreach(const QJsonValue &value, data){
+                        emit ipAAAA(value.toString());
+                        log.resultsCount++;
+                    }
+                }
+            }
+        }
+
+        if(requestType == CERT_HOST || requestType == CERT_SHA1){
+            QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+            QJsonArray content = document.object()["content"].toArray();
+
+            foreach(const QJsonValue &record, content){
+                QJsonObject host = record.toObject()["host"].toObject();
+                QString hostValue = host["host"].toString();
+                emit ip(hostValue);
+                log.resultsCount++;
+            }
+        }
     }
-  ]
+    end(reply);
 }
-*/
+
+void RiskIq::replyFinishedCertFingerprint(QNetworkReply *reply){
+    if(reply->error())
+        this->onError(reply);
+    else
+    {
+        int requestType = reply->property(REQUEST_TYPE).toInt();
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray content = document.object()["content"].toArray();
+
+        if(requestType == CERT_HOST || requestType == CERT_SHA1){
+            foreach(const QJsonValue &record, content){
+                QJsonObject cert = record.toObject()["cert"].toObject();
+                QString sha1 = cert["sha1"].toString();
+                emit certFingerprint(sha1);
+                log.resultsCount++;
+                /* QString serialNo = cert["serialNumber"].toString(); */
+            }
+        }
+    }
+    end(reply);
+}

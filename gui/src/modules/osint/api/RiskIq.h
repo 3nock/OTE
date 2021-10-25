@@ -18,7 +18,11 @@ namespace ModuleInfo {
                                         {"whois name", "name"},
                                         {"whois nameserver", "nameserver address"},
                                         {"whois org", "organization name"},
-                                        {"whois phone", "phone number"}};
+                                        {"whois phone", "phone number"},
+                                        {"cert host", "hostname"},
+                                        {"cert name", "name"},
+                                        {"cert serial", "serial"},
+                                        {"cert sha1", "sha1"}};
     };
 }
 
@@ -30,7 +34,10 @@ class RiskIq: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomainIp(QNetworkReply *reply) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
+        void replyFinishedCertFingerprint(QNetworkReply *reply) override;
 
     private:
         QString m_name = nullptr;

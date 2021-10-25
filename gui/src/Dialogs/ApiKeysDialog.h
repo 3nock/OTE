@@ -53,6 +53,10 @@ class ApiKeysDialog : public QDialog{
 
         void on_buttonGetMnemonic_clicked();
 
+        void on_buttonGetRobtex_clicked();
+
+        void on_buttonGetOtx_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         void loadApiKeys();

@@ -1,14 +1,27 @@
 #include "Projectdiscovery.h"
+#include "src/utils/Config.h"
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
 
+#define SUBDOMAIN 0
 
 Projectdiscovery::Projectdiscovery(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinished);
+    log.moduleName = "ProjectDiscovery";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedSubdomain);
+    ///
+    /// getting api key...
+    ///
+    Config::generalConfig().beginGroup("api-keys");
+    m_key = Config::generalConfig().value("projectdiscovery").toString();
+    Config::generalConfig().endGroup();
 }
 Projectdiscovery::~Projectdiscovery(){
     delete manager;
@@ -16,45 +29,45 @@ Projectdiscovery::~Projectdiscovery(){
 
 void Projectdiscovery::start(){
     QNetworkRequest request;
+    request.setRawHeader("Authorization", m_key.toUtf8());
 
     QUrl url;
     if(args->raw){
-        if(args->option == "subdomains")
+        switch(args->rawOption){
+        case SUBDOMAIN:
             url.setUrl("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");
-    }else{
-        url.setUrl("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    request.setRawHeader("Authorization", "key");
-    manager->get(request);
+    if(args->inputDomain){
+        url.setUrl("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");
+        request.setAttribute(QNetworkRequest::User, SUBDOMAIN);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void Projectdiscovery::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject jsonObject = jsonReply.object();
-        QString error = jsonObject["error"].toString();
-        if(error.isNull() || error.isEmpty()){
-            QJsonArray subdomainList = jsonObject["subdomains"].toArray();
-            foreach(const QJsonValue &value, subdomainList)
-                emit subdomain(value.toString());
-        }
-        else{
-            emit subdomain(error);
-        }
-    }
+void Projectdiscovery::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error())
+        this->onError(reply);
     else
     {
-        emit errorLog(reply->errorString());
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonObject mainObject = document.object();
+        QString error = mainObject["error"].toString();
+        if(error.isNull() || error.isEmpty()){
+            QJsonArray subdomainList = mainObject["subdomains"].toArray();
+            foreach(const QJsonValue &value, subdomainList){
+                emit subdomain(value.toString());
+                log.resultsCount++;
+            }
+        }
     }
-    reply->deleteLater();
-    emit quitThread();
+    end(reply);
 }

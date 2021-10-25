@@ -9,7 +9,8 @@ class OsintModulesWidget;
 
 struct OsintModules{
     bool certspotter = false;
-    bool otx = false;
+    bool otxfree = false;
+    bool otxpaid = false;
     bool sublist3r = false;
     bool threatminer = false;
     bool threatcrowd = false;
@@ -25,7 +26,6 @@ struct OsintModules{
     bool omnisint = false;
     bool rapiddns = false;
     bool googleCert = false;
-    bool qwant = false;
     bool urlscan = false;
     bool virustotalapi = false;
     bool waybackmachine = false;
@@ -39,7 +39,8 @@ struct OsintModules{
     bool huntersearch = false;
     bool ipinfo = false;
     bool github = false;
-    bool robtex = false;
+    bool robtexfree = false;
+    bool robtexpaid = false;
     bool riskiq = false;
     bool securitytrails = false;
     bool threatbook = false;

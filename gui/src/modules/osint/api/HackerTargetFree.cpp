@@ -14,8 +14,7 @@
 #define ZONETRANSFER 11
 
 
-HackerTargetFree::HackerTargetFree(ScanArgs *args):
-    AbstractOsintModule(args)
+HackerTargetFree::HackerTargetFree(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "HackerTarget";

@@ -9,7 +9,7 @@ namespace ModuleInfo {
         QString url = "https://chaos.projectdiscovery.io/";
         QString summary = "We actively collect and maintain internet-wide assets' data, \n"
                           "this project is meant to enhance research and analyse changes around DNS for better insights";
-        QMap<QString, QString> flags = {{"subdomains", "domain name"}};
+        QMap<QString, QString> flags = {{"subdomain", "domain name"}};
     };
 }
 
@@ -21,7 +21,10 @@ class Projectdiscovery: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *) override;
+
+    private:
+        QString m_key;
 };
 
 #endif // PROJECTDISCOVERY_H

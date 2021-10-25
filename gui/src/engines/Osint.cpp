@@ -24,7 +24,8 @@
 #include "src/modules/osint/api/ThreatBook.h"
 #include "src/modules/osint/api/Shodan.h"
 #include "src/modules/osint/api/SecurityTrails.h"
-#include "src/modules/osint/api/Robtex.h"
+#include "src/modules/osint/api/RobtexFree.h"
+#include "src/modules/osint/api/RobtexPaid.h"
 #include "src/modules/osint/api/RiskIq.h"
 #include "src/modules/osint/api/MnemonicFree.h"
 #include "src/modules/osint/api/MnemonicPaid.h"
@@ -35,7 +36,8 @@
 #include "src/modules/osint/api/BinaryEdge.h"
 #include "src/modules/osint/api/Bgpview.h"
 #include "src/modules/osint/api/Anubis.h"
-#include "src/modules/osint/api/Otx.h"
+#include "src/modules/osint/api/OtxFree.h"
+#include "src/modules/osint/api/OtxPaid.h"
 #include "src/modules/osint/api/Sublist3r.h"
 #include "src/modules/osint/api/Threatminer.h"
 #include "src/modules/osint/api/Threatcrowd.h"
@@ -45,7 +47,6 @@
 #include "src/modules/osint/api/Projectdiscovery.h"
 #include "src/modules/osint/api/Spyse.h"
 #include "src/modules/osint/api/Omnisint.h"
-#include "src/modules/osint/api/Qwant.h"
 #include "src/modules/osint/api/VirusTotal.h"
 #include "src/modules/osint/api/Urlscan.h"
 #include "src/modules/osint/api/Circl.h"
@@ -603,6 +604,143 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(module.otxfree)
+    {
+        OtxFree *otx = new OtxFree(scanArgs);
+        QThread *cThread = new QThread(this);
+        otx->Enumerator(cThread);
+        otx->moveToThread(cThread);
+        //...
+        connect(otx, &OtxFree::subdomain, this, &Osint::onResultSubdomain);
+        connect(otx, &OtxFree::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(otx, &OtxFree::ipA, this, &Osint::onResultA);
+        connect(otx, &OtxFree::ipAAAA, this, &Osint::onResultAAAA);
+        connect(otx, &OtxFree::CNAME, this, &Osint::onResultCNAME);
+        connect(otx, &OtxFree::NS, this, &Osint::onResultNS);
+        connect(otx, &OtxFree::MX, this, &Osint::onResultMX);
+        connect(otx, &OtxFree::asn, this, &Osint::onResultAsn);
+        connect(otx, &OtxFree::errorLog, this, &Osint::onErrorLog);
+        connect(otx, &OtxFree::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, otx, &OtxFree::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.otxpaid)
+    {
+        OtxPaid *otx = new OtxPaid(scanArgs);
+        QThread *cThread = new QThread(this);
+        otx->Enumerator(cThread);
+        otx->moveToThread(cThread);
+        //...
+        connect(otx, &OtxPaid::subdomain, this, &Osint::onResultSubdomain);
+        connect(otx, &OtxPaid::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(otx, &OtxPaid::ipA, this, &Osint::onResultA);
+        connect(otx, &OtxPaid::ipAAAA, this, &Osint::onResultAAAA);
+        connect(otx, &OtxPaid::CNAME, this, &Osint::onResultCNAME);
+        connect(otx, &OtxPaid::NS, this, &Osint::onResultNS);
+        connect(otx, &OtxPaid::MX, this, &Osint::onResultMX);
+        connect(otx, &OtxPaid::asn, this, &Osint::onResultAsn);
+        connect(otx, &OtxPaid::errorLog, this, &Osint::onErrorLog);
+        connect(otx, &OtxPaid::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, otx, &OtxPaid::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.projectdiscovery)
+    {
+        Projectdiscovery *projectdiscovery = new Projectdiscovery(scanArgs);
+        QThread *cThread = new QThread(this);
+        projectdiscovery->Enumerator(cThread);
+        projectdiscovery->moveToThread(cThread);
+        //...
+        connect(projectdiscovery, &Projectdiscovery::subdomain, this, &Osint::onResultSubdomain);
+        connect(projectdiscovery, &Projectdiscovery::errorLog, this, &Osint::onErrorLog);
+        connect(projectdiscovery, &Projectdiscovery::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, projectdiscovery, &Projectdiscovery::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.riskiq){
+        RiskIq *riskiq = new RiskIq(scanArgs);
+        QThread *cThread = new QThread(this);
+        riskiq->Enumerator(cThread);
+        riskiq->moveToThread(cThread);
+        //...
+        connect(riskiq, &RiskIq::subdomain, this, &Osint::onResultSubdomain);
+        connect(riskiq, &RiskIq::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(riskiq, &RiskIq::ip, this, &Osint::onResultIp);
+        connect(riskiq, &RiskIq::ipA, this, &Osint::onResultA);
+        connect(riskiq, &RiskIq::ipAAAA, this, &Osint::onResultAAAA);
+        connect(riskiq, &RiskIq::CNAME, this, &Osint::onResultCNAME);
+        connect(riskiq, &RiskIq::NS, this, &Osint::onResultNS);
+        connect(riskiq, &RiskIq::MX, this, &Osint::onResultMX);
+        connect(riskiq, &RiskIq::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(riskiq, &RiskIq::errorLog, this, &Osint::onErrorLog);
+        connect(riskiq, &RiskIq::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, riskiq, &RiskIq::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.robtexfree){
+        RobtexFree *robtex = new RobtexFree(scanArgs);
+        QThread *cThread = new QThread(this);
+        robtex->Enumerator(cThread);
+        robtex->moveToThread(cThread);
+        //...
+        connect(robtex, &RobtexFree::subdomain, this, &Osint::onResultSubdomain);
+        connect(robtex, &RobtexFree::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(robtex, &RobtexFree::ip, this, &Osint::onResultIp);
+        connect(robtex, &RobtexFree::ipA, this, &Osint::onResultA);
+        connect(robtex, &RobtexFree::ipAAAA, this, &Osint::onResultAAAA);
+        connect(robtex, &RobtexFree::NS, this, &Osint::onResultNS);
+        connect(robtex, &RobtexFree::MX, this, &Osint::onResultMX);
+        connect(robtex, &RobtexFree::CNAME, this, &Osint::onResultCNAME);
+        connect(robtex, &RobtexFree::asn, this, &Osint::onResultAsn);
+        connect(robtex, &RobtexFree::errorLog, this, &Osint::onErrorLog);
+        connect(robtex, &RobtexFree::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, robtex, &RobtexFree::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.robtexpaid){
+        RobtexPaid *robtex = new RobtexPaid(scanArgs);
+        QThread *cThread = new QThread(this);
+        robtex->Enumerator(cThread);
+        robtex->moveToThread(cThread);
+        //...
+        connect(robtex, &RobtexPaid::subdomain, this, &Osint::onResultSubdomain);
+        connect(robtex, &RobtexPaid::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(robtex, &RobtexPaid::ip, this, &Osint::onResultIp);
+        connect(robtex, &RobtexPaid::ipA, this, &Osint::onResultA);
+        connect(robtex, &RobtexPaid::ipAAAA, this, &Osint::onResultAAAA);
+        connect(robtex, &RobtexPaid::NS, this, &Osint::onResultNS);
+        connect(robtex, &RobtexPaid::MX, this, &Osint::onResultMX);
+        connect(robtex, &RobtexPaid::CNAME, this, &Osint::onResultCNAME);
+        connect(robtex, &RobtexPaid::asn, this, &Osint::onResultAsn);
+        connect(robtex, &RobtexPaid::errorLog, this, &Osint::onErrorLog);
+        connect(robtex, &RobtexPaid::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, robtex, &RobtexPaid::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(module.certspotter)
     {
         Certspotter *certspotter = new Certspotter(scanArgs);
@@ -619,27 +757,6 @@ void Osint::startScan(){
         connect(certspotter, &Certspotter::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, certspotter, &Certspotter::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.otx)
-    {
-        Otx *otx = new Otx(scanArgs);
-        QThread *cThread = new QThread(this);
-        otx->Enumerator(cThread);
-        otx->moveToThread(cThread);
-        //...
-        connect(otx, &Otx::subdomain, this, &Osint::onResultSubdomain);
-        connect(otx, &Otx::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(otx, &Otx::ip, this, &Osint::onResultIp);
-        connect(otx, &Otx::email, this, &Osint::onResultEmail);
-        connect(otx, &Otx::url, this, &Osint::onResultUrl);
-        connect(otx, &Otx::errorLog, this, &Osint::onErrorLog);
-        connect(otx, &Otx::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, otx, &Otx::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -703,27 +820,6 @@ void Osint::startScan(){
         connect(threatcrowd, &Threatcrowd::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, threatcrowd, &Threatcrowd::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.projectdiscovery)
-    {
-        Projectdiscovery *projectdiscovery = new Projectdiscovery(scanArgs);
-        QThread *cThread = new QThread(this);
-        projectdiscovery->Enumerator(cThread);
-        projectdiscovery->moveToThread(cThread);
-        //...
-        connect(projectdiscovery, &Projectdiscovery::subdomain, this, &Osint::onResultSubdomain);
-        connect(projectdiscovery, &Projectdiscovery::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(projectdiscovery, &Projectdiscovery::ip, this, &Osint::onResultIp);
-        connect(projectdiscovery, &Projectdiscovery::email, this, &Osint::onResultEmail);
-        connect(projectdiscovery, &Projectdiscovery::url, this, &Osint::onResultUrl);
-        connect(projectdiscovery, &Projectdiscovery::errorLog, this, &Osint::onErrorLog);
-        connect(projectdiscovery, &Projectdiscovery::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, projectdiscovery, &Projectdiscovery::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -889,26 +985,6 @@ void Osint::startScan(){
         connect(googlecert, &GoogleCert::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, googlecert, &GoogleCert::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.qwant){
-        Qwant *qwant = new Qwant(scanArgs);
-        QThread *cThread = new QThread(this);
-        qwant->Enumerator(cThread);
-        qwant->moveToThread(cThread);
-        //...
-        connect(qwant, &Qwant::subdomain, this, &Osint::onResultSubdomain);
-        connect(qwant, &Qwant::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(qwant, &Qwant::ip, this, &Osint::onResultIp);
-        connect(qwant, &Qwant::email, this, &Osint::onResultEmail);
-        connect(qwant, &Qwant::url, this, &Osint::onResultUrl);
-        connect(qwant, &Qwant::errorLog, this, &Osint::onErrorLog);
-        connect(qwant, &Qwant::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, qwant, &Qwant::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -1089,46 +1165,6 @@ void Osint::startScan(){
         connect(ipinfo, &IpInfo::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.riskiq){
-        RiskIq *riskiq = new RiskIq(scanArgs);
-        QThread *cThread = new QThread(this);
-        riskiq->Enumerator(cThread);
-        riskiq->moveToThread(cThread);
-        //...
-        connect(riskiq, &RiskIq::subdomain, this, &Osint::onResultSubdomain);
-        connect(riskiq, &RiskIq::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(riskiq, &RiskIq::ip, this, &Osint::onResultIp);
-        connect(riskiq, &RiskIq::email, this, &Osint::onResultEmail);
-        connect(riskiq, &RiskIq::url, this, &Osint::onResultUrl);
-        connect(riskiq, &RiskIq::errorLog, this, &Osint::onErrorLog);
-        connect(riskiq, &RiskIq::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, riskiq, &RiskIq::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.robtex){
-        Robtex *robtex = new Robtex(scanArgs);
-        QThread *cThread = new QThread(this);
-        robtex->Enumerator(cThread);
-        robtex->moveToThread(cThread);
-        //...
-        connect(robtex, &Robtex::subdomain, this, &Osint::onResultSubdomain);
-        connect(robtex, &Robtex::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(robtex, &Robtex::ip, this, &Osint::onResultIp);
-        connect(robtex, &Robtex::email, this, &Osint::onResultEmail);
-        connect(robtex, &Robtex::url, this, &Osint::onResultUrl);
-        connect(robtex, &Robtex::errorLog, this, &Osint::onErrorLog);
-        connect(robtex, &Robtex::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, robtex, &Robtex::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
