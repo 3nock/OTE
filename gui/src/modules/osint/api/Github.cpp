@@ -54,14 +54,13 @@ void Github::start(){
 }
 
 void Github::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        /*
-         * Not Yet Implemented...
-         */
+        return;
     }
+    /*
+     * Not Yet Implemented...
+     */
     end(reply);
 }
 

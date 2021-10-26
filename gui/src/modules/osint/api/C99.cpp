@@ -161,21 +161,21 @@ void C99::start(){
 }
 
 void C99::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject jsonObject = document.object();
+        return;
+    }
 
-        if(requestType == SUBDOMAIN_FINDER){
-            bool success = jsonObject["success"].toBool();
-            if(success){
-                QJsonArray subdomainList = jsonObject["subdomains"].toArray();
-                foreach(const QJsonValue &value, subdomainList)
-                    emit subdomain(value.toString());
-            }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject jsonObject = document.object();
+
+    if(requestType == SUBDOMAIN_FINDER){
+        bool success = jsonObject["success"].toBool();
+        if(success){
+            QJsonArray subdomainList = jsonObject["subdomains"].toArray();
+            foreach(const QJsonValue &value, subdomainList)
+                emit subdomain(value.toString());
         }
     }
     end(reply);

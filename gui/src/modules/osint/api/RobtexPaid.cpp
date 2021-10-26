@@ -99,142 +99,142 @@ void RobtexPaid::start(){
 }
 
 void RobtexPaid::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
+        return;
+    }
 
-        if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
-            QString stringReply = QString::fromUtf8(reply->readAll());
-            QStringList results = stringReply.split("\n");
+    int requestType = reply->property(REQUEST_TYPE).toInt();
 
-            foreach(const QString &result, results){
-                QJsonDocument document  = QJsonDocument::fromJson(result.toUtf8());
-                QString rrtype = document.object()["rrtype"].toString();
-                QString rrname = document.object()["rrname"].toString();
-                QString rrdata = document.object()["rrdata"].toString();
-                if(rrtype == "A" || rrtype == "AAAA"){
-                    emit subdomain(rrname);
-                    log.resultsCount++;
-                }
-                if(rrtype == "NS"){
-                    emit NS(rrdata);
-                    log.resultsCount++;
-                }
-                if(rrtype == "MX"){
-                    emit MX(rrdata);
-                    log.resultsCount++;
-                }
-                if(rrtype == "CNAME"){
-                    emit CNAME(rrdata);
-                    log.resultsCount++;
-                }
-            }
-        }
+    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+        QString stringReply = QString::fromUtf8(reply->readAll());
+        QStringList results = stringReply.split("\n");
 
-        if(requestType == IPQUERY){
-            QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-            QJsonArray act = document.object()["act"].toArray();
-            foreach(const QJsonValue &value, act){
-                QString host = value.toObject()["o"].toString();
-                emit subdomain(host);
+        foreach(const QString &result, results){
+            QJsonDocument document  = QJsonDocument::fromJson(result.toUtf8());
+            QString rrtype = document.object()["rrtype"].toString();
+            QString rrname = document.object()["rrname"].toString();
+            QString rrdata = document.object()["rrdata"].toString();
+            if(rrtype == "A" || rrtype == "AAAA"){
+                emit subdomain(rrname);
                 log.resultsCount++;
             }
-
-            QJsonArray pas = document.object()["pas"].toArray();
-            foreach(const QJsonValue &value, pas){
-                QString host = value.toObject()["o"].toString();
-                emit subdomain(host);
+            if(rrtype == "NS"){
+                emit NS(rrdata);
+                log.resultsCount++;
+            }
+            if(rrtype == "MX"){
+                emit MX(rrdata);
+                log.resultsCount++;
+            }
+            if(rrtype == "CNAME"){
+                emit CNAME(rrdata);
                 log.resultsCount++;
             }
         }
     }
-    end(reply);
-}
 
-void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
-    if(reply->error())
-        this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
+    if(requestType == IPQUERY){
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-        if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
-            QString stringReply = QString::fromUtf8(reply->readAll());
-            QStringList results = stringReply.split("\n");
-
-            foreach(const QString &result, results){
-                QJsonDocument document  = QJsonDocument::fromJson(result.toUtf8());
-                QString rrtype = document.object()["rrtype"].toString();
-                QString rrname = document.object()["rrname"].toString();
-                QString rrdata = document.object()["rrdata"].toString();
-                if(rrtype == "A"){
-                    emit ipA(rrdata);
-                    log.resultsCount++;
-                }
-                if(rrtype == "A"){
-                    emit ipAAAA(rrdata);
-                    log.resultsCount++;
-                }
-            }
+        QJsonArray act = document.object()["act"].toArray();
+        foreach(const QJsonValue &value, act){
+            QString host = value.toObject()["o"].toString();
+            emit subdomain(host);
+            log.resultsCount++;
         }
 
-        if(requestType == ASQUERY){
-            QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-            QJsonArray nets = document.object()["nets"].toArray();
-            foreach(const QJsonValue &value, nets){
-                QString address = value.toObject()["n"].toString();
-                emit ip(address);
-                //emit ipCdir(address); since the return address is a ip/cdir..
-                log.resultsCount++;
-            }
-        }
-    }
-    end(reply);
-}
-
-void RobtexPaid::replyFinishedAsn(QNetworkReply *reply){
-    if(reply->error())
-        this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-
-        if(requestType == IPQUERY){
-            QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-            QJsonObject mainObj = document.object();
-            QString asnValue = mainObj["as"].toString();
-            QString asnName = mainObj["asname"].toString();
-
-            emit asn(asnValue, asnName);
+        QJsonArray pas = document.object()["pas"].toArray();
+        foreach(const QJsonValue &value, pas){
+            QString host = value.toObject()["o"].toString();
+            emit subdomain(host);
             log.resultsCount++;
         }
     }
     end(reply);
 }
 
-void RobtexPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
-    if(reply->error())
+void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
+        return;
+    }
 
-        if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
-            QString stringReply = QString::fromUtf8(reply->readAll());
-            QStringList results = stringReply.split("\n");
+    int requestType = reply->property(REQUEST_TYPE).toInt();
 
-            foreach(const QString &result, results){
-                QJsonDocument document  = QJsonDocument::fromJson(result.toUtf8());
-                QString rrtype = document.object()["rrtype"].toString();
-                QString rrname = document.object()["rrname"].toString();
-                QString rrdata = document.object()["rrdata"].toString();
-                if(rrtype == "A" || rrtype == "AAAA"){
-                    emit subdomainIp(rrname, rrdata);
-                    log.resultsCount++;
-                }
+    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+        QString stringReply = QString::fromUtf8(reply->readAll());
+        QStringList results = stringReply.split("\n");
+
+        foreach(const QString &result, results){
+            QJsonDocument document  = QJsonDocument::fromJson(result.toUtf8());
+            QString rrtype = document.object()["rrtype"].toString();
+            QString rrname = document.object()["rrname"].toString();
+            QString rrdata = document.object()["rrdata"].toString();
+            if(rrtype == "A"){
+                emit ipA(rrdata);
+                log.resultsCount++;
+            }
+            if(rrtype == "A"){
+                emit ipAAAA(rrdata);
+                log.resultsCount++;
+            }
+        }
+    }
+
+    if(requestType == ASQUERY){
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray nets = document.object()["nets"].toArray();
+        foreach(const QJsonValue &value, nets){
+            QString address = value.toObject()["n"].toString();
+            emit ip(address);
+            //emit ipCdir(address); since the return address is a ip/cdir..
+            log.resultsCount++;
+        }
+    }
+    end(reply);
+}
+
+void RobtexPaid::replyFinishedAsn(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+
+    if(requestType == IPQUERY){
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonObject mainObj = document.object();
+        QString asnValue = mainObj["as"].toString();
+        QString asnName = mainObj["asname"].toString();
+
+        emit asn(asnValue, asnName);
+        log.resultsCount++;
+    }
+    end(reply);
+}
+
+void RobtexPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+
+    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+        QString stringReply = QString::fromUtf8(reply->readAll());
+        QStringList results = stringReply.split("\n");
+
+        foreach(const QString &result, results){
+            QJsonDocument document  = QJsonDocument::fromJson(result.toUtf8());
+            QString rrtype = document.object()["rrtype"].toString();
+            QString rrname = document.object()["rrname"].toString();
+            QString rrdata = document.object()["rrdata"].toString();
+            if(rrtype == "A" || rrtype == "AAAA"){
+                emit subdomainIp(rrname, rrdata);
+                log.resultsCount++;
             }
         }
     }

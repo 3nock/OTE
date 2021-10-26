@@ -105,46 +105,46 @@ void MnemonicFree::start(){
 }
 
 void MnemonicFree::replyFinishedIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray data = document.object()["data"].toArray();
-        //int responseCode = document.object()["responseCode"].toInt();
+        return;
+    }
 
-        if(requestType == IP_ANY_RECORD){
-            foreach(const QJsonValue &value, data){
-                QJsonObject dataObj = value.toObject();
-                if(dataObj["rrtype"].toString() == "a"){
-                    emit ipA(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
-                if(dataObj["rrtype"].toString() == "aaaa"){
-                    emit ipAAAA(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray data = document.object()["data"].toArray();
+    //int responseCode = document.object()["responseCode"].toInt();
+
+    if(requestType == IP_ANY_RECORD){
+        foreach(const QJsonValue &value, data){
+            QJsonObject dataObj = value.toObject();
+            if(dataObj["rrtype"].toString() == "a"){
+                emit ipA(dataObj["answer"].toString());
+                log.resultsCount++;
+            }
+            if(dataObj["rrtype"].toString() == "aaaa"){
+                emit ipAAAA(dataObj["answer"].toString());
+                log.resultsCount++;
             }
         }
+    }
 
-        if(requestType == PDNS_A){
-            foreach(const QJsonValue &value, data){
-                QJsonObject dataObj = value.toObject();
-                if(dataObj["rrtype"].toString() == "a"){
-                    emit ipA(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
+    if(requestType == PDNS_A){
+        foreach(const QJsonValue &value, data){
+            QJsonObject dataObj = value.toObject();
+            if(dataObj["rrtype"].toString() == "a"){
+                emit ipA(dataObj["answer"].toString());
+                log.resultsCount++;
             }
         }
+    }
 
-        if(requestType == PDNS_AAAA){
-            foreach(const QJsonValue &value, data){
-                QJsonObject dataObj = value.toObject();
-                if(dataObj["rrtype"].toString() == "aaaa"){
-                    emit ipAAAA(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
+    if(requestType == PDNS_AAAA){
+        foreach(const QJsonValue &value, data){
+            QJsonObject dataObj = value.toObject();
+            if(dataObj["rrtype"].toString() == "aaaa"){
+                emit ipAAAA(dataObj["answer"].toString());
+                log.resultsCount++;
             }
         }
     }
@@ -152,60 +152,60 @@ void MnemonicFree::replyFinishedIp(QNetworkReply *reply){
 }
 
 void MnemonicFree::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray data = document.object()["data"].toArray();
-        //int responseCode = document.object()["responseCode"].toInt();
+        return;
+    }
 
-        if(requestType == IP_ANY_RECORD){
-            foreach(const QJsonValue &value, data){
-                QJsonObject dataObj = value.toObject();
-                if(dataObj["rrtype"].toString() == "cname"){
-                    emit CNAME(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
-                if(dataObj["rrtype"].toString() == "mx"){
-                    emit MX(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
-                if(dataObj["rrtype"].toString() == "ns"){
-                    emit NS(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray data = document.object()["data"].toArray();
+    //int responseCode = document.object()["responseCode"].toInt();
+
+    if(requestType == IP_ANY_RECORD){
+        foreach(const QJsonValue &value, data){
+            QJsonObject dataObj = value.toObject();
+            if(dataObj["rrtype"].toString() == "cname"){
+                emit CNAME(dataObj["answer"].toString());
+                log.resultsCount++;
+            }
+            if(dataObj["rrtype"].toString() == "mx"){
+                emit MX(dataObj["answer"].toString());
+                log.resultsCount++;
+            }
+            if(dataObj["rrtype"].toString() == "ns"){
+                emit NS(dataObj["answer"].toString());
+                log.resultsCount++;
             }
         }
+    }
 
-        if(requestType == PDNS_CNAME){
-            foreach(const QJsonValue &value, data){
-                QJsonObject dataObj = value.toObject();
-                if(dataObj["rrtype"].toString() == "cname"){
-                    emit CNAME(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
+    if(requestType == PDNS_CNAME){
+        foreach(const QJsonValue &value, data){
+            QJsonObject dataObj = value.toObject();
+            if(dataObj["rrtype"].toString() == "cname"){
+                emit CNAME(dataObj["answer"].toString());
+                log.resultsCount++;
             }
         }
+    }
 
-        if(requestType == PDNS_MX){
-            foreach(const QJsonValue &value, data){
-                QJsonObject dataObj = value.toObject();
-                if(dataObj["rrtype"].toString() == "mx"){
-                    emit MX(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
+    if(requestType == PDNS_MX){
+        foreach(const QJsonValue &value, data){
+            QJsonObject dataObj = value.toObject();
+            if(dataObj["rrtype"].toString() == "mx"){
+                emit MX(dataObj["answer"].toString());
+                log.resultsCount++;
             }
         }
+    }
 
-        if(requestType == PDNS_NS){
-            foreach(const QJsonValue &value, data){
-                QJsonObject dataObj = value.toObject();
-                if(dataObj["rrtype"].toString() == "ns"){
-                    emit NS(dataObj["answer"].toString());
-                    log.resultsCount++;
-                }
+    if(requestType == PDNS_NS){
+        foreach(const QJsonValue &value, data){
+            QJsonObject dataObj = value.toObject();
+            if(dataObj["rrtype"].toString() == "ns"){
+                emit NS(dataObj["answer"].toString());
+                log.resultsCount++;
             }
         }
     }

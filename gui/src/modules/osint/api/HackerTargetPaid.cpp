@@ -137,24 +137,24 @@ void HackerTargetPaid::start(){
 }
 
 void HackerTargetPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
+        return;
+    }
 
-        if(requestType == HOSTSEARCH){
-            QString results = reply->readAll();
-            foreach(const QString &item, results.split("\n")){
-                QStringList domainAndIp = item.split(","); // ["subdomain", "ip-address"]
-                /*
-                   some results have only subdomain without an ip-address
-                   hence only those with both are accepted
-                 */
-                if(domainAndIp.size() == 2){
-                    emit subdomainIp(domainAndIp.at(0), domainAndIp.at(1));
-                    log.resultsCount++;
-                }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+
+    if(requestType == HOSTSEARCH){
+        QString results = reply->readAll();
+        foreach(const QString &item, results.split("\n")){
+            QStringList domainAndIp = item.split(","); // ["subdomain", "ip-address"]
+            /*
+               some results have only subdomain without an ip-address
+               hence only those with both are accepted
+             */
+            if(domainAndIp.size() == 2){
+                emit subdomainIp(domainAndIp.at(0), domainAndIp.at(1));
+                log.resultsCount++;
             }
         }
     }
@@ -162,89 +162,90 @@ void HackerTargetPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
 }
 
 void HackerTargetPaid::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
+        return;
+    }
 
-        if(requestType == HOSTSEARCH){
-            QString results = reply->readAll();
-            foreach(const QString &item, results.split("\n")){
-                emit subdomain(item.split(",").at(0));
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+
+    if(requestType == HOSTSEARCH){
+        QString results = reply->readAll();
+        foreach(const QString &item, results.split("\n")){
+            emit subdomain(item.split(",").at(0));
+            log.resultsCount++;
+        }
+    }
+
+    if(requestType == DNSLOOKUP){
+        QString results = reply->readAll();
+        foreach(const QString &item, results.split("\n")){
+            QString type = item.split(":").at(0);
+            QString value = item.split(":").at(1);
+
+            type = type.remove(" ");
+            if(type == "NS"){
+                QString ns = value.remove(" ");
+                emit NS(ns);
                 log.resultsCount++;
             }
-        }
-
-        if(requestType == DNSLOOKUP){
-            QString results = reply->readAll();
-            foreach(const QString &item, results.split("\n")){
-                QString type = item.split(":").at(0);
-                QString value = item.split(":").at(1);
-
-                type = type.remove(" ");
-                if(type == "NS"){
-                    QString ns = value.remove(" ");
-                    emit NS(ns);
-                    log.resultsCount++;
-                }
-                if(type == "MX"){
-                    QString mx = value.split(" ").at(1);
-                    emit MX(mx);
-                    log.resultsCount++;
-                }
-                if(type == "CNAME"){
-                    QString cname = value.remove(" ");
-                    emit CNAME(cname);
-                    log.resultsCount++;
-                }
+            if(type == "MX"){
+                QString mx = value.split(" ").at(1);
+                emit MX(mx);
+                log.resultsCount++;
             }
-        }
-
-        if(requestType == REVERSE_IPLOOKUP){
-            QString results = reply->readAll();
-            foreach(const QString &item, results.split("\n")){
-                emit subdomain(item);
+            if(type == "CNAME"){
+                QString cname = value.remove(" ");
+                emit CNAME(cname);
                 log.resultsCount++;
             }
         }
     }
+
+    if(requestType == REVERSE_IPLOOKUP){
+        QString results = reply->readAll();
+        foreach(const QString &item, results.split("\n")){
+            emit subdomain(item);
+            log.resultsCount++;
+        }
+    }
+
     end(reply);
 }
 
 void HackerTargetPaid::replyFinishedIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
+        return;
+    }
 
-        if(requestType == HOSTSEARCH){
-            QString results = reply->readAll();
-            foreach(const QString &item, results.split("\n")){
-                emit ip(item.split(",").at(1));
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+
+    if(requestType == HOSTSEARCH){
+        QString results = reply->readAll();
+        foreach(const QString &item, results.split("\n")){
+            emit ip(item.split(",").at(1));
+            log.resultsCount++;
+        }
+    }
+
+    if(requestType == DNSLOOKUP){
+        QString results = reply->readAll();
+        foreach(const QString &item, results.split("\n")){
+            QString type = item.split(":").at(0);
+
+            type = type.remove(" ");
+            if(type == "A"){
+                QString value = item.split(":").at(0);
+                value = value.remove(" ");
+                emit ipA(value);
                 log.resultsCount++;
             }
-        }
-
-        if(requestType == DNSLOOKUP){
-            QString results = reply->readAll();
-            foreach(const QString &item, results.split("\n")){
-                QString type = item.split(":").at(0);
-
-                type = type.remove(" ");
-                if(type == "A"){
-                    QString value = item.split(":").at(0);
-                    value = value.remove(" ");
-                    emit ipA(value);
-                    log.resultsCount++;
-                }
-                if(type == "AAA"){
-                    QString value = item;
-                    value = value.remove(0, 7);
-                    emit ipAAAA(value);
-                    log.resultsCount++;
-                }
+            if(type == "AAA"){
+                QString value = item;
+                value = value.remove(0, 7);
+                emit ipAAAA(value);
+                log.resultsCount++;
             }
         }
     }
@@ -252,20 +253,20 @@ void HackerTargetPaid::replyFinishedIp(QNetworkReply *reply){
 }
 
 void HackerTargetPaid::replyFinishedAsn(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
+        return;
+    }
 
-        if(requestType == ASLOOKUP){
-            QString result = reply->readAll();
-            result = result.remove("\"");
-            QStringList resultList = result.split(",");
+    int requestType = reply->property(REQUEST_TYPE).toInt();
 
-            emit asn(resultList.at(1), resultList.at(3));
-            log.resultsCount++;
-        }
+    if(requestType == ASLOOKUP){
+        QString result = reply->readAll();
+        result = result.remove("\"");
+        QStringList resultList = result.split(",");
+
+        emit asn(resultList.at(1), resultList.at(3));
+        log.resultsCount++;
     }
     end(reply);
 }

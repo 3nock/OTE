@@ -5,12 +5,15 @@
 #include <QJsonArray>
 
 
-/* Not well implemented yet...*/
-ZETAlytics::ZETAlytics(ScanArgs *args):
-    AbstractOsintModule(args)
+ZETAlytics::ZETAlytics(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinished);
+    log.moduleName = "ZETAlytics";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedSubdomain);
     ///
     /// get api key...
     ///
@@ -24,34 +27,33 @@ ZETAlytics::~ZETAlytics(){
 
 void ZETAlytics::start(){
     QNetworkRequest request;
+    request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
     if(args->raw){
-
-    }else{
         url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+args->target+"&token="+m_key);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
-    request.setUrl(url);
-    request.setRawHeader("Content-Type", "application/json");
-    manager->get(request);
+
+    if(args->inputDomain){
+        url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+args->target+"&token="+m_key);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void ZETAlytics::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        /*
-         * Not implemented yet...
-         */
+void ZETAlytics::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    else{
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
+
+    /*
+     * Not implemented yet...
+     */
+    end(reply);
 }

@@ -63,26 +63,26 @@ void Omnisint::start(){
 }
 
 void Omnisint::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray subdomains = document.array();
+        return;
+    }
 
-        if(requestType == ALL){
-            foreach(const QJsonValue &value, subdomains){
-                emit subdomain(value.toString());
-                log.resultsCount++;
-            }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray subdomains = document.array();
+
+    if(requestType == ALL){
+        foreach(const QJsonValue &value, subdomains){
+            emit subdomain(value.toString());
+            log.resultsCount++;
         }
+    }
 
-        if(requestType == REVERSE_IP){
-            foreach(const QJsonValue &value, subdomains){
-                emit subdomain(value.toString());
-                log.resultsCount++;
-            }
+    if(requestType == REVERSE_IP){
+        foreach(const QJsonValue &value, subdomains){
+            emit subdomain(value.toString());
+            log.resultsCount++;
         }
     }
     end(reply);

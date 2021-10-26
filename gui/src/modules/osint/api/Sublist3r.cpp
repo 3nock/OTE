@@ -3,11 +3,15 @@
 #include <QJsonArray>
 
 
-Sublist3r::Sublist3r(ScanArgs *args):
-    AbstractOsintModule(args)
+Sublist3r::Sublist3r(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinished);
+    log.moduleName = "Sublist3r";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinishedSubdomain);
 }
 Sublist3r::~Sublist3r(){
     delete manager;
@@ -18,34 +22,31 @@ void Sublist3r::start(){
 
     QUrl url;
     if(args->raw){
-        if(args->option == "subdomains")
-            url.setUrl("https://api.sublist3r.com/search.php?domain="+args->target);
-    }else{
         url.setUrl("https://api.sublist3r.com/search.php?domain="+args->target);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    manager->get(request);
+    if(args->inputDomain){
+        url.setUrl("https://api.sublist3r.com/search.php?domain="+args->target);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void Sublist3r::replyFinished(QNetworkReply *reply){
-    if(reply->error())
-    {
-        emit errorLog(reply->errorString());
+void Sublist3r::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
     }
-    else
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray passive_dns = jsonReply.array();
-        foreach(const QJsonValue &value, passive_dns)
-            emit subdomain(value.toString());
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray passive_dns = document.array();
+    foreach(const QJsonValue &value, passive_dns){
+        emit subdomain(value.toString());
+        log.resultsCount++;
     }
-    reply->deleteLater();
-    emit quitThread();
+    end(reply);
 }

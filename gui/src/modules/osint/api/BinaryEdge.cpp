@@ -119,37 +119,37 @@ void BinaryEdge::start(){
 }
 
 void BinaryEdge::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray events = document.object()["events"].toArray();
+        return;
+    }
 
-        if(requestType == DOMAIN_SUBDOMAIN){
-            foreach(const QJsonValue &value, events){
-                emit subdomain(value.toString());
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray events = document.object()["events"].toArray();
+
+    if(requestType == DOMAIN_SUBDOMAIN){
+        foreach(const QJsonValue &value, events){
+            emit subdomain(value.toString());
+            log.resultsCount++;
+        }
+    }
+
+    /* domains/dns and domains/ip have results in same format */
+    if(requestType == DOMAIN_DNS || requestType == DOMAIN_IP){
+        foreach(const QJsonValue &value, events){
+            QString domain = value.toObject()["domain"].toString();
+            emit subdomain(domain);
+            log.resultsCount++;
+
+            foreach(const QJsonValue &value, value.toObject()["NS"].toArray()){
+                emit NS(value.toString());
                 log.resultsCount++;
             }
-        }
 
-        /* domains/dns and domains/ip have results in same format */
-        if(requestType == DOMAIN_DNS || requestType == DOMAIN_IP){
-            foreach(const QJsonValue &value, events){
-                QString domain = value.toObject()["domain"].toString();
-                emit subdomain(domain);
+            foreach(const QJsonValue &value, value.toObject()["MX"].toArray()){
+                emit MX(value.toString());
                 log.resultsCount++;
-
-                foreach(const QJsonValue &value, value.toObject()["NS"].toArray()){
-                    emit NS(value.toString());
-                    log.resultsCount++;
-                }
-
-                foreach(const QJsonValue &value, value.toObject()["MX"].toArray()){
-                    emit MX(value.toString());
-                    log.resultsCount++;
-                }
             }
         }
     }
@@ -157,27 +157,27 @@ void BinaryEdge::replyFinishedSubdomain(QNetworkReply *reply){
 }
 
 void BinaryEdge::replyFinishedIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray events = document.object()["events"].toArray();
+        return;
+    }
 
-        /* domains/dns and domains/ip have results in same format */
-        if(requestType == DOMAIN_DNS || requestType == DOMAIN_IP){
-            foreach(const QJsonValue &value, events){
-                QString A = value.toObject()["A"].toArray().at(0).toString();
-                QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
-                if(!A.isEmpty()){
-                    emit ipA(A);
-                    log.resultsCount++;
-                }
-                if(!AAAA.isEmpty()){
-                    emit ipAAAA(AAAA);
-                    log.resultsCount++;
-                }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray events = document.object()["events"].toArray();
+
+    /* domains/dns and domains/ip have results in same format */
+    if(requestType == DOMAIN_DNS || requestType == DOMAIN_IP){
+        foreach(const QJsonValue &value, events){
+            QString A = value.toObject()["A"].toArray().at(0).toString();
+            QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
+            if(!A.isEmpty()){
+                emit ipA(A);
+                log.resultsCount++;
+            }
+            if(!AAAA.isEmpty()){
+                emit ipAAAA(AAAA);
+                log.resultsCount++;
             }
         }
     }
@@ -185,28 +185,28 @@ void BinaryEdge::replyFinishedIp(QNetworkReply *reply){
 }
 
 void BinaryEdge::replyFinishedSubdomainIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray events = document.object()["events"].toArray();
+        return;
+    }
 
-        /* domains/dns and domains/ip have results in same format */
-        if(requestType == DOMAIN_DNS || requestType == DOMAIN_IP){
-            foreach(const QJsonValue &value, events){
-                QString domain = value.toObject()["domain"].toString();
-                QString A = value.toObject()["A"].toArray().at(0).toString();
-                QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
-                if(!A.isEmpty()){
-                    emit subdomainIp(domain, A);
-                    log.resultsCount++;
-                }
-                if(!AAAA.isEmpty()){
-                    emit subdomainIp(domain, AAAA);
-                    log.resultsCount++;
-                }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray events = document.object()["events"].toArray();
+
+    /* domains/dns and domains/ip have results in same format */
+    if(requestType == DOMAIN_DNS || requestType == DOMAIN_IP){
+        foreach(const QJsonValue &value, events){
+            QString domain = value.toObject()["domain"].toString();
+            QString A = value.toObject()["A"].toArray().at(0).toString();
+            QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
+            if(!A.isEmpty()){
+                emit subdomainIp(domain, A);
+                log.resultsCount++;
+            }
+            if(!AAAA.isEmpty()){
+                emit subdomainIp(domain, AAAA);
+                log.resultsCount++;
             }
         }
     }

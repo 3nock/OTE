@@ -177,22 +177,22 @@ void OtxFree::start(){
 }
 
 void OtxFree::replyFinishedSubdomainIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray passive_dns = document.object()["passive_dns"].toArray();
+        return;
+    }
 
-        foreach(const QJsonValue &value, passive_dns){
-            QString record_type = value.toObject()["record_type"].toString();
-            if(record_type == "A" || record_type == "AAAA"){
-                QString hostname = value.toObject()["hostname"].toString();
-                QString address = value.toObject()["address"].toString();
-                if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
-                    emit subdomainIp(hostname, address);
-                    log.resultsCount++;
-                }
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray passive_dns = document.object()["passive_dns"].toArray();
+
+    foreach(const QJsonValue &value, passive_dns){
+        QString record_type = value.toObject()["record_type"].toString();
+        if(record_type == "A" || record_type == "AAAA"){
+            QString hostname = value.toObject()["hostname"].toString();
+            QString address = value.toObject()["address"].toString();
+            if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
+                emit subdomainIp(hostname, address);
+                log.resultsCount++;
             }
         }
     }
@@ -200,65 +200,65 @@ void OtxFree::replyFinishedSubdomainIp(QNetworkReply *reply){
 }
 
 void OtxFree::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray passive_dns = document.object()["passive_dns"].toArray();
+        return;
+    }
 
-        foreach(const QJsonValue &value, passive_dns){
-            QString record_type = value.toObject()["record_type"].toString();
-            if(record_type == "A" || record_type == "AAAA"){
-                QString hostname = value.toObject()["hostname"].toString();
-                emit subdomain(hostname);
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray passive_dns = document.object()["passive_dns"].toArray();
+
+    foreach(const QJsonValue &value, passive_dns){
+        QString record_type = value.toObject()["record_type"].toString();
+        if(record_type == "A" || record_type == "AAAA"){
+            QString hostname = value.toObject()["hostname"].toString();
+            emit subdomain(hostname);
+            log.resultsCount++;
+        }
+        if(record_type == "CNAME"){
+            QString hostname = value.toObject()["address"].toString();
+            emit CNAME(hostname);
+            log.resultsCount++;
+        }
+        if(record_type == "NS"){
+            QString hostname = value.toObject()["address"].toString();
+            if(hostname != "NXDOMAIN"){
+                emit NS(hostname);
                 log.resultsCount++;
             }
-            if(record_type == "CNAME"){
-                QString hostname = value.toObject()["address"].toString();
-                emit CNAME(hostname);
-                log.resultsCount++;
-            }
-            if(record_type == "NS"){
-                QString hostname = value.toObject()["address"].toString();
-                if(hostname != "NXDOMAIN"){
-                    emit NS(hostname);
-                    log.resultsCount++;
-                }
-            }
-            if(record_type == "MX"){
-                QString hostname = value.toObject()["address"].toString();
-                emit MX(hostname);
-                log.resultsCount++;
-            }
+        }
+        if(record_type == "MX"){
+            QString hostname = value.toObject()["address"].toString();
+            emit MX(hostname);
+            log.resultsCount++;
         }
     }
     end(reply);
 }
 
 void OtxFree::replyFinishedIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray passive_dns = document.object()["passive_dns"].toArray();
+        return;
+    }
 
-        foreach(const QJsonValue &value, passive_dns){
-            QString record_type = value.toObject()["record_type"].toString();
-            if(record_type == "A"){
-                QString address = value.toObject()["address"].toString();
-                if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
-                    emit ipA(address);
-                    log.resultsCount++;
-                }
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray passive_dns = document.object()["passive_dns"].toArray();
+
+    foreach(const QJsonValue &value, passive_dns){
+        QString record_type = value.toObject()["record_type"].toString();
+        if(record_type == "A"){
+            QString address = value.toObject()["address"].toString();
+            if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
+                emit ipA(address);
+                log.resultsCount++;
             }
-            if(record_type == "AAAA"){
-                QString address = value.toObject()["address"].toString();
-                if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
-                    emit ipAAAA(address);
-                    log.resultsCount++;
-                }
+        }
+        if(record_type == "AAAA"){
+            QString address = value.toObject()["address"].toString();
+            if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
+                emit ipAAAA(address);
+                log.resultsCount++;
             }
         }
     }
@@ -266,28 +266,28 @@ void OtxFree::replyFinishedIp(QNetworkReply *reply){
 }
 
 void OtxFree::replyFinishedAsn(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray passive_dns = document.object()["passive_dns"].toArray();
+        return;
+    }
 
-        foreach(const QJsonValue &value, passive_dns){
-            /* if asn value is null jump to next value */
-            if(value.toObject()["asn"].isNull())
-                continue;
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray passive_dns = document.object()["passive_dns"].toArray();
 
-            QString ASN = value.toObject()["asn"].toString();
-            QStringList ASN_VALUE_NAME = ASN.split(" ");
-            if(ASN_VALUE_NAME.size() == 2){
-                emit asn(ASN_VALUE_NAME[0], ASN_VALUE_NAME[1]);
-                log.resultsCount++;
-            }
-            if(ASN_VALUE_NAME.size() == 1){
-                emit asn(ASN_VALUE_NAME[0], "");
-                log.resultsCount++;
-            }
+    foreach(const QJsonValue &value, passive_dns){
+        /* if asn value is null jump to next value */
+        if(value.toObject()["asn"].isNull())
+            continue;
+
+        QString ASN = value.toObject()["asn"].toString();
+        QStringList ASN_VALUE_NAME = ASN.split(" ");
+        if(ASN_VALUE_NAME.size() == 2){
+            emit asn(ASN_VALUE_NAME[0], ASN_VALUE_NAME[1]);
+            log.resultsCount++;
+        }
+        if(ASN_VALUE_NAME.size() == 1){
+            emit asn(ASN_VALUE_NAME[0], "");
+            log.resultsCount++;
         }
     }
     end(reply);

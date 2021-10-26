@@ -54,19 +54,19 @@ void Projectdiscovery::start(){
 }
 
 void Projectdiscovery::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject mainObject = document.object();
-        QString error = mainObject["error"].toString();
-        if(error.isNull() || error.isEmpty()){
-            QJsonArray subdomainList = mainObject["subdomains"].toArray();
-            foreach(const QJsonValue &value, subdomainList){
-                emit subdomain(value.toString());
-                log.resultsCount++;
-            }
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObject = document.object();
+    QString error = mainObject["error"].toString();
+    if(error.isNull() || error.isEmpty()){
+        QJsonArray subdomainList = mainObject["subdomains"].toArray();
+        foreach(const QJsonValue &value, subdomainList){
+            emit subdomain(value.toString());
+            log.resultsCount++;
         }
     }
     end(reply);

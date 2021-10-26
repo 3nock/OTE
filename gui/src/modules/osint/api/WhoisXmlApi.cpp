@@ -4,16 +4,24 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define DNS_LOOKUP 0
+#define EMAIL_VERIFICATION 1
+#define IP_WHOIS 2
+#define WHOIS 3
 
 /*
- * After Sign Up you automaticsubdomainIpy get a free subscription plan limited to 500 queries per month.
+ * After Sign Up you automatically get a free subscription plan limited to 500 queries per month.
  * has a well parsed whois data...
  */
-WhoisXmlApi::WhoisXmlApi(ScanArgs *args):
-    AbstractOsintModule(args)
+WhoisXmlApi::WhoisXmlApi(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinished);
+    log.moduleName = "WhoisXmlApi";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedSubdomain);
     ///
     /// get api key...
     ///
@@ -27,48 +35,56 @@ WhoisXmlApi::~WhoisXmlApi(){
 
 void WhoisXmlApi::start(){
     QNetworkRequest request;
+    request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
     if(args->raw){
-        if(args->option == "whois")
+        switch (args->rawOption){
+        case WHOIS:
             url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&outputFormat=JSON&domainName="+args->target);
-        if(args->option == "ipWhois")
+            break;
+        case IP_WHOIS:
             url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&ipWhois=1&ip=1&domainName="+args->target);
-        if(args->option == "DNS Lookup")
+            break;
+        case DNS_LOOKUP:
             url.setUrl("https://www.whoisxmlapi.com/whoisserver/DNSService?apiKey="+m_key+"&domainName="+args->target+"&type=_subdomainIp");
-        if(args->option == "Email Verification")
+            break;
+        case EMAIL_VERIFICATION:
             url.setUrl("https://emailverification.whoisxmlapi.com/api/v1?apiKey="+m_key+"&emailAddress="+args->target);
-    }else{
-        url.setUrl("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    request.setRawHeader("Content-Type", "application/json");
-    manager->get(request);
+    if(args->inputDomain){
+        url.setUrl("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void WhoisXmlApi::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject result = jsonReply.object()["result"].toObject();
-        if(result["count"].toInt()){
-            QJsonArray records = result["records"].toArray();
-            foreach(const QJsonValue &value, records)
-                emit subdomain(value.toObject()["domain"].toString());
+void WhoisXmlApi::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject result = document.object()["result"].toObject();
+
+    if(result["count"].toInt()){
+        QJsonArray records = result["records"].toArray();
+        foreach(const QJsonValue &value, records){
+            emit subdomain(value.toObject()["domain"].toString());
+            log.resultsCount++;
         }
     }
-    else{
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
+
+    end(reply);
 }
 
 
@@ -77,7 +93,7 @@ void WhoisXmlApi::replyFinished(QNetworkReply *reply){
  *
 https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target
 {
-    "search":"udsm.ac.tz",
+    "search":"google",
     "result": {
         "count":364,
         "records":[

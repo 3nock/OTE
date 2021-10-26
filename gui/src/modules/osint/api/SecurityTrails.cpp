@@ -18,10 +18,9 @@
 #define WHOIS_HISTORY 11
 
 /*
- * Limited to 2000 results for the Free plan and to 10000 for subdomainIp paid subscriptions.
+ * Limited to 2000 results, 50 queries a month for the Free plan and to 10000 for subdomainIp paid subscriptions.
  */
-SecurityTrails::SecurityTrails(ScanArgs *args):
-    AbstractOsintModule(args)
+SecurityTrails::SecurityTrails(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "SecurityTrails";
@@ -89,32 +88,29 @@ void SecurityTrails::start(){
         return;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/subdomains?children_only=false&include_inactive=true");
-    }
-
     if(args->inputDomain){
-
+        if(args->outputSubdomain){
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/subdomains?children_only=false&include_inactive=true");
+            request.setAttribute(QNetworkRequest::User, SUBDOMAINS);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 }
 
 void SecurityTrails::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray subdomainList = jsonReply.object()["subdomains"].toArray();
-        foreach(const QJsonValue &value, subdomainList)
-            emit subdomain(value.toString().append(".").append(args->target));
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    else{
-        emit errorLog(reply->errorString());
+
+    QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray subdomainList = jsonReply.object()["subdomains"].toArray();
+    foreach(const QJsonValue &value, subdomainList){
+        emit subdomain(value.toString().append(".").append(args->target));
+        log.resultsCount++;
     }
-    reply->deleteLater();
-    emit quitThread();
+
+    end(reply);
 }

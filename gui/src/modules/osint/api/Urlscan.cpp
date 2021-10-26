@@ -6,11 +6,21 @@
 /*
  * does not produce clean results yet...
  */
-Urlscan::Urlscan(ScanArgs *args):
-    AbstractOsintModule(args)
+Urlscan::Urlscan(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinished);
+    log.moduleName = "UrlScan";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedSubdomain);
+    if(args->outputAsn)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedAsn);
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedUrl);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedIp);
 }
 Urlscan::~Urlscan(){
     delete manager;
@@ -21,43 +31,84 @@ void Urlscan::start(){
 
     QUrl url;
     if(args->raw){
-        if(args->option == "domain")
-            url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
-    }else{
         url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
     }
 
-    request.setUrl(url);
-    manager->get(request);
+    if(args->inputDomain){
+        url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void Urlscan::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject jsonObject = jsonReply.object();
-        QJsonArray resultsArray = jsonObject["results"].toArray();
-        foreach(const QJsonValue &value, resultsArray){
-            QJsonObject page = value["page"].toObject();
-            emit subdomain(page["domain"].toString());
-            /*
-            emit subdomain(page["server"].toString());
-            emit subdomain(page["asn"].toString());
-            emit subdomain(page["url"].toString());
-            emit subdomain(page["ptr"].toString());
-            */
-        }
+void Urlscan::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    else
-    {
-        emit errorLog(reply->errorString());
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray resultsArray = document.object()["results"].toArray();
+
+    foreach(const QJsonValue &value, resultsArray){
+        QJsonObject page = value["page"].toObject();
+        emit subdomain(page["domain"].toString());
+        log.resultsCount++;
     }
-    reply->deleteLater();
-    emit quitThread();
+    end(reply);
+}
+
+void Urlscan::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray resultsArray = document.object()["results"].toArray();
+
+    foreach(const QJsonValue &value, resultsArray){
+        QJsonObject page = value["page"].toObject();
+        emit ip(page["ptr"].toString());
+        log.resultsCount++;
+    }
+    end(reply);
+}
+
+void Urlscan::replyFinishedUrl(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray resultsArray = document.object()["results"].toArray();
+
+    foreach(const QJsonValue &value, resultsArray){
+        QJsonObject page = value["page"].toObject();
+        emit url(page["url"].toString());
+        log.resultsCount++;
+    }
+    end(reply);
+}
+
+void Urlscan::replyFinishedAsn(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray resultsArray = document.object()["results"].toArray();
+
+    foreach(const QJsonValue &value, resultsArray){
+        QJsonObject page = value["page"].toObject();
+        emit asn(page["asn"].toString(), "");
+        log.resultsCount++;
+    }
+    end(reply);
 }

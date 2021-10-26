@@ -20,7 +20,10 @@ class Urlscan: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
+        void replyFinishedUrl(QNetworkReply *reply) override;
+        void replyFinishedAsn(QNetworkReply *reply) override;
 };
 
 #endif // URLSCAN_H

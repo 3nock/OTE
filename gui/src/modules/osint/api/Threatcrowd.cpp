@@ -3,12 +3,25 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#define ANTIVIRUS 0
+#define DOMAINS 1
+#define EMAIL 2
+#define FILE 3
+#define IP 4
 
-Threatcrowd::Threatcrowd(ScanArgs *args):
-    AbstractOsintModule(args)
+Threatcrowd::Threatcrowd(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinished);
+    log.moduleName = "ThreatCrowd";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedSubdomain);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedIp);
+    if(args->outputEmail)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedEmail);
 }
 Threatcrowd::~Threatcrowd(){
     delete manager;
@@ -19,58 +32,109 @@ void Threatcrowd::start(){
 
     QUrl url;
     if(args->raw){
-        if(args->option == "email")
+        switch (args->rawOption) {
+        case EMAIL:
             url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+args->target);
-        if(args->option == "domain")
+            break;
+        case DOMAINS:
             url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+args->target);
-        if(args->option == "ip")
+            break;
+        case IP:
             url.setUrl("https://www.threatcrowd.org/searchApi/v2/ip/report/?ip="+args->target);
-        if(args->option == "antivirus")
+            break;
+        case ANTIVIRUS:
             url.setUrl("https://www.threatcrowd.org/searchApi/v2/antivirus/report/?antivirus="+args->target);
-        if(args->option == "file")
+            break;
+        case FILE:
             url.setUrl("https://www.threatcrowd.org/searchApi/v2/file/report/?resource="+args->target);
-    }else{
-        url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+args->target);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    manager->get(request);
+    if(args->inputDomain){
+        url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+args->target);
+        request.setAttribute(QNetworkRequest::User, DOMAINS);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->inputEmail){
+        url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+args->target);
+        request.setAttribute(QNetworkRequest::User, EMAIL);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->inputIp){
+        url.setUrl("https://www.threatcrowd.org/searchApi/v2/ip/report/?ip="+args->target);
+        request.setAttribute(QNetworkRequest::User, IP);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void Threatcrowd::replyFinished(QNetworkReply *reply){
-    if(reply->error())
-    {
-        emit errorLog(reply->errorString());
+void Threatcrowd::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    else
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject jsonObject = jsonReply.object();
-        if(jsonObject["response_code"].toString() == "1")
-        {
-            /*
-                            FOR IP-ADDRESS
-            QJsonArray resolutions = jsonObject["resolutions"].toArray();
-            foreach(const QJsonValue &value, resolutions)
-                emit subdomain(value["ip_address"].toString());
 
-                              FOR EMAILS
-            QJsonArray emails = jsonObject["emails"].toArray();
-            foreach(const QJsonValue &value, emails)
-                emit subdomain(value.toString());
-            */
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
 
-            QJsonArray subdomains = jsonObject["subdomains"].toArray();
-            foreach(const QJsonValue &value, subdomains)
-                emit subdomain(value.toString());
+    if(mainObj["response_code"].toString() == "1"){
+        QJsonArray resolutions = mainObj["resolutions"].toArray();
+        foreach(const QJsonValue &value, resolutions){
+            emit subdomain(value["ip_address"].toString());
+            log.resultsCount++;
         }
     }
-    reply->deleteLater();
-    emit quitThread();
+    end(reply);
+}
+
+void Threatcrowd::replyFinishedEmail(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    if(mainObj["response_code"].toString() == "1"){
+        QJsonArray emails = mainObj["emails"].toArray();
+        foreach(const QJsonValue &value, emails){
+            emit email(value.toString());
+            log.resultsCount++;
+        }
+    }
+    end(reply);
+}
+
+void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    if(mainObj["response_code"].toString() == "1"){
+        QJsonArray subdomains = mainObj["subdomains"].toArray();
+        foreach(const QJsonValue &value, subdomains){
+            emit subdomain(value.toString());
+            log.resultsCount++;
+        }
+    }
+    end(reply);
 }

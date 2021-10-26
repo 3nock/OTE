@@ -72,32 +72,32 @@ void HunterSearch::start(){
 }
 
 void HunterSearch::replyFinishedEmail(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject data = jsonReply["data"].toObject();
+        return;
+    }
 
-        if(requestType == DOMAIN_SEARCH){
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject data = jsonReply["data"].toObject();
+
+    if(requestType == DOMAIN_SEARCH){
+        /*
+         * QString OrganizationName = data["organization"].toString();
+         */
+        QJsonArray emailList = data["emails"].toArray();
+        foreach(const QJsonValue &value, emailList){
+            QString Email = value["value"].toString();
+            emit email(Email);
+            log.resultsCount++;
             /*
-             * QString OrganizationName = data["organization"].toString();
+             * getting where the email was extracted from
+             *
+            QStringList uriSources;
+            foreach(const QJsonValue &sources, value["sources"].toArray())
+                uriSources.append(value["uri"].toString());
+             *
              */
-            QJsonArray emailList = data["emails"].toArray();
-            foreach(const QJsonValue &value, emailList){
-                QString Email = value["value"].toString();
-                emit email(Email);
-                log.resultsCount++;
-                /*
-                 * getting where the email was extracted from
-                 *
-                QStringList uriSources;
-                foreach(const QJsonValue &sources, value["sources"].toArray())
-                    uriSources.append(value["uri"].toString());
-                 *
-                 */
-            }
         }
     }
     end(reply);

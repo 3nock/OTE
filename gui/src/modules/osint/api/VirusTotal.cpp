@@ -1,15 +1,27 @@
 #include "VirusTotal.h"
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
 #include "src/utils/Config.h"
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
+#define DOMAINS 0
+#define IP_ADDRESSES 1
+#define RESOLUTIONS 2
+#define URLS 3
 
-VirusTotal::VirusTotal(ScanArgs *args):
-    AbstractOsintModule(args)
+VirusTotal::VirusTotal(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinished);
+    log.moduleName = "VirusTotal";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedRaw);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedIp);
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedUrl);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSubdomain);
     ///
     /// obtain apikey...
     ///
@@ -26,62 +38,79 @@ void VirusTotal::start(){
 
     QUrl url;
     if(args->raw){
-        if(args->option == "urls")
+        switch (args->rawOption) {
+        case URLS:
             url.setUrl("https://www.virustotal.com/api/v3/urls/"+args->target);
-        if(args->option == "domains")
+            break;
+        case DOMAINS:
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+args->target);
-        if(args->option == "resolutions")
+            break;
+        case RESOLUTIONS:
             url.setUrl("https://www.virustotal.com/api/v3/resolutions/"+args->target);
-        if(args->option == "ip-addresses")
+            break;
+        case IP_ADDRESSES:
             url.setUrl("https://www.virustotal.com/api/v3/ip_addresses/"+args->target);
-
-        request.setUrl(url);
+            break;
+        }
         request.setRawHeader("x-apikey", m_key.toUtf8());
+        request.setUrl(url);
         manager->get(request);
+        activeRequests++;
+        return;
+    }
 
-    }else{
+    if(args->inputDomain){
         url.setUrl("https://www.virustotal.com/vtapi/v2/domain/report?apikey="+m_key+"&domain="+args->target);
         request.setUrl(url);
         manager->get(request);
+        activeRequests++;
     }
 }
 
-void VirusTotal::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject jsonObject = jsonReply.object();
-        ///
-        /// for subdomains...
-        ///
-        QJsonArray subdomains = jsonObject["subdomains"].toArray();
-        foreach(const QJsonValue &value, subdomains)
-            emit subdomain(value.toString());
-        /*
-        ///
-        /// ip-addresses...
-        ///
-        QJsonArray resolutions = jsonObject["resolutions"].toArray();
-        foreach(const QJsonValue &value, resolutions)
-            emit subdomain(value.toObject()["ip_address"].toString());
-        ///
-        /// detected-urls...
-        ///
-        QJsonArray urls = jsonObject["detected_urls"].toArray();
-        foreach(const QJsonValue &value, urls)
-            emit subdomain(value.toObject()["url"].toString());
-        */
+void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    else
-    {
-        emit errorLog(reply->errorString());
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray subdomains = document.object()["subdomains"].toArray();
+
+    foreach(const QJsonValue &value, subdomains){
+        emit subdomain(value.toString());
+        log.resultsCount++;
     }
-    reply->deleteLater();
-    emit quitThread();
+    end(reply);
+}
+
+void VirusTotal::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray resolutions = document.object()["resolutions"].toArray();
+
+    foreach(const QJsonValue &value, resolutions){
+        emit ip(value.toObject()["ip_address"].toString());
+        log.resultsCount++;
+    }
+    end(reply);
+}
+
+void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray urls = document.object()["detected_urls"].toArray();
+
+    foreach(const QJsonValue &value, urls){
+        emit url(value.toObject()["url"].toString());
+        log.resultsCount++;
+    }
+    end(reply);
 }

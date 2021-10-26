@@ -37,16 +37,16 @@ void Anubis::start(){
 }
 
 void Anubis::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray subdomainList = document.array();
-        foreach(const QJsonValue &value, subdomainList){
-            emit subdomain(value.toString());
-            log.resultsCount++;
-        }
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray subdomainList = document.array();
+    foreach(const QJsonValue &value, subdomainList){
+        emit subdomain(value.toString());
+        log.resultsCount++;
     }
     end(reply);
 }

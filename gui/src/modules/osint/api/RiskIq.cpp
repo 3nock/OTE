@@ -159,24 +159,24 @@ void RiskIq::start(){
 }
 
 void RiskIq::replyFinishedSubdomainIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray records = document.object()["records"].toArray();
+        return;
+    }
 
-        if(requestType == PDNS_IP || requestType == PDNS_NAME){
-            foreach(const QJsonValue &record, records){
-                QString rrtype = record.toObject()["rrtype"].toString();
-                if(rrtype == "A" || rrtype == "AAAA"){
-                    QJsonArray data = record.toObject()["data"].toArray();
-                    QString name = record.toObject()["name"].toString();
-                    foreach(const QJsonValue &value, data){
-                        emit subdomainIp(name, value.toString());
-                        log.resultsCount++;
-                    }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray records = document.object()["records"].toArray();
+
+    if(requestType == PDNS_IP || requestType == PDNS_NAME){
+        foreach(const QJsonValue &record, records){
+            QString rrtype = record.toObject()["rrtype"].toString();
+            if(rrtype == "A" || rrtype == "AAAA"){
+                QJsonArray data = record.toObject()["data"].toArray();
+                QString name = record.toObject()["name"].toString();
+                foreach(const QJsonValue &value, data){
+                    emit subdomainIp(name, value.toString());
+                    log.resultsCount++;
                 }
             }
         }
@@ -185,42 +185,42 @@ void RiskIq::replyFinishedSubdomainIp(QNetworkReply *reply){
 }
 
 void RiskIq::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray records = document.object()["records"].toArray();
+        return;
+    }
 
-        if(requestType == PDNS_IP || requestType == PDNS_NAME){
-            foreach(const QJsonValue &record, records){
-                QString rrtype = record.toObject()["rrtype"].toString();
-                if(rrtype == "A" || rrtype == "AAAA"){
-                    QString name = record.toObject()["name"].toString();
-                    emit subdomain(name);
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray records = document.object()["records"].toArray();
+
+    if(requestType == PDNS_IP || requestType == PDNS_NAME){
+        foreach(const QJsonValue &record, records){
+            QString rrtype = record.toObject()["rrtype"].toString();
+            if(rrtype == "A" || rrtype == "AAAA"){
+                QString name = record.toObject()["name"].toString();
+                emit subdomain(name);
+                log.resultsCount++;
+            }
+            if(rrtype == "NS"){
+                QJsonArray data = record.toObject()["data"].toArray();
+                foreach(const QJsonValue &value, data){
+                    emit NS(value.toString());
                     log.resultsCount++;
                 }
-                if(rrtype == "NS"){
-                    QJsonArray data = record.toObject()["data"].toArray();
-                    foreach(const QJsonValue &value, data){
-                        emit NS(value.toString());
-                        log.resultsCount++;
-                    }
+            }
+            if(rrtype == "MX"){
+                QJsonArray data = record.toObject()["data"].toArray();
+                foreach(const QJsonValue &value, data){
+                    emit MX(value.toString());
+                    log.resultsCount++;
                 }
-                if(rrtype == "MX"){
-                    QJsonArray data = record.toObject()["data"].toArray();
-                    foreach(const QJsonValue &value, data){
-                        emit MX(value.toString());
-                        log.resultsCount++;
-                    }
-                }
-                if(rrtype == "CNAME"){
-                    QJsonArray data = record.toObject()["data"].toArray();
-                    foreach(const QJsonValue &value, data){
-                        emit CNAME(value.toString());
-                        log.resultsCount++;
-                    }
+            }
+            if(rrtype == "CNAME"){
+                QJsonArray data = record.toObject()["data"].toArray();
+                foreach(const QJsonValue &value, data){
+                    emit CNAME(value.toString());
+                    log.resultsCount++;
                 }
             }
         }
@@ -229,67 +229,67 @@ void RiskIq::replyFinishedSubdomain(QNetworkReply *reply){
 }
 
 void RiskIq::replyFinishedIp(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
+        return;
+    }
 
-        if(requestType == PDNS_IP || requestType == PDNS_NAME){
-            QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-            QJsonArray records = document.object()["records"].toArray();
+    int requestType = reply->property(REQUEST_TYPE).toInt();
 
-            foreach(const QJsonValue &record, records){
-                QString rrtype = record.toObject()["rrtype"].toString();
-                if(rrtype == "A"){
-                    QJsonArray data = record.toObject()["data"].toArray();
-                    foreach(const QJsonValue &value, data){
-                        emit ipA(value.toString());
-                        log.resultsCount++;
-                    }
+    if(requestType == PDNS_IP || requestType == PDNS_NAME){
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray records = document.object()["records"].toArray();
+
+        foreach(const QJsonValue &record, records){
+            QString rrtype = record.toObject()["rrtype"].toString();
+            if(rrtype == "A"){
+                QJsonArray data = record.toObject()["data"].toArray();
+                foreach(const QJsonValue &value, data){
+                    emit ipA(value.toString());
+                    log.resultsCount++;
                 }
-                if(rrtype == "AAAA"){
-                    QJsonArray data = record.toObject()["data"].toArray();
-                    foreach(const QJsonValue &value, data){
-                        emit ipAAAA(value.toString());
-                        log.resultsCount++;
-                    }
+            }
+            if(rrtype == "AAAA"){
+                QJsonArray data = record.toObject()["data"].toArray();
+                foreach(const QJsonValue &value, data){
+                    emit ipAAAA(value.toString());
+                    log.resultsCount++;
                 }
             }
         }
+    }
 
-        if(requestType == CERT_HOST || requestType == CERT_SHA1){
-            QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-            QJsonArray content = document.object()["content"].toArray();
+    if(requestType == CERT_HOST || requestType == CERT_SHA1){
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray content = document.object()["content"].toArray();
 
-            foreach(const QJsonValue &record, content){
-                QJsonObject host = record.toObject()["host"].toObject();
-                QString hostValue = host["host"].toString();
-                emit ip(hostValue);
-                log.resultsCount++;
-            }
+        foreach(const QJsonValue &record, content){
+            QJsonObject host = record.toObject()["host"].toObject();
+            QString hostValue = host["host"].toString();
+            emit ip(hostValue);
+            log.resultsCount++;
         }
     }
     end(reply);
 }
 
 void RiskIq::replyFinishedCertFingerprint(QNetworkReply *reply){
-    if(reply->error())
+    if(reply->error()){
         this->onError(reply);
-    else
-    {
-        int requestType = reply->property(REQUEST_TYPE).toInt();
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray content = document.object()["content"].toArray();
+        return;
+    }
 
-        if(requestType == CERT_HOST || requestType == CERT_SHA1){
-            foreach(const QJsonValue &record, content){
-                QJsonObject cert = record.toObject()["cert"].toObject();
-                QString sha1 = cert["sha1"].toString();
-                emit certFingerprint(sha1);
-                log.resultsCount++;
-                /* QString serialNo = cert["serialNumber"].toString(); */
-            }
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray content = document.object()["content"].toArray();
+
+    if(requestType == CERT_HOST || requestType == CERT_SHA1){
+        foreach(const QJsonValue &record, content){
+            QJsonObject cert = record.toObject()["cert"].toObject();
+            QString sha1 = cert["sha1"].toString();
+            emit certFingerprint(sha1);
+            log.resultsCount++;
+            /* QString serialNo = cert["serialNumber"].toString(); */
         }
     }
     end(reply);

@@ -23,7 +23,7 @@ class WhoisXmlApi: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *) override;
 
     private:
         QString m_key = nullptr;

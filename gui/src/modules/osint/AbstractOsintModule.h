@@ -86,6 +86,7 @@ class AbstractOsintModule : public QObject {
             log.message = reply->errorString();
             //emit errorLog(log);
             emit errorLog(reply->errorString());
+            end(reply); // for now, later implement own end...
         }
 
         inline void end(QNetworkReply *reply){

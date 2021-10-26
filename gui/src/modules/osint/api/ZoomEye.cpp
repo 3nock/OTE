@@ -4,16 +4,27 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define DOMAINS 0
 
 /*
  * produces a vast amount of information...
  * subdomain-ip-asn-org-geoLoc
  */
-ZoomEye::ZoomEye(ScanArgs *args):
-    AbstractOsintModule(args)
+ZoomEye::ZoomEye(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinished);
+    log.moduleName = "ZoomEye";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedRaw);
+    if(args->outputSubdomainIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomainIp);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomain);
+    if(args->outputAsn)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedAsn);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedIp);
     ///
     /// get api key...
     ///
@@ -27,53 +38,106 @@ ZoomEye::~ZoomEye(){
 
 void ZoomEye::start(){
     QNetworkRequest request;
+    request.setRawHeader("Content-Type", "application/json");
+    request.setRawHeader("API-KEY", m_key.toUtf8());
 
     QUrl url;
     if(args->raw){
-        if(args->option == "domain")
+        switch(args->rawOption){
+        case DOMAINS:
             url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
-    }else{
-        url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    request.setRawHeader("Content-Type", "application/json");
-    request.setRawHeader("API-KEY", m_key.toUtf8());
-    manager->get(request);
+    if(args->inputDomain){
+        url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void ZoomEye::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        if(jsonReply.object()["total"].toInt()){
-            QJsonArray matches = jsonReply.object()["matches"].toArray();
-            foreach(const QJsonValue &value, matches)
-                emit subdomain(value.toObject()["rdns"].toString());
-            /*
-                IP
-            foreach(const QJsonValue &value, matches)
-                emit subdomain(value.toObject()["ip"].toString());
+void ZoomEye::replyFinishedSubdomainIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
 
-                ASN & ORGANIZATION
-            foreach(const QJsonValue &value, matches){
-                QString asn = value.toObject()["geoinfo"].toObject()["asn"].toString();
-                QString org = value.toObject()["geoinfo"].toObject()["organization"].toString();
-            }
-            */
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    if(document.object()["total"].toInt()){
+        QJsonArray matches = document.object()["matches"].toArray();
+        foreach(const QJsonValue &value, matches){
+            emit subdomain(value.toObject()["rdns"].toString());
+            log.resultsCount++;
         }
     }
-    else{
-        emit errorLog(reply->errorString());
+
+    end(reply);
+}
+
+void ZoomEye::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    reply->deleteLater();
-    emit quitThread();
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    if(document.object()["total"].toInt()){
+        QJsonArray matches = document.object()["matches"].toArray();
+        foreach(const QJsonValue &value, matches){
+            emit ip(value.toObject()["ip"].toString());
+            log.resultsCount++;
+        }
+    }
+
+    end(reply);
+}
+
+void ZoomEye::replyFinishedAsn(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    if(document.object()["total"].toInt()){
+        QJsonArray matches = document.object()["matches"].toArray();
+        foreach(const QJsonValue &value, matches){
+            QString ASN = value.toObject()["geoinfo"].toObject()["asn"].toString();
+            QString org = value.toObject()["geoinfo"].toObject()["organization"].toString();
+            emit asn(ASN, org);
+            log.resultsCount++;
+        }
+    }
+
+    end(reply);
+}
+
+void ZoomEye::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    if(document.object()["total"].toInt()){
+        QJsonArray matches = document.object()["matches"].toArray();
+        foreach(const QJsonValue &value, matches){
+            emit subdomain(value.toObject()["rdns"].toString());
+            log.resultsCount++;
+        }
+    }
+
+    end(reply);
 }
 
 /*

@@ -4,16 +4,31 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-/*
- * 1 request/ second
- */
-Shodan::Shodan(ScanArgs *args):
-    AbstractOsintModule(args)
+#define ACCOUNT_PROFILE 0
+#define BULK_DATA 1
+#define DNS_DOMAIN 2
+#define DNS_RESOLVE 3
+#define DNS_REVERSE 4
+#define HOST_COUNT 5
+#define HOST_IP 6
+#define HOST_SEARCH 7
+#define HOST_SEARCH_FACETS 8
+#define HOST_SEARCH_FILTERS 9
+#define HOST_SEARCH_TOKENS 10
+
+
+/* 1 request/ second */
+Shodan::Shodan(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinished);
+    log.moduleName = "Shodan";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomain);
     ///
-    /// get api-key...
+    /// getting api-key...
     ///
     Config::generalConfig().beginGroup("api-keys");
     m_key = Config::generalConfig().value("shodan").toString();
@@ -28,63 +43,91 @@ void Shodan::start(){
 
     QUrl url;
     if(args->raw){
-        if(args->option == "host ip")
+        switch (args->rawOption) {
+        case HOST_IP:
             url.setUrl("https://api.shodan.io/shodan/host/"+args->target+"?key="+m_key);
-        if(args->option == "host count")
+            break;
+        case HOST_COUNT:
             url.setUrl("https://api.shodan.io/shodan/host/count?key="+m_key+"&query="+args->target+"&facets=org,os");
-        if(args->option == "host search")
+            break;
+        case HOST_SEARCH:
             url.setUrl("https://api.shodan.io/shodan/host/search?key="+m_key+"&query="+args->target+"&facets=country");
-        if(args->option == "host search facets")
+            break;
+        case HOST_SEARCH_FACETS:
             url.setUrl("https://api.shodan.io/shodan/host/search/facets?key="+m_key);
-        if(args->option == "host search filters")
+            break;
+        case HOST_SEARCH_FILTERS:
             url.setUrl("https://api.shodan.io/shodan/host/search/filters?key="+m_key);
-        if(args->option == "host search tokens")
+            break;
+        case HOST_SEARCH_TOKENS:
             url.setUrl("https://api.shodan.io/shodan/host/search/tokens?key="+m_key+"&query="+args->target);
-        if(args->option == "bulk data")
+            break;
+        case BULK_DATA:
             url.setUrl("https://api.shodan.io/shodan/data/"+args->target+"?key="+m_key);
-        if(args->option == "account profile")
+            break;
+        case ACCOUNT_PROFILE:
             url.setUrl("https://api.shodan.io/account/profile?key="+m_key);
-        if(args->option == "dns domain")
+            break;
+        case DNS_DOMAIN:
             url.setUrl("https://api.shodan.io/dns/domain/"+args->target+"?key="+m_key);
-        if(args->option == "dns resolve")
+            break;
+        case DNS_RESOLVE:
             url.setUrl("https://api.shodan.io/dns/resolve?hostnames="+args->target+"&key="+m_key);
-        if(args->option == "dns reverse")
+            break;
+        case DNS_REVERSE:
             url.setUrl("https://api.shodan.io/dns/reverse?ips="+args->target+"&key="+m_key);
-    }else{
-        url.setUrl("https://api.shodan.io/dns/domain/"+args->target+"?key="+m_key);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    manager->get(request);
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            url.setUrl("https://api.shodan.io/dns/domain/"+args->target+"?key="+m_key);
+            request.setAttribute(QNetworkRequest::User, DNS_DOMAIN);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
-void Shodan::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray data = jsonReply.object()["data"].toArray();
+void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray data = jsonReply.object()["data"].toArray();
+
+    if(requestType == DNS_DOMAIN){
         QJsonArray subdomains = jsonReply.object()["subdomains"].toArray();
-        ///
-        /// for subdomains...
-        ///
+        foreach(const QJsonValue &value, subdomains){
+            emit subdomain(value.toString());
+            log.resultsCount++;
+        }
+
         foreach(const QJsonValue &value, data){
             QString type = value.toObject()["type"].toString();
             QString hostname = value.toObject()["value"].toString();
-            if(type == "MX" || type == "NS" || type == "CNAME")
-                emit subdomain(hostname);
+            if(type == "MX"){
+                emit MX(hostname);
+                log.resultsCount++;
+            }
+            if(type == "NS"){
+                emit NS(hostname);
+                log.resultsCount++;
+            }
+            if(type == "CNAME"){
+                emit CNAME(hostname);
+                log.resultsCount++;
+            }
         }
-        foreach(const QJsonValue &value, subdomains)
-            emit subdomain(value.toString());
     }
-    else{
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
+    end(reply);
 }

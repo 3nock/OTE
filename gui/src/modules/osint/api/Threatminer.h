@@ -29,7 +29,7 @@ class Threatminer: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
 };
 
 #endif // THREATMINER_H

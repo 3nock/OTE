@@ -24,7 +24,9 @@ class VirusTotal: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
+        void replyFinishedUrl(QNetworkReply *reply) override;
 
     private:
         QString m_key;
