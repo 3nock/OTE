@@ -105,6 +105,46 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
     }else{
         modules.robtexpaid = false;
     }
+    if(ui->moduleSecuritytrails->isChecked()){
+        modules.securitytrails = true;
+    }else{
+        modules.securitytrails = false;
+    }
+    if(ui->moduleShodan->isChecked()){
+        modules.shodan = true;
+    }else{
+        modules.shodan = false;
+    }
+    if(ui->moduleSpyse->isChecked()){
+        modules.spyse = true;
+    }else{
+        modules.spyse = false;
+    }
+    if(ui->moduleSublist3r->isChecked()){
+        modules.sublist3r = true;
+    }else{
+        modules.sublist3r = false;
+    }
+    if(ui->moduleThreatBook->isChecked()){
+        modules.threatbook = true;
+    }else{
+        modules.threatbook = false;
+    }
+    if(ui->moduleThreatcrowd->isChecked()){
+        modules.threatcrowd = true;
+    }else{
+        modules.threatcrowd = false;
+    }
+    if(ui->moduleThreatminer->isChecked()){
+        modules.threatminer = true;
+    }else{
+        modules.threatminer = false;
+    }
+    if(ui->moduleViewDns->isChecked()){
+        modules.viewDns = true;
+    }else{
+        modules.viewDns = false;
+    }
     /*
      * ...
      */
@@ -112,16 +152,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
         modules.censysFree = true;
     }else{
         modules.censysFree = false;
-    }
-    if(ui->moduleThreatminer->isChecked()){
-        modules.threatminer = true;
-    }else{
-        modules.threatminer = false;
-    }
-    if(ui->moduleShodan->isChecked()){
-        modules.shodan = true;
-    }else{
-        modules.shodan = false;
     }
     if(ui->moduleGithub->isChecked()){
         modules.github = true;
@@ -158,11 +188,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
     }else{
         modules.netcraft = false;
     }
-    if(ui->moduleSecuritytrails->isChecked()){
-        modules.securitytrails = true;
-    }else{
-        modules.securitytrails = false;
-    }
     if(ui->moduleSuip->isChecked()){
         modules.suip = true;
     }else{
@@ -177,11 +202,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
         modules.cloudflare = true;
     }else{
         modules.cloudflare = false;
-    }
-    if(ui->moduleThreatcrowd->isChecked()){
-        modules.threatcrowd = true;
-    }else{
-        modules.threatcrowd = false;
     }
     if(ui->moduleDnsbufferoverrun->isChecked()){
         modules.dnsbufferoverrun = true;
@@ -252,11 +272,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
         modules.pentesttools = true;
     }else{
         modules.pentesttools = false;
-    }
-    if(ui->moduleSpyse->isChecked()){
-        modules.spyse = true;
-    }else{
-        modules.spyse = false;
     }
 }
 
@@ -364,19 +379,49 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     else{
         ui->moduleRobtexPaid->setChecked(false);
     }
-    /*
-     * ...
-     */
-    if(settings.value(OSINT_THREATMINER).toString() == TRUE){
-        ui->moduleThreatminer->setChecked(true);
+    if(settings.value(OSINT_SECURITYTRAILS).toString() == TRUE){
+        ui->moduleSecuritytrails->setChecked(true);
     }else{
-        ui->moduleThreatminer->setChecked(false);
+        ui->moduleSecuritytrails->setChecked(false);
     }
     if(settings.value(OSINT_SHODAN).toString() == TRUE){
         ui->moduleShodan->setChecked(true);
     }else{
         ui->moduleShodan->setChecked(false);
     }
+    if(settings.value(OSINT_SPYSE).toString() == TRUE){
+        ui->moduleSpyse->setChecked(true);
+    }else{
+        ui->moduleSpyse->setChecked(false);
+    }
+    if(settings.value("sublist3r").toString() == TRUE){
+        ui->moduleSublist3r->setChecked(true);
+    }else{
+        ui->moduleSublist3r->setChecked(false);
+    }
+    if(settings.value("threatbook").toString() == TRUE){
+        ui->moduleThreatBook->setChecked(true);
+    }else{
+        ui->moduleThreatBook->setChecked(false);
+    }
+    if(settings.value(OSINT_THREATCROWD).toString() == TRUE){
+        ui->moduleThreatcrowd->setChecked(true);
+    }else{
+        ui->moduleThreatcrowd->setChecked(false);
+    }
+    if(settings.value(OSINT_THREATMINER).toString() == TRUE){
+        ui->moduleThreatminer->setChecked(true);
+    }else{
+        ui->moduleThreatminer->setChecked(false);
+    }
+    if(settings.value("viewdns").toString() == TRUE){
+        ui->moduleViewDns->setChecked(true);
+    }else{
+        ui->moduleViewDns->setChecked(false);
+    }
+    /*
+     * ...
+     */
     if(settings.value(OSINT_BING).toString() == TRUE){
         ui->moduleBing->setChecked(true);
     }else{
@@ -391,11 +436,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
         ui->moduleCensys->setChecked(true);
     }else{
         ui->moduleCensys->setChecked(false);
-    }
-    if(settings.value(OSINT_SECURITYTRAILS).toString() == TRUE){
-        ui->moduleSecuritytrails->setChecked(true);
-    }else{
-        ui->moduleSecuritytrails->setChecked(false);
     }
     if(settings.value(OSINT_CLOUDFLARE).toString() == TRUE){
         ui->moduleCloudflare->setChecked(true);
@@ -452,11 +492,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleTrello->setChecked(false);
     }
-    if(settings.value(OSINT_THREATCROWD).toString() == TRUE){
-        ui->moduleThreatcrowd->setChecked(true);
-    }else{
-        ui->moduleThreatcrowd->setChecked(false);
-    }
     if(settings.value(OSINT_DNSBUFFEROVERRUN).toString() == TRUE){
         ui->moduleDnsbufferoverrun->setChecked(true);
     }else{
@@ -512,11 +547,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
         ui->modulePentesttools->setChecked(true);
     }else{
         ui->modulePentesttools->setChecked(false);
-    }
-    if(settings.value(OSINT_SPYSE).toString() == TRUE){
-        ui->moduleSpyse->setChecked(true);
-    }else{
-        ui->moduleSpyse->setChecked(false);
     }
     settings.endGroup();
 }
@@ -623,6 +653,46 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue("robtexpaid", FALSE);
     }
+    if(ui->moduleSecuritytrails->isChecked()){
+        settings.setValue(OSINT_SECURITYTRAILS, TRUE);
+    }else{
+        settings.setValue(OSINT_SECURITYTRAILS, FALSE);
+    }
+    if(ui->moduleShodan->isChecked()){
+        settings.setValue(OSINT_SHODAN, TRUE);
+    }else{
+        settings.setValue(OSINT_SHODAN, FALSE);
+    }
+    if(ui->moduleSpyse->isChecked()){
+        settings.setValue(OSINT_SPYSE, TRUE);
+    }else{
+        settings.setValue(OSINT_SPYSE, FALSE);
+    }
+    if(ui->moduleSublist3r->isChecked()){
+        settings.setValue("sublist3r", TRUE);
+    }else{
+        settings.setValue("sublist3r", FALSE);
+    }
+    if(ui->moduleThreatBook->isChecked()){
+        settings.setValue("threatbook", TRUE);
+    }else{
+        settings.setValue("threatbook", FALSE);
+    }
+    if(ui->moduleThreatcrowd->isChecked()){
+        settings.setValue(OSINT_THREATCROWD, TRUE);
+    }else{
+        settings.setValue(OSINT_THREATCROWD, FALSE);
+    }
+    if(ui->moduleThreatminer->isChecked()){
+        settings.setValue(OSINT_THREATMINER, TRUE);
+    }else{
+        settings.setValue(OSINT_THREATMINER, FALSE);
+    }
+    if(ui->moduleViewDns->isChecked()){
+        settings.setValue("viewdns", TRUE);
+    }else{
+        settings.setValue("viewdns", FALSE);
+    }
     /*
      * ...
      */
@@ -630,16 +700,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_CENSYS, TRUE);
     }else{
         settings.setValue(OSINT_CENSYS, FALSE);
-    }
-    if(ui->moduleThreatminer->isChecked()){
-        settings.setValue(OSINT_THREATMINER, TRUE);
-    }else{
-        settings.setValue(OSINT_THREATMINER, FALSE);
-    }
-    if(ui->moduleShodan->isChecked()){
-        settings.setValue(OSINT_SHODAN, TRUE);
-    }else{
-        settings.setValue(OSINT_SHODAN, FALSE);
     }
     if(ui->moduleGithub->isChecked()){
         settings.setValue(OSINT_GITHUB, TRUE);
@@ -676,11 +736,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_NETCRAFT, FALSE);
     }
-    if(ui->moduleSecuritytrails->isChecked()){
-        settings.setValue(OSINT_SECURITYTRAILS, TRUE);
-    }else{
-        settings.setValue(OSINT_SECURITYTRAILS, FALSE);
-    }
     if(ui->moduleSuip->isChecked()){
         settings.setValue(OSINT_SUIP, TRUE);
     }else{
@@ -695,11 +750,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_CLOUDFLARE, TRUE);
     }else{
         settings.setValue(OSINT_CLOUDFLARE, FALSE);
-    }
-    if(ui->moduleThreatcrowd->isChecked()){
-        settings.setValue(OSINT_THREATCROWD, TRUE);
-    }else{
-        settings.setValue(OSINT_THREATCROWD, FALSE);
     }
     if(ui->moduleDnsbufferoverrun->isChecked()){
         settings.setValue(OSINT_DNSBUFFEROVERRUN, TRUE);
@@ -770,11 +820,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_PENTESTTOOLS, TRUE);
     }else{
         settings.setValue(OSINT_PENTESTTOOLS, FALSE);
-    }
-    if(ui->moduleSpyse->isChecked()){
-        settings.setValue(OSINT_SPYSE, TRUE);
-    }else{
-        settings.setValue(OSINT_SPYSE, FALSE);
     }
     settings.endGroup();
 }

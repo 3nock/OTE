@@ -21,6 +21,8 @@
 
 /*
  * only 250 api csubdomainIps available for free...
+ * also has a reverse dns lookup...
+ * has mx,ip & ns reverse lookups...
  */
 ViewDns::ViewDns(ScanArgs *args): AbstractOsintModule(args)
 {
@@ -31,6 +33,10 @@ ViewDns::ViewDns(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedRaw);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedSubdomain);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedIp);
+    if(args->outputEmail)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedEmail);
     ///
     /// getting api key...
     ///
@@ -97,11 +103,52 @@ void ViewDns::start(){
         return;
     }
 
-    {
-        /*
-         * nothing yet...
-         */
+    if(args->inputDomain){
+        if(args->outputSubdomain || args->outputIp){
+            url.setUrl("https://api.viewdns.info/dnsrecord/?domain="+args->target+"&recordtype=ANY&apikey="+m_key+"&output=json");
+            request.setAttribute(QNetworkRequest::User, DNS_RECORD_LOOKUP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+
+        if(args->outputIp){
+            url.setUrl("https://api.viewdns.info/iphistory/?domain="+args->target+"&apikey="+m_key+"&output=json");
+            request.setAttribute(QNetworkRequest::User, IP_HISTORY);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+
+        if(args->outputEmail){
+            url.setUrl("https://api.viewdns.info/abuselookup/?domain="+args->target+"&apikey="+m_key+"&output=json");
+            request.setAttribute(QNetworkRequest::User, ABUSE_CONTACT_LOOKUP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
+
+    if(args->inputIp){
+        if(args->outputSubdomain){
+            url.setUrl("https://api.viewdns.info/reverseip/?host="+args->target+"&apikey="+m_key+"&output=json");
+            request.setAttribute(QNetworkRequest::User, REVERSE_IP_LOOKUP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args->inputEmail){
+        if(args->outputSubdomain){
+            url.setUrl("https://api.viewdns.info/reversewhois/?q="+args->target+"&apikey="+m_key+"&output=json");
+            request.setAttribute(QNetworkRequest::User, REVERSE_WHOIS_LOOKUP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
 }
 
 void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
@@ -109,8 +156,114 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
         this->onError(reply);
         return;
     }
-    /*
-     * Nothing yet...
-     */
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject response = document.object()["response"].toObject();
+
+    if(requestType == DNS_RECORD_LOOKUP){
+        QJsonArray records = response["records"].toArray();
+        foreach(const QJsonValue &record, records){
+            QString type = record.toObject()["type"].toString();
+
+            if(type == "NS"){
+                QString data = record.toObject()["data"].toString();
+                emit NS(data);
+                log.resultsCount++;
+            }
+            if(type == "MX"){
+                QString data = record.toObject()["data"].toString();
+                emit MX(data);
+                log.resultsCount++;
+            }
+            if(type == "CNAME"){
+                QString data = record.toObject()["data"].toString();
+                emit CNAME(data);
+                log.resultsCount++;
+            }
+            if(type == "TXT"){
+                QString data = record.toObject()["data"].toString();
+                emit TXT(data);
+                log.resultsCount++;
+            }
+        }
+    }
+
+    if(requestType == REVERSE_IP_LOOKUP){
+        QJsonArray domains = response["domains"].toArray();
+        foreach(const QJsonValue &domain, domains){
+            QString hostname = domain.toObject()["name"].toString();
+            emit subdomain(hostname);
+            log.resultsCount++;
+        }
+    }
+
+    if(requestType == REVERSE_WHOIS_LOOKUP){
+        QJsonArray matches = response["matches"].toArray();
+        foreach(const QJsonValue &match, matches){
+            QString hostname = match.toObject()["domain"].toString();
+            emit subdomain(hostname);
+            log.resultsCount++;
+        }
+    }
+    end(reply);
+}
+
+void ViewDns::replyFinishedEmail(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject response = document.object()["response"].toObject();
+
+    if(requestType == ABUSE_CONTACT_LOOKUP){
+        QString emailAddress = response["abusecontact"].toString();
+        emit email(emailAddress);
+        log.resultsCount++;
+    }
+
+    end(reply);
+}
+
+void ViewDns::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject response = document.object()["response"].toObject();
+
+    if(requestType == DNS_RECORD_LOOKUP){
+        QJsonArray records = response["records"].toArray();
+        foreach(const QJsonValue &record, records){
+            QString type = record.toObject()["type"].toString();
+
+            if(type == "A"){
+                QString data = record.toObject()["data"].toString();
+                emit ipA(data);
+                log.resultsCount++;
+            }
+            if(type == "AAAA"){
+                QString data = record.toObject()["data"].toString();
+                emit ipAAAA(data);
+                log.resultsCount++;
+            }
+        }
+    }
+
+    if(requestType == IP_HISTORY){
+        QJsonArray records = response["records"].toArray();
+        foreach(const QJsonValue &record, records){
+            QString address = record.toObject()["ip"].toString();
+            emit ip(address);
+            log.resultsCount++;
+        }
+    }
+
     end(reply);
 }

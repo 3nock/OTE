@@ -120,6 +120,9 @@
  *
  * active services eg HTTP should be boolean on the structure...
  *
+ *  avoiding emmiting empty results
+ *
+ * reverse lookups for mx, ns, ip.. eq viewdns..
  */
 
 
@@ -290,6 +293,10 @@ void Osint::onResultNS(QString NS){
         project->addPassiveNS({NS});
         ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
     }
+}
+
+void Osint::onResultTXT(QString TXT){
+    project->addPassiveTXT({TXT});
 }
 
 void Osint::onResultCertFingerprint(QString certId){
@@ -741,6 +748,179 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(module.securitytrails){
+        SecurityTrails *securitytrails = new SecurityTrails(scanArgs);
+        QThread *cThread = new QThread(this);
+        securitytrails->Enumerator(cThread);
+        securitytrails->moveToThread(cThread);
+        //...
+        connect(securitytrails, &SecurityTrails::subdomain, this, &Osint::onResultSubdomain);
+        connect(securitytrails, &SecurityTrails::ip, this, &Osint::onResultIp);
+        connect(securitytrails, &SecurityTrails::ipA, this, &Osint::onResultA);
+        connect(securitytrails, &SecurityTrails::ipAAAA, this, &Osint::onResultAAAA);
+        connect(securitytrails, &SecurityTrails::NS, this, &Osint::onResultNS);
+        connect(securitytrails, &SecurityTrails::MX, this, &Osint::onResultMX);
+        connect(securitytrails, &SecurityTrails::TXT, this, &Osint::onResultTXT);
+        connect(securitytrails, &SecurityTrails::errorLog, this, &Osint::onErrorLog);
+        connect(securitytrails, &SecurityTrails::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, securitytrails, &SecurityTrails::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.shodan){
+        Shodan *shodan = new Shodan(scanArgs);
+        QThread *cThread = new QThread(this);
+        shodan->Enumerator(cThread);
+        shodan->moveToThread(cThread);
+        //...
+        connect(shodan, &Shodan::subdomain, this, &Osint::onResultSubdomain);
+        connect(shodan, &Shodan::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(shodan, &Shodan::ip, this, &Osint::onResultIp);
+        connect(shodan, &Shodan::ipA, this, &Osint::onResultA);
+        connect(shodan, &Shodan::ipAAAA, this, &Osint::onResultAAAA);
+        connect(shodan, &Shodan::NS, this, &Osint::onResultNS);
+        connect(shodan, &Shodan::MX, this, &Osint::onResultMX);
+        connect(shodan, &Shodan::CNAME, this, &Osint::onResultCNAME);
+        connect(shodan, &Shodan::TXT, this, &Osint::onResultTXT);
+        connect(shodan, &Shodan::errorLog, this, &Osint::onErrorLog);
+        connect(shodan, &Shodan::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, shodan, &Shodan::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.spyse)
+    {
+        Spyse *spyse = new Spyse(scanArgs);
+        QThread *cThread = new QThread(this);
+        spyse->Enumerator(cThread);
+        spyse->moveToThread(cThread);
+        //...
+        connect(spyse, &Spyse::subdomain, this, &Osint::onResultSubdomain);
+        connect(spyse, &Spyse::ip, this, &Osint::onResultIp);
+        connect(spyse, &Spyse::ipA, this, &Osint::onResultA);
+        connect(spyse, &Spyse::ipAAAA, this, &Osint::onResultAAAA);
+        connect(spyse, &Spyse::email, this, &Osint::onResultEmail);
+        connect(spyse, &Spyse::url, this, &Osint::onResultUrl);
+        connect(spyse, &Spyse::NS, this, &Osint::onResultNS);
+        connect(spyse, &Spyse::MX, this, &Osint::onResultMX);
+        connect(spyse, &Spyse::TXT, this, &Osint::onResultTXT);
+        connect(spyse, &Spyse::CNAME, this, &Osint::onResultCNAME);
+        connect(spyse, &Spyse::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(spyse, &Spyse::errorLog, this, &Osint::onErrorLog);
+        connect(spyse, &Spyse::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, spyse, &Spyse::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.sublist3r)
+    {
+        Sublist3r *sublist3r = new Sublist3r(scanArgs);
+        QThread *cThread = new QThread(this);
+        sublist3r->Enumerator(cThread);
+        sublist3r->moveToThread(cThread);
+        //...
+        connect(sublist3r, &Sublist3r::subdomain, this, &Osint::onResultSubdomain);
+        connect(sublist3r, &Sublist3r::errorLog, this, &Osint::onErrorLog);
+        connect(sublist3r, &Sublist3r::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, sublist3r, &Sublist3r::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.threatbook){
+        ThreatBook *threatbook = new ThreatBook(scanArgs);
+        QThread *cThread = new QThread(this);
+        threatbook->Enumerator(cThread);
+        threatbook->moveToThread(cThread);
+        //...
+        connect(threatbook, &ThreatBook::subdomain, this, &Osint::onResultSubdomain);
+        connect(threatbook, &ThreatBook::ip, this, &Osint::onResultIp);
+        connect(threatbook, &ThreatBook::asn, this, &Osint::onResultAsn);
+        connect(threatbook, &ThreatBook::errorLog, this, &Osint::onErrorLog);
+        connect(threatbook, &ThreatBook::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, threatbook, &ThreatBook::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.threatcrowd)
+    {
+        Threatcrowd *threatcrowd = new Threatcrowd(scanArgs);
+        QThread *cThread = new QThread(this);
+        threatcrowd->Enumerator(cThread);
+        threatcrowd->moveToThread(cThread);
+        //...
+        connect(threatcrowd, &Threatcrowd::subdomain, this, &Osint::onResultSubdomain);
+        connect(threatcrowd, &Threatcrowd::ip, this, &Osint::onResultIp);
+        connect(threatcrowd, &Threatcrowd::email, this, &Osint::onResultEmail);
+        connect(threatcrowd, &Threatcrowd::errorLog, this, &Osint::onErrorLog);
+        connect(threatcrowd, &Threatcrowd::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, threatcrowd, &Threatcrowd::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.threatminer)
+    {
+        Threatminer *threatminer = new Threatminer(scanArgs);
+        QThread *cThread = new QThread(this);
+        threatminer->Enumerator(cThread);
+        threatminer->moveToThread(cThread);
+        //...
+        connect(threatminer, &Threatminer::subdomain, this, &Osint::onResultSubdomain);
+        connect(threatminer, &Threatminer::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(threatminer, &Threatminer::ip, this, &Osint::onResultIp);
+        connect(threatminer, &Threatminer::email, this, &Osint::onResultEmail);
+        connect(threatminer, &Threatminer::url, this, &Osint::onResultUrl);
+        connect(threatminer, &Threatminer::asn, this, &Osint::onResultAsn);
+        connect(threatminer, &Threatminer::errorLog, this, &Osint::onErrorLog);
+        connect(threatminer, &Threatminer::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, threatminer, &Threatminer::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.viewDns){
+        ViewDns *viewdns = new ViewDns(scanArgs);
+        QThread *cThread = new QThread(this);
+        viewdns->Enumerator(cThread);
+        viewdns->moveToThread(cThread);
+        //...
+        connect(viewdns, &ViewDns::subdomain, this, &Osint::onResultSubdomain);
+        connect(viewdns, &ViewDns::email, this, &Osint::onResultEmail);
+        connect(viewdns, &ViewDns::NS, this, &Osint::onResultNS);
+        connect(viewdns, &ViewDns::MX, this, &Osint::onResultMX);
+        connect(viewdns, &ViewDns::TXT, this, &Osint::onResultTXT);
+        connect(viewdns, &ViewDns::CNAME, this, &Osint::onResultCNAME);
+        connect(viewdns, &ViewDns::ipA, this, &Osint::onResultA);
+        connect(viewdns, &ViewDns::ipAAAA, this, &Osint::onResultAAAA);
+        connect(viewdns, &ViewDns::ip, this, &Osint::onResultIp);
+        connect(viewdns, &ViewDns::errorLog, this, &Osint::onErrorLog);
+        connect(viewdns, &ViewDns::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, viewdns, &ViewDns::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(module.certspotter)
     {
         Certspotter *certspotter = new Certspotter(scanArgs);
@@ -757,90 +937,6 @@ void Osint::startScan(){
         connect(certspotter, &Certspotter::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, certspotter, &Certspotter::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.sublist3r)
-    {
-        Sublist3r *sublist3r = new Sublist3r(scanArgs);
-        QThread *cThread = new QThread(this);
-        sublist3r->Enumerator(cThread);
-        sublist3r->moveToThread(cThread);
-        //...
-        connect(sublist3r, &Sublist3r::subdomain, this, &Osint::onResultSubdomain);
-        connect(sublist3r, &Sublist3r::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(sublist3r, &Sublist3r::ip, this, &Osint::onResultIp);
-        connect(sublist3r, &Sublist3r::email, this, &Osint::onResultEmail);
-        connect(sublist3r, &Sublist3r::url, this, &Osint::onResultUrl);
-        connect(sublist3r, &Sublist3r::errorLog, this, &Osint::onErrorLog);
-        connect(sublist3r, &Sublist3r::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, sublist3r, &Sublist3r::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.threatminer)
-    {
-        Threatminer *threatminer = new Threatminer(scanArgs);
-        QThread *cThread = new QThread(this);
-        threatminer->Enumerator(cThread);
-        threatminer->moveToThread(cThread);
-        //...
-        connect(threatminer, &Threatminer::subdomain, this, &Osint::onResultSubdomain);
-        connect(threatminer, &Threatminer::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(threatminer, &Threatminer::ip, this, &Osint::onResultIp);
-        connect(threatminer, &Threatminer::email, this, &Osint::onResultEmail);
-        connect(threatminer, &Threatminer::url, this, &Osint::onResultUrl);
-        connect(threatminer, &Threatminer::errorLog, this, &Osint::onErrorLog);
-        connect(threatminer, &Threatminer::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, threatminer, &Threatminer::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.threatcrowd)
-    {
-        Threatcrowd *threatcrowd = new Threatcrowd(scanArgs);
-        QThread *cThread = new QThread(this);
-        threatcrowd->Enumerator(cThread);
-        threatcrowd->moveToThread(cThread);
-        //...
-        connect(threatcrowd, &Threatcrowd::subdomain, this, &Osint::onResultSubdomain);
-        connect(threatcrowd, &Threatcrowd::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(threatcrowd, &Threatcrowd::ip, this, &Osint::onResultIp);
-        connect(threatcrowd, &Threatcrowd::email, this, &Osint::onResultEmail);
-        connect(threatcrowd, &Threatcrowd::url, this, &Osint::onResultUrl);
-        connect(threatcrowd, &Threatcrowd::errorLog, this, &Osint::onErrorLog);
-        connect(threatcrowd, &Threatcrowd::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, threatcrowd, &Threatcrowd::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.spyse)
-    {
-        Spyse *spyse = new Spyse(scanArgs);
-        QThread *cThread = new QThread(this);
-        spyse->Enumerator(cThread);
-        spyse->moveToThread(cThread);
-        //...
-        connect(spyse, &Spyse::subdomain, this, &Osint::onResultSubdomain);
-        connect(spyse, &Spyse::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(spyse, &Spyse::ip, this, &Osint::onResultIp);
-        connect(spyse, &Spyse::email, this, &Osint::onResultEmail);
-        connect(spyse, &Spyse::url, this, &Osint::onResultUrl);
-        connect(spyse, &Spyse::errorLog, this, &Osint::onErrorLog);
-        connect(spyse, &Spyse::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, spyse, &Spyse::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -1170,66 +1266,6 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.securitytrails){
-        SecurityTrails *securitytrails = new SecurityTrails(scanArgs);
-        QThread *cThread = new QThread(this);
-        securitytrails->Enumerator(cThread);
-        securitytrails->moveToThread(cThread);
-        //...
-        connect(securitytrails, &SecurityTrails::subdomain, this, &Osint::onResultSubdomain);
-        connect(securitytrails, &SecurityTrails::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(securitytrails, &SecurityTrails::ip, this, &Osint::onResultIp);
-        connect(securitytrails, &SecurityTrails::email, this, &Osint::onResultEmail);
-        connect(securitytrails, &SecurityTrails::url, this, &Osint::onResultUrl);
-        connect(securitytrails, &SecurityTrails::errorLog, this, &Osint::onErrorLog);
-        connect(securitytrails, &SecurityTrails::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, securitytrails, &SecurityTrails::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.shodan){
-        Shodan *shodan = new Shodan(scanArgs);
-        QThread *cThread = new QThread(this);
-        shodan->Enumerator(cThread);
-        shodan->moveToThread(cThread);
-        //...
-        connect(shodan, &Shodan::subdomain, this, &Osint::onResultSubdomain);
-        connect(shodan, &Shodan::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(shodan, &Shodan::ip, this, &Osint::onResultIp);
-        connect(shodan, &Shodan::email, this, &Osint::onResultEmail);
-        connect(shodan, &Shodan::url, this, &Osint::onResultUrl);
-        connect(shodan, &Shodan::errorLog, this, &Osint::onErrorLog);
-        connect(shodan, &Shodan::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, shodan, &Shodan::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.threatbook){
-        ThreatBook *threatbook = new ThreatBook(scanArgs);
-        QThread *cThread = new QThread(this);
-        threatbook->Enumerator(cThread);
-        threatbook->moveToThread(cThread);
-        //...
-        connect(threatbook, &ThreatBook::subdomain, this, &Osint::onResultSubdomain);
-        connect(threatbook, &ThreatBook::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(threatbook, &ThreatBook::ip, this, &Osint::onResultIp);
-        connect(threatbook, &ThreatBook::email, this, &Osint::onResultEmail);
-        connect(threatbook, &ThreatBook::url, this, &Osint::onResultUrl);
-        connect(threatbook, &ThreatBook::errorLog, this, &Osint::onErrorLog);
-        connect(threatbook, &ThreatBook::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, threatbook, &ThreatBook::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
     if(module.whoisxmlapi){
         WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(scanArgs);
         QThread *cThread = new QThread(this);
@@ -1505,26 +1541,6 @@ void Osint::startScan(){
         connect(pagesinventory, &PagesInventory::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, pagesinventory, &PagesInventory::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.viewDns){
-        ViewDns *viewdns = new ViewDns(scanArgs);
-        QThread *cThread = new QThread(this);
-        viewdns->Enumerator(cThread);
-        viewdns->moveToThread(cThread);
-        //...
-        connect(viewdns, &ViewDns::subdomain, this, &Osint::onResultSubdomain);
-        connect(viewdns, &ViewDns::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(viewdns, &ViewDns::ip, this, &Osint::onResultIp);
-        connect(viewdns, &ViewDns::email, this, &Osint::onResultEmail);
-        connect(viewdns, &ViewDns::url, this, &Osint::onResultUrl);
-        connect(viewdns, &ViewDns::errorLog, this, &Osint::onErrorLog);
-        connect(viewdns, &ViewDns::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, viewdns, &ViewDns::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

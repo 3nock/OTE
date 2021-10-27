@@ -16,8 +16,8 @@ namespace ModuleInfo {
                                         {"ip whois", "ip-address"},
                                         {"ip passive dns", "ip-address"},
                                         {"ip Query URI", "ip-address"},
-                                        {"SSL Certificates", "ip-address"},
-                                        {"SSL Hosts", "cert id"}};
+                                        {"ip ssl certs", "ip-address"},
+                                        {"ssl Hosts", "cert id"}};
     };
 }
 
@@ -30,6 +30,11 @@ class Threatminer: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
+        void replyFinishedEmail(QNetworkReply *reply) override;
+        void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedUrl(QNetworkReply *reply) override;
+        void replyFinishedCertFingerprint(QNetworkReply *reply) override;
 };
 
 #endif // THREATMINER_H

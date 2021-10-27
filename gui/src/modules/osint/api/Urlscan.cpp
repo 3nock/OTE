@@ -5,6 +5,7 @@
 
 /*
  * does not produce clean results yet...
+ * use for malicious url analysis...
  */
 Urlscan::Urlscan(ScanArgs *args): AbstractOsintModule(args)
 {

@@ -38,6 +38,7 @@ class Osint : public AbstractEngine{
         void onResultCNAME(QString CNAME);
         void onResultMX(QString MX);
         void onResultNS(QString NS);
+        void onResultTXT(QString TXT);
         void onResultCertFingerprint(QString certId);
 
     private slots:

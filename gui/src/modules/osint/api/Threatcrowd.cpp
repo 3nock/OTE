@@ -9,6 +9,7 @@
 #define FILE 3
 #define IP 4
 
+/*  limit all requests to no more than one request every ten seconds */
 Threatcrowd::Threatcrowd(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
@@ -82,20 +83,63 @@ void Threatcrowd::start(){
     }
 }
 
+void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    if(requestType == DOMAINS){
+        QJsonArray subdomains = mainObj["subdomains"].toArray();
+        foreach(const QJsonValue &value, subdomains){
+            emit subdomain(value.toString());
+            log.resultsCount++;
+        }
+    }
+
+    if(requestType == EMAIL){
+        if(mainObj["response_code"].toString() == "1"){
+            QJsonArray domains = mainObj["domains"].toArray();
+            foreach(const QJsonValue &value, domains){
+                emit subdomain(value.toString());
+                log.resultsCount++;
+            }
+        }
+    }
+
+    if(requestType == IP){
+        if(mainObj["response_code"].toString() == "1"){
+            QJsonArray resolutions = mainObj["resolutions"].toArray();
+            foreach(const QJsonValue &value, resolutions){
+                emit subdomain(value.toObject()["domain"].toString());
+                log.resultsCount++;
+            }
+        }
+    }
+    end(reply);
+}
+
 void Threatcrowd::replyFinishedIp(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
     }
 
+    int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(mainObj["response_code"].toString() == "1"){
-        QJsonArray resolutions = mainObj["resolutions"].toArray();
-        foreach(const QJsonValue &value, resolutions){
-            emit subdomain(value["ip_address"].toString());
-            log.resultsCount++;
+    if(requestType == DOMAINS){
+        if(mainObj["response_code"].toString() == "1"){
+            QJsonArray resolutions = mainObj["resolutions"].toArray();
+            foreach(const QJsonValue &value, resolutions){
+                emit ip(value["ip_address"].toString());
+                log.resultsCount++;
+            }
         }
     }
     end(reply);
@@ -107,33 +151,18 @@ void Threatcrowd::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
+    int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(mainObj["response_code"].toString() == "1"){
-        QJsonArray emails = mainObj["emails"].toArray();
-        foreach(const QJsonValue &value, emails){
-            emit email(value.toString());
-            log.resultsCount++;
-        }
-    }
-    end(reply);
-}
-
-void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonObject mainObj = document.object();
-
-    if(mainObj["response_code"].toString() == "1"){
-        QJsonArray subdomains = mainObj["subdomains"].toArray();
-        foreach(const QJsonValue &value, subdomains){
-            emit subdomain(value.toString());
-            log.resultsCount++;
+    if(requestType == DOMAINS){
+        if(mainObj["response_code"].toString() == "1"){
+            QJsonArray emails = mainObj["emails"].toArray();
+            foreach(const QJsonValue &value, emails){
+                QString EmailAddress = value.toString();
+                emit email(EmailAddress);
+                log.resultsCount++;
+            }
         }
     }
     end(reply);

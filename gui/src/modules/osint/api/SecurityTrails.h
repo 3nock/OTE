@@ -11,17 +11,19 @@ namespace ModuleInfo {
                           "attack surface management, and total intel";
 
         QMap<QString, QString> flags = {{"dns history", "domain name"},
-                                        {"subdomains", "domain name"},
+                                        {"domain subdomain", "domain name"},
                                         {"whois", "domain name"},
                                         {"whois history", "domain name"},
                                         {"associated domains", "domain name"},
                                         {"associated ips", "domain name"},
-                                        {"domain", "domain name"},
-                                        {"company", "domain name"},
+                                        {"domain details", "domain name"},
+                                        {"company details", "domain name"},
                                         {"ssl cert", "domain name"},
-                                        {"ip whois", "nameserver address"},
+                                        {"ip neighbours", "ip-address"},
+                                        {"ip whois", "ip-address"},
                                         {"ping", ""},
-                                        {"account", ""}};
+                                        {"account", ""},
+                                        {"company associated ip", "domain name"}};
     };
 }
 
@@ -33,7 +35,8 @@ class SecurityTrails: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
 
     private:
         QString m_key = nullptr;

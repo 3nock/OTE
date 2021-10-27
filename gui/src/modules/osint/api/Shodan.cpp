@@ -18,6 +18,10 @@
 
 
 /* 1 request/ second */
+/*
+ * able to reverse ip addresses to domain names, targets are comma seperated...
+ * also able to resolve domains, targets are comma seperated...
+ */
 Shodan::Shodan(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
@@ -27,6 +31,12 @@ Shodan::Shodan(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedRaw);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomain);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedIp);
+    if(args->outputAsn)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedAsn);
+    if(args->outputSubdomainIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomainIp);
     ///
     /// getting api-key...
     ///
@@ -43,7 +53,7 @@ void Shodan::start(){
 
     QUrl url;
     if(args->raw){
-        switch (args->rawOption) {
+        switch (args->rawOption){
         case HOST_IP:
             url.setUrl("https://api.shodan.io/shodan/host/"+args->target+"?key="+m_key);
             break;
@@ -85,14 +95,50 @@ void Shodan::start(){
     }
 
     if(args->inputDomain){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.shodan.io/dns/domain/"+args->target+"?key="+m_key);
-            request.setAttribute(QNetworkRequest::User, DNS_DOMAIN);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
+        url.setUrl("https://api.shodan.io/dns/domain/"+args->target+"?key="+m_key);
+        request.setAttribute(QNetworkRequest::User, DNS_DOMAIN);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
+
+    if(args->inputIp){
+        url.setUrl("https://api.shodan.io/shodan/host/"+args->target+"?key="+m_key);
+        request.setAttribute(QNetworkRequest::User, HOST_IP);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
+}
+
+void Shodan::replyFinishedSubdomainIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200){
+        emit errorLog("Error occurred!");
+        end(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    if(requestType == DNS_DOMAIN){
+        /* dns records */
+        QJsonArray data = document.object()["data"].toArray();
+        foreach(const QJsonValue &value, data){
+            QString type = value.toObject()["type"].toString();
+            if(type == "A" || type == "AAAA"){
+                QString subdomain = value.toObject()["subdomain"].toString();
+                QString address = value.toObject()["value"].toString();
+                emit subdomainIp(subdomain, address);
+                log.resultsCount++;
+            }
         }
     }
+    end(reply);
 }
 
 void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
@@ -100,18 +146,24 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
         this->onError(reply);
         return;
     }
+    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200){
+        emit errorLog("Error occurred!");
+        end(reply);
+        return;
+    }
 
     int requestType = reply->property(REQUEST_TYPE).toInt();
-    QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-    QJsonArray data = jsonReply.object()["data"].toArray();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
     if(requestType == DNS_DOMAIN){
-        QJsonArray subdomains = jsonReply.object()["subdomains"].toArray();
+        /* direct subdomains */
+        QJsonArray subdomains = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
             emit subdomain(value.toString());
             log.resultsCount++;
         }
-
+        /* dns records */
+        QJsonArray data = document.object()["data"].toArray();
         foreach(const QJsonValue &value, data){
             QString type = value.toObject()["type"].toString();
             QString hostname = value.toObject()["value"].toString();
@@ -127,6 +179,78 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
                 emit CNAME(hostname);
                 log.resultsCount++;
             }
+            if(type == "TXT"){
+                emit TXT(hostname);
+                log.resultsCount++;
+            }
+        }
+    }
+
+    if(requestType == HOST_IP){
+        QJsonArray data = document.object()["data"].toArray();
+        foreach(const QJsonValue &dataValue, data){
+            foreach(const QJsonValue &value, dataValue.toObject()["hostnames"].toArray()){
+                emit subdomain(value.toString());
+                log.resultsCount++;
+            }
+        }
+    }
+    end(reply);
+}
+
+void Shodan::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200){
+        emit errorLog("Error occurred!");
+        end(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    if(requestType == DNS_DOMAIN){
+        /* dns records */
+        QJsonArray data = document.object()["data"].toArray();
+        foreach(const QJsonValue &value, data){
+            QString type = value.toObject()["type"].toString();
+            if(type == "A"){
+                QString address = value.toObject()["value"].toString();
+                emit ipA(address);
+                log.resultsCount++;
+            }
+            if(type == "AAAA"){
+                QString address = value.toObject()["value"].toString();
+                emit ipAAAA(address);
+                log.resultsCount++;
+            }
+        }
+    }
+    end(reply);
+}
+
+void Shodan::replyFinishedAsn(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200){
+        emit errorLog("Error occurred!");
+        end(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    if(requestType == HOST_IP){
+        QJsonArray data = document.object()["data"].toArray();
+        foreach(const QJsonValue &value, data){
+            emit asn(value.toObject()["asn"].toString(), "");
+            log.resultsCount++;
         }
     }
     end(reply);

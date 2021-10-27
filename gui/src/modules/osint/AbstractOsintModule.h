@@ -125,6 +125,7 @@ class AbstractOsintModule : public QObject {
         void NS(QString NS);
         void MX(QString MX);
         void CNAME(QString CNAME);
+        void TXT(QString TXT);
         /* old */
         void errorLog(QString log);
         void infoLog(QString log);
