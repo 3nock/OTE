@@ -50,6 +50,7 @@
 #include "src/modules/osint/api/VirusTotal.h"
 #include "src/modules/osint/api/Urlscan.h"
 #include "src/modules/osint/api/Circl.h"
+#include "src/modules/osint/api/WebResolver.h"
 #include "src/modules/osint/archive/Waybackmachine.h"
 #include "src/modules/osint/archive/ArchiveToday.h"
 #include "src/modules/osint/archive/CommonCrawl.h"
@@ -123,6 +124,7 @@
  *  avoiding emmiting empty results
  *
  * reverse lookups for mx, ns, ip.. eq viewdns..
+ * dont count txt
  */
 
 
@@ -921,6 +923,75 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(module.virustotal){
+        VirusTotal *virustotal = new VirusTotal(scanArgs);
+        QThread *cThread = new QThread(this);
+        virustotal->Enumerator(cThread);
+        virustotal->moveToThread(cThread);
+        //...
+        connect(virustotal, &VirusTotal::subdomain, this, &Osint::onResultSubdomain);
+        connect(virustotal, &VirusTotal::ip, this, &Osint::onResultIp);
+        connect(virustotal, &VirusTotal::ipA, this, &Osint::onResultA);
+        connect(virustotal, &VirusTotal::ipAAAA, this, &Osint::onResultAAAA);
+        connect(virustotal, &VirusTotal::CNAME, this, &Osint::onResultCNAME);
+        connect(virustotal, &VirusTotal::NS, this, &Osint::onResultNS);
+        connect(virustotal, &VirusTotal::MX, this, &Osint::onResultMX);
+        connect(virustotal, &VirusTotal::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(virustotal, &VirusTotal::url, this, &Osint::onResultUrl);
+        connect(virustotal, &VirusTotal::errorLog, this, &Osint::onErrorLog);
+        connect(virustotal, &VirusTotal::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, virustotal, &VirusTotal::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.webresolver){
+        WebResolver *webresolver = new WebResolver(scanArgs);
+        QThread *cThread = new QThread(this);
+        webresolver->Enumerator(cThread);
+        webresolver->moveToThread(cThread);
+        //...
+        connect(webresolver, &WebResolver::subdomain, this, &Osint::onResultSubdomain);
+        connect(webresolver, &WebResolver::ip, this, &Osint::onResultIp);
+        connect(webresolver, &WebResolver::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(webresolver, &WebResolver::CNAME, this, &Osint::onResultCNAME);
+        connect(webresolver, &WebResolver::NS, this, &Osint::onResultNS);
+        connect(webresolver, &WebResolver::MX, this, &Osint::onResultMX);
+        connect(webresolver, &WebResolver::TXT, this, &Osint::onResultTXT);
+        connect(webresolver, &WebResolver::errorLog, this, &Osint::onErrorLog);
+        connect(webresolver, &WebResolver::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, webresolver, &WebResolver::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.whoisxmlapi){
+        WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(scanArgs);
+        QThread *cThread = new QThread(this);
+        whoisxmlapi->Enumerator(cThread);
+        whoisxmlapi->moveToThread(cThread);
+        //...
+        connect(whoisxmlapi, &WhoisXmlApi::subdomain, this, &Osint::onResultSubdomain);
+        connect(whoisxmlapi, &WhoisXmlApi::ip, this, &Osint::onResultIp);
+        connect(whoisxmlapi, &WhoisXmlApi::email, this, &Osint::onResultEmail);
+        connect(whoisxmlapi, &WhoisXmlApi::asn, this, &Osint::onResultAsn);
+        connect(whoisxmlapi, &WhoisXmlApi::NS, this, &Osint::onResultNS);
+        connect(whoisxmlapi, &WhoisXmlApi::MX, this, &Osint::onResultMX);
+        connect(whoisxmlapi, &WhoisXmlApi::CNAME, this, &Osint::onResultCNAME);
+        connect(whoisxmlapi, &WhoisXmlApi::TXT, this, &Osint::onResultTXT);
+        connect(whoisxmlapi, &WhoisXmlApi::errorLog, this, &Osint::onErrorLog);
+        connect(whoisxmlapi, &WhoisXmlApi::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, whoisxmlapi, &WhoisXmlApi::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(module.certspotter)
     {
         Certspotter *certspotter = new Certspotter(scanArgs);
@@ -1086,26 +1157,6 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.virustotalapi){
-        VirusTotal *virustotal = new VirusTotal(scanArgs);
-        QThread *cThread = new QThread(this);
-        virustotal->Enumerator(cThread);
-        virustotal->moveToThread(cThread);
-        //...
-        connect(virustotal, &VirusTotal::subdomain, this, &Osint::onResultSubdomain);
-        connect(virustotal, &VirusTotal::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(virustotal, &VirusTotal::ip, this, &Osint::onResultIp);
-        connect(virustotal, &VirusTotal::email, this, &Osint::onResultEmail);
-        connect(virustotal, &VirusTotal::url, this, &Osint::onResultUrl);
-        connect(virustotal, &VirusTotal::errorLog, this, &Osint::onErrorLog);
-        connect(virustotal, &VirusTotal::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, virustotal, &VirusTotal::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
     if(module.urlscan){
         Urlscan *urlscan = new Urlscan(scanArgs);
         QThread *cThread = new QThread(this);
@@ -1261,26 +1312,6 @@ void Osint::startScan(){
         connect(ipinfo, &IpInfo::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.whoisxmlapi){
-        WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(scanArgs);
-        QThread *cThread = new QThread(this);
-        whoisxmlapi->Enumerator(cThread);
-        whoisxmlapi->moveToThread(cThread);
-        //...
-        connect(whoisxmlapi, &WhoisXmlApi::subdomain, this, &Osint::onResultSubdomain);
-        connect(whoisxmlapi, &WhoisXmlApi::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(whoisxmlapi, &WhoisXmlApi::ip, this, &Osint::onResultIp);
-        connect(whoisxmlapi, &WhoisXmlApi::email, this, &Osint::onResultEmail);
-        connect(whoisxmlapi, &WhoisXmlApi::url, this, &Osint::onResultUrl);
-        connect(whoisxmlapi, &WhoisXmlApi::errorLog, this, &Osint::onErrorLog);
-        connect(whoisxmlapi, &WhoisXmlApi::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, whoisxmlapi, &WhoisXmlApi::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

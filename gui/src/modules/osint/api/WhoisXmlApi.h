@@ -9,9 +9,21 @@ namespace ModuleInfo {
         QString url = "https://otx.alienvault.com/";
         QString summary = "The World’s First Truly Open Threat Intelligence Community";
         QMap<QString, QString> flags = {{"whois", "domain name"},
-                                        {"ipWhois", "ip-address"},
-                                        {"DNS Lookup", "domain name"},
-                                        {"Email Verification", "email"}};
+                                        {"ip whois", "ip-address"},
+                                        {"dns Lookup", "domain name"},
+                                        {"email Verification", "email"},
+                                        {"domain availability", "domain name"},
+                                        {"ip netblocks asn", "asn"},
+                                        {"ip netblocks ip", "ip-address"},
+                                        {"ip netblocks org", "organization name"},
+                                        {"reverse ip", "ip-address"},
+                                        {"reverse mx", "mx name"},
+                                        {"reverse ns", "ns name"},
+                                        {"reverse whois", "domain name"},
+                                        {"subdomain lookup", "domain name"},
+                                        {"website contacts", "domain name"},
+                                        {"website screenshot", "domain name"},
+                                        {"whois history", "domain name"}};
     };
 }
 
@@ -23,7 +35,9 @@ class WhoisXmlApi: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedSubdomain(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedEmail(QNetworkReply *reply) override;
 
     private:
         QString m_key = nullptr;

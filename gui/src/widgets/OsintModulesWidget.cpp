@@ -145,6 +145,21 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
     }else{
         modules.viewDns = false;
     }
+    if(ui->moduleVirusTotal->isChecked()){
+        modules.virustotal = true;
+    }else{
+        modules.virustotal = false;
+    }
+    if(ui->moduleWebResolver->isChecked()){
+        modules.webresolver = true;
+    }else{
+        modules.webresolver = false;
+    }
+    if(ui->moduleWhoisXmlApi->isChecked()){
+        modules.whoisxmlapi = true;
+    }else{
+        modules.whoisxmlapi = false;
+    }
     /*
      * ...
      */
@@ -252,11 +267,6 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
         modules.yahoo = true;
     }else{
         modules.yahoo = false;
-    }
-    if(ui->moduleVirustotalapi->isChecked()){
-        modules.virustotalapi = true;
-    }else{
-        modules.virustotalapi = false;
     }
     if(ui->moduleRapiddns->isChecked()){
         modules.rapiddns = true;
@@ -419,6 +429,21 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleViewDns->setChecked(false);
     }
+    if(settings.value("virustotal").toString() == TRUE){
+        ui->moduleVirusTotal->setChecked(true);
+    }else{
+        ui->moduleVirusTotal->setChecked(false);
+    }
+    if(settings.value("webresolver").toString() == TRUE){
+        ui->moduleWebResolver->setChecked(true);
+    }else{
+        ui->moduleWebResolver->setChecked(false);
+    }
+    if(settings.value("whoisxmlapi").toString() == TRUE){
+        ui->moduleWhoisXmlApi->setChecked(true);
+    }else{
+        ui->moduleWhoisXmlApi->setChecked(false);
+    }
     /*
      * ...
      */
@@ -526,11 +551,6 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
         ui->moduleYahoo->setChecked(true);
     }else{
         ui->moduleYahoo->setChecked(false);
-    }
-    if(settings.value(OSINT_VIRUSTOTALAPI).toString() == TRUE){
-        ui->moduleVirustotalapi->setChecked(true);
-    }else{
-        ui->moduleVirustotalapi->setChecked(false);
     }
     if(settings.value(OSINT_URLSCAN).toString() == TRUE){
         ui->moduleUrlscan->setChecked(true);
@@ -693,6 +713,16 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue("viewdns", FALSE);
     }
+    if(ui->moduleWebResolver->isChecked()){
+        settings.setValue("webresolver", TRUE);
+    }else{
+        settings.setValue("webresolver", FALSE);
+    }
+    if(ui->moduleWhoisXmlApi->isChecked()){
+        settings.setValue("whoisxmlapi", TRUE);
+    }else{
+        settings.setValue("whoisxmlapi", FALSE);
+    }
     /*
      * ...
      */
@@ -800,11 +830,6 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_YAHOO, TRUE);
     }else{
         settings.setValue(OSINT_YAHOO, FALSE);
-    }
-    if(ui->moduleVirustotalapi->isChecked()){
-        settings.setValue(OSINT_VIRUSTOTALAPI, TRUE);
-    }else{
-        settings.setValue(OSINT_VIRUSTOTALAPI, FALSE);
     }
     if(ui->moduleRapiddns->isChecked()){
         settings.setValue(OSINT_RAPIDDNS, TRUE);

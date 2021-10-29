@@ -37,8 +37,15 @@ SOURCES += \
     src/modules/osint/api/RobtexFree.cpp \
     src/modules/osint/api/RobtexPaid.cpp \
     src/modules/osint/api/WebResolver.cpp \
+    src/tools/ASNChecker.cpp \
     src/tools/BannerGrabber.cpp \
+    src/tools/CertChecker.cpp \
+    src/tools/EmailChecker.cpp \
     src/tools/FastAnalysis.cpp \
+    src/tools/HostnameChecker.cpp \
+    src/tools/IpChecker.cpp \
+    src/tools/MXChecker.cpp \
+    src/tools/NSChecker.cpp \
     src/tools/RawOsint.cpp \
     src/modules/scan/BruteScanner.cpp \
     src/modules/scan/OsintScanner.cpp \
@@ -132,8 +139,15 @@ HEADERS += \
     src/modules/osint/api/RobtexFree.h \
     src/modules/osint/api/RobtexPaid.h \
     src/modules/osint/api/WebResolver.h \
+    src/tools/ASNChecker.h \
     src/tools/BannerGrabber.h \
+    src/tools/CertChecker.h \
+    src/tools/EmailChecker.h \
     src/tools/FastAnalysis.h \
+    src/tools/HostnameChecker.h \
+    src/tools/IpChecker.h \
+    src/tools/MXChecker.h \
+    src/tools/NSChecker.h \
     src/tools/RawOsint.h \
     src/modules/scan/OsintScanner.h \
     src/modules/scan/BruteScanner.h \
@@ -221,8 +235,15 @@ HEADERS += \
     src/MainWindow.h
 
 FORMS += \
+    src/tools/ASNChecker.ui \
     src/tools/BannerGrabber.ui \
+    src/tools/CertChecker.ui \
+    src/tools/EmailChecker.ui \
     src/tools/FastAnalysis.ui \
+    src/tools/HostnameChecker.ui \
+    src/tools/IpChecker.ui \
+    src/tools/MXChecker.ui \
+    src/tools/NSChecker.ui \
     src/tools/RawOsint.ui \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \

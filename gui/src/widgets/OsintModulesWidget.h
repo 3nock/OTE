@@ -27,7 +27,7 @@ struct OsintModules{
     bool rapiddns = false;
     bool googleCert = false;
     bool urlscan = false;
-    bool virustotalapi = false;
+    bool virustotal = false;
     bool waybackmachine = false;
     bool archivetoday = false;
     bool archiveit = false;

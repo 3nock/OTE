@@ -42,7 +42,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("securitytrails", ui->lineEditSecurityTrails->text());
     Config::generalConfig().setValue("shodan", ui->lineEditShodan->text());
     Config::generalConfig().setValue("spyse", ui->lineEditSpyse->text());
-    Config::generalConfig().setValue("virustotalapi", ui->lineEditVirusTotal->text());
+    Config::generalConfig().setValue("virustotal", ui->lineEditVirusTotal->text());
     Config::generalConfig().setValue("binaryedge", ui->lineEditBinaryEdge->text());
     Config::generalConfig().setValue("c99", ui->lineEditC99->text());
     Config::generalConfig().setValue("ipapi", ui->lineEditIpApi->text());
@@ -157,7 +157,7 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditSpyse->setText(key);
         ui->buttonGetSpyse->hide();
     }
-    key = Config::generalConfig().value("virustotalapi").toString();
+    key = Config::generalConfig().value("virustotal").toString();
     if(!key.isEmpty()){
         ui->lineEditVirusTotal->setText(key);
         ui->buttonGetVirusTotal->hide();

@@ -9,15 +9,14 @@ namespace ModuleInfo {
         QString url = "https://webresolver.nl/";
         QString summary = "WebResolver";
         QMap<QString, QString> flags = {{"GeoIP", "domain name"},
-                                        {"DNS Resolver", "domain name"},
+                                        {"Dns Resolver", "domain name"},
                                         {"Phone Number Check", "Phone Number"},
                                         {"Screenshot Tool", "domain name"},
                                         {"Website Whois", "domain name"},
-                                        {"Ping", "domain name"},
+                                        {"Website Headers", "domain name"},
                                         {"Portscan", "domain name"},
-                                        {"IP Logger", "ip-address"},
                                         {"Disposable email checker", "email"},
-                                        {"IP to Website(s)", "ip-address"},
+                                        {"Ip to Website(s)", "ip-address"},
                                         {"Domain information", "domain name"}};
     };
 }
@@ -30,7 +29,9 @@ class WebResolver: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *reply) override;
+        void replyFinishedSubdomainIp(QNetworkReply *reply) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
 
     private:
         QString m_key;

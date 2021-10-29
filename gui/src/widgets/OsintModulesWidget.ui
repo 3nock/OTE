@@ -252,7 +252,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-210</y>
+            <y>0</y>
             <width>162</width>
             <height>910</height>
            </rect>
@@ -712,7 +712,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="moduleVirustotalapi">
+            <widget class="QCheckBox" name="moduleVirusTotal">
              <property name="text">
               <string>VirusTotal</string>
              </property>
