@@ -7,10 +7,11 @@ namespace ModuleInfo {
     struct CommonCrawl{
         QString name = "CommonCrawl";
         QString url = "http://commoncrawl.org/";
+        QString url_apiDoc = "";
         QString summary = "We build and maintain an open repository of web crawl data that can be accessed and \n"
                           "analyzed by anyone.";
-        QMap<QString, QString> flags = {{"index", ""},
-                                        {"url", "domain name"}};
+        QMap<QString, QStringList> flags = {{"index", {PLACEHOLDERTEXT_NONE, ""}},
+                                        {"url", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

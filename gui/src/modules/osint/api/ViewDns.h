@@ -3,25 +3,31 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomain, email, ip
+ * INPUT ip:                OUTPUT: subdomain
+ */
+
 namespace ModuleInfo {
     struct ViewDns{
         QString name = "ViewDns";
         QString url = "https://otx.alienvault.com/";
+        QString url_apiDoc = "";
         QString summary = "The World’s First Truly Open Threat Intelligence Community";
-        QMap<QString, QString> flags = {{"Abuse Contact Lookup", "domain name"},
-                                        {"DNS Propagation Checker", "domain name"},
-                                        {"DNS Record Lookup", "domain name"},
-                                        {"Domain/IP Whois", "hostname/ip"},
-                                        {"IP History", "domain name"},
-                                        {"IP Location Finder", "ip-address"},
-                                        {"MAC Address Lookup", "Mac address"},
-                                        {"Ping", "domain name"},
-                                        {"Port Scanner", "domain name"},
-                                        {"Reverse DNS Lookup", "ip-address"},
-                                        {"Reverse IP Lookup", "ip-address"},
-                                        {"Reverse MX Lookup", "MX domain name"},
-                                        {"Reverse NS Lookup", "NS domain name"},
-                                        {"Reverse Whois Lookup", "domain name"}};
+        QMap<QString, QStringList> flags = {{"Abuse Contact Lookup", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"DNS Propagation Checker", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"DNS Record Lookup", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Domain/IP Whois", {PLACEHOLDERTEXT_DOMAIN_OR_IP, ""}},
+                                        {"IP History", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"IP Location Finder", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"MAC Address Lookup", {"Mac address", ""}},
+                                        {"Ping", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Port Scanner", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Reverse DNS Lookup", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"Reverse IP Lookup", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"Reverse MX Lookup", {PLACEHOLDERTEXT_MX, ""}},
+                                        {"Reverse NS Lookup", {PLACEHOLDERTEXT_NS, ""}},
+                                        {"Reverse Whois Lookup", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

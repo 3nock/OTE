@@ -8,7 +8,7 @@ namespace ModuleInfo {
         QString name = "ZETAlytics";
         QString url = "https://zetalytics.com/";
         QString summary = "https://zetalytics.com/";
-        QMap<QString, QString> flags = {};
+        QMap<QString, QStringList> flags = {};
     };
 }
 

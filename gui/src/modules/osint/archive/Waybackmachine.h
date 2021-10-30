@@ -7,8 +7,9 @@ namespace ModuleInfo {
     struct Waybackmachine{
         QString name = "Waybackmachine";
         QString url = "https://archive.org/web/";
+        QString url_apiDoc = "";
         QString summary = "web acrhive...";
-        QMap<QString, QString> flags = {{"urls", "domain name"}};
+        QMap<QString, QStringList> flags = {{"urls", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

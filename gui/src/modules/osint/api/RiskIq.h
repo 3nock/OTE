@@ -3,26 +3,33 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip, ssl
+ * INPUT ip:                OUTPUT: subdomainIp, subdomain, ip, ssl
+ * INPUT ssl:               OUTPUT: ip, ssl
+ */
+
 namespace ModuleInfo {
     struct RiskIq{
         QString name = "RiskIq";
         QString url = "https://www.riskiq.com/";
+        QString url_apiDoc = "";
         QString summary = "Relevant, actionable security intelligence to protect your attack surface";
 
-        QMap<QString, QString> flags = {{"pdns ip", "ip-address"},
-                                        {"pdns name", "domain name"},
-                                        {"pdns raw", "raw hex"},
-                                        {"whois address", "ip-address"},
-                                        {"whois domain", "domain name"},
-                                        {"whois email", "email"},
-                                        {"whois name", "name"},
-                                        {"whois nameserver", "nameserver address"},
-                                        {"whois org", "organization name"},
-                                        {"whois phone", "phone number"},
-                                        {"cert host", "hostname"},
-                                        {"cert name", "name"},
-                                        {"cert serial", "serial"},
-                                        {"cert sha1", "sha1"}};
+        QMap<QString, QStringList> flags = {{"pdns ip", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"pdns name", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"pdns raw", {"raw hex", ""}},
+                                        {"whois address", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"whois domain", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"whois email", {PLACEHOLDERTEXT_EMAIL, ""}},
+                                        {"whois name", {"name", ""}},
+                                        {"whois nameserver", {PLACEHOLDERTEXT_NS, ""}},
+                                        {"whois org", {PLACEHOLDERTEXT_ORG, ""}},
+                                        {"whois phone", {PLACEHOLDERTEXT_PHONE, ""}},
+                                        {"cert host", {PLACEHOLDERTEXT_HOSTNAME, ""}},
+                                        {"cert name", {"name", ""}},
+                                        {"cert serial", {"serial", ""}},
+                                        {"cert sha1", {PLACEHOLDERTEXT_SSLCERT, ""}}};
     };
 }
 

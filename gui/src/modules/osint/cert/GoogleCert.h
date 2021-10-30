@@ -7,9 +7,10 @@ namespace ModuleInfo {
     struct GoogleCert{
         QString name = "GoogleCert";
         QString url = "https://transparencyreport.google.com/";
+        QString url_apiDoc = "";
         QString summary = "Sharing data that sheds light on how the policies and actions of governments and \n"
                           "corporations affect privacy, security, and access to information.";
-        QMap<QString, QString> flags = {{"cert", "domain name"}};
+        QMap<QString, QStringList> flags = {{"cert", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

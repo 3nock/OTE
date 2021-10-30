@@ -6,7 +6,7 @@
 #include <QStandardItemModel>
 //...
 #include "src/modules/osint/api/ViewDns.h"
-#include "src/modules/osint/api/IpApi.h"
+#include "src/modules/osint/ip/IpApi.h"
 #include "src/modules/osint/api/ZoomEye.h"
 #include "src/modules/osint/api/ZETAlytics.h"
 #include "src/modules/osint/api/WhoisXmlApi.h"
@@ -18,7 +18,7 @@
 #include "src/modules/osint/api/RiskIq.h"
 #include "src/modules/osint/api/MnemonicFree.h"
 #include "src/modules/osint/api/MnemonicPaid.h"
-#include "src/modules/osint/api/IpInfo.h"
+#include "src/modules/osint/ip/IpInfo.h"
 #include "src/modules/osint/api/HunterSearch.h"
 #include "src/modules/osint/api/Github.h"
 #include "src/modules/osint/api/C99.h"
@@ -88,7 +88,7 @@ class RawOsint : public QDialog{
         QStandardItemModel *m_model;
         ScanArgs *m_scanArgs;
         //...
-        QMap<QString, QString> m_optionSet;
+        QMap<QString, QStringList> m_optionSet;
         //...
         void loadEngines();
         void startScan();

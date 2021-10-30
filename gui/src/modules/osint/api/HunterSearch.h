@@ -3,19 +3,24 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: email
+ */
+
 namespace ModuleInfo {
     struct HunterSearch{
         QString name = "Hunter";
         QString url = "https://hunter.io/";
+        QString url_apiDoc = "";
         QString summary = "Hunter lets you find professional email addresses in seconds and \n"
                           "connect with the people that matter for your business.";
 
-        QMap<QString, QString> flags = {{"Domain Search", "domain name"},
-                                        {"Email Finder", "domain name"},
-                                        {"Author Finder", "url"},
-                                        {"Email Verifier", "email"},
-                                        {"Email Count", "domain name"},
-                                        {"Account Information", ""}};
+        QMap<QString, QStringList> flags = {{"Domain Search", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Email Finder", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Author Finder", {PLACEHOLDERTEXT_URL, ""}},
+                                        {"Email Verifier", {PLACEHOLDERTEXT_EMAIL, ""}},
+                                        {"Email Count", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Account Information", {PLACEHOLDERTEXT_NONE, ""}}};
     };
 }
 

@@ -3,12 +3,16 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:        OUTPUT: subdomain
+ */
+
 namespace ModuleInfo {
     struct Urlscan{
         QString name = "Urlscan";
         QString url = "https://urlscan.io/";
         QString summary = "A sandbox for the web";
-        QMap<QString, QString> flags = {{"domain", "domain name"}};
+        QMap<QString, QStringList> flags = {{"domain", {PLACEHOLDERTEXT_IP, ""}}};
     };
 }
 

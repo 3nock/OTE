@@ -3,23 +3,31 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT ip:            OUTPUT: asn, ip, email
+ * INPUT cidr:          OUTPUT:
+ * INPUT asn:           OUTPUT: asn, ip, email, subdomain
+ * INPUT query-term:    OUTPUT: asn, ip, email
+ */
+
 namespace ModuleInfo {
     struct Bgpview{
         QString name = "Bgpview";
         QString url = "https://bgpview.io/";
+        QString url_apiDoc = "";
         QString summary = " API that lets you gather information about the current state and structure of the internet, "
                           "\nincluding ASNs, IP addresses, IXs, BGP Downstream & Upstream Peers, and much more";
 
-        QMap <QString, QString> flags = {{"ip", "ip-address"},
-                                         {"ip prefix", "ip-address/cdir"},
-                                         {"asn", "asn"},
-                                         {"asn prefixes", "asn prefixes"},
-                                         {"asn peers", "asn"},
-                                         {"asn peers", "asn"},
-                                         {"asn upstreams", "asn"},
-                                         {"asn downstreams", "asn"},
-                                         {"asn ixs", "ixs"},
-                                         {"query", "query term"}};
+        QMap <QString, QStringList> flags = {{"ip", {PLACEHOLDERTEXT_IP, ""}},
+                                             {"ip prefix", {PLACEHOLDERTEXT_CIDR, ""}},
+                                             {"asn", {PLACEHOLDERTEXT_ASN, ""}},
+                                             {"asn prefixes", {PLACEHOLDERTEXT_ASN, ""}},
+                                             {"asn peers", {PLACEHOLDERTEXT_ASN, ""}},
+                                             {"asn peers", {PLACEHOLDERTEXT_ASN, ""}},
+                                             {"asn upstreams", {PLACEHOLDERTEXT_ASN, ""}},
+                                             {"asn downstreams", {PLACEHOLDERTEXT_ASN, ""}},
+                                             {"asn ixs", {"ixs", ""}},
+                                             {"query", {PLACEHOLDERTEXT_QUERY, ""}}};
     };
 }
 

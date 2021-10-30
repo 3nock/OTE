@@ -3,12 +3,16 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * input: hostname output: subdomains
+ */
 namespace ModuleInfo {
     struct Anubis{
         QString name = "Anubis";
         QString url = "https://jldc.me/anubis/";
+        QString url_apiDoc = "";
         QString summary = "Subdomain enumeration and information gathering tool";
-        QMap<QString, QString> flags = {{"subdomain", "domain name"}};
+        QMap<QString, QStringList> flags = {{"subdomain", {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains of a particular domain"}}};
     };
 }
 

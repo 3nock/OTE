@@ -3,12 +3,25 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip, asn
+ * INPUT ip:                OUTPUT: subdomainIp, subdomain, ip, asn
+ * INPUT asn:               OUTPUT: ip, asn
+ */
+
 namespace ModuleInfo {
     struct ZoomEye{
         QString name = "ZoomEye";
         QString url = "https://www.zoomeye.org/";
-        QString summary = "ZoomEye";
-        QMap<QString, QString> flags = {{"domain", "domain name"}};
+        QString url_apiDoc = "";
+        QString summary = "ZoomEyeis a Cyberspace Search Engine recording information of devices, websites, \n"
+                          "services and components etc.";
+
+        QMap<QString, QStringList> flags = {{"host search asn", {PLACEHOLDERTEXT_ASN, ""}},
+                                        {"host search cidr", {PLACEHOLDERTEXT_CIDR, ""}},
+                                        {"host search hostname", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"host search ip", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"user information", {PLACEHOLDERTEXT_NONE, ""}}};
     };
 }
 

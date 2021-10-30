@@ -3,27 +3,34 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomain, email
+ * INPUT ip:                OUTPUT: subdomain, asn
+ * INPUT asn:               OUTPUT: asn
+ */
+
 namespace ModuleInfo {
     struct WhoisXmlApi{
         QString name = "WhoisXmlApi";
-        QString url = "https://otx.alienvault.com/";
+        QString url = "https://whoisxmlapi.com/";
+        QString url_apiDoc = "";
         QString summary = "The World’s First Truly Open Threat Intelligence Community";
-        QMap<QString, QString> flags = {{"whois", "domain name"},
-                                        {"ip whois", "ip-address"},
-                                        {"dns Lookup", "domain name"},
-                                        {"email Verification", "email"},
-                                        {"domain availability", "domain name"},
-                                        {"ip netblocks asn", "asn"},
-                                        {"ip netblocks ip", "ip-address"},
-                                        {"ip netblocks org", "organization name"},
-                                        {"reverse ip", "ip-address"},
-                                        {"reverse mx", "mx name"},
-                                        {"reverse ns", "ns name"},
-                                        {"reverse whois", "domain name"},
-                                        {"subdomain lookup", "domain name"},
-                                        {"website contacts", "domain name"},
-                                        {"website screenshot", "domain name"},
-                                        {"whois history", "domain name"}};
+        QMap<QString, QStringList> flags = {{"whois", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"ip whois", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"dns Lookup", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"email Verification", {PLACEHOLDERTEXT_EMAIL, ""}},
+                                        {"domain availability", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"ip netblocks asn", {PLACEHOLDERTEXT_ASN, ""}},
+                                        {"ip netblocks ip", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"ip netblocks org", {PLACEHOLDERTEXT_ORG, ""}},
+                                        {"reverse ip", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"reverse mx", {PLACEHOLDERTEXT_MX, ""}},
+                                        {"reverse ns", {PLACEHOLDERTEXT_NS, ""}},
+                                        {"reverse whois", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"subdomain lookup", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"website contacts", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"website screenshot", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"whois history", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

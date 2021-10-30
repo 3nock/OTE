@@ -7,11 +7,12 @@ namespace ModuleInfo {
     struct IpApi{
         QString name = "IpApi";
         QString url = "https://ipapi.com/";
+        QString url_apiDoc = "";
         QString summary = "Real-time Geolocation & Reverse IP Lookup REST API";
 
-        QMap<QString, QString> flags = {{"Standard Lookup", "ip-address"},
-                                        {"Bulk Lookup", "ip-address,ip-address,ip-address"},
-                                        {"Origin Lookup", ""}};
+        QMap<QString, QStringList> flags = {{"Standard Lookup", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"Bulk Lookup", {"ip-address,ip-address", ""}},
+                                        {"Origin Lookup", {PLACEHOLDERTEXT_NONE, ""}}};
     };
 }
 

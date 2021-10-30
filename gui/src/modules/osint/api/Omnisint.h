@@ -3,17 +3,23 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomain
+ * INPUT ip:                OUTPUT: subdomain
+ */
+
 namespace ModuleInfo {
     struct Omnisint{
         QString name = "Omnisint";
         QString url = "https://omnisint.io/";
+        QString url_apiDoc = "";
         QString summary = "Rapid7's DNS Database easily searchable via a lightening fast API, \n"
                           "with domains available in milliseconds.";
 
-        QMap<QString, QString> flags = {{"subdomains", "domain name"},
-                                        {"tlds", "domain name"},
-                                        {"all", "domain name"},
-                                        {"reverse ip", "ip-address or ip/cdir"}};
+        QMap<QString, QStringList> flags = {{"subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"tlds", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"all", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"reverse ip", {PLACEHOLDERTEXT_IP_OR_CIDR, ""}}};
     };
 }
 

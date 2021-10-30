@@ -3,21 +3,26 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomainIP, subdomain, ip
+ */
+
 namespace ModuleInfo {
     struct WebResolver{
         QString name = "WebResolver";
         QString url = "https://webresolver.nl/";
+        QString url_apiDoc = "";
         QString summary = "WebResolver";
-        QMap<QString, QString> flags = {{"GeoIP", "domain name"},
-                                        {"Dns Resolver", "domain name"},
-                                        {"Phone Number Check", "Phone Number"},
-                                        {"Screenshot Tool", "domain name"},
-                                        {"Website Whois", "domain name"},
-                                        {"Website Headers", "domain name"},
-                                        {"Portscan", "domain name"},
-                                        {"Disposable email checker", "email"},
-                                        {"Ip to Website(s)", "ip-address"},
-                                        {"Domain information", "domain name"}};
+        QMap<QString, QStringList> flags = {{"GeoIP", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Dns Resolver", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Phone Number Check", {PLACEHOLDERTEXT_PHONE, ""}},
+                                        {"Screenshot Tool", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Website Whois", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Website Headers", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Portscan", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"Disposable email checker", {PLACEHOLDERTEXT_EMAIL, ""}},
+                                        {"Ip to Website(s)", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"Domain information", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

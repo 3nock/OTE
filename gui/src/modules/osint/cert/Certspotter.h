@@ -7,9 +7,10 @@ namespace ModuleInfo {
     struct Certspotter{
         QString name = "Certspotter";
         QString url = "https://sslmate.com/certspotter/";
+        QString url_apiDoc = "";
         QString summary = "Cert Spotter monitors your domains for expiring, unauthorized, and invalid SSL certificates, \n"
                           "so you can act before an incident, not after";
-        QMap<QString, QString> flags = {{"cert", "domain name"}};
+        QMap<QString, QStringList> flags = {{"cert", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

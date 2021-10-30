@@ -3,16 +3,22 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomain, ip
+ * INPUT ip:                OUTPUT: subdomain, ip, asn
+ */
+
 namespace ModuleInfo {
     struct ThreatBook{
         QString name = "ThreatBook";
         QString url = "https://threatbook.cn/";
+        QString url_apiDoc = "";
         QString summary = "Threat detection platform";
-        QMap<QString, QString> flags = {{"subdomains", "domain name"},
-                                        {"domain query", "domain name"},
-                                        {"domain adv query", "domain name"},
-                                        {"ip adv query", "ip-address"},
-                                        {"ip query", "ip-address"}};
+        QMap<QString, QStringList> flags = {{"subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"domain query", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"domain adv query", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"ip adv query", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"ip query", {PLACEHOLDERTEXT_IP, ""}}};
     };
 }
 

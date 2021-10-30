@@ -3,12 +3,17 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:                OUTPUT: subdomain
+ */
+
 namespace ModuleInfo {
     struct Sublist3r{
         QString name = "Sublist3r";
         QString url = "https://api.sublist3r.com/";
+        QString url_apiDoc = "";
         QString summary = "Sublist3r";
-        QMap<QString, QString> flags = {{"subdomains", "domain name"}};
+        QMap<QString, QStringList> flags = {{"subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

@@ -4,20 +4,27 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomain, ip, email, url
+ * INPUT ip:                OUTPUT: subdomain, asn, ssl
+ * INPUT ssl:               OUTPUT: ip
+ */
+
 namespace ModuleInfo {
     struct Threatminer{
         QString name = "Threatminer";
         QString url = "https://threatminer.org/";
+        QString url_apiDoc = "";
         QString summary = "Data Mining for threat Intelligence";
-        QMap<QString, QString> flags = {{"domain whois", "domain name"},
-                                        {"domain passive dns", "domain name"},
-                                        {"domain subdomains", "domain name"},
-                                        {"domain Query URI", "domain name"},
-                                        {"ip whois", "ip-address"},
-                                        {"ip passive dns", "ip-address"},
-                                        {"ip Query URI", "ip-address"},
-                                        {"ip ssl certs", "ip-address"},
-                                        {"ssl Hosts", "cert id"}};
+        QMap<QString, QStringList> flags = {{"domain whois", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"domain passive dns", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"domain subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"domain Query URI", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"ip whois", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"ip passive dns", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"ip Query URI", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"ip ssl certs", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"ssl Hosts", {PLACEHOLDERTEXT_SSLCERT, ""}}};
     };
 }
 

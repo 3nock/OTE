@@ -160,6 +160,16 @@ void OsintModulesWidget::getChoosenModules(OsintModules &modules){
     }else{
         modules.whoisxmlapi = false;
     }
+    if(ui->moduleZetalytics->isChecked()){
+        modules.zetalytics = true;
+    }else{
+        modules.zetalytics = false;
+    }
+    if(ui->moduleZoomeye->isChecked()){
+        modules.zoomeye = true;
+    }else{
+        modules.zoomeye = false;
+    }
     /*
      * ...
      */
@@ -444,6 +454,16 @@ void OsintModulesWidget::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleWhoisXmlApi->setChecked(false);
     }
+    if(settings.value("zetalytics").toString() == TRUE){
+        ui->moduleZetalytics->setChecked(true);
+    }else{
+        ui->moduleZetalytics->setChecked(false);
+    }
+    if(settings.value("zoomeye").toString() == TRUE){
+        ui->moduleZoomeye->setChecked(true);
+    }else{
+        ui->moduleZoomeye->setChecked(false);
+    }
     /*
      * ...
      */
@@ -722,6 +742,16 @@ void OsintModulesWidget::on_buttonCreateProfile_clicked(){
         settings.setValue("whoisxmlapi", TRUE);
     }else{
         settings.setValue("whoisxmlapi", FALSE);
+    }
+    if(ui->moduleZetalytics->isChecked()){
+        settings.setValue("zetalytics", TRUE);
+    }else{
+        settings.setValue("zetalytics", FALSE);
+    }
+    if(ui->moduleZoomeye->isChecked()){
+        settings.setValue("zoomeye", TRUE);
+    }else{
+        settings.setValue("zoomeye", FALSE);
     }
     /*
      * ...

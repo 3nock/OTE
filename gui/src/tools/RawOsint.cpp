@@ -1339,5 +1339,6 @@ void RawOsint::on_comboBoxModule_currentIndexChanged(int index){
 
 void RawOsint::on_comboBoxOptions_currentIndexChanged(const QString &arg1){
     ui->lineEditTarget->clear();
-    ui->lineEditTarget->setPlaceholderText(m_optionSet.value(arg1));
+    QStringList flagData = m_optionSet.value(arg1);
+    ui->lineEditTarget->setPlaceholderText(flagData[0]);
 }

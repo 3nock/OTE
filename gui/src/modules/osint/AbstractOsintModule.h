@@ -8,6 +8,28 @@
 #include <QNetworkAccessManager>
 
 #define REQUEST_TYPE "type"
+///
+/// input types for raw placeholder txt...
+///
+#define PLACEHOLDERTEXT_DOMAIN "domain name"
+#define PLACEHOLDERTEXT_IP "ip-address"
+#define PLACEHOLDERTEXT_IP4 "IpV4-address"
+#define PLACEHOLDERTEXT_IP_OR_CIDR "ip-address or ip-address/cidr"
+#define PLACEHOLDERTEXT_DOMAIN_OR_IP "domain name or ip-address"
+#define PLACEHOLDERTEXT_IP6 "IpV6-address"
+#define PLACEHOLDERTEXT_ASN "asn number"
+#define PLACEHOLDERTEXT_EMAIL "email-address"
+#define PLACEHOLDERTEXT_CIDR "ip-address/cidr"
+#define PLACEHOLDERTEXT_QUERY "query term"
+#define PLACEHOLDERTEXT_SSLCERT "ssl certificate sha1"
+#define PLACEHOLDERTEXT_PHONE "phone number"
+#define PLACEHOLDERTEXT_USERNAME "username"
+#define PLACEHOLDERTEXT_URL "url"
+#define PLACEHOLDERTEXT_NONE ""
+#define PLACEHOLDERTEXT_NS "dns server name"
+#define PLACEHOLDERTEXT_HOSTNAME "hostname"
+#define PLACEHOLDERTEXT_ORG "organization name"
+#define PLACEHOLDERTEXT_MX "mailserver name"
 
 struct ScanLog{
     QString moduleName;

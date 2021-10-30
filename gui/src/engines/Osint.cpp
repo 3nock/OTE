@@ -17,7 +17,7 @@
 #include "src/modules/osint/scrape/Baidu.h"
 #include "src/modules/osint/scrape/Ask.h"
 #include "src/modules/osint/api/ViewDns.h"
-#include "src/modules/osint/api/IpApi.h"
+#include "src/modules/osint/ip/IpApi.h"
 #include "src/modules/osint/api/ZoomEye.h"
 #include "src/modules/osint/api/ZETAlytics.h"
 #include "src/modules/osint/api/WhoisXmlApi.h"
@@ -29,7 +29,7 @@
 #include "src/modules/osint/api/RiskIq.h"
 #include "src/modules/osint/api/MnemonicFree.h"
 #include "src/modules/osint/api/MnemonicPaid.h"
-#include "src/modules/osint/api/IpInfo.h"
+#include "src/modules/osint/ip/IpInfo.h"
 #include "src/modules/osint/api/HunterSearch.h"
 #include "src/modules/osint/api/Github.h"
 #include "src/modules/osint/api/C99.h"
@@ -992,6 +992,41 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(module.zetalytics){
+        ZETAlytics *zetalytics = new ZETAlytics(scanArgs);
+        QThread *cThread = new QThread(this);
+        zetalytics->Enumerator(cThread);
+        zetalytics->moveToThread(cThread);
+        //...
+        connect(zetalytics, &ZETAlytics::subdomain, this, &Osint::onResultSubdomain);
+        connect(zetalytics, &ZETAlytics::errorLog, this, &Osint::onErrorLog);
+        connect(zetalytics, &ZETAlytics::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, zetalytics, &ZETAlytics::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(module.zoomeye){
+        ZoomEye *zoomeye = new ZoomEye(scanArgs);
+        QThread *cThread = new QThread(this);
+        zoomeye->Enumerator(cThread);
+        zoomeye->moveToThread(cThread);
+        //...
+        connect(zoomeye, &ZoomEye::subdomain, this, &Osint::onResultSubdomain);
+        connect(zoomeye, &ZoomEye::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(zoomeye, &ZoomEye::ip, this, &Osint::onResultIp);
+        connect(zoomeye, &ZoomEye::asn, this, &Osint::onResultAsn);
+        connect(zoomeye, &ZoomEye::errorLog, this, &Osint::onErrorLog);
+        connect(zoomeye, &ZoomEye::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, zoomeye, &ZoomEye::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(module.certspotter)
     {
         Certspotter *certspotter = new Certspotter(scanArgs);
@@ -1312,46 +1347,6 @@ void Osint::startScan(){
         connect(ipinfo, &IpInfo::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.zetalytics){
-        ZETAlytics *zetalytics = new ZETAlytics(scanArgs);
-        QThread *cThread = new QThread(this);
-        zetalytics->Enumerator(cThread);
-        zetalytics->moveToThread(cThread);
-        //...
-        connect(zetalytics, &ZETAlytics::subdomain, this, &Osint::onResultSubdomain);
-        connect(zetalytics, &ZETAlytics::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(zetalytics, &ZETAlytics::ip, this, &Osint::onResultIp);
-        connect(zetalytics, &ZETAlytics::email, this, &Osint::onResultEmail);
-        connect(zetalytics, &ZETAlytics::url, this, &Osint::onResultUrl);
-        connect(zetalytics, &ZETAlytics::errorLog, this, &Osint::onErrorLog);
-        connect(zetalytics, &ZETAlytics::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, zetalytics, &ZETAlytics::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(module.zoomeye){
-        ZoomEye *zoomeye = new ZoomEye(scanArgs);
-        QThread *cThread = new QThread(this);
-        zoomeye->Enumerator(cThread);
-        zoomeye->moveToThread(cThread);
-        //...
-        connect(zoomeye, &ZoomEye::subdomain, this, &Osint::onResultSubdomain);
-        connect(zoomeye, &ZoomEye::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(zoomeye, &ZoomEye::ip, this, &Osint::onResultIp);
-        connect(zoomeye, &ZoomEye::email, this, &Osint::onResultEmail);
-        connect(zoomeye, &ZoomEye::url, this, &Osint::onResultUrl);
-        connect(zoomeye, &ZoomEye::errorLog, this, &Osint::onErrorLog);
-        connect(zoomeye, &ZoomEye::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, zoomeye, &ZoomEye::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

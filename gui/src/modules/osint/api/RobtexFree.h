@@ -3,16 +3,23 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
+ * INPUT ip:                OUTPUT: subdomainIp, subdomain, ip, asn
+ * INPUT asn:               OUTPUT: ip
+ */
+
 namespace ModuleInfo {
     struct RobtexFree{
         QString name = "Robtex";
         QString url = "https://www.robtex.com/";
+        QString url_apiDoc = "";
         QString summary = "Robtex is used for various kinds of research of IP numbers, Domain names, etc";
 
-        QMap<QString, QString> flags = {{"ipquery", "ip-address"},
-                                        {"asquery", "asn"},
-                                        {"pdns forward", "domain name"},
-                                        {"pdns reverse", "ip-address"}};
+        QMap<QString, QStringList> flags = {{"ipquery", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"asquery", {PLACEHOLDERTEXT_ASN, ""}},
+                                        {"pdns forward", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"pdns reverse", {PLACEHOLDERTEXT_IP, ""}}};
     };
 }
 

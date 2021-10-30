@@ -3,13 +3,18 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomain
+ */
+
 namespace ModuleInfo {
     struct Projectdiscovery{
         QString name = "Projectdiscovery";
         QString url = "https://chaos.projectdiscovery.io/";
+        QString url_apiDoc = "";
         QString summary = "We actively collect and maintain internet-wide assets' data, \n"
                           "this project is meant to enhance research and analyse changes around DNS for better insights";
-        QMap<QString, QString> flags = {{"subdomain", "domain name"}};
+        QMap<QString, QStringList> flags = {{"subdomain", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

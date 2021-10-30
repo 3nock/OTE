@@ -3,23 +3,31 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT ip:            OUTPUT: subdomainIp, subdomain, ip
+ * INPUT cidr:          OUTPUT:
+ * INPUT search term:   OUTPUT:
+ * INPUT domain:        OUTPUT: subdomainIP, subdomain, ip
+ */
+
 namespace ModuleInfo {
     struct BinaryEdge{
         QString name = "BinaryEdge";
         QString url = "https://binaryedge.io/";
+        QString url_apiDoc = "";
         QString summary = "We scan the entire public internet, create real-time threat intelligence streams,\n"
                           "and reports that show the exposure of what is connected to the Internet";
 
-        QMap <QString, QString> flags = {{"host ip", "ip-address or ip/cidr"},
-                                         {"host historical", "ip-address"},
-                                         {"host search", "search parameter"},
-                                         {"host search stats", "search parameter"},
-                                         {"domains subdomain", "domain name"},
-                                         {"domains dns", "domain name"},
-                                         {"domains ip", "domain name"},
-                                         {"domains search", "search query"},
-                                         {"domains enumeration", "domain name"},
-                                         {"domains homoglyphs", "domain name"}};
+        QMap <QString, QStringList> flags = {{"host ip", {PLACEHOLDERTEXT_IP_OR_CIDR, ""}},
+                                         {"host historical", {PLACEHOLDERTEXT_IP, ""}},
+                                         {"host search", {PLACEHOLDERTEXT_QUERY, ""}},
+                                         {"host search stats", {PLACEHOLDERTEXT_QUERY, ""}},
+                                         {"domains subdomain", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                         {"domains dns", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                         {"domains ip", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                         {"domains search", {PLACEHOLDERTEXT_QUERY, ""}},
+                                         {"domains enumeration", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                         {"domains homoglyphs", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

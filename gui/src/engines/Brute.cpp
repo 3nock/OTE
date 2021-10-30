@@ -63,6 +63,25 @@
  *
  * must be project base, on launch asks if you want a quick scan or launch a project base...
  *
+ *
+    "8.8.8.8",        // Google
+    "1.1.1.1",        // Cloudflare
+    "9.9.9.9",        // Quad9
+    "208.67.222.222", // Cisco OpenDNS
+    "84.200.69.80",   // DNS.WATCH
+    "64.6.64.6",      // Verisign
+    "8.26.56.26",     // Comodo Secure DNS
+    "64.6.64.6",      // Neustar DNS
+    "195.46.39.39",   // SafeDNS
+    "185.228.168.9",  // CleanBrowsing
+    "76.76.19.19",    // Alternate DNS
+    "77.88.8.1",      // Yandex.DNS
+    "94.140.14.140",  // AdGuard
+    "216.146.35.35",  // Dyn
+    "192.71.245.208", // OpenNIC
+    "38.132.106.139", // CyberGhost
+    "109.69.8.51",    // puntCAT
+    "74.82.42.42",    // Hurricane Electric
  */
 
 Brute::Brute(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :

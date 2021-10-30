@@ -3,12 +3,17 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: ip, subdomain, subdomainIp
+ */
+
 namespace ModuleInfo {
     struct Dnsbufferoverun{
         QString name = "Dnsbufferoverun";
         QString url = "https://dns.bufferover.run/";
+        QString url_apiDoc = "";
         QString summary = "Subdomain enumeration from rapid7 sonar project";
-        QMap<QString, QString> flags = {{"subdomains", "domain name"}};
+        QMap<QString, QStringList> flags = {{"subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

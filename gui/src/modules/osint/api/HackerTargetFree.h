@@ -4,24 +4,31 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
+ * INPUT ip-address:        OUTPUT: asn, subdomain
+ */
+
 namespace ModuleInfo {
     struct HackerTargetFree{
         QString name = "HackerTarget";
         QString url = "https://hackertarget.com/";
+        QString url_apiDoc = "";
         QString summary = "From attack surface discovery to vulnerability identification, actionable network intelligence \n"
                           "for IT & security operations.";
-        QMap<QString, QString> flags = {{"dnslookup", "domain name"},
-                                        {"banner grabbing", "ip-address/cdir"},
-                                        {"find shared dns", "dns server name eg dns.google.com"},
-                                        {"hostsearch", "domain name"},
-                                        {"subnet calculator", "ip-adress/cdir"},
-                                        {"zonetransfer", "subdomain name"},
-                                        {"reverse dns", "ip-address"},
-                                        {"geoip", "ip-address"},
-                                        {"reverse ip lookup", "ip-address"},
-                                        {"httpheaders", "domain name"},
-                                        {"pagelinks", "domain name"},
-                                        {"aslookup", "ip-address"}};
+
+        QMap<QString, QStringList> flags = {{"dnslookup", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"banner grabbing", {PLACEHOLDERTEXT_CIDR, ""}},
+                                        {"find shared dns", {PLACEHOLDERTEXT_NS, ""}},
+                                        {"hostsearch", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"subnet calculator", {PLACEHOLDERTEXT_CIDR, ""}},
+                                        {"zonetransfer", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"reverse dns", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"geoip", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"reverse ip lookup", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"httpheaders", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"pagelinks", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"aslookup", {PLACEHOLDERTEXT_IP, ""}}};
     };
 }
 

@@ -4,16 +4,22 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomain, ip, email
+ * INPUT domain:            OUTPUT: subdomain
+ * INPUT email:             OUTPUT: subdomain
+ */
+
 namespace ModuleInfo {
     struct Threatcrowd{
         QString name = "Threatcrowd";
         QString url = "https://www.threatcrowd.org/";
         QString summary = "A Search Engine for Threats";
-        QMap<QString, QString> flags = {{"email", "email"},
-                                        {"domain", "domain name"},
-                                        {"ip", "ip-address"},
-                                        {"antivirus", "antivirus"},
-                                        {"file", "file hash"}};
+        QMap<QString, QStringList> flags = {{"email", {PLACEHOLDERTEXT_EMAIL, ""}},
+                                        {"domain", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"ip", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"antivirus", {"antivirus", ""}},
+                                        {"file", {"file hash", ""}}};
     };
 }
 

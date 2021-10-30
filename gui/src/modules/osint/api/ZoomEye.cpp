@@ -4,11 +4,15 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#define DOMAINS 0
+#define HOST_ASN 0
+#define HOST_CIDR 1
+#define HOST_HOSTNAME 2
+#define HOST_IP 3
+#define USER_INFO 4
 
 /*
- * produces a vast amount of information...
- * subdomain-ip-asn-org-geoLoc
+ * 10K queries for free...
+ * also has many query types...
  */
 ZoomEye::ZoomEye(ScanArgs *args): AbstractOsintModule(args)
 {
@@ -26,7 +30,7 @@ ZoomEye::ZoomEye(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedIp);
     ///
-    /// get api key...
+    /// getting api key...
     ///
     Config::generalConfig().beginGroup("api-keys");
     m_key = Config::generalConfig().value("zoomeye").toString();
@@ -44,8 +48,20 @@ void ZoomEye::start(){
     QUrl url;
     if(args->raw){
         switch(args->rawOption){
-        case DOMAINS:
+        case HOST_ASN:
+            url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+args->target);
+            break;
+        case HOST_CIDR:
+            url.setUrl("https://api.zoomeye.org/host/search?query=cidr:"+args->target);
+            break;
+        case HOST_HOSTNAME:
             url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+            break;
+        case HOST_IP:
+            url.setUrl("https://api.zoomeye.org/host/search?query=ip:"+args->target);
+            break;
+        case USER_INFO:
+            url.setUrl("https://api.zoomeye.org/resources-info");
             break;
         }
         request.setUrl(url);
@@ -56,6 +72,23 @@ void ZoomEye::start(){
 
     if(args->inputDomain){
         url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+        request.setAttribute(QNetworkRequest::User, HOST_HOSTNAME);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
+
+    if(args->inputIp){
+        url.setUrl("https://api.zoomeye.org/host/search?query=ip:"+args->target);
+        request.setAttribute(QNetworkRequest::User, HOST_IP);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
+
+    if(args->inputAsn){
+        url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+args->target);
+        request.setAttribute(QNetworkRequest::User, HOST_ASN);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
@@ -68,12 +101,15 @@ void ZoomEye::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
+    int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray matches = document.object()["matches"].toArray();
 
-    if(document.object()["total"].toInt()){
-        QJsonArray matches = document.object()["matches"].toArray();
+    if(requestType == HOST_HOSTNAME || requestType == HOST_IP){
         foreach(const QJsonValue &value, matches){
-            emit subdomain(value.toObject()["rdns"].toString());
+            QString hostname = value.toObject()["rdns"].toString();
+            QString address = value.toObject()["ip"].toString();
+            emit subdomainIp(hostname, address);
             log.resultsCount++;
         }
     }
@@ -87,10 +123,11 @@ void ZoomEye::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
+    int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray matches = document.object()["matches"].toArray();
 
-    if(document.object()["total"].toInt()){
-        QJsonArray matches = document.object()["matches"].toArray();
+    if(requestType == HOST_IP || requestType == HOST_ASN || requestType == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
             emit ip(value.toObject()["ip"].toString());
             log.resultsCount++;
@@ -106,10 +143,11 @@ void ZoomEye::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
+    int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray matches = document.object()["matches"].toArray();
 
-    if(document.object()["total"].toInt()){
-        QJsonArray matches = document.object()["matches"].toArray();
+    if(requestType == HOST_IP || requestType == HOST_ASN || requestType == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
             QString ASN = value.toObject()["geoinfo"].toObject()["asn"].toString();
             QString org = value.toObject()["geoinfo"].toObject()["organization"].toString();
@@ -127,10 +165,11 @@ void ZoomEye::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
+    int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray matches = document.object()["matches"].toArray();
 
-    if(document.object()["total"].toInt()){
-        QJsonArray matches = document.object()["matches"].toArray();
+    if(requestType == HOST_IP || requestType == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
             emit subdomain(value.toObject()["rdns"].toString());
             log.resultsCount++;
@@ -139,80 +178,3 @@ void ZoomEye::replyFinishedSubdomain(QNetworkReply *reply){
 
     end(reply);
 }
-
-/*
- * QUERY
-{
-"total": 2080,
-"available": 2080,
-"matches":[
-    {"rdns": "imap.google.com",
-    "jarm": "",
-    "ico": {"mmh3": "", "md5": ""},
-    "txtfile": {"robotsmd5": "", "securitymd5": ""},
-    "ip": "161.42.161.43",
-    "portinfo": {
-        "hostname": "",
-        "os": "",
-        "port": 7443,
-        "service": "https",
-        "title": null,
-        "version": "",
-        "device": "",
-        "extrainfo": "",
-        "rdns": "imap.google.com",
-        "app": "Apache httpd",
-        "banner": "HTTP/1.1  400 Bad Request\nSec-Websocket-Version: 13\n\n"
-    },
-    "ssl": "...the certificate..."
-    "timestamp": "2021-09-28T13:27:05",
-    "geoinfo": {
-        "continent":{"code": "AF",
-            "names": {"en": "Africa", "zh-CN": "\u975e\u6d32"},
-            "geoname_id": null
-        },
-        "country": {
-            "code": "TZ",
-            "names": {"en": "Tanzania", "zh-CN": "\u5766\u6851\u5c3c\u4e9a"},
-            "geoname_id": null
-        },
-        "base_station": "",
-        "city": {
-            "names": {"en": "", "cn": "", "zh-CN": ""},
-            "geoname_id": null
-        },
-        "isp": "",
-        "organization": "Google",
-        "idc": "",
-        "location": {"lon": "24.586189", "lat": "-5.86621"},
-        "aso": null,
-        "asn": "21246",
-        "subdivisions": {"names": {"en": "Unknown", "zh-CN": "Unknown"}, "geoname_id": null},
-        "PoweredBy": "IPIP",
-        "organization_CN": null
-    },
-    "protocol": {
-        "application": "HTTP",
-        "probe": "GetRequestHost",
-        "transport": "tcp"},
-        "honeypot": 0
-    },
-    {...others...}
-    ]
-}
-
-YOU CAN SEARCH:
-app	      string	application\software\product and etc.)	app: ProFTPD
-ver	      string	versions                                ver:2.1
-device	  string	device type                             device:router
-os	      string	operating system                        os:windows
-service	  string	service                                 service:http
-ip	      string	ip address                              ip:192.168.1.1
-cidr	  string	CIDR Address prefix                     cidr:192.168.1.1/24
-hostname  string	hostname                                hostname:google.com
-port	  string	port number                             port:80
-city	  string	city name                               city:beijing
-country	  string	country name                            country:china
-asn       integer	asn number                              asn:8978
-
-*/

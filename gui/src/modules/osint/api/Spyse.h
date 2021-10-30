@@ -3,19 +3,28 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomain, email, ip, ssl, asn, url
+ * INPUT ip:                OUTPUT: asn
+ * INPUT asn:               OUTPUT: ip, asn
+ * INPUT ssl:               OUTPUT: email
+ * INPUT email:             OUTPUT: email
+ */
+
 namespace ModuleInfo {
     struct Spyse{
         QString name = "Spyse";
         QString url = "https://spyse.com/";
+        QString url_apiDoc = "";
         QString summary = "Find any Internet asset by digital fingerprints";
 
-        QMap<QString, QString> flags = {{"Domain", "domain name"},
-                                        {"IPv4 Host", "ip-address"},
-                                        {"SSL/TLS Certificate", "cert id"},
-                                        {"AS", "asn"},
-                                        {"CVE", "CVE id"},
-                                        {"Emails", "email"},
-                                        {"DNS History", "domain name"}};
+        QMap<QString, QStringList> flags = {{"Domain", {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"IPv4 Host", {PLACEHOLDERTEXT_IP, ""}},
+                                        {"SSL/TLS Certificate", {PLACEHOLDERTEXT_SSLCERT, ""}},
+                                        {"AS", {PLACEHOLDERTEXT_ASN, ""}},
+                                        {"CVE", {"CVE id", ""}},
+                                        {"Emails", {PLACEHOLDERTEXT_EMAIL, ""}},
+                                        {"DNS History", {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

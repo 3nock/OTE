@@ -28,15 +28,37 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/modules/osint/api/AHrefs.cpp \
+    src/modules/osint/api/Arin.cpp \
+    src/modules/osint/api/BuiltWith.cpp \
+    src/modules/osint/api/Detectify.cpp \
+    src/modules/osint/api/Dnslytics.cpp \
+    src/modules/osint/api/GreyNoise.cpp \
     src/modules/osint/api/HackerTargetFree.cpp \
     src/modules/osint/api/HackerTargetPaid.cpp \
+    src/modules/osint/api/Maltiverse.cpp \
     src/modules/osint/api/MnemonicFree.cpp \
     src/modules/osint/api/MnemonicPaid.cpp \
+    src/modules/osint/api/N45HT.cpp \
+    src/modules/osint/api/Onyphe.cpp \
     src/modules/osint/api/OtxFree.cpp \
     src/modules/osint/api/OtxPaid.cpp \
+    src/modules/osint/api/PassiveDns360.cpp \
+    src/modules/osint/api/Quake.cpp \
     src/modules/osint/api/RobtexFree.cpp \
     src/modules/osint/api/RobtexPaid.cpp \
+    src/modules/osint/api/SpamHaus.cpp \
     src/modules/osint/api/WebResolver.cpp \
+    src/modules/osint/ip/Ip2Location.cpp \
+    src/modules/osint/ip/IpData.cpp \
+    src/modules/osint/ip/IpGeoLocation.cpp \
+    src/modules/osint/ip/IpRegistry.cpp \
+    src/modules/osint/ip/MaxMind.cpp \
+    src/modules/osint/mal/AbuseIPDB.cpp \
+    src/modules/osint/archive/Arquivo.cpp \
+    src/modules/osint/archive/Haw.cpp \
+    src/modules/osint/archive/UkWebArchive.cpp \
+    src/modules/osint/cert/Digitorus.cpp \
     src/tools/ASNChecker.cpp \
     src/tools/BannerGrabber.cpp \
     src/tools/CertChecker.cpp \
@@ -62,8 +84,8 @@ SOURCES += \
     src/modules/osint/api/Circl.cpp \
     src/modules/osint/api/Github.cpp \
     src/modules/osint/api/HunterSearch.cpp \
-    src/modules/osint/api/IpApi.cpp \
-    src/modules/osint/api/IpInfo.cpp \
+    src/modules/osint/ip/IpApi.cpp \
+    src/modules/osint/ip/IpInfo.cpp \
     src/modules/osint/api/RiskIq.cpp \
     src/modules/osint/api/SecurityTrails.cpp \
     src/modules/osint/api/Shodan.cpp \
@@ -130,15 +152,37 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+    src/modules/osint/api/AHrefs.h \
+    src/modules/osint/api/Arin.h \
+    src/modules/osint/api/BuiltWith.h \
+    src/modules/osint/api/Detectify.h \
+    src/modules/osint/api/Dnslytics.h \
+    src/modules/osint/api/GreyNoise.h \
     src/modules/osint/api/HackerTargetFree.h \
     src/modules/osint/api/HackerTargetPaid.h \
+    src/modules/osint/api/Maltiverse.h \
     src/modules/osint/api/MnemonicFree.h \
     src/modules/osint/api/MnemonicPaid.h \
+    src/modules/osint/api/N45HT.h \
+    src/modules/osint/api/Onyphe.h \
     src/modules/osint/api/OtxFree.h \
     src/modules/osint/api/OtxPaid.h \
+    src/modules/osint/api/PassiveDns360.h \
+    src/modules/osint/api/Quake.h \
     src/modules/osint/api/RobtexFree.h \
     src/modules/osint/api/RobtexPaid.h \
+    src/modules/osint/api/SpamHaus.h \
     src/modules/osint/api/WebResolver.h \
+    src/modules/osint/ip/Ip2Location.h \
+    src/modules/osint/ip/IpData.h \
+    src/modules/osint/ip/IpGeoLocation.h \
+    src/modules/osint/ip/IpRegistry.h \
+    src/modules/osint/ip/MaxMind.h \
+    src/modules/osint/mal/AbuseIPDB.h \
+    src/modules/osint/archive/Arquivo.h \
+    src/modules/osint/archive/Haw.h \
+    src/modules/osint/archive/UkWebArchive.h \
+    src/modules/osint/cert/Digitorus.h \
     src/tools/ASNChecker.h \
     src/tools/BannerGrabber.h \
     src/tools/CertChecker.h \
@@ -165,8 +209,8 @@ HEADERS += \
     src/modules/osint/api/Circl.h \
     src/modules/osint/api/Github.h \
     src/modules/osint/api/HunterSearch.h \
-    src/modules/osint/api/IpApi.h \
-    src/modules/osint/api/IpInfo.h \
+    src/modules/osint/ip/IpApi.h \
+    src/modules/osint/ip/IpInfo.h \
     src/modules/osint/api/RiskIq.h \
     src/modules/osint/api/SecurityTrails.h \
     src/modules/osint/api/Shodan.h \

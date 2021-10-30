@@ -3,16 +3,23 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT domain:            OUTPUT: ip, subdomain
+ * INPUT ip-address:        OUTPUT: ip, asn, subdomain, ssl
+ * INPUT ssl:               OUTPUT: ip
+ */
+
 namespace ModuleInfo {
     struct Circl{
         QString name = "Circl";
         QString url = "https://www.circl.lu/";
+        QString url_apiDoc = "";
         QString summary = "Circl";
-        QMap<QString, QString> flags = {{"Passive dns", "domain name / ip-address"},
-                                        {"Passive SSL", "ip-address/cdir"},
-                                        {"Passive SSL Fetch", "SHA1 certificate fingerprint"},
-                                        {"Passive SSL query", "SHA1 certificate fingerprint"},
-                                        {"Ip 2 ASN", "ip-address"}};
+        QMap<QString, QStringList> flags = {{"Passive dns", {PLACEHOLDERTEXT_DOMAIN_OR_IP, ""}},
+                                            {"Passive SSL", {PLACEHOLDERTEXT_CIDR, ""}},
+                                            {"Passive SSL Fetch", {PLACEHOLDERTEXT_SSLCERT, ""}},
+                                            {"Passive SSL query", {PLACEHOLDERTEXT_SSLCERT, ""}},
+                                            {"Ip 2 ASN", {PLACEHOLDERTEXT_IP, ""}}};
     };
 }
 
