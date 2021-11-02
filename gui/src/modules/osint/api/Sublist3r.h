@@ -13,7 +13,8 @@ namespace ModuleInfo {
         QString url = "https://api.sublist3r.com/";
         QString url_apiDoc = "";
         QString summary = "Sublist3r";
-        QMap<QString, QStringList> flags = {{"subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}}};
+        QMap<QString, QStringList> flags = {{"subdomains",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns list of all available subdomains"}}};
     };
 }
 

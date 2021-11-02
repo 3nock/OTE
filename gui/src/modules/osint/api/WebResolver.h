@@ -11,18 +11,28 @@ namespace ModuleInfo {
     struct WebResolver{
         QString name = "WebResolver";
         QString url = "https://webresolver.nl/";
-        QString url_apiDoc = "";
+        QString url_apiDoc = "https://webresolver.nl/api";
         QString summary = "WebResolver";
-        QMap<QString, QStringList> flags = {{"GeoIP", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"Dns Resolver", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"Phone Number Check", {PLACEHOLDERTEXT_PHONE, ""}},
-                                        {"Screenshot Tool", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"Website Whois", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"Website Headers", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"Portscan", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"Disposable email checker", {PLACEHOLDERTEXT_EMAIL, ""}},
-                                        {"Ip to Website(s)", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"Domain information", {PLACEHOLDERTEXT_DOMAIN, ""}}};
+        QMap<QString, QStringList> flags = {{"GeoIP",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Geo Location data. Supports Domain, IPv4 and IPv6."}},
+                                            {"Dns Resolver",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Get the DNS records from a domain."}},
+                                            {"Phone Number Check",
+                                             {PLACEHOLDERTEXT_PHONE, "Looks up information about a specific phone number. (Use international phone format)."}},
+                                            {"Screenshot Tool",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Creates a screenshot of any website/url."}},
+                                            {"Website Whois",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Get the registration information from a domain."}},
+                                            {"Website Headers",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Get the website header information from a domain."}},
+                                            {"Portscan",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Scan a port to check if the port is open or closed on a host."}},
+                                            {"Disposable email checker",
+                                             {PLACEHOLDERTEXT_EMAIL, "Search trough a database with known disposable email servers to check if a domain is disposable."}},
+                                            {"Ip to Website(s)",
+                                             {PLACEHOLDERTEXT_IP, "Tries to find any websites linked to an IP you entered."}},
+                                            {"Domain information",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Get all the information from a domain such as: IP history, subdomains & domain score"}}};
     };
 }
 

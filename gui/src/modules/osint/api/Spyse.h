@@ -15,16 +15,23 @@ namespace ModuleInfo {
     struct Spyse{
         QString name = "Spyse";
         QString url = "https://spyse.com/";
-        QString url_apiDoc = "";
+        QString url_apiDoc = "https://spyse.com/api";
         QString summary = "Find any Internet asset by digital fingerprints";
 
-        QMap<QString, QStringList> flags = {{"Domain", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"IPv4 Host", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"SSL/TLS Certificate", {PLACEHOLDERTEXT_SSLCERT, ""}},
-                                        {"AS", {PLACEHOLDERTEXT_ASN, ""}},
-                                        {"CVE", {"CVE id", ""}},
-                                        {"Emails", {PLACEHOLDERTEXT_EMAIL, ""}},
-                                        {"DNS History", {PLACEHOLDERTEXT_DOMAIN, ""}}};
+        QMap<QString, QStringList> flags = {{"Domain",
+                                             {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                            {"IPv4 Host",
+                                             {PLACEHOLDERTEXT_IP, ""}},
+                                            {"SSL/TLS Certificate",
+                                             {PLACEHOLDERTEXT_SSLCERT, ""}},
+                                            {"AS",
+                                             {PLACEHOLDERTEXT_ASN, ""}},
+                                            {"CVE",
+                                             {"CVE id", ""}},
+                                            {"Emails",
+                                             {PLACEHOLDERTEXT_EMAIL, ""}},
+                                            {"DNS History",
+                                             {PLACEHOLDERTEXT_DOMAIN, ""}}};
     };
 }
 

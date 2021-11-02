@@ -12,28 +12,46 @@ namespace ModuleInfo {
     struct VirusTotal{
         QString name = "VirusTotal";
         QString url = "https://www.virustotal.com/";
-        QString url_apiDoc = "";
+        QString url_apiDoc = "https://developers.virustotal.com/reference";
         QString summary = "Analyze suspicious files and URLs to detect types of malware, \n"
                           "automaticsubdomainIpy share them with the security community";
 
-        QMap<QString, QStringList> flags = {{"domain historical whois", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain historical ssl certs", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain cname records", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain caa records", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain ns records", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain mx records", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain parent", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain resolutions", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain siblings", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain soa records", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain urls", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"ip historical ssl certs", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ip historical whois", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ip resolutions", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ip urls", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"v2 api domain", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"v2 api ipaddress", {PLACEHOLDERTEXT_IP, ""}}};
+        QMap<QString, QStringList> flags = {{"domain historical whois",
+                                             {PLACEHOLDERTEXT_DOMAIN, "All whois records that have been associated with the domain at some moment in time."}},
+                                            {"domain historical ssl certs",
+                                             {PLACEHOLDERTEXT_DOMAIN, "All SSL certificates that have been associated with the domain at some moment in time."}},
+                                            {"domain cname records",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The cname_records relationship returns a list of all domain's CNAME records"}},
+                                            {"domain caa records",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The caa_records relationship returns a list of all domain's CAA records"}},
+                                            {"domain ns records",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The ns_records relationship returns a list of all domain's NS records."}},
+                                            {"domain mx records",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The mx_records relationship returns a list of all domain's MX records. "}},
+                                            {"domain parent",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The parent relationship returns the domain's object parent."}},
+                                            {"domain resolutions",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The resolutions relationship returns a list of past and current IP resolutions for a given domain or subdomain."}},
+                                            {"domain siblings",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The siblings relationship returns a list of subdomains at the same level as the given subdomain for a domain, along with their information."}},
+                                            {"domain soa records",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The soa_records relationship returns a list of all domain's CNAME records."}},
+                                            {"domain subdomains",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The subdomains relationship returns a list of all domain's subdomains. This relationships only returns direct subdomains, it's not recursive (it won't return a subdomain's subdomains)."}},
+                                            {"domain urls",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The urls relationship returns a list of the domain's URLs"}},
+                                            {"ip historical ssl certs",
+                                             {PLACEHOLDERTEXT_IP, "The historical_ssl_certificates relationship returns a list of SSL certificates that have been associated with the IP address at some moment in time."}},
+                                            {"ip historical whois",
+                                             {PLACEHOLDERTEXT_IP, "The historical_whois relationship returns a list of whois records that have been associated with the IP address at some moment in time."}},
+                                            {"ip resolutions",
+                                             {PLACEHOLDERTEXT_IP, "The resolutions relationship returns a list of past and current domain resolutions for a IP address."}},
+                                            {"ip urls",
+                                             {PLACEHOLDERTEXT_IP, "The urls relationship returns a list of the IP's URLs"}},
+                                            {"v2 api domain",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns all the available data assosiated with domain, uses v2 api"}},
+                                            {"v2 api ipaddress",
+                                             {PLACEHOLDERTEXT_IP, "Returns all the available data assosiated with ip-address, uses v2 api"}}};
     };
 }
 

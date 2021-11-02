@@ -14,20 +14,28 @@ namespace ModuleInfo {
     struct Bgpview{
         QString name = "Bgpview";
         QString url = "https://bgpview.io/";
-        QString url_apiDoc = "";
-        QString summary = " API that lets you gather information about the current state and structure of the internet, "
-                          "\nincluding ASNs, IP addresses, IXs, BGP Downstream & Upstream Peers, and much more";
+        QString url_apiDoc = "https://bgpview.docs.apiary.io/";
+        QString summary = "BGPView is a simple API allowing consumers to view all sort of analytics data"\
+                "about the current state and structure of the internet.";
 
-        QMap <QString, QStringList> flags = {{"ip", {PLACEHOLDERTEXT_IP, ""}},
-                                             {"ip prefix", {PLACEHOLDERTEXT_CIDR, ""}},
-                                             {"asn", {PLACEHOLDERTEXT_ASN, ""}},
-                                             {"asn prefixes", {PLACEHOLDERTEXT_ASN, ""}},
-                                             {"asn peers", {PLACEHOLDERTEXT_ASN, ""}},
-                                             {"asn peers", {PLACEHOLDERTEXT_ASN, ""}},
-                                             {"asn upstreams", {PLACEHOLDERTEXT_ASN, ""}},
-                                             {"asn downstreams", {PLACEHOLDERTEXT_ASN, ""}},
-                                             {"asn ixs", {"ixs", ""}},
-                                             {"query", {PLACEHOLDERTEXT_QUERY, ""}}};
+        QMap <QString, QStringList> flags = {{"ip",
+                                              {PLACEHOLDERTEXT_IP, "Returns analytical data about the Ip address"}},
+                                             {"ip prefix",
+                                              {PLACEHOLDERTEXT_CIDR, "Returns analytical data about all the Ip address cidr"}},
+                                             {"asn",
+                                              {PLACEHOLDERTEXT_ASN, "Returns analytical data about the asn"}},
+                                             {"asn prefixes",
+                                              {PLACEHOLDERTEXT_ASN, "Returns all prefixes related to the asn"}},
+                                             {"asn peers",
+                                              {PLACEHOLDERTEXT_ASN, "Returns all peers associated with the asn"}},
+                                             {"asn upstreams",
+                                              {PLACEHOLDERTEXT_ASN, "Returns all asn upstream of the queried asn"}},
+                                             {"asn downstreams",
+                                              {PLACEHOLDERTEXT_ASN, "Returns all asn downstream of the queried asn"}},
+                                             {"asn ixs",
+                                              {"ixs", "Returns all asn associated with the ixs"}},
+                                             {"query",
+                                              {PLACEHOLDERTEXT_QUERY, "Returns all analytical data of the query term"}}};
     };
 }
 

@@ -12,24 +12,39 @@ namespace ModuleInfo {
     struct SecurityTrails{
         QString name = "SecurityTrails";
         QString url = "https://securitytrails.com/";
-        QString url_apiDoc = "";
+        QString url_apiDoc = "https://securitytrails.com/corp/api";
         QString summary = "The Total Internet Inventory. Powerful tools for third-party risk, \n"
                           "attack surface management, and total intel";
 
-        QMap<QString, QStringList> flags = {{"dns history", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain subdomain", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"whois", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"whois history", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"associated domains", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"associated ips", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain details", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"company details", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"ssl cert", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"ip neighbours", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ip whois", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ping", {PLACEHOLDERTEXT_NONE, ""}},
-                                        {"account", {PLACEHOLDERTEXT_NONE, ""}},
-                                        {"company associated ip", {PLACEHOLDERTEXT_DOMAIN, ""}}};
+        QMap<QString, QStringList> flags = {{"history dns",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Lists out specific historical information about the given hostname parameter"}},
+                                            {"history whois",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns historical WHOIS information about the given domain"}},
+                                            {"domain subdomain",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns child and sibling subdomains for a given hostname."}},
+                                            {"domain whois",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns the current WHOIS data about a given hostname with the stats merged together"}},
+                                            {"domain associated domains",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Find all domains that are related to a hostname you input."}},
+                                            {"domain details",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns the current data about the given hostname. "
+                                                                      "In addition to the current data, you also get the current statistics associated with a particular record."}},
+                                            {"domain ssl cert",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Fetch current and historical certificate information for any hostname"}},
+                                            {"ip neighbours",
+                                             {PLACEHOLDERTEXT_IP, "Returns the neighbors in any given IP level range and essentially allows you to explore closeby IP addresses. "
+                                                                  "It will divide the range into 16 groups. Example: a /28 would be divided into 16 /32 blocks or a /24 would be divided into 16 /28 blocks"}},
+                                            {"ip whois",
+                                             {PLACEHOLDERTEXT_IP, "Fetch current IP information for a single IPv4 address."}},
+                                            {"general ping",
+                                             {PLACEHOLDERTEXT_NONE, "You can use this simple endpoint to test your authentication and access to the SecurityTrails API."}},
+                                            {"general usage",
+                                             {PLACEHOLDERTEXT_NONE, "Usage statistics of the API for the current month"}},
+                                            {"company details",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns details for a company domain."}},
+                                            {"company associated ip",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns associated IPs for a company domain. The result is not paginated nor limited. "
+                                                                      "The data is based on whois data with the names matched to the domains."}}};
     };
 }
 

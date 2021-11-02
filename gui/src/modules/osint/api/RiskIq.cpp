@@ -8,19 +8,21 @@
 #define CERT_NAME 1
 #define CERT_SERIAL 2
 #define CERT_SHA1 3
-#define PDNS_IP 4
-#define PDNS_NAME 5
-#define PDNS_RAW 6
-#define WHOIS_ADDRESS 7
-#define WHOIS_DOMAIN 8
-#define WHOIS_EMAIL 9
-#define WHOIS_NAME 10
-#define WHOIS_NAMESERVER 11
-#define WHOIS_ORG 12
-#define WHOIS_PHONE 13
+#define HOSTS 4
+#define PDNS_IP 5
+#define PDNS_NAME 6
+#define PDNS_RAW 7
+#define WHOIS_ADDRESS 8
+#define WHOIS_DOMAIN 9
+#define WHOIS_EMAIL 10
+#define WHOIS_NAME 11
+#define WHOIS_NAMESERVER 12
+#define WHOIS_ORG 13
+#define WHOIS_PHONE 14
 
 /*
  * Error in Basic Authentication
+ * returns hosts using cert-id HOSTS
  */
 RiskIq::RiskIq(ScanArgs *args): AbstractOsintModule(args)
 {
@@ -103,6 +105,9 @@ void RiskIq::start(){
             break;
         case WHOIS_PHONE:
             url.setUrl("https://api.riskiq.net/v0/whois/phone?phone="+args->target);
+            break;
+        case HOSTS:
+            url.setUrl("https://api.riskiq.net/v1/ssl/host?certSha1="+args->target);
             break;
         }
         request.setUrl(url);

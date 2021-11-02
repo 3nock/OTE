@@ -8,7 +8,10 @@
  * TODO: add option to view and choose default nameservers you want to use...
  *       add site's own nameservers...
  *
+ *       add option to view and choose default user agents you want to use, either one
+ *       or multiple
  */
+
 ConfigDialog::ConfigDialog(QWidget *parent, ScanConfig *scanConfig) : QDialog(parent), ui(new Ui::ConfigDialog),
       m_scanConfig(scanConfig)
 {

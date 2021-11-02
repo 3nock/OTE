@@ -8,6 +8,14 @@
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ConfigDialog.h"
 
+#define SUBDOMAINIP 0
+#define SUBDOMAIN 1
+#define IP 2
+#define EMAIL 3
+#define URL 4
+#define ASN 5
+#define SSLCERT 6
+
 namespace Ui {
     class Osint;
 }

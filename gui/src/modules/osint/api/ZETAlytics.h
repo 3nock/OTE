@@ -7,6 +7,7 @@ namespace ModuleInfo {
     struct ZETAlytics{
         QString name = "ZETAlytics";
         QString url = "https://zetalytics.com/";
+        QString url_apiDoc = "";
         QString summary = "https://zetalytics.com/";
         QMap<QString, QStringList> flags = {};
     };

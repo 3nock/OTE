@@ -14,17 +14,26 @@ namespace ModuleInfo {
     struct Threatminer{
         QString name = "Threatminer";
         QString url = "https://threatminer.org/";
-        QString url_apiDoc = "";
+        QString url_apiDoc = "https://www.threatminer.org/api.php";
         QString summary = "Data Mining for threat Intelligence";
-        QMap<QString, QStringList> flags = {{"domain whois", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain passive dns", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"domain Query URI", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"ip whois", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ip passive dns", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ip Query URI", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ip ssl certs", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ssl Hosts", {PLACEHOLDERTEXT_SSLCERT, ""}}};
+        QMap<QString, QStringList> flags = {{"domain whois",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Search Whois data by domain name"}},
+                                            {"domain passive dns",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Search passive dns data by domain name"}},
+                                            {"domain subdomains",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Search subdomains of the domain"}},
+                                            {"domain Query URI",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Search uri data of a domain"}},
+                                            {"ip whois",
+                                             {PLACEHOLDERTEXT_IP, "Search whois data of an ip address"}},
+                                            {"ip passive dns",
+                                             {PLACEHOLDERTEXT_IP, "Search passive dns data of an ip address"}},
+                                            {"ip Query URI",
+                                             {PLACEHOLDERTEXT_IP, "Search uri data of an ip address"}},
+                                            {"ip ssl certs",
+                                             {PLACEHOLDERTEXT_IP, "Search ssl certificate data of an ip address"}},
+                                            {"ssl Hosts",
+                                             {PLACEHOLDERTEXT_SSLCERT, "Search hosts data of an ssl certificate"}}};
     };
 }
 

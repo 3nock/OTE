@@ -1,10 +1,20 @@
-#ifndef RAWOSINT_H
-#define RAWOSINT_H
+#ifndef OSINTMODULESHEADERS_H
+#define OSINTMODULESHEADERS_H
 
-#include <QDialog>
-#include <QTextDocument>
-#include <QStandardItemModel>
-//...
+/******************************************************************************
+                        Osint Headers
+*******************************************************************************/
+
+#include "src/modules/osint/site/PagesInventory.h"
+#include "src/modules/osint/site/SiteDossier.h"
+#include "src/modules/osint/scrape/Bing.h"
+#include "src/modules/osint/scrape/Yahoo.h"
+#include "src/modules/osint/scrape/Trello.h"
+#include "src/modules/osint/scrape/Exalead.h"
+#include "src/modules/osint/scrape/DuckDuckGo.h"
+#include "src/modules/osint/scrape/DogPile.h"
+#include "src/modules/osint/scrape/Baidu.h"
+#include "src/modules/osint/scrape/Ask.h"
 #include "src/modules/osint/api/ViewDns.h"
 #include "src/modules/osint/ip/IpApi.h"
 #include "src/modules/osint/api/ZoomEye.h"
@@ -38,67 +48,20 @@
 #include "src/modules/osint/api/Omnisint.h"
 #include "src/modules/osint/api/VirusTotal.h"
 #include "src/modules/osint/api/Urlscan.h"
+#include "src/modules/osint/api/Circl.h"
+#include "src/modules/osint/api/WebResolver.h"
 #include "src/modules/osint/archive/Waybackmachine.h"
 #include "src/modules/osint/archive/ArchiveToday.h"
 #include "src/modules/osint/archive/CommonCrawl.h"
 #include "src/modules/osint/archive/ArchiveIt.h"
+#include "src/modules/osint/site/Dnsdumpster.h"
+#include "src/modules/osint/site/Netcraft.h"
+#include "src/modules/osint/site/Suip.h"
+#include "src/modules/osint/site/Pkey.h"
+#include "src/modules/osint/site/Rapiddns.h"
 #include "src/modules/osint/cert/Crtsh.h"
 #include "src/modules/osint/cert/GoogleCert.h"
 #include "src/modules/osint/cert/Certspotter.h"
-#include "src/modules/osint/api/WebResolver.h"
-#include "src/modules/osint/api/Circl.h"
+#include "src/modules/osint/cert/CensysFree.h"
 
-namespace Ui {
-    class RawOsint;
-}
-
-class RawOsint : public QDialog{
-        Q_OBJECT
-
-    public:
-        explicit RawOsint(QWidget *parent = nullptr);
-        ~RawOsint();
-
-    public slots:
-        void onEnumerationComplete();
-        void onErrorLog(QString log);
-        void onInfoLog(QString log);
-        void onResults(QByteArray); // for Json results
-        void onResultsTxt(QByteArray); // for normal txt results
-
-    signals:
-        void stopScanThread();
-
-    private slots:
-        void on_buttonStart_clicked();
-        void on_buttonClear_clicked();
-        void on_buttonCopy_clicked();
-        void on_buttonSave_clicked();
-        void on_comboBoxModule_currentIndexChanged(int index);
-        void on_comboBoxOptions_currentIndexChanged(const QString &arg1);
-        ///
-        /// for Find...
-        ///
-        void on_buttonNext_clicked();
-        void on_buttonPrev_clicked();
-        void on_lineEditFind_textEdited(const QString &arg1);
-
-    private:
-        Ui::RawOsint *ui;
-        QStandardItemModel *m_model;
-        ScanArgs *m_scanArgs;
-        //...
-        QMap<QString, QStringList> m_optionSet;
-        //...
-        void loadEngines();
-        void startScan();
-        //...
-        void setJsonText(QJsonDocument &document);
-        void setJsonTree(QJsonDocument &document);
-        void treeObject(QJsonObject object, QStandardItem *item);
-        void treeArray(QJsonArray array, QStandardItem *item);
-        //...
-        void find(QString, QTextDocument::FindFlags);
-};
-
-#endif // RAWOSINT_H
+#endif // OSINTMODULESHEADERS_H

@@ -3,6 +3,17 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct ArchiveIt{
+        QString name = "ArchiveIt";
+        QString url = "";
+        QString url_apiDoc = "";
+        QString summary = "ArchiveIt";
+        QMap<QString, QStringList> flags = {{"url", {PLACEHOLDERTEXT_URL, "..."}}};
+    };
+}
+
+
 class ArchiveIt: public AbstractOsintModule{
 
     public:

@@ -4,20 +4,19 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#define ACCOUNT 0
-#define ASSOCIATED_DOMAINS 1
-#define ASSOCIATED_IPS 2
-#define COMPANY_ASSOCIATED_IP 3
-#define COMPANY_DETAILS 4
-#define DNS_HISTORY 5
-#define DOMAIN_DETAILS 6
-#define DOMAIN_SUBDOMAIN 7
-#define IP_NEIGHBOURS 8
-#define IP_WHOIS 9
-#define PING 10
-#define SSL_CERT 11
-#define WHOIS 12
-#define WHOIS_HISTORY 13
+#define COMPANY_ASSOCIATED_IP 0
+#define COMPANY_DETAILS 1
+#define DOMAIN_ASSOCIATED_DOMAINS 2
+#define DOMAIN_DETAILS 3
+#define DOMAIN_SUBDOMAIN 4
+#define DOMAIN_SSL_CERT 5
+#define DOMAIN_WHOIS 6
+#define GENERAL_PING 7
+#define GENERAL_USAGE 8
+#define HISTORY_DNS 9
+#define HISTORY_WHOIS 10
+#define IP_NEIGHBOURS 11
+#define IP_WHOIS 12
 
 /*
  * Limited to 2000 results, 50 queries a month for the Free plan and to 10000 for subdomainIp paid subscriptions.
@@ -56,23 +55,20 @@ void SecurityTrails::start(){
     QUrl url;
     if(args->raw){
         switch (args->rawOption) {
-        case DNS_HISTORY:
+        case HISTORY_DNS:
             url.setUrl("https://api.securitytrails.com/v1/history/"+args->target+"/dns/any");
             break;
         case DOMAIN_SUBDOMAIN:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/subdomains?children_only=false&include_inactive=true");
             break;
-        case WHOIS_HISTORY:
+        case HISTORY_WHOIS:
             url.setUrl("https://api.securitytrails.com/v1/history/"+args->target+"/whois");
             break;
-        case WHOIS:
+        case DOMAIN_WHOIS:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/whois");
             break;
-        case ASSOCIATED_DOMAINS:
+        case DOMAIN_ASSOCIATED_DOMAINS:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/associated");
-            break;
-        case ASSOCIATED_IPS:
-            url.setUrl("https://api.securitytrails.com/v1/company/"+args->target+"/associated-ips");
             break;
         case DOMAIN_DETAILS:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target);
@@ -83,7 +79,7 @@ void SecurityTrails::start(){
         case COMPANY_ASSOCIATED_IP:
             url.setUrl("https://api.securitytrails.com/v1/company/"+args->target+"/associated-ips");
             break;
-        case SSL_CERT:
+        case DOMAIN_SSL_CERT:
             url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/ssl?include_subdomains=false&status=valid");
             break;
         case IP_NEIGHBOURS:
@@ -92,10 +88,10 @@ void SecurityTrails::start(){
         case IP_WHOIS:
             url.setUrl("https://api.securitytrails.com/v1/ips/"+args->target+"/whois");
             break;
-        case PING:
+        case GENERAL_PING:
             url.setUrl("https://api.securitytrails.com/v1/ping");
             break;
-        case ACCOUNT:
+        case GENERAL_USAGE:
             url.setUrl("https://api.securitytrails.com/v1/account/usage");
         }
         request.setUrl(url);

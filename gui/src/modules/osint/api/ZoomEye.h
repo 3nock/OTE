@@ -13,15 +13,15 @@ namespace ModuleInfo {
     struct ZoomEye{
         QString name = "ZoomEye";
         QString url = "https://www.zoomeye.org/";
-        QString url_apiDoc = "";
+        QString url_apiDoc = "https://www.zoomeye.org/doc";
         QString summary = "ZoomEyeis a Cyberspace Search Engine recording information of devices, websites, \n"
                           "services and components etc.";
 
-        QMap<QString, QStringList> flags = {{"host search asn", {PLACEHOLDERTEXT_ASN, ""}},
-                                        {"host search cidr", {PLACEHOLDERTEXT_CIDR, ""}},
-                                        {"host search hostname", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"host search ip", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"user information", {PLACEHOLDERTEXT_NONE, ""}}};
+        QMap<QString, QStringList> flags = {{"host search asn", {PLACEHOLDERTEXT_ASN, "Search by asn"}},
+                                            {"host search cidr", {PLACEHOLDERTEXT_CIDR, "Search by ip-address/cidr"}},
+                                            {"host search hostname", {PLACEHOLDERTEXT_DOMAIN, "Search by hostname"}},
+                                            {"host search ip", {PLACEHOLDERTEXT_IP, "Search by ip-address"}},
+                                            {"user information", {PLACEHOLDERTEXT_NONE, "User Information"}}};
     };
 }
 

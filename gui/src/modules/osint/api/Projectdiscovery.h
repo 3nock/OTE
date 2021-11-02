@@ -14,7 +14,9 @@ namespace ModuleInfo {
         QString url_apiDoc = "";
         QString summary = "We actively collect and maintain internet-wide assets' data, \n"
                           "this project is meant to enhance research and analyse changes around DNS for better insights";
-        QMap<QString, QStringList> flags = {{"subdomain", {PLACEHOLDERTEXT_DOMAIN, ""}}};
+
+        QMap<QString, QStringList> flags = {{"subdomain",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains Associated with the domain"}}};
     };
 }
 

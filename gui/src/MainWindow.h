@@ -11,6 +11,7 @@
 #include "src/engines/Brute.h"
 #include "src/engines/Osint.h"
 #include "src/engines/Active.h"
+#include "src/engines/Raw.h"
 
 namespace Ui {
     class MainWindow;
@@ -44,17 +45,16 @@ class MainWindow : public QMainWindow{
         void on_actionAbout_triggered();
         void on_actionAboutQt_triggered();
         void on_actionExit_triggered();
-        void on_actionRawOsint_triggered();
-
         void on_actionBannerGrab_triggered();
 
-private:
+    private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;
         Brute *brute = nullptr;
         Active *active = nullptr;
         DnsRecords *records = nullptr;
         Project *project = nullptr;
+        Raw *raw = nullptr;
 };
 
 #endif // MAINWINDOW_H

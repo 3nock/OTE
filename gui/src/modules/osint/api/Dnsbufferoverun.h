@@ -13,7 +13,8 @@ namespace ModuleInfo {
         QString url = "https://dns.bufferover.run/";
         QString url_apiDoc = "";
         QString summary = "Subdomain enumeration from rapid7 sonar project";
-        QMap<QString, QStringList> flags = {{"subdomains", {PLACEHOLDERTEXT_DOMAIN, ""}}};
+        QMap<QString, QStringList> flags = {{"subdomains",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Quickly Extract Ip addresses and subdomains from TLS certificates"}}};
     };
 }
 

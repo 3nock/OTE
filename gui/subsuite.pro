@@ -28,6 +28,15 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/engines/ActiveContextMenu.cpp \
+    src/engines/BruteContextMenu.cpp \
+    src/engines/DnsRecordsContextMenu.cpp \
+    src/engines/IpContextMenu.cpp \
+    src/engines/OsintContextMenu.cpp \
+    src/engines/OsintModules.cpp \
+    src/engines/OsintProfiles.cpp \
+    src/engines/RawContextMenu.cpp \
+    src/engines/RawModules.cpp \
     src/modules/osint/api/AHrefs.cpp \
     src/modules/osint/api/Arin.cpp \
     src/modules/osint/api/BuiltWith.cpp \
@@ -68,7 +77,6 @@ SOURCES += \
     src/tools/IpChecker.cpp \
     src/tools/MXChecker.cpp \
     src/tools/NSChecker.cpp \
-    src/tools/RawOsint.cpp \
     src/modules/scan/BruteScanner.cpp \
     src/modules/scan/OsintScanner.cpp \
     src/modules/scan/DnsRecordsScanner.cpp \
@@ -127,6 +135,7 @@ SOURCES += \
     src/modules/osint/site/Rapiddns.cpp \
     src/modules/osint/site/SiteDossier.cpp \
     src/modules/osint/site/Suip.cpp \
+    src/engines/Raw.cpp \
     src/engines/Ip.cpp \
     src/engines/Active.cpp \
     src/engines/DnsRecords.cpp \
@@ -152,6 +161,7 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+    src/modules/osint/OsintModulesHeaders.h \
     src/modules/osint/api/AHrefs.h \
     src/modules/osint/api/Arin.h \
     src/modules/osint/api/BuiltWith.h \
@@ -192,7 +202,6 @@ HEADERS += \
     src/tools/IpChecker.h \
     src/tools/MXChecker.h \
     src/tools/NSChecker.h \
-    src/tools/RawOsint.h \
     src/modules/scan/OsintScanner.h \
     src/modules/scan/BruteScanner.h \
     src/modules/scan/DnsRecordsScanner.h \
@@ -253,6 +262,7 @@ HEADERS += \
     src/modules/osint/site/SiteDossier.h \
     src/modules/osint/site/Suip.h \
     src/modules/osint/AbstractOsintModule.h \
+    src/engines/Raw.h \
     src/engines/Ip.h \
     src/engines/Active.h \
     src/engines/DnsRecords.h \
@@ -288,10 +298,10 @@ FORMS += \
     src/tools/IpChecker.ui \
     src/tools/MXChecker.ui \
     src/tools/NSChecker.ui \
-    src/tools/RawOsint.ui \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \
     src/project/specific/SpecificAnalysis.ui \
+    src/engines/Raw.ui \
     src/engines/Ip.ui \
     src/engines/DnsRecords.ui \
     src/engines/Brute.ui \

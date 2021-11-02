@@ -2,7 +2,6 @@
 #include "ui_MainWindow.h"
 //...
 #include "src/dialogs/AboutDialog.h"
-#include "src/tools/RawOsint.h"
 #include "src/tools/BannerGrabber.h"
 
 /*
@@ -22,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     brute = new Brute(this, resultsModel, projectDataModel, status);
     active = new Active(this, resultsModel, projectDataModel, status);
     records = new DnsRecords(this, resultsModel, projectDataModel, status);
+    raw = new Raw(this);
     project = new Project(this, projectDataModel);
 
     // BRUTE::Sending results...
@@ -117,11 +117,12 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
 
     // creating tabs...
     ui->tabWidget_mainTab->insertTab(0, osint, "Osint");
-    ui->tabWidget_mainTab->insertTab(1, brute, "Brute");
-    ui->tabWidget_mainTab->insertTab(2, active, "Active");
-    ui->tabWidget_mainTab->insertTab(3, records, "Record");
-    ui->tabWidget_mainTab->insertTab(4, ip, "Ip");
-    ui->tabWidget_mainTab->insertTab(5, project, "Project");
+    ui->tabWidget_mainTab->insertTab(1, raw, "Raw");
+    ui->tabWidget_mainTab->insertTab(2, brute, "Brute");
+    ui->tabWidget_mainTab->insertTab(3, active, "Active");
+    ui->tabWidget_mainTab->insertTab(4, records, "Record");
+    ui->tabWidget_mainTab->insertTab(5, ip, "Ip");
+    ui->tabWidget_mainTab->insertTab(6, project, "Project");
     //...
     ui->tabWidget_mainTab->setCurrentIndex(0);
     ///
@@ -135,6 +136,7 @@ MainWindow::~MainWindow(){
     delete brute;
     delete active;
     delete records;
+    delete raw;
     delete project;
     //...
     delete status;
@@ -191,12 +193,6 @@ void MainWindow::on_actionAboutQt_triggered(){
 
 void MainWindow::on_actionExit_triggered(){
     QApplication::exit();
-}
-
-void MainWindow::on_actionRawOsint_triggered(){
-    RawOsint *rawOsint = new RawOsint(this);
-    rawOsint->setAttribute(Qt::WA_DeleteOnClose, true);
-    rawOsint->show();
 }
 
 void MainWindow::on_actionBannerGrab_triggered(){

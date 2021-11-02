@@ -164,12 +164,12 @@ QFrame[frameShape=&quot;5&quot;] {
     background: transparent;
 }
 
-QFrame#frame, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers{
+QFrame#frame, QFrame#frame1, QFrame#frame_newSpecialWordlist, QFrame#frame_nameservers{
     background-color: rgb(55, 55, 55);
 }
 
 /******** QLabels ***********/
-QLabel#labelResultsCount, QLabel#label_level, QLabel#labelCount, QLabel#labelResultsCountSRV {
+QLabel#labelResultsCount, QLabel#label_level, QLabel#labelResultsCountTree, QLabel#labelResultsCountJson, QLabel#labelCount, QLabel#labelResultsCountSRV {
     background-color: rgb(42, 42, 42);
 }
 
@@ -209,6 +209,14 @@ QSplitter::handle:horizontal {
 QSplitter::handle:vertical{
     background-color:rgb(40,40,40);
     height: 5px
+}
+
+QTextEdit{
+    background-color:transparent;
+    color: rgba(218, 218, 163, 200);
+    border-style: solid;
+    border-color: rgb(25,25,25);
+    border-width: 1px;
 }
 
 QListWidget, QTableView, QTreeView, QListView, QColumnView, QPlainTextEdit{
@@ -524,7 +532,6 @@ QRadioButton:hover {
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionRawOsint"/>
     <addaction name="actionBannerGrab"/>
    </widget>
    <widget class="QMenu" name="menuHelp">

@@ -14,12 +14,18 @@ namespace ModuleInfo {
     struct Threatcrowd{
         QString name = "Threatcrowd";
         QString url = "https://www.threatcrowd.org/";
+        QString url_apiDoc = "https://github.com/AlienVault-OTX/ApiV2";
         QString summary = "A Search Engine for Threats";
-        QMap<QString, QStringList> flags = {{"email", {PLACEHOLDERTEXT_EMAIL, ""}},
-                                        {"domain", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"ip", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"antivirus", {"antivirus", ""}},
-                                        {"file", {"file hash", ""}}};
+        QMap<QString, QStringList> flags = {{"email",
+                                             {PLACEHOLDERTEXT_EMAIL, "Search by Email"}},
+                                            {"domain",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Search by domain name"}},
+                                            {"ip",
+                                             {PLACEHOLDERTEXT_IP, "Search by ip address"}},
+                                            {"antivirus",
+                                             {"antivirus", "Search by antivirus"}},
+                                            {"file",
+                                             {"file hash", "Search by file hash"}}};
     };
 }
 
