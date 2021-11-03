@@ -656,6 +656,38 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleArin->isChecked())
+    {
+        Arin *arin = new Arin(m_scanArgs);
+        arin->Enumerator(cThread);
+        arin->moveToThread(cThread);
+        //...
+        connect(arin, &Arin::rawResults, this, &Raw::onResults);
+        connect(arin, &Arin::errorLog, this, &Raw::onErrorLog);
+        connect(arin, &Arin::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, arin, &Arin::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleBuiltWith->isChecked())
+    {
+        BuiltWith *builtWith = new BuiltWith(m_scanArgs);
+        builtWith->Enumerator(cThread);
+        builtWith->moveToThread(cThread);
+        //...
+        connect(builtWith, &BuiltWith::rawResults, this, &Raw::onResults);
+        connect(builtWith, &BuiltWith::errorLog, this, &Raw::onErrorLog);
+        connect(builtWith, &BuiltWith::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, builtWith, &BuiltWith::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -673,8 +705,8 @@ void Raw::on_moduleCertSpotter_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Certspotter meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -683,8 +715,8 @@ void Raw::on_moduleOtx_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::OtxPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -693,8 +725,8 @@ void Raw::on_moduleSublist3r_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Sublist3r meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -703,8 +735,8 @@ void Raw::on_moduleThreatMiner_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Threatminer meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -713,8 +745,8 @@ void Raw::on_moduleThreatCrowd_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Threatcrowd meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -723,8 +755,8 @@ void Raw::on_moduleHackerTargetFree_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::HackerTargetFree meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -733,8 +765,8 @@ void Raw::on_moduleDnsBufferOverRun_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Dnsbufferoverun meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -743,8 +775,8 @@ void Raw::on_moduleAnubis_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Anubis meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -753,8 +785,8 @@ void Raw::on_moduleProjectDiscovery_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Projectdiscovery meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -763,8 +795,8 @@ void Raw::on_moduleSpyse_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Spyse meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -773,8 +805,8 @@ void Raw::on_moduleGoogleCert_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::GoogleCert meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -783,8 +815,8 @@ void Raw::on_moduleOmnisint_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Omnisint meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -793,8 +825,8 @@ void Raw::on_moduleRobtexPaid_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::RobtexPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -803,8 +835,8 @@ void Raw::on_moduleUrlScan_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Urlscan meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -813,8 +845,8 @@ void Raw::on_moduleVirusTotal_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::VirusTotal meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -823,8 +855,8 @@ void Raw::on_moduleWaybackMachine_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Waybackmachine meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -833,8 +865,8 @@ void Raw::on_moduleArchiveIt_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ArchiveIt meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -843,8 +875,8 @@ void Raw::on_moduleBgpview_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Bgpview meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -853,8 +885,8 @@ void Raw::on_moduleBinaryEdge_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::BinaryEdge meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -863,8 +895,8 @@ void Raw::on_moduleC99_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::C99 meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -873,8 +905,8 @@ void Raw::on_moduleCommonCrawl_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::CommonCrawl meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -883,8 +915,8 @@ void Raw::on_moduleGithub_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Github meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -893,8 +925,8 @@ void Raw::on_moduleHunterSearch_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::HunterSearch meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -903,8 +935,8 @@ void Raw::on_moduleIpInfo_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::IpInfo meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -913,8 +945,8 @@ void Raw::on_moduleMnemonicFree_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::MnemonicFree meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -923,8 +955,8 @@ void Raw::on_moduleRiskIq_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::RiskIq meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -933,8 +965,8 @@ void Raw::on_moduleRobtex_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::RobtexPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -943,8 +975,8 @@ void Raw::on_moduleSecurityTrails_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::SecurityTrails meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -953,8 +985,8 @@ void Raw::on_moduleShodan_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Shodan meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -963,8 +995,8 @@ void Raw::on_moduleThreatBook_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ThreatBook meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -973,8 +1005,8 @@ void Raw::on_moduleWhoisXmlApi_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::WhoisXmlApi meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -983,8 +1015,8 @@ void Raw::on_moduleZETALytics_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ZETAlytics meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -993,8 +1025,8 @@ void Raw::on_moduleZoomEye_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ZoomEye meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1003,8 +1035,8 @@ void Raw::on_moduleIpApi_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::IpApi meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1013,8 +1045,8 @@ void Raw::on_moduleViewDns_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ViewDns meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1023,8 +1055,8 @@ void Raw::on_moduleWebResolver_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::WebResolver meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1033,8 +1065,8 @@ void Raw::on_moduleCircl_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Circl meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1043,8 +1075,8 @@ void Raw::on_moduleHackerTarget_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::HackerTargetPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1053,8 +1085,28 @@ void Raw::on_moduleMnemonic_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::MnemonicPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleArin_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Arin meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleBuiltWith_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::BuiltWith meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }

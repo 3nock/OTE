@@ -3,6 +3,7 @@
 //...
 #include "src/dialogs/AboutDialog.h"
 #include "src/tools/BannerGrabber.h"
+#include "src/tools/IpChecker.h"
 
 /*
  * use https://www.qcustomplot.com/ for plots
@@ -199,4 +200,10 @@ void MainWindow::on_actionBannerGrab_triggered(){
     BannerGrabber *bannergrab = new BannerGrabber(this);
     bannergrab->setAttribute(Qt::WA_DeleteOnClose, true);
     bannergrab->show();
+}
+
+void MainWindow::on_actionIpTool_triggered(){
+    IpChecker *ipChecker = new IpChecker(this);
+    ipChecker->setAttribute(Qt::WA_DeleteOnClose, true);
+    ipChecker->show();
 }

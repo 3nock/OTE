@@ -540,6 +540,11 @@
                   <height>0</height>
                  </size>
                 </property>
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -698,9 +703,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-136</y>
+                  <y>0</y>
                   <width>157</width>
-                  <height>288</height>
+                  <height>311</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -708,6 +713,13 @@
                   <widget class="QRadioButton" name="moduleAnubis">
                    <property name="text">
                     <string>Anubis</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleArin">
+                   <property name="text">
+                    <string>Arin</string>
                    </property>
                   </widget>
                  </item>
@@ -826,10 +838,17 @@
                   <x>0</x>
                   <y>0</y>
                   <width>157</width>
-                  <height>633</height>
+                  <height>656</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <item>
+                  <widget class="QRadioButton" name="moduleBuiltWith">
+                   <property name="text">
+                    <string>Builtwith</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QRadioButton" name="moduleCertSpotter">
                    <property name="text">

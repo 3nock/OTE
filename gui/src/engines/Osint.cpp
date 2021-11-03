@@ -101,6 +101,12 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
     this->connectActions();
+    ///
+    /// ....
+    ///
+    ui->lineEditNewProfile->setPlaceholderText("Enter New Profile's Name...");
+    ui->frameProfiles->hide();
+    this->initProfiles();
 }
 Osint::~Osint(){
     delete m_scanArguments;
@@ -249,7 +255,7 @@ void Osint::on_buttonStart_clicked(){
         QMessageBox::warning(this, "Error!", "Please Target Domain For Enumerations!");
         return;
     }
-    startScan();
+    this->startScan();
 }
 void Osint::on_lineEditTarget_returnPressed(){
     on_buttonStart_clicked();

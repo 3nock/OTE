@@ -63,5 +63,7 @@
 #include "src/modules/osint/cert/GoogleCert.h"
 #include "src/modules/osint/cert/Certspotter.h"
 #include "src/modules/osint/cert/CensysFree.h"
+#include "src/modules/osint/api/Arin.h"
+#include "src/modules/osint/api/BuiltWith.h"
 
 #endif // OSINTMODULESHEADERS_H

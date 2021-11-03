@@ -37,11 +37,11 @@ SOURCES += \
     src/engines/OsintProfiles.cpp \
     src/engines/RawContextMenu.cpp \
     src/engines/RawModules.cpp \
-    src/modules/osint/api/AHrefs.cpp \
     src/modules/osint/api/Arin.cpp \
     src/modules/osint/api/BuiltWith.cpp \
     src/modules/osint/api/Detectify.cpp \
     src/modules/osint/api/Dnslytics.cpp \
+    src/modules/osint/api/DomainTools.cpp \
     src/modules/osint/api/GreyNoise.cpp \
     src/modules/osint/api/HackerTargetFree.cpp \
     src/modules/osint/api/HackerTargetPaid.cpp \
@@ -146,8 +146,8 @@ SOURCES += \
     src/project/specific/SpecificAnalysis.cpp \
     src/project/ProjectDataModel.cpp \
     src/project/Project.cpp \
+    src/utils/JsonSyntaxHighlighter.cpp \
     src/widgets/InputWidget.cpp \
-    src/widgets/OsintModulesWidget.cpp \
     src/widgets/WordlistGeneratorWidget.cpp \
     src/dialogs/AboutDialog.cpp \
     src/dialogs/ConfigDialog.cpp \
@@ -162,11 +162,11 @@ SOURCES += \
 
 HEADERS += \
     src/modules/osint/OsintModulesHeaders.h \
-    src/modules/osint/api/AHrefs.h \
     src/modules/osint/api/Arin.h \
     src/modules/osint/api/BuiltWith.h \
     src/modules/osint/api/Detectify.h \
     src/modules/osint/api/Dnslytics.h \
+    src/modules/osint/api/DomainTools.h \
     src/modules/osint/api/GreyNoise.h \
     src/modules/osint/api/HackerTargetFree.h \
     src/modules/osint/api/HackerTargetPaid.h \
@@ -273,9 +273,9 @@ HEADERS += \
     src/project/specific/SpecificAnalysis.h \
     src/project/ProjectDataModel.h \
     src/project/Project.h \
+    src/utils/JsonSyntaxHighlighter.h \
     src/utils/ResultsModels.h \
     src/widgets/InputWidget.h \
-    src/widgets/OsintModulesWidget.h \
     src/widgets/WordlistGeneratorWidget.h \
     src/dialogs/AboutDialog.h \
     src/dialogs/ApiKeysDialog.h \
@@ -308,7 +308,6 @@ FORMS += \
     src/engines/Osint.ui \
     src/engines/Active.ui \
     src/widgets/InputWidget.ui \
-    src/widgets/OsintModulesWidget.ui \
     src/widgets/WordlistGeneratorWidget.ui \
     src/dialogs/AboutDialog.ui \
     src/dialogs/ConfigDialog.ui \

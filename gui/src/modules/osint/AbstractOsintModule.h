@@ -31,6 +31,8 @@
 #define PLACEHOLDERTEXT_ORG "organization name eg GOOGLE LLC"
 #define PLACEHOLDERTEXT_MX "mailserver name eg aspmx.l.google.com"
 #define PLACEHOLDERTEXT_MAC_ADDRESS "mac address eg 00-05-02-34-56-78"
+#define PLACEHOLDERTEXT_POC "point of contact eg KOSTE-ARIN"
+#define PLACEHOLDERTEXT_NET "network eg"
 
 struct ScanLog{
     QString moduleName;

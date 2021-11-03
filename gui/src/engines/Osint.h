@@ -3,7 +3,6 @@
 
 #include "AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/widgets/OsintModulesWidget.h"
 #include "src/modules/scan/OsintScanner.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ConfigDialog.h"
@@ -68,8 +67,15 @@ class Osint : public AbstractEngine{
         void on_checkBoxMultipleTargets_clicked(bool checked);
         void on_comboBoxOption_currentIndexChanged(int index);
         void on_lineEditFilter_textChanged(const QString &arg1);
+        ///
+        /// ...
+        ///
+        void on_useProfiles_clicked(bool checked);
+        void on_buttonLoadProfile_clicked();
+        void on_buttonCreateProfile_clicked();
+        void on_buttonDeleteProfile_clicked();
 
-private:
+    private:
         Ui::Osint *ui;
         //...
         osint::ScanArguments *m_scanArguments;
@@ -88,6 +94,10 @@ private:
         void pauseScan();
         void ResumeScan();
         void connectActions();
+        ///
+        ///...
+        ///
+        void initProfiles();
 };
 
 #endif // OSINT_H

@@ -5,6 +5,7 @@
 #include <QTextDocument>
 #include <QStandardItemModel>
 #include "src/modules/osint/OsintModulesHeaders.h"
+#include "src/utils/JsonSyntaxHighlighter.h"
 
 namespace Ui {
     class Raw;
@@ -79,12 +80,17 @@ class Raw : public QDialog{
         void on_moduleHackerTarget_clicked();
         void on_moduleMnemonic_clicked();
 
+        void on_moduleArin_clicked();
+
+        void on_moduleBuiltWith_clicked();
+
     private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         ScanArgs *m_scanArgs;
         //...
         QMap<QString, QStringList> m_optionSet;
+        JsonSyntaxHighlighter *syntaxHighlighter;
         //...
         void onCopy();
         void onSave();

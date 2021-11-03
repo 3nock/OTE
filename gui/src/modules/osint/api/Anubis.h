@@ -12,7 +12,8 @@ namespace ModuleInfo {
         QString url = "https://jldc.me/anubis/";
         QString url_apiDoc = "";
         QString summary = "Subdomain enumeration and information gathering tool";
-        QMap<QString, QStringList> flags = {{"subdomain", {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains of a particular domain"}}};
+        QMap<QString, QStringList> flags = {{"subdomain",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains of a particular domain"}}};
     };
 }
 

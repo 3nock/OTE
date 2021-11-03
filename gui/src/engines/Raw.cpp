@@ -7,7 +7,6 @@
 #include <QMessageBox>
 #include <QTextCursor>
 
-
 /*
  * later on use custom icons to indicate this is a string, array or object instead
  * of numbers in the jsonarray..
@@ -52,6 +51,10 @@ Raw::Raw(QWidget *parent) : QDialog(parent), ui(new Ui::Raw),
 
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
+    ///
+    /// json syntax higlighting...
+    ///
+    syntaxHighlighter = new JsonSyntaxHighlighter(ui->plainTextEdit->document());
 }
 Raw::~Raw(){
     delete m_scanArgs;

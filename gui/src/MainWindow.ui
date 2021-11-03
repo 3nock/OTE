@@ -533,6 +533,7 @@ QRadioButton:hover {
      <string>Tools</string>
     </property>
     <addaction name="actionBannerGrab"/>
+    <addaction name="actionIpTool"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -688,6 +689,11 @@ QRadioButton:hover {
   <action name="actionBannerGrab">
    <property name="text">
     <string>banner-grabber</string>
+   </property>
+  </action>
+  <action name="actionIpTool">
+   <property name="text">
+    <string>Ip Tool</string>
    </property>
   </action>
  </widget>

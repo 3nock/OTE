@@ -58,6 +58,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("mnemonic", ui->lineEditMnemonic->text());
     Config::generalConfig().setValue("robtex", ui->lineEditRobtex->text());
     Config::generalConfig().setValue("otx", ui->lineEditRobtex->text());
+    Config::generalConfig().setValue("builtwith", ui->lineEditBuiltWith->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -243,6 +244,11 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditOtx->setText(key);
         ui->buttonGetOtx->hide();
     }
+    key = Config::generalConfig().value("builtwith").toString();
+    if(!key.isEmpty()){
+        ui->lineEditBuiltWith->setText(key);
+        ui->buttonGetBuiltWith->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -365,4 +371,8 @@ void ApiKeysDialog::on_buttonGetRobtex_clicked(){
 
 void ApiKeysDialog::on_buttonGetOtx_clicked(){
     QDesktopServices::openUrl(QUrl("https://otx.alienvault.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetBuiltWith_clicked(){
+    QDesktopServices::openUrl(QUrl("https://api.builtwith.com/", QUrl::TolerantMode));
 }

@@ -9,9 +9,6 @@
 **********************************************************************************/
 
 void Osint::startScan(){
-    OsintModules module;
-    ui->modules->getChoosenModules(module);
-
     ScanArgs *scanArgs = new ScanArgs;
     scanArgs->target = ui->lineEditTarget->text();
     scanArgs->inputDomain = true;
@@ -40,7 +37,7 @@ void Osint::startScan(){
         break;
     }
 
-    if(module.anubis)
+    if(ui->moduleAnubis->isChecked())
     {
         Anubis *anubis = new Anubis(scanArgs);
         QThread *cThread = new QThread(this);
@@ -57,7 +54,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.bgpview){
+    if(ui->moduleBgpview->isChecked()){
         Bgpview *bgpview = new Bgpview(scanArgs);
         QThread *cThread = new QThread(this);
         bgpview->Enumerator(cThread);
@@ -78,7 +75,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.binaryEdge){
+    if(ui->moduleBinaryEdge->isChecked()){
         BinaryEdge *binaryedge = new BinaryEdge(scanArgs);
         QThread *cThread = new QThread(this);
         binaryedge->Enumerator(cThread);
@@ -99,7 +96,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.c99){
+    if(ui->moduleC99->isChecked()){
         C99 *c99 = new C99(scanArgs);
         QThread *cThread = new QThread(this);
         c99->Enumerator(cThread);
@@ -119,7 +116,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.circl){
+    if(ui->moduleCircl->isChecked()){
         Circl *circl = new Circl(scanArgs);
         QThread *cThread = new QThread(this);
         circl->Enumerator(cThread);
@@ -141,7 +138,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.dnsbufferoverrun)
+    if(ui->moduleDnsbufferoverrun->isChecked())
     {
         Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(scanArgs);
         QThread *cThread = new QThread(this);
@@ -160,7 +157,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.github){
+    if(ui->moduleGithub->isChecked()){
         Github *github = new Github(scanArgs);
         QThread *cThread = new QThread(this);
         github->Enumerator(cThread);
@@ -176,7 +173,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.hackertargetfree)
+    if(ui->moduleHackerTargetFree->isChecked())
     {
         HackerTargetFree *hackertarget = new HackerTargetFree(scanArgs);
         QThread *cThread = new QThread(this);
@@ -197,7 +194,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.hackertargetpaid)
+    if(ui->moduleHackerTargetPaid->isChecked())
     {
         HackerTargetPaid *hackertarget = new HackerTargetPaid(scanArgs);
         QThread *cThread = new QThread(this);
@@ -218,7 +215,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.huntersearch){
+    if(ui->moduleHuntersearch->isChecked()){
         HunterSearch *huntersearch = new HunterSearch(scanArgs);
         QThread *cThread = new QThread(this);
         huntersearch->Enumerator(cThread);
@@ -234,7 +231,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.mnemonicfree){
+    if(ui->moduleMnemonicFree->isChecked()){
         MnemonicFree *mnemonic = new MnemonicFree(scanArgs);
         QThread *cThread = new QThread(this);
         mnemonic->Enumerator(cThread);
@@ -254,7 +251,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.mnemonicpaid){
+    if(ui->moduleMnemonicPaid->isChecked()){
         MnemonicPaid *mnemonic = new MnemonicPaid(scanArgs);
         QThread *cThread = new QThread(this);
         mnemonic->Enumerator(cThread);
@@ -274,7 +271,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.omnisint){
+    if(ui->moduleOmnisint->isChecked()){
         Omnisint *omnisint = new Omnisint(scanArgs);
         QThread *cThread = new QThread(this);
         omnisint->Enumerator(cThread);
@@ -290,7 +287,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.otxfree)
+    if(ui->moduleOtxFree->isChecked())
     {
         OtxFree *otx = new OtxFree(scanArgs);
         QThread *cThread = new QThread(this);
@@ -314,7 +311,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.otxpaid)
+    if(ui->moduleOtxPaid->isChecked())
     {
         OtxPaid *otx = new OtxPaid(scanArgs);
         QThread *cThread = new QThread(this);
@@ -338,7 +335,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.projectdiscovery)
+    if(ui->moduleProjectdiscovery->isChecked())
     {
         Projectdiscovery *projectdiscovery = new Projectdiscovery(scanArgs);
         QThread *cThread = new QThread(this);
@@ -355,7 +352,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.riskiq){
+    if(ui->moduleRiskIq->isChecked()){
         RiskIq *riskiq = new RiskIq(scanArgs);
         QThread *cThread = new QThread(this);
         riskiq->Enumerator(cThread);
@@ -379,7 +376,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.robtexfree){
+    if(ui->moduleRobtexFree){
         RobtexFree *robtex = new RobtexFree(scanArgs);
         QThread *cThread = new QThread(this);
         robtex->Enumerator(cThread);
@@ -403,7 +400,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.robtexpaid){
+    if(ui->moduleRobtexPaid->isChecked()){
         RobtexPaid *robtex = new RobtexPaid(scanArgs);
         QThread *cThread = new QThread(this);
         robtex->Enumerator(cThread);
@@ -427,7 +424,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.securitytrails){
+    if(ui->moduleSecuritytrails->isChecked()){
         SecurityTrails *securitytrails = new SecurityTrails(scanArgs);
         QThread *cThread = new QThread(this);
         securitytrails->Enumerator(cThread);
@@ -449,7 +446,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.shodan){
+    if(ui->moduleShodan->isChecked()){
         Shodan *shodan = new Shodan(scanArgs);
         QThread *cThread = new QThread(this);
         shodan->Enumerator(cThread);
@@ -473,7 +470,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.spyse)
+    if(ui->moduleSpyse->isChecked())
     {
         Spyse *spyse = new Spyse(scanArgs);
         QThread *cThread = new QThread(this);
@@ -500,7 +497,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.sublist3r)
+    if(ui->moduleSublist3r->isChecked())
     {
         Sublist3r *sublist3r = new Sublist3r(scanArgs);
         QThread *cThread = new QThread(this);
@@ -517,7 +514,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.threatbook){
+    if(ui->moduleThreatBook->isChecked()){
         ThreatBook *threatbook = new ThreatBook(scanArgs);
         QThread *cThread = new QThread(this);
         threatbook->Enumerator(cThread);
@@ -535,7 +532,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.threatcrowd)
+    if(ui->moduleThreatcrowd->isChecked())
     {
         Threatcrowd *threatcrowd = new Threatcrowd(scanArgs);
         QThread *cThread = new QThread(this);
@@ -554,7 +551,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.threatminer)
+    if(ui->moduleThreatminer->isChecked())
     {
         Threatminer *threatminer = new Threatminer(scanArgs);
         QThread *cThread = new QThread(this);
@@ -576,7 +573,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.viewDns){
+    if(ui->moduleViewDns->isChecked()){
         ViewDns *viewdns = new ViewDns(scanArgs);
         QThread *cThread = new QThread(this);
         viewdns->Enumerator(cThread);
@@ -600,7 +597,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.virustotal){
+    if(ui->moduleVirusTotal->isChecked()){
         VirusTotal *virustotal = new VirusTotal(scanArgs);
         QThread *cThread = new QThread(this);
         virustotal->Enumerator(cThread);
@@ -624,7 +621,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.webresolver){
+    if(ui->moduleWebResolver->isChecked()){
         WebResolver *webresolver = new WebResolver(scanArgs);
         QThread *cThread = new QThread(this);
         webresolver->Enumerator(cThread);
@@ -646,7 +643,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.whoisxmlapi){
+    if(ui->moduleWhoisXmlApi->isChecked()){
         WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(scanArgs);
         QThread *cThread = new QThread(this);
         whoisxmlapi->Enumerator(cThread);
@@ -669,7 +666,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.zetalytics){
+    if(ui->moduleZetalytics){
         ZETAlytics *zetalytics = new ZETAlytics(scanArgs);
         QThread *cThread = new QThread(this);
         zetalytics->Enumerator(cThread);
@@ -685,7 +682,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.zoomeye){
+    if(ui->moduleZoomeye->isChecked()){
         ZoomEye *zoomeye = new ZoomEye(scanArgs);
         QThread *cThread = new QThread(this);
         zoomeye->Enumerator(cThread);
@@ -704,7 +701,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.certspotter)
+    if(ui->moduleCertspotter->isChecked())
     {
         Certspotter *certspotter = new Certspotter(scanArgs);
         QThread *cThread = new QThread(this);
@@ -725,7 +722,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.crtsh)
+    if(ui->moduleCrtsh->isChecked())
     {
         Crtsh *crtsh = new Crtsh(scanArgs);
         QThread *cThread = new QThread(this);
@@ -746,7 +743,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.dnsdumpster)
+    if(ui->moduleDnsdumpster->isChecked())
     {
         Dnsdumpster *dnsdumpster = new Dnsdumpster(scanArgs);
         QThread *cThread = new QThread(this);
@@ -767,7 +764,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.netcraft)
+    if(ui->moduleNetcraft->isChecked())
     {
         Netcraft *netcraft = new Netcraft(scanArgs);
         QThread *cThread = new QThread(this);
@@ -788,7 +785,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.suip)
+    if(ui->moduleSuip->isChecked())
     {
         Suip *suip = new Suip(scanArgs);
         QThread *cThread = new QThread(this);
@@ -809,7 +806,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.pkey){
+    if(ui->modulePkey->isChecked()){
         Pkey *pkey = new Pkey(scanArgs);
         QThread *cThread = new QThread(this);
         pkey->Enumerator(cThread);
@@ -829,7 +826,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.rapiddns){
+    if(ui->moduleRapiddns->isChecked()){
         Rapiddns *rapiddns = new Rapiddns(scanArgs);
         QThread *cThread = new QThread(this);
         rapiddns->Enumerator(cThread);
@@ -849,7 +846,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.googleCert){
+    if(ui->moduleGoogleCert->isChecked()){
         GoogleCert *googlecert = new GoogleCert(scanArgs);
         QThread *cThread = new QThread(this);
         googlecert->Enumerator(cThread);
@@ -869,7 +866,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.urlscan){
+    if(ui->moduleUrlscan->isChecked()){
         Urlscan *urlscan = new Urlscan(scanArgs);
         QThread *cThread = new QThread(this);
         urlscan->Enumerator(cThread);
@@ -889,7 +886,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.waybackmachine){
+    if(ui->moduleWaybackmachine->isChecked()){
         Waybackmachine *waybackmachine = new Waybackmachine(scanArgs);
         QThread *cThread = new QThread(this);
         waybackmachine->Enumerator(cThread);
@@ -909,7 +906,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.archivetoday){
+    if(ui->moduleArchiveToday->isChecked()){
         ArchiveToday *archivetoday = new ArchiveToday(scanArgs);
         QThread *cThread = new QThread(this);
         archivetoday->Enumerator(cThread);
@@ -929,7 +926,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.archiveit){
+    if(ui->moduleArchiveit->isChecked()){
         ArchiveIt *archiveit = new ArchiveIt(scanArgs);
         QThread *cThread = new QThread(this);
         archiveit->Enumerator(cThread);
@@ -949,7 +946,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.censysFree){
+    if(ui->moduleCensysFree->isChecked()){
         CensysFree *censysfree = new CensysFree(scanArgs);
         QThread *cThread = new QThread(this);
         censysfree->Enumerator(cThread);
@@ -969,7 +966,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.commoncrawl){
+    if(ui->moduleCommonCrawl->isChecked()){
         CommonCrawl *commonCrawl = new CommonCrawl(scanArgs);
         QThread *cThread = new QThread(this);
         commonCrawl->Enumerator(cThread);
@@ -989,7 +986,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.github){
+    if(ui->moduleGithub->isChecked()){
         Github *github = new Github(scanArgs);
         QThread *cThread = new QThread(this);
         github->Enumerator(cThread);
@@ -1009,7 +1006,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.ipinfo){
+    if(ui->moduleIpInfo->isChecked()){
         IpInfo *ipinfo = new IpInfo(scanArgs);
         QThread *cThread = new QThread(this);
         ipinfo->Enumerator(cThread);
@@ -1029,7 +1026,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.ipapi){
+    if(ui->moduleIpApi->isChecked()){
         IpApi *ipapi = new IpApi(scanArgs);
         QThread *cThread = new QThread(this);
         ipapi->Enumerator(cThread);
@@ -1049,7 +1046,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.ask){
+    if(ui->moduleAsk->isChecked()){
         Ask *ask = new Ask(scanArgs);
         QThread *cThread = new QThread(this);
         ask->Enumerator(cThread);
@@ -1069,7 +1066,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.baidu){
+    if(ui->moduleBaidu->isChecked()){
         Baidu *baidu = new Baidu(scanArgs);
         QThread *cThread = new QThread(this);
         baidu->Enumerator(cThread);
@@ -1089,7 +1086,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.dogpile){
+    if(ui->moduleDogpile->isChecked()){
         DogPile *dogpile = new DogPile(scanArgs);
         QThread *cThread = new QThread(this);
         dogpile->Enumerator(cThread);
@@ -1109,7 +1106,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.duckduckgo){
+    if(ui->moduleDuckduckgo->isChecked()){
         DuckDuckGo *duckduckgo = new DuckDuckGo(scanArgs);
         QThread *cThread = new QThread(this);
         duckduckgo->Enumerator(cThread);
@@ -1129,7 +1126,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.exalead){
+    if(ui->moduleExalead->isChecked()){
         Exalead *exalead = new Exalead(scanArgs);
         QThread *cThread = new QThread(this);
         exalead->Enumerator(cThread);
@@ -1149,7 +1146,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.trello){
+    if(ui->moduleTrello->isChecked()){
         Trello *trello = new Trello(scanArgs);
         QThread *cThread = new QThread(this);
         trello->Enumerator(cThread);
@@ -1169,7 +1166,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.yahoo){
+    if(ui->moduleYahoo->isChecked()){
         Yahoo *yahoo = new Yahoo(scanArgs);
         QThread *cThread = new QThread(this);
         yahoo->Enumerator(cThread);
@@ -1189,7 +1186,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.bing){
+    if(ui->moduleBing->isChecked()){
         Bing *bing = new Bing(scanArgs);
         QThread *cThread = new QThread(this);
         bing->Enumerator(cThread);
@@ -1209,7 +1206,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.sitedossier){
+    if(ui->moduleSitedossier->isChecked()){
         SiteDossier *sitedossier = new SiteDossier(scanArgs);
         QThread *cThread = new QThread(this);
         sitedossier->Enumerator(cThread);
@@ -1229,7 +1226,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(module.pagesinventory){
+    if(ui->modulePagesInventory->isChecked()){
         PagesInventory *pagesinventory = new PagesInventory(scanArgs);
         QThread *cThread = new QThread(this);
         pagesinventory->Enumerator(cThread);
@@ -1256,5 +1253,8 @@ void Osint::startScan(){
     {
         ui->buttonStart->setDisabled(true);
         ui->buttonStop->setEnabled(true);
+    }
+    else{
+        QMessageBox::warning(this, "Error!", "Please Choose Engine For Enumeration!");
     }
 }
