@@ -204,10 +204,17 @@ QTextEdit{
 }
 
 QListWidget, QTableView, QTreeView, QListView, QColumnView, QPlainTextEdit{
-    background-color:rgb(40, 40, 40);
+    background-color: rgb(40, 40, 40);
+    alternate-background-color: rgb(46, 46, 46);
     color: rgba(218, 218, 163, 180);
     border-style: solid;
     border-color: rgb(25,25,25);
+    border-width: 1px;
+}
+
+QTreeView::item{
+    border-style: solid;
+    border-color: rgb(35, 35, 35);
     border-width: 1px;
 }
 

@@ -32,13 +32,9 @@ Raw::Raw(QWidget *parent) : QDialog(parent), ui(new Ui::Raw),
     ///
     ///...
     ///
-    ui->treeView->setModel(m_model);
     m_model->setColumnCount(2);
     m_model->setHorizontalHeaderLabels({"Key", "Value"});
-    /*
-    m_model->setHorizontalHeaderItem(0, new QStandardItem("Key"));
-    m_model->setHorizontalHeaderItem(0, new QStandardItem("Value"));
-    */
+    ui->treeView->setModel(m_model);
     ///
     /// ...
     ///
@@ -100,6 +96,11 @@ void Raw::setJsonTree(QJsonDocument &results){
         return;
 
     QStandardItem *item = new QStandardItem(m_scanArgs->module+"("+m_scanArgs->target+")");
+
+    QFont font("Segoe UI", 9, QFont::Bold);
+    item->setFont(font);
+    item->setForeground(QColor(220,220,220));
+
     m_model->invisibleRootItem()->appendRow(item);
 
     if(results.isArray())

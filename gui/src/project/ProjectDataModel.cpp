@@ -37,6 +37,12 @@ ProjectDataModel::ProjectDataModel():
 {
     m_rootItem = projectModel->invisibleRootItem();
     projectModel->setColumnCount(3);
+
+    QFont font("Segoe UI", 9, QFont::Bold);
+    m_active->setFont(font);
+    m_active->setForeground(Qt::cyan);
+    m_passive->setFont(font);
+    m_passive->setForeground(Qt::cyan);
     ///
     /// for active...
     ///

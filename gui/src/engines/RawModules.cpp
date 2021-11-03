@@ -10,13 +10,13 @@
 void Raw::startScan(){
     m_scanArgs->rawOption = ui->comboBoxOptions->currentIndex();
     m_scanArgs->option = ui->comboBoxOptions->currentText();
-    m_scanArgs->module = ui->comboBoxModule->currentText();
     m_scanArgs->target = ui->lineEditTarget->text();
     m_scanArgs->raw = true;
 
     QThread *cThread = new QThread(this);
     if(ui->moduleCertSpotter->isChecked())
     {
+        m_scanArgs->module = "CertSpotter";
         Certspotter *certspotter = new Certspotter(m_scanArgs);
         certspotter->Enumerator(cThread);
         certspotter->moveToThread(cThread);
@@ -33,6 +33,7 @@ void Raw::startScan(){
     }
     if(ui->moduleOtx->isChecked())
     {
+        m_scanArgs->module = "Otx";
         OtxFree *otx = new OtxFree(m_scanArgs);
         otx->Enumerator(cThread);
         otx->moveToThread(cThread);
@@ -49,6 +50,7 @@ void Raw::startScan(){
     }
     if(ui->moduleSublist3r->isChecked())
     {
+        m_scanArgs->module = "Sublist3r";
         Sublist3r *sublist3r = new Sublist3r(m_scanArgs);
         sublist3r->Enumerator(cThread);
         sublist3r->moveToThread(cThread);
@@ -65,6 +67,7 @@ void Raw::startScan(){
     }
     if(ui->moduleThreatMiner->isChecked())
     {
+        m_scanArgs->module = "ThreatMiner";
         Threatminer *threatminer = new Threatminer(m_scanArgs);
         threatminer->Enumerator(cThread);
         threatminer->moveToThread(cThread);
@@ -81,6 +84,7 @@ void Raw::startScan(){
     }
     if(ui->moduleThreatCrowd->isChecked())
     {
+        m_scanArgs->module = "ThreatCrowd";
         Threatcrowd *threatcrowd = new Threatcrowd(m_scanArgs);
         threatcrowd->Enumerator(cThread);
         threatcrowd->moveToThread(cThread);
@@ -97,6 +101,7 @@ void Raw::startScan(){
     }
     if(ui->moduleHackerTargetFree->isChecked())
     {
+        m_scanArgs->module = "HackerTargetFree";
         HackerTargetFree *hackertarget = new HackerTargetFree(m_scanArgs);
         hackertarget->Enumerator(cThread);
         hackertarget->moveToThread(cThread);
@@ -113,6 +118,7 @@ void Raw::startScan(){
     }
     if(ui->moduleDnsBufferOverRun->isChecked())
     {
+        m_scanArgs->module = "DnsBufferOverRun";
         Dnsbufferoverun *dnsbufferoverun = new Dnsbufferoverun(m_scanArgs);
         dnsbufferoverun->Enumerator(cThread);
         dnsbufferoverun->moveToThread(cThread);
@@ -129,8 +135,8 @@ void Raw::startScan(){
     }
     if(ui->moduleAnubis->isChecked())
     {
+        m_scanArgs->module = "Anubis";
         Anubis *anubis = new Anubis(m_scanArgs);
-
         anubis->Enumerator(cThread);
         anubis->moveToThread(cThread);
         //...
@@ -146,6 +152,7 @@ void Raw::startScan(){
     }
     if(ui->moduleProjectDiscovery->isChecked())
     {
+        m_scanArgs->module = "ProjectDiscovery";
         Projectdiscovery *projectdiscovery = new Projectdiscovery(m_scanArgs);
         projectdiscovery->Enumerator(cThread);
         projectdiscovery->moveToThread(cThread);
@@ -162,6 +169,7 @@ void Raw::startScan(){
     }
     if(ui->moduleSpyse->isChecked())
     {
+        m_scanArgs->module = "Spyse";
         Spyse *spyse = new Spyse(m_scanArgs);
         spyse->Enumerator(cThread);
         spyse->moveToThread(cThread);
@@ -178,6 +186,7 @@ void Raw::startScan(){
     }
     if(ui->moduleGoogleCert->isChecked())
     {
+        m_scanArgs->module = "GoogleCert";
         GoogleCert *googlecert = new GoogleCert(m_scanArgs);
         googlecert->Enumerator(cThread);
         googlecert->moveToThread(cThread);
@@ -194,6 +203,7 @@ void Raw::startScan(){
     }
     if(ui->moduleOmnisint->isChecked())
     {
+        m_scanArgs->module = "Ominisint";
         Omnisint *omnisint = new Omnisint(m_scanArgs);
         omnisint->Enumerator(cThread);
         omnisint->moveToThread(cThread);
@@ -210,6 +220,7 @@ void Raw::startScan(){
     }
     if(ui->moduleRobtexPaid->isChecked())
     {
+        m_scanArgs->module = "RobtexPaid";
         RobtexPaid *robtex = new RobtexPaid(m_scanArgs);
         robtex->Enumerator(cThread);
         robtex->moveToThread(cThread);
@@ -226,6 +237,7 @@ void Raw::startScan(){
     }
     if(ui->moduleVirusTotal->isChecked())
     {
+        m_scanArgs->module = "VirusTotal";
         VirusTotal *virustotal = new VirusTotal(m_scanArgs);
         virustotal->Enumerator(cThread);
         virustotal->moveToThread(cThread);
@@ -242,6 +254,7 @@ void Raw::startScan(){
     }
     if(ui->moduleUrlScan->isChecked())
     {
+        m_scanArgs->module = "UrlScan";
         Urlscan *urlscan = new Urlscan(m_scanArgs);
         urlscan->Enumerator(cThread);
         urlscan->moveToThread(cThread);
@@ -258,6 +271,7 @@ void Raw::startScan(){
     }
     if(ui->moduleWaybackMachine->isChecked())
     {
+        m_scanArgs->module = "WaybackMachine";
         Waybackmachine *waybackmachine = new Waybackmachine(m_scanArgs);
         waybackmachine->Enumerator(cThread);
         waybackmachine->moveToThread(cThread);
@@ -274,6 +288,7 @@ void Raw::startScan(){
     }
     if(ui->moduleArchiveIt->isChecked())
     {
+        m_scanArgs->module = "ArchiveIt";
         ArchiveIt *archiveit = new ArchiveIt(m_scanArgs);
         archiveit->Enumerator(cThread);
         archiveit->moveToThread(cThread);
@@ -290,6 +305,7 @@ void Raw::startScan(){
     }
     if(ui->moduleBgpview->isChecked())
     {
+        m_scanArgs->module = "Bgpview";
         Bgpview *bgpview = new Bgpview(m_scanArgs);
         bgpview->Enumerator(cThread);
         bgpview->moveToThread(cThread);
@@ -306,6 +322,7 @@ void Raw::startScan(){
     }
     if(ui->moduleBinaryEdge->isChecked())
     {
+        m_scanArgs->module = "BinaryEdge";
         BinaryEdge *binaryedge = new BinaryEdge(m_scanArgs);
         binaryedge->Enumerator(cThread);
         binaryedge->moveToThread(cThread);
@@ -322,6 +339,7 @@ void Raw::startScan(){
     }
     if(ui->moduleC99->isChecked())
     {
+        m_scanArgs->module = "C99";
         C99 *c99 = new C99(m_scanArgs);
         c99->Enumerator(cThread);
         c99->moveToThread(cThread);
@@ -338,6 +356,7 @@ void Raw::startScan(){
     }
     if(ui->moduleCommonCrawl->isChecked())
     {
+        m_scanArgs->module = "CommonCrawl";
         CommonCrawl *commonCrawl = new CommonCrawl(m_scanArgs);
         commonCrawl->Enumerator(cThread);
         commonCrawl->moveToThread(cThread);
@@ -354,6 +373,7 @@ void Raw::startScan(){
     }
     if(ui->moduleGithub->isChecked())
     {
+        m_scanArgs->module = "Gtihub";
         Github *github = new Github(m_scanArgs);
         github->Enumerator(cThread);
         github->moveToThread(cThread);
@@ -370,6 +390,7 @@ void Raw::startScan(){
     }
     if(ui->moduleHunterSearch->isChecked())
     {
+        m_scanArgs->module = "Hunter";
         HunterSearch *huntersearch = new HunterSearch(m_scanArgs);
         huntersearch->Enumerator(cThread);
         huntersearch->moveToThread(cThread);
@@ -386,6 +407,7 @@ void Raw::startScan(){
     }
     if(ui->moduleIpInfo->isChecked())
     {
+        m_scanArgs->module = "IpInfo";
         IpInfo *ipinfo = new IpInfo(m_scanArgs);
         ipinfo->Enumerator(cThread);
         ipinfo->moveToThread(cThread);
@@ -402,6 +424,7 @@ void Raw::startScan(){
     }
     if(ui->moduleMnemonicFree->isChecked())
     {
+        m_scanArgs->module = "Mnemonic";
         MnemonicFree *mnemonic = new MnemonicFree(m_scanArgs);
         mnemonic->Enumerator(cThread);
         mnemonic->moveToThread(cThread);
@@ -418,6 +441,7 @@ void Raw::startScan(){
     }
     if(ui->moduleRiskIq->isChecked())
     {
+        m_scanArgs->module = "RiskIq";
         RiskIq *riskiq = new RiskIq(m_scanArgs);
         riskiq->Enumerator(cThread);
         riskiq->moveToThread(cThread);
@@ -434,6 +458,7 @@ void Raw::startScan(){
     }
     if(ui->moduleRobtex->isChecked())
     {
+        m_scanArgs->module = "RobtexFree";
         RobtexFree *robtex = new RobtexFree(m_scanArgs);
         robtex->Enumerator(cThread);
         robtex->moveToThread(cThread);
@@ -450,6 +475,7 @@ void Raw::startScan(){
     }
     if(ui->moduleSecurityTrails->isChecked())
     {
+        m_scanArgs->module = "SecurityTrails";
         SecurityTrails *securitytrails = new SecurityTrails(m_scanArgs);
         securitytrails->Enumerator(cThread);
         securitytrails->moveToThread(cThread);
@@ -466,6 +492,7 @@ void Raw::startScan(){
     }
     if(ui->moduleShodan->isChecked())
     {
+        m_scanArgs->module = "Shodan";
         Shodan *shodan = new Shodan(m_scanArgs);
         shodan->Enumerator(cThread);
         shodan->moveToThread(cThread);
@@ -482,6 +509,7 @@ void Raw::startScan(){
     }
     if(ui->moduleThreatBook->isChecked())
     {
+        m_scanArgs->module = "ThreatBook";
         ThreatBook *threatbook = new ThreatBook(m_scanArgs);
         threatbook->Enumerator(cThread);
         threatbook->moveToThread(cThread);
@@ -498,6 +526,7 @@ void Raw::startScan(){
     }
     if(ui->moduleWhoisXmlApi->isChecked())
     {
+        m_scanArgs->module = "WhoIsXmlApi";
         WhoisXmlApi *whoisxmlapi = new WhoisXmlApi(m_scanArgs);
         whoisxmlapi->Enumerator(cThread);
         whoisxmlapi->moveToThread(cThread);
@@ -514,6 +543,7 @@ void Raw::startScan(){
     }
     if(ui->moduleZETALytics->isChecked())
     {
+        m_scanArgs->module = "ZETALytics";
         ZETAlytics *zetalytics = new ZETAlytics(m_scanArgs);
         zetalytics->Enumerator(cThread);
         zetalytics->moveToThread(cThread);
@@ -530,6 +560,7 @@ void Raw::startScan(){
     }
     if(ui->moduleZoomEye->isChecked())
     {
+        m_scanArgs->module = "ZoomEye";
         ZoomEye *zoomeye = new ZoomEye(m_scanArgs);
         zoomeye->Enumerator(cThread);
         zoomeye->moveToThread(cThread);
@@ -546,6 +577,7 @@ void Raw::startScan(){
     }
     if(ui->moduleIpApi->isChecked())
     {
+        m_scanArgs->module = "IpApi";
         IpApi *ipapi = new IpApi(m_scanArgs);
         ipapi->Enumerator(cThread);
         ipapi->moveToThread(cThread);
@@ -562,6 +594,7 @@ void Raw::startScan(){
     }
     if(ui->moduleViewDns->isChecked())
     {
+        m_scanArgs->module = "ViewDns";
         ViewDns *viewdns = new ViewDns(m_scanArgs);
         viewdns->Enumerator(cThread);
         viewdns->moveToThread(cThread);
@@ -578,6 +611,7 @@ void Raw::startScan(){
     }
     if(ui->moduleWebResolver->isChecked())
     {
+        m_scanArgs->module = "WebResolver";
         WebResolver *webresolver = new WebResolver(m_scanArgs);
         webresolver->Enumerator(cThread);
         webresolver->moveToThread(cThread);
@@ -594,6 +628,7 @@ void Raw::startScan(){
     }
     if(ui->moduleCircl->isChecked())
     {
+        m_scanArgs->module = "Circl";
         Circl *circl = new Circl(m_scanArgs);
         circl->Enumerator(cThread);
         circl->moveToThread(cThread);
@@ -610,6 +645,7 @@ void Raw::startScan(){
     }
     if(ui->moduleHackerTarget->isChecked())
     {
+        m_scanArgs->module = "HackerTarget";
         HackerTargetPaid *hackertarget = new HackerTargetPaid(m_scanArgs);
         hackertarget->Enumerator(cThread);
         hackertarget->moveToThread(cThread);
@@ -626,6 +662,7 @@ void Raw::startScan(){
     }
     if(ui->moduleMnemonic->isChecked())
     {
+        m_scanArgs->module = "Mnemonic";
         MnemonicPaid *mnemonic = new MnemonicPaid(m_scanArgs);
         mnemonic->Enumerator(cThread);
         mnemonic->moveToThread(cThread);
@@ -642,6 +679,7 @@ void Raw::startScan(){
     }
     if(ui->moduleOtx->isChecked())
     {
+        m_scanArgs->module = "Otx";
         OtxPaid *otx = new OtxPaid(m_scanArgs);
         otx->Enumerator(cThread);
         otx->moveToThread(cThread);
@@ -658,6 +696,7 @@ void Raw::startScan(){
     }
     if(ui->moduleArin->isChecked())
     {
+        m_scanArgs->module = "Arin";
         Arin *arin = new Arin(m_scanArgs);
         arin->Enumerator(cThread);
         arin->moveToThread(cThread);
@@ -674,6 +713,7 @@ void Raw::startScan(){
     }
     if(ui->moduleBuiltWith->isChecked())
     {
+        m_scanArgs->module = "BuiltWith";
         BuiltWith *builtWith = new BuiltWith(m_scanArgs);
         builtWith->Enumerator(cThread);
         builtWith->moveToThread(cThread);
@@ -705,8 +745,8 @@ void Raw::on_moduleCertSpotter_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Certspotter meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -715,8 +755,8 @@ void Raw::on_moduleOtx_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::OtxPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -725,8 +765,8 @@ void Raw::on_moduleSublist3r_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Sublist3r meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -735,8 +775,8 @@ void Raw::on_moduleThreatMiner_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Threatminer meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -745,8 +785,8 @@ void Raw::on_moduleThreatCrowd_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Threatcrowd meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -755,8 +795,8 @@ void Raw::on_moduleHackerTargetFree_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::HackerTargetFree meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -765,8 +805,8 @@ void Raw::on_moduleDnsBufferOverRun_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Dnsbufferoverun meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -775,8 +815,8 @@ void Raw::on_moduleAnubis_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Anubis meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -785,8 +825,8 @@ void Raw::on_moduleProjectDiscovery_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Projectdiscovery meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -795,8 +835,8 @@ void Raw::on_moduleSpyse_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Spyse meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -805,8 +845,8 @@ void Raw::on_moduleGoogleCert_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::GoogleCert meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -815,8 +855,8 @@ void Raw::on_moduleOmnisint_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Omnisint meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -825,8 +865,8 @@ void Raw::on_moduleRobtexPaid_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::RobtexPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -835,8 +875,8 @@ void Raw::on_moduleUrlScan_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Urlscan meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -845,8 +885,8 @@ void Raw::on_moduleVirusTotal_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::VirusTotal meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -855,8 +895,8 @@ void Raw::on_moduleWaybackMachine_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Waybackmachine meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -865,8 +905,8 @@ void Raw::on_moduleArchiveIt_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ArchiveIt meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -875,8 +915,8 @@ void Raw::on_moduleBgpview_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Bgpview meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -885,8 +925,8 @@ void Raw::on_moduleBinaryEdge_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::BinaryEdge meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -895,8 +935,8 @@ void Raw::on_moduleC99_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::C99 meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -905,8 +945,8 @@ void Raw::on_moduleCommonCrawl_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::CommonCrawl meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -915,8 +955,8 @@ void Raw::on_moduleGithub_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Github meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -925,8 +965,8 @@ void Raw::on_moduleHunterSearch_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::HunterSearch meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -935,8 +975,8 @@ void Raw::on_moduleIpInfo_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::IpInfo meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -945,8 +985,8 @@ void Raw::on_moduleMnemonicFree_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::MnemonicFree meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -955,8 +995,8 @@ void Raw::on_moduleRiskIq_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::RiskIq meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -965,8 +1005,8 @@ void Raw::on_moduleRobtex_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::RobtexPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -975,8 +1015,8 @@ void Raw::on_moduleSecurityTrails_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::SecurityTrails meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -985,8 +1025,8 @@ void Raw::on_moduleShodan_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Shodan meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -995,8 +1035,8 @@ void Raw::on_moduleThreatBook_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ThreatBook meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1005,8 +1045,8 @@ void Raw::on_moduleWhoisXmlApi_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::WhoisXmlApi meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1015,8 +1055,8 @@ void Raw::on_moduleZETALytics_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ZETAlytics meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1025,8 +1065,8 @@ void Raw::on_moduleZoomEye_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ZoomEye meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1035,8 +1075,8 @@ void Raw::on_moduleIpApi_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::IpApi meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1045,8 +1085,8 @@ void Raw::on_moduleViewDns_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::ViewDns meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1055,8 +1095,8 @@ void Raw::on_moduleWebResolver_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::WebResolver meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1065,8 +1105,8 @@ void Raw::on_moduleCircl_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Circl meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1075,8 +1115,8 @@ void Raw::on_moduleHackerTarget_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::HackerTargetPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1085,8 +1125,8 @@ void Raw::on_moduleMnemonic_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::MnemonicPaid meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1095,8 +1135,8 @@ void Raw::on_moduleArin_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Arin meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
@@ -1105,8 +1145,8 @@ void Raw::on_moduleBuiltWith_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::BuiltWith meta;
     m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: cyan;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: cyan;\">"+meta.url_apiDoc+"</a>");
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
