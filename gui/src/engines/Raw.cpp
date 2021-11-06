@@ -29,6 +29,7 @@ Raw::Raw(QWidget *parent) : QDialog(parent), ui(new Ui::Raw),
     ///
     ui->lineEditTarget->setPlaceholderText("Enter target...");
     ui->lineEditFind->setPlaceholderText("Find...");
+    ui->lineEditTreeFilter->setPlaceholderText("Filter...");
     ///
     ///...
     ///

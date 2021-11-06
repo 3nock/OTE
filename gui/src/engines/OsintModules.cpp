@@ -701,6 +701,44 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(ui->moduleIpInfo->isChecked()){
+        IpInfo *ipinfo = new IpInfo(scanArgs);
+        QThread *cThread = new QThread(this);
+        ipinfo->Enumerator(cThread);
+        ipinfo->moveToThread(cThread);
+        //...
+        connect(ipinfo, &IpInfo::subdomain, this, &Osint::onResultSubdomain);
+        connect(ipinfo, &IpInfo::errorLog, this, &Osint::onErrorLog);
+        connect(ipinfo, &IpInfo::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->moduleDnslytics->isChecked()){
+        Dnslytics *dnslytics = new Dnslytics(scanArgs);
+        QThread *cThread = new QThread(this);
+        dnslytics->Enumerator(cThread);
+        dnslytics->moveToThread(cThread);
+        //...
+        connect(dnslytics, &Dnslytics::subdomain, this, &Osint::onResultSubdomain);
+        connect(dnslytics, &Dnslytics::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(dnslytics, &Dnslytics::ip, this, &Osint::onResultIp);
+        connect(dnslytics, &Dnslytics::ipA, this, &Osint::onResultA);
+        connect(dnslytics, &Dnslytics::ipAAAA, this, &Osint::onResultAAAA);
+        connect(dnslytics, &Dnslytics::NS, this, &Osint::onResultNS);
+        connect(dnslytics, &Dnslytics::MX, this, &Osint::onResultMX);
+        connect(dnslytics, &Dnslytics::errorLog, this, &Osint::onErrorLog);
+        connect(dnslytics, &Dnslytics::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(ui->moduleCertspotter->isChecked())
     {
         Certspotter *certspotter = new Certspotter(scanArgs);
@@ -1001,46 +1039,6 @@ void Osint::startScan(){
         connect(github, &Github::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, github, &Github::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->moduleIpInfo->isChecked()){
-        IpInfo *ipinfo = new IpInfo(scanArgs);
-        QThread *cThread = new QThread(this);
-        ipinfo->Enumerator(cThread);
-        ipinfo->moveToThread(cThread);
-        //...
-        connect(ipinfo, &IpInfo::subdomain, this, &Osint::onResultSubdomain);
-        connect(ipinfo, &IpInfo::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(ipinfo, &IpInfo::ip, this, &Osint::onResultIp);
-        connect(ipinfo, &IpInfo::email, this, &Osint::onResultEmail);
-        connect(ipinfo, &IpInfo::url, this, &Osint::onResultUrl);
-        connect(ipinfo, &IpInfo::errorLog, this, &Osint::onErrorLog);
-        connect(ipinfo, &IpInfo::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->moduleIpApi->isChecked()){
-        IpApi *ipapi = new IpApi(scanArgs);
-        QThread *cThread = new QThread(this);
-        ipapi->Enumerator(cThread);
-        ipapi->moveToThread(cThread);
-        //...
-        connect(ipapi, &IpApi::subdomain, this, &Osint::onResultSubdomain);
-        connect(ipapi, &IpApi::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(ipapi, &IpApi::ip, this, &Osint::onResultIp);
-        connect(ipapi, &IpApi::email, this, &Osint::onResultEmail);
-        connect(ipapi, &IpApi::url, this, &Osint::onResultUrl);
-        connect(ipapi, &IpApi::errorLog, this, &Osint::onErrorLog);
-        connect(ipapi, &IpApi::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, ipapi, &IpApi::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

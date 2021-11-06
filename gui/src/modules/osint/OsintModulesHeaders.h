@@ -65,5 +65,6 @@
 #include "src/modules/osint/cert/CensysFree.h"
 #include "src/modules/osint/api/Arin.h"
 #include "src/modules/osint/api/BuiltWith.h"
+#include "src/modules/osint/api/Dnslytics.h"
 
 #endif // OSINTMODULESHEADERS_H

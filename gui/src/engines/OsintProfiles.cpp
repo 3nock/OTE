@@ -175,6 +175,16 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleZoomeye->setChecked(false);
     }
+    if(settings.value("ipinfo").toString() == TRUE){
+        ui->moduleIpInfo->setChecked(true);
+    }else{
+        ui->moduleIpInfo->setChecked(false);
+    }
+    if(settings.value("dnslytics").toString() == TRUE){
+        ui->moduleDnslytics->setChecked(true);
+    }else{
+        ui->moduleDnslytics->setChecked(false);
+    }
     /*
      * ...
      */
@@ -463,6 +473,16 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue("zoomeye", TRUE);
     }else{
         settings.setValue("zoomeye", FALSE);
+    }
+    if(ui->moduleIpInfo->isChecked()){
+        settings.setValue("ipinfo", TRUE);
+    }else{
+        settings.setValue("ipinfo", FALSE);
+    }
+    if(ui->moduleDnslytics->isChecked()){
+        settings.setValue("dnslytics", TRUE);
+    }else{
+        settings.setValue("dnslytics", FALSE);
     }
     /*
      * ...

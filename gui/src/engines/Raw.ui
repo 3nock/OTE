@@ -383,7 +383,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit"/>
+            <widget class="QLineEdit" name="lineEditTreeFilter"/>
            </item>
           </layout>
          </widget>
@@ -841,7 +841,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>157</width>
-                  <height>656</height>
+                  <height>679</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -856,6 +856,13 @@
                   <widget class="QRadioButton" name="moduleCertSpotter">
                    <property name="text">
                     <string>CertSpotter</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleDnslytics">
+                   <property name="text">
+                    <string>DNSlytics</string>
                    </property>
                   </widget>
                  </item>

@@ -6,6 +6,8 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
+//...
+#include "src/models/ipmodel.h"
 
 #define REQUEST_TYPE "type"
 ///
@@ -46,6 +48,11 @@ struct ScanArgs{
     QString module;
     QString option;
     ///
+    /// for info...
+    ///
+    bool info = false;
+    IpModel *ipModel = nullptr;
+    ///
     /// for raw...
     ///
     int rawOption;
@@ -64,6 +71,7 @@ struct ScanArgs{
     bool outputAsn = false;
     bool outputUrl = false;
     bool outputIp = false;
+    bool outputPrefixes = false;
 
     /* old */
     bool ip = false;
@@ -144,6 +152,7 @@ class AbstractOsintModule : public QObject {
         void url(QString url);
         void asn(QString asn, QString asnName);
         void rawResults(QByteArray reply);
+        void prefixes(QString prefix, QString name);
         /* dns */
         void ipA(QString ip);
         void ipAAAA(QString ip);
@@ -158,6 +167,8 @@ class AbstractOsintModule : public QObject {
     public slots:
         virtual void start() = 0;
         virtual void replyFinished(QNetworkReply*){}
+        virtual void replyFinishedInfo(QNetworkReply*){}
+        virtual void replyFinishedPrefixes(QNetworkReply *){} // ip/cidr prefixes
         virtual void replyFinishedCertFingerprint(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
         virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
         virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains

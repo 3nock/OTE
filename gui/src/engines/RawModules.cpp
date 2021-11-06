@@ -728,6 +728,23 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleDnslytics->isChecked())
+    {
+        m_scanArgs->module = "DNSlytics";
+        Dnslytics *dnslytics = new Dnslytics(m_scanArgs);
+        dnslytics->Enumerator(cThread);
+        dnslytics->moveToThread(cThread);
+        //...
+        connect(dnslytics, &Dnslytics::rawResults, this, &Raw::onResults);
+        connect(dnslytics, &Dnslytics::errorLog, this, &Raw::onErrorLog);
+        connect(dnslytics, &Dnslytics::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -1144,6 +1161,16 @@ void Raw::on_moduleArin_clicked(){
 void Raw::on_moduleBuiltWith_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::BuiltWith meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleDnslytics_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Dnslytics meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

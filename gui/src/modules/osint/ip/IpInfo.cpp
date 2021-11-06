@@ -4,16 +4,25 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define ASN 0
+#define HOSTED_DOMAINS 1
+#define IP 2
+#define RANGES 3
 
 /*
  * 50,000 requests per month
  */
-
-IpInfo::IpInfo(ScanArgs *args):
-    AbstractOsintModule(args)
+IpInfo::IpInfo(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinished);
+    log.moduleName = "IpInfo";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedRaw);
+    if(args->info)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedInfo);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
     ///
     /// getting the api key...
     ///
@@ -27,248 +36,137 @@ IpInfo::~IpInfo(){
 
 void IpInfo::start(){
     QNetworkRequest request;
+    request.setRawHeader("Accept", "application/json");
 
     QUrl url;
     if(args->raw){
-        if(args->option == "IP")
+        switch (args->rawOption) {
+        case IP:
             url.setUrl("https://ipinfo.io/"+args->target+"/json?token="+m_key);
-        if(args->option == "ASN")
+            break;
+        case ASN:
             url.setUrl("https://ipinfo.io/AS"+args->target+"/json?token="+m_key);
-        if(args->option == "Ranges")
+            break;
+        case RANGES:
             url.setUrl("https://ipinfo.io/ranges/"+args->target+"/json?token="+m_key);
-        if(args->option == "Hosted Domains")
+            break;
+        case HOSTED_DOMAINS:
             url.setUrl("https://ipinfo.io/domains"+args->target+"/json?token="+m_key);
-    }else{
-        url.setUrl("https://ipinfo.io/"+args->target+"/json?token="+m_key);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setRawHeader("Accept", "application/json");
-    request.setUrl(url);
-    manager->get(request);
+    if(args->info){
+        url.setUrl("https://ipinfo.io/"+args->target+"/json?token="+m_key);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->inputIp){
+        if(args->outputSubdomain){
+            url.setUrl("https://ipinfo.io/domains"+args->target+"/json?token="+m_key);
+            request.setAttribute(QNetworkRequest::User, HOSTED_DOMAINS);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
-void IpInfo::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
+void IpInfo::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray domains = document.object()["domains"].toArray();
+
+    if(requestType == HOSTED_DOMAINS){
+        foreach(const QJsonValue &value, domains){
+            emit subdomain(value.toString());
+            log.resultsCount++;
         }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject results = jsonReply.object();
-        ///
-        /// getting results...
-        ///
-        QString hostname = results["hostname"].toString();
-        QString city = results["city"].toString();
-        QString region = results["region"].toString();
-        QString country = results["country"].toString();
-        QString location = results["loc"].toString();
-        QString organization = results["org"].toString();
-        ///
-        /// send results...
-        ///
-        emit subdomain(hostname);
     }
-    else{
-        emit errorLog(reply->errorString());
+
+    end(reply);
+}
+
+void IpInfo::replyFinishedInfo(QNetworkReply *reply){
+    if(reply->error()){
+        quitThread();
+        return;
     }
-    reply->deleteLater();
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    args->ipModel->info_ip->setText(mainObj["ip"].toString());
+    args->ipModel->info_city->setText(mainObj["city"].toString());
+    args->ipModel->info_region->setText(mainObj["region"].toString());
+    args->ipModel->info_countryCode->setText(mainObj["country"].toString());
+    args->ipModel->info_geoLocation->setText(mainObj["loc"].toString());
+    args->ipModel->info_timezone->setText(mainObj["timezone"].toString());
+    args->ipModel->info_organization->setText(mainObj["org"].toString());
+
+    ///
+    /// if basic plan or higher...
+    ///
+    if(!mainObj["asn"].isNull() || !mainObj["asn"].isUndefined()){
+        QJsonObject asn = mainObj["asn"].toObject();
+
+        args->ipModel->asnInfo_asn->setText(asn["asn"].toString());
+        args->ipModel->asnInfo_name->setText(asn["name"].toString());
+        args->ipModel->asnInfo_domain->setText(asn["domain"].toString());
+        args->ipModel->asnInfo_route->setText(asn["route"].toString());
+        args->ipModel->asnInfo_type->setText(asn["type"].toString());
+    }
+
+    ///
+    /// if bussiness plan or higher...
+    ///
+    if(!mainObj["company"].isNull() || !mainObj["company"].isUndefined()){
+        QJsonObject company = mainObj["company"].toObject();
+
+        args->ipModel->companyInfo_name->setText(company["name"].toString());
+        args->ipModel->companyInfo_domain->setText(company["domain"].toString());
+        args->ipModel->companyInfo_type->setText(company["type"].toString());
+    }
+
+    if(!mainObj["privacy"].isNull() || !mainObj["privacy"].isUndefined()){
+        QJsonObject privacy = mainObj["privacy"].toObject();
+
+        args->ipModel->privacyInfo_tor->setText(privacy["tor"].toString());
+        args->ipModel->privacyInfo_vpn->setText(privacy["vpn"].toString());
+        args->ipModel->privacyInfo_proxy->setText(privacy["proxy"].toString());
+        args->ipModel->privacyInfo_relay->setText(privacy["relay"].toString());
+        args->ipModel->privacyInfo_hosting->setText(privacy["hosting"].toString());
+    }
+
+    if(!mainObj["abuse"].isNull() || !mainObj["abuse"].isUndefined()){
+        QJsonObject abuse = mainObj["abuse"].toObject();
+
+        args->ipModel->abuseInfo_name->setText(abuse["name"].toString());
+        args->ipModel->abuseInfo_email->setText(abuse["email"].toString());
+        args->ipModel->abuseInfo_phone->setText(abuse["phone"].toString());
+        args->ipModel->abuseInfo_address->setText(abuse["address"].toString());
+        args->ipModel->abuseInfo_country->setText(abuse["country"].toString());
+        args->ipModel->abuseInfo_network->setText(abuse["network"].toString());
+    }
+
+    if(!mainObj["domains"].isNull() || !mainObj["domains"].isUndefined()){
+        QJsonArray domains = mainObj["domains"].toObject()["domains"].toArray();
+        foreach(const QJsonValue &value, domains){
+            args->ipModel->domains->appendRow(new QStandardItem(value.toString()));
+        }
+    }
+
     emit quitThread();
 }
-
-/*
- * FREE PLAN
-{
-  "ip": "66.87.125.72",
-  "hostname": "ip-66-87-125-72.spfdma.spcsdns.net",
-  "city": "Springfield",
-  "region": "Massachusetts",
-  "country": "US",
-  "loc": "42.1015,-72.5898",
-  "org": "AS10507 Sprint Personal Communications Systems",
-  "postal": "01101",
-  "timezone": "America/New_York"
-}
-
- * BASIC PLAN
-{
-  "ip": "66.87.125.72",
-  "hostname": "ip-66-87-125-72.spfdma.spcsdns.net",
-  "city": "Springfield",
-  "region": "Massachusetts",
-  "country": "US",
-  "loc": "42.1015,-72.5898",
-  "org": "AS10507 Sprint Personal Communications Systems",
-  "postal": "01101",
-  "timezone": "America/New_York",
-  "asn": {
-    "asn": "AS10507",
-    "name": "Sprint Personal Communications Systems",
-    "domain": "sprint.net",
-    "route": "66.87.125.0/24",
-    "type": "isp"
-  }
-}
-
- * BUSSINESS PLAN
-{
-  "ip": "8.8.8.8",
-  "hostname": "dns.google",
-  "anycast": true,
-  "city": "Mountain View",
-  "region": "California",
-  "country": "US",
-  "loc": "37.4056,-122.0775",
-  "postal": "94043",
-  "timezone": "America/Los_Angeles",
-  "asn": {
-    "asn": "AS15169",
-    "name": "Google LLC",
-    "domain": "google.com",
-    "route": "8.8.8.0/24",
-    "type": "business"
-  },
-  "company": {
-    "name": "Google LLC",
-    "domain": "google.com",
-    "type": "business"
-  },
-  "privacy": {
-    "vpn": false,
-    "proxy": false,
-    "tor": false,
-    "hosting": false
-  },
-  "abuse": {
-    "address": "US, CA, Mountain View, 1600 Amphitheatre Parkway, 94043",
-    "country": "US",
-    "email": "network-abuse@google.com",
-    "name": "Abuse",
-    "network": "8.8.8.0/24",
-    "phone": "+1-650-253-0000"
-  },
-  "domains": {
-    "ip": "8.8.8.8",
-    "total": 11606,
-    "domains": [
-        "41.cn",
-        "onionflix.cc",
-        "newmax.info",
-        "ftempurl.com",
-        "itempurl.com"
-    ]
-  }
-}
-
-ipinfo.io/domains/8.8.8.8?token=650e5ad807db50
-{
-  "ip": "8.8.8.8",
-  "total": 11606,
-  "domains": [
-    "41.cn",
-    "onionflix.cc",
-    "newmax.info",
-    "ftempurl.com",
-    "itempurl.com"
-  ]
-}
- * PREMIUM-PLAN
-{
-  "ip": "8.8.8.8",
-  "hostname": "dns.google",
-  "anycast": true,
-  "city": "Mountain View",
-  "region": "California",
-  "country": "US",
-  "loc": "37.4056,-122.0775",
-  "postal": "94043",
-  "timezone": "America/Los_Angeles",
-  "asn": {
-    "asn": "AS15169",
-    "name": "Google LLC",
-    "domain": "google.com",
-    "route": "8.8.8.0/24",
-    "type": "business"
-  },
-  "company": {
-    "name": "Google LLC",
-    "domain": "google.com",
-    "type": "business"
-  },
-  "privacy": {
-    "vpn": false,
-    "proxy": false,
-    "tor": false,
-    "hosting": false
-  },
-  "abuse": {
-    "address": "US, CA, Mountain View, 1600 Amphitheatre Parkway, 94043",
-    "country": "US",
-    "email": "network-abuse@google.com",
-    "name": "Abuse",
-    "network": "8.8.8.0/24",
-    "phone": "+1-650-253-0000"
-  },
-  "domains": {
-    "ip": "8.8.8.8",
-    "total": 11606,
-    "domains": [
-        "41.cn",
-        "onionflix.cc",
-        "newmax.info",
-        "ftempurl.com",
-        "itempurl.com"
-    ]
-  }
-}
-
-IP Ranges API
-
-ipinfo.io/ranges/comcast.net?token=650e5ad807db50
-{
-  "domain": "comcast.net",
-  "num_ranges": "37330",
-  "ranges": [
-    "23.24.240.0/29",
-    "23.24.240.64/29",
-    "23.24.240.128/28",
-    "23.24.240.152/29",
-    "23.24.240.168/29",
-    "23.24.240.192/29",
-    "23.24.240.208/29",
-    "23.24.241.40/29",
-    "23.24.241.72/29",
-    "23.24.241.96/29",
-    "23.24.241.112/28",
-    "23.24.241.136/29",
-    "23.24.241.168/29",
-    "23.24.241.184/29",
-    ...
-   ]
-}
-
-Hosted Domains API
-ipinfo.io/domains/8.8.8.8?token=650e5ad807db50
-{
-  "ip": "8.8.8.8",
-  "total": "37330",
-  "domains": [
-    "41.cn",
-    "onionflix.cc",
-    "newmax.info",
-    "ftempurl.com",
-    "itempurl.com",
-    "authrock.com",
-    "ctempurl.com",
-    "mtqnia.com",
-    "server-panel.net",
-    "gtempurl.com",
-    "htempurl.com",
-    ...
-   ]
-}
-
-*/

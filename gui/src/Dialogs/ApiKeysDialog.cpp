@@ -59,6 +59,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("robtex", ui->lineEditRobtex->text());
     Config::generalConfig().setValue("otx", ui->lineEditRobtex->text());
     Config::generalConfig().setValue("builtwith", ui->lineEditBuiltWith->text());
+    Config::generalConfig().setValue("dnslytics", ui->lineEditDnslytics->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -249,6 +250,11 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditBuiltWith->setText(key);
         ui->buttonGetBuiltWith->hide();
     }
+    key = Config::generalConfig().value("dnslytics").toString();
+    if(!key.isEmpty()){
+        ui->lineEditDnslytics->setText(key);
+        ui->buttonGetDnslytics->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -375,4 +381,8 @@ void ApiKeysDialog::on_buttonGetOtx_clicked(){
 
 void ApiKeysDialog::on_buttonGetBuiltWith_clicked(){
     QDesktopServices::openUrl(QUrl("https://api.builtwith.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetDnslytics_clicked(){
+    QDesktopServices::openUrl(QUrl("https://dnslytics.com/api", QUrl::TolerantMode));
 }

@@ -3,18 +3,26 @@
 
 #include "../AbstractOsintModule.h"
 
+/*
+ * INPUT ip:            OUTPUT: subdomain
+ */
+
 namespace ModuleInfo {
     struct IpInfo{
         QString name = "IpInfo";
         QString url = "https://ipinfo.io/";
-        QString url_apiDoc = "";
+        QString url_apiDoc = "https://ipinfo.io/developers";
         QString summary = "With IPinfo, you can pinpoint your users’ locations, customize their experiences, \n"
                           "prevent fraud, ensure compliance, and so much more";
 
-        QMap<QString, QStringList> flags = {{"IP", {PLACEHOLDERTEXT_IP, ""}},
-                                        {"ASN", {PLACEHOLDERTEXT_ASN, ""}},
-                                        {"Ranges", {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                        {"Hosted Domains", {PLACEHOLDERTEXT_IP, ""}}};
+        QMap<QString, QStringList> flags = {{"ip",
+                                             {PLACEHOLDERTEXT_IP, "Returns All the Information about the Ip address"}},
+                                            {"asn",
+                                             {PLACEHOLDERTEXT_ASN, "Returns ASN information of the Ip address"}},
+                                            {"ranges",
+                                             {PLACEHOLDERTEXT_DOMAIN, "Returns a list of Ip ranges of the Ip address"}},
+                                            {"hosted domains",
+                                             {PLACEHOLDERTEXT_IP, "Returns a List of Domains hosted on the Ip address"}}};
     };
 }
 
@@ -26,7 +34,8 @@ class IpInfo: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedInfo(QNetworkReply *reply) override;
 
     private:
         QString m_key = nullptr;

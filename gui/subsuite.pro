@@ -161,6 +161,7 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+    src/models/ipmodel.h \
     src/modules/osint/OsintModulesHeaders.h \
     src/modules/osint/api/Arin.h \
     src/modules/osint/api/BuiltWith.h \
@@ -275,6 +276,7 @@ HEADERS += \
     src/project/Project.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/ResultsModels.h \
+    src/utils/models.h \
     src/widgets/InputWidget.h \
     src/widgets/WordlistGeneratorWidget.h \
     src/dialogs/AboutDialog.h \

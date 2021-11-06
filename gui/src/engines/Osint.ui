@@ -615,7 +615,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="Line" name="line_5">
@@ -1250,7 +1250,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>174</width>
-                  <height>677</height>
+                  <height>700</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -1282,6 +1282,20 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QCheckBox" name="moduleDetectify">
+                   <property name="text">
+                    <string>Detectify</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleDnslytics">
+                   <property name="text">
+                    <string>DNSlytics</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QCheckBox" name="moduleGithub">
                    <property name="text">
                     <string>Github</string>
@@ -1299,13 +1313,6 @@
                   <widget class="QCheckBox" name="moduleHuntersearch">
                    <property name="text">
                     <string>HunterSearch</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleIpApi">
-                   <property name="text">
-                    <string>IpApi</string>
                    </property>
                   </widget>
                  </item>

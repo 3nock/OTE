@@ -4,17 +4,22 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define BULK_LOOKUP 0
+#define ORIGIN_LOOKUP 1
+#define STANDARD_LOOKUP 2
 
 /*
- * Provides info about an ip-address
- * simple ip-info lookup
  * 1,000 per month for free-user...
  */
-IpApi::IpApi(ScanArgs *args):
-    AbstractOsintModule(args)
+IpApi::IpApi(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinished);
+    log.moduleName = "IpApi";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinishedRaw);
+    if(args->info)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinishedInfo);
     ///
     /// get api key...
     ///
@@ -31,159 +36,91 @@ void IpApi::start(){
 
     QUrl url;
     if(args->raw){
-        if(args->option == "Standard Lookup")
+        switch (args->rawOption) {
+        case STANDARD_LOOKUP:
             url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
-        if(args->option == "Bulk Lookup")
+            break;
+        case BULK_LOOKUP:
             url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
-        if(args->option == "")
-            url.setUrl("https://api.ipapi.com/api/check?access_key="+m_key);
-    }else{
-        url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
+            break;
+        case ORIGIN_LOOKUP:
+            url.setUrl("http://api.ipapi.com/api/check?access_key="+m_key);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    manager->get(request);
+    if(args->info){
+        url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void IpApi::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        /*
-            Nothing for now...
-        */
+void IpApi::replyFinishedInfo(QNetworkReply *reply){
+    if(reply->error()){
+        quitThread();
+        return;
     }
-    else{
-        emit errorLog(reply->errorString());
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    args->ipModel->info_ip->setText(mainObj["ip"].toString());
+    args->ipModel->info_type->setText(mainObj["type"].toString());
+    args->ipModel->info_host->setText(mainObj["hostname"].toString());
+    args->ipModel->info_city->setText(mainObj["city"].toString());
+    args->ipModel->info_region->setText(mainObj["region_name"].toString());
+    args->ipModel->info_countryCode->setText(mainObj["country_code"].toString());
+    args->ipModel->info_countryName->setText(mainObj["country_name"].toString());
+    args->ipModel->info_zip->setText(mainObj["zip"].toString());
+    ///
+    /// for location...
+    ///
+    QString latitude = QString::number(mainObj["latitude"].toDouble());
+    QString longitude = QString::number(mainObj["longitude"].toDouble());
+    args->ipModel->info_geoLocation->setText(latitude+","+longitude);
+
+    /* for paid subscription...
+
+
+    ///
+    /// for timezone...
+    ///
+    if(!mainObj["time_zone"].isNull() || !mainObj["time_zone"].isUndefined()){
+        QString timezone = mainObj["time_zone"].toObject()["id"].toString();
+        args->ipModel->info_timezone->setText(timezone);
     }
-    reply->deleteLater();
+    ///
+    /// for currency...
+    ///
+    if(!mainObj["currency"].isNull() || !mainObj["currency"].isUndefined()){
+        QString currency = mainObj["currency"].toObject()["name"].toString();
+        args->ipModel->info_currency->setText(currency);
+    }
+
+    ///
+    /// for connection...
+    ///
+    if(!mainObj["connection"].isNull() || !mainObj["connection"].isUndefined()){
+        QString asn = QString::number(mainObj["connection"].toObject()["asn"].toInt());
+        args->ipModel->asnInfo_asn->setText(asn);
+    }
+
+    ///
+    /// for privacy...
+    ///
+    if(!mainObj["security"].isNull() || !mainObj["security"].isUndefined()){
+        QJsonObject security = mainObj["security"].toObject();
+        args->ipModel->privacyInfo_proxy->setText(security["is_proxy"].toString());
+        args->ipModel->privacyInfo_tor->setText(security["is_tor"].toString());
+        args->ipModel->privacyInfo_threatLevel->setText(security["threat_level"].toString());
+    }
+    */
+
     emit quitThread();
 }
-
-/*
- * SIMPLE IP-LOOKUP
- *
-{
-    "ip": "1.1.1.1",
-    "type": "ipv4",
-    "continent_code": "OC",
-    "continent_name": "Oceania",
-    "country_code": "AU",
-    "country_name": "Australia",
-    "region_code": "NSW",
-    "region_name": "New South Wales",
-    "city": "Sydney",
-    "zip": "2000",
-    "latitude": -33.86714172363281,
-    "longitude": 151.2071075439453,
-    "location": {
-        "geoname_id": 2147714,
-        "capital": "Canberra",
-        "languages": [{"code": "en", "name": "English", "native": "English"}],
-        "country_flag": "https://assets.ipstack.com/flags/au.svg",
-        "country_flag_emoji": "\ud83c\udde6\ud83c\uddfa",
-        "country_flag_emoji_unicode": "U+1F1E6 U+1F1FA",
-        "csubdomainIping_code": "61", "is_eu": false
-    }
-}
- OR
-{
-    "ip": "161.185.160.93",
-    "hostname": "161.185.160.93",
-    "type": "ipv4",
-    "continent_code": "NA",
-    "continent_name": "North America",
-    "country_code": "US",
-    "country_name": "United States",
-    "region_code": "NY",
-    "region_name": "New York",
-    "city": "Brooklyn",
-    "zip": "11238",
-    "latitude": 40.676,
-    "longitude": -73.9629,
-    "location": {
-        "geoname_id": 5110302,
-        "capital": "Washington D.C.",
-        "languages": [
-            {
-                "code": "en",
-                "name": "English",
-                "native": "English"
-            }
-        ],
-        "country_flag": "http://assets.ipapi.com/flags/us.svg",
-        "country_flag_emoji": "🇺🇸",
-        "country_flag_emoji_unicode": "U+1F1FA U+1F1F8",
-        "csubdomainIping_code": "1",
-        "is_eu": false
-    },
-    "time_zone": {
-        "id": "America/New_York",
-        "current_time": "2018-09-24T05:07:10-04:00",
-        "gmt_offset": -14400,
-        "code": "EDT",
-        "is_daylight_saving": true
-    },
-    "currency": {
-        "code": "USD",
-        "name": "US Dollar",
-        "plural": "US dollars",
-        "symbol": "$",
-        "symbol_native": "$"
-    },
-    "connection": {
-        "asn": 22252,
-        "isp": "The City of New York"
-    },
-    "security": {
-        "is_proxy": false,
-        "proxy_type": null,
-        "is_crawler": false,
-        "crawler_name": null,
-        "crawler_type": null,
-        "is_tor": false,
-        "threat_level": "low",
-        "threat_types": null
-    }
-}
-
- * Bulk IP Lookup
- *
-http://api.ipapi.com/api/161.185.160.93,87.111.168.248,210.138.184.5?access_key=YOUR_ACCESS_KEY
-
-{
-    "ip": "161.185.160.93",
-    "type": "ipv4",
-    "continent_code": "NA",
-    "continent_name": "North America",
-    "country_code": "US",
-    "country_name": "United States",
-    "region_code": "NY",
-    "region_name": "New York",
-    "city": "Brooklyn",
-    "zip": "11238",
-    "latitude": 40.676,
-    "longitude": -73.9629,
-    [...]
-},
-{
-    "ip": "161.185.160.93",
-    "type": "ipv4",
-    "continent_code": "EU",
-    "continent_name": "Europe",
-    "country_code": "ES",
-    "country_name": "Spain",
-    "region_code": "GA",
-    "region_name": "Galicia",
-    "city": "Santiago de Compostela",
-    "zip": "15781",
-    "latitude": 42.88,
-    "longitude": -8.5448,
-    [...]
-}
-*/

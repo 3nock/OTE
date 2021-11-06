@@ -84,7 +84,9 @@ class Raw : public QDialog{
 
         void on_moduleBuiltWith_clicked();
 
-    private:
+        void on_moduleDnslytics_clicked();
+
+private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         ScanArgs *m_scanArgs;
