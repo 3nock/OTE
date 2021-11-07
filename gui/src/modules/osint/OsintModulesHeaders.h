@@ -66,5 +66,6 @@
 #include "src/modules/osint/api/Arin.h"
 #include "src/modules/osint/api/BuiltWith.h"
 #include "src/modules/osint/api/Dnslytics.h"
+#include "src/modules/osint/api/DomainTools.h"
 
 #endif // OSINTMODULESHEADERS_H

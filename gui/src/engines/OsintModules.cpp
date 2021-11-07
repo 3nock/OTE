@@ -739,6 +739,23 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(ui->moduleDomainTools->isChecked()){
+        DomainTools *domaintools = new DomainTools(scanArgs);
+        QThread *cThread = new QThread(this);
+        domaintools->Enumerator(cThread);
+        domaintools->moveToThread(cThread);
+        //...
+        connect(domaintools, &DomainTools::subdomain, this, &Osint::onResultSubdomain);
+        connect(domaintools, &DomainTools::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(domaintools, &DomainTools::errorLog, this, &Osint::onErrorLog);
+        connect(domaintools, &DomainTools::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, domaintools, &DomainTools::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(ui->moduleCertspotter->isChecked())
     {
         Certspotter *certspotter = new Certspotter(scanArgs);

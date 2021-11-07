@@ -86,6 +86,8 @@ class Raw : public QDialog{
 
         void on_moduleDnslytics_clicked();
 
+        void on_moduleDomainTools_clicked();
+
 private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;

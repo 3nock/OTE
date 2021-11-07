@@ -60,6 +60,8 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("otx", ui->lineEditRobtex->text());
     Config::generalConfig().setValue("builtwith", ui->lineEditBuiltWith->text());
     Config::generalConfig().setValue("dnslytics", ui->lineEditDnslytics->text());
+    Config::generalConfig().setValue("domaintools_username", ui->lineEditDomainToolsUsername->text());
+    Config::generalConfig().setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -255,6 +257,16 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditDnslytics->setText(key);
         ui->buttonGetDnslytics->hide();
     }
+    key = Config::generalConfig().value("domaintools_username").toString();
+    if(!key.isEmpty()){
+        ui->lineEditDomainToolsUsername->setText(key);
+        ui->buttonGetDomainTools->hide();
+    }
+    key = Config::generalConfig().value("domaintools_key").toString();
+    if(!key.isEmpty()){
+        ui->lineEditDomainToolsKey->setText(key);
+        ui->buttonGetDomainTools->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -385,4 +397,8 @@ void ApiKeysDialog::on_buttonGetBuiltWith_clicked(){
 
 void ApiKeysDialog::on_buttonGetDnslytics_clicked(){
     QDesktopServices::openUrl(QUrl("https://dnslytics.com/api", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetDomainTools_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.domaintools.com/resources/api-documentation/", QUrl::TolerantMode));
 }

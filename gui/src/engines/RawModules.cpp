@@ -745,6 +745,23 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleDomainTools->isChecked())
+    {
+        m_scanArgs->module = "DomainTools";
+        DomainTools *domaintools = new DomainTools(m_scanArgs);
+        domaintools->Enumerator(cThread);
+        domaintools->moveToThread(cThread);
+        //...
+        connect(domaintools, &DomainTools::rawResults, this, &Raw::onResults);
+        connect(domaintools, &DomainTools::errorLog, this, &Raw::onErrorLog);
+        connect(domaintools, &DomainTools::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, domaintools, &DomainTools::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -1171,6 +1188,16 @@ void Raw::on_moduleBuiltWith_clicked(){
 void Raw::on_moduleDnslytics_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Dnslytics meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleDomainTools_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::DomainTools meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

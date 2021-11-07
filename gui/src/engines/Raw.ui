@@ -841,7 +841,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>157</width>
-                  <height>679</height>
+                  <height>702</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -863,6 +863,13 @@
                   <widget class="QRadioButton" name="moduleDnslytics">
                    <property name="text">
                     <string>DNSlytics</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleDomainTools">
+                   <property name="text">
+                    <string>DomainTools</string>
                    </property>
                   </widget>
                  </item>

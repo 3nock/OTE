@@ -61,6 +61,8 @@ class ApiKeysDialog : public QDialog{
 
         void on_buttonGetDnslytics_clicked();
 
+        void on_buttonGetDomainTools_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         void loadApiKeys();

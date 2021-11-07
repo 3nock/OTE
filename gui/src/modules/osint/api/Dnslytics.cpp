@@ -18,7 +18,9 @@
 #define REVERSENS 11
 #define SUBNETINFO 12
 
-
+/*
+ * has reverse ip, reverse mx and reverse ns
+ */
 Dnslytics::Dnslytics(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
