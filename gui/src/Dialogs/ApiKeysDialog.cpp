@@ -62,6 +62,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("dnslytics", ui->lineEditDnslytics->text());
     Config::generalConfig().setValue("domaintools_username", ui->lineEditDomainToolsUsername->text());
     Config::generalConfig().setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
+    Config::generalConfig().setValue("onyphe", ui->lineEditOnyphe->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -267,6 +268,11 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditDomainToolsKey->setText(key);
         ui->buttonGetDomainTools->hide();
     }
+    key = Config::generalConfig().value("onyphe").toString();
+    if(!key.isEmpty()){
+        ui->lineEditOnyphe->setText(key);
+        ui->buttonGetOnyphe->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -401,4 +407,8 @@ void ApiKeysDialog::on_buttonGetDnslytics_clicked(){
 
 void ApiKeysDialog::on_buttonGetDomainTools_clicked(){
     QDesktopServices::openUrl(QUrl("https://www.domaintools.com/resources/api-documentation/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetOnyphe_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.onyphe.io/pricing/", QUrl::TolerantMode));
 }

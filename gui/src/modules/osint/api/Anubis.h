@@ -4,7 +4,7 @@
 #include "../AbstractOsintModule.h"
 
 /*
- * input: hostname output: subdomains
+ * INPUT hostname:          OUTPUT: subdomains
  */
 namespace ModuleInfo {
     struct Anubis{

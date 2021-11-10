@@ -35,12 +35,6 @@ Arin::Arin(ScanArgs *args): AbstractOsintModule(args)
 
     if(args->raw)
         connect(manager, &MyNetworkAccessManager::finished, this, &Arin::replyFinishedRaw);
-    if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Arin::replyFinishedIp);
-    if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Arin::replyFinishedAsn);
-    if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Arin::replyFinishedEmail);
 }
 Arin::~Arin(){
     delete manager;
@@ -119,64 +113,4 @@ void Arin::start(){
         activeRequests++;
         return;
     }
-
-    if(args->inputIp){
-
-    }
-
-    if(args->inputAsn){
-
-    }
-}
-
-void Arin::replyFinishedIp(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    int requestType = reply->property(REQUEST_TYPE).toInt();
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-
-    end(reply);
-}
-
-void Arin::replyFinishedAsn(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    int requestType = reply->property(REQUEST_TYPE).toInt();
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-
-    end(reply);
-}
-
-void Arin::replyFinishedEmail(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    int requestType = reply->property(REQUEST_TYPE).toInt();
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-
-    end(reply);
-}
-
-void Arin::replyFinishedPoc(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    int requestType = reply->property(REQUEST_TYPE).toInt();
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-
-    end(reply);
 }

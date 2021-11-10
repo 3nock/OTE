@@ -37,12 +37,12 @@ SOURCES += \
     src/engines/OsintProfiles.cpp \
     src/engines/RawContextMenu.cpp \
     src/engines/RawModules.cpp \
-    src/modules/osint/api/Arin.cpp \
+    src/modules/osint/iana/Apnic.cpp \
+    src/modules/osint/iana/Arin.cpp \
     src/modules/osint/api/BuiltWith.cpp \
     src/modules/osint/api/Detectify.cpp \
     src/modules/osint/api/Dnslytics.cpp \
     src/modules/osint/api/DomainTools.cpp \
-    src/modules/osint/api/GreyNoise.cpp \
     src/modules/osint/api/HackerTargetFree.cpp \
     src/modules/osint/api/HackerTargetPaid.cpp \
     src/modules/osint/api/Maltiverse.cpp \
@@ -54,10 +54,13 @@ SOURCES += \
     src/modules/osint/api/OtxPaid.cpp \
     src/modules/osint/api/PassiveDns360.cpp \
     src/modules/osint/api/Quake.cpp \
+    src/modules/osint/iana/Lacnic.cpp \
+    src/modules/osint/iana/Ripe.cpp \
     src/modules/osint/api/RobtexFree.cpp \
     src/modules/osint/api/RobtexPaid.cpp \
     src/modules/osint/api/SpamHaus.cpp \
     src/modules/osint/api/WebResolver.cpp \
+    src/modules/osint/iana/Afrinic.cpp \
     src/modules/osint/ip/Ip2Location.cpp \
     src/modules/osint/ip/IpData.cpp \
     src/modules/osint/ip/IpGeoLocation.cpp \
@@ -68,15 +71,13 @@ SOURCES += \
     src/modules/osint/archive/Haw.cpp \
     src/modules/osint/archive/UkWebArchive.cpp \
     src/modules/osint/cert/Digitorus.cpp \
-    src/tools/ASNChecker.cpp \
+    src/tools/ASNTool.cpp \
     src/tools/BannerGrabber.cpp \
-    src/tools/CertChecker.cpp \
-    src/tools/EmailChecker.cpp \
-    src/tools/FastAnalysis.cpp \
-    src/tools/HostnameChecker.cpp \
-    src/tools/IpChecker.cpp \
-    src/tools/MXChecker.cpp \
-    src/tools/NSChecker.cpp \
+    src/tools/CertTool.cpp \
+    src/tools/DomainTool.cpp \
+    src/tools/EmailTool.cpp \
+    src/tools/IpTool.cpp \
+    src/tools/MXTool.cpp \
     src/modules/scan/BruteScanner.cpp \
     src/modules/scan/OsintScanner.cpp \
     src/modules/scan/DnsRecordsScanner.cpp \
@@ -146,6 +147,7 @@ SOURCES += \
     src/project/specific/SpecificAnalysis.cpp \
     src/project/ProjectDataModel.cpp \
     src/project/Project.cpp \
+    src/tools/NSTool.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/widgets/InputWidget.cpp \
     src/widgets/WordlistGeneratorWidget.cpp \
@@ -161,14 +163,15 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
-    src/models/ipmodel.h \
+    src/models/AsnModel.h \
+    src/models/IpModel.h \
     src/modules/osint/OsintModulesHeaders.h \
-    src/modules/osint/api/Arin.h \
+    src/modules/osint/iana/Apnic.h \
+    src/modules/osint/iana/Arin.h \
     src/modules/osint/api/BuiltWith.h \
     src/modules/osint/api/Detectify.h \
     src/modules/osint/api/Dnslytics.h \
     src/modules/osint/api/DomainTools.h \
-    src/modules/osint/api/GreyNoise.h \
     src/modules/osint/api/HackerTargetFree.h \
     src/modules/osint/api/HackerTargetPaid.h \
     src/modules/osint/api/Maltiverse.h \
@@ -180,10 +183,13 @@ HEADERS += \
     src/modules/osint/api/OtxPaid.h \
     src/modules/osint/api/PassiveDns360.h \
     src/modules/osint/api/Quake.h \
+    src/modules/osint/iana/Lacnic.h \
+    src/modules/osint/iana/Ripe.h \
     src/modules/osint/api/RobtexFree.h \
     src/modules/osint/api/RobtexPaid.h \
     src/modules/osint/api/SpamHaus.h \
     src/modules/osint/api/WebResolver.h \
+    src/modules/osint/iana/Afrinic.h \
     src/modules/osint/ip/Ip2Location.h \
     src/modules/osint/ip/IpData.h \
     src/modules/osint/ip/IpGeoLocation.h \
@@ -194,15 +200,12 @@ HEADERS += \
     src/modules/osint/archive/Haw.h \
     src/modules/osint/archive/UkWebArchive.h \
     src/modules/osint/cert/Digitorus.h \
-    src/tools/ASNChecker.h \
+    src/tools/ASNTool.h \
     src/tools/BannerGrabber.h \
-    src/tools/CertChecker.h \
-    src/tools/EmailChecker.h \
-    src/tools/FastAnalysis.h \
-    src/tools/HostnameChecker.h \
-    src/tools/IpChecker.h \
-    src/tools/MXChecker.h \
-    src/tools/NSChecker.h \
+    src/tools/CertTool.h \
+    src/tools/DomainTool.h \
+    src/tools/EmailTool.h \
+    src/tools/IpTool.h \
     src/modules/scan/OsintScanner.h \
     src/modules/scan/BruteScanner.h \
     src/modules/scan/DnsRecordsScanner.h \
@@ -274,6 +277,8 @@ HEADERS += \
     src/project/specific/SpecificAnalysis.h \
     src/project/ProjectDataModel.h \
     src/project/Project.h \
+    src/tools/MXTool.h \
+    src/tools/NSTool.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/ResultsModels.h \
     src/utils/models.h \
@@ -291,15 +296,13 @@ HEADERS += \
     src/MainWindow.h
 
 FORMS += \
-    src/tools/ASNChecker.ui \
+    src/tools/ASNTool.ui \
     src/tools/BannerGrabber.ui \
-    src/tools/CertChecker.ui \
-    src/tools/EmailChecker.ui \
-    src/tools/FastAnalysis.ui \
-    src/tools/HostnameChecker.ui \
-    src/tools/IpChecker.ui \
-    src/tools/MXChecker.ui \
-    src/tools/NSChecker.ui \
+    src/tools/CertTool.ui \
+    src/tools/DomainTool.ui \
+    src/tools/EmailTool.ui \
+    src/tools/IpTool.ui \
+    src/tools/MXTool.ui \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \
     src/project/specific/SpecificAnalysis.ui \
@@ -309,6 +312,7 @@ FORMS += \
     src/engines/Brute.ui \
     src/engines/Osint.ui \
     src/engines/Active.ui \
+    src/tools/NSTool.ui \
     src/widgets/InputWidget.ui \
     src/widgets/WordlistGeneratorWidget.ui \
     src/dialogs/AboutDialog.ui \

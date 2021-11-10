@@ -1,19 +1,19 @@
-#ifndef IPCHECKER_H
-#define IPCHECKER_H
+#ifndef IPTOOL_H
+#define IPTOOL_H
 
 #include <QDialog>
 #include "src/modules/osint/OsintModulesHeaders.h"
 
 namespace Ui {
-    class IpChecker;
+    class IpTool;
 }
 
-class IpChecker : public QDialog{
+class IpTool : public QDialog{
     Q_OBJECT
 
     public:
-        explicit IpChecker(QWidget *parent = nullptr);
-        ~IpChecker();
+        explicit IpTool(QWidget *parent = nullptr);
+        ~IpTool();
 
     public slots:
         void onEnumerationComplete();
@@ -25,9 +25,9 @@ class IpChecker : public QDialog{
         void on_buttonAnalyze_clicked();
 
     private:
-        Ui::IpChecker *ui;
+        Ui::IpTool *ui;
         IpModel *ipModel;
         ScanArgs *m_scanArgs = nullptr;
 };
 
-#endif // IPCHECKER_H
+#endif // IPTOOL_H

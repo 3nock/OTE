@@ -1,12 +1,11 @@
-#include "IpChecker.h"
-#include "ui_IpChecker.h"
-
+#include "IpTool.h"
+#include "ui_IpTool.h"
 
 #define ALL 0
 #define IPINFO 1
 #define IPAPI 2
 
-IpChecker::IpChecker(QWidget *parent) : QDialog(parent), ui(new Ui::IpChecker),
+IpTool::IpTool(QWidget *parent) : QDialog(parent), ui(new Ui::IpTool),
     ipModel(new IpModel)
 {
     ui->setupUi(this);
@@ -26,35 +25,35 @@ IpChecker::IpChecker(QWidget *parent) : QDialog(parent), ui(new Ui::IpChecker),
     m_scanArgs->ipModel = ipModel;
     m_scanArgs->info = true;
 }
-IpChecker::~IpChecker(){
+IpTool::~IpTool(){
     delete ui;
 }
 
-void IpChecker::onEnumerationComplete(){
+void IpTool::onEnumerationComplete(){
     ui->buttonAnalyze->setEnabled(true);
     ui->buttonStop->setDisabled(true);
 }
 
-void IpChecker::onErrorLog(QString log){
+void IpTool::onErrorLog(QString log){
     QString fontedLog;
     fontedLog.append("<font color=\"red\">").append(log).append("</font>");
     QString logTime = QDateTime::currentDateTime().toString("[hh:mm]  ");
     ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
 }
 
-void IpChecker::onInfoLog(QString log){
+void IpTool::onInfoLog(QString log){
     QString logTime = QDateTime::currentDateTime().toString("[hh:mm]  ");
     ui->plainTextEditLogs->appendPlainText(logTime.append(log));
 }
 
-void IpChecker::on_checkBoxExpand_clicked(bool checked){
+void IpTool::on_checkBoxExpand_clicked(bool checked){
     if(checked)
         ui->treeResults->expandAll();
     else
         ui->treeResults->collapseAll();
 }
 
-void IpChecker::on_buttonAnalyze_clicked(){
+void IpTool::on_buttonAnalyze_clicked(){
     m_scanArgs->target = ui->lineEditTarget->text();
     ///
     /// ....
@@ -71,9 +70,9 @@ void IpChecker::on_buttonAnalyze_clicked(){
         ipinfo->Enumerator(cThread);
         ipinfo->moveToThread(cThread);
         //...
-        connect(ipinfo, &IpInfo::errorLog, this, &IpChecker::onErrorLog);
-        connect(ipinfo, &IpInfo::infoLog, this, &IpChecker::onInfoLog);
-        connect(cThread, &QThread::finished, this, &IpChecker::onEnumerationComplete);
+        connect(ipinfo, &IpInfo::errorLog, this, &IpTool::onErrorLog);
+        connect(ipinfo, &IpInfo::infoLog, this, &IpTool::onInfoLog);
+        connect(cThread, &QThread::finished, this, &IpTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
@@ -86,9 +85,9 @@ void IpChecker::on_buttonAnalyze_clicked(){
         ipApi->Enumerator(cThread);
         ipApi->moveToThread(cThread);
         //...
-        connect(ipApi, &IpInfo::errorLog, this, &IpChecker::onErrorLog);
-        connect(ipApi, &IpInfo::infoLog, this, &IpChecker::onInfoLog);
-        connect(cThread, &QThread::finished, this, &IpChecker::onEnumerationComplete);
+        connect(ipApi, &IpInfo::errorLog, this, &IpTool::onErrorLog);
+        connect(ipApi, &IpInfo::infoLog, this, &IpTool::onInfoLog);
+        connect(cThread, &QThread::finished, this, &IpTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, ipApi, &IpInfo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...

@@ -342,16 +342,16 @@ void Dnslytics::replyFinishedPrefixes(QNetworkReply *reply){
     if(requestType == ASINFO){
         /* prefixesv4 */
         foreach(const QJsonValue &value, data["prefixesv4"].toArray()){
-            QString prefix = value.toObject()["prefix"].toString();
+            QString Prefix = value.toObject()["prefix"].toString();
             QString shortname = value.toObject()["shortname"].toString();
-            emit prefixes(prefix, shortname);
+            emit prefix(Prefix, shortname);
             log.resultsCount++;
         }
         /* prefixesv6 */
         foreach(const QJsonValue &value, data["prefixesv6"].toArray()){
-            QString prefix = value.toObject()["prefix"].toString();
+            QString Prefix = value.toObject()["prefix"].toString();
             QString shortname = value.toObject()["shortname"].toString();
-            emit prefixes(prefix, shortname);
+            emit prefix(Prefix, shortname);
             log.resultsCount++;
         }
     }

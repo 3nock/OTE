@@ -762,6 +762,108 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleMaltiverseFree->isChecked())
+    {
+        m_scanArgs->module = "Maltiverse";
+        Maltiverse *maltiverse = new Maltiverse(m_scanArgs);
+        maltiverse->Enumerator(cThread);
+        maltiverse->moveToThread(cThread);
+        //...
+        connect(maltiverse, &Maltiverse::rawResults, this, &Raw::onResults);
+        connect(maltiverse, &Maltiverse::errorLog, this, &Raw::onErrorLog);
+        connect(maltiverse, &Maltiverse::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, maltiverse, &Maltiverse::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleN45HT->isChecked())
+    {
+        m_scanArgs->module = "N45HT";
+        N45HT *n45ht = new N45HT(m_scanArgs);
+        n45ht->Enumerator(cThread);
+        n45ht->moveToThread(cThread);
+        //...
+        connect(n45ht, &N45HT::rawResults, this, &Raw::onResults);
+        connect(n45ht, &N45HT::errorLog, this, &Raw::onErrorLog);
+        connect(n45ht, &N45HT::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, n45ht, &N45HT::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleOnyphe->isChecked())
+    {
+        m_scanArgs->module = "Onyphe";
+        Onyphe *onyphe = new Onyphe(m_scanArgs);
+        onyphe->Enumerator(cThread);
+        onyphe->moveToThread(cThread);
+        //...
+        connect(onyphe, &Onyphe::rawResults, this, &Raw::onResults);
+        connect(onyphe, &Onyphe::errorLog, this, &Raw::onErrorLog);
+        connect(onyphe, &Onyphe::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, onyphe, &Onyphe::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleRipe->isChecked())
+    {
+        m_scanArgs->module = "Ripe";
+        Ripe *ripe = new Ripe(m_scanArgs);
+        ripe->Enumerator(cThread);
+        ripe->moveToThread(cThread);
+        //...
+        connect(ripe, &Ripe::rawResults, this, &Raw::onResults);
+        connect(ripe, &Ripe::errorLog, this, &Raw::onErrorLog);
+        connect(ripe, &Ripe::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ripe, &Ripe::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleAfrinic->isChecked())
+    {
+        m_scanArgs->module = "Ripe";
+        Afrinic *afrinic = new Afrinic(m_scanArgs);
+        afrinic->Enumerator(cThread);
+        afrinic->moveToThread(cThread);
+        //...
+        connect(afrinic, &Afrinic::rawResults, this, &Raw::onResults);
+        connect(afrinic, &Afrinic::errorLog, this, &Raw::onErrorLog);
+        connect(afrinic, &Afrinic::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, afrinic, &Afrinic::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleApnic->isChecked())
+    {
+        m_scanArgs->module = "Ripe";
+        Apnic *apnic = new Apnic(m_scanArgs);
+        apnic->Enumerator(cThread);
+        apnic->moveToThread(cThread);
+        //...
+        connect(apnic, &Apnic::rawResults, this, &Raw::onResults);
+        connect(apnic, &Apnic::errorLog, this, &Raw::onErrorLog);
+        connect(apnic, &Apnic::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, apnic, &Apnic::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -1198,6 +1300,66 @@ void Raw::on_moduleDnslytics_clicked(){
 void Raw::on_moduleDomainTools_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::DomainTools meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleMaltiverseFree_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Maltiverse meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleN45HT_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::N45HT meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleOnyphe_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Onyphe meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleRipe_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Ripe meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleAfrinic_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Afrinic meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleApnic_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Apnic meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

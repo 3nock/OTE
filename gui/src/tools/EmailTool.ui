@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ASNChecker</class>
- <widget class="QDialog" name="ASNChecker">
+ <class>EmailTool</class>
+ <widget class="QDialog" name="EmailTool">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>479</width>
-    <height>457</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ASN Checker</string>
+   <string>Email Tool</string>
   </property>
  </widget>
  <resources/>

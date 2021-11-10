@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CertChecker</class>
- <widget class="QDialog" name="CertChecker">
+ <class>CertTool</class>
+ <widget class="QDialog" name="CertTool">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>SSL Certificate Checker</string>
+   <string>SSL Certificate Tool</string>
   </property>
  </widget>
  <resources/>

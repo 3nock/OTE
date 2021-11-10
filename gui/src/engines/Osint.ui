@@ -871,9 +871,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>0</y>
+                  <y>-52</y>
                   <width>175</width>
-                  <height>910</height>
+                  <height>979</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -933,6 +933,13 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QCheckBox" name="moduleRipe">
+                   <property name="text">
+                    <string>RipeStat</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QCheckBox" name="moduleBgpview">
                    <property name="text">
                     <string>Bgpview</string>
@@ -954,9 +961,23 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QCheckBox" name="moduleMaltiverseFree">
+                   <property name="text">
+                    <string>Maltiverse (Free)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QCheckBox" name="moduleMnemonicFree">
                    <property name="text">
                     <string>Mnemonic (Free)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleN45HT">
+                   <property name="text">
+                    <string>N45HT</string>
                    </property>
                   </widget>
                  </item>
@@ -1250,7 +1271,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>174</width>
-                  <height>723</height>
+                  <height>746</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -1334,6 +1355,13 @@
                   <widget class="QCheckBox" name="moduleMnemonicPaid">
                    <property name="text">
                     <string>Mnemonic</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleOnyphe">
+                   <property name="text">
+                    <string>Onyphe</string>
                    </property>
                   </widget>
                  </item>

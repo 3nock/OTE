@@ -539,7 +539,7 @@ QRadioButton:hover {
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionBannerGrab"/>
+    <addaction name="actionASNTool"/>
     <addaction name="actionIpTool"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -693,14 +693,14 @@ QRadioButton:hover {
     <string>raw-osint</string>
    </property>
   </action>
-  <action name="actionBannerGrab">
-   <property name="text">
-    <string>banner-grabber</string>
-   </property>
-  </action>
   <action name="actionIpTool">
    <property name="text">
     <string>Ip Tool</string>
+   </property>
+  </action>
+  <action name="actionASNTool">
+   <property name="text">
+    <string>ASN Tool</string>
    </property>
   </action>
  </widget>

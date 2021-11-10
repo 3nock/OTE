@@ -49,6 +49,8 @@ class MainWindow : public QMainWindow{
 
         void on_actionIpTool_triggered();
 
+        void on_actionASNTool_triggered();
+
 private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;

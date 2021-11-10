@@ -48,20 +48,14 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetViewDns_clicked();
         void on_buttonGetHackerTarget_clicked();
         void on_buttonGetWebResolver_clicked();
-
         void on_buttonGetCircl_clicked();
-
         void on_buttonGetMnemonic_clicked();
-
         void on_buttonGetRobtex_clicked();
-
         void on_buttonGetOtx_clicked();
-
         void on_buttonGetBuiltWith_clicked();
-
         void on_buttonGetDnslytics_clicked();
-
         void on_buttonGetDomainTools_clicked();
+        void on_buttonGetOnyphe_clicked();
 
 private:
         Ui::ApiKeysDialog *ui;

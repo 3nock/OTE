@@ -376,7 +376,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->moduleRobtexFree){
+    if(ui->moduleRobtexFree->isChecked()){
         RobtexFree *robtex = new RobtexFree(scanArgs);
         QThread *cThread = new QThread(this);
         robtex->Enumerator(cThread);
@@ -666,7 +666,7 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->moduleZetalytics){
+    if(ui->moduleZetalytics->isChecked()){
         ZETAlytics *zetalytics = new ZETAlytics(scanArgs);
         QThread *cThread = new QThread(this);
         zetalytics->Enumerator(cThread);
@@ -751,6 +751,72 @@ void Osint::startScan(){
         connect(domaintools, &DomainTools::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, domaintools, &DomainTools::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->moduleMaltiverseFree->isChecked()){
+        Maltiverse *maltiverse = new Maltiverse(scanArgs);
+        QThread *cThread = new QThread(this);
+        maltiverse->Enumerator(cThread);
+        maltiverse->moveToThread(cThread);
+        //...
+        connect(maltiverse, &Maltiverse::ip, this, &Osint::onResultIp);
+        connect(maltiverse, &Maltiverse::asn, this, &Osint::onResultAsn);
+        connect(maltiverse, &Maltiverse::email, this, &Osint::onResultEmail);
+        connect(maltiverse, &Maltiverse::errorLog, this, &Osint::onErrorLog);
+        connect(maltiverse, &Maltiverse::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, maltiverse, &Maltiverse::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->moduleN45HT->isChecked()){
+        N45HT *n45ht = new N45HT(scanArgs);
+        QThread *cThread = new QThread(this);
+        n45ht->Enumerator(cThread);
+        n45ht->moveToThread(cThread);
+        //...
+        connect(n45ht, &N45HT::subdomain, this, &Osint::onResultSubdomain);
+        connect(n45ht, &N45HT::errorLog, this, &Osint::onErrorLog);
+        connect(n45ht, &N45HT::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, n45ht, &N45HT::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->moduleOnyphe->isChecked()){
+        Onyphe *onyphe = new Onyphe(scanArgs);
+        QThread *cThread = new QThread(this);
+        onyphe->Enumerator(cThread);
+        onyphe->moveToThread(cThread);
+        //...
+        connect(onyphe, &Onyphe::subdomain, this, &Osint::onResultSubdomain);
+        connect(onyphe, &Onyphe::errorLog, this, &Osint::onErrorLog);
+        connect(onyphe, &Onyphe::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, onyphe, &Onyphe::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->moduleRipe->isChecked()){
+        Ripe *ripe = new Ripe(scanArgs);
+        QThread *cThread = new QThread(this);
+        ripe->Enumerator(cThread);
+        ripe->moveToThread(cThread);
+        /* others not yet */
+        connect(ripe, &Ripe::asn, this, &Osint::onResultAsn);
+        connect(ripe, &Ripe::errorLog, this, &Osint::onErrorLog);
+        connect(ripe, &Ripe::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, ripe, &Ripe::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

@@ -708,10 +708,24 @@
                   <x>0</x>
                   <y>0</y>
                   <width>157</width>
-                  <height>311</height>
+                  <height>426</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_3">
+                 <item>
+                  <widget class="QRadioButton" name="moduleAfrinic">
+                   <property name="text">
+                    <string>Afrinic</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleApnic">
+                   <property name="text">
+                    <string>Apnic</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QRadioButton" name="moduleAnubis">
                    <property name="text">
@@ -723,6 +737,27 @@
                   <widget class="QRadioButton" name="moduleArin">
                    <property name="text">
                     <string>Arin</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleRipe">
+                   <property name="text">
+                    <string>RipeStat</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleMaltiverseFree">
+                   <property name="text">
+                    <string>Maltiverse (Free)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleN45HT">
+                   <property name="text">
+                    <string>N45HT</string>
                    </property>
                   </widget>
                  </item>
@@ -841,7 +876,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>157</width>
-                  <height>702</height>
+                  <height>725</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -877,6 +912,13 @@
                   <widget class="QRadioButton" name="moduleOtx">
                    <property name="text">
                     <string>Otx</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleOnyphe">
+                   <property name="text">
+                    <string>Onyphe</string>
                    </property>
                   </widget>
                  </item>

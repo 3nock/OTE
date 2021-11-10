@@ -185,6 +185,26 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleDnslytics->setChecked(false);
     }
+    if(settings.value("maltiversefree").toString() == TRUE){
+        ui->moduleMaltiverseFree->setChecked(true);
+    }else{
+        ui->moduleMaltiverseFree->setChecked(false);
+    }
+    if(settings.value("n45ht").toString() == TRUE){
+        ui->moduleN45HT->setChecked(true);
+    }else{
+        ui->moduleN45HT->setChecked(false);
+    }
+    if(settings.value("onyphe").toString() == TRUE){
+        ui->moduleOnyphe->setChecked(true);
+    }else{
+        ui->moduleOnyphe->setChecked(false);
+    }
+    if(settings.value("ripe").toString() == TRUE){
+        ui->moduleRipe->setChecked(true);
+    }else{
+        ui->moduleRipe->setChecked(false);
+    }
     /*
      * ...
      */
@@ -483,6 +503,26 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue("dnslytics", TRUE);
     }else{
         settings.setValue("dnslytics", FALSE);
+    }
+    if(ui->moduleMaltiverseFree->isChecked()){
+        settings.setValue("maltiversefree", TRUE);
+    }else{
+        settings.setValue("maltiversefree", FALSE);
+    }
+    if(ui->moduleN45HT->isChecked()){
+        settings.setValue("n45ht", TRUE);
+    }else{
+        settings.setValue("n45ht", FALSE);
+    }
+    if(ui->moduleOnyphe->isChecked()){
+        settings.setValue("onyphe", TRUE);
+    }else{
+        settings.setValue("onyphe", FALSE);
+    }
+    if(ui->moduleRipe->isChecked()){
+        settings.setValue("ripe", TRUE);
+    }else{
+        settings.setValue("ripe", FALSE);
     }
     /*
      * ...

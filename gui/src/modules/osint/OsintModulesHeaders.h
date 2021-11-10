@@ -63,9 +63,19 @@
 #include "src/modules/osint/cert/GoogleCert.h"
 #include "src/modules/osint/cert/Certspotter.h"
 #include "src/modules/osint/cert/CensysFree.h"
-#include "src/modules/osint/api/Arin.h"
 #include "src/modules/osint/api/BuiltWith.h"
 #include "src/modules/osint/api/Dnslytics.h"
 #include "src/modules/osint/api/DomainTools.h"
+#include "src/modules/osint/api/Maltiverse.h"
+#include "src/modules/osint/api/N45HT.h"
+#include "src/modules/osint/api/Onyphe.h"
+#include "src/modules/osint/iana/Afrinic.h"
+#include "src/modules/osint/iana/Apnic.h"
+///
+/// iana...
+///
+#include "src/modules/osint/iana/Arin.h"
+#include "src/modules/osint/iana/Afrinic.h"
+#include "src/modules/osint/iana/Ripe.h"
 
 #endif // OSINTMODULESHEADERS_H

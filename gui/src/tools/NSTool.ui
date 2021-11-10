@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FastAnalysis</class>
- <widget class="QDialog" name="FastAnalysis">
+ <class>NSTool</class>
+ <widget class="QDialog" name="NSTool">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>443</width>
-    <height>385</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>NS Record Tool</string>
   </property>
  </widget>
  <resources/>

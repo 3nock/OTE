@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT ip:            OUTPUT: emails
- * INPUT asn:           OUTPUT: emails
- */
 
 namespace ModuleInfo {
     struct Arin{
@@ -68,10 +64,5 @@ class Arin: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedAsn(QNetworkReply *reply) override;
-        void replyFinishedEmail(QNetworkReply *reply) override;
-        //...
-        void replyFinishedPoc(QNetworkReply *reply);
 };
 #endif // ARIN_H

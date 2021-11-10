@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
     initializationCheckUp();
     QApplication app(argc, argv);
     ///
-    /// removing subdomainIp the question mark buttons on dialogs...
+    /// removing all the question mark buttons on dialogs...
     ///
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     ///

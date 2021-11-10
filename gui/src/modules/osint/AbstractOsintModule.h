@@ -7,7 +7,8 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 //...
-#include "src/models/ipmodel.h"
+#include "src/models/IpModel.h"
+#include "src/models/AsnModel.h"
 
 #define REQUEST_TYPE "type"
 ///
@@ -35,6 +36,17 @@
 #define PLACEHOLDERTEXT_MAC_ADDRESS "mac address eg 00-05-02-34-56-78"
 #define PLACEHOLDERTEXT_POC "point of contact eg KOSTE-ARIN"
 #define PLACEHOLDERTEXT_NET "network eg"
+#define PLACEHOLDERTEXT_CHECKSUM "sha256 checksum eg"
+#define PLACEHOLDERTEXT_MD5 "md5 eg"
+#define PLACEHOLDERTEXT_IP_OR_ASN_OR_CIDR "ip or asn or cidr"
+#define PLACEHOLDERTEXT_IP_OR_ASN "ip or asn"
+#define PLACEHOLDERTEXT_IP_OR_DOMAIN "ip or domain"
+#define PLACEHOLDERTEXT_IP_RANGE "ip range"
+#define PLACEHOLDERTEXT_IP_RANGE_OR_CIDR "ip range or cidr"
+#define PLACEHOLDERTEXT_AS "as eg AS15169"
+#define PLACEHOLDERTEXT_COUNTRY_CODE "2-digit ISO-3166 country code e.g. tz"
+#define PLACEHOLDERTEXT_ANY "asn, ip, cidr, organization"
+#define PLACEHOLDERTEXT_CIDR_OR_ASN "cidr or asn"
 
 struct ScanLog{
     QString moduleName;
@@ -152,7 +164,7 @@ class AbstractOsintModule : public QObject {
         void url(QString url);
         void asn(QString asn, QString asnName);
         void rawResults(QByteArray reply);
-        void prefixes(QString prefix, QString name);
+        void prefix(QString prefix, QString name);
         /* dns */
         void ipA(QString ip);
         void ipAAAA(QString ip);

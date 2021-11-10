@@ -3,7 +3,8 @@
 //...
 #include "src/dialogs/AboutDialog.h"
 #include "src/tools/BannerGrabber.h"
-#include "src/tools/IpChecker.h"
+#include "src/tools/IpTool.h"
+#include "src/tools/ASNTool.h"
 
 /*
  * use https://www.qcustomplot.com/ for plots
@@ -203,7 +204,13 @@ void MainWindow::on_actionBannerGrab_triggered(){
 }
 
 void MainWindow::on_actionIpTool_triggered(){
-    IpChecker *ipChecker = new IpChecker(this);
+    IpTool *ipChecker = new IpTool(this);
     ipChecker->setAttribute(Qt::WA_DeleteOnClose, true);
     ipChecker->show();
+}
+
+void MainWindow::on_actionASNTool_triggered(){
+    ASNTool *asnTool = new ASNTool(this);
+    asnTool->setAttribute(Qt::WA_DeleteOnClose, true);
+    asnTool->show();
 }

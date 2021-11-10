@@ -88,6 +88,18 @@ class Raw : public QDialog{
 
         void on_moduleDomainTools_clicked();
 
+        void on_moduleMaltiverseFree_clicked();
+
+        void on_moduleN45HT_clicked();
+
+        void on_moduleOnyphe_clicked();
+
+        void on_moduleRipe_clicked();
+
+        void on_moduleAfrinic_clicked();
+
+        void on_moduleApnic_clicked();
+
 private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
