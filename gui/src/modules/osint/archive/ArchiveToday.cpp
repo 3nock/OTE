@@ -1,69 +1,15 @@
 #include "ArchiveToday.h"
 
-/*
- * returns subdomains and their screenshot
- */
 
-/*
- * Handling possible redirect
- *
-     * Reply is finished!
-     * We'll ask for the reply about the Redirection attribute
-     * http://doc.trolltech.com/qnetworkrequest.html#Attribute-enum
-
-    QVariant possibleRedirectUrl =
-             reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-
-    // We'll deduct if the redirection is valid in the redirectUrl function
-    _urlRedirectedTo = this->redirectUrl(possibleRedirectUrl.toUrl(),
-                                         _urlRedirectedTo);
-
-    // If the URL is not empty, we're being redirected.
-    if(!_urlRedirectedTo.isEmpty()) {
-        QString text = QString("QNAMRedirect::replyFinished: Redirected to ")
-                              .append(_urlRedirectedTo.toString());
-        this->_textContainer->setText(text);
-
-        // We'll do another request to the redirection url.
-        this->_qnam->get(QNetworkRequest(_urlRedirectedTo));
-    }
-    else {
-        //
-         * We weren't redirected anymore
-         * so we arrived to the final destination...
-
-        QString text = QString("QNAMRedirect::replyFinished: Arrived to ")
-                              .append(reply->url().toString());
-        this->_textContainer->setText(text);
-        // ...so this can be cleared.
-        _urlRedirectedTo.clear();
-    }
-    // Clean up.
-    reply->deleteLater();
-}
-
-QUrl QNAMRedirect::redirectUrl(const QUrl& possibleRedirectUrl,
-                               const QUrl& oldRedirectUrl) const {
-    QUrl redirectUrl;
-
-     * Check if the URL is empty and
-     * that we aren't being fooled into a infinite redirect loop.
-     * We could also keep track of how many redirects we have been to
-     * and set a limit to it, but we'll leave that to you.
-
-    if(!possibleRedirectUrl.isEmpty() &&
-       possibleRedirectUrl != oldRedirectUrl) {
-        redirectUrl = possibleRedirectUrl;
-    }
-    return redirectUrl;
-}
-*/
-
-ArchiveToday::ArchiveToday(ScanArgs *args):
-    AbstractOsintModule(args)
+ArchiveToday::ArchiveToday(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveToday::replyFinished);
+    log.moduleName = "Archive";
+
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveToday::replyFinishedUrl);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveToday::replyFinishedSubdomain);
 }
 ArchiveToday::~ArchiveToday(){
     delete manager;
@@ -71,34 +17,53 @@ ArchiveToday::~ArchiveToday(){
 
 void ArchiveToday::start(){
     QNetworkRequest request;
-    QUrl url("http://archive.is/*."+args->target);
-    request.setUrl(url);
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
-    manager->get(request);
-}
 
-void ArchiveToday::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError){
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
+    QUrl url;
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            url.setUrl("http://archive.is/*."+args->target);
+            request.setUrl(url);
+            manager->get(request);
         }
-        emit subdomain(QString::fromUtf8(reply->readAll()));
+        if(args->outputUrl){
+            url.setUrl("http://archive.is/*."+args->target+"/*");
+            request.setUrl(url);
+            manager->get(request);
+        }
     }
-    else{
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
 }
 
-void ArchiveToday::getSubdomains(GumboNode *node){
+void ArchiveToday::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    this->m_getSubdomains(output->root);
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    end(reply);
+}
+
+void ArchiveToday::replyFinishedUrl(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    this->m_getUrls(output->root);
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    end(reply);
+}
+
+void ArchiveToday::m_getSubdomains(GumboNode *node){
     Q_UNUSED(node);
 }
 
-void ArchiveToday::getScreenshots(GumboNode *node){
+void ArchiveToday::m_getUrls(GumboNode *node){
     Q_UNUSED(node);
 }
-

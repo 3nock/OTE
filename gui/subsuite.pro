@@ -28,15 +28,33 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
-    src/engines/ActiveContextMenu.cpp \
-    src/engines/BruteContextMenu.cpp \
-    src/engines/DnsRecordsContextMenu.cpp \
-    src/engines/IpContextMenu.cpp \
-    src/engines/OsintContextMenu.cpp \
-    src/engines/OsintModules.cpp \
-    src/engines/OsintProfiles.cpp \
-    src/engines/RawContextMenu.cpp \
-    src/engines/RawModules.cpp \
+    src/engines/active/ActiveContextMenu.cpp \
+    src/engines/brute/BruteContextMenu.cpp \
+    src/engines/records/DnsRecordsContextMenu.cpp \
+    src/engines/ip/IpContextMenu.cpp \
+    src/engines/osint/OsintContextMenu.cpp \
+    src/engines/osint/OsintModules.cpp \
+    src/engines/osint/OsintProfiles.cpp \
+    src/engines/raw/RawContextMenu.cpp \
+    src/engines/raw/RawModules.cpp \
+    src/modules/osint/api/HaveIBeenPawned.cpp \
+    src/modules/osint/api/Host.cpp \
+    src/modules/osint/api/JsonWhois.cpp \
+    src/modules/osint/api/LeakIX.cpp \
+    src/modules/osint/api/NetworksDB.cpp \
+    src/modules/osint/api/NeutrinoApi.cpp \
+    src/modules/osint/api/Seon.cpp \
+    src/modules/osint/api/SpyOnWeb.cpp \
+    src/modules/osint/api/Whatcms.cpp \
+    src/modules/osint/api/Whoxy.cpp \
+    src/modules/osint/email/EmailCrawlr.cpp \
+    src/modules/osint/email/Debounce.cpp \
+    src/modules/osint/api/FullHunt.cpp \
+    src/modules/osint/email/EmailFormat.cpp \
+    src/modules/osint/email/EmailRep.cpp \
+    src/modules/osint/email/Hunter.cpp \
+    src/modules/osint/email/Snov.cpp \
+    src/modules/osint/email/TruMail.cpp \
     src/modules/osint/iana/Apnic.cpp \
     src/modules/osint/iana/Arin.cpp \
     src/modules/osint/api/BuiltWith.cpp \
@@ -52,9 +70,6 @@ SOURCES += \
     src/modules/osint/api/Onyphe.cpp \
     src/modules/osint/api/OtxFree.cpp \
     src/modules/osint/api/OtxPaid.cpp \
-    src/modules/osint/api/PassiveDns360.cpp \
-    src/modules/osint/api/Quake.cpp \
-    src/modules/osint/iana/Lacnic.cpp \
     src/modules/osint/iana/Ripe.cpp \
     src/modules/osint/api/RobtexFree.cpp \
     src/modules/osint/api/RobtexPaid.cpp \
@@ -65,12 +80,20 @@ SOURCES += \
     src/modules/osint/ip/IpData.cpp \
     src/modules/osint/ip/IpGeoLocation.cpp \
     src/modules/osint/ip/IpRegistry.cpp \
+    src/modules/osint/ip/IpStack.cpp \
     src/modules/osint/ip/MaxMind.cpp \
+    src/modules/osint/mal/Abuse.cpp \
     src/modules/osint/mal/AbuseIPDB.cpp \
     src/modules/osint/archive/Arquivo.cpp \
     src/modules/osint/archive/Haw.cpp \
     src/modules/osint/archive/UkWebArchive.cpp \
     src/modules/osint/cert/Digitorus.cpp \
+    src/modules/osint/mal/BotScout.cpp \
+    src/modules/osint/mal/FraudGuard.cpp \
+    src/modules/osint/mal/HybridAnalysis.cpp \
+    src/modules/osint/mal/IpQualityScore.cpp \
+    src/modules/osint/mal/LeakLookup.cpp \
+    src/modules/osint/mal/PhishStats.cpp \
     src/tools/ASNTool.cpp \
     src/tools/BannerGrabber.cpp \
     src/tools/CertTool.cpp \
@@ -92,7 +115,6 @@ SOURCES += \
     src/modules/osint/api/C99.cpp \
     src/modules/osint/api/Circl.cpp \
     src/modules/osint/api/Github.cpp \
-    src/modules/osint/api/HunterSearch.cpp \
     src/modules/osint/ip/IpApi.cpp \
     src/modules/osint/ip/IpInfo.cpp \
     src/modules/osint/api/RiskIq.cpp \
@@ -112,7 +134,7 @@ SOURCES += \
     src/modules/osint/api/Threatcrowd.cpp \
     src/modules/osint/api/Threatminer.cpp \
     src/modules/osint/api/Urlscan.cpp \
-    src/modules/osint/api/VirusTotal.cpp \
+    src/modules/osint/mal/VirusTotal.cpp \
     src/modules/osint/archive/ArchiveIt.cpp \
     src/modules/osint/archive/ArchiveToday.cpp \
     src/modules/osint/archive/CommonCrawl.cpp \
@@ -136,12 +158,12 @@ SOURCES += \
     src/modules/osint/site/Rapiddns.cpp \
     src/modules/osint/site/SiteDossier.cpp \
     src/modules/osint/site/Suip.cpp \
-    src/engines/Raw.cpp \
-    src/engines/Ip.cpp \
-    src/engines/Active.cpp \
-    src/engines/DnsRecords.cpp \
-    src/engines/Brute.cpp \
-    src/engines/Osint.cpp \
+    src/engines/raw/Raw.cpp \
+    src/engines/ip/Ip.cpp \
+    src/engines/active/Active.cpp \
+    src/engines/records/DnsRecords.cpp \
+    src/engines/brute/Brute.cpp \
+    src/engines/osint/Osint.cpp \
     src/engines/AbstractEngine.cpp \
     src/project/general/GeneralAnalysis.cpp \
     src/project/specific/SpecificAnalysis.cpp \
@@ -165,7 +187,25 @@ SOURCES += \
 HEADERS += \
     src/models/AsnModel.h \
     src/models/IpModel.h \
+    src/modules/osint/api/HaveIBeenPawned.h \
+    src/modules/osint/api/Host.h \
+    src/modules/osint/api/JsonWhois.h \
+    src/modules/osint/api/LeakIX.h \
+    src/modules/osint/api/NetworksDB.h \
+    src/modules/osint/api/NeutrinoApi.h \
+    src/modules/osint/api/Seon.h \
+    src/modules/osint/api/SpyOnWeb.h \
+    src/modules/osint/api/Whatcms.h \
+    src/modules/osint/api/Whoxy.h \
+    src/modules/osint/email/EmailCrawlr.h \
     src/modules/osint/OsintModulesHeaders.h \
+    src/modules/osint/email/Debounce.h \
+    src/modules/osint/api/FullHunt.h \
+    src/modules/osint/email/EmailFormat.h \
+    src/modules/osint/email/EmailRep.h \
+    src/modules/osint/email/Hunter.h \
+    src/modules/osint/email/Snov.h \
+    src/modules/osint/email/TruMail.h \
     src/modules/osint/iana/Apnic.h \
     src/modules/osint/iana/Arin.h \
     src/modules/osint/api/BuiltWith.h \
@@ -181,9 +221,7 @@ HEADERS += \
     src/modules/osint/api/Onyphe.h \
     src/modules/osint/api/OtxFree.h \
     src/modules/osint/api/OtxPaid.h \
-    src/modules/osint/api/PassiveDns360.h \
     src/modules/osint/api/Quake.h \
-    src/modules/osint/iana/Lacnic.h \
     src/modules/osint/iana/Ripe.h \
     src/modules/osint/api/RobtexFree.h \
     src/modules/osint/api/RobtexPaid.h \
@@ -194,12 +232,20 @@ HEADERS += \
     src/modules/osint/ip/IpData.h \
     src/modules/osint/ip/IpGeoLocation.h \
     src/modules/osint/ip/IpRegistry.h \
+    src/modules/osint/ip/IpStack.h \
     src/modules/osint/ip/MaxMind.h \
+    src/modules/osint/mal/Abuse.h \
     src/modules/osint/mal/AbuseIPDB.h \
     src/modules/osint/archive/Arquivo.h \
     src/modules/osint/archive/Haw.h \
     src/modules/osint/archive/UkWebArchive.h \
     src/modules/osint/cert/Digitorus.h \
+    src/modules/osint/mal/BotScout.h \
+    src/modules/osint/mal/FraudGuard.h \
+    src/modules/osint/mal/HybridAnalysis.h \
+    src/modules/osint/mal/IpQualityScore.h \
+    src/modules/osint/mal/LeakLookup.h \
+    src/modules/osint/mal/PhishStats.h \
     src/tools/ASNTool.h \
     src/tools/BannerGrabber.h \
     src/tools/CertTool.h \
@@ -221,7 +267,6 @@ HEADERS += \
     src/modules/osint/api/C99.h \
     src/modules/osint/api/Circl.h \
     src/modules/osint/api/Github.h \
-    src/modules/osint/api/HunterSearch.h \
     src/modules/osint/ip/IpApi.h \
     src/modules/osint/ip/IpInfo.h \
     src/modules/osint/api/RiskIq.h \
@@ -241,7 +286,7 @@ HEADERS += \
     src/modules/osint/api/Threatcrowd.h \
     src/modules/osint/api/Threatminer.h \
     src/modules/osint/api/Urlscan.h \
-    src/modules/osint/api/VirusTotal.h \
+    src/modules/osint/mal/VirusTotal.h \
     src/modules/osint/archive/ArchiveIt.h \
     src/modules/osint/archive/ArchiveToday.h \
     src/modules/osint/archive/CommonCrawl.h \
@@ -266,12 +311,12 @@ HEADERS += \
     src/modules/osint/site/SiteDossier.h \
     src/modules/osint/site/Suip.h \
     src/modules/osint/AbstractOsintModule.h \
-    src/engines/Raw.h \
-    src/engines/Ip.h \
-    src/engines/Active.h \
-    src/engines/DnsRecords.h \
-    src/engines/Brute.h \
-    src/engines/Osint.h \
+    src/engines/raw/Raw.h \
+    src/engines/ip/Ip.h \
+    src/engines/active/Active.h \
+    src/engines/records/DnsRecords.h \
+    src/engines/brute/Brute.h \
+    src/engines/osint/Osint.h \
     src/engines/AbstractEngine.h \
     src/project/general/GeneralAnalysis.h \
     src/project/specific/SpecificAnalysis.h \
@@ -279,8 +324,9 @@ HEADERS += \
     src/project/Project.h \
     src/tools/MXTool.h \
     src/tools/NSTool.h \
+    src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
-    src/utils/ResultsModels.h \
+    src/models/ResultsModels.h \
     src/utils/models.h \
     src/widgets/InputWidget.h \
     src/widgets/WordlistGeneratorWidget.h \
@@ -306,12 +352,12 @@ FORMS += \
     src/project/Project.ui \
     src/project/general/GeneralAnalysis.ui \
     src/project/specific/SpecificAnalysis.ui \
-    src/engines/Raw.ui \
-    src/engines/Ip.ui \
-    src/engines/DnsRecords.ui \
-    src/engines/Brute.ui \
-    src/engines/Osint.ui \
-    src/engines/Active.ui \
+    src/engines/raw/Raw.ui \
+    src/engines/ip/Ip.ui \
+    src/engines/records/DnsRecords.ui \
+    src/engines/brute/Brute.ui \
+    src/engines/osint/Osint.ui \
+    src/engines/active/Active.ui \
     src/tools/NSTool.ui \
     src/widgets/InputWidget.ui \
     src/widgets/WordlistGeneratorWidget.ui \

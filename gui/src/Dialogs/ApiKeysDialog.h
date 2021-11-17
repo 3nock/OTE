@@ -57,6 +57,32 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetDomainTools_clicked();
         void on_buttonGetOnyphe_clicked();
 
+        void on_buttonGetFullHunt_clicked();
+
+        void on_buttonGetSpamHaus_clicked();
+
+        void on_buttonGetDebounce_clicked();
+
+        void on_buttonGetHaveIBeenPawned_clicked();
+
+        void on_buttonGetHost_clicked();
+
+        void on_buttonGetJsonWhois_clicked();
+
+        void on_buttonGetLeakIX_clicked();
+
+        void on_buttonGetNetworksDB_clicked();
+
+        void on_buttonGetNeutrinoApi_clicked();
+
+        void on_buttonGetSeon_clicked();
+
+        void on_buttonGetSpyOnWeb_clicked();
+
+        void on_buttonGetWhatcms_clicked();
+
+        void on_buttonGetWhoxy_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         void loadApiKeys();

@@ -4,7 +4,7 @@
 #include <QMenu>
 #include <QAction>
 #include "src/utils/utils.h"
-#include "src/utils/ResultsModels.h"
+#include "src/models/ResultsModels.h"
 #include "src/widgets/InputWidget.h"
 #include "src/project/ProjectDataModel.h"
 

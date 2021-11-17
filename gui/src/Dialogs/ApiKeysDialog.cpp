@@ -33,7 +33,6 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("github", ui->lineEditGithub->text());
     Config::generalConfig().setValue("google", ui->lineEditGoogle->text());
     Config::generalConfig().setValue("hunter", ui->lineEditHunter->text());
-    Config::generalConfig().setValue("huntersearch", ui->lineEditHunter->text());
     Config::generalConfig().setValue("intelx", ui->lineEditIntelX->text());
     Config::generalConfig().setValue("pentesttools", ui->lineEditPentestTools->text());
     Config::generalConfig().setValue("projectdiscovery", ui->lineEditProjectDiscovery->text());
@@ -63,6 +62,20 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("domaintools_username", ui->lineEditDomainToolsUsername->text());
     Config::generalConfig().setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
     Config::generalConfig().setValue("onyphe", ui->lineEditOnyphe->text());
+    Config::generalConfig().setValue("fullhunt", ui->lineEditFullHunt->text());
+    Config::generalConfig().setValue("spamhaus", ui->lineEditSpamHaus->text());
+    Config::generalConfig().setValue("debounce", ui->lineEditDebounce->text());
+    Config::generalConfig().setValue("haveibeenpwned", ui->lineEditHaveIBeenPawned->text());
+    Config::generalConfig().setValue("host", ui->lineEditHost->text());
+    Config::generalConfig().setValue("jsonwhois", ui->lineEditJsonWhois->text());
+    Config::generalConfig().setValue("leakix", ui->lineEditLeakIX->text());
+    Config::generalConfig().setValue("networksdb", ui->lineEditNetworksDB->text());
+    Config::generalConfig().setValue("neutrinoapi_key", ui->lineEditNeutrinoApiKey->text());
+    Config::generalConfig().setValue("neutrinoapi_uid", ui->lineEditNeutrinoApiUID->text());
+    Config::generalConfig().setValue("seon", ui->lineEditSeon->text());
+    Config::generalConfig().setValue("spyonweb", ui->lineEditSpyOnWeb->text());
+    Config::generalConfig().setValue("whatcms", ui->lineEditWhatcms->text());
+    Config::generalConfig().setValue("whoxy", ui->lineEditWhoxy->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -114,11 +127,6 @@ void ApiKeysDialog::loadApiKeys(){
         ui->buttonGetGoogle->hide();
     }
     key = Config::generalConfig().value("hunter").toString();
-    if(!key.isEmpty()){
-        ui->lineEditHunter->setText(key);
-        ui->buttonGetHunter->hide();
-    }
-    key = Config::generalConfig().value("huntersearch").toString();
     if(!key.isEmpty()){
         ui->lineEditHunter->setText(key);
         ui->buttonGetHunter->hide();
@@ -273,6 +281,75 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditOnyphe->setText(key);
         ui->buttonGetOnyphe->hide();
     }
+    key = Config::generalConfig().value("fullhunt").toString();
+    if(!key.isEmpty()){
+        ui->lineEditFullHunt->setText(key);
+        ui->buttonGetFullHunt->hide();
+    }
+    key = Config::generalConfig().value("spamhaus").toString();
+    if(!key.isEmpty()){
+        ui->lineEditSpamHaus->setText(key);
+        ui->buttonGetSpamHaus->hide();
+    }
+    key = Config::generalConfig().value("debounce").toString();
+    if(!key.isEmpty()){
+        ui->lineEditDebounce->setText(key);
+        ui->buttonGetDebounce->hide();
+    }
+    key = Config::generalConfig().value("haveibeenpwned").toString();
+    if(!key.isEmpty()){
+        ui->lineEditHaveIBeenPawned->setText(key);
+        ui->buttonGetHaveIBeenPawned->hide();
+    }
+    key = Config::generalConfig().value("host").toString();
+    if(!key.isEmpty()){
+        ui->lineEditHost->setText(key);
+        ui->buttonGetHost->hide();
+    }
+    key = Config::generalConfig().value("jsonwhois").toString();
+    if(!key.isEmpty()){
+        ui->lineEditJsonWhois->setText(key);
+        ui->buttonGetJsonWhois->hide();
+    }
+    key = Config::generalConfig().value("leakix").toString();
+    if(!key.isEmpty()){
+        ui->lineEditLeakIX->setText(key);
+        ui->buttonGetLeakIX->hide();
+    }
+    key = Config::generalConfig().value("networksdb").toString();
+    if(!key.isEmpty()){
+        ui->lineEditNetworksDB->setText(key);
+        ui->buttonGetNetworksDB->hide();
+    }
+    //...
+    key = Config::generalConfig().value("neutrinoapi_key").toString();
+    QString uid = Config::generalConfig().value("neutrinoapi_uid").toString();
+    if(!key.isEmpty() && !uid.isEmpty()){
+        ui->lineEditNeutrinoApiKey->setText(key);
+        ui->lineEditNeutrinoApiUID->setText(uid);
+        ui->buttonGetNeutrinoApi->hide();
+    }
+    //...
+    key = Config::generalConfig().value("seon").toString();
+    if(!key.isEmpty()){
+        ui->lineEditSeon->setText(key);
+        ui->buttonGetSeon->hide();
+    }
+    key = Config::generalConfig().value("spyonweb").toString();
+    if(!key.isEmpty()){
+        ui->lineEditSpyOnWeb->setText(key);
+        ui->buttonGetSpyOnWeb->hide();
+    }
+    key = Config::generalConfig().value("whatcms").toString();
+    if(!key.isEmpty()){
+        ui->lineEditWhatcms->setText(key);
+        ui->buttonGetWhatcms->hide();
+    }
+    key = Config::generalConfig().value("whoxy").toString();
+    if(!key.isEmpty()){
+        ui->lineEditWhoxy->setText(key);
+        ui->buttonGetWhoxy->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -411,4 +488,56 @@ void ApiKeysDialog::on_buttonGetDomainTools_clicked(){
 
 void ApiKeysDialog::on_buttonGetOnyphe_clicked(){
     QDesktopServices::openUrl(QUrl("https://www.onyphe.io/pricing/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetFullHunt_clicked(){
+    QDesktopServices::openUrl(QUrl("https://fullhunt.io/pricing/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetSpamHaus_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.spamhaus.com/developer/sia/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetDebounce_clicked(){
+    QDesktopServices::openUrl(QUrl("https://app.debounce.io/login", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetHaveIBeenPawned_clicked(){
+    QDesktopServices::openUrl(QUrl("https://haveibeenpwned.com/API/Key", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetHost_clicked(){
+    QDesktopServices::openUrl(QUrl("https://host.io/pricing", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetJsonWhois_clicked(){
+    QDesktopServices::openUrl(QUrl("https://jsonwhois.com/pricing", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetLeakIX_clicked(){
+    QDesktopServices::openUrl(QUrl("https://leakix.net/auth/login", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetNetworksDB_clicked(){
+    QDesktopServices::openUrl(QUrl("https://networksdb.io/api/plans", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetNeutrinoApi_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.neutrinoapi.com/plans/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetSeon_clicked(){
+    QDesktopServices::openUrl(QUrl("https://seon.io/pricing/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetSpyOnWeb_clicked(){
+    QDesktopServices::openUrl(QUrl("https://api.spyonweb.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetWhatcms_clicked(){
+    QDesktopServices::openUrl(QUrl("https://whatcms.org/API", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetWhoxy_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.whoxy.com/", QUrl::TolerantMode));
 }

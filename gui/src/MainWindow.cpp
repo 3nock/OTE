@@ -197,12 +197,6 @@ void MainWindow::on_actionExit_triggered(){
     QApplication::exit();
 }
 
-void MainWindow::on_actionBannerGrab_triggered(){
-    BannerGrabber *bannergrab = new BannerGrabber(this);
-    bannergrab->setAttribute(Qt::WA_DeleteOnClose, true);
-    bannergrab->show();
-}
-
 void MainWindow::on_actionIpTool_triggered(){
     IpTool *ipChecker = new IpTool(this);
     ipChecker->setAttribute(Qt::WA_DeleteOnClose, true);

@@ -6,12 +6,12 @@
 //...
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
-#include "src/engines/Ip.h"
-#include "src/engines/DnsRecords.h"
-#include "src/engines/Brute.h"
-#include "src/engines/Osint.h"
-#include "src/engines/Active.h"
-#include "src/engines/Raw.h"
+#include "src/engines/ip/Ip.h"
+#include "src/engines/records/DnsRecords.h"
+#include "src/engines/brute/Brute.h"
+#include "src/engines/osint/Osint.h"
+#include "src/engines/active/Active.h"
+#include "src/engines/raw/Raw.h"
 
 namespace Ui {
     class MainWindow;
@@ -45,10 +45,10 @@ class MainWindow : public QMainWindow{
         void on_actionAbout_triggered();
         void on_actionAboutQt_triggered();
         void on_actionExit_triggered();
-        void on_actionBannerGrab_triggered();
-
+        ///
+        /// tools actions...
+        ///
         void on_actionIpTool_triggered();
-
         void on_actionASNTool_triggered();
 
 private:

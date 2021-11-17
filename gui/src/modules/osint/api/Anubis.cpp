@@ -21,15 +21,21 @@ Anubis::~Anubis(){
 void Anubis::start(){
     QNetworkRequest request;
 
+    QUrl url;
     if(args->raw){
-        QUrl url("https://jldc.me/anubis/subdomains/"+args->target);
+        switch (args->rawOption) {
+        case SUBDOMAIN:
+            url.setUrl("https://jldc.me/anubis/subdomains/"+args->target);
+            break;
+        }
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
+        return;
     }
 
     if(args->inputDomain){
-        QUrl url("https://jldc.me/anubis/subdomains/"+args->target);
+        url.setUrl("https://jldc.me/anubis/subdomains/"+args->target);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
@@ -44,6 +50,7 @@ void Anubis::replyFinishedSubdomain(QNetworkReply *reply){
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray subdomainList = document.array();
+
     foreach(const QJsonValue &value, subdomainList){
         emit subdomain(value.toString());
         log.resultsCount++;

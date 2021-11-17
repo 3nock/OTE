@@ -13,8 +13,8 @@
 
 
 /*
- * A singleton class that saves & retrieves subdomainIp the configuration
- * settings for subdomainIp engines
+ * A singleton class that saves & retrieves all the configuration
+ * settings for all engines
  */
 class Config {
 

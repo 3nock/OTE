@@ -1,10 +1,14 @@
 #include "ArchiveIt.h"
 
-ArchiveIt::ArchiveIt(ScanArgs *args):
-    AbstractOsintModule(args)
+ArchiveIt::ArchiveIt(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveIt::replyFinished);
+    log.moduleName = "ArchiveIt";
+
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedUrl);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedSubdomain);
 }
 ArchiveIt::~ArchiveIt(){
     delete manager;
@@ -12,27 +16,52 @@ ArchiveIt::~ArchiveIt(){
 
 void ArchiveIt::start(){
     QNetworkRequest request;
-    QUrl url("https://wayback.archive-it.org/subdomainIp/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+args->target);
-    request.setUrl(url);
-    manager->get(request);
+
+    QUrl url;
+    if(args->inputDomain){
+        if(args->outputUrl || args->outputSubdomain){
+            url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+args->target);
+            request.setUrl(url);
+            manager->get(request);
+        }
+    }
 }
 
-void ArchiveIt::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError){
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QString document = QString::fromUtf8(reply->readAll());
-        QStringList urlList = document.remove(" ").split("\n");
-        foreach(const QString &url, urlList)
-            emit subdomain(url);
+void ArchiveIt::replyFinishedUrl(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    else{
-        emit errorLog(reply->errorString());
+
+    QString document = QString::fromUtf8(reply->readAll());
+    QStringList urlList = document.remove(" ").split("\n");
+
+    foreach(const QString &urlValue, urlList){
+        emit url(urlValue);
+        log.resultsCount++;
     }
-    reply->deleteLater();
-    emit quitThread();
+
+    end(reply);
+}
+
+void ArchiveIt::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QString document = QString::fromUtf8(reply->readAll());
+    QStringList urlList = document.remove(" ").split("\n");
+
+    foreach(const QString &url, urlList){
+        QString domain = url;
+        domain.remove("http://");
+        domain.remove("https://");
+        domain = domain.split("/").at(0);
+
+        emit subdomain(domain);
+        log.resultsCount++;
+    }
+
+    end(reply);
 }
