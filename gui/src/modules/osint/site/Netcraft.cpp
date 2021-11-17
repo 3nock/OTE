@@ -60,5 +60,4 @@ void Netcraft::getSubdomains(GumboNode *node){
     GumboVector *children = &node->v.element.children;
     for(unsigned int i = 0; i < children->length; i++)
         getSubdomains(static_cast<GumboNode*>(children->data[i]));
-    return;
 }

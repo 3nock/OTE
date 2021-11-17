@@ -1085,6 +1085,23 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleArquivo->isChecked())
+    {
+        m_scanArgs->module = "Arquivo";
+        Arquivo *arquivo = new Arquivo(m_scanArgs);
+        arquivo->Enumerator(cThread);
+        arquivo->moveToThread(cThread);
+        //...
+        connect(arquivo, &Arquivo::rawResults, this, &Raw::onResults);
+        connect(arquivo, &Arquivo::errorLog, this, &Raw::onErrorLog);
+        connect(arquivo, &Arquivo::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, arquivo, &Arquivo::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -1711,6 +1728,16 @@ void Raw::on_moduleWhatcms_clicked(){
 void Raw::on_moduleWhoxy_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Whoxy meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleArquivo_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Arquivo meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

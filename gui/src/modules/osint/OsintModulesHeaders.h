@@ -102,6 +102,7 @@
 #include "src/modules/osint/archive/ArchiveToday.h"
 #include "src/modules/osint/archive/CommonCrawl.h"
 #include "src/modules/osint/archive/ArchiveIt.h"
+#include "src/modules/osint/archive/Arquivo.h"
 ///
 /// scrape
 ///

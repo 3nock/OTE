@@ -8,6 +8,7 @@
 #include <QNetworkAccessManager>
 //...
 #include "src/utils/Definitions.h"
+#include "gumbo-parser/src/gumbo.h"
 //...
 #include "src/models/IpModel.h"
 #include "src/models/AsnModel.h"
@@ -110,6 +111,15 @@ class AbstractOsintModule : public QObject {
                 //emit errorLog(log);
                 emit quitThread();
             }
+        }
+
+        GumboNode* getBody(GumboNode *node){
+            for(unsigned int i = 0; i < node->v.element.children.length; i++){
+                GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[i]);
+                if(child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_BODY)
+                    return child;
+            }
+            return nullptr;
         }
 
     signals:

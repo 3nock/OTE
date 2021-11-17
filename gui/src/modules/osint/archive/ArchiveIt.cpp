@@ -23,6 +23,7 @@ void ArchiveIt::start(){
             url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+args->target);
             request.setUrl(url);
             manager->get(request);
+            activeRequests++;
         }
     }
 }
@@ -54,12 +55,16 @@ void ArchiveIt::replyFinishedSubdomain(QNetworkReply *reply){
     QStringList urlList = document.remove(" ").split("\n");
 
     foreach(const QString &url, urlList){
-        QString domain = url;
-        domain.remove("http://");
-        domain.remove("https://");
-        domain = domain.split("/").at(0);
+        /* getting url */
+        QString domainUrl = url;
 
-        emit subdomain(domain);
+        /* extracting subdomain from url...*/
+        domainUrl.remove("http://");
+        domainUrl.remove("https://");
+        domainUrl = domainUrl.split("/").at(0);
+
+        /*  emiting subdomain... */
+        emit subdomain(domainUrl);
         log.resultsCount++;
     }
 

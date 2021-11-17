@@ -708,7 +708,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>169</width>
-                  <height>464</height>
+                  <height>506</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -744,6 +744,34 @@
                   <widget class="QRadioButton" name="moduleRipe">
                    <property name="text">
                     <string>Ripe</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_12">
+                   <property name="text">
+                    <string>Archives</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleArchiveIt">
+                   <property name="text">
+                    <string>ArchiveIt</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleArquivo">
+                   <property name="text">
+                    <string>Arquivo</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleWaybackMachine">
+                   <property name="text">
+                    <string>WaybackMachine</string>
                    </property>
                   </widget>
                  </item>
@@ -825,20 +853,6 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="moduleWaybackMachine">
-                   <property name="text">
-                    <string>WaybackMachine</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="moduleArchiveIt">
-                   <property name="text">
-                    <string>ArchiveIt</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QRadioButton" name="moduleOmnisint">
                    <property name="text">
                     <string>Omnisint</string>
@@ -888,7 +902,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-396</y>
+                  <y>0</y>
                   <width>169</width>
                   <height>1024</height>
                  </rect>

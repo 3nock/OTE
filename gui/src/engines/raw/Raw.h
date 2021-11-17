@@ -105,6 +105,8 @@ class Raw : public QDialog{
 
         void on_moduleWhoxy_clicked();
 
+        void on_moduleArquivo_clicked();
+
 private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;

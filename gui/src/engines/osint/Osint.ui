@@ -873,7 +873,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>175</width>
-                  <height>979</height>
+                  <height>1002</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -1163,20 +1163,6 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="moduleCommonCrawl">
-                   <property name="text">
-                    <string>CommonCrawl</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleWaybackmachine">
-                   <property name="text">
-                    <string>WayBackMachine</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QCheckBox" name="moduleArchiveit">
                    <property name="text">
                     <string>ArchiveIt</string>
@@ -1187,6 +1173,27 @@
                   <widget class="QCheckBox" name="moduleArchiveToday">
                    <property name="text">
                     <string>ArchiveToday</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleArquivo">
+                   <property name="text">
+                    <string>Arquivo</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleCommonCrawl">
+                   <property name="text">
+                    <string>CommonCrawl</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleWaybackmachine">
+                   <property name="text">
+                    <string>WayBackMachine</string>
                    </property>
                   </widget>
                  </item>
@@ -1269,7 +1276,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-259</y>
+                  <y>0</y>
                   <width>174</width>
                   <height>815</height>
                  </rect>

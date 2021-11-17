@@ -6,7 +6,6 @@
  */
 
 #include "../AbstractOsintModule.h"
-#include "gumbo-parser/src/gumbo.h"
 
 namespace ModuleInfo {
     struct ArchiveToday{
@@ -31,10 +30,6 @@ class ArchiveToday: public AbstractOsintModule{
         void start() override;
         void replyFinishedUrl(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-
-    private:
-        void m_getSubdomains(GumboNode *node);
-        void m_getUrls(GumboNode *node);
 };
 
 #endif // ARCHIVETODAY_H

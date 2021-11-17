@@ -233,6 +233,11 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleArchiveToday->setChecked(false);
     }
+    if(settings.value("arquivo").toString() == TRUE){
+        ui->moduleArquivo->setChecked(true);
+    }else{
+        ui->moduleArquivo->setChecked(false);
+    }
 
 /***************************************************************
                            CERTS
@@ -583,6 +588,11 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue("archivetoday", TRUE);
     }else{
         settings.setValue("archivetoday", FALSE);
+    }
+    if(ui->moduleArquivo->isChecked()){
+        settings.setValue("arquivo", TRUE);
+    }else{
+        settings.setValue("arquivo", FALSE);
     }
 
 /***************************************************************

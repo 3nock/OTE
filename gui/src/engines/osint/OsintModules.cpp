@@ -914,6 +914,23 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(ui->moduleArquivo->isChecked()){
+        Arquivo *arquivo = new Arquivo(scanArgs);
+        QThread *cThread = new QThread(this);
+        arquivo->Enumerator(cThread);
+        arquivo->moveToThread(cThread);
+        //...
+        connect(arquivo, &Arquivo::subdomain, this, &Osint::onResultSubdomain);
+        connect(arquivo, &Arquivo::url, this, &Osint::onResultUrl);
+        connect(arquivo, &Arquivo::errorLog, this, &Osint::onErrorLog);
+        connect(arquivo, &Arquivo::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, arquivo, &Arquivo::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
 
     /****************************************************************************
                                  CERTS
