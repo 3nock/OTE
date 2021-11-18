@@ -931,6 +931,40 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(ui->moduleCommonCrawl->isChecked()){
+        CommonCrawl *commonCrawl = new CommonCrawl(scanArgs);
+        QThread *cThread = new QThread(this);
+        commonCrawl->Enumerator(cThread);
+        commonCrawl->moveToThread(cThread);
+        //...
+        connect(commonCrawl, &CommonCrawl::subdomain, this, &Osint::onResultSubdomain);
+        connect(commonCrawl, &CommonCrawl::url, this, &Osint::onResultUrl);
+        connect(commonCrawl, &CommonCrawl::errorLog, this, &Osint::onErrorLog);
+        connect(commonCrawl, &CommonCrawl::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, commonCrawl, &CommonCrawl::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->moduleUKWebArchive->isChecked()){
+        UKWebArchive *ukwebarchive = new UKWebArchive(scanArgs);
+        QThread *cThread = new QThread(this);
+        ukwebarchive->Enumerator(cThread);
+        ukwebarchive->moveToThread(cThread);
+        //...
+        connect(ukwebarchive, &UKWebArchive::subdomain, this, &Osint::onResultSubdomain);
+        connect(ukwebarchive, &UKWebArchive::url, this, &Osint::onResultUrl);
+        connect(ukwebarchive, &UKWebArchive::errorLog, this, &Osint::onErrorLog);
+        connect(ukwebarchive, &UKWebArchive::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, ukwebarchive, &UKWebArchive::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
 
     /****************************************************************************
                                  CERTS
@@ -1156,26 +1190,6 @@ void Osint::startScan(){
         connect(censysfree, &CensysFree::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, censysfree, &CensysFree::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->moduleCommonCrawl->isChecked()){
-        CommonCrawl *commonCrawl = new CommonCrawl(scanArgs);
-        QThread *cThread = new QThread(this);
-        commonCrawl->Enumerator(cThread);
-        commonCrawl->moveToThread(cThread);
-        //...
-        connect(commonCrawl, &CommonCrawl::subdomain, this, &Osint::onResultSubdomain);
-        connect(commonCrawl, &CommonCrawl::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(commonCrawl, &CommonCrawl::ip, this, &Osint::onResultIp);
-        connect(commonCrawl, &CommonCrawl::email, this, &Osint::onResultEmail);
-        connect(commonCrawl, &CommonCrawl::url, this, &Osint::onResultUrl);
-        connect(commonCrawl, &CommonCrawl::errorLog, this, &Osint::onErrorLog);
-        connect(commonCrawl, &CommonCrawl::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, commonCrawl, &CommonCrawl::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

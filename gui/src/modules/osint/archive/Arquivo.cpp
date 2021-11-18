@@ -8,6 +8,8 @@
 
 /*
  * for now use *. hence data on subdomains
+ * cdx uses ndjson...
+ * maxItems set to 100...
  */
 Arquivo::Arquivo(ScanArgs *args): AbstractOsintModule(args)
 {
@@ -81,7 +83,8 @@ void Arquivo::replyFinishedSubdomain(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray response_items = document.object()["response_items"].toArray();
 
-    foreach(const QJsonValue &response_item, response_items){
+    foreach(const QJsonValue &response_item, response_items)
+    {
         /* getting url */
         QString domainUrl = response_item.toObject()["originalURL"].toString();
 

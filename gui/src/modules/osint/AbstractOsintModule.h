@@ -175,6 +175,23 @@ class AbstractOsintModule : public QObject {
 
             end(reply);
         }
+        virtual void replyFinishedRawNdjson(QNetworkReply *reply) // returns raw results from ndjson
+        {
+            if(reply->error())
+                this->onError(reply);
+            else{
+                /* converting ndjson to json array document */
+                QByteArray byteDocument = reply->readAll();
+                byteDocument = byteDocument.simplified();
+                byteDocument.replace("\n", ",");
+                byteDocument.push_back("]");
+                byteDocument.push_front("[");
+
+                emit rawResults(byteDocument);
+            }
+
+            end(reply);
+        }
 
     protected:
         int activeRequests = 0;

@@ -60,7 +60,6 @@ class Raw : public QDialog{
         void on_moduleBgpview_clicked();
         void on_moduleBinaryEdge_clicked();
         void on_moduleC99_clicked();
-        void on_moduleCommonCrawl_clicked();
         void on_moduleGithub_clicked();
         void on_moduleHunter_clicked();
         void on_moduleIpInfo_clicked();
@@ -106,6 +105,8 @@ class Raw : public QDialog{
         void on_moduleWhoxy_clicked();
 
         void on_moduleArquivo_clicked();
+
+        void on_moduleUKWebArchive_clicked();
 
 private:
         Ui::Raw *ui;

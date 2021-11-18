@@ -238,6 +238,16 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleArquivo->setChecked(false);
     }
+    if(settings.value("commoncrawl").toString() == TRUE){
+        ui->moduleCommonCrawl->setChecked(true);
+    }else{
+        ui->moduleCommonCrawl->setChecked(false);
+    }
+    if(settings.value("ukwebarchive").toString() == TRUE){
+        ui->moduleUKWebArchive->setChecked(true);
+    }else{
+        ui->moduleUKWebArchive->setChecked(false);
+    }
 
 /***************************************************************
                            CERTS
@@ -593,6 +603,16 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue("arquivo", TRUE);
     }else{
         settings.setValue("arquivo", FALSE);
+    }
+    if(ui->moduleCommonCrawl->isChecked()){
+        settings.setValue("commoncrawl", TRUE);
+    }else{
+        settings.setValue("commoncrawl", FALSE);
+    }
+    if(ui->moduleUKWebArchive->isChecked()){
+        settings.setValue("ukwebarchive", TRUE);
+    }else{
+        settings.setValue("ukwebarchive", FALSE);
     }
 
 /***************************************************************

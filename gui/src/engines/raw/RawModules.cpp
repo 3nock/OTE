@@ -354,23 +354,6 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
-    if(ui->moduleCommonCrawl->isChecked())
-    {
-        m_scanArgs->module = "CommonCrawl";
-        CommonCrawl *commonCrawl = new CommonCrawl(m_scanArgs);
-        commonCrawl->Enumerator(cThread);
-        commonCrawl->moveToThread(cThread);
-        //...
-        connect(commonCrawl, &CommonCrawl::rawResults, this, &Raw::onResults);
-        connect(commonCrawl, &CommonCrawl::errorLog, this, &Raw::onErrorLog);
-        connect(commonCrawl, &CommonCrawl::infoLog, this, &Raw::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
-        connect(cThread, &QThread::finished, commonCrawl, &CommonCrawl::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        return;
-    }
     if(ui->moduleGithub->isChecked())
     {
         m_scanArgs->module = "Gtihub";
@@ -1102,6 +1085,23 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleUKWebArchive->isChecked())
+    {
+        m_scanArgs->module = "UKWebArchive";
+        UKWebArchive *ukwebarchive = new UKWebArchive(m_scanArgs);
+        ukwebarchive->Enumerator(cThread);
+        ukwebarchive->moveToThread(cThread);
+        //...
+        connect(ukwebarchive, &UKWebArchive::rawResults, this, &Raw::onResults);
+        connect(ukwebarchive, &UKWebArchive::errorLog, this, &Raw::onErrorLog);
+        connect(ukwebarchive, &UKWebArchive::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ukwebarchive, &UKWebArchive::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -1308,16 +1308,6 @@ void Raw::on_moduleBinaryEdge_clicked(){
 void Raw::on_moduleC99_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::C99 meta;
-    m_optionSet = meta.flags;
-    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
-    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
-    ui->textEditEngineSummary->setText(meta.summary);
-    ui->comboBoxOptions->addItems(meta.flags.keys());
-}
-
-void Raw::on_moduleCommonCrawl_clicked(){
-    ui->comboBoxOptions->clear();
-    ModuleInfo::CommonCrawl meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
@@ -1738,6 +1728,16 @@ void Raw::on_moduleWhoxy_clicked(){
 void Raw::on_moduleArquivo_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Arquivo meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleUKWebArchive_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::UKWebArchive meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

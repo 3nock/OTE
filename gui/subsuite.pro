@@ -47,6 +47,7 @@ SOURCES += \
     src/modules/osint/api/SpyOnWeb.cpp \
     src/modules/osint/api/Whatcms.cpp \
     src/modules/osint/api/Whoxy.cpp \
+    src/modules/osint/archive/UKWebArchive.cpp \
     src/modules/osint/email/EmailCrawlr.cpp \
     src/modules/osint/email/Debounce.cpp \
     src/modules/osint/api/FullHunt.cpp \
@@ -85,8 +86,6 @@ SOURCES += \
     src/modules/osint/mal/Abuse.cpp \
     src/modules/osint/mal/AbuseIPDB.cpp \
     src/modules/osint/archive/Arquivo.cpp \
-    src/modules/osint/archive/Haw.cpp \
-    src/modules/osint/archive/UkWebArchive.cpp \
     src/modules/osint/cert/Digitorus.cpp \
     src/modules/osint/mal/BotScout.cpp \
     src/modules/osint/mal/FraudGuard.cpp \
@@ -197,6 +196,7 @@ HEADERS += \
     src/modules/osint/api/SpyOnWeb.h \
     src/modules/osint/api/Whatcms.h \
     src/modules/osint/api/Whoxy.h \
+    src/modules/osint/archive/UKWebArchive.h \
     src/modules/osint/email/EmailCrawlr.h \
     src/modules/osint/OsintModulesHeaders.h \
     src/modules/osint/email/Debounce.h \
@@ -237,8 +237,6 @@ HEADERS += \
     src/modules/osint/mal/Abuse.h \
     src/modules/osint/mal/AbuseIPDB.h \
     src/modules/osint/archive/Arquivo.h \
-    src/modules/osint/archive/Haw.h \
-    src/modules/osint/archive/UkWebArchive.h \
     src/modules/osint/cert/Digitorus.h \
     src/modules/osint/mal/BotScout.h \
     src/modules/osint/mal/FraudGuard.h \

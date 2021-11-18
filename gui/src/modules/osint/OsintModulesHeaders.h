@@ -103,6 +103,7 @@
 #include "src/modules/osint/archive/CommonCrawl.h"
 #include "src/modules/osint/archive/ArchiveIt.h"
 #include "src/modules/osint/archive/Arquivo.h"
+#include "src/modules/osint/archive/UkWebArchive.h"
 ///
 /// scrape
 ///

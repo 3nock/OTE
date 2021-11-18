@@ -4,80 +4,109 @@
 #include <QJsonArray>
 
 /*
- * provides urls...
- * uses archives of list from different times...
- * returns ndjson format...
- *  try:
- *      Content-Type: application/json
+ * for now only use the first index url to obtain crawled urls...
  */
-
-CommonCrawl::CommonCrawl(ScanArgs *args):
-    AbstractOsintModule(args)
+CommonCrawl::CommonCrawl(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &CommonCrawl::replyFinished);
+    log.moduleName = "CommonCrawl";
 }
 CommonCrawl::~CommonCrawl(){
     delete manager;
 }
 
 void CommonCrawl::start(){
+    /* first temporary connection to index */
+    connect(manager, &MyNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedIndex);
+
+    /* request to obtain the index url */
     QNetworkRequest request;
     QUrl url("https://index.commoncrawl.org/collinfo.json");
     request.setUrl(url);
     manager->get(request);
+    activeRequests++;
 }
 
-void CommonCrawl::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
+void CommonCrawl::replyFinishedIndex(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray subdomainList = jsonReply.array();
+
+    foreach(const QJsonValue &value, subdomainList)
     {
-        if(getArchive){
-            getArchive = false;
-            if(args->raw && args->option == "index"){
-                emit rawResults(reply->readAll());
-                reply->deleteLater();
-                emit quitThread();
-                return;
-            }
-            QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-            QJsonArray subdomainList = jsonReply.array();
-            foreach(const QJsonValue &value, subdomainList){
-                QJsonObject aaa = value.toObject();
-                urlList.append(aaa["cdx-api"].toString());
-            }
-            ///
-            /// send request to get the subdomains,
-            /// just use the first on the list for now...
-            ///
-            QUrl url(urlList.at(0)+"?url=*."+args->target+"&output=json&fl=url");
-            QNetworkRequest request;
-            request.setUrl(url);
-            manager->get(request);
-            ///
-            /// return...
-            ///
-            reply->deleteLater();
-            return;
-        }
-        else{
-            if(args->raw){
-                emit rawResults(reply->readAll());
-                reply->deleteLater();
-                emit quitThread();
-                return;
-            }
-            QString replyList = QString::fromUtf8(reply->readAll());
-            QStringList urlList = replyList.split("\n");
-            foreach(const QString &value, urlList){
-                    QString url = value;
-                    url.chop(2);
-                    emit subdomain(url.remove(0, 9));
-            }
-        }
+        QJsonObject aaa = value.toObject();
+        urlList.append(aaa["cdx-api"].toString());
     }
-    else{
-        emit errorLog(reply->errorString());
+
+    /* disconnect the first manager connection */
+    disconnect(manager, &MyNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedIndex);
+
+    /* make new manager connection depending on user output */
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedUrl);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedSubdomain);
+
+    /* send request to get the subdomains/urls */
+    QUrl url(urlList.at(0)+"?url=*."+args->target+"&output=json&fl=url");
+    QNetworkRequest request;
+    request.setUrl(url);
+    manager->get(request);
+    activeRequests++;
+
+    end(reply);
+}
+
+void CommonCrawl::replyFinishedUrl(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    reply->deleteLater();
-    emit quitThread();
+
+    QString replyList = QString::fromUtf8(reply->readAll());
+    QStringList urlList = replyList.split("\n");
+
+    foreach(const QString &value, urlList)
+    {
+        QString urlValue = value;
+        urlValue.chop(2);
+        emit url(urlValue.remove(0, 9));
+        log.resultsCount++;
+    }
+
+    end(reply);
+}
+
+void CommonCrawl::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QString replyList = QString::fromUtf8(reply->readAll());
+    QStringList urlList = replyList.split("\n");
+
+    foreach(const QString &value, urlList)
+    {
+        /* obtaining the url */
+        QString urlValue = value;
+        urlValue.chop(2);
+        QString domainUrl = urlValue.remove(0, 9);
+
+        /* extracting subdomain from url...*/
+        domainUrl.remove("http://");
+        domainUrl.remove("https://");
+        domainUrl = domainUrl.split("/").at(0);
+
+        /*  emiting subdomain... */
+        emit subdomain(domainUrl);
+        log.resultsCount++;
+
+    }
+
+    end(reply);
 }

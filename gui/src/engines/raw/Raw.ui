@@ -706,9 +706,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>0</y>
+                  <y>-102</y>
                   <width>169</width>
-                  <height>506</height>
+                  <height>529</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -765,6 +765,13 @@
                   <widget class="QRadioButton" name="moduleArquivo">
                    <property name="text">
                     <string>Arquivo</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleUKWebArchive">
+                   <property name="text">
+                    <string>UKWebArchive</string>
                    </property>
                   </widget>
                  </item>
@@ -904,7 +911,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>169</width>
-                  <height>1024</height>
+                  <height>1001</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1073,13 +1080,6 @@
                   <widget class="QRadioButton" name="moduleC99">
                    <property name="text">
                     <string>C99</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="moduleCommonCrawl">
-                   <property name="text">
-                    <string>CommonCrawl</string>
                    </property>
                   </widget>
                  </item>
