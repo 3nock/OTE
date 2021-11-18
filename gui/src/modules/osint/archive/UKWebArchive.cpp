@@ -91,10 +91,6 @@ void UKWebArchive::replyFinishedSubdomain(QNetworkReply *reply){
     byteDocument.push_back("]");
     byteDocument.push_front("[");
 
-    emit subdomain(QString::fromUtf8(byteDocument));
-    end(reply);
-    return;
-
     /* ... */
     QJsonDocument document = QJsonDocument::fromJson(byteDocument);
     QJsonArray urls = document.array();

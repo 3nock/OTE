@@ -41,9 +41,10 @@ struct ScanArgs{
     bool inputIp = false;
     bool inputAsn = false;
     bool inputCidr = false;
+    bool inputUrl = false;
     bool inputEmail = false;
     bool inputDomain = false;
-    bool inputCertFingerprint = false;
+    bool inputSSLCert = false;
     //...
     bool outputCertFingerprint = false;
     bool outputSubdomainIp = false;
@@ -133,7 +134,7 @@ class AbstractOsintModule : public QObject {
         /* void infoLog(ScanLog log);
            void errorLog(ScanLog error);
         */
-        void certFingerprint(QString certId); // change to sslCert
+        void sslCert(QString certId); // change to sslCert
         void ipCdir(QString ip);
         void ip(QString ip);
         void subdomain(QString subdomain);
@@ -159,7 +160,7 @@ class AbstractOsintModule : public QObject {
         virtual void replyFinished(QNetworkReply*){}
         virtual void replyFinishedInfo(QNetworkReply*){}
         virtual void replyFinishedPrefixes(QNetworkReply *){} // ip/cidr prefixes
-        virtual void replyFinishedCertFingerprint(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
+        virtual void replyFinishedSSLCert(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
         virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
         virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains
         virtual void replyFinishedIp(QNetworkReply*){} // returns ip-addresses

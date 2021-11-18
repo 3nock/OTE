@@ -61,7 +61,7 @@ class RiskIq: public AbstractOsintModule{
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedCertFingerprint(QNetworkReply *reply) override;
+        void replyFinishedSSLCert(QNetworkReply *reply) override;
 
     private:
         QString m_name = nullptr;

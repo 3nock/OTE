@@ -1,5 +1,5 @@
-#ifndef CENSYSFREE_H
-#define CENSYSFREE_H
+#ifndef CENSYS_H
+#define CENSYS_H
 
 /*
  * INPUT domain:           OUTPUT: cert, subdomain
@@ -10,7 +10,7 @@
 #include "../AbstractOsintModule.h"
 
 namespace ModuleInfo {
-    struct CensysFree{
+    struct Censys{
         QString name = "Censys";
         QString url = "https://censys.io/";
         QString url_apiDoc = "https://censys.io/api/v1/docs/";
@@ -19,16 +19,20 @@ namespace ModuleInfo {
     };
 }
 
-class CensysFree: public AbstractOsintModule{
+class Censys: public AbstractOsintModule{
 
     public:
-        CensysFree(ScanArgs *args);
-        ~CensysFree() override;
+        Censys(ScanArgs *args);
+        ~Censys() override;
 
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedSSLCert(QNetworkReply *reply) override;
+
+    private:
+        QString m_uid;
+        QString m_key;
 };
 
-#endif // CENSYSFREE_H
+#endif // CENSYS_H

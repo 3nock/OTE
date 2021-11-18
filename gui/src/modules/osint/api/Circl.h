@@ -39,7 +39,7 @@ class Circl: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedCertFingerprint(QNetworkReply *reply) override;
+        void replyFinishedSSLCert(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;

@@ -71,6 +71,7 @@
 #include "src/modules/osint/cert/GoogleCert.h"
 #include "src/modules/osint/cert/Certspotter.h"
 #include "src/modules/osint/cert/CensysFree.h"
+#include "src/modules/osint/cert/Censys.h"
 ///
 /// site...
 ///
@@ -103,7 +104,7 @@
 #include "src/modules/osint/archive/CommonCrawl.h"
 #include "src/modules/osint/archive/ArchiveIt.h"
 #include "src/modules/osint/archive/Arquivo.h"
-#include "src/modules/osint/archive/UkWebArchive.h"
+#include "src/modules/osint/archive/UKWebArchive.h"
 ///
 /// scrape
 ///

@@ -3,23 +3,27 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#define MATCHTYPE_DOMAIN 0
+#define MATCHTYPE_EXACT 1
+#define MATCHTYPE_HOST 2
+#define MATCHTYPE_PREFIX 3
+
 /*
-  different searching ways, produces tons of urls...
-  you can get subdomain name by spliting btn http://<your_subdomain>/
-  another:
-    QUrl url("http://web.archive.org/cdx/search/cdx?url=*."+target+"&output=json&collapse=urlkey");
-    https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=txt&collapse=urlkey&url=udsm.ac.tz - text file
+ *  &from=2010&to=2018
+ *   &limit=999999
+ */
 
-    other options:
-    &from=2010&to=2018
-    &limit=999999
-*/
-
-Waybackmachine::Waybackmachine(ScanArgs *args):
-    AbstractOsintModule(args)
+Waybackmachine::Waybackmachine(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Waybackmachine::replyFinished);
+    log.moduleName = "WaybackMachine";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedRaw);
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedUrl);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedSubdomain);
 }
 Waybackmachine::~Waybackmachine(){
     delete manager;
@@ -27,30 +31,94 @@ Waybackmachine::~Waybackmachine(){
 
 void Waybackmachine::start(){
     QNetworkRequest request;
-    QUrl url("https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=json&collapse=urlkey&url="+args->target);
-    request.setUrl(url);
-    manager->get(request);
+
+    QUrl url;
+    if(args->raw){
+        switch (args->rawOption) {
+        case MATCHTYPE_DOMAIN:
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&output=json&collapse=urlkey&url="+args->target);
+            break;
+        case MATCHTYPE_EXACT:
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=exact&output=json&collapse=urlkey&url="+args->target);
+            break;
+        case MATCHTYPE_HOST:
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=host&output=json&collapse=urlkey&url="+args->target);
+            break;
+        case MATCHTYPE_PREFIX:
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&output=json&collapse=urlkey&url="+args->target);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->inputDomain){
+        if(args->outputUrl){
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&fl=original&output=json&collapse=urlkey&url="+args->target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args->outputSubdomain){
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=json&collapse=urlkey&url="+args->target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
-void Waybackmachine::replyFinished(QNetworkReply *reply){
-    if(reply->error())
-    {
-        emit errorLog(reply->errorString());
+void Waybackmachine::replyFinishedUrl(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    else
+
+    QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray urls = jsonReply.array();
+
+    urls.removeFirst();
+    foreach(const QJsonValue &value, urls)
     {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
+        QString urlValue = value.toArray()[0].toString();
+        emit url(urlValue);
+        log.resultsCount++;
+    }
+
+    end(reply);
+}
+
+void Waybackmachine::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray mainArray = jsonReply.array();
+
+    mainArray.removeFirst();
+    foreach(const QJsonValue &value, mainArray)
+    {
+        /* getting url */
+        QString domainUrl = value.toArray()[0].toString();
+
+        /* extracting subdomain from url...*/
+        domainUrl.remove("http://");
+        domainUrl.remove("https://");
+        domainUrl = domainUrl.split("/").at(0);
+
+        /* remove port number if available */
+        if(domainUrl.contains(":")){
+            domainUrl = domainUrl.split(":").at(0);
         }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray mainArray = jsonReply.array();
-        mainArray.removeFirst();
-        foreach(const QJsonValue &value, mainArray)
-            emit subdomain(value.toArray()[0].toString());
+
+        /*  emiting subdomain... */
+        emit subdomain(domainUrl);
+        log.resultsCount++;
     }
-    reply->deleteLater();
-    emit quitThread();
+
+    end(reply);
 }

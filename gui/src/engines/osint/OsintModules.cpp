@@ -13,26 +13,49 @@ void Osint::startScan(){
     scanArgs->target = ui->lineEditTarget->text();
     scanArgs->inputDomain = true;
 
+    /* getting input type as specified by user */
+    switch(ui->comboBoxInput->currentIndex()){
+    case INPUT_DOMAIN:
+        scanArgs->inputDomain = true;
+        break;
+    case INPUT_IP:
+        scanArgs->inputIp = true;
+        break;
+    case INPUT_EMAIL:
+        scanArgs->inputEmail = true;
+        break;
+    case INPUT_URL:
+        scanArgs->inputUrl = true;
+        break;
+    case INPUT_ASN:
+        scanArgs->inputAsn = true;
+        break;
+    case INPUT_SSLCERT:
+        scanArgs->inputSSLCert = true;
+        break;
+    }
+
+    /* getting output type as specified by user */
     switch(ui->comboBoxOption->currentIndex()){
-    case SUBDOMAINIP:
+    case OUTPUT_SUBDOMAINIP:
         scanArgs->outputSubdomainIp = true;
         break;
-    case SUBDOMAIN:
+    case OUTPUT_SUBDOMAIN:
         scanArgs->outputSubdomain = true;
         break;
-    case IP:
+    case OUTPUT_IP:
         scanArgs->outputIp = true;
         break;
-    case EMAIL:
+    case OUTPUT_EMAIL:
         scanArgs->outputEmail = true;
         break;
-    case URL:
+    case OUTPUT_URL:
         scanArgs->outputUrl = true;
         break;
-    case ASN:
+    case OUTPUT_ASN:
         scanArgs->outputAsn = true;
         break;
-    case SSLCERT:
+    case OUTPUT_SSLCERT:
         scanArgs->outputCertFingerprint = true;
         break;
     }
@@ -128,7 +151,7 @@ void Osint::startScan(){
         connect(circl, &Circl::NS, this, &Osint::onResultNS);
         connect(circl, &Circl::CNAME, this, &Osint::onResultCNAME);
         connect(circl, &Circl::asn, this, &Osint::onResultAsn);
-        connect(circl, &Circl::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(circl, &Circl::sslCert, this, &Osint::onResultSSLCert);
         connect(circl, &Circl::errorLog, this, &Osint::onErrorLog);
         connect(circl, &Circl::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -366,7 +389,7 @@ void Osint::startScan(){
         connect(riskiq, &RiskIq::CNAME, this, &Osint::onResultCNAME);
         connect(riskiq, &RiskIq::NS, this, &Osint::onResultNS);
         connect(riskiq, &RiskIq::MX, this, &Osint::onResultMX);
-        connect(riskiq, &RiskIq::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(riskiq, &RiskIq::sslCert, this, &Osint::onResultSSLCert);
         connect(riskiq, &RiskIq::errorLog, this, &Osint::onErrorLog);
         connect(riskiq, &RiskIq::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -487,7 +510,7 @@ void Osint::startScan(){
         connect(spyse, &Spyse::MX, this, &Osint::onResultMX);
         connect(spyse, &Spyse::TXT, this, &Osint::onResultTXT);
         connect(spyse, &Spyse::CNAME, this, &Osint::onResultCNAME);
-        connect(spyse, &Spyse::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(spyse, &Spyse::sslCert, this, &Osint::onResultSSLCert);
         connect(spyse, &Spyse::errorLog, this, &Osint::onErrorLog);
         connect(spyse, &Spyse::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -559,7 +582,7 @@ void Osint::startScan(){
         threatminer->moveToThread(cThread);
         //...
         connect(threatminer, &Threatminer::subdomain, this, &Osint::onResultSubdomain);
-        connect(threatminer, &Threatminer::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(threatminer, &Threatminer::sslCert, this, &Osint::onResultSSLCert);
         connect(threatminer, &Threatminer::ip, this, &Osint::onResultIp);
         connect(threatminer, &Threatminer::email, this, &Osint::onResultEmail);
         connect(threatminer, &Threatminer::url, this, &Osint::onResultUrl);
@@ -610,7 +633,7 @@ void Osint::startScan(){
         connect(virustotal, &VirusTotal::CNAME, this, &Osint::onResultCNAME);
         connect(virustotal, &VirusTotal::NS, this, &Osint::onResultNS);
         connect(virustotal, &VirusTotal::MX, this, &Osint::onResultMX);
-        connect(virustotal, &VirusTotal::certFingerprint, this, &Osint::onResultCertFingerprint);
+        connect(virustotal, &VirusTotal::sslCert, this, &Osint::onResultSSLCert);
         connect(virustotal, &VirusTotal::url, this, &Osint::onResultUrl);
         connect(virustotal, &VirusTotal::errorLog, this, &Osint::onErrorLog);
         connect(virustotal, &VirusTotal::infoLog, this, &Osint::onInfoLog);
@@ -965,11 +988,45 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(ui->moduleWaybackmachine->isChecked()){
+        Waybackmachine *waybackmachine = new Waybackmachine(scanArgs);
+        QThread *cThread = new QThread(this);
+        waybackmachine->Enumerator(cThread);
+        waybackmachine->moveToThread(cThread);
+        //...
+        connect(waybackmachine, &Waybackmachine::subdomain, this, &Osint::onResultSubdomain);
+        connect(waybackmachine, &Waybackmachine::url, this, &Osint::onResultUrl);
+        connect(waybackmachine, &Waybackmachine::errorLog, this, &Osint::onErrorLog);
+        connect(waybackmachine, &Waybackmachine::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, waybackmachine, &Waybackmachine::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
 
     /****************************************************************************
                                  CERTS
     *****************************************************************************/
 
+    if(ui->moduleCensysFree->isChecked()){
+        CensysFree *censysfree = new CensysFree(scanArgs);
+        QThread *cThread = new QThread(this);
+        censysfree->Enumerator(cThread);
+        censysfree->moveToThread(cThread);
+        //...
+        connect(censysfree, &CensysFree::subdomain, this, &Osint::onResultSubdomain);
+        connect(censysfree, &CensysFree::sslCert, this, &Osint::onResultSSLCert);
+        connect(censysfree, &CensysFree::errorLog, this, &Osint::onErrorLog);
+        connect(censysfree, &CensysFree::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, censysfree, &CensysFree::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(ui->moduleCertspotter->isChecked())
     {
         Certspotter *certspotter = new Certspotter(scanArgs);
@@ -1150,46 +1207,6 @@ void Osint::startScan(){
         connect(urlscan, &Urlscan::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, urlscan, &Urlscan::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->moduleWaybackmachine->isChecked()){
-        Waybackmachine *waybackmachine = new Waybackmachine(scanArgs);
-        QThread *cThread = new QThread(this);
-        waybackmachine->Enumerator(cThread);
-        waybackmachine->moveToThread(cThread);
-        //...
-        connect(waybackmachine, &Waybackmachine::subdomain, this, &Osint::onResultSubdomain);
-        connect(waybackmachine, &Waybackmachine::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(waybackmachine, &Waybackmachine::ip, this, &Osint::onResultIp);
-        connect(waybackmachine, &Waybackmachine::email, this, &Osint::onResultEmail);
-        connect(waybackmachine, &Waybackmachine::url, this, &Osint::onResultUrl);
-        connect(waybackmachine, &Waybackmachine::errorLog, this, &Osint::onErrorLog);
-        connect(waybackmachine, &Waybackmachine::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, waybackmachine, &Waybackmachine::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->moduleCensysFree->isChecked()){
-        CensysFree *censysfree = new CensysFree(scanArgs);
-        QThread *cThread = new QThread(this);
-        censysfree->Enumerator(cThread);
-        censysfree->moveToThread(cThread);
-        //...
-        connect(censysfree, &CensysFree::subdomain, this, &Osint::onResultSubdomain);
-        connect(censysfree, &CensysFree::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(censysfree, &CensysFree::ip, this, &Osint::onResultIp);
-        connect(censysfree, &CensysFree::email, this, &Osint::onResultEmail);
-        connect(censysfree, &CensysFree::url, this, &Osint::onResultUrl);
-        connect(censysfree, &CensysFree::errorLog, this, &Osint::onErrorLog);
-        connect(censysfree, &CensysFree::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, censysfree, &CensysFree::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

@@ -64,31 +64,31 @@ void Osint::on_buttonAction_clicked(){
     int option = ui->comboBoxOption->currentIndex();
 
     switch(option){
-    case SUBDOMAINIP:
+    case OUTPUT_SUBDOMAINIP:
         if(result->osint->subdomainIpProxy->rowCount() < 1)
             return;
         break;
-    case SUBDOMAIN:
+    case OUTPUT_SUBDOMAIN:
         if(result->osint->subdomainProxy->rowCount() < 1)
             return;
         break;
-    case IP:
+    case OUTPUT_IP:
         if(result->osint->ipProxy->rowCount() < 1)
             return;
         break;
-    case EMAIL:
+    case OUTPUT_EMAIL:
         if(result->osint->emailProxy->rowCount() < 1)
             return;
         break;
-    case URL:
+    case OUTPUT_URL:
         if(result->osint->urlProxy->rowCount() < 1)
             return;
         break;
-    case ASN:
+    case OUTPUT_ASN:
         if(result->osint->asnProxy->rowCount() < 1)
             return;
         break;
-    case SSLCERT:
+    case OUTPUT_SSLCERT:
         if(result->osint->sslCertProxy->rowCount() < 1)
             return;
         break;
@@ -108,7 +108,7 @@ void Osint::on_buttonAction_clicked(){
     ///
     /// ADDING ACTIONS TO THE CONTEXT MENU...
     ///
-    if(option == SUBDOMAINIP){
+    if(option == OUTPUT_SUBDOMAINIP){
         saveMenu->addAction(&actionSaveSubdomains);
         copyMenu->addAction(&actionCopySubdomains);
         saveMenu->addAction(&actionSaveIpAddresses);
@@ -116,27 +116,27 @@ void Osint::on_buttonAction_clicked(){
         saveMenu->addAction(&actionSaveAll);
         copyMenu->addAction(&actionCopyAll);
     }
-    if(option == SUBDOMAIN){
+    if(option == OUTPUT_SUBDOMAIN){
         saveMenu->addAction(&actionSaveSubdomains_subdomain);
         copyMenu->addAction(&actionCopySubdomains_subdomain);
     }
-    if(option == IP){
+    if(option == OUTPUT_IP){
         saveMenu->addAction(&actionSaveIpAddresses_ip);
         copyMenu->addAction(&actionCopyIpAddresses_ip);
     }
-    if(option == EMAIL){
+    if(option == OUTPUT_EMAIL){
         saveMenu->addAction(&actionSaveEmails);
         copyMenu->addAction(&actionCopyEmails);
     }
-    if(option == URL){
+    if(option == OUTPUT_URL){
         saveMenu->addAction(&actionSaveUrls);
         copyMenu->addAction(&actionCopyUrls);
     }
-    if(option == ASN){
+    if(option == OUTPUT_ASN){
         saveMenu->addAction(&actionSaveAsns);
         copyMenu->addAction(&actionCopyAsns);
     }
-    if(option == SSLCERT){
+    if(option == OUTPUT_SSLCERT){
         saveMenu->addAction(&actionSaveCerts);
         copyMenu->addAction(&actionCopyCerts);
     }
@@ -147,14 +147,14 @@ void Osint::on_buttonAction_clicked(){
     Menu->addSeparator();
     if(option == IP)
         Menu->addAction(&actionSendToIp_ip);
-    if(option == SUBDOMAINIP){
+    if(option == OUTPUT_SUBDOMAINIP){
         Menu->addAction(&actionSendToIp);
         Menu->addAction(&actionSendToOsint);
         Menu->addAction(&actionSendToBrute);
         Menu->addAction(&actionSendToActive);
         Menu->addAction(&actionSendToRecords);
     }
-    if(option == SUBDOMAIN){
+    if(option == OUTPUT_SUBDOMAIN){
         Menu->addAction(&actionSendToOsint_subdomain);
         Menu->addAction(&actionSendToBrute_subdomain);
         Menu->addAction(&actionSendToActive_subdomain);
@@ -181,13 +181,13 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     Menu->addAction(&actionCopy);
     Menu->addAction(&actionSave);
     Menu->addSeparator();
-    if(option != EMAIL){
+    if(option != OUTPUT_EMAIL){
         Menu->addAction(&actionOpenInBrowser);
         Menu->addSeparator();
     }
-    if(option == SUBDOMAINIP || option == IP)
+    if(option == OUTPUT_SUBDOMAINIP || option == IP)
         Menu->addAction(&actionSendToIp_c);
-    if(option == SUBDOMAINIP || option == SUBDOMAIN){
+    if(option == OUTPUT_SUBDOMAINIP || option == OUTPUT_SUBDOMAIN){
         Menu->addAction(&actionSendToOsint_c);
         Menu->addAction(&actionSendToBrute_c);
         Menu->addAction(&actionSendToActive_c);

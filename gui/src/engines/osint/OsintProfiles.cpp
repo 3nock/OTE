@@ -248,6 +248,11 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleUKWebArchive->setChecked(false);
     }
+    if(settings.value(OSINT_WAYBACKMACHINE).toString() == TRUE){
+        ui->moduleWaybackmachine->setChecked(true);
+    }else{
+        ui->moduleWaybackmachine->setChecked(false);
+    }
 
 /***************************************************************
                            CERTS
@@ -331,11 +336,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->modulePkey->setChecked(true);
     }else{
         ui->modulePkey->setChecked(false);
-    }
-    if(settings.value(OSINT_WAYBACKMACHINE).toString() == TRUE){
-        ui->moduleWaybackmachine->setChecked(true);
-    }else{
-        ui->moduleWaybackmachine->setChecked(false);
     }
     if(settings.value(OSINT_ASK).toString() == TRUE){
         ui->moduleAsk->setChecked(true);
@@ -614,6 +614,11 @@ void Osint::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue("ukwebarchive", FALSE);
     }
+    if(ui->moduleWaybackmachine->isChecked()){
+        settings.setValue(OSINT_WAYBACKMACHINE, TRUE);
+    }else{
+        settings.setValue(OSINT_WAYBACKMACHINE, FALSE);
+    }
 
 /***************************************************************
                            CERTS
@@ -683,11 +688,6 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_PKEY, TRUE);
     }else{
         settings.setValue(OSINT_PKEY, FALSE);
-    }
-    if(ui->moduleWaybackmachine->isChecked()){
-        settings.setValue(OSINT_WAYBACKMACHINE, TRUE);
-    }else{
-        settings.setValue(OSINT_WAYBACKMACHINE, FALSE);
     }
     if(ui->moduleAsk->isChecked()){
         settings.setValue(OSINT_ASK, TRUE);

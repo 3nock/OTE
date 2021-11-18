@@ -33,7 +33,7 @@ Threatminer::Threatminer(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedUrl);
     if(args->outputCertFingerprint)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedCertFingerprint);
+        connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedSSLCert);
 }
 Threatminer::~Threatminer(){
     delete manager;
@@ -142,7 +142,7 @@ void Threatminer::start(){
     }
 
     /* for ssl-cert hash target */
-    if(args->inputCertFingerprint){
+    if(args->inputSSLCert){
         if(args->outputIp){
             url.setUrl("https://api.threatminer.org/v2/ssl.php?q="+args->target+"&rt=1");
             request.setAttribute(QNetworkRequest::User, SSL_HOSTS);
@@ -274,7 +274,7 @@ void Threatminer::replyFinishedUrl(QNetworkReply *reply){
     end(reply);
 }
 
-void Threatminer::replyFinishedCertFingerprint(QNetworkReply *reply){
+void Threatminer::replyFinishedSSLCert(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -287,7 +287,7 @@ void Threatminer::replyFinishedCertFingerprint(QNetworkReply *reply){
     if(requestType == IP_SSL_CERTS){
         foreach(const QJsonValue &result, results){
             QString hash = result.toString();
-            emit certFingerprint(hash);
+            emit sslCert(hash);
             log.resultsCount++;
         }
     }

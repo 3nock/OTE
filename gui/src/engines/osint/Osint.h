@@ -7,13 +7,23 @@
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ConfigDialog.h"
 
-#define SUBDOMAINIP 0
-#define SUBDOMAIN 1
-#define IP 2
-#define EMAIL 3
-#define URL 4
-#define ASN 5
-#define SSLCERT 6
+/* output option */
+#define OUTPUT_SUBDOMAINIP 0
+#define OUTPUT_SUBDOMAIN 1
+#define OUTPUT_IP 2
+#define OUTPUT_EMAIL 3
+#define OUTPUT_URL 4
+#define OUTPUT_ASN 5
+#define OUTPUT_SSLCERT 6
+
+/* input option */
+#define INPUT_DOMAIN 0
+#define INPUT_IP 1
+#define INPUT_EMAIL 2
+#define INPUT_URL 3
+#define INPUT_ASN 4
+#define INPUT_SSLCERT 5
+
 
 namespace Ui {
     class Osint;
@@ -47,7 +57,7 @@ class Osint : public AbstractEngine{
         void onResultMX(QString MX);
         void onResultNS(QString NS);
         void onResultTXT(QString TXT);
-        void onResultCertFingerprint(QString certId);
+        void onResultSSLCert(QString sha1_or_sha256);
 
     private slots:
         void onClearResults();
@@ -76,7 +86,9 @@ class Osint : public AbstractEngine{
         void on_buttonCreateProfile_clicked();
         void on_buttonDeleteProfile_clicked();
 
-    private:
+        void on_comboBoxInput_currentIndexChanged(int index);
+
+private:
         Ui::Osint *ui;
         //...
         osint::ScanArguments *m_scanArguments;

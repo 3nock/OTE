@@ -4,7 +4,9 @@
 #include <QDateTime>
 #include <QClipboard>
 #include "src/utils/Config.h"
+#include "src/utils/Definitions.h"
 #include "src/dialogs/OsintConfigDialog.h"
+
 
 /* log on every scan each module its results count
  *
@@ -77,7 +79,7 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     /// ...
     ///
     m_currentPath = QDir::currentPath();
-    ui->lineEditTarget->setPlaceholderText("eg. example.com, 1.1.1.1, <asn number>, <SHA1 certificate fingerprint>");
+    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
     ui->lineEditFilter->setPlaceholderText("Filter...");
     //...
     result->osint->subdomainIp->setHorizontalHeaderLabels({"Subdomains", "IpAddresses"});
@@ -247,12 +249,12 @@ void Osint::onResultTXT(QString TXT){
         project->addPassiveTXT({TXT});
 }
 
-void Osint::onResultCertFingerprint(QString certId){
+void Osint::onResultSSLCert(QString sha1_or_sha256){
     int prevSize = m_sslCertSet.count();
-    m_sslCertSet.insert(certId);
-    if(m_sslCertSet.count() > prevSize && !certId.isEmpty()){
-        result->osint->sslCert->appendRow(new QStandardItem(certId));
-        project->addPassiveSSLCert({certId});
+    m_sslCertSet.insert(sha1_or_sha256);
+    if(m_sslCertSet.count() > prevSize && !sha1_or_sha256.isEmpty()){
+        result->osint->sslCert->appendRow(new QStandardItem(sha1_or_sha256));
+        project->addPassiveSSLCert({sha1_or_sha256});
         ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
     }
 }
@@ -301,31 +303,31 @@ void Osint::onScanThreadEnded(){
 
 void Osint::onClearResults(){
     switch(ui->comboBoxOption->currentIndex()){
-    case SUBDOMAINIP:
+    case OUTPUT_SUBDOMAINIP:
         result->osint->subdomainIp->clear();
         result->osint->subdomainIp->setHorizontalHeaderLabels({"Subdomains", "IpAddresses"});
         break;
-    case SUBDOMAIN:
+    case OUTPUT_SUBDOMAIN:
         result->osint->subdomain->clear();
         result->osint->subdomain->setHorizontalHeaderLabels({"Subdomains"});
         break;
-    case IP:
+    case OUTPUT_IP:
         result->osint->ip->clear();
         result->osint->ip->setHorizontalHeaderLabels({"IpAddresses"});
         break;
-    case EMAIL:
+    case OUTPUT_EMAIL:
         result->osint->email->clear();
         result->osint->email->setHorizontalHeaderLabels({"Emails"});
         break;
-    case URL:
+    case OUTPUT_URL:
         result->osint->url->clear();
         result->osint->url->setHorizontalHeaderLabels({"Urls"});
         break;
-    case ASN:
+    case OUTPUT_ASN:
         result->osint->asn->clear();
         result->osint->asn->setHorizontalHeaderLabels({"Asn", "Name"});
         break;
-    case SSLCERT:
+    case OUTPUT_SSLCERT:
         result->osint->sslCert->clear();
         result->osint->sslCert->setHorizontalHeaderLabels({"Asn", "Name"});
         break;
@@ -361,41 +363,41 @@ void Osint::on_checkBoxMultipleTargets_clicked(bool checked){
 
 void Osint::on_comboBoxOption_currentIndexChanged(int index){
     switch(index){
-    case SUBDOMAINIP:
+    case OUTPUT_SUBDOMAINIP:
         ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
         ui->labelResultsCount->setNum(result->osint->subdomainIpProxy->rowCount());
         ui->comboBoxFilter->clear();
         ui->comboBoxFilter->addItems({"Subdomain", "Ip"});
         ui->comboBoxFilter->show();
         break;
-    case SUBDOMAIN:
+    case OUTPUT_SUBDOMAIN:
         ui->tableViewResults->setModel(result->osint->subdomainProxy);
         ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
         ui->comboBoxFilter->hide();
         break;
-    case IP:
+    case OUTPUT_IP:
         ui->tableViewResults->setModel(result->osint->ipProxy);
         ui->labelResultsCount->setNum(result->osint->ipProxy->rowCount());
         ui->comboBoxFilter->hide();
         break;
-    case EMAIL:
+    case OUTPUT_EMAIL:
         ui->tableViewResults->setModel(result->osint->emailProxy);
         ui->labelResultsCount->setNum(result->osint->emailProxy->rowCount());
         ui->comboBoxFilter->hide();
         break;
-    case URL:
+    case OUTPUT_URL:
         ui->tableViewResults->setModel(result->osint->urlProxy);
         ui->labelResultsCount->setNum(result->osint->urlProxy->rowCount());
         ui->comboBoxFilter->hide();
         break;
-    case ASN:
+    case OUTPUT_ASN:
         ui->tableViewResults->setModel(result->osint->asnProxy);
         ui->labelResultsCount->setNum(result->osint->asnProxy->rowCount());
         ui->comboBoxFilter->clear();
         ui->comboBoxFilter->addItems({"ASN", "Name"});
         ui->comboBoxFilter->show();
         break;
-    case SSLCERT:
+    case OUTPUT_SSLCERT:
         ui->tableViewResults->setModel(result->osint->sslCertProxy);
         ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
         ui->comboBoxFilter->clear();
@@ -406,42 +408,65 @@ void Osint::on_comboBoxOption_currentIndexChanged(int index){
 
 void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
     switch(ui->comboBoxOption->currentIndex()){
-    case SUBDOMAINIP:
+    case OUTPUT_SUBDOMAINIP:
         result->osint->subdomainIpProxy->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
         result->osint->subdomainIpProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
         ui->labelResultsCount->setNum(result->osint->subdomainIpProxy->rowCount());
         break;
-    case SUBDOMAIN:
+    case OUTPUT_SUBDOMAIN:
         result->osint->subdomainProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->subdomainProxy);
         ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
         break;
-    case IP:
+    case OUTPUT_IP:
         result->osint->ipProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->ipProxy);
         ui->labelResultsCount->setNum(result->osint->ipProxy->rowCount());
         break;
-    case EMAIL:
+    case OUTPUT_EMAIL:
         result->osint->emailProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->emailProxy);
         ui->labelResultsCount->setNum(result->osint->emailProxy->rowCount());
         break;
-    case URL:
+    case OUTPUT_URL:
         result->osint->urlProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->urlProxy);
         ui->labelResultsCount->setNum(result->osint->urlProxy->rowCount());
         break;
-    case ASN:
+    case OUTPUT_ASN:
         result->osint->asnProxy->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
         result->osint->asnProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->asnProxy);
         ui->labelResultsCount->setNum(result->osint->asnProxy->rowCount());
         break;
-    case SSLCERT:
+    case OUTPUT_SSLCERT:
         result->osint->sslCertProxy->setFilterRegExp(filterKeyword);
         ui->tableViewResults->setModel(result->osint->sslCertProxy);
         ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
+        break;
+    }
+}
+
+void Osint::on_comboBoxInput_currentIndexChanged(int index){
+    switch (index) {
+    case INPUT_DOMAIN:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
+        break;
+    case INPUT_IP:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_IP);
+        break;
+    case INPUT_EMAIL:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_EMAIL);
+        break;
+    case INPUT_URL:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_URL);
+        break;
+    case INPUT_ASN:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_ASN);
+        break;
+    case INPUT_SSLCERT:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
         break;
     }
 }

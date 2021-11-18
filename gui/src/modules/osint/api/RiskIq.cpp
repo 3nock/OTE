@@ -38,7 +38,7 @@ RiskIq::RiskIq(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomainIp);
     if(args->outputCertFingerprint)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedCertFingerprint);
+        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSSLCert);
     ///
     /// getting api-key...
     ///
@@ -152,7 +152,7 @@ void RiskIq::start(){
         return;
     }
 
-    if(args->inputCertFingerprint){
+    if(args->inputSSLCert){
         if(args->outputIp || args->outputCertFingerprint){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+args->target);
             request.setAttribute(QNetworkRequest::User, CERT_SHA1);
@@ -278,7 +278,7 @@ void RiskIq::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void RiskIq::replyFinishedCertFingerprint(QNetworkReply *reply){
+void RiskIq::replyFinishedSSLCert(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -292,7 +292,7 @@ void RiskIq::replyFinishedCertFingerprint(QNetworkReply *reply){
         foreach(const QJsonValue &record, content){
             QJsonObject cert = record.toObject()["cert"].toObject();
             QString sha1 = cert["sha1"].toString();
-            emit certFingerprint(sha1);
+            emit sslCert(sha1);
             log.resultsCount++;
             /* QString serialNo = cert["serialNumber"].toString(); */
         }

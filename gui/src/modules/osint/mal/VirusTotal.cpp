@@ -40,7 +40,7 @@ VirusTotal::VirusTotal(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSubdomain);
     if(args->outputCertFingerprint)
-        connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedCertFingerprint);
+        connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSLCert);
     ///
     /// obtain apikey...
     ///
@@ -354,7 +354,7 @@ void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
     end(reply);
 }
 
-void VirusTotal::replyFinishedCertFingerprint(QNetworkReply *reply){
+void VirusTotal::replyFinishedSSLCert(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -368,7 +368,7 @@ void VirusTotal::replyFinishedCertFingerprint(QNetworkReply *reply){
     if(requestType == DOMAIN_HISTORICAL_SSL_CERTS || requestType == IP_HISTORICAL_SSL_CERTS){
         foreach(const QJsonValue &value, data){
             QString cert_id = value.toObject()["id"].toString();
-            emit certFingerprint(cert_id);
+            emit sslCert(cert_id);
             log.resultsCount++;
         }
     }
@@ -378,7 +378,7 @@ void VirusTotal::replyFinishedCertFingerprint(QNetworkReply *reply){
            /* from ssl cert alternative name */
            QJsonObject last_https_certificate = value.toObject()["attributes"].toObject()["last_https_certificate"].toObject();
            QString thumbprint = last_https_certificate["thumbprint"].toString();
-           emit certFingerprint(thumbprint);
+           emit sslCert(thumbprint);
            log.resultsCount++;
         }
     }

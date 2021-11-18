@@ -21,7 +21,7 @@ Circl::Circl(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedIp);
     if(args->outputCertFingerprint)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedCertFingerprint);
+        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedSSLCert);
     if(args->outputAsn)
         connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
     ///
@@ -101,7 +101,7 @@ void Circl::start(){
         }
     }
 
-    if(args->inputCertFingerprint){
+    if(args->inputSSLCert){
         /* returns the certificate
         if(args->outputCertFingerprint){
             url.setUrl("https://www.circl.lu/pdns/query/"+args->target);
@@ -122,7 +122,7 @@ void Circl::start(){
     }
 }
 
-void Circl::replyFinishedCertFingerprint(QNetworkReply *reply){
+void Circl::replyFinishedSSLCert(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -137,7 +137,7 @@ void Circl::replyFinishedCertFingerprint(QNetworkReply *reply){
         foreach(const QString &key, keys){
             QJsonArray certificates = jsonObject[key].toObject()["certificates"].toArray();
             foreach(const QJsonValue &value, certificates){
-                emit certFingerprint(value.toString());
+                emit sslCert(value.toString());
                 log.resultsCount++;
             }
         }

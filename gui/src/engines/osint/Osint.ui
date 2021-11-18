@@ -32,6 +32,46 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
+      <widget class="QComboBox" name="comboBoxInput">
+       <property name="minimumSize">
+        <size>
+         <width>110</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>Domain</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ip</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Email</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Url</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Asn</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>SSL Cert</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboBoxOption">
        <property name="minimumSize">
         <size>
@@ -891,13 +931,6 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="moduleCrtsh">
-                   <property name="text">
-                    <string>Crtsh</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QCheckBox" name="moduleCensysFree">
                    <property name="text">
                     <string>Censys</string>
@@ -908,6 +941,13 @@
                   <widget class="QCheckBox" name="moduleCertspotter">
                    <property name="text">
                     <string>CertSpotter</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleCrtsh">
+                   <property name="text">
+                    <string>Crtsh</string>
                    </property>
                   </widget>
                  </item>

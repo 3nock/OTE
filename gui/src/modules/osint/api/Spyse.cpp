@@ -31,7 +31,7 @@ Spyse::Spyse(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputAsn)
         connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedAsn);
     if(args->outputCertFingerprint)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedCertFingerprint);
+        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedSSLCert);
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedUrl);
     if(args->outputIp)
@@ -102,7 +102,7 @@ void Spyse::start(){
         return;
     }
 
-    if(args->inputCertFingerprint){
+    if(args->inputSSLCert){
         url.setUrl("https://api.spyse.com/v4/data/certificate/"+args->target);
         request.setAttribute(QNetworkRequest::User, SSL_CERT);
         request.setUrl(url);
@@ -220,7 +220,7 @@ void Spyse::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void Spyse::replyFinishedCertFingerprint(QNetworkReply *reply){
+void Spyse::replyFinishedSSLCert(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -234,7 +234,7 @@ void Spyse::replyFinishedCertFingerprint(QNetworkReply *reply){
         foreach(const QJsonValue &item, items){
             QJsonObject cert_summary = item.toObject()["cert_summary"].toObject();
             QString fingerprint = cert_summary["fingerprint_sha256"].toString();
-            emit certFingerprint(fingerprint);
+            emit sslCert(fingerprint);
             log.resultsCount++;
         }
     }
