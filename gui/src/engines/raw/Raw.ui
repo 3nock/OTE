@@ -706,9 +706,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-102</y>
+                  <y>-182</y>
                   <width>169</width>
-                  <height>529</height>
+                  <height>571</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -779,6 +779,20 @@
                   <widget class="QRadioButton" name="moduleWaybackMachine">
                    <property name="text">
                     <string>WaybackMachine</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_13">
+                   <property name="text">
+                    <string>Certs</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleCertSpotter">
+                   <property name="text">
+                    <string>CertSpotter</string>
                    </property>
                   </widget>
                  </item>
@@ -911,7 +925,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>169</width>
-                  <height>1001</height>
+                  <height>978</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -919,13 +933,6 @@
                   <widget class="QRadioButton" name="moduleBuiltWith">
                    <property name="text">
                     <string>Builtwith</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="moduleCertSpotter">
-                   <property name="text">
-                    <string>CertSpotter</string>
                    </property>
                   </widget>
                  </item>

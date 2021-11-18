@@ -20,7 +20,7 @@ Circl::Circl(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedSubdomain);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedIp);
-    if(args->outputCertFingerprint)
+    if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedSSLCert);
     if(args->outputAsn)
         connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
@@ -91,7 +91,7 @@ void Circl::start(){
             activeRequests++;
             return;
         }
-        if(args->outputCertFingerprint){
+        if(args->outputSSLCert){
             url.setUrl("https://www.circl.lu/pdns/query/"+args->target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL);
             request.setUrl(url);
@@ -103,7 +103,7 @@ void Circl::start(){
 
     if(args->inputSSLCert){
         /* returns the certificate
-        if(args->outputCertFingerprint){
+        if(args->outputSSLCert){
             url.setUrl("https://www.circl.lu/pdns/query/"+args->target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL_FETCH);
             request.setUrl(url);

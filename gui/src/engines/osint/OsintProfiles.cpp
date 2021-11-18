@@ -257,6 +257,21 @@ void Osint::on_buttonLoadProfile_clicked(){
 /***************************************************************
                            CERTS
 ****************************************************************/
+
+    if(settings.value(OSINT_CERTSPOTTER).toString() == TRUE){
+        ui->moduleCertspotter->setChecked(true);
+    }else{
+        ui->moduleCertspotter->setChecked(false);
+    }
+    if(settings.value(OSINT_CENSYS).toString() == TRUE){
+        ui->moduleCensys->setChecked(true);
+    }else{
+        ui->moduleCensys->setChecked(false);
+    }
+
+/****************************************************************
+                           ....
+*****************************************************************/
     if(settings.value(OSINT_BING).toString() == TRUE){
         ui->moduleBing->setChecked(true);
     }else{
@@ -266,11 +281,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->moduleGithub->setChecked(true);
     }else{
         ui->moduleGithub->setChecked(false);
-    }
-    if(settings.value(OSINT_CENSYS).toString() == TRUE){
-        ui->moduleCensys->setChecked(true);
-    }else{
-        ui->moduleCensys->setChecked(false);
     }
     if(settings.value(OSINT_CLOUDFLARE).toString() == TRUE){
         ui->moduleCloudflare->setChecked(true);
@@ -286,11 +296,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->moduleGoogle->setChecked(true);
     }else{
         ui->moduleGoogle->setChecked(false);
-    }
-    if(settings.value(OSINT_CERTSPOTTER).toString() == TRUE){
-        ui->moduleCertspotter->setChecked(true);
-    }else{
-        ui->moduleCertspotter->setChecked(false);
     }
     if(settings.value(OSINT_CRTSH).toString() == TRUE){
         ui->moduleCrtsh->setChecked(true);
@@ -629,15 +634,19 @@ void Osint::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_CENSYS, FALSE);
     }
-    if(ui->moduleGithub->isChecked()){
-        settings.setValue(OSINT_GITHUB, TRUE);
-    }else{
-        settings.setValue(OSINT_GITHUB, FALSE);
-    }
     if(ui->moduleCertspotter->isChecked()){
         settings.setValue(OSINT_CERTSPOTTER, TRUE);
     }else{
         settings.setValue(OSINT_CERTSPOTTER, FALSE);
+    }
+
+/****************************************************************
+                          ....
+*****************************************************************/
+    if(ui->moduleGithub->isChecked()){
+        settings.setValue(OSINT_GITHUB, TRUE);
+    }else{
+        settings.setValue(OSINT_GITHUB, FALSE);
     }
     if(ui->moduleDogpile->isChecked()){
         settings.setValue(OSINT_DOGPILE, TRUE);

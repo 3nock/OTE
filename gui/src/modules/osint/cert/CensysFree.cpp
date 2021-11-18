@@ -12,7 +12,7 @@ CensysFree::CensysFree(ScanArgs *args): AbstractOsintModule(args)
 
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &CensysFree::replyFinishedSubdomain);
-    if(args->outputCertFingerprint)
+    if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &CensysFree::replyFinishedSSLCert);
 }
 CensysFree::~CensysFree(){

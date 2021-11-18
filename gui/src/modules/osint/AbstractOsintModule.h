@@ -46,7 +46,7 @@ struct ScanArgs{
     bool inputDomain = false;
     bool inputSSLCert = false;
     //...
-    bool outputCertFingerprint = false;
+    bool outputSSLCert = false;
     bool outputSubdomainIp = false;
     bool outputSubdomain = false;
     bool outputEmail = false;

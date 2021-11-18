@@ -1,23 +1,24 @@
 #include "Certspotter.h"
 #include <QJsonDocument>
-#include <QJsonArray>
 #include <QJsonObject>
-#include <QJsonParseError>
+#include <QJsonArray>
+
+#define ISSUEANCES 0
 
 /*
  * free for 100 queries an hour - keep track
  */
-/*
-  TODO:
-     filter the stars eg
-            *.googlecnapps.cn
-            googlecnapps.cn
- */
-Certspotter::Certspotter(ScanArgs *args) :
-    AbstractOsintModule(args)
+Certspotter::Certspotter(ScanArgs *args) : AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinished);
+    log.moduleName = "CertSpotter";
+
+    if(args->raw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedRaw);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedSubdomain);
+    if(args->outputSSLCert)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedSSLCert);
 }
 Certspotter::~Certspotter(){
     delete manager;
@@ -28,41 +29,69 @@ void Certspotter::start(){
 
     QUrl url;
     if(args->raw){
-        if(args->option == "cert")
-            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&expand=dns_names");
-    }else{
-        url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&expand=dns_names");
+        switch (args->rawOption) {
+        case ISSUEANCES:
+            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&include_subdomains=true&expand=cert&expand=issuer&expand=dns_names");
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    manager->get(request);
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&include_subdomains=true&expand=dns_names");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args->outputSSLCert){
+            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&include_subdomains=true&expand=cert");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
-void Certspotter::replyFinished(QNetworkReply *reply){
-    if(reply->error())
-    {
-        emit errorLog(reply->errorString());
+void Certspotter::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    else
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    foreach(const QJsonValue &value, document.array())
     {
-        if(args->raw){
-            emit rawResults(reply->readAll());
-            reply->deleteLater();
-            emit quitThread();
-            return;
-        }
-        QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray certsArray = jsonReply.array();
-        QJsonObject certObj;
-        QJsonArray dns_names;
-        foreach(const QJsonValue &value, certsArray)
-        {
-            certObj = value.toObject();
-            dns_names = certObj["dns_names"].toArray();
-            foreach(const QJsonValue &item, dns_names)
-                emit subdomain(item.toString());
+        QJsonArray dns_names = value.toObject()["dns_names"].toArray();
+        foreach(const QJsonValue &domain, dns_names){
+            emit subdomain(domain.toString());
+            log.resultsCount++;
         }
     }
-    reply->deleteLater();
-    emit quitThread();
+
+    end(reply);
+}
+
+void Certspotter::replyFinishedSSLCert(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    foreach(const QJsonValue &value, document.array())
+    {
+        QJsonObject cert = value.toObject()["cert"].toObject();
+        QString sha256 = cert["sha256"].toString();
+        /* ... */
+        emit sslCert(sha256);
+        log.resultsCount++;
+    }
+
+    end(reply);
 }

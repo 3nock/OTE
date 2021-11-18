@@ -76,7 +76,7 @@ class Osint : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
         void on_checkBoxMultipleTargets_clicked(bool checked);
-        void on_comboBoxOption_currentIndexChanged(int index);
+        void on_comboBoxOutput_currentIndexChanged(int index);
         void on_lineEditFilter_textChanged(const QString &arg1);
         ///
         /// ...

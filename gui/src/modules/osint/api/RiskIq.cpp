@@ -37,7 +37,7 @@ RiskIq::RiskIq(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomainIp);
-    if(args->outputCertFingerprint)
+    if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSSLCert);
     ///
     /// getting api-key...
@@ -124,7 +124,7 @@ void RiskIq::start(){
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputCertFingerprint){
+        if(args->outputSSLCert){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
@@ -142,7 +142,7 @@ void RiskIq::start(){
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputCertFingerprint){
+        if(args->outputSSLCert){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
@@ -153,7 +153,7 @@ void RiskIq::start(){
     }
 
     if(args->inputSSLCert){
-        if(args->outputIp || args->outputCertFingerprint){
+        if(args->outputIp || args->outputSSLCert){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+args->target);
             request.setAttribute(QNetworkRequest::User, CERT_SHA1);
             request.setUrl(url);

@@ -30,7 +30,7 @@ Spyse::Spyse(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedEmail);
     if(args->outputAsn)
         connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedAsn);
-    if(args->outputCertFingerprint)
+    if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedSSLCert);
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedUrl);

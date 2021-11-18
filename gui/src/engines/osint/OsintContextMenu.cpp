@@ -61,7 +61,7 @@ void Osint::connectActions(){
 }
 
 void Osint::on_buttonAction_clicked(){
-    int option = ui->comboBoxOption->currentIndex();
+    int option = ui->comboBoxOutput->currentIndex();
 
     switch(option){
     case OUTPUT_SUBDOMAINIP:
@@ -168,7 +168,7 @@ void Osint::on_buttonAction_clicked(){
 
 void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
-    int option = ui->comboBoxOption->currentIndex();
+    int option = ui->comboBoxOutput->currentIndex();
 
     if(!ui->tableViewResults->selectionModel()->isSelected(ui->tableViewResults->currentIndex())){
         return;

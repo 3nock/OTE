@@ -32,7 +32,7 @@ Threatminer::Threatminer(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedAsn);
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedUrl);
-    if(args->outputCertFingerprint)
+    if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedSSLCert);
 }
 Threatminer::~Threatminer(){
@@ -132,7 +132,7 @@ void Threatminer::start(){
             activeRequests++;
         }
 
-        if(args->outputCertFingerprint){
+        if(args->outputSSLCert){
             url.setUrl("https://api.threatminer.org/v2/host.php?q="+args->target+"&rt=5");
             request.setAttribute(QNetworkRequest::User, IP_SSL_CERTS);
             request.setUrl(url);

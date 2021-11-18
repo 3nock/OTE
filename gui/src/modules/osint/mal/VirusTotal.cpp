@@ -39,7 +39,7 @@ VirusTotal::VirusTotal(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedUrl);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSubdomain);
-    if(args->outputCertFingerprint)
+    if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSLCert);
     ///
     /// obtain apikey...
@@ -137,7 +137,7 @@ void VirusTotal::start(){
         //...
         request.setRawHeader("x-apikey", m_key.toUtf8());
         //...
-        if(args->outputSubdomain || args->outputCertFingerprint){
+        if(args->outputSubdomain || args->outputSSLCert){
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+args->target+"/historical_ssl_certificates");
             request.setAttribute(QNetworkRequest::User, DOMAIN_HISTORICAL_SSL_CERTS);
             request.setUrl(url);
@@ -153,7 +153,7 @@ void VirusTotal::start(){
             activeRequests++;
         }
 
-        if(args->outputIp || args->outputSubdomain || args->outputCertFingerprint){
+        if(args->outputIp || args->outputSubdomain || args->outputSSLCert){
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+args->target+"/subdomains");
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
@@ -173,7 +173,7 @@ void VirusTotal::start(){
         //...
         request.setRawHeader("x-apikey", m_key.toUtf8());
         //...
-        if(args->outputSubdomain || args->outputCertFingerprint){
+        if(args->outputSubdomain || args->outputSSLCert){
             url.setUrl("https://www.virustotal.com/api/v3/ip_addresses/"+args->target+"/historical_ssl_certificates");
             request.setAttribute(QNetworkRequest::User, IP_HISTORICAL_SSL_CERTS);
             request.setUrl(url);

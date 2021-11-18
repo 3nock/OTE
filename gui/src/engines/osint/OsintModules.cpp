@@ -36,7 +36,7 @@ void Osint::startScan(){
     }
 
     /* getting output type as specified by user */
-    switch(ui->comboBoxOption->currentIndex()){
+    switch(ui->comboBoxOutput->currentIndex()){
     case OUTPUT_SUBDOMAINIP:
         scanArgs->outputSubdomainIp = true;
         break;
@@ -56,7 +56,7 @@ void Osint::startScan(){
         scanArgs->outputAsn = true;
         break;
     case OUTPUT_SSLCERT:
-        scanArgs->outputCertFingerprint = true;
+        scanArgs->outputSSLCert = true;
         break;
     }
 
@@ -1035,10 +1035,7 @@ void Osint::startScan(){
         certspotter->moveToThread(cThread);
         //...
         connect(certspotter, &Certspotter::subdomain, this, &Osint::onResultSubdomain);
-        connect(certspotter, &Certspotter::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(certspotter, &Certspotter::ip, this, &Osint::onResultIp);
-        connect(certspotter, &Certspotter::email, this, &Osint::onResultEmail);
-        connect(certspotter, &Certspotter::url, this, &Osint::onResultUrl);
+        connect(certspotter, &Certspotter::sslCert, this, &Osint::onResultSSLCert);
         connect(certspotter, &Certspotter::errorLog, this, &Osint::onErrorLog);
         connect(certspotter, &Certspotter::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);

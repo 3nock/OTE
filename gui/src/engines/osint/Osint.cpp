@@ -302,7 +302,7 @@ void Osint::onScanThreadEnded(){
 }
 
 void Osint::onClearResults(){
-    switch(ui->comboBoxOption->currentIndex()){
+    switch(ui->comboBoxOutput->currentIndex()){
     case OUTPUT_SUBDOMAINIP:
         result->osint->subdomainIp->clear();
         result->osint->subdomainIp->setHorizontalHeaderLabels({"Subdomains", "IpAddresses"});
@@ -361,7 +361,7 @@ void Osint::on_checkBoxMultipleTargets_clicked(bool checked){
         ui->targets->hide();
 }
 
-void Osint::on_comboBoxOption_currentIndexChanged(int index){
+void Osint::on_comboBoxOutput_currentIndexChanged(int index){
     switch(index){
     case OUTPUT_SUBDOMAINIP:
         ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
@@ -404,10 +404,12 @@ void Osint::on_comboBoxOption_currentIndexChanged(int index){
         ui->comboBoxFilter->hide();
         break;
     }
+
+    /* only show modules that supports both input-type and output-type */
 }
 
 void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
-    switch(ui->comboBoxOption->currentIndex()){
+    switch(ui->comboBoxOutput->currentIndex()){
     case OUTPUT_SUBDOMAINIP:
         result->osint->subdomainIpProxy->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
         result->osint->subdomainIpProxy->setFilterRegExp(filterKeyword);
@@ -449,6 +451,10 @@ void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
 }
 
 void Osint::on_comboBoxInput_currentIndexChanged(int index){
+    /* clearing the target first, since another type of input is introduced */
+    ui->lineEditTarget->clear();
+
+    /* setting a respective placeholdertext on the target line edit */
     switch (index) {
     case INPUT_DOMAIN:
         ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
@@ -469,4 +475,6 @@ void Osint::on_comboBoxInput_currentIndexChanged(int index){
         ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
         break;
     }
+
+    /* only show modules that supports both input-type and output-type */
 }
