@@ -10,9 +10,7 @@ public:
 
 public:
     QStandardItemModel *model;
-    ///
-    /// ...
-    ///
+    /* ... */
     QStandardItem *asn;
     QStandardItem *name;
     QStandardItem *description;

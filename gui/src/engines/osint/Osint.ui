@@ -938,7 +938,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="moduleCertspotter">
+                  <widget class="QCheckBox" name="moduleCertspotterFree">
                    <property name="text">
                     <string>CertSpotter</string>
                    </property>
@@ -1325,7 +1325,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>174</width>
-                  <height>815</height>
+                  <height>838</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -1346,6 +1346,13 @@
                   <widget class="QCheckBox" name="moduleC99">
                    <property name="text">
                     <string>C99</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleCertspotter">
+                   <property name="text">
+                    <string>Certspotter</string>
                    </property>
                   </widget>
                  </item>

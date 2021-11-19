@@ -11,7 +11,6 @@
 void Osint::startScan(){
     ScanArgs *scanArgs = new ScanArgs;
     scanArgs->target = ui->lineEditTarget->text();
-    scanArgs->inputDomain = true;
 
     /* getting input type as specified by user */
     switch(ui->comboBoxInput->currentIndex()){
@@ -1045,6 +1044,24 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(ui->moduleCertspotterFree->isChecked())
+    {
+        CertspotterFree *certspotter = new CertspotterFree(scanArgs);
+        QThread *cThread = new QThread(this);
+        certspotter->Enumerator(cThread);
+        certspotter->moveToThread(cThread);
+        //...
+        connect(certspotter, &CertspotterFree::subdomain, this, &Osint::onResultSubdomain);
+        connect(certspotter, &CertspotterFree::sslCert, this, &Osint::onResultSSLCert);
+        connect(certspotter, &CertspotterFree::errorLog, this, &Osint::onErrorLog);
+        connect(certspotter, &CertspotterFree::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, certspotter, &CertspotterFree::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(ui->moduleCrtsh->isChecked())
     {
         Crtsh *crtsh = new Crtsh(scanArgs);
@@ -1053,10 +1070,7 @@ void Osint::startScan(){
         crtsh->moveToThread(cThread);
         //...
         connect(crtsh, &Crtsh::subdomain, this, &Osint::onResultSubdomain);
-        connect(crtsh, &Crtsh::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(crtsh, &Crtsh::ip, this, &Osint::onResultIp);
-        connect(crtsh, &Crtsh::email, this, &Osint::onResultEmail);
-        connect(crtsh, &Crtsh::url, this, &Osint::onResultUrl);
+        connect(crtsh, &Crtsh::sslCert, this, &Osint::onResultSSLCert);
         connect(crtsh, &Crtsh::errorLog, this, &Osint::onErrorLog);
         connect(crtsh, &Crtsh::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);

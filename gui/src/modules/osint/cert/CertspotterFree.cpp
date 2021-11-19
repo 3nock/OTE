@@ -1,37 +1,31 @@
-#include "Certspotter.h"
-#include "src/utils/Config.h"
+#include "CertspotterFree.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 
 #define ISSUEANCES 0
 
-
-Certspotter::Certspotter(ScanArgs *args) : AbstractOsintModule(args)
+/*
+ * free for 100 queries an hour - keep track
+ */
+CertspotterFree::CertspotterFree(ScanArgs *args) : AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    log.moduleName = "CertSpotter";
+    log.moduleName = "CertspotterFree";
 
     if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedRaw);
+        connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedRaw);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedSubdomain);
+        connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSubdomain);
     if(args->outputSSLCert)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedSSLCert);
-    ///
-    /// getting api key...
-    ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("certspotter").toString();
-    Config::generalConfig().endGroup();
+        connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSSLCert);
 }
-Certspotter::~Certspotter(){
+CertspotterFree::~CertspotterFree(){
     delete manager;
 }
 
-void Certspotter::start(){
+void CertspotterFree::start(){
     QNetworkRequest request;
-    request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
 
     QUrl url;
     if(args->raw){
@@ -62,7 +56,7 @@ void Certspotter::start(){
     }
 }
 
-void Certspotter::replyFinishedSubdomain(QNetworkReply *reply){
+void CertspotterFree::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -82,7 +76,7 @@ void Certspotter::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void Certspotter::replyFinishedSSLCert(QNetworkReply *reply){
+void CertspotterFree::replyFinishedSSLCert(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -101,4 +95,3 @@ void Certspotter::replyFinishedSSLCert(QNetworkReply *reply){
 
     end(reply);
 }
-

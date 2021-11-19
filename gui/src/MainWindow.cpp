@@ -5,6 +5,7 @@
 #include "src/tools/BannerGrabber.h"
 #include "src/tools/IpTool.h"
 #include "src/tools/ASNTool.h"
+#include "src/tools/CertTool.h"
 
 /*
  * use https://www.qcustomplot.com/ for plots
@@ -197,6 +198,9 @@ void MainWindow::on_actionExit_triggered(){
     QApplication::exit();
 }
 
+/*****************************************************************
+                            TOOLS
+******************************************************************/
 void MainWindow::on_actionIpTool_triggered(){
     IpTool *ipChecker = new IpTool(this);
     ipChecker->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -207,4 +211,10 @@ void MainWindow::on_actionASNTool_triggered(){
     ASNTool *asnTool = new ASNTool(this);
     asnTool->setAttribute(Qt::WA_DeleteOnClose, true);
     asnTool->show();
+}
+
+void MainWindow::on_actionCertTool_triggered(){
+    CertTool *certTool = new CertTool(this);
+    certTool->setAttribute(Qt::WA_DeleteOnClose, true);
+    certTool->show();
 }

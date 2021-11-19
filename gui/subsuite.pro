@@ -49,7 +49,8 @@ SOURCES += \
     src/modules/osint/api/Whoxy.cpp \
     src/modules/osint/archive/UKWebArchive.cpp \
     src/modules/osint/cert/Censys.cpp \
-    src/modules/osint/cert/SSLMate.cpp \
+    src/modules/osint/cert/Certspotter.cpp \
+    src/modules/osint/cert/CertspotterFree.cpp \
     src/modules/osint/email/EmailCrawlr.cpp \
     src/modules/osint/email/Debounce.cpp \
     src/modules/osint/api/FullHunt.cpp \
@@ -88,13 +89,13 @@ SOURCES += \
     src/modules/osint/mal/Abuse.cpp \
     src/modules/osint/mal/AbuseIPDB.cpp \
     src/modules/osint/archive/Arquivo.cpp \
-    src/modules/osint/cert/Digitorus.cpp \
     src/modules/osint/mal/BotScout.cpp \
     src/modules/osint/mal/FraudGuard.cpp \
     src/modules/osint/mal/HybridAnalysis.cpp \
     src/modules/osint/mal/IpQualityScore.cpp \
     src/modules/osint/mal/LeakLookup.cpp \
     src/modules/osint/mal/PhishStats.cpp \
+    src/modules/scan/CertScanner.cpp \
     src/tools/ASNTool.cpp \
     src/tools/BannerGrabber.cpp \
     src/tools/CertTool.cpp \
@@ -140,7 +141,6 @@ SOURCES += \
     src/modules/osint/archive/ArchiveToday.cpp \
     src/modules/osint/archive/CommonCrawl.cpp \
     src/modules/osint/archive/Waybackmachine.cpp \
-    src/modules/osint/cert/Certspotter.cpp \
     src/modules/osint/cert/Crtsh.cpp \
     src/modules/osint/cert/GoogleCert.cpp \
     src/modules/osint/cert/CensysFree.cpp \
@@ -187,6 +187,7 @@ SOURCES += \
 
 HEADERS += \
     src/models/AsnModel.h \
+    src/models/CertModel.h \
     src/models/IpModel.h \
     src/modules/osint/api/HaveIBeenPawned.h \
     src/modules/osint/api/Host.h \
@@ -200,7 +201,8 @@ HEADERS += \
     src/modules/osint/api/Whoxy.h \
     src/modules/osint/archive/UKWebArchive.h \
     src/modules/osint/cert/Censys.h \
-    src/modules/osint/cert/SSLMate.h \
+    src/modules/osint/cert/Certspotter.h \
+    src/modules/osint/cert/CertspotterFree.h \
     src/modules/osint/email/EmailCrawlr.h \
     src/modules/osint/OsintModulesHeaders.h \
     src/modules/osint/email/Debounce.h \
@@ -241,13 +243,13 @@ HEADERS += \
     src/modules/osint/mal/Abuse.h \
     src/modules/osint/mal/AbuseIPDB.h \
     src/modules/osint/archive/Arquivo.h \
-    src/modules/osint/cert/Digitorus.h \
     src/modules/osint/mal/BotScout.h \
     src/modules/osint/mal/FraudGuard.h \
     src/modules/osint/mal/HybridAnalysis.h \
     src/modules/osint/mal/IpQualityScore.h \
     src/modules/osint/mal/LeakLookup.h \
     src/modules/osint/mal/PhishStats.h \
+    src/modules/scan/CertScanner.h \
     src/tools/ASNTool.h \
     src/tools/BannerGrabber.h \
     src/tools/CertTool.h \
@@ -293,7 +295,6 @@ HEADERS += \
     src/modules/osint/archive/ArchiveToday.h \
     src/modules/osint/archive/CommonCrawl.h \
     src/modules/osint/archive/Waybackmachine.h \
-    src/modules/osint/cert/Certspotter.h \
     src/modules/osint/cert/Crtsh.h \
     src/modules/osint/cert/GoogleCert.h \
     src/modules/osint/cert/CensysFree.h \

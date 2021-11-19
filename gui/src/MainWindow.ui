@@ -540,6 +540,7 @@ QRadioButton:hover {
      <string>Tools</string>
     </property>
     <addaction name="actionASNTool"/>
+    <addaction name="actionCertTool"/>
     <addaction name="actionIpTool"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -701,6 +702,11 @@ QRadioButton:hover {
   <action name="actionASNTool">
    <property name="text">
     <string>ASN Tool</string>
+   </property>
+  </action>
+  <action name="actionCertTool">
+   <property name="text">
+    <string>Cert Tool</string>
    </property>
   </action>
  </widget>

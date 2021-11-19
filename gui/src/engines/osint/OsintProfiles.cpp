@@ -258,15 +258,25 @@ void Osint::on_buttonLoadProfile_clicked(){
                            CERTS
 ****************************************************************/
 
+    if(settings.value(OSINT_CENSYS).toString() == TRUE){
+        ui->moduleCensys->setChecked(true);
+    }else{
+        ui->moduleCensys->setChecked(false);
+    }
     if(settings.value(OSINT_CERTSPOTTER).toString() == TRUE){
         ui->moduleCertspotter->setChecked(true);
     }else{
         ui->moduleCertspotter->setChecked(false);
     }
-    if(settings.value(OSINT_CENSYS).toString() == TRUE){
-        ui->moduleCensys->setChecked(true);
+    if(settings.value("certspotterfree").toString() == TRUE){
+        ui->moduleCertspotterFree->setChecked(true);
     }else{
-        ui->moduleCensys->setChecked(false);
+        ui->moduleCertspotterFree->setChecked(false);
+    }
+    if(settings.value(OSINT_CRTSH).toString() == TRUE){
+        ui->moduleCrtsh->setChecked(true);
+    }else{
+        ui->moduleCrtsh->setChecked(false);
     }
 
 /****************************************************************
@@ -296,11 +306,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->moduleGoogle->setChecked(true);
     }else{
         ui->moduleGoogle->setChecked(false);
-    }
-    if(settings.value(OSINT_CRTSH).toString() == TRUE){
-        ui->moduleCrtsh->setChecked(true);
-    }else{
-        ui->moduleCrtsh->setChecked(false);
     }
     if(settings.value(OSINT_DOGPILE).toString() == TRUE){
         ui->moduleDogpile->setChecked(true);
@@ -639,6 +644,16 @@ void Osint::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_CERTSPOTTER, FALSE);
     }
+    if(ui->moduleCertspotterFree->isChecked()){
+        settings.setValue("certspotterfree", TRUE);
+    }else{
+        settings.setValue("certspotterfree", FALSE);
+    }
+    if(ui->moduleCrtsh->isChecked()){
+        settings.setValue(OSINT_CRTSH, TRUE);
+    }else{
+        settings.setValue(OSINT_CRTSH, FALSE);
+    }
 
 /****************************************************************
                           ....
@@ -712,11 +727,6 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_BING, TRUE);
     }else{
         settings.setValue(OSINT_BING, FALSE);
-    }
-    if(ui->moduleCrtsh->isChecked()){
-        settings.setValue(OSINT_CRTSH, TRUE);
-    }else{
-        settings.setValue(OSINT_CRTSH, FALSE);
     }
     if(ui->moduleDnsdumpster->isChecked()){
         settings.setValue(OSINT_DNSDUMPSTER, TRUE);

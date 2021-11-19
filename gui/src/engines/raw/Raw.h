@@ -40,7 +40,7 @@ class Raw : public QDialog{
         ///
         /// modules...
         ///
-        void on_moduleCertSpotter_clicked();
+        void on_moduleCertspotter_clicked();
         void on_moduleOtx_clicked();
         void on_moduleSublist3r_clicked();
         void on_moduleThreatMiner_clicked();
@@ -99,16 +99,13 @@ class Raw : public QDialog{
         void on_moduleNeutrinoApi_clicked();
         void on_moduleSeon_clicked();
         void on_moduleSpyOnWeb_clicked();
-
         void on_moduleWhatcms_clicked();
-
         void on_moduleWhoxy_clicked();
-
         void on_moduleArquivo_clicked();
-
         void on_moduleUKWebArchive_clicked();
+        void on_moduleCertspotterFree_clicked();
 
-private:
+    private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         ScanArgs *m_scanArgs;

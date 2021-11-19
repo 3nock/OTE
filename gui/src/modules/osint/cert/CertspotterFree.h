@@ -1,10 +1,10 @@
-#ifndef CERTSPOTTER_H
-#define CERTSPOTTER_H
+#ifndef CERTSPOTTERFREE_H
+#define CERTSPOTTERFREE_H
 
 #include "../AbstractOsintModule.h"
 
 namespace ModuleInfo {
-    struct Certspotter{
+    struct CertspotterFree{
         QString name = "Certspotter";
         QString url = "https://sslmate.com/certspotter/";
         QString url_apiDoc = "https://sslmate.com/help/reference/ct_search_api_v1";
@@ -16,18 +16,15 @@ namespace ModuleInfo {
     };
 }
 
-class Certspotter : public AbstractOsintModule {
+class CertspotterFree : public AbstractOsintModule {
     public:
-        Certspotter(ScanArgs *args);
-        ~Certspotter() override;
+        CertspotterFree(ScanArgs *args);
+        ~CertspotterFree() override;
 
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedSSLCert(QNetworkReply *reply) override;
-
-    private:
-        QString m_key;
 };
 
-#endif // CERTSPOTTER_H
+#endif // CERTSPOTTERFREE_H

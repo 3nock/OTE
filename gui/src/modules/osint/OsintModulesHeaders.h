@@ -69,6 +69,7 @@
 ///
 #include "src/modules/osint/cert/Crtsh.h"
 #include "src/modules/osint/cert/GoogleCert.h"
+#include "src/modules/osint/cert/CertspotterFree.h"
 #include "src/modules/osint/cert/Certspotter.h"
 #include "src/modules/osint/cert/CensysFree.h"
 #include "src/modules/osint/cert/Censys.h"

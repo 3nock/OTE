@@ -14,7 +14,7 @@ void Raw::startScan(){
     m_scanArgs->raw = true;
 
     QThread *cThread = new QThread(this);
-    if(ui->moduleCertSpotter->isChecked())
+    if(ui->moduleCertspotter->isChecked())
     {
         m_scanArgs->module = "CertSpotter";
         Certspotter *certspotter = new Certspotter(m_scanArgs);
@@ -26,6 +26,23 @@ void Raw::startScan(){
         connect(certspotter, &Certspotter::infoLog, this, &Raw::onInfoLog);
         connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
         connect(cThread, &QThread::finished, certspotter, &Certspotter::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleCertspotterFree->isChecked())
+    {
+        m_scanArgs->module = "CertspotterFree";
+        CertspotterFree *certspotter = new CertspotterFree(m_scanArgs);
+        certspotter->Enumerator(cThread);
+        certspotter->moveToThread(cThread);
+        //...
+        connect(certspotter, &CertspotterFree::rawResults, this, &Raw::onResults);
+        connect(certspotter, &CertspotterFree::errorLog, this, &Raw::onErrorLog);
+        connect(certspotter, &CertspotterFree::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, certspotter, &CertspotterFree::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -1115,9 +1132,19 @@ void Raw::startScan(){
                                     Modules
 ********************************************************************************/
 
-void Raw::on_moduleCertSpotter_clicked(){
+void Raw::on_moduleCertspotter_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Certspotter meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleCertspotterFree_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::CertspotterFree meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

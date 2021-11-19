@@ -706,7 +706,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-182</y>
+                  <y>-178</y>
                   <width>169</width>
                   <height>571</height>
                  </rect>
@@ -790,9 +790,9 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="moduleCertSpotter">
+                  <widget class="QRadioButton" name="moduleCertspotterFree">
                    <property name="text">
-                    <string>CertSpotter</string>
+                    <string>CertSpotter(Free)</string>
                    </property>
                   </widget>
                  </item>
@@ -925,7 +925,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>169</width>
-                  <height>978</height>
+                  <height>1001</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -933,6 +933,13 @@
                   <widget class="QRadioButton" name="moduleBuiltWith">
                    <property name="text">
                     <string>Builtwith</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleCertspotter">
+                   <property name="text">
+                    <string>Certspotter</string>
                    </property>
                   </widget>
                  </item>
