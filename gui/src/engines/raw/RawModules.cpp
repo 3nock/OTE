@@ -1119,6 +1119,23 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleCensys->isChecked())
+    {
+        m_scanArgs->module = "Censys";
+        Censys *censys = new Censys(m_scanArgs);
+        censys->Enumerator(cThread);
+        censys->moveToThread(cThread);
+        //...
+        connect(censys, &Censys::rawResults, this, &Raw::onResults);
+        connect(censys, &Censys::errorLog, this, &Raw::onErrorLog);
+        connect(censys, &Censys::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, censys, &Censys::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -1765,6 +1782,16 @@ void Raw::on_moduleArquivo_clicked(){
 void Raw::on_moduleUKWebArchive_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::UKWebArchive meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleCensys_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Censys meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

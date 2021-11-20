@@ -105,7 +105,9 @@ class Raw : public QDialog{
         void on_moduleUKWebArchive_clicked();
         void on_moduleCertspotterFree_clicked();
 
-    private:
+        void on_moduleCensys_clicked();
+
+private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         ScanArgs *m_scanArgs;

@@ -263,6 +263,11 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleCensys->setChecked(false);
     }
+    if(settings.value("censysfree").toString() == TRUE){
+        ui->moduleCensysFree->setChecked(true);
+    }else{
+        ui->moduleCensysFree->setChecked(false);
+    }
     if(settings.value(OSINT_CERTSPOTTER).toString() == TRUE){
         ui->moduleCertspotter->setChecked(true);
     }else{
@@ -277,6 +282,11 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->moduleCrtsh->setChecked(true);
     }else{
         ui->moduleCrtsh->setChecked(false);
+    }
+    if(settings.value("googlecert").toString() == TRUE){
+        ui->moduleGoogleCert->setChecked(true);
+    }else{
+        ui->moduleGoogleCert->setChecked(false);
     }
 
 /****************************************************************
@@ -639,6 +649,11 @@ void Osint::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_CENSYS, FALSE);
     }
+    if(ui->moduleCensysFree->isChecked()){
+        settings.setValue("censysfree", TRUE);
+    }else{
+        settings.setValue("censysfree", FALSE);
+    }
     if(ui->moduleCertspotter->isChecked()){
         settings.setValue(OSINT_CERTSPOTTER, TRUE);
     }else{
@@ -653,6 +668,11 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_CRTSH, TRUE);
     }else{
         settings.setValue(OSINT_CRTSH, FALSE);
+    }
+    if(ui->moduleGoogleCert->isChecked()){
+        settings.setValue("googlecert", TRUE);
+    }else{
+        settings.setValue("googlecert", FALSE);
     }
 
 /****************************************************************

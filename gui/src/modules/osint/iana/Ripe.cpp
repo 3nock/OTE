@@ -15,30 +15,31 @@
 #define BLOCKLIST 8
 #define COUNTRY_ASNS 9
 #define COUNTRY_RESOURCE_STATS 10
-#define DNS_CHAIN 11
-#define HISTORICAL_WHOIS 12
-#define IANA_REGISTRY_INFO 13
-#define LOOKING_GLASS 14
-#define MAXMIND_GEO_LITE 15
-#define MAXMIND_GEO_LITE_AS 16
-#define NETWORK_INFO 17
-#define PREFIX_OVERVIEW 18
-#define PREFIX_ROUTING_CONSISTENCY 19
-#define RIR 20
-#define RIR_STATS_COUNTRY 21
-#define RIR_PREFIX_SIZE_DISTRIBUTION 22
-#define RIS_FIRST_LAST_SEEN 23
-#define RIS_PREFIXES 24
-#define RIS_PEERINGS 25
-#define RELATED_PREFIXES 26
-#define REVERSE_DNS 27
-#define REVERSE_DNS_IP 28
-#define ROUTING_HISTORY 29
-#define ROUTING_STATUS 30
-#define RRC_INFO 31
-#define VISIBILITY 32
-#define WHATS_MY_IP 33
-#define WHOIS 34
+#define COUNTRY_RESOURCE_LISTS 11
+#define DNS_CHAIN 12
+#define HISTORICAL_WHOIS 13
+#define IANA_REGISTRY_INFO 14
+#define LOOKING_GLASS 15
+#define MAXMIND_GEO_LITE 16
+#define MAXMIND_GEO_LITE_AS 17
+#define NETWORK_INFO 18
+#define PREFIX_OVERVIEW 19
+#define PREFIX_ROUTING_CONSISTENCY 20
+#define RIR 21
+#define RIR_STATS_COUNTRY 22
+#define RIR_PREFIX_SIZE_DISTRIBUTION 23
+#define RIS_FIRST_LAST_SEEN 24
+#define RIS_PREFIXES 25
+#define RIS_PEERINGS 26
+#define RELATED_PREFIXES 267
+#define REVERSE_DNS 28
+#define REVERSE_DNS_IP 29
+#define ROUTING_HISTORY 30
+#define ROUTING_STATUS 31
+#define RRC_INFO 32
+#define VISIBILITY 33
+#define WHATS_MY_IP 34
+#define WHOIS 35
 
 /*
  * has a dns-lookup
@@ -102,6 +103,9 @@ void Ripe::start(){
             break;
         case COUNTRY_RESOURCE_STATS:
             url.setUrl("https://stat.ripe.net/data/country-resource-stats/data.json?resource="+args->target);
+            break;
+        case COUNTRY_RESOURCE_LISTS:
+            url.setUrl(" https://stat.ripe.net/data/country-resource-list/data.json?resource="+args->target);
             break;
         case DNS_CHAIN:
             url.setUrl("https://stat.ripe.net/data/dns-chain/data.json?resource="+args->target);

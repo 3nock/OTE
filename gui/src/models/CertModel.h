@@ -32,9 +32,6 @@ public:
         issuer_commonName(new QStandardItem),
         issuer_organizationName(new QStandardItem),
         issuer_countryName(new QStandardItem),
-        issuer_localityName(new QStandardItem),
-        issuer_stateOrProvinceName(new QStandardItem),
-        issuer_email(new QStandardItem),
         /* validity */
         validity_notBefore(new QStandardItem),
         validity_notAfter(new QStandardItem),
@@ -78,9 +75,6 @@ public:
         issuer->appendRow({new QStandardItem("Common Name"), issuer_commonName});
         issuer->appendRow({new QStandardItem("Organization Name"), issuer_organizationName});
         issuer->appendRow({new QStandardItem("Country Name"), issuer_countryName});
-        issuer->appendRow({new QStandardItem("Locality Name"), issuer_localityName});
-        issuer->appendRow({new QStandardItem("State Or Province"), issuer_stateOrProvinceName});
-        issuer->appendRow({new QStandardItem("Email"), issuer_email});
 
         validity->appendRow({new QStandardItem("Not Before"), validity_notBefore});
         validity->appendRow({new QStandardItem("Not After"), validity_notAfter});
@@ -140,9 +134,6 @@ public:
     QStandardItem *issuer_commonName;
     QStandardItem *issuer_organizationName;
     QStandardItem *issuer_countryName;
-    QStandardItem *issuer_localityName;
-    QStandardItem *issuer_stateOrProvinceName;
-    QStandardItem *issuer_email;
 
     /* validity */
     QStandardItem *validity_notBefore;

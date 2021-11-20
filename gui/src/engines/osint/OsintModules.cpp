@@ -1009,6 +1009,23 @@ void Osint::startScan(){
                                  CERTS
     *****************************************************************************/
 
+    if(ui->moduleCensys->isChecked()){
+        Censys *censys = new Censys(scanArgs);
+        QThread *cThread = new QThread(this);
+        censys->Enumerator(cThread);
+        censys->moveToThread(cThread);
+        //...
+        connect(censys, &Censys::subdomain, this, &Osint::onResultSubdomain);
+        connect(censys, &Censys::sslCert, this, &Osint::onResultSSLCert);
+        connect(censys, &Censys::errorLog, this, &Osint::onErrorLog);
+        connect(censys, &Censys::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, censys, &Censys::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(ui->moduleCensysFree->isChecked()){
         CensysFree *censysfree = new CensysFree(scanArgs);
         QThread *cThread = new QThread(this);
@@ -1080,6 +1097,28 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(ui->moduleGoogleCert->isChecked()){
+        GoogleCert *googlecert = new GoogleCert(scanArgs);
+        QThread *cThread = new QThread(this);
+        googlecert->Enumerator(cThread);
+        googlecert->moveToThread(cThread);
+        //...
+        connect(googlecert, &GoogleCert::subdomain, this, &Osint::onResultSubdomain);
+        connect(googlecert, &GoogleCert::sslCert, this, &Osint::onResultSSLCert);
+        connect(googlecert, &GoogleCert::errorLog, this, &Osint::onErrorLog);
+        connect(googlecert, &GoogleCert::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, googlecert, &GoogleCert::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+
+    /****************************************************************************
+                                 EMAIL
+    *****************************************************************************/
+
     if(ui->moduleDnsdumpster->isChecked())
     {
         Dnsdumpster *dnsdumpster = new Dnsdumpster(scanArgs);
@@ -1178,26 +1217,6 @@ void Osint::startScan(){
         connect(rapiddns, &Rapiddns::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, rapiddns, &Rapiddns::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->moduleGoogleCert->isChecked()){
-        GoogleCert *googlecert = new GoogleCert(scanArgs);
-        QThread *cThread = new QThread(this);
-        googlecert->Enumerator(cThread);
-        googlecert->moveToThread(cThread);
-        //...
-        connect(googlecert, &GoogleCert::subdomain, this, &Osint::onResultSubdomain);
-        connect(googlecert, &GoogleCert::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(googlecert, &GoogleCert::ip, this, &Osint::onResultIp);
-        connect(googlecert, &GoogleCert::email, this, &Osint::onResultEmail);
-        connect(googlecert, &GoogleCert::url, this, &Osint::onResultUrl);
-        connect(googlecert, &GoogleCert::errorLog, this, &Osint::onErrorLog);
-        connect(googlecert, &GoogleCert::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, googlecert, &GoogleCert::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

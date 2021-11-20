@@ -81,12 +81,6 @@ void CertTool::onRawCert(QByteArray rawCert){
             m_certModel->issuer_organizationName->setText(cert.issuerInfo(QSslCertificate::Organization)[0]);
         if(cert.issuerInfo(QSslCertificate::CountryName).length() > 0)
             m_certModel->issuer_countryName->setText(cert.issuerInfo(QSslCertificate::CountryName)[0]);
-        if(cert.issuerInfo(QSslCertificate::LocalityName).length() > 0)
-            m_certModel->issuer_localityName->setText(cert.issuerInfo(QSslCertificate::LocalityName)[0]);
-        if(cert.issuerInfo(QSslCertificate::StateOrProvinceName).length() > 0)
-            m_certModel->issuer_stateOrProvinceName->setText(cert.issuerInfo(QSslCertificate::StateOrProvinceName)[0]);
-        if(cert.issuerInfo(QSslCertificate::EmailAddress).length() > 0)
-            m_certModel->issuer_email->setText(cert.issuerInfo(QSslCertificate::EmailAddress)[0]);
 
         /* subject info */
         if(cert.subjectInfo(QSslCertificate::CommonName).length() > 0)

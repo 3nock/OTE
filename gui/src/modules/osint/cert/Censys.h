@@ -15,10 +15,17 @@ namespace ModuleInfo {
         QString url = "https://censys.io/";
         QString url_apiDoc = "https://censys.io/api/v1/docs/";
         QString summary = "Censys reduces your Internet attack surface by continually discovering unknown assets and helping remediate Internet facing risks";
-        QMap<QString, QStringList> flags = {};
+
+        QMap<QString, QStringList> flags = {{"Account",
+                                            {PLACEHOLDERTEXT_NONE, "The account endpoint returns information about your Censys account."}},
+                                            {"View Websites",
+                                             {PLACEHOLDERTEXT_DOMAIN, "The View API exposes a single endpoint, /api/v1/view, which can be used to fetch full document from domain."}},
+                                            {"View Ipv4",
+                                             {PLACEHOLDERTEXT_IP4, "The View API exposes a single endpoint, /api/v1/view, which can be used to fetch full document from IP address"}},
+                                            {"View Certificate",
+                                             {PLACEHOLDERTEXT_SSLCERT, "The View API exposes a single endpoint, /api/v1/view, which can be used to fetch full document from certificate"}}};
     };
 }
-
 class Censys: public AbstractOsintModule{
 
     public:

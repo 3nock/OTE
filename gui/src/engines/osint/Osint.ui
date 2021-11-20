@@ -933,14 +933,14 @@
                  <item>
                   <widget class="QCheckBox" name="moduleCensysFree">
                    <property name="text">
-                    <string>Censys</string>
+                    <string>Censys (Free)</string>
                    </property>
                   </widget>
                  </item>
                  <item>
                   <widget class="QCheckBox" name="moduleCertspotterFree">
                    <property name="text">
-                    <string>CertSpotter</string>
+                    <string>CertSpotter (Free)</string>
                    </property>
                   </widget>
                  </item>
@@ -1325,7 +1325,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>174</width>
-                  <height>838</height>
+                  <height>876</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -1335,6 +1335,34 @@
                  <property name="bottomMargin">
                   <number>5</number>
                  </property>
+                 <item>
+                  <widget class="QLabel" name="label_2">
+                   <property name="text">
+                    <string>Certificates</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleCensys">
+                   <property name="text">
+                    <string>Censys</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleCertspotter">
+                   <property name="text">
+                    <string>Certspotter</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_6">
+                   <property name="text">
+                    <string>APIs</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QCheckBox" name="moduleBinaryEdge">
                    <property name="text">
@@ -1346,13 +1374,6 @@
                   <widget class="QCheckBox" name="moduleC99">
                    <property name="text">
                     <string>C99</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleCertspotter">
-                   <property name="text">
-                    <string>Certspotter</string>
                    </property>
                   </widget>
                  </item>
@@ -1549,13 +1570,6 @@
                   <widget class="QCheckBox" name="moduleBingPaid">
                    <property name="text">
                     <string>Bing</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleCensys">
-                   <property name="text">
-                    <string>Censys</string>
                    </property>
                   </widget>
                  </item>

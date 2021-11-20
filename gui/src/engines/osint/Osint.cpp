@@ -60,6 +60,8 @@
  *
  * reverse lookups for mx, ns, ip.. eq viewdns..
  * dont count txt
+ *
+ * countries resources eg asns : ripe
  */
 
 
