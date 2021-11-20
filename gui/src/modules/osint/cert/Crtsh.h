@@ -3,7 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 #include "gumbo-parser/src/gumbo.h"
-#include <QStack>
+#include "src/models/certmodel.h"
 
 namespace ModuleInfo {
     struct Crtsh{
@@ -19,7 +19,6 @@ namespace ModuleInfo {
 }
 
 class Crtsh: public AbstractOsintModule{
-
     public:
         Crtsh(ScanArgs *args);
         ~Crtsh() override;
@@ -33,6 +32,7 @@ class Crtsh: public AbstractOsintModule{
     private:
         void m_getCertId(QNetworkReply *reply);
         bool m_queryToGetId = true;
+        CertModel *m_certModel;
 };
 
 

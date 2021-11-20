@@ -1,5 +1,5 @@
 #include "Crtsh.h"
-#include <QSslCertificate>
+#include <QStack>
 
 /*
  * use regex for some queries
@@ -112,9 +112,10 @@ void Crtsh::replyFinishedInfo(QNetworkReply *reply){
         return;
     }
 
-    /*
-     * use regex
-     */
+    if(m_queryToGetId)
+        m_getCertId(reply); // get the crtsh certificate id and request to download the certificate...
+    else
+        emit rawCert(reply->readAll()); // get and send the raw certificate for analysis
 
     end(reply);
 }

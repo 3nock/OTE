@@ -154,6 +154,8 @@ class AbstractOsintModule : public QObject {
         /* old */
         void errorLog(QString log);
         void infoLog(QString log);
+        /* for ssl-cert info */
+        void rawCert(QByteArray);
 
     public slots:
         virtual void start() = 0;

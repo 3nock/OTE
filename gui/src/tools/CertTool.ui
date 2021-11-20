@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>608</width>
+    <width>634</width>
     <height>504</height>
    </rect>
   </property>
@@ -107,23 +107,15 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>*Data Type</string>
+         <string>*Scan Config</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox_2">
-        <property name="minimumSize">
-         <size>
-          <width>110</width>
-          <height>0</height>
-         </size>
+       <widget class="QToolButton" name="toolButton_2">
+        <property name="text">
+         <string>Config...</string>
         </property>
-        <item>
-         <property name="text">
-          <string>All</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>
@@ -149,7 +141,7 @@
      </property>
      <widget class="QWidget" name="tabInfo">
       <attribute name="title">
-       <string>Ip Info</string>
+       <string>Cert Info</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="leftMargin">
@@ -219,7 +211,7 @@
           <number>200</number>
          </attribute>
          <attribute name="headerDefaultSectionSize">
-          <number>300</number>
+          <number>200</number>
          </attribute>
          <attribute name="headerHighlightSections">
           <bool>true</bool>
@@ -252,6 +244,50 @@
           <widget class="QLineEdit" name="lineEditFilter"/>
          </item>
         </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabRaw">
+      <attribute name="title">
+       <string>Raw Cert</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEditRawCert"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabKey">
+      <attribute name="title">
+       <string>Key</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEditRawKey"/>
        </item>
       </layout>
      </widget>
