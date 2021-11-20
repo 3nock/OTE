@@ -5,13 +5,14 @@
 #include <QStandardItem>
 #include <QSslKey>
 #include "src/utils/Definitions.h"
+#include "src/modules/scan/CertScanner.h"
 
 #define ACTIVE 0
 #define CRTSH 1
-#define CENSYS 2
-#define CERTSPOTTER 3
 
 /*
+ * just active and crtsh for now...
+ *
  * articles on ssl-cert osint
  * https://osintcurio.us/2019/03/12/certificates-the-osint-gift-that-keeps-on-giving/
  */
@@ -24,7 +25,7 @@ CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
 
     /* setting the placeholdertxt */
     ui->lineEditFilter->setPlaceholderText("Filter...");
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
+    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
 
     /* setting the models */
     m_proxyModel->setSourceModel(m_certModel->model);
@@ -133,16 +134,29 @@ void CertTool::onRawCert(QByteArray rawCert){
 void CertTool::on_buttonAnalyze_clicked(){
     m_scanArgs->target = ui->lineEditTarget->text();
     m_scanArgs->info = true;
-    ///
-    /// ....
-    ///
+
     ui->buttonStop->setEnabled(true);
     ui->buttonAnalyze->setDisabled(true);
 
     QThread *cThread = new QThread;
-    int engineToUse = ui->comboBoxEngine->currentIndex();
-
-    if(engineToUse == CRTSH)
+    switch (ui->comboBoxEngine->currentIndex()) {
+    case ACTIVE:
+    {
+        cert::Scanner *scanner = new cert::Scanner(ui->lineEditTarget->text());
+        scanner->startScan(cThread);
+        scanner->moveToThread(cThread);
+        //...
+        connect(scanner, &cert::Scanner::rawCert, this, &CertTool::onRawCert);
+        connect(scanner, &cert::Scanner::errorLog, this, &CertTool::onErrorLog);
+        connect(scanner, &cert::Scanner::infoLog, this, &CertTool::onInfoLog);
+        connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
+        connect(cThread, &QThread::finished, scanner, &cert::Scanner::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        break;
+    }
+    case CRTSH:
     {
         Crtsh *crtsh = new Crtsh(m_scanArgs);
         crtsh->Enumerator(cThread);
@@ -156,6 +170,8 @@ void CertTool::on_buttonAnalyze_clicked(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
+        break;
+    }
     }
 }
 
@@ -164,4 +180,18 @@ void CertTool::on_checkBoxExpand_clicked(bool checked){
         ui->treeResults->expandAll();
     else
         ui->treeResults->collapseAll();
+}
+
+void CertTool::on_comboBoxEngine_currentIndexChanged(int index){
+    /* clear the target */
+    ui->lineEditTarget->clear();
+
+    /* set new placeholdertxt */
+    switch(index){
+    case ACTIVE:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
+        break;
+    case CRTSH:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
+    }
 }

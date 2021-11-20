@@ -34,16 +34,6 @@
          <string>Crtsh</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Censys</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Certspotter</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>
@@ -141,7 +131,7 @@
      </property>
      <widget class="QWidget" name="tabInfo">
       <attribute name="title">
-       <string>Cert Info</string>
+       <string>Info</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="leftMargin">
@@ -249,7 +239,7 @@
      </widget>
      <widget class="QWidget" name="tabRaw">
       <attribute name="title">
-       <string>Raw Cert</string>
+       <string>Cert</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="leftMargin">
@@ -265,7 +255,11 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEditRawCert"/>
+        <widget class="QPlainTextEdit" name="plainTextEditRawCert">
+         <property name="textInteractionFlags">
+          <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -287,7 +281,11 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEditRawKey"/>
+        <widget class="QPlainTextEdit" name="plainTextEditRawKey">
+         <property name="textInteractionFlags">
+          <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

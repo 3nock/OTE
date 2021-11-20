@@ -14,7 +14,7 @@
 #define PLACEHOLDERTEXT_EMAIL "email-address eg something@email.com"
 #define PLACEHOLDERTEXT_CIDR "ip-address/cidr eg 1.1.1.1/24"
 #define PLACEHOLDERTEXT_QUERY "query term eg GOOGLE"
-#define PLACEHOLDERTEXT_SSLCERT "ssl cert sha1 eg "
+#define PLACEHOLDERTEXT_SSLCERT "cert fingerprint(sha1 or sha256)"
 #define PLACEHOLDERTEXT_PHONE "phone number eg +2557298984323"
 #define PLACEHOLDERTEXT_USERNAME "username eg John Doe"
 #define PLACEHOLDERTEXT_URL "url eg https://example.com/something"

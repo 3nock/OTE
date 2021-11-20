@@ -88,7 +88,7 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     result->osint->email->setHorizontalHeaderLabels({"Emails"});
     result->osint->url->setHorizontalHeaderLabels({"Urls"});
     result->osint->asn->setHorizontalHeaderLabels({"Asn", "Name"});
-    result->osint->sslCert->setHorizontalHeaderLabels({"SSL Certs SHA-1 FingerPrints"});
+    result->osint->sslCert->setHorizontalHeaderLabels({"SSL-Cert FingerPrint"});
     //...
     ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
     //...

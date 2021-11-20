@@ -17,17 +17,21 @@ class CertTool : public QDialog{
     public:
         explicit CertTool(QWidget *parent = nullptr);
         ~CertTool();
+        //...
+        void analyzeDomain(QString domain);
+        void analyzeCert(QString cert);
 
     private slots:
         void on_buttonAnalyze_clicked();
         void on_checkBoxExpand_clicked(bool checked);
+        void on_comboBoxEngine_currentIndexChanged(int index);
 
     public slots:
+        void onRawCert(QByteArray);
         void onEnumerationComplete();
         void onErrorLog(QString log);
         void onInfoLog(QString log);
-        //...
-        void onRawCert(QByteArray);
+
 
     private:
         Ui::CertTool *ui;
