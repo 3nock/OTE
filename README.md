@@ -1,2 +1,2 @@
-# subsuite
-subdomain Enumeration Framework
+# sub3 suite
+subdomain Enumeration Suite
