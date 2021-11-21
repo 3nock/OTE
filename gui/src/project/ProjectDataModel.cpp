@@ -11,6 +11,7 @@ ProjectDataModel::ProjectDataModel():
     ///
     m_activeSubdomains(new QStandardItem("Subdomains")),
     m_activeTlds(new QStandardItem("Tlds")),
+    m_activeWildcards(new QStandardItem("Wildcards")),
     m_activeA(new QStandardItem("A")),
     m_activeAAAA(new QStandardItem("AAAA")),
     m_activeNS(new QStandardItem("NS")),
@@ -23,8 +24,10 @@ ProjectDataModel::ProjectDataModel():
     ///
     m_passiveSubdomains(new QStandardItem("Subdomains")),
     m_passiveTlds(new QStandardItem("Tlds")),
+    m_passiveWildcards(new QStandardItem("Wildcards")),
     m_passiveA(new QStandardItem("A")),
     m_passiveAAAA(new QStandardItem("AAAA")),
+    m_passiveCidr(new QStandardItem("Cidr")),
     m_passiveNS(new QStandardItem("NS")),
     m_passiveMX(new QStandardItem("MX")),
     m_passiveTXT(new QStandardItem("TXT")),
@@ -48,6 +51,7 @@ ProjectDataModel::ProjectDataModel():
     ///
     m_activeSubdomains->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_activeTlds->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    m_activeWildcards->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_activeA->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_activeAAAA->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_activeNS->setIcon(QIcon(":/img/res/icons/folder2.png"));
@@ -60,8 +64,10 @@ ProjectDataModel::ProjectDataModel():
     ///
     m_passiveSubdomains->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_passiveTlds->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    m_passiveWildcards->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_passiveA->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_passiveAAAA->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    m_passiveCidr->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_passiveNS->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_passiveMX->setIcon(QIcon(":/img/res/icons/folder2.png"));
     m_passiveTXT->setIcon(QIcon(":/img/res/icons/folder2.png"));
@@ -76,6 +82,7 @@ ProjectDataModel::ProjectDataModel():
     ///
     m_activeSubdomains->setForeground(Qt::white);
     m_activeTlds->setForeground(Qt::white);
+    m_activeWildcards->setForeground(Qt::white);
     m_activeA->setForeground(Qt::white);
     m_activeAAAA->setForeground(Qt::white);
     m_activeNS->setForeground(Qt::white);
@@ -88,8 +95,10 @@ ProjectDataModel::ProjectDataModel():
     ///
     m_passiveSubdomains->setForeground(Qt::white);
     m_passiveTlds->setForeground(Qt::white);
+    m_passiveWildcards->setForeground(Qt::white);
     m_passiveA->setForeground(Qt::white);
     m_passiveAAAA->setForeground(Qt::white);
+    m_passiveCidr->setForeground(Qt::white);
     m_passiveNS->setForeground(Qt::white);
     m_passiveMX->setForeground(Qt::white);
     m_passiveTXT->setForeground(Qt::white);
@@ -109,6 +118,7 @@ ProjectDataModel::ProjectDataModel():
     ///
     m_active->appendRow(m_activeSubdomains);
     m_active->appendRow(m_activeTlds);
+    m_active->appendRow(m_activeWildcards);
     m_active->appendRow(m_activeA);
     m_active->appendRow(m_activeAAAA);
     m_active->appendRow(m_activeNS);
@@ -121,8 +131,10 @@ ProjectDataModel::ProjectDataModel():
     ///
     m_passive->appendRow(m_passiveSubdomains);
     m_passive->appendRow(m_passiveTlds);
+    m_passive->appendRow(m_passiveWildcards);
     m_passive->appendRow(m_passiveA);
     m_passive->appendRow(m_passiveAAAA);
+    m_passive->appendRow(m_passiveCidr);
     m_passive->appendRow(m_passiveNS);
     m_passive->appendRow(m_passiveMX);
     m_passive->appendRow(m_passiveTXT);
@@ -147,6 +159,7 @@ ProjectDataModel::~ProjectDataModel(){
     //...
     delete m_activeSubdomains;
     delete m_activeTlds;
+    delete m_activeWildcards;
     delete m_activeA;
     delete m_activeAAAA;
     delete m_activeNS;
@@ -157,8 +170,10 @@ ProjectDataModel::~ProjectDataModel(){
     //...
     delete m_passiveSubdomains;
     delete m_passiveTlds;
+    delete m_passiveWildcards;
     delete m_passiveA;
     delete m_passiveAAAA;
+    delete m_passiveCidr;
     delete m_passiveNS;
     delete m_passiveMX;
     delete m_passiveTXT;
@@ -189,11 +204,25 @@ void ProjectDataModel::addActiveTLD(QStringList items){
     if(m_activeTldSet.count() > prevSize)
         m_activeTlds->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
 }
+
+void ProjectDataModel::addActiveWildcard(QStringList items){
+    int prevSize = m_activeWildcardSet.count();
+    m_activeWildcardSet.insert(items[0]);
+    if(m_activeWildcardSet.count() > prevSize)
+        m_activeWildcards->appendRow(new QStandardItem(items[0]));
+}
 void ProjectDataModel::addPassiveTLD(QStringList items){
     int prevSize = m_passiveTldSet.count();
     m_passiveTldSet.insert(items[0]);
     if(m_passiveTldSet.count() > prevSize)
         m_passiveTlds->appendRow(new QStandardItem(items[0]));
+}
+
+void ProjectDataModel::addPassiveWildcard(QStringList items){
+    int prevSize = m_passiveWildcardSet.count();
+    m_passiveWildcardSet.insert(items[0]);
+    if(m_passiveWildcardSet.count() > prevSize)
+        m_passiveWildcards->appendRow(new QStandardItem(items[0]));
 }
 
 /* if you arent sure what type of ip it is */
@@ -239,6 +268,13 @@ void ProjectDataModel::addPassiveAAAA(QStringList items){
     m_passiveAAAASet.insert(items[0]);
     if(m_passiveAAAASet.count() > prevSize)
         m_passiveAAAA->appendRow(new QStandardItem(items[0]));
+}
+
+void ProjectDataModel::addPassiveCidr(QStringList items){
+    int prevSize = m_passiveCidrSet.count();
+    m_passiveCidrSet.insert(items[0]);
+    if(m_passiveCidrSet.count() > prevSize)
+        m_passiveCidr->appendRow(new QStandardItem(items[0]));
 }
 
 void ProjectDataModel::addActiveNS(QStringList items){

@@ -53,7 +53,7 @@ struct ScanArgs{
     bool outputAsn = false;
     bool outputUrl = false;
     bool outputIp = false;
-    bool outputPrefixes = false;
+    bool outputCidr = false;
 
     /* old */
     bool ip = false;
@@ -135,7 +135,7 @@ class AbstractOsintModule : public QObject {
            void errorLog(ScanLog error);
         */
         void sslCert(QString certId); // change to sslCert
-        void ipCdir(QString ip);
+        void cidr(QString cidr);
         void ip(QString ip);
         void subdomain(QString subdomain);
         void subdomainIp(QString subdomain, QString ip);

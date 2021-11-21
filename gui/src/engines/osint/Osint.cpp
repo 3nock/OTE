@@ -8,7 +8,9 @@
 #include "src/dialogs/OsintConfigDialog.h"
 
 
-/* log on every scan each module its results count
+/* fix the regex for filter, it breaks on special chars
+ *
+ * log on every scan each module its results count
  *
  * http://ipv4info.com/account/register/
  * https://riddler.io/auth/register
@@ -91,6 +93,7 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     result->osint->url->setHorizontalHeaderLabels({"Urls"});
     result->osint->asn->setHorizontalHeaderLabels({"Asn", "Name"});
     result->osint->sslCert->setHorizontalHeaderLabels({"SSL-Cert FingerPrint"});
+    result->osint->cidr->setHorizontalHeaderLabels({"Cidr"});
     //...
     ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
     //...
@@ -150,6 +153,22 @@ void Osint::onResultSubdomain(QString subdomain){
     }
 }
 
+void Osint::onResultMightContainWildcards(QString subdomain){
+    int prevSize = m_subdomainSet.count();
+    m_subdomainSet.insert(subdomain);
+    if(m_subdomainSet.count() > prevSize && !subdomain.isEmpty())
+    {
+        result->osint->subdomain->appendRow(new QStandardItem(subdomain));
+        ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
+
+        /* save as wildcard if starts with *. */
+        if(subdomain.startsWith("*"))
+            project->addPassiveWildcard({subdomain});
+        else
+            project->addPassiveSubdomain({subdomain});
+    }
+}
+
 void Osint::onResultIp(QString ip){
     int prevSize = m_ipSet.count();
     m_ipSet.insert(ip);
@@ -190,10 +209,14 @@ void Osint::onResultAsn(QString asnValue, QString asnName){
     }
 }
 
-void Osint::onResultPrefix(QString cidr, QString name){
-    /*
-     * Nothing Yet...
-     */
+void Osint::onResultCidr(QString cidr){
+    int prevSize = m_cidrSet.count();
+    m_cidrSet.insert(cidr);
+    if(m_cidrSet.count() > prevSize && !cidr.isEmpty()){
+        result->osint->cidr->appendRow(new QStandardItem(A));
+        project->addPassiveCidr({cidr});
+        ui->labelResultsCount->setNum(result->osint->cidrProxy->rowCount());
+    }
 }
 
 void Osint::onResultA(QString A){
@@ -333,6 +356,10 @@ void Osint::onClearResults(){
         result->osint->sslCert->clear();
         result->osint->sslCert->setHorizontalHeaderLabels({"Asn", "Name"});
         break;
+    case OUTPUT_CIDR:
+        result->osint->sslCert->clear();
+        result->osint->sslCert->setHorizontalHeaderLabels({" Cidr"});
+        break;
     }
     ui->labelResultsCount->clear();
     ///
@@ -405,6 +432,12 @@ void Osint::on_comboBoxOutput_currentIndexChanged(int index){
         ui->comboBoxFilter->clear();
         ui->comboBoxFilter->hide();
         break;
+    case OUTPUT_CIDR:
+        ui->tableViewResults->setModel(result->osint->cidrProxy);
+        ui->labelResultsCount->setNum(result->osint->cidrProxy->rowCount());
+        ui->comboBoxFilter->clear();
+        ui->comboBoxFilter->hide();
+        break;
     }
 
     /* only show modules that supports both input-type and output-type */
@@ -449,6 +482,11 @@ void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
         ui->tableViewResults->setModel(result->osint->sslCertProxy);
         ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
         break;
+    case OUTPUT_CIDR:
+        result->osint->cidrProxy->setFilterRegExp(filterKeyword);
+        ui->tableViewResults->setModel(result->osint->cidrProxy);
+        ui->labelResultsCount->setNum(result->osint->cidrProxy->rowCount());
+        break;
     }
 }
 
@@ -475,6 +513,9 @@ void Osint::on_comboBoxInput_currentIndexChanged(int index){
         break;
     case INPUT_SSLCERT:
         ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
+        break;
+    case INPUT_CIDR:
+        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_CIDR);
         break;
     }
 

@@ -36,7 +36,7 @@ Dnslytics::Dnslytics(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedAsn);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomainIp);
-    if(args->outputPrefixes)
+    if(args->outputCidr)
         connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedPrefixes);
     ///
     /// getting api key...
@@ -121,7 +121,7 @@ void Dnslytics::start(){
     }
 
     if(args->inputAsn){
-        if(args->outputIp || args->outputAsn || args->outputSubdomain || args->outputSubdomainIp || args->outputPrefixes){
+        if(args->outputIp || args->outputAsn || args->outputSubdomain || args->outputSubdomainIp || args->outputCidr){
             url.setUrl("https://api.dnslytics.net/v1/asinfo/"+args->target+"/summary?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, ASINFO);
             request.setUrl(url);

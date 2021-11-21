@@ -32,6 +32,9 @@ void Osint::startScan(){
     case INPUT_SSLCERT:
         scanArgs->inputSSLCert = true;
         break;
+    case INPUT_CIDR:
+        scanArgs->inputCidr = true;
+        break;
     }
 
     /* getting output type as specified by user */
@@ -56,6 +59,9 @@ void Osint::startScan(){
         break;
     case OUTPUT_SSLCERT:
         scanArgs->outputSSLCert = true;
+        break;
+    case OUTPUT_CIDR:
+        scanArgs->outputCidr = true;
         break;
     }
 
@@ -869,7 +875,7 @@ void Osint::startScan(){
         connect(networksdb, &NetworksDB::subdomainIp, this, &Osint::onResultSubdomainIp);
         connect(networksdb, &NetworksDB::subdomain, this, &Osint::onResultSubdomain);
         connect(networksdb, &NetworksDB::ip, this, &Osint::onResultIp);
-        connect(networksdb, &NetworksDB::prefix, this, &Osint::onResultPrefix);
+        connect(networksdb, &NetworksDB::prefix, this, &Osint::onResultCidr);
         connect(networksdb, &NetworksDB::errorLog, this, &Osint::onErrorLog);
         connect(networksdb, &NetworksDB::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -1015,7 +1021,7 @@ void Osint::startScan(){
         censys->Enumerator(cThread);
         censys->moveToThread(cThread);
         //...
-        connect(censys, &Censys::subdomain, this, &Osint::onResultSubdomain);
+        connect(censys, &Censys::subdomain, this, &Osint::onResultMightContainWildcards);
         connect(censys, &Censys::sslCert, this, &Osint::onResultSSLCert);
         connect(censys, &Censys::errorLog, this, &Osint::onErrorLog);
         connect(censys, &Censys::infoLog, this, &Osint::onInfoLog);
@@ -1032,7 +1038,7 @@ void Osint::startScan(){
         censysfree->Enumerator(cThread);
         censysfree->moveToThread(cThread);
         //...
-        connect(censysfree, &CensysFree::subdomain, this, &Osint::onResultSubdomain);
+        connect(censysfree, &CensysFree::subdomain, this, &Osint::onResultMightContainWildcards);
         connect(censysfree, &CensysFree::sslCert, this, &Osint::onResultSSLCert);
         connect(censysfree, &CensysFree::errorLog, this, &Osint::onErrorLog);
         connect(censysfree, &CensysFree::infoLog, this, &Osint::onInfoLog);
@@ -1050,7 +1056,7 @@ void Osint::startScan(){
         certspotter->Enumerator(cThread);
         certspotter->moveToThread(cThread);
         //...
-        connect(certspotter, &Certspotter::subdomain, this, &Osint::onResultSubdomain);
+        connect(certspotter, &Certspotter::subdomain, this, &Osint::onResultMightContainWildcards);
         connect(certspotter, &Certspotter::sslCert, this, &Osint::onResultSSLCert);
         connect(certspotter, &Certspotter::errorLog, this, &Osint::onErrorLog);
         connect(certspotter, &Certspotter::infoLog, this, &Osint::onInfoLog);
@@ -1068,7 +1074,7 @@ void Osint::startScan(){
         certspotter->Enumerator(cThread);
         certspotter->moveToThread(cThread);
         //...
-        connect(certspotter, &CertspotterFree::subdomain, this, &Osint::onResultSubdomain);
+        connect(certspotter, &CertspotterFree::subdomain, this, &Osint::onResultMightContainWildcards);
         connect(certspotter, &CertspotterFree::sslCert, this, &Osint::onResultSSLCert);
         connect(certspotter, &CertspotterFree::errorLog, this, &Osint::onErrorLog);
         connect(certspotter, &CertspotterFree::infoLog, this, &Osint::onInfoLog);
@@ -1086,7 +1092,7 @@ void Osint::startScan(){
         crtsh->Enumerator(cThread);
         crtsh->moveToThread(cThread);
         //...
-        connect(crtsh, &Crtsh::subdomain, this, &Osint::onResultSubdomain);
+        connect(crtsh, &Crtsh::subdomain, this, &Osint::onResultMightContainWildcards);
         connect(crtsh, &Crtsh::sslCert, this, &Osint::onResultSSLCert);
         connect(crtsh, &Crtsh::errorLog, this, &Osint::onErrorLog);
         connect(crtsh, &Crtsh::infoLog, this, &Osint::onInfoLog);
@@ -1103,7 +1109,7 @@ void Osint::startScan(){
         googlecert->Enumerator(cThread);
         googlecert->moveToThread(cThread);
         //...
-        connect(googlecert, &GoogleCert::subdomain, this, &Osint::onResultSubdomain);
+        connect(googlecert, &GoogleCert::subdomain, this, &Osint::onResultMightContainWildcards);
         connect(googlecert, &GoogleCert::sslCert, this, &Osint::onResultSSLCert);
         connect(googlecert, &GoogleCert::errorLog, this, &Osint::onErrorLog);
         connect(googlecert, &GoogleCert::infoLog, this, &Osint::onInfoLog);

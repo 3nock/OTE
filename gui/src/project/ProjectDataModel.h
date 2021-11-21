@@ -14,6 +14,7 @@ class ProjectDataModel{
         ///
         void addActiveSubdomain(QStringList);
         void addActiveTLD(QStringList);
+        void addActiveWildcard(QStringList);
         void addActiveIp(QStringList);
         void addActiveA(QStringList);
         void addActiveAAAA(QStringList);
@@ -27,9 +28,11 @@ class ProjectDataModel{
         ///
         void addPassiveSubdomain(QStringList);
         void addPassiveTLD(QStringList);
+        void addPassiveWildcard(QStringList);
         void addPassiveIp(QStringList);
         void addPassiveA(QStringList);
         void addPassiveAAAA(QStringList);
+        void addPassiveCidr(QStringList);
         void addPassiveNS(QStringList);
         void addPassiveMX(QStringList);
         void addPassiveTXT(QStringList);
@@ -47,6 +50,7 @@ class ProjectDataModel{
     private:
         QSet<QString> m_activeSubdomainSet;
         QSet<QString> m_activeTldSet;
+        QSet<QString> m_activeWildcardSet;
         QSet<QString> m_activeASet;
         QSet<QString> m_activeAAAASet;
         QSet<QString> m_activeNSSet;
@@ -59,8 +63,10 @@ class ProjectDataModel{
         ///
         QSet<QString> m_passiveSubdomainSet;
         QSet<QString> m_passiveTldSet;
+        QSet<QString> m_passiveWildcardSet;
         QSet<QString> m_passiveASet;
         QSet<QString> m_passiveAAAASet;
+        QSet<QString> m_passiveCidrSet;
         QSet<QString> m_passiveNSSet;
         QSet<QString> m_passiveMXSet;
         QSet<QString> m_passiveTXTSet;
@@ -80,6 +86,7 @@ class ProjectDataModel{
         ///
         QStandardItem *m_activeSubdomains;
         QStandardItem *m_activeTlds;
+        QStandardItem *m_activeWildcards;
         QStandardItem *m_activeA;
         QStandardItem *m_activeAAAA;
         QStandardItem *m_activeNS;
@@ -92,8 +99,10 @@ class ProjectDataModel{
         ///
         QStandardItem *m_passiveSubdomains;
         QStandardItem *m_passiveTlds;
+        QStandardItem *m_passiveWildcards;
         QStandardItem *m_passiveA;
         QStandardItem *m_passiveAAAA;
+        QStandardItem *m_passiveCidr;
         QStandardItem *m_passiveNS;
         QStandardItem *m_passiveMX;
         QStandardItem *m_passiveTXT;

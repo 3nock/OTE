@@ -29,7 +29,7 @@ NetworksDB::NetworksDB(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomain);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedIp);
-    if(args->outputPrefixes)
+    if(args->outputCidr)
         connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedPrefixes);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomainIp);
@@ -111,7 +111,7 @@ void NetworksDB::start(){
     }
 
     if(args->inputAsn){
-        if(args->outputPrefixes){
+        if(args->outputCidr){
             url.setUrl("https://networksdb.io/api/asn-networks?asn="+args->target);
             request.setAttribute(QNetworkRequest::User, AS_NETWORKS);
             request.setUrl(url);

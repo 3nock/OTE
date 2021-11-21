@@ -20,13 +20,15 @@ class Osint{
               url(new QStandardItemModel),
               asn(new QStandardItemModel),
               sslCert(new QStandardItemModel),
+              cidr(new QStandardItemModel),
               subdomainIpProxy(new QSortFilterProxyModel),
               subdomainProxy(new QSortFilterProxyModel),
               ipProxy(new QSortFilterProxyModel),
               emailProxy(new QSortFilterProxyModel),
               urlProxy(new QSortFilterProxyModel),
               asnProxy(new QSortFilterProxyModel),
-              sslCertProxy(new QSortFilterProxyModel)
+              sslCertProxy(new QSortFilterProxyModel),
+              cidrProxy(new QSortFilterProxyModel)
         {
             subdomainIpProxy->setSourceModel(subdomainIp);
             subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -56,6 +58,10 @@ class Osint{
             sslCertProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
             sslCertProxy->setRecursiveFilteringEnabled(true);
             sslCertProxy->setFilterKeyColumn(0);
+            cidrProxy->setSourceModel(cidr);
+            cidrProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            cidrProxy->setRecursiveFilteringEnabled(true);
+            cidrProxy->setFilterKeyColumn(0);
         }
         ~Osint(){
             delete subdomainIp;
@@ -65,6 +71,7 @@ class Osint{
             delete url;
             delete asn;
             delete sslCert;
+            delete cidr;
             delete subdomainIpProxy;
             delete subdomainProxy;
             delete ipProxy;
@@ -72,6 +79,7 @@ class Osint{
             delete urlProxy;
             delete asnProxy;
             delete sslCertProxy;
+            delete cidrProxy;
         }
         ///
         /// the models...
@@ -83,6 +91,7 @@ class Osint{
         QStandardItemModel *url;
         QStandardItemModel *asn;
         QStandardItemModel *sslCert;
+        QStandardItemModel *cidr;
         QSortFilterProxyModel *subdomainIpProxy;
         QSortFilterProxyModel *subdomainProxy;
         QSortFilterProxyModel *ipProxy;
@@ -90,6 +99,7 @@ class Osint{
         QSortFilterProxyModel *urlProxy;
         QSortFilterProxyModel *asnProxy;
         QSortFilterProxyModel *sslCertProxy;
+        QSortFilterProxyModel *cidrProxy;
 };
 
 class Ip{

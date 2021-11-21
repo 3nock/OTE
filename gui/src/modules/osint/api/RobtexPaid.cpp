@@ -188,7 +188,7 @@ void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &value, nets){
             QString address = value.toObject()["n"].toString();
             emit ip(address);
-            //emit ipCdir(address); since the return address is a ip/cdir..
+            //emit cidr(address); since the return address is a ip/cdir..
             log.resultsCount++;
         }
     }

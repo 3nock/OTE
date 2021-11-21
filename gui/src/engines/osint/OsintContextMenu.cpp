@@ -3,7 +3,9 @@
 //...
 #include <QClipboard>
 
-
+/*
+ * implement for cidr
+ */
 void Osint::connectActions(){
     connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
     ///

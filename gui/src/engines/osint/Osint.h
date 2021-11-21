@@ -15,6 +15,7 @@
 #define OUTPUT_URL 4
 #define OUTPUT_ASN 5
 #define OUTPUT_SSLCERT 6
+#define OUTPUT_CIDR 7
 
 /* input option */
 #define INPUT_DOMAIN 0
@@ -23,6 +24,7 @@
 #define INPUT_URL 3
 #define INPUT_ASN 4
 #define INPUT_SSLCERT 5
+#define INPUT_CIDR 6
 
 
 namespace Ui {
@@ -45,11 +47,12 @@ class Osint : public AbstractEngine{
         void onErrorLog(QString log);
         void onResultSubdomainIp(QString subdomain, QString ip);
         void onResultSubdomain(QString subdomain);
+        void onResultMightContainWildcards(QString subdomain);
         void onResultIp(QString ip);
         void onResultEmail(QString email);
         void onResultUrl(QString url);
         void onResultAsn(QString asnValue, QString asnName);
-        void onResultPrefix(QString cidr, QString name);
+        void onResultCidr(QString cidr);
         /* dns */
         void onResultA(QString A);
         void onResultAAAA(QString AAAA);
@@ -88,7 +91,7 @@ class Osint : public AbstractEngine{
 
         void on_comboBoxInput_currentIndexChanged(int index);
 
-private:
+    private:
         Ui::Osint *ui;
         //...
         osint::ScanArguments *m_scanArguments;
@@ -102,6 +105,7 @@ private:
         QSet<QString> m_urlSet;
         QSet<QString> m_asnSet;
         QSet<QString> m_sslCertSet;
+        QSet<QString> m_cidrSet;
         void stopScan();
         void startScan();
         void pauseScan();

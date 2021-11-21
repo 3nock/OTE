@@ -58,7 +58,7 @@ Ripe::Ripe(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedRaw);
     if(args->outputAsn)
         connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
-    if(args->outputPrefixes)
+    if(args->outputCidr)
         connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedPrefixes);
 }
 Ripe::~Ripe(){
@@ -197,7 +197,7 @@ void Ripe::start(){
     }
 
     if(args->inputAsn){
-        if(args->outputPrefixes){
+        if(args->outputCidr){
             url.setUrl("https://stat.ripe.net/data/ris-prefixes/data.json?resource="+args->target+"&list_prefixes=true");
             request.setAttribute(QNetworkRequest::User, RIS_PREFIXES);
             request.setUrl(url);
