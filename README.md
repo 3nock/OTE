@@ -1,2 +1,2 @@
 # sub3 suite
-subdomain Enumeration Suite
+Subdomain 3numeration Suite
