@@ -243,22 +243,6 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->moduleHunter->isChecked()){
-        Hunter *hunter = new Hunter(scanArgs);
-        QThread *cThread = new QThread(this);
-        hunter->Enumerator(cThread);
-        hunter->moveToThread(cThread);
-        //...
-        connect(hunter, &Hunter::email, this, &Osint::onResultEmail);
-        connect(hunter, &Hunter::errorLog, this, &Osint::onErrorLog);
-        connect(hunter, &Hunter::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, hunter, &Hunter::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
     if(ui->moduleMnemonicFree->isChecked()){
         MnemonicFree *mnemonic = new MnemonicFree(scanArgs);
         QThread *cThread = new QThread(this);
@@ -1123,6 +1107,43 @@ void Osint::startScan(){
 
     /****************************************************************************
                                  EMAIL
+    *****************************************************************************/
+
+    if(ui->moduleHunter->isChecked()){
+        Hunter *hunter = new Hunter(scanArgs);
+        QThread *cThread = new QThread(this);
+        hunter->Enumerator(cThread);
+        hunter->moveToThread(cThread);
+        //...
+        connect(hunter, &Hunter::email, this, &Osint::onResultEmail);
+        connect(hunter, &Hunter::errorLog, this, &Osint::onErrorLog);
+        connect(hunter, &Hunter::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, hunter, &Hunter::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->moduleEmailCrawlr->isChecked()){
+        EmailCrawlr *emailcrawlr = new EmailCrawlr(scanArgs);
+        QThread *cThread = new QThread(this);
+        emailcrawlr->Enumerator(cThread);
+        emailcrawlr->moveToThread(cThread);
+        //...
+        connect(emailcrawlr, &EmailCrawlr::email, this, &Osint::onResultEmail);
+        connect(emailcrawlr, &EmailCrawlr::errorLog, this, &Osint::onErrorLog);
+        connect(emailcrawlr, &EmailCrawlr::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, emailcrawlr, &EmailCrawlr::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+
+    /****************************************************************************
+                                 IANA
     *****************************************************************************/
 
     if(ui->moduleDnsdumpster->isChecked())

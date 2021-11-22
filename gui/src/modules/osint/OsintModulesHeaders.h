@@ -93,6 +93,11 @@
 ///
 #include "src/modules/osint/email/Hunter.h"
 #include "src/modules/osint/email/Debounce.h"
+#include "src/modules/osint/email/EmailCrawlr.h"
+#include "src/modules/osint/email/EmailFormat.h"
+#include "src/modules/osint/email/EmailRep.h"
+#include "src/modules/osint/email/Snov.h"
+#include "src/modules/osint/email/TruMail.h"
 ///
 /// mal...
 ///

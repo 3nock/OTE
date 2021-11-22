@@ -24,7 +24,7 @@ Hunter::Hunter(ScanArgs *args): AbstractOsintModule(args)
     /// getting api-key...
     ///
     Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("Hunter").toString();
+    m_key = Config::generalConfig().value("hunter").toString();
     Config::generalConfig().endGroup();
 }
 Hunter::~Hunter(){
@@ -78,8 +78,8 @@ void Hunter::replyFinishedEmail(QNetworkReply *reply){
     }
 
     int requestType = reply->property(REQUEST_TYPE).toInt();
-    QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
-    QJsonObject data = jsonReply["data"].toObject();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject data = document["data"].toObject();
 
     if(requestType == DOMAIN_SEARCH){
         /*
@@ -101,9 +101,4 @@ void Hunter::replyFinishedEmail(QNetworkReply *reply){
         }
     }
     end(reply);
-}
-
-bool Hunter::verifyEmail(QString email){
-    Q_UNUSED(email);
-    return true;
 }

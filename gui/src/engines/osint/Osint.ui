@@ -1335,7 +1335,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>174</width>
-                  <height>876</height>
+                  <height>918</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -1363,6 +1363,27 @@
                   <widget class="QCheckBox" name="moduleCertspotter">
                    <property name="text">
                     <string>Certspotter</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_7">
+                   <property name="text">
+                    <string>Emails</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleHunter">
+                   <property name="text">
+                    <string>Hunter</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="moduleEmailCrawlr">
+                   <property name="text">
+                    <string>EmailCrawlr</string>
                    </property>
                   </widget>
                  </item>
@@ -1433,13 +1454,6 @@
                   <widget class="QCheckBox" name="moduleHackerTargetPaid">
                    <property name="text">
                     <string>HackerTarget</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleHunter">
-                   <property name="text">
-                    <string>Hunter</string>
                    </property>
                   </widget>
                  </item>

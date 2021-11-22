@@ -706,9 +706,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>0</y>
+                  <y>-177</y>
                   <width>169</width>
-                  <height>571</height>
+                  <height>575</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -783,20 +783,6 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_13">
-                   <property name="text">
-                    <string>Certs</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="moduleCertspotterFree">
-                   <property name="text">
-                    <string>CertSpotter(Free)</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QLabel" name="label_8">
                    <property name="text">
                     <string>Api</string>
@@ -807,6 +793,20 @@
                   <widget class="QRadioButton" name="moduleAnubis">
                    <property name="text">
                     <string>Anubis</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleTruMail">
+                   <property name="text">
+                    <string>TruMail</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleCertspotterFree">
+                   <property name="text">
+                    <string>CertSpotter(Free)</string>
                    </property>
                   </widget>
                  </item>
@@ -923,12 +923,68 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>0</y>
+                  <y>-30</y>
                   <width>169</width>
-                  <height>1024</height>
+                  <height>1154</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <item>
+                  <widget class="QLabel" name="label_14">
+                   <property name="text">
+                    <string>Email</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleDebounce">
+                   <property name="text">
+                    <string>Debounce</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleEmailCrawlr">
+                   <property name="text">
+                    <string>EmailCrawlr</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleEmailFormat">
+                   <property name="text">
+                    <string>EmailFormat</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleEmailRep">
+                   <property name="text">
+                    <string>EmailRep</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleHunter">
+                   <property name="text">
+                    <string>Hunter</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleSnov">
+                   <property name="text">
+                    <string>Snov</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_15">
+                   <property name="text">
+                    <string>APIs</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QRadioButton" name="moduleBuiltWith">
                    <property name="text">
@@ -1105,23 +1161,9 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="moduleDebounce">
-                   <property name="text">
-                    <string>Debounce</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QRadioButton" name="moduleGithub">
                    <property name="text">
                     <string>Github</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="moduleHunter">
-                   <property name="text">
-                    <string>Hunter</string>
                    </property>
                   </widget>
                  </item>

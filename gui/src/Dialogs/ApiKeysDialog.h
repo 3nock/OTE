@@ -83,6 +83,14 @@ class ApiKeysDialog : public QDialog{
 
         void on_buttonGetWhoxy_clicked();
 
+        void on_buttonGetEmailCrawlr_clicked();
+
+        void on_buttonGetEmailFormat_clicked();
+
+        void on_buttonGetEmailRep_clicked();
+
+        void on_buttonGetSnov_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         void loadApiKeys();

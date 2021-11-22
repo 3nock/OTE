@@ -107,6 +107,16 @@ class Raw : public QDialog{
 
         void on_moduleCensys_clicked();
 
+        void on_moduleEmailCrawlr_clicked();
+
+        void on_moduleEmailFormat_clicked();
+
+        void on_moduleEmailRep_clicked();
+
+        void on_moduleSnov_clicked();
+
+        void on_moduleTruMail_clicked();
+
 private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;

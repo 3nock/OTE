@@ -1136,6 +1136,91 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleEmailCrawlr->isChecked())
+    {
+        m_scanArgs->module = "EmailCrawlr";
+        EmailCrawlr *emailcrawlr = new EmailCrawlr(m_scanArgs);
+        emailcrawlr->Enumerator(cThread);
+        emailcrawlr->moveToThread(cThread);
+        //...
+        connect(emailcrawlr, &EmailCrawlr::rawResults, this, &Raw::onResults);
+        connect(emailcrawlr, &EmailCrawlr::errorLog, this, &Raw::onErrorLog);
+        connect(emailcrawlr, &EmailCrawlr::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, emailcrawlr, &EmailCrawlr::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleEmailFormat->isChecked())
+    {
+        m_scanArgs->module = "EmailFormat";
+        EmailFormat *emailformat = new EmailFormat(m_scanArgs);
+        emailformat->Enumerator(cThread);
+        emailformat->moveToThread(cThread);
+        //...
+        connect(emailformat, &EmailFormat::rawResults, this, &Raw::onResults);
+        connect(emailformat, &EmailFormat::errorLog, this, &Raw::onErrorLog);
+        connect(emailformat, &EmailFormat::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, emailformat, &EmailFormat::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleEmailRep->isChecked())
+    {
+        m_scanArgs->module = "EmailRep";
+        EmailRep *emailrep = new EmailRep(m_scanArgs);
+        emailrep->Enumerator(cThread);
+        emailrep->moveToThread(cThread);
+        //...
+        connect(emailrep, &EmailRep::rawResults, this, &Raw::onResults);
+        connect(emailrep, &EmailRep::errorLog, this, &Raw::onErrorLog);
+        connect(emailrep, &EmailRep::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, emailrep, &EmailRep::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleSnov->isChecked())
+    {
+        m_scanArgs->module = "Snov";
+        Snov *snov = new Snov(m_scanArgs);
+        snov->Enumerator(cThread);
+        snov->moveToThread(cThread);
+        //...
+        connect(snov, &Snov::rawResults, this, &Raw::onResults);
+        connect(snov, &Snov::errorLog, this, &Raw::onErrorLog);
+        connect(snov, &Snov::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, snov, &Snov::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleTruMail->isChecked())
+    {
+        m_scanArgs->module = "TruMail";
+        TruMail *trumail = new TruMail(m_scanArgs);
+        trumail->Enumerator(cThread);
+        trumail->moveToThread(cThread);
+        //...
+        connect(trumail, &TruMail::rawResults, this, &Raw::onResults);
+        connect(trumail, &TruMail::errorLog, this, &Raw::onErrorLog);
+        connect(trumail, &TruMail::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, trumail, &TruMail::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -1792,6 +1877,56 @@ void Raw::on_moduleUKWebArchive_clicked(){
 void Raw::on_moduleCensys_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Censys meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleEmailCrawlr_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::EmailCrawlr meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleEmailFormat_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::EmailFormat meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleEmailRep_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::EmailRep meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleSnov_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Snov meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleTruMail_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::TruMail meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

@@ -76,6 +76,10 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("spyonweb", ui->lineEditSpyOnWeb->text());
     Config::generalConfig().setValue("whatcms", ui->lineEditWhatcms->text());
     Config::generalConfig().setValue("whoxy", ui->lineEditWhoxy->text());
+    Config::generalConfig().setValue("emailcrawlr", ui->lineEditEmailCrawlr->text());
+    Config::generalConfig().setValue("emailformat", ui->lineEditEmailFormat->text());
+    Config::generalConfig().setValue("emailrep", ui->lineEditEmailRep->text());
+    Config::generalConfig().setValue("snov", ui->lineEditSnov->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -350,6 +354,26 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditWhoxy->setText(key);
         ui->buttonGetWhoxy->hide();
     }
+    key = Config::generalConfig().value("emailcrawlr").toString();
+    if(!key.isEmpty()){
+        ui->lineEditEmailCrawlr->setText(key);
+        ui->buttonGetEmailCrawlr->hide();
+    }
+    key = Config::generalConfig().value("emailformat").toString();
+    if(!key.isEmpty()){
+        ui->lineEditEmailFormat->setText(key);
+        ui->buttonGetEmailFormat->hide();
+    }
+    key = Config::generalConfig().value("emailrep").toString();
+    if(!key.isEmpty()){
+        ui->lineEditEmailRep->setText(key);
+        ui->buttonGetEmailRep->hide();
+    }
+    key = Config::generalConfig().value("snov").toString();
+    if(!key.isEmpty()){
+        ui->lineEditSnov->setText(key);
+        ui->buttonGetSnov->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -540,4 +564,23 @@ void ApiKeysDialog::on_buttonGetWhatcms_clicked(){
 
 void ApiKeysDialog::on_buttonGetWhoxy_clicked(){
     QDesktopServices::openUrl(QUrl("https://www.whoxy.com/", QUrl::TolerantMode));
+}
+///
+/// use referral code...
+/// https://emailcrawlr.com/?ref_code=8d7e7b98
+///
+void ApiKeysDialog::on_buttonGetEmailCrawlr_clicked(){
+    QDesktopServices::openUrl(QUrl("https://emailcrawlr.com/#pricing", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetEmailFormat_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.email-format.com/i/pricing/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetEmailRep_clicked(){
+    QDesktopServices::openUrl(QUrl("https://emailrep.io/key", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetSnov_clicked(){
+    QDesktopServices::openUrl(QUrl("https://snov.io/pricing", QUrl::TolerantMode));
 }

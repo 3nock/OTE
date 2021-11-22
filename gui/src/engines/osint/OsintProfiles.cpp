@@ -55,11 +55,6 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleCircl->setChecked(false);
     }
-    if(settings.value("hunter").toString() == TRUE){
-        ui->moduleHunter->setChecked(true);
-    }else{
-        ui->moduleHunter->setChecked(false);
-    }
     if(settings.value("mnemonicfree").toString() == TRUE){
         ui->moduleMnemonicFree->setChecked(true);
     }else{
@@ -290,6 +285,20 @@ void Osint::on_buttonLoadProfile_clicked(){
     }
 
 /****************************************************************
+                           EMAIL
+*****************************************************************/
+    if(settings.value("hunter").toString() == TRUE){
+        ui->moduleHunter->setChecked(true);
+    }else{
+        ui->moduleHunter->setChecked(false);
+    }
+    if(settings.value("emailcrawlr").toString() == TRUE){
+        ui->moduleEmailCrawlr->setChecked(true);
+    }else{
+        ui->moduleEmailCrawlr->setChecked(false);
+    }
+
+/****************************************************************
                            ....
 *****************************************************************/
     if(settings.value(OSINT_BING).toString() == TRUE){
@@ -449,11 +458,6 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue("circl", TRUE);
     }else{
         settings.setValue("circl", FALSE);
-    }
-    if(ui->moduleHunter->isChecked()){
-        settings.setValue("hunter", TRUE);
-    }else{
-        settings.setValue("hunter", FALSE);
     }
     if(ui->moduleMnemonicFree->isChecked()){
         settings.setValue("mnemonicfree", TRUE);
@@ -676,7 +680,21 @@ void Osint::on_buttonCreateProfile_clicked(){
     }
 
 /****************************************************************
-                          ....
+                          Email
+*****************************************************************/
+    if(ui->moduleHunter->isChecked()){
+        settings.setValue("hunter", TRUE);
+    }else{
+        settings.setValue("hunter", FALSE);
+    }
+    if(ui->moduleEmailCrawlr->isChecked()){
+        settings.setValue("emailcrawlr", TRUE);
+    }else{
+        settings.setValue("emailcrawlr", FALSE);
+    }
+
+/****************************************************************
+                              ....
 *****************************************************************/
     if(ui->moduleGithub->isChecked()){
         settings.setValue(OSINT_GITHUB, TRUE);

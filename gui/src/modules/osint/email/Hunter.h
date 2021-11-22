@@ -35,8 +35,6 @@ class Hunter: public AbstractOsintModule{
     public:
         Hunter(ScanArgs *args);
         ~Hunter() override;
-        //...
-        bool verifyEmail(QString email);
 
     public slots:
         void start() override;
