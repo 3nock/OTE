@@ -117,6 +117,14 @@ class Raw : public QDialog{
 
         void on_moduleTruMail_clicked();
 
+        void on_moduleIpData_clicked();
+
+        void on_moduleIpGeoLocation_clicked();
+
+        void on_moduleIpRegistry_clicked();
+
+        void on_moduleIpStack_clicked();
+
 private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;

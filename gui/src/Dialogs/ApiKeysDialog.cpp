@@ -80,6 +80,10 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("emailformat", ui->lineEditEmailFormat->text());
     Config::generalConfig().setValue("emailrep", ui->lineEditEmailRep->text());
     Config::generalConfig().setValue("snov", ui->lineEditSnov->text());
+    Config::generalConfig().setValue("ipdata", ui->lineEditIpData->text());
+    Config::generalConfig().setValue("ipgeolocation", ui->lineEditIpGeoLocation->text());
+    Config::generalConfig().setValue("ipregistry", ui->lineEditIpRegistry->text());
+    Config::generalConfig().setValue("ipstack", ui->lineEditIpStack->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -374,6 +378,26 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditSnov->setText(key);
         ui->buttonGetSnov->hide();
     }
+    key = Config::generalConfig().value("ipdata").toString();
+    if(!key.isEmpty()){
+        ui->lineEditIpData->setText(key);
+        ui->buttonGetIpData->hide();
+    }
+    key = Config::generalConfig().value("ipgeolocation").toString();
+    if(!key.isEmpty()){
+        ui->lineEditIpGeoLocation->setText(key);
+        ui->buttonGetIpGeoLocation->hide();
+    }
+    key = Config::generalConfig().value("ipregistry").toString();
+    if(!key.isEmpty()){
+        ui->lineEditIpRegistry->setText(key);
+        ui->buttonGetIpRegistry->hide();
+    }
+    key = Config::generalConfig().value("ipstack").toString();
+    if(!key.isEmpty()){
+        ui->lineEditIpStack->setText(key);
+        ui->buttonGetIpStack->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -583,4 +607,20 @@ void ApiKeysDialog::on_buttonGetEmailRep_clicked(){
 
 void ApiKeysDialog::on_buttonGetSnov_clicked(){
     QDesktopServices::openUrl(QUrl("https://snov.io/pricing", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetIpData_clicked(){
+    QDesktopServices::openUrl(QUrl("https://ipdata.co/pricing.html", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetIpGeoLocation_clicked(){
+    QDesktopServices::openUrl(QUrl("https://ipgeolocation.io/pricing.html", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetIpRegistry_clicked(){
+    QDesktopServices::openUrl(QUrl("https://ipregistry.co/pricing", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetIpStack_clicked(){
+    QDesktopServices::openUrl(QUrl("https://ipstack.com/product", QUrl::TolerantMode));
 }

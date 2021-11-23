@@ -80,12 +80,10 @@ SOURCES += \
     src/modules/osint/api/SpamHaus.cpp \
     src/modules/osint/api/WebResolver.cpp \
     src/modules/osint/iana/Afrinic.cpp \
-    src/modules/osint/ip/Ip2Location.cpp \
     src/modules/osint/ip/IpData.cpp \
     src/modules/osint/ip/IpGeoLocation.cpp \
     src/modules/osint/ip/IpRegistry.cpp \
     src/modules/osint/ip/IpStack.cpp \
-    src/modules/osint/ip/MaxMind.cpp \
     src/modules/osint/mal/Abuse.cpp \
     src/modules/osint/mal/AbuseIPDB.cpp \
     src/modules/osint/archive/Arquivo.cpp \
@@ -188,6 +186,7 @@ SOURCES += \
 HEADERS += \
     src/models/AsnModel.h \
     src/models/CertModel.h \
+    src/models/EmailModel.h \
     src/models/IpModel.h \
     src/modules/osint/api/HaveIBeenPawned.h \
     src/modules/osint/api/Host.h \
@@ -234,12 +233,10 @@ HEADERS += \
     src/modules/osint/api/SpamHaus.h \
     src/modules/osint/api/WebResolver.h \
     src/modules/osint/iana/Afrinic.h \
-    src/modules/osint/ip/Ip2Location.h \
     src/modules/osint/ip/IpData.h \
     src/modules/osint/ip/IpGeoLocation.h \
     src/modules/osint/ip/IpRegistry.h \
     src/modules/osint/ip/IpStack.h \
-    src/modules/osint/ip/MaxMind.h \
     src/modules/osint/mal/Abuse.h \
     src/modules/osint/mal/AbuseIPDB.h \
     src/modules/osint/archive/Arquivo.h \

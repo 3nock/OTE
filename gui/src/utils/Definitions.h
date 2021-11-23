@@ -39,5 +39,7 @@
 #define PLACEHOLDERTEXT_CIDR_OR_ASN "cidr or asn"
 #define PLACEHOLDERTEXT_ADSENSE "google adsense id eg pub-5953444431482912"
 #define PLACEHOLDERTEXT_NAME "domain owner's name"
+#define PLACEHOLDERTEXT_UA "User-Agent"
+#define PLACEHOLDERTEXT_BULK_IP "ip-address,ip-address"
 
 #endif // DEFINITIONS_H

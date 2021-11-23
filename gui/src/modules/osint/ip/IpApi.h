@@ -14,7 +14,7 @@ namespace ModuleInfo {
         QMap<QString, QStringList> flags = {{"standard lookup",
                                              {PLACEHOLDERTEXT_IP, "Look up any given IP address."}},
                                             {"bulk lookup",
-                                             {"ip-address,ip-address", "Look up multiple IP addresses in bulk."}},
+                                             {PLACEHOLDERTEXT_BULK_IP, "Look up multiple IP addresses in bulk."}},
                                             {"origin lookup",
                                              {PLACEHOLDERTEXT_NONE, "Look up the IP address the current API request is coming from."}}};
     };

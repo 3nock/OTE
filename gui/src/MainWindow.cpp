@@ -6,6 +6,7 @@
 #include "src/tools/IpTool.h"
 #include "src/tools/ASNTool.h"
 #include "src/tools/CertTool.h"
+#include "src/tools/EmailTool.h"
 
 /*
  * use https://www.qcustomplot.com/ for plots
@@ -217,4 +218,10 @@ void MainWindow::on_actionCertTool_triggered(){
     CertTool *certTool = new CertTool(this);
     certTool->setAttribute(Qt::WA_DeleteOnClose, true);
     certTool->show();
+}
+
+void MainWindow::on_actionEmailTool_triggered(){
+    EmailTool *emailTool = new EmailTool(this);
+    emailTool->setAttribute(Qt::WA_DeleteOnClose, true);
+    emailTool->show();
 }

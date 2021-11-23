@@ -4,7 +4,6 @@
 /******************************************************************************
                         Osint Headers
 *******************************************************************************/
-
 ///
 /// api...
 ///
@@ -88,6 +87,10 @@
 ///
 #include "src/modules/osint/ip/IpInfo.h"
 #include "src/modules/osint/ip/IpApi.h"
+#include "src/modules/osint/ip/IpData.h"
+#include "src/modules/osint/ip/IpGeoLocation.h"
+#include "src/modules/osint/ip/IpRegistry.h"
+#include "src/modules/osint/ip/IpStack.h"
 ///
 /// email...
 ///

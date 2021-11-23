@@ -25,7 +25,7 @@
 #define INPUT_ASN 4
 #define INPUT_SSLCERT 5
 #define INPUT_CIDR 6
-
+//QMap<int, QList<int>> input_output;
 
 namespace Ui {
     class Osint;

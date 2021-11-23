@@ -1221,6 +1221,74 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleIpData->isChecked())
+    {
+        m_scanArgs->module = "IpData";
+        IpData *ipdata = new IpData(m_scanArgs);
+        ipdata->Enumerator(cThread);
+        ipdata->moveToThread(cThread);
+        //...
+        connect(ipdata, &IpData::rawResults, this, &Raw::onResults);
+        connect(ipdata, &IpData::errorLog, this, &Raw::onErrorLog);
+        connect(ipdata, &IpData::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ipdata, &IpData::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleIpGeoLocation->isChecked())
+    {
+        m_scanArgs->module = "IpGeoLocation";
+        IpGeoLocation *ipgeolocation = new IpGeoLocation(m_scanArgs);
+        ipgeolocation->Enumerator(cThread);
+        ipgeolocation->moveToThread(cThread);
+        //...
+        connect(ipgeolocation, &IpGeoLocation::rawResults, this, &Raw::onResults);
+        connect(ipgeolocation, &IpGeoLocation::errorLog, this, &Raw::onErrorLog);
+        connect(ipgeolocation, &IpGeoLocation::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ipgeolocation, &IpGeoLocation::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleIpRegistry->isChecked())
+    {
+        m_scanArgs->module = "IpRegistry";
+        IpRegistry *ipregistry = new IpRegistry(m_scanArgs);
+        ipregistry->Enumerator(cThread);
+        ipregistry->moveToThread(cThread);
+        //...
+        connect(ipregistry, &IpRegistry::rawResults, this, &Raw::onResults);
+        connect(ipregistry, &IpRegistry::errorLog, this, &Raw::onErrorLog);
+        connect(ipregistry, &IpRegistry::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ipregistry, &IpRegistry::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleIpStack->isChecked())
+    {
+        m_scanArgs->module = "IpStack";
+        IpStack *ipstack = new IpStack(m_scanArgs);
+        ipstack->Enumerator(cThread);
+        ipstack->moveToThread(cThread);
+        //...
+        connect(ipstack, &IpStack::rawResults, this, &Raw::onResults);
+        connect(ipstack, &IpStack::errorLog, this, &Raw::onErrorLog);
+        connect(ipstack, &IpStack::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ipstack, &IpStack::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -1927,6 +1995,46 @@ void Raw::on_moduleSnov_clicked(){
 void Raw::on_moduleTruMail_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::TruMail meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleIpData_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::IpData meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleIpGeoLocation_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::IpGeoLocation meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleIpRegistry_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::IpRegistry meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleIpStack_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::IpStack meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

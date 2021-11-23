@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>sub3suite</string>
+   <string>sub3 suite</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QScrollBar:vertical {
@@ -541,6 +541,7 @@ QRadioButton:hover {
     </property>
     <addaction name="actionASNTool"/>
     <addaction name="actionCertTool"/>
+    <addaction name="actionEmailTool"/>
     <addaction name="actionIpTool"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -707,6 +708,11 @@ QRadioButton:hover {
   <action name="actionCertTool">
    <property name="text">
     <string>Cert Tool</string>
+   </property>
+  </action>
+  <action name="actionEmailTool">
+   <property name="text">
+    <string>Email Tool</string>
    </property>
   </action>
  </widget>

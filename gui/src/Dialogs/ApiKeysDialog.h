@@ -91,6 +91,14 @@ class ApiKeysDialog : public QDialog{
 
         void on_buttonGetSnov_clicked();
 
+        void on_buttonGetIpData_clicked();
+
+        void on_buttonGetIpGeoLocation_clicked();
+
+        void on_buttonGetIpRegistry_clicked();
+
+        void on_buttonGetIpStack_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         void loadApiKeys();

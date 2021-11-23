@@ -706,7 +706,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-177</y>
+                  <y>0</y>
                   <width>169</width>
                   <height>575</height>
                  </rect>
@@ -923,9 +923,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-30</y>
+                  <y>-198</y>
                   <width>169</width>
-                  <height>1154</height>
+                  <height>1265</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -975,6 +975,55 @@
                   <widget class="QRadioButton" name="moduleSnov">
                    <property name="text">
                     <string>Snov</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_13">
+                   <property name="text">
+                    <string>Ip</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleIpApi">
+                   <property name="text">
+                    <string>IpApi</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleIpInfo">
+                   <property name="text">
+                    <string>IpInfo</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleIpData">
+                   <property name="text">
+                    <string>IpData</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleIpGeoLocation">
+                   <property name="text">
+                    <string>IpGeoLocation</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleIpRegistry">
+                   <property name="text">
+                    <string>IpRegistry</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleIpStack">
+                   <property name="text">
+                    <string>IpStack</string>
                    </property>
                   </widget>
                  </item>
@@ -1168,13 +1217,6 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="moduleIpInfo">
-                   <property name="text">
-                    <string>IpInfo</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QRadioButton" name="moduleMnemonicFree">
                    <property name="text">
                     <string>Mnemonic (Free)</string>
@@ -1234,13 +1276,6 @@
                   <widget class="QRadioButton" name="moduleZoomEye">
                    <property name="text">
                     <string>ZoomEye</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="moduleIpApi">
-                   <property name="text">
-                    <string>IpApi</string>
                    </property>
                   </widget>
                  </item>

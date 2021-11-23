@@ -884,7 +884,7 @@
                 <enum>QFrame::Raised</enum>
                </property>
                <property name="text">
-                <string>Free Osint Engines</string>
+                <string>Api Key not Required</string>
                </property>
               </widget>
              </item>
@@ -1299,7 +1299,7 @@
                 <enum>QFrame::Raised</enum>
                </property>
                <property name="text">
-                <string>Paid Osint Engines</string>
+                <string>Require Api Keys</string>
                </property>
               </widget>
              </item>
