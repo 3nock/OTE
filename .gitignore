@@ -20,6 +20,7 @@
 *.orig
 cov-int*
 *.pdb
+*.js
 ui_*
 include/
 gui/includes
