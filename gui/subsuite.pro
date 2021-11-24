@@ -84,7 +84,6 @@ SOURCES += \
     src/modules/osint/ip/IpGeoLocation.cpp \
     src/modules/osint/ip/IpRegistry.cpp \
     src/modules/osint/ip/IpStack.cpp \
-    src/modules/osint/mal/Abuse.cpp \
     src/modules/osint/mal/AbuseIPDB.cpp \
     src/modules/osint/archive/Arquivo.cpp \
     src/modules/osint/mal/BotScout.cpp \
@@ -92,7 +91,6 @@ SOURCES += \
     src/modules/osint/mal/HybridAnalysis.cpp \
     src/modules/osint/mal/IpQualityScore.cpp \
     src/modules/osint/mal/LeakLookup.cpp \
-    src/modules/osint/mal/PhishStats.cpp \
     src/modules/scan/CertScanner.cpp \
     src/tools/ASNTool.cpp \
     src/tools/BannerGrabber.cpp \
@@ -237,7 +235,6 @@ HEADERS += \
     src/modules/osint/ip/IpGeoLocation.h \
     src/modules/osint/ip/IpRegistry.h \
     src/modules/osint/ip/IpStack.h \
-    src/modules/osint/mal/Abuse.h \
     src/modules/osint/mal/AbuseIPDB.h \
     src/modules/osint/archive/Arquivo.h \
     src/modules/osint/mal/BotScout.h \
@@ -245,7 +242,6 @@ HEADERS += \
     src/modules/osint/mal/HybridAnalysis.h \
     src/modules/osint/mal/IpQualityScore.h \
     src/modules/osint/mal/LeakLookup.h \
-    src/modules/osint/mal/PhishStats.h \
     src/modules/scan/CertScanner.h \
     src/tools/ASNTool.h \
     src/tools/BannerGrabber.h \

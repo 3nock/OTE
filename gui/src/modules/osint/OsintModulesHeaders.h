@@ -105,6 +105,12 @@
 /// mal...
 ///
 #include "src/modules/osint/mal/VirusTotal.h"
+#include "src/modules/osint/mal/AbuseIPDB.h"
+#include "src/modules/osint/mal/BotScout.h"
+#include "src/modules/osint/mal/FraudGuard.h"
+#include "src/modules/osint/mal/HybridAnalysis.h"
+#include "src/modules/osint/mal/IpQualityScore.h"
+#include "src/modules/osint/mal/LeakLookup.h"
 ///
 /// archive...
 ///

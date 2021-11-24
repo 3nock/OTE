@@ -923,12 +923,61 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-198</y>
+                  <y>-38</y>
                   <width>169</width>
-                  <height>1265</height>
+                  <height>1422</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <item>
+                  <widget class="QLabel" name="label_16">
+                   <property name="text">
+                    <string>Abuse</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleAbuseIPDB">
+                   <property name="text">
+                    <string>AbuseIPDB</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleBotScout">
+                   <property name="text">
+                    <string>BotScout</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleFraudGuard">
+                   <property name="text">
+                    <string>FraudGuard</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleHybridAnalysis">
+                   <property name="text">
+                    <string>HybridAnalysis</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleIpQualityScore">
+                   <property name="text">
+                    <string>IpQualityScore</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="moduleLeakLookup">
+                   <property name="text">
+                    <string>Leak-Lookup</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QLabel" name="label_14">
                    <property name="text">

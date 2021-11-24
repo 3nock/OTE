@@ -8,7 +8,10 @@
 #include "src/dialogs/OsintConfigDialog.h"
 
 
-/* fix the regex for filter, it breaks on special chars
+/*
+ * write the ultimate article on subdomain enumeration
+ *
+ * fix the regex for filter, it breaks on special chars
  *
  * log on every scan each module its results count
  *

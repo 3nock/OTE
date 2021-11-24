@@ -99,6 +99,16 @@ class ApiKeysDialog : public QDialog{
 
         void on_buttonGetIpStack_clicked();
 
+        void on_buttonGetAbuseIPDB_clicked();
+
+        void on_buttonGetFraudGuard_clicked();
+
+        void on_buttonGetHybridAnalysis_clicked();
+
+        void on_buttonGetIpQualityScore_clicked();
+
+        void on_buttonGetLeakLookup_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         void loadApiKeys();

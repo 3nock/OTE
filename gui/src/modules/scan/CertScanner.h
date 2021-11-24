@@ -8,17 +8,29 @@
 
 namespace cert {
 
+struct ScanArguments{
+    QString target;
+    //QString targetList;
+    int timeout = 3;
+
+    /* protocal to connect to */
+    bool https = false;
+    bool ssh = false;
+    bool ftp = false;
+};
+
 class Scanner : public AbstractScanner{
 
     public:
-        Scanner(QString target);
+        Scanner(cert::ScanArguments args);
         ~Scanner() override;
 
     private slots:
         void lookup() override;
 
     private:
-        QString m_target;
+        cert::ScanArguments m_args;
 };
 }
+
 #endif // CERTSCANNER_H

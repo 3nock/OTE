@@ -125,6 +125,18 @@ class Raw : public QDialog{
 
         void on_moduleIpStack_clicked();
 
+        void on_moduleAbuseIPDB_clicked();
+
+        void on_moduleBotScout_clicked();
+
+        void on_moduleFraudGuard_clicked();
+
+        void on_moduleHybridAnalysis_clicked();
+
+        void on_moduleIpQualityScore_clicked();
+
+        void on_moduleLeakLookup_clicked();
+
 private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;

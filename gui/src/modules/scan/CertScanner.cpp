@@ -1,9 +1,11 @@
 #include "CertScanner.h"
 #include <QSslSocket>
 
-
-cert::Scanner::Scanner(QString target): AbstractScanner (nullptr),
-    m_target(target)
+/*
+ * implement use of different protocals that use TLS...
+ */
+cert::Scanner::Scanner(cert::ScanArguments args): AbstractScanner (nullptr),
+    m_args(args)
 {
 }
 cert::Scanner::~Scanner(){
@@ -12,9 +14,11 @@ cert::Scanner::~Scanner(){
 void cert::Scanner::lookup(){
     QSslSocket socket;
 
-    socket.connectToHostEncrypted(m_target, 443);
+    /* making a blocking connection to domain/ip target provided */
+    socket.connectToHostEncrypted(m_args.target, 443);
 
-    if(!socket.waitForEncrypted())
+    /* waiting SSL-handshake to finish, if done emit the acquired target's ssl-cert */
+    if(!socket.waitForEncrypted(m_args.timeout*1000))
         emit errorLog(socket.errorString());
     else{
         emit rawCert(socket.peerCertificate().toPem());

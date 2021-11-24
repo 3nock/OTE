@@ -84,6 +84,12 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("ipgeolocation", ui->lineEditIpGeoLocation->text());
     Config::generalConfig().setValue("ipregistry", ui->lineEditIpRegistry->text());
     Config::generalConfig().setValue("ipstack", ui->lineEditIpStack->text());
+    Config::generalConfig().setValue("abuseipdb", ui->lineEditAbuseIPDB->text());
+    Config::generalConfig().setValue("fraudguard_user", ui->lineEditFraudGuardUser->text());
+    Config::generalConfig().setValue("fraudguard_pass", ui->lineEditFraudGuardPass->text());
+    Config::generalConfig().setValue("hybridanalysis", ui->lineEditHybridAnalysis->text());
+    Config::generalConfig().setValue("ipqualityscore", ui->lineEditIpQualityScore->text());
+    Config::generalConfig().setValue("leaklookup", ui->lineEditLeakLookup->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -398,6 +404,35 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditIpStack->setText(key);
         ui->buttonGetIpStack->hide();
     }
+    key = Config::generalConfig().value("abuseipdb").toString();
+    if(!key.isEmpty()){
+        ui->lineEditAbuseIPDB->setText(key);
+        ui->buttonGetAbuseIPDB->hide();
+    }
+    //...
+    QString user = Config::generalConfig().value("fraudguard_user").toString();
+    QString pass = Config::generalConfig().value("fraudguard_pass").toString();
+    if(!key.isEmpty() && !uid.isEmpty()){
+        ui->lineEditFraudGuardUser->setText(user);
+        ui->lineEditFraudGuardPass->setText(pass);
+        ui->buttonGetFraudGuard->hide();
+    }
+    //...
+    key = Config::generalConfig().value("hybridanalysis").toString();
+    if(!key.isEmpty()){
+        ui->lineEditHybridAnalysis->setText(key);
+        ui->buttonGetHybridAnalysis->hide();
+    }
+    key = Config::generalConfig().value("ipqualityscore").toString();
+    if(!key.isEmpty()){
+        ui->lineEditIpQualityScore->setText(key);
+        ui->buttonGetIpQualityScore->hide();
+    }
+    key = Config::generalConfig().value("leaklookup").toString();
+    if(!key.isEmpty()){
+        ui->lineEditLeakLookup->setText(key);
+        ui->buttonGetLeakLookup->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -623,4 +658,24 @@ void ApiKeysDialog::on_buttonGetIpRegistry_clicked(){
 
 void ApiKeysDialog::on_buttonGetIpStack_clicked(){
     QDesktopServices::openUrl(QUrl("https://ipstack.com/product", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetAbuseIPDB_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.abuseipdb.com/pricing", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetFraudGuard_clicked(){
+    QDesktopServices::openUrl(QUrl("https://fraudguard.io/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetHybridAnalysis_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.hybrid-analysis.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetIpQualityScore_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.ipqualityscore.com/create-account", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetLeakLookup_clicked(){
+    QDesktopServices::openUrl(QUrl("https://leak-lookup.com/", QUrl::TolerantMode));
 }

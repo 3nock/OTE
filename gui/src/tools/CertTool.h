@@ -24,7 +24,7 @@ class CertTool : public QDialog{
     private slots:
         void on_buttonAnalyze_clicked();
         void on_checkBoxExpand_clicked(bool checked);
-        void on_comboBoxEngine_currentIndexChanged(int index);
+        void on_comboBoxTargetType_currentIndexChanged(int index);
 
     public slots:
         void onRawCert(QByteArray);
@@ -38,6 +38,10 @@ class CertTool : public QDialog{
         CertModel *m_certModel;
         QSortFilterProxyModel *m_proxyModel;
         ScanArgs *m_scanArgs;
+
+        /* for option combobox */
+        QStringList m_protocals{"HTTPS", "SSH", "FTP"};
+        QStringList m_osintModules{"Crtsh", "Certspotter"};
 };
 
 #endif // CERTTOOL_H

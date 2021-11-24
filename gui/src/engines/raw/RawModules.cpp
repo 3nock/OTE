@@ -1289,6 +1289,108 @@ void Raw::startScan(){
         cThread->start();
         return;
     }
+    if(ui->moduleAbuseIPDB->isChecked())
+    {
+        m_scanArgs->module = "AbuseIPDB";
+        AbuseIPDB *abuseipdb = new AbuseIPDB(m_scanArgs);
+        abuseipdb->Enumerator(cThread);
+        abuseipdb->moveToThread(cThread);
+        //...
+        connect(abuseipdb, &AbuseIPDB::rawResults, this, &Raw::onResults);
+        connect(abuseipdb, &AbuseIPDB::errorLog, this, &Raw::onErrorLog);
+        connect(abuseipdb, &AbuseIPDB::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, abuseipdb, &AbuseIPDB::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleBotScout->isChecked())
+    {
+        m_scanArgs->module = "BotScout";
+        BotScout *botscout = new BotScout(m_scanArgs);
+        botscout->Enumerator(cThread);
+        botscout->moveToThread(cThread);
+        //...
+        connect(botscout, &BotScout::rawResults, this, &Raw::onResultsTxt);
+        connect(botscout, &BotScout::errorLog, this, &Raw::onErrorLog);
+        connect(botscout, &BotScout::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, botscout, &BotScout::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleFraudGuard->isChecked())
+    {
+        m_scanArgs->module = "FraudGuard";
+        FraudGuard *fraudguard = new FraudGuard(m_scanArgs);
+        fraudguard->Enumerator(cThread);
+        fraudguard->moveToThread(cThread);
+        //...
+        connect(fraudguard, &FraudGuard::rawResults, this, &Raw::onResults);
+        connect(fraudguard, &FraudGuard::errorLog, this, &Raw::onErrorLog);
+        connect(fraudguard, &FraudGuard::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, fraudguard, &FraudGuard::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleHybridAnalysis->isChecked())
+    {
+        m_scanArgs->module = "HybridAnalysis";
+        HybridAnalysis *hybridanalysis = new HybridAnalysis(m_scanArgs);
+        hybridanalysis->Enumerator(cThread);
+        hybridanalysis->moveToThread(cThread);
+        //...
+        connect(hybridanalysis, &HybridAnalysis::rawResults, this, &Raw::onResults);
+        connect(hybridanalysis, &HybridAnalysis::errorLog, this, &Raw::onErrorLog);
+        connect(hybridanalysis, &HybridAnalysis::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, hybridanalysis, &HybridAnalysis::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleIpQualityScore->isChecked())
+    {
+        m_scanArgs->module = "IpQualityScore";
+        IpQualityScore *ipqualityscore = new IpQualityScore(m_scanArgs);
+        ipqualityscore->Enumerator(cThread);
+        ipqualityscore->moveToThread(cThread);
+        //...
+        connect(ipqualityscore, &IpQualityScore::rawResults, this, &Raw::onResults);
+        connect(ipqualityscore, &IpQualityScore::errorLog, this, &Raw::onErrorLog);
+        connect(ipqualityscore, &IpQualityScore::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, ipqualityscore, &IpQualityScore::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
+    if(ui->moduleLeakLookup->isChecked())
+    {
+        m_scanArgs->module = "Leak-Lookup";
+        LeakLookup *leaklookup = new LeakLookup(m_scanArgs);
+        leaklookup->Enumerator(cThread);
+        leaklookup->moveToThread(cThread);
+        //...
+        connect(leaklookup, &LeakLookup::rawResults, this, &Raw::onResults);
+        connect(leaklookup, &LeakLookup::errorLog, this, &Raw::onErrorLog);
+        connect(leaklookup, &LeakLookup::infoLog, this, &Raw::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+        connect(cThread, &QThread::finished, leaklookup, &LeakLookup::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        return;
+    }
     ///
     /// if control reaches here means no module was selected...
     ///
@@ -2035,6 +2137,66 @@ void Raw::on_moduleIpRegistry_clicked(){
 void Raw::on_moduleIpStack_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::IpStack meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleAbuseIPDB_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::AbuseIPDB meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleBotScout_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::BotScout meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleFraudGuard_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::FraudGuard meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleHybridAnalysis_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::HybridAnalysis meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleIpQualityScore_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::IpQualityScore meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}
+
+void Raw::on_moduleLeakLookup_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::LeakLookup meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
