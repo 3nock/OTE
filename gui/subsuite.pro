@@ -154,7 +154,6 @@ SOURCES += \
     src/modules/osint/site/Pkey.cpp \
     src/modules/osint/site/Rapiddns.cpp \
     src/modules/osint/site/SiteDossier.cpp \
-    src/modules/osint/site/Suip.cpp \
     src/engines/raw/Raw.cpp \
     src/engines/ip/Ip.cpp \
     src/engines/active/Active.cpp \
@@ -305,7 +304,6 @@ HEADERS += \
     src/modules/osint/site/Pkey.h \
     src/modules/osint/site/Rapiddns.h \
     src/modules/osint/site/SiteDossier.h \
-    src/modules/osint/site/Suip.h \
     src/modules/osint/AbstractOsintModule.h \
     src/engines/raw/Raw.h \
     src/engines/ip/Ip.h \

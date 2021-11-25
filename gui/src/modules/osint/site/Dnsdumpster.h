@@ -2,7 +2,19 @@
 #define DNSDUMPSTER_H
 
 #include "../AbstractOsintModule.h"
-#include "gumbo-parser/src/gumbo.h"
+
+/*
+ * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
+ */
+namespace ModuleInfo {
+    struct Dnsdumpster{
+        QString name = "Dnsdumpster";
+        QString url = "https://dnsdumpster.com/";
+        QString url_apiDoc = "";
+        QString summary = "";
+        QMap<QString, QStringList> flags = {};
+    };
+}
 
 class Dnsdumpster: public AbstractOsintModule{
 
@@ -12,14 +24,13 @@ class Dnsdumpster: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomainIp(QNetworkReply *reply) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
 
     private:
-        bool firstScanToGetToken = false;
-        QString m_token;
-        QMap<QString, QString> m_banner;
-        void getToken(GumboNode *node);
-        void getSubdomains(GumboNode *node);
+        bool m_queryToGetToken;
+        void m_getToken(QNetworkReply *reply);
 };
 
 #endif // DNSDUMPSTER_H

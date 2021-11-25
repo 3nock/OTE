@@ -1,5 +1,8 @@
 #include "ActiveScanner.h"
 
+/*
+ * smtp ports, 587, 25, 2525, 465...
+ */
 
 active::Scanner::Scanner(ScanConfig *scanConfig, active::ScanArguments *scanArguments)
     : AbstractScanner (nullptr),

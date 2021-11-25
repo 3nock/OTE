@@ -1,16 +1,19 @@
 #include "SiteDossier.h"
+#include <QStack>
+
 
 /*
+ * for now only page1...
  * get different info for different things...
- *
  * uses captcha...
- *
  */
-SiteDossier::SiteDossier(ScanArgs *args):
-    AbstractOsintModule(args)
+SiteDossier::SiteDossier(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &SiteDossier::replyFinished);
+    log.resultsCount++;
+
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &SiteDossier::replyFinishedSubdomain);
 }
 SiteDossier::~SiteDossier(){
     delete manager;
@@ -18,36 +21,29 @@ SiteDossier::~SiteDossier(){
 
 void SiteDossier::start(){
     QNetworkRequest request;
-    QUrl url("http://www.sitedossier.com/parentdomain/"+args->target+"/"+QString::number(m_page));
+    QUrl url("http://www.sitedossier.com/parentdomain/"+args->target+"/1");
     request.setUrl(url);
     manager->get(request);
+    activeRequests++;
 }
 
-void SiteDossier::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        GumboOutput *output = gumbo_parse(reply->readAll());
-        GumboNode *body = getBody(output->root);
-        getSubdomains(body);
-        gumbo_destroy_output(&kGumboDefaultOptions, output);
-    }
-    else
-    {
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
-}
-
-///
-/// next page implementation not yet...
-///
-void SiteDossier::getSubdomains(GumboNode *node){
-    if(node->type != GUMBO_NODE_ELEMENT)
+void SiteDossier::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
         return;
+    }
 
-    if(node->v.element.tag == GUMBO_TAG_LI && node->v.element.children.length > 0)
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
     {
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+            continue;
+
         for(unsigned int i = 0; i < node->v.element.children.length; i++){
             GumboNode *tiChild = static_cast<GumboNode*>(node->v.element.children.data[i]);
             if(tiChild->type == GUMBO_NODE_ELEMENT && tiChild->v.element.tag == GUMBO_TAG_A){
@@ -56,22 +52,16 @@ void SiteDossier::getSubdomains(GumboNode *node){
                     QString item = QString::fromUtf8(link->v.text.text);
                     item = item.remove(0, 7).remove("/");
                     emit subdomain(item);
+                    log.resultsCount++;
                 }
             }
         }
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
     }
 
-    GumboVector *children = &node->v.element.children;
-    for(unsigned int i = 0; i < children->length; i++)
-        getSubdomains(static_cast<GumboNode*>(children->data[i]));
-    return;
-}
-
-GumboNode *SiteDossier::getBody(GumboNode *node){
-    for(unsigned int i = 0; i < node->v.element.children.length; i++){
-        GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[i]);
-        if(child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_BODY)
-            return child;
-    }
-    return nullptr;
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
 }

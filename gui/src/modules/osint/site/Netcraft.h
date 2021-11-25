@@ -2,7 +2,19 @@
 #define NETCRAFT_H
 
 #include "../AbstractOsintModule.h"
-#include "gumbo-parser/src/gumbo.h"
+
+/*
+ * INPUT domain:            OUTPUT: subdomain
+ */
+namespace ModuleInfo {
+    struct Netcraft{
+        QString name = "Netcraft";
+        QString url = "https://netcraft.com/";
+        QString url_apiDoc = "";
+        QString summary = "";
+        QMap<QString, QStringList> flags = {};
+    };
+}
 
 class Netcraft: public AbstractOsintModule{
 
@@ -12,10 +24,7 @@ class Netcraft: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
-
-    private:
-        void getSubdomains(GumboNode *node);
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
 };
 
 #endif // NETCRAFT_H

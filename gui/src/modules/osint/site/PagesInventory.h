@@ -4,6 +4,19 @@
 #include "../AbstractOsintModule.h"
 #include "gumbo-parser/src/gumbo.h"
 
+/*
+ * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
+ */
+namespace ModuleInfo {
+    struct PagesInventory{
+        QString name = "PagesInventory";
+        QString url = "https://pagesinventory.com/";
+        QString url_apiDoc = "";
+        QString summary = "";
+        QMap<QString, QStringList> flags = {};
+    };
+}
+
 class PagesInventory: public AbstractOsintModule{
 
     public:
@@ -12,11 +25,9 @@ class PagesInventory: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
-
-    private:
-        void getSubdomains(GumboNode *node);
-        GumboNode* getBody(GumboNode *node);
+        void replyFinishedSubdomainIp(QNetworkReply *reply) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
 };
 
 #endif // PAGESINVENTORY_H

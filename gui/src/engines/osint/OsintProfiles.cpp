@@ -299,6 +299,40 @@ void Osint::on_buttonLoadProfile_clicked(){
     }
 
 /****************************************************************
+                           SITES
+*****************************************************************/
+    if(settings.value(OSINT_DNSDUMPSTER).toString() == TRUE){
+        ui->moduleDnsdumpster->setChecked(true);
+    }else{
+        ui->moduleDnsdumpster->setChecked(false);
+    }
+    if(settings.value(OSINT_NETCRAFT).toString() == TRUE){
+        ui->moduleNetcraft->setChecked(true);
+    }else{
+        ui->moduleNetcraft->setChecked(false);
+    }
+    if(settings.value("pagesinventory").toString() == TRUE){
+        ui->modulePagesInventory->setChecked(true);
+    }else{
+        ui->modulePagesInventory->setChecked(false);
+    }
+    if(settings.value(OSINT_PKEY).toString() == TRUE){
+        ui->modulePkey->setChecked(true);
+    }else{
+        ui->modulePkey->setChecked(false);
+    }
+    if(settings.value(OSINT_RAPIDDNS).toString() == TRUE){
+        ui->moduleRapiddns->setChecked(true);
+    }else{
+        ui->moduleRapiddns->setChecked(false);
+    }
+    if(settings.value("sitedossier").toString() == TRUE){
+        ui->moduleSitedossier->setChecked(true);
+    }else{
+        ui->moduleSitedossier->setChecked(false);
+    }
+
+/****************************************************************
                            ....
 *****************************************************************/
     if(settings.value(OSINT_BING).toString() == TRUE){
@@ -341,16 +375,6 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleExalead->setChecked(false);
     }
-    if(settings.value(OSINT_NETCRAFT).toString() == TRUE){
-        ui->moduleNetcraft->setChecked(true);
-    }else{
-        ui->moduleNetcraft->setChecked(false);
-    }
-    if(settings.value(OSINT_SUIP).toString() == TRUE){
-        ui->moduleSuip->setChecked(true);
-    }else{
-        ui->moduleSuip->setChecked(false);
-    }
     if(settings.value(OSINT_TRELLO).toString() == TRUE){
         ui->moduleTrello->setChecked(true);
     }else{
@@ -360,11 +384,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->moduleDnsbufferoverrun->setChecked(true);
     }else{
         ui->moduleDnsbufferoverrun->setChecked(false);
-    }
-    if(settings.value(OSINT_PKEY).toString() == TRUE){
-        ui->modulePkey->setChecked(true);
-    }else{
-        ui->modulePkey->setChecked(false);
     }
     if(settings.value(OSINT_ASK).toString() == TRUE){
         ui->moduleAsk->setChecked(true);
@@ -376,11 +395,6 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleBaidu->setChecked(false);
     }
-    if(settings.value(OSINT_DNSDUMPSTER).toString() == TRUE){
-        ui->moduleDnsdumpster->setChecked(true);
-    }else{
-        ui->moduleDnsdumpster->setChecked(false);
-    }
     if(settings.value(OSINT_YAHOO).toString() == TRUE){
         ui->moduleYahoo->setChecked(true);
     }else{
@@ -390,12 +404,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->moduleUrlscan->setChecked(true);
     }else{
         ui->moduleUrlscan->setChecked(false);
-    }
-    if(settings.value(OSINT_RAPIDDNS).toString() == TRUE){
-        ui->moduleRapiddns->setChecked(true);
-    }
-    else{
-        ui->moduleRapiddns->setChecked(false);
     }
     if(settings.value(OSINT_PENTESTTOOLS).toString() == TRUE){
         ui->modulePentesttools->setChecked(true);
@@ -694,8 +702,43 @@ void Osint::on_buttonCreateProfile_clicked(){
     }
 
 /****************************************************************
+                           SITES
+*****************************************************************/
+    if(ui->moduleDnsdumpster->isChecked()){
+        settings.setValue(OSINT_DNSDUMPSTER, TRUE);
+    }else{
+        settings.setValue(OSINT_DNSDUMPSTER, FALSE);
+    }
+    if(ui->moduleNetcraft->isChecked()){
+        settings.setValue(OSINT_NETCRAFT, TRUE);
+    }else{
+        settings.setValue(OSINT_NETCRAFT, FALSE);
+    }
+    if(ui->modulePagesInventory->isChecked()){
+        settings.setValue("pagesinventory", TRUE);
+    }else{
+        settings.setValue("pagesinventory", FALSE);
+    }
+    if(ui->modulePkey->isChecked()){
+        settings.setValue(OSINT_PKEY, TRUE);
+    }else{
+        settings.setValue(OSINT_PKEY, FALSE);
+    }
+    if(ui->moduleRapiddns->isChecked()){
+        settings.setValue(OSINT_RAPIDDNS, TRUE);
+    }else{
+        settings.setValue(OSINT_RAPIDDNS, FALSE);
+    }
+    if(ui->moduleSitedossier->isChecked()){
+        settings.setValue("sitedossier", TRUE);
+    }else{
+        settings.setValue("sitedossier", FALSE);
+    }
+
+/****************************************************************
                               ....
 *****************************************************************/
+
     if(ui->moduleGithub->isChecked()){
         settings.setValue(OSINT_GITHUB, TRUE);
     }else{
@@ -721,16 +764,6 @@ void Osint::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_INTELX, FALSE);
     }
-    if(ui->moduleNetcraft->isChecked()){
-        settings.setValue(OSINT_NETCRAFT, TRUE);
-    }else{
-        settings.setValue(OSINT_NETCRAFT, FALSE);
-    }
-    if(ui->moduleSuip->isChecked()){
-        settings.setValue(OSINT_SUIP, TRUE);
-    }else{
-        settings.setValue(OSINT_SUIP, FALSE);
-    }
     if(ui->moduleTrello->isChecked()){
         settings.setValue(OSINT_TRELLO, TRUE);
     }else{
@@ -745,11 +778,6 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_DNSBUFFEROVERRUN, TRUE);
     }else{
         settings.setValue(OSINT_DNSBUFFEROVERRUN, FALSE);
-    }
-    if(ui->modulePkey->isChecked()){
-        settings.setValue(OSINT_PKEY, TRUE);
-    }else{
-        settings.setValue(OSINT_PKEY, FALSE);
     }
     if(ui->moduleAsk->isChecked()){
         settings.setValue(OSINT_ASK, TRUE);
@@ -766,11 +794,6 @@ void Osint::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_BING, FALSE);
     }
-    if(ui->moduleDnsdumpster->isChecked()){
-        settings.setValue(OSINT_DNSDUMPSTER, TRUE);
-    }else{
-        settings.setValue(OSINT_DNSDUMPSTER, FALSE);
-    }
     if(ui->moduleGoogle->isChecked()){
         settings.setValue(OSINT_GOOGLE, TRUE);
     }else{
@@ -780,11 +803,6 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_YAHOO, TRUE);
     }else{
         settings.setValue(OSINT_YAHOO, FALSE);
-    }
-    if(ui->moduleRapiddns->isChecked()){
-        settings.setValue(OSINT_RAPIDDNS, TRUE);
-    }else{
-        settings.setValue(OSINT_RAPIDDNS, FALSE);
     }
     if(ui->moduleUrlscan->isChecked()){
         settings.setValue(OSINT_URLSCAN, TRUE);

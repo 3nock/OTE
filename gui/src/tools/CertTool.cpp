@@ -21,7 +21,8 @@ enum MODULE{
     CERTSPOTTER = 1
 };
 
-/*
+/* group the certificates into; expired, valid, all
+ *
  * just active and crtsh for now...
  *
  * articles on ssl-cert osint

@@ -1,15 +1,21 @@
 #include "PagesInventory.h"
+#include <QStack>
+
 
 /*
- * search domain/ip
- *
- * results seperated by comma (,)
+ * next page implementation not yet...
  */
-PagesInventory::PagesInventory(ScanArgs *args):
-    AbstractOsintModule(args)
+PagesInventory::PagesInventory(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &PagesInventory::replyFinished);
+    log.moduleName = "PagesInventory";
+
+    if(args->outputSubdomainIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &PagesInventory::replyFinishedSubdomainIp);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &PagesInventory::replyFinishedSubdomain);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &PagesInventory::replyFinishedIp);
 }
 PagesInventory::~PagesInventory(){
     delete manager;
@@ -20,90 +26,193 @@ void PagesInventory::start(){
     QUrl url("https://www.pagesinventory.com/search/?s="+args->target);
     request.setUrl(url);
     manager->get(request);
+    activeRequests++;
 }
 
-void PagesInventory::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        GumboOutput *output = gumbo_parse(reply->readAll());
-        GumboNode *body = getBody(output->root);
-        getSubdomains(body);
-        gumbo_destroy_output(&kGumboDefaultOptions, output);
-    }
-    else
-    {
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
-}
-
-///
-/// next page implementation not yet...
-///
-void PagesInventory::getSubdomains(GumboNode *node){
-    if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+void PagesInventory::replyFinishedSubdomainIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
         return;
+    }
 
-    if(node->v.element.tag == GUMBO_TAG_TR && node->v.element.attributes.length == 1 && node->v.element.children.length > 3)
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
     {
-        GumboAttribute *attribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-        QString attrValue = QString::fromUtf8(attribute->value);
-        if(attrValue == "sude"){
-            QString results;
-            ///
-            /// subdomain...
-            ///
-            GumboNode *tdSubdomain = static_cast<GumboNode*>(node->v.element.children.data[0]);
-            if(tdSubdomain->type == GUMBO_NODE_ELEMENT && tdSubdomain->v.element.children.length > 0){
-                GumboNode *a = static_cast<GumboNode*>(tdSubdomain->v.element.children.data[0]);
-                if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
-                    GumboNode *subdomain = static_cast<GumboNode*>(a->v.element.children.data[0]);
-                    if(subdomain->type == GUMBO_NODE_TEXT)
-                        results.append(QString::fromUtf8(subdomain->v.text.text));
-                }
-            }
-            ///
-            /// ipv4...
-            ///
-            GumboNode *tdIpV4 = static_cast<GumboNode*>(node->v.element.children.data[4]);
-            if(tdIpV4->type == GUMBO_NODE_ELEMENT && tdIpV4->v.element.children.length > 0){
-                GumboNode *a = static_cast<GumboNode*>(tdIpV4->v.element.children.data[0]);
-                if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
-                    GumboNode *ipv4 = static_cast<GumboNode*>(a->v.element.children.data[0]);
-                    if(ipv4->type == GUMBO_NODE_TEXT)
-                        results.append(",").append(QString::fromUtf8(ipv4->v.text.text));
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+            continue;
 
+        if(node->v.element.tag == GUMBO_TAG_TR && node->v.element.attributes.length == 1 && node->v.element.children.length > 3)
+        {
+            GumboAttribute *attribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            QString attrValue = QString::fromUtf8(attribute->value);
+            if(attrValue == "sude")
+            {
+                QString domainName;
+                /* subdomain */
+                GumboNode *tdSubdomain = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                if(tdSubdomain->type == GUMBO_NODE_ELEMENT && tdSubdomain->v.element.children.length > 0){
+                    GumboNode *a = static_cast<GumboNode*>(tdSubdomain->v.element.children.data[0]);
+                    if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
+                        GumboNode *domain = static_cast<GumboNode*>(a->v.element.children.data[0]);
+                        if(domain->type == GUMBO_NODE_TEXT)
+                            domainName = QString::fromUtf8(domain->v.text.text);
+                    }
+                }
+                /* ipv4... */
+                GumboNode *tdIpV4 = static_cast<GumboNode*>(node->v.element.children.data[4]);
+                if(tdIpV4->type == GUMBO_NODE_ELEMENT && tdIpV4->v.element.children.length > 0){
+                    GumboNode *a = static_cast<GumboNode*>(tdIpV4->v.element.children.data[0]);
+                    if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
+                        GumboNode *ipv4 = static_cast<GumboNode*>(a->v.element.children.data[0]);
+                        if(ipv4->type == GUMBO_NODE_TEXT)
+                        {
+                            QString address = QString::fromUtf8(ipv4->v.text.text);
+                            emit subdomainIp(domainName, address);
+                            log.resultsCount++;
+                        }
+
+                    }
+                }
+                /* ipv6... */
+                GumboNode *tdIpv6 = static_cast<GumboNode*>(node->v.element.children.data[5]);
+                if(tdIpv6->type == GUMBO_NODE_ELEMENT && tdIpv6->v.element.children.length > 0){
+                    GumboNode *a = static_cast<GumboNode*>(tdIpv6->v.element.children.data[0]);
+                    if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
+                        GumboNode *ipv6 = static_cast<GumboNode*>(a->v.element.children.data[0]);
+                        if(ipv6->type == GUMBO_NODE_TEXT)
+                        {
+                            QString address = QString::fromUtf8(ipv6->v.text.text);
+                            emit subdomainIp(domainName, address);
+                            log.resultsCount++;
+                        }
+                    }
                 }
             }
-            ///
-            /// ipv6
-            ///
-            GumboNode *tdIpv6 = static_cast<GumboNode*>(node->v.element.children.data[5]);
-            if(tdIpv6->type == GUMBO_NODE_ELEMENT && tdIpv6->v.element.children.length > 0){
-                GumboNode *a = static_cast<GumboNode*>(tdIpv6->v.element.children.data[0]);
-                if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
-                    GumboNode *ipv6 = static_cast<GumboNode*>(a->v.element.children.data[0]);
-                    if(ipv6->type == GUMBO_NODE_TEXT)
-                        results.append(",").append(QString::fromUtf8(ipv6->v.text.text));
-                }
-            }
-            emit subdomain(results);
         }
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
+    }
+
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
+}
+
+void PagesInventory::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
         return;
     }
 
-    GumboVector *children = &node->v.element.children;
-    for(unsigned int i = 0; i < children->length; i++)
-        getSubdomains(static_cast<GumboNode*>(children->data[i]));
-    return;
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
+    {
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+            continue;
+
+        if(node->v.element.tag == GUMBO_TAG_TR && node->v.element.attributes.length == 1 && node->v.element.children.length > 3)
+        {
+            GumboAttribute *attribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            QString attrValue = QString::fromUtf8(attribute->value);
+            if(attrValue == "sude")
+            {
+                /* ipv4...*/
+                GumboNode *tdIpV4 = static_cast<GumboNode*>(node->v.element.children.data[4]);
+                if(tdIpV4->type == GUMBO_NODE_ELEMENT && tdIpV4->v.element.children.length > 0){
+                    GumboNode *a = static_cast<GumboNode*>(tdIpV4->v.element.children.data[0]);
+                    if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
+                        GumboNode *ipv4 = static_cast<GumboNode*>(a->v.element.children.data[0]);
+                        if(ipv4->type == GUMBO_NODE_TEXT)
+                        {
+                            QString address = QString::fromUtf8(ipv4->v.text.text);
+                            emit ipA(address);
+                            log.resultsCount++;
+                        }
+
+                    }
+                }
+
+                /* ipv6...*/
+                GumboNode *tdIpv6 = static_cast<GumboNode*>(node->v.element.children.data[5]);
+                if(tdIpv6->type == GUMBO_NODE_ELEMENT && tdIpv6->v.element.children.length > 0){
+                    GumboNode *a = static_cast<GumboNode*>(tdIpv6->v.element.children.data[0]);
+                    if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
+                        GumboNode *ipv6 = static_cast<GumboNode*>(a->v.element.children.data[0]);
+                        if(ipv6->type == GUMBO_NODE_TEXT)
+                        {
+                            QString address = QString::fromUtf8(ipv6->v.text.text);
+                            emit ipAAAA(address);
+                            log.resultsCount++;
+                        }
+                    }
+                }
+            }
+        }
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
+    }
+
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
 }
 
-GumboNode *PagesInventory::getBody(GumboNode *node){
-    for(unsigned int i = 0; i < node->v.element.children.length; i++){
-        GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[i]);
-        if(child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_BODY)
-            return child;
+void PagesInventory::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    return nullptr;
+
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
+    {
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+            continue;
+
+        if(node->v.element.tag == GUMBO_TAG_TR && node->v.element.attributes.length == 1 && node->v.element.children.length > 3)
+        {
+            GumboAttribute *attribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            QString attrValue = QString::fromUtf8(attribute->value);
+            if(attrValue == "sude")
+            {
+                GumboNode *tdSubdomain = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                if(tdSubdomain->type == GUMBO_NODE_ELEMENT && tdSubdomain->v.element.children.length > 0){
+                    GumboNode *a = static_cast<GumboNode*>(tdSubdomain->v.element.children.data[0]);
+                    if(a->type == GUMBO_NODE_ELEMENT && a->v.element.children.length > 0){
+                        GumboNode *domain = static_cast<GumboNode*>(a->v.element.children.data[0]);
+                        if(domain->type == GUMBO_NODE_TEXT)
+                        {
+                            QString domainName = QString::fromUtf8(domain->v.text.text);
+                            emit subdomain(domainName);
+                            log.resultsCount++;
+                        }
+                    }
+                }
+            }
+        }
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
+    }
+
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
 }

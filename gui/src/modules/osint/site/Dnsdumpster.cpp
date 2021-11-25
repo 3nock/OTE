@@ -1,152 +1,224 @@
 #include "Dnsdumpster.h"
+#include <QStack>
 
 
-Dnsdumpster::Dnsdumpster(ScanArgs *args):
-    AbstractOsintModule(args)
+Dnsdumpster::Dnsdumpster(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Dnsdumpster::replyFinished);
+    log.moduleName = "DnsDumpster";
+
+    if(args->outputSubdomainIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomainIp);
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomain);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedIp);
 }
 Dnsdumpster::~Dnsdumpster(){
     delete manager;
 }
 
+///
+/// first scan is to get the crsf token...
+///
 void Dnsdumpster::start(){
-    ///
-    /// first scan to get the crsf token...
-    ///
     QNetworkRequest request;
     QUrl url("https://dnsdumpster.com");
     request.setUrl(url);
-    firstScanToGetToken = true;
+    m_queryToGetToken = true;
     manager->get(request);
+    activeRequests++;
 }
 
-void Dnsdumpster::replyFinished(QNetworkReply *reply){
-    if(firstScanToGetToken){
-        if(reply->error())
+void Dnsdumpster::replyFinishedSubdomainIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    if(m_queryToGetToken)
+        this->m_getToken(reply);
+
+    else{
+        QStack<GumboNode*> nodes;
+        GumboOutput *output = gumbo_parse(reply->readAll());
+        nodes.push(this->getBody(output->root));
+
+        GumboNode *node;
+        while(!nodes.isEmpty())
         {
-            emit errorLog(reply->errorString());
-        }
-        else
-        {
-            GumboOutput *output = gumbo_parse(reply->readAll());
-            getToken(output->root);
-            gumbo_destroy_output(&kGumboDefaultOptions, output);
-            ///
-            /// getting the subdomains...
-            ///
-            if(!m_token.isEmpty())
+            node = nodes.pop();
+            if(node->type != GUMBO_NODE_ELEMENT)
+                continue;
+
+            if(node->v.element.tag == GUMBO_TAG_TD && node->v.element.attributes.length == 1)
             {
-                QByteArray data;
-                QNetworkRequest request;
-                request.setRawHeader("Referer", "https://dnsdumpster.com");
-                request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
-                request.setUrl(QUrl("https://dnsdumpster.com"));
-                data.append("csrfmiddlewaretoken="+m_token);
-                data.append("&");
-                data.append("targetip="+args->target);
-                data.append("&");
-                data.append("user=free");
-                manager->post(request, data);
-                firstScanToGetToken = false;
+                GumboNode *name = static_cast<GumboNode*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(name->v.text.text) == "col-md-4") // col-md-4 == subdomain name
+                {
+                    GumboVector tdChildren = node->v.element.children;
+                    for(unsigned int i = 0; i < tdChildren.length; i++)
+                    {
+                        GumboNode *tdChild = static_cast<GumboNode*>(node->v.element.children.data[i]);
+                        if(tdChild->type == GUMBO_NODE_TEXT)
+                            emit subdomain(QString::fromUtf8(tdChild->v.text.text));
+                    }
+                }
+                continue;
             }
+
+            GumboVector *children = &node->v.element.children;
+            for(unsigned int i = 0; i < children->length; i++)
+                nodes.push(static_cast<GumboNode*>(children->data[i]));
         }
-        reply->deleteLater();
+        gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
-    else
-    {
-        if(reply->error())
-        {
-            // an error occured...
-        }
-        else
-        {
-            GumboOutput *output = gumbo_parse(reply->readAll());
-            getSubdomains(output->root);
-            gumbo_destroy_output(&kGumboDefaultOptions, output);
-        }
-        reply->deleteLater();
-        emit quitThread();
-    }
+
+    end(reply);
 }
 
-void Dnsdumpster::getToken(GumboNode *node){
-    if(node->type != GUMBO_NODE_ELEMENT)
-        return;
-
-    if(node->v.element.tag == GUMBO_TAG_INPUT && node->v.element.attributes.length == 3)
-    {
-        GumboNode *name = static_cast<GumboNode*>(node->v.element.attributes.data[1]);
-        if(QString::fromUtf8(name->v.text.text) == "csrfmiddlewaretoken"){
-            GumboNode *csrfValue = static_cast<GumboNode*>(node->v.element.attributes.data[2]);
-            m_token = QString::fromUtf8(csrfValue->v.text.text);
-        }
+void Dnsdumpster::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
         return;
     }
 
-    GumboVector *children = &node->v.element.children;
-    for(unsigned int i = 0; i < children->length; i++)
-        getToken(static_cast<GumboNode*>(children->data[i]));
-    return;
-}
+    if(m_queryToGetToken)
+        this->m_getToken(reply);
 
-void Dnsdumpster::getSubdomains(GumboNode *node){
-    if(node->type != GUMBO_NODE_ELEMENT)
-        return;
+    else{
+        QStack<GumboNode*> nodes;
+        GumboOutput *output = gumbo_parse(reply->readAll());
+        nodes.push(this->getBody(output->root));
 
-    if(node->v.element.tag == GUMBO_TAG_TD && node->v.element.attributes.length == 1)
-    {
-        GumboNode *name = static_cast<GumboNode*>(node->v.element.attributes.data[0]);
-        if(QString::fromUtf8(name->v.text.text) == "col-md-4") // col-md-4 == subdomain name
+        GumboNode *node;
+        while(!nodes.isEmpty())
         {
-            GumboVector tdChildren = node->v.element.children;
-            bool key = true, value = false;
-            QString bannerName, bannerValue;
-            for(unsigned int i = 0; i < tdChildren.length; i++)
+            node = nodes.pop();
+            if(node->type != GUMBO_NODE_ELEMENT)
+                continue;
+
+            if(node->v.element.tag == GUMBO_TAG_TD && node->v.element.attributes.length == 1)
             {
-                GumboNode *tdChild = static_cast<GumboNode*>(node->v.element.children.data[i]);
-                if(tdChild->type == GUMBO_NODE_TEXT)
-                    emit subdomain(QString::fromUtf8(tdChild->v.text.text));
-
-                ///
-                /// if the particular subdomain has any banner...
-                ///
-                if(tdChild->type == GUMBO_NODE_ELEMENT && tdChild->v.element.tag == GUMBO_TAG_SPAN){
-                    if(tdChild->v.element.children.length > 0){
-                        GumboNode *span = static_cast<GumboNode*>(tdChild->v.element.children.data[0]);
-                        if(span->type == GUMBO_NODE_TEXT && key){
-                            bannerName = QString::fromUtf8(span->v.text.text);
-                            key = false; value = true;
-                            continue;
-                        }
-                        if(span->type == GUMBO_NODE_TEXT && value){
-                            bannerValue = QString::fromUtf8(span->v.text.text);
-                            key = true; value = false;
-                            m_banner.insert(bannerName, bannerValue);
+                GumboNode *name = static_cast<GumboNode*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(name->v.text.text) == "col-md-4") // col-md-4 == subdomain name
+                {
+                    GumboVector tdChildren = node->v.element.children;
+                    for(unsigned int i = 0; i < tdChildren.length; i++)
+                    {
+                        GumboNode *tdChild = static_cast<GumboNode*>(node->v.element.children.data[i]);
+                        if(tdChild->type == GUMBO_NODE_TEXT){
+                            emit subdomain(QString::fromUtf8(tdChild->v.text.text));
+                            log.resultsCount++;
                         }
                     }
                 }
+                continue;
             }
-        }
-        /*
-              Ip-Address of the Subdomain, and the following col-md-3 is the name
 
-        if(QString::fromUtf8(name->v.text.text) == "col-md-3") // col-md-3 == ip-address
-        {
-            if(node->v.element.children.length > 0)
-            {
-                GumboNode *td = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(td->type == GUMBO_NODE_TEXT)
-                    emit subdomain(QString::fromUtf8(td->v.text.text));
-            }
+            GumboVector *children = &node->v.element.children;
+            for(unsigned int i = 0; i < children->length; i++)
+                nodes.push(static_cast<GumboNode*>(children->data[i]));
         }
-        */
+        gumbo_destroy_output(&kGumboDefaultOptions, output);
+    }
+
+    end(reply);
+}
+
+void Dnsdumpster::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
         return;
     }
 
-    GumboVector *children = &node->v.element.children;
-    for(unsigned int i = 0; i < children->length; i++)
-        getSubdomains(static_cast<GumboNode*>(children->data[i]));
-    return;
+    if(m_queryToGetToken)
+        this->m_getToken(reply);
+
+    else{
+        QStack<GumboNode*> nodes;
+        GumboOutput *output = gumbo_parse(reply->readAll());
+        nodes.push(this->getBody(output->root));
+
+        GumboNode *node;
+        while(!nodes.isEmpty())
+        {
+            node = nodes.pop();
+            if(node->type != GUMBO_NODE_ELEMENT)
+                continue;
+
+            if(node->v.element.tag == GUMBO_TAG_TD && node->v.element.attributes.length == 1)
+            {
+                GumboNode *address = static_cast<GumboNode*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(address->v.text.text) == "col-md-3") // col-md-3 == ip-address
+                {
+                    if(node->v.element.children.length > 0)
+                    {
+                        GumboNode *td = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                        if(td->type == GUMBO_NODE_TEXT){
+                            emit ip(QString::fromUtf8(td->v.text.text));
+                            log.resultsCount++;
+                        }
+                    }
+                }
+                continue;
+            }
+
+            GumboVector *children = &node->v.element.children;
+            for(unsigned int i = 0; i < children->length; i++)
+                nodes.push(static_cast<GumboNode*>(children->data[i]));
+        }
+        gumbo_destroy_output(&kGumboDefaultOptions, output);
+    }
+
+    end(reply);
+}
+
+///
+/// after obtaining the csrf token, send the request to obtain results...
+///
+void Dnsdumpster::m_getToken(QNetworkReply *reply){
+    QString token;
+    QStack<GumboNode*> nodes;
+
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty()){
+        node = nodes.pop();
+
+        if(node->type != GUMBO_NODE_ELEMENT)
+            continue;
+
+        if(node->v.element.tag == GUMBO_TAG_INPUT && node->v.element.attributes.length == 3)
+        {
+            GumboNode *name = static_cast<GumboNode*>(node->v.element.attributes.data[1]);
+            if(QString::fromUtf8(name->v.text.text) == "csrfmiddlewaretoken"){
+                GumboNode *csrfValue = static_cast<GumboNode*>(node->v.element.attributes.data[2]);
+                token = QString::fromUtf8(csrfValue->v.text.text);
+            }
+            continue;
+        }
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
+    }
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    /* Request to obtain the Results */
+    QNetworkRequest request;
+    request.setRawHeader("Referer", "https://dnsdumpster.com");
+    request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
+    request.setUrl(QUrl("https://dnsdumpster.com"));
+
+    QByteArray data;
+    data.append("csrfmiddlewaretoken="+token+"&");
+    data.append("targetip="+args->target+"&");
+    data.append("user=free");
+
+    manager->post(request, data);
+    m_queryToGetToken = false;
+    activeRequests++;
 }

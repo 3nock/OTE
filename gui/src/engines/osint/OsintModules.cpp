@@ -1143,7 +1143,7 @@ void Osint::startScan(){
     }
 
     /****************************************************************************
-                                 IANA
+                                 SITES
     *****************************************************************************/
 
     if(ui->moduleDnsdumpster->isChecked())
@@ -1156,8 +1156,6 @@ void Osint::startScan(){
         connect(dnsdumpster, &Dnsdumpster::subdomain, this, &Osint::onResultSubdomain);
         connect(dnsdumpster, &Dnsdumpster::subdomainIp, this, &Osint::onResultSubdomainIp);
         connect(dnsdumpster, &Dnsdumpster::ip, this, &Osint::onResultIp);
-        connect(dnsdumpster, &Dnsdumpster::email, this, &Osint::onResultEmail);
-        connect(dnsdumpster, &Dnsdumpster::url, this, &Osint::onResultUrl);
         connect(dnsdumpster, &Dnsdumpster::errorLog, this, &Osint::onErrorLog);
         connect(dnsdumpster, &Dnsdumpster::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -1175,10 +1173,6 @@ void Osint::startScan(){
         netcraft->moveToThread(cThread);
         //...
         connect(netcraft, &Netcraft::subdomain, this, &Osint::onResultSubdomain);
-        connect(netcraft, &Netcraft::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(netcraft, &Netcraft::ip, this, &Osint::onResultIp);
-        connect(netcraft, &Netcraft::email, this, &Osint::onResultEmail);
-        connect(netcraft, &Netcraft::url, this, &Osint::onResultUrl);
         connect(netcraft, &Netcraft::errorLog, this, &Osint::onErrorLog);
         connect(netcraft, &Netcraft::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -1188,22 +1182,20 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->moduleSuip->isChecked())
-    {
-        Suip *suip = new Suip(scanArgs);
+    if(ui->modulePagesInventory->isChecked()){
+        PagesInventory *pagesinventory = new PagesInventory(scanArgs);
         QThread *cThread = new QThread(this);
-        suip->Enumerator(cThread);
-        suip->moveToThread(cThread);
+        pagesinventory->Enumerator(cThread);
+        pagesinventory->moveToThread(cThread);
         //...
-        connect(suip, &Suip::subdomain, this, &Osint::onResultSubdomain);
-        connect(suip, &Suip::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(suip, &Suip::ip, this, &Osint::onResultIp);
-        connect(suip, &Suip::email, this, &Osint::onResultEmail);
-        connect(suip, &Suip::url, this, &Osint::onResultUrl);
-        connect(suip, &Suip::errorLog, this, &Osint::onErrorLog);
-        connect(suip, &Suip::infoLog, this, &Osint::onInfoLog);
+        connect(pagesinventory, &PagesInventory::subdomain, this, &Osint::onResultSubdomain);
+        connect(pagesinventory, &PagesInventory::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(pagesinventory, &PagesInventory::ipA, this, &Osint::onResultA);
+        connect(pagesinventory, &PagesInventory::ipAAAA, this, &Osint::onResultAAAA);
+        connect(pagesinventory, &PagesInventory::errorLog, this, &Osint::onErrorLog);
+        connect(pagesinventory, &PagesInventory::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, suip, &Suip::deleteLater);
+        connect(cThread, &QThread::finished, pagesinventory, &PagesInventory::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -1217,9 +1209,8 @@ void Osint::startScan(){
         //...
         connect(pkey, &Pkey::subdomain, this, &Osint::onResultSubdomain);
         connect(pkey, &Pkey::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(pkey, &Pkey::ip, this, &Osint::onResultIp);
-        connect(pkey, &Pkey::email, this, &Osint::onResultEmail);
-        connect(pkey, &Pkey::url, this, &Osint::onResultUrl);
+        connect(pkey, &Pkey::ipA, this, &Osint::onResultA);
+        connect(pkey, &Pkey::ipAAAA, this, &Osint::onResultAAAA);
         connect(pkey, &Pkey::errorLog, this, &Osint::onErrorLog);
         connect(pkey, &Pkey::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -1235,15 +1226,33 @@ void Osint::startScan(){
         rapiddns->Enumerator(cThread);
         rapiddns->moveToThread(cThread);
         //...
-        connect(rapiddns, &Rapiddns::subdomain, this, &Osint::onResultSubdomain);
         connect(rapiddns, &Rapiddns::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(rapiddns, &Rapiddns::ip, this, &Osint::onResultIp);
-        connect(rapiddns, &Rapiddns::email, this, &Osint::onResultEmail);
-        connect(rapiddns, &Rapiddns::url, this, &Osint::onResultUrl);
+        connect(rapiddns, &Rapiddns::subdomain, this, &Osint::onResultSubdomain);
+        connect(rapiddns, &Rapiddns::MX, this, &Osint::onResultMX);
+        connect(rapiddns, &Rapiddns::CNAME, this, &Osint::onResultCNAME);
+        connect(rapiddns, &Rapiddns::NS, this, &Osint::onResultNS);
+        connect(rapiddns, &Rapiddns::ipA, this, &Osint::onResultA);
+        connect(rapiddns, &Rapiddns::ipAAAA, this, &Osint::onResultAAAA);
         connect(rapiddns, &Rapiddns::errorLog, this, &Osint::onErrorLog);
         connect(rapiddns, &Rapiddns::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, rapiddns, &Rapiddns::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
+    if(ui->moduleSitedossier->isChecked()){
+        SiteDossier *sitedossier = new SiteDossier(scanArgs);
+        QThread *cThread = new QThread(this);
+        sitedossier->Enumerator(cThread);
+        sitedossier->moveToThread(cThread);
+        //...
+        connect(sitedossier, &SiteDossier::subdomain, this, &Osint::onResultSubdomain);
+        connect(sitedossier, &SiteDossier::errorLog, this, &Osint::onErrorLog);
+        connect(sitedossier, &SiteDossier::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, sitedossier, &SiteDossier::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();
@@ -1444,46 +1453,6 @@ void Osint::startScan(){
         connect(bing, &Bing::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
         connect(cThread, &QThread::finished, bing, &Bing::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->moduleSitedossier->isChecked()){
-        SiteDossier *sitedossier = new SiteDossier(scanArgs);
-        QThread *cThread = new QThread(this);
-        sitedossier->Enumerator(cThread);
-        sitedossier->moveToThread(cThread);
-        //...
-        connect(sitedossier, &SiteDossier::subdomain, this, &Osint::onResultSubdomain);
-        connect(sitedossier, &SiteDossier::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(sitedossier, &SiteDossier::ip, this, &Osint::onResultIp);
-        connect(sitedossier, &SiteDossier::email, this, &Osint::onResultEmail);
-        connect(sitedossier, &SiteDossier::url, this, &Osint::onResultUrl);
-        connect(sitedossier, &SiteDossier::errorLog, this, &Osint::onErrorLog);
-        connect(sitedossier, &SiteDossier::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, sitedossier, &SiteDossier::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->modulePagesInventory->isChecked()){
-        PagesInventory *pagesinventory = new PagesInventory(scanArgs);
-        QThread *cThread = new QThread(this);
-        pagesinventory->Enumerator(cThread);
-        pagesinventory->moveToThread(cThread);
-        //...
-        connect(pagesinventory, &PagesInventory::subdomain, this, &Osint::onResultSubdomain);
-        connect(pagesinventory, &PagesInventory::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(pagesinventory, &PagesInventory::ip, this, &Osint::onResultIp);
-        connect(pagesinventory, &PagesInventory::email, this, &Osint::onResultEmail);
-        connect(pagesinventory, &PagesInventory::url, this, &Osint::onResultUrl);
-        connect(pagesinventory, &PagesInventory::errorLog, this, &Osint::onErrorLog);
-        connect(pagesinventory, &PagesInventory::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, pagesinventory, &PagesInventory::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //...
         cThread->start();

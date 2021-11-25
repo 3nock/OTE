@@ -1,15 +1,22 @@
 #include "Rapiddns.h"
+#include <QStack>
 
-/* for Reverse-ip-lookup
- * https://rapiddns.io/sameip/216.58.223.110#result
- * brings list of domains associated with the ip
+
+/*
+ * implement for subdomainIp & ip
+ * it is one of my fav
  */
-
-Rapiddns::Rapiddns(ScanArgs *args):
-    AbstractOsintModule(args)
+Rapiddns::Rapiddns(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Rapiddns::replyFinished);
+    log.moduleName = "RapidDns";
+
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomain);
+    if(args->outputSubdomainIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomainIp);
+    if(args->outputIp)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Rapiddns::replyFinishedIp);
 }
 Rapiddns::~Rapiddns(){
     delete manager;
@@ -17,45 +24,127 @@ Rapiddns::~Rapiddns(){
 
 void Rapiddns::start(){
     QNetworkRequest request;
-    QUrl url("https://rapiddns.io/subdomain/"+args->target+"?full=1#result");
-    request.setUrl(url);
-    manager->get(request);
+    QUrl url;
+
+    if(args->inputDomain){
+        url.setUrl("https://rapiddns.io/subdomain/"+args->target+"?full=1#result");
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
+
+    if(args->inputIp){
+        url.setUrl("https://rapiddns.io/sameip/"+args->target+"?full=1#result");
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
+
+    if(args->inputCidr){
+        url.setUrl("https://rapiddns.io/s/"+args->target+"?full=1#result");
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
-void Rapiddns::replyFinished(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError){
-        GumboOutput *output = gumbo_parse(reply->readAll());
-        getSubdomains(output->root);
-        gumbo_destroy_output(&kGumboDefaultOptions, output);
-    }
-    else{
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    emit quitThread();
-}
-
-void Rapiddns::getSubdomains(GumboNode *node){
-    if(node->type != GUMBO_NODE_ELEMENT)
+void Rapiddns::replyFinishedSubdomain(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
         return;
+    }
 
-    if(node->v.element.tag == GUMBO_TAG_TBODY && node->v.element.children.length > 0){
-        GumboVector tbodyChildren = node->v.element.children;
-        for(unsigned int i = 0; i < tbodyChildren.length; i++){
-            GumboNode *trNode = static_cast<GumboNode*>(tbodyChildren.data[i]);
-            if(trNode->type == GUMBO_NODE_ELEMENT && trNode->v.element.tag == GUMBO_TAG_TR && trNode->v.element.children.length > 1){
-                GumboNode *td = static_cast<GumboNode*>(trNode->v.element.children.data[3]);
-                if(td->type == GUMBO_NODE_ELEMENT && td->v.element.tag == GUMBO_TAG_TD && td->v.element.children.length >0){
-                    GumboNode *item = static_cast<GumboNode*>(td->v.element.children.data[0]);
-                    if(item->type == GUMBO_NODE_TEXT)
-                        emit subdomain(QString::fromUtf8(item->v.text.text));
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
+    {
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+            continue;
+
+        if(node->v.element.tag == GUMBO_TAG_TBODY && node->v.element.children.length > 0){
+            GumboVector tbodyChildren = node->v.element.children;
+            for(unsigned int i = 0; i < tbodyChildren.length; i++){
+                GumboNode *trNode = static_cast<GumboNode*>(tbodyChildren.data[i]);
+                if(trNode->type == GUMBO_NODE_ELEMENT && trNode->v.element.tag == GUMBO_TAG_TR && trNode->v.element.children.length > 1){
+                    GumboNode *td = static_cast<GumboNode*>(trNode->v.element.children.data[3]);
+                    if(td->type == GUMBO_NODE_ELEMENT && td->v.element.tag == GUMBO_TAG_TD && td->v.element.children.length >0){
+                        GumboNode *item = static_cast<GumboNode*>(td->v.element.children.data[0]);
+                        if(item->type == GUMBO_NODE_TEXT)
+                        {
+                            emit subdomain(QString::fromUtf8(item->v.text.text));
+                            log.resultsCount++;
+                        }
+                    }
                 }
             }
+            continue;
         }
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
+    }
+
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
+}
+
+void Rapiddns::replyFinishedSubdomainIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
         return;
     }
 
-    GumboVector *children = &node->v.element.children;
-    for(unsigned int i = 0; i < children->length; i++)
-        getSubdomains(static_cast<GumboNode*>(children->data[i]));
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
+    {
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+            continue;
+
+        /* not yet implemented... */
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
+    }
+
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
+}
+
+void Rapiddns::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
+    {
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+            continue;
+
+        /* not yet implemented... */
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
+    }
+
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
 }

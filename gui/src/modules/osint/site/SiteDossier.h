@@ -2,7 +2,19 @@
 #define SITEDOSSIER_H
 
 #include "../AbstractOsintModule.h"
-#include "gumbo-parser/src/gumbo.h"
+
+/*
+ * INPUT domain:            OUTPUT: subdomain
+ */
+namespace ModuleInfo {
+    struct SiteDossier{
+        QString name = "SiteDossier";
+        QString url = "https://sitedossier.com/";
+        QString url_apiDoc = "";
+        QString summary = "";
+        QMap<QString, QStringList> flags = {};
+    };
+}
 
 class SiteDossier: public AbstractOsintModule{
 
@@ -12,12 +24,7 @@ class SiteDossier: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
-
-    private:
-        int m_page = 1;
-        void getSubdomains(GumboNode *node);
-        GumboNode *getBody(GumboNode *node);
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
 };
 
 #endif // SITEDOSSIER_H

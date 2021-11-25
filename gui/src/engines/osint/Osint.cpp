@@ -138,7 +138,8 @@ void Osint::onErrorLog(QString log){
 
 void Osint::onResultSubdomainIp(QString subdomain, QString ip){
     int prevSize = m_subdomainIpSet.count();
-    m_subdomainIpSet.insert(subdomain);
+    /* inserting subdomain+ip */
+    m_subdomainIpSet.insert(subdomain+ip);
     if(m_subdomainIpSet.count() > prevSize && !subdomain.isEmpty()){
         result->osint->subdomainIp->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
         project->addPassiveSubdomain({subdomain, ip});
