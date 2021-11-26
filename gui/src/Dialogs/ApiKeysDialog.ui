@@ -72,7 +72,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-1453</y>
+        <y>0</y>
         <width>532</width>
         <height>2505</height>
        </rect>
@@ -4564,10 +4564,23 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_14">
      <item>
+      <spacer name="horizontalSpacer_67">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QPushButton" name="buttonSave">
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>75</width>
          <height>23</height>
         </size>
        </property>
@@ -4589,7 +4602,7 @@
       <widget class="QPushButton" name="buttonCancel">
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>75</width>
          <height>23</height>
         </size>
        </property>

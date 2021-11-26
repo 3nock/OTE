@@ -12,6 +12,7 @@
 #include "src/engines/osint/Osint.h"
 #include "src/engines/active/Active.h"
 #include "src/engines/raw/Raw.h"
+#include "src/engines/cert/Cert.h"
 
 namespace Ui {
     class MainWindow;
@@ -50,9 +51,7 @@ class MainWindow : public QMainWindow{
         ///
         void on_actionIpTool_triggered();
         void on_actionASNTool_triggered();
-
         void on_actionCertTool_triggered();
-
         void on_actionEmailTool_triggered();
 
 private:
@@ -63,6 +62,7 @@ private:
         DnsRecords *records = nullptr;
         Project *project = nullptr;
         Raw *raw = nullptr;
+        Cert *cert = nullptr;
 };
 
 #endif // MAINWINDOW_H

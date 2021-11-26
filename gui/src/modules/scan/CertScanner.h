@@ -1,13 +1,11 @@
 #ifndef CERTSCANNER_H
 #define CERTSCANNER_H
 
-#include <QTcpSocket>
 #include <QSslCertificate>
 #include "AbstractScanner.h"
 #include "src/dialogs/ConfigDialog.h"
 
-namespace cert {
-
+namespace certificate {
 struct ScanArguments{
     QString target;
     //QString targetList;
@@ -22,14 +20,14 @@ struct ScanArguments{
 class Scanner : public AbstractScanner{
 
     public:
-        Scanner(cert::ScanArguments args);
+        Scanner(certificate::ScanArguments args);
         ~Scanner() override;
 
     private slots:
         void lookup() override;
 
     private:
-        cert::ScanArguments m_args;
+        certificate::ScanArguments m_args;
 };
 }
 

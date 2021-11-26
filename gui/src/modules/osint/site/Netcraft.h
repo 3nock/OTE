@@ -11,7 +11,8 @@ namespace ModuleInfo {
         QString name = "Netcraft";
         QString url = "https://netcraft.com/";
         QString url_apiDoc = "";
-        QString summary = "";
+        QString summary = "Netcraft is an internet services company based in the United Kingdom which provides internet security services, including cybercrime disruption, application security testing and automated vulnerability scanning."
+                          "We have explored the internet for a quarter of a century and are an authority on many aspects of the internet.";
         QMap<QString, QStringList> flags = {};
     };
 }

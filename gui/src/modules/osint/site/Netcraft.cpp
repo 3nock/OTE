@@ -4,6 +4,8 @@
 
 /*
  *  next page implementation not yet...
+ *  using site+contains...
+ *  has restrictions...
  */
 Netcraft::Netcraft(ScanArgs *args): AbstractOsintModule(args)
 {
@@ -19,7 +21,7 @@ Netcraft::~Netcraft(){
 
 void Netcraft::start(){
     QNetworkRequest request;
-    QUrl url("https://searchdns.netcraft.com/?restriction=site+ends+with&host="+args->target);
+    QUrl url("https://searchdns.netcraft.com/?restriction=site+contains&host="+args->target);
     request.setUrl(url);
     manager->get(request);
     activeRequests++;

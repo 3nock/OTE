@@ -24,29 +24,19 @@ Pkey::~Pkey(){
 
 void Pkey::start(){
     QNetworkRequest request;
-    QByteArray data;
+
     QUrl url("https://www.pkey.in/tools-i/search-subdomains");
     request.setUrl(url);
-    request.setRawHeader("Pragma", "no-cache");
     request.setRawHeader("Origin", "https://www.pkey.in");
-    request.setRawHeader("Accept-Encoding", "gzip, deflate, br");
-    request.setRawHeader("Accept-Language", "en-US,en;q=0.9,it;q=0.8");
-    request.setRawHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
     request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
-    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-    request.setRawHeader("Cache-Control", "no-cache");
-    request.setRawHeader("Referer", "http://www.pkey.in/tools-i/search-subdomains");
-    request.setRawHeader("Connection", "keep-alive");
-    //request.setRawHeader("DNT", "1");
+    //...
+    QByteArray data;
     data.append("zone="+args->target+"&");
     data.append("submit=");
-    ///
-    /// ignore ssl verification...
-    ///
-    QSslConfiguration conf = request.sslConfiguration();
-    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
-    request.setSslConfiguration(conf);
+
+    /* send request */
     manager->post(request, data);
+    activeRequests++;
 }
 
 void Pkey::replyFinishedSubdomain(QNetworkReply *reply){

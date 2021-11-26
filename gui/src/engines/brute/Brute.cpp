@@ -2,6 +2,7 @@
 #include "ui_Brute.h"
 //...
 #include <QDateTime>
+#include "src/utils/Definitions.h"
 
 /*
  * option to resolve both A & AAAA, 3 models, one for A one for AAAA & one for A&AAAA
@@ -99,15 +100,12 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     ///
     /// ...
     ///
-    ui->lineEditTarget->setPlaceholderText("eg. example.com");
+    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
     ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ///
     /// ...
     ///
     ui->buttonStop->setDisabled(true);
-    //ui->buttonPause->setDisabled(true);
-    //...
-    ui->buttonAction->hide();
     ui->targets->hide();
     ui->progressBar->hide();
     //...
@@ -232,7 +230,6 @@ void Brute::on_buttonStart_clicked(){
     /// Starting the scan...
     ///
     startScan();
-    ui->buttonAction->show();
     //...
     sendStatus("[START] Started Subdomain Enumeration!");
 }
@@ -399,10 +396,6 @@ void Brute::onClearResults(){
     ui->progressBar->clearMask();
     ui->progressBar->reset();
     ui->progressBar->hide();
-    ///
-    /// hide the action button...
-    ///
-    ui->buttonAction->hide();
     ///
     /// hide the filter...
     ///

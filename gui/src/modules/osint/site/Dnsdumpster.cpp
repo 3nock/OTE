@@ -1,7 +1,9 @@
 #include "Dnsdumpster.h"
 #include <QStack>
 
-
+/*
+ * fix sometimes, returns words in ip-address place...
+ */
 Dnsdumpster::Dnsdumpster(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);

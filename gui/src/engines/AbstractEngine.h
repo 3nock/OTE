@@ -37,9 +37,11 @@ class Status{
     public:
         Status()
             : osint(new ScanStatus),
+              raw(new ScanStatus),
               brute(new ScanStatus),
               active(new ScanStatus),
               ip(new ScanStatus),
+              cert(new ScanStatus),
               records(new ScanStatus)
         {
         }
@@ -51,16 +53,20 @@ class Status{
             delete records;
         }
         ScanStatus *osint;
+        ScanStatus *raw;
         ScanStatus *brute;
         ScanStatus *active;
         ScanStatus *ip;
+        ScanStatus *cert;
         ScanStatus *records;
         //...
         int totalThreadsInUse(){
             return osint->activeThreads+
+                    raw->activeThreads+
                     brute->activeThreads+
                     active->activeThreads+
                     ip->activeThreads+
+                    cert->activeThreads+
                     records->activeThreads;
         }
 };

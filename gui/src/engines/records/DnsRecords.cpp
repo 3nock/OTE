@@ -27,7 +27,6 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, ProjectDataM
     ui->srvWordlist->hide();
     ui->progressBar->hide();
     ui->progressBarSRV->hide();
-    ui->buttonAction->hide();
     //...
     ui->lineEditFilter->hide();
     ui->buttonFilter->hide();
@@ -134,7 +133,6 @@ void DnsRecords::on_buttonStart_clicked(){
     /// start Enumeration...
     ///
     startScan();
-    ui->buttonAction->show();
     //...
     sendStatus("[START] Started Subdomain Enumeration!");
 }
@@ -390,10 +388,6 @@ void DnsRecords::onClearResultsDnsRecords(){
     ui->progressBar->clearMask();
     ui->progressBar->reset();
     ui->progressBar->hide();
-    ///
-    /// hide the action button...
-    ///
-    ui->buttonAction->hide();
 }
 
 void DnsRecords::onClearResultsSrvRecords(){

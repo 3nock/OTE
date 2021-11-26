@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     brute = new Brute(this, resultsModel, projectDataModel, status);
     active = new Active(this, resultsModel, projectDataModel, status);
     records = new DnsRecords(this, resultsModel, projectDataModel, status);
+    cert = new Cert(this, resultsModel, projectDataModel, status);
     raw = new Raw(this);
     project = new Project(this, projectDataModel);
 
@@ -125,8 +126,9 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->tabWidget_mainTab->insertTab(2, brute, "Brute");
     ui->tabWidget_mainTab->insertTab(3, active, "Active");
     ui->tabWidget_mainTab->insertTab(4, records, "Record");
-    ui->tabWidget_mainTab->insertTab(5, ip, "Ip");
-    ui->tabWidget_mainTab->insertTab(6, project, "Project");
+    ui->tabWidget_mainTab->insertTab(5, cert, "Cert");
+    ui->tabWidget_mainTab->insertTab(6, ip, "Ip");
+    ui->tabWidget_mainTab->insertTab(7, project, "Project");
     //...
     ui->tabWidget_mainTab->setCurrentIndex(0);
     ///

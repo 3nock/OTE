@@ -20,7 +20,6 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, S
     /// ...
     ///
     ui->progressBar->hide();
-    ui->buttonAction->hide();
     //...
     ui->lineEditFilter->hide();
     ui->buttonFilter->hide();
@@ -93,7 +92,6 @@ void Ip::on_buttonStart_clicked(){
     /// start Ip subdomain enumeration...
     ///
     startScan();
-    ui->buttonAction->show();
     //...
     sendStatus("[*] Testing For Ip Subdomains...");
 }
@@ -234,10 +232,6 @@ void Ip::onClearResults(){
     ui->progressBar->clearMask();
     ui->progressBar->reset();
     ui->progressBar->hide();
-    ///
-    /// hide the action button...
-    ///
-    ui->buttonAction->hide();
     ///
     /// hide the filter...
     ///

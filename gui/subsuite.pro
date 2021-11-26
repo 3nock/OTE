@@ -30,6 +30,8 @@ include(includes/gumbo/gumbo-parser.pri)
 SOURCES += \
     src/engines/active/ActiveContextMenu.cpp \
     src/engines/brute/BruteContextMenu.cpp \
+    src/engines/cert/Cert.cpp \
+    src/engines/cert/CertContextMenu.cpp \
     src/engines/records/DnsRecordsContextMenu.cpp \
     src/engines/ip/IpContextMenu.cpp \
     src/engines/osint/OsintContextMenu.cpp \
@@ -181,6 +183,7 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+    src/engines/cert/Cert.h \
     src/models/AsnModel.h \
     src/models/CertModel.h \
     src/models/EmailModel.h \
@@ -336,6 +339,7 @@ HEADERS += \
     src/MainWindow.h
 
 FORMS += \
+    src/engines/cert/Cert.ui \
     src/tools/ASNTool.ui \
     src/tools/BannerGrabber.ui \
     src/tools/CertTool.ui \

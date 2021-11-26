@@ -28,7 +28,6 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *pr
     /// ...
     ///
     ui->progressBar->hide();
-    ui->buttonAction->hide();
     //...
     ui->buttonStop->setDisabled(true);
     //ui->buttonPause->setDisabled(true);
@@ -126,7 +125,6 @@ void Active::on_buttonStart_clicked(){
     /// start active subdomain enumeration...
     ///
     startScan();
-    ui->buttonAction->show();
     //...
     sendStatus("[*] Testing For Active Subdomains...");
 }
@@ -284,10 +282,6 @@ void Active::onClearResults(){
     ui->progressBar->clearMask();
     ui->progressBar->reset();
     ui->progressBar->hide();
-    ///
-    /// hide the action button...
-    ///
-    ui->buttonAction->hide();
     ///
     /// hide the filter...
     ///

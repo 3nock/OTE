@@ -4,14 +4,14 @@
 /*
  * implement use of different protocals that use TLS...
  */
-cert::Scanner::Scanner(cert::ScanArguments args): AbstractScanner (nullptr),
+certificate::Scanner::Scanner(certificate::ScanArguments args): AbstractScanner (nullptr),
     m_args(args)
 {
 }
-cert::Scanner::~Scanner(){
+certificate::Scanner::~Scanner(){
 }
 
-void cert::Scanner::lookup(){
+void certificate::Scanner::lookup(){
     QSslSocket socket;
 
     /* making a blocking connection to domain/ip target provided */

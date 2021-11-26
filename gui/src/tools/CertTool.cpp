@@ -84,7 +84,7 @@ void CertTool::on_buttonAnalyze_clicked(){
     case TARGET_HOSTNAME:
     {
         /* getting target, and determining target type */
-        cert::ScanArguments args;
+        certificate::ScanArguments args;
         args.target = ui->lineEditTarget->text();
 
         /* getting protocal to use */
@@ -101,14 +101,14 @@ void CertTool::on_buttonAnalyze_clicked(){
         }
 
         /* enumerating */
-        cert::Scanner *scanner = new cert::Scanner(args);
+        certificate::Scanner *scanner = new certificate::Scanner(args);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
-        connect(scanner, &cert::Scanner::rawCert, this, &CertTool::onRawCert);
-        connect(scanner, &cert::Scanner::errorLog, this, &CertTool::onErrorLog);
-        connect(scanner, &cert::Scanner::infoLog, this, &CertTool::onInfoLog);
+        connect(scanner, &certificate::Scanner::rawCert, this, &CertTool::onRawCert);
+        connect(scanner, &certificate::Scanner::errorLog, this, &CertTool::onErrorLog);
+        connect(scanner, &certificate::Scanner::infoLog, this, &CertTool::onInfoLog);
         connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
-        connect(cThread, &QThread::finished, scanner, &cert::Scanner::deleteLater);
+        connect(cThread, &QThread::finished, scanner, &certificate::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         cThread->start();
         break;
