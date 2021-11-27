@@ -43,12 +43,14 @@ void Osint::connectActions(){
     connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToBrute();});
     connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToActive();});
     connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToRecords();});
+    connect(&actionSendToCert, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToCert();});
     //...
     connect(&actionSendToIp_ip, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::OSINT, CHOICE::ip, PROXYMODEL_TYPE::ipProxy); emit changeTabToIp();});
     connect(&actionSendToOsint_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToOsint();});
     connect(&actionSendToBrute_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToBrute();});
     connect(&actionSendToActive_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToActive();});
     connect(&actionSendToRecords_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToRecords();});
+    connect(&actionSendToCert_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToCert();});
     /**** For Right-Click ContextMenu ****/
     connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
     connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
@@ -60,6 +62,7 @@ void Osint::connectActions(){
     connect(&actionSendToBrute_c, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
     connect(&actionSendToActive_c, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
     connect(&actionSendToRecords_c, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+    connect(&actionSendToCert_c, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(selectionModel); emit changeTabToCert();});
 }
 
 void Osint::on_buttonAction_clicked(){
@@ -155,12 +158,14 @@ void Osint::on_buttonAction_clicked(){
         Menu->addAction(&actionSendToBrute);
         Menu->addAction(&actionSendToActive);
         Menu->addAction(&actionSendToRecords);
+        Menu->addAction(&actionSendToCert);
     }
     if(option == OUTPUT_SUBDOMAIN){
         Menu->addAction(&actionSendToOsint_subdomain);
         Menu->addAction(&actionSendToBrute_subdomain);
         Menu->addAction(&actionSendToActive_subdomain);
         Menu->addAction(&actionSendToRecords_subdomain);
+        Menu->addAction(&actionSendToCert_subdomain);
     }
     ///
     /// showing the context menu...
@@ -194,6 +199,7 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         Menu->addAction(&actionSendToBrute_c);
         Menu->addAction(&actionSendToActive_c);
         Menu->addAction(&actionSendToRecords_c);
+        Menu->addAction(&actionSendToCert_c);
     }
     ///
     /// showing the menu...

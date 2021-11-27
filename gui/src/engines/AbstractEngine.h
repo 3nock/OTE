@@ -116,9 +116,11 @@ class AbstractEngine : public QWidget{
         ///
         void changeTabToIp();
         void changeTabToOsint();
+        void changeTabToRaw();
         void changeTabToBrute();
         void changeTabToActive();
         void changeTabToRecords();
+        void changeTabToCert();
         void changeTabToProject();
 
 /*
@@ -132,14 +134,18 @@ class AbstractEngine : public QWidget{
         void sendSubdomainsToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE);
         void sendSubdomainsToActive(ENGINE, CHOICE, PROXYMODEL_TYPE);
         void sendSubdomainsToRecord(ENGINE, CHOICE, PROXYMODEL_TYPE);
+        void sendSubdomainsToCert(ENGINE, CHOICE, PROXYMODEL_TYPE);
         void sendSubdomainsToProject(ENGINE, CHOICE, PROXYMODEL_TYPE);
+        void sendSSLCertToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE);
         //...
         void sendIpAddressesToIp(QItemSelectionModel*);
         void sendSubdomainsToBrute(QItemSelectionModel*);
         void sendSubdomainsToOsint(QItemSelectionModel*);
         void sendSubdomainsToActive(QItemSelectionModel*);
         void sendSubdomainsToRecord(QItemSelectionModel*);
+        void sendSubdomainsToCert(QItemSelectionModel*);
         void sendSubdomainsToProject(QItemSelectionModel*);
+        void sendSSLCertToOsint(QItemSelectionModel*);
 
     public slots:
         void onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE);
@@ -160,22 +166,26 @@ class AbstractEngine : public QWidget{
         QAction actionSendToActive{"Send Hostnames To Active"};
         QAction actionSendToBrute{"Send Hostnames To Brute"};
         QAction actionSendToRecords{"Send Hostnames To Records"};
+        QAction actionSendToCert{"Send Hostnames To Cert"};
         //...
         QAction actionSendToIp_ip{"Send Addresses To Ip"};
         QAction actionSendToOsint_subdomain{"Send Hostnames To Osint"};
         QAction actionSendToActive_subdomain{"Send Hostnames To Active"};
         QAction actionSendToBrute_subdomain{"Send Hostnames To Brute"};
         QAction actionSendToRecords_subdomain{"Send Hostnames To Records"};
+        QAction actionSendToCert_subdomain{"Send Hostnames To Cert"};
         //...
         QAction actionSendToOsint_dns{"Send Hostnames To Osint"};
         QAction actionSendToActive_dns{"Send Hostnames To Active"};
         QAction actionSendToBrute_dns{"Send Hostnames To Brute"};
         QAction actionSendToRecords_dns{"Send Hostnames To Records"};
+        QAction actionSendToCert_dns{"Send Hostnames To Cert"};
         //...
         QAction actionSendToOsint_srv{"Send Hostnames To Osint"};
         QAction actionSendToActive_srv{"Send Hostnames To Active"};
         QAction actionSendToBrute_srv{"Send Hostnames To Brute"};
         QAction actionSendToRecords_srv{"Send Hostnames To Records"};
+        QAction actionSendToCert_srv{"Send Hostnames To Cert"};
         //...
         QAction actionOpenInBrowser{"Open in Browser"};
         //...
@@ -184,6 +194,7 @@ class AbstractEngine : public QWidget{
         QAction actionSendToActive_c{"Send Selected To Active"};
         QAction actionSendToBrute_c{"Send Selected To Brute"};
         QAction actionSendToRecords_c{"Send Selected To Records"};
+        QAction actionSendToCert_c{"Send Selected To Cert"};
         QAction actionOpenInBrowser_c{"Open Selected in Browser"};
         ///
         /// save actions...
@@ -196,6 +207,7 @@ class AbstractEngine : public QWidget{
         QAction actionSaveUrls{"urls"};
         QAction actionSaveAsns{"Asns"};
         QAction actionSaveCerts{"SSL Certs"};
+        QAction actionSaveCertInfo{"Cert Info"};
         //...
         QAction actionSaveSubdomains_subdomain{"subdomains"};
         QAction actionSaveIpAddresses_ip{"ip-addresses"};
@@ -219,6 +231,7 @@ class AbstractEngine : public QWidget{
         QAction actionCopyUrls{"urls"};
         QAction actionCopyAsns{"Asns"};
         QAction actionCopyCerts{"SSL Certs"};
+        QAction actionCopyCertInfo{"Cert Info"};
         //...
         QAction actionCopySubdomains_subdomain{"subdomains"};
         QAction actionCopyIpAddresses_ip{"ip-addresses"};

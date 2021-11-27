@@ -6,7 +6,7 @@
 
 
 /*
- * The Results Models of subdomainIp Engines...
+ * The Results Models of all Engines...
  */
 namespace Model {
 
@@ -210,6 +210,48 @@ class Active{
         QStandardItemModel *subdomainIp;
         QSortFilterProxyModel *subdomainIpProxy;
 };
+
+class Cert{
+    public:
+        Cert()
+            : subdomain(new QStandardItemModel),
+              sslCert(new QStandardItemModel),
+              certInfo(new QStandardItemModel),
+              subdomainProxy(new QSortFilterProxyModel),
+              sslCertProxy(new QSortFilterProxyModel),
+              certInfoProxy(new QSortFilterProxyModel)
+        {
+            subdomainProxy->setSourceModel(subdomain);
+            subdomainProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            subdomainProxy->setRecursiveFilteringEnabled(true);
+            subdomainProxy->setFilterKeyColumn(0);
+            sslCertProxy->setSourceModel(sslCert);
+            sslCertProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            sslCertProxy->setRecursiveFilteringEnabled(true);
+            sslCertProxy->setFilterKeyColumn(0);
+            certInfoProxy->setSourceModel(certInfo);
+            certInfoProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            certInfoProxy->setRecursiveFilteringEnabled(true);
+            certInfoProxy->setFilterKeyColumn(0);
+        }
+        ~Cert(){
+            delete subdomain;
+            delete sslCert;
+            delete certInfo;
+            delete subdomainProxy;
+            delete sslCertProxy;
+            delete certInfoProxy;
+        }
+        ///
+        /// the models...
+        ///
+        QStandardItemModel *subdomain;
+        QStandardItemModel *sslCert;
+        QStandardItemModel *certInfo;
+        QSortFilterProxyModel *subdomainProxy;
+        QSortFilterProxyModel *sslCertProxy;
+        QSortFilterProxyModel *certInfoProxy;
+};
 }
 
 class ResultsModel{
@@ -220,7 +262,8 @@ class ResultsModel{
               osint(new Model::Osint),
               brute(new Model::Brute),
               active(new Model::Active),
-              records(new Model::Records)
+              records(new Model::Records),
+              cert(new Model::Cert)
         {
         }
         ~ResultsModel(){
@@ -229,6 +272,7 @@ class ResultsModel{
             delete brute;
             delete active;
             delete records;
+            delete cert;
         }
         ///
         /// the results Models...
@@ -238,6 +282,7 @@ class ResultsModel{
         Model::Brute *brute;
         Model::Active *active;
         Model::Records *records;
+        Model::Cert *cert;
 };
 
 enum PROXYMODEL_TYPE{

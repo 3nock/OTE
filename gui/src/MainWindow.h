@@ -41,6 +41,8 @@ class MainWindow : public QMainWindow{
         void onChangeTabToBrute();
         void onChangeTabToIp();
         void onChangeTabToRecords();
+        void onChangeTabToRaw();
+        void onChangeTabToCert();
 
     private slots:
         void on_actionAbout_triggered();

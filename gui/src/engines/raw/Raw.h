@@ -1,9 +1,11 @@
 #ifndef RAW_H
 #define RAW_H
 
-#include <QDialog>
+#include <QWidget>
 #include <QTextDocument>
 #include <QStandardItemModel>
+#include "../AbstractEngine.h"
+#include "src/utils/utils.h"
 #include "src/modules/osint/OsintModulesHeaders.h"
 #include "src/utils/JsonSyntaxHighlighter.h"
 
@@ -11,11 +13,14 @@ namespace Ui {
     class Raw;
 }
 
-class Raw : public QDialog{
+class Raw : public AbstractEngine{
         Q_OBJECT
 
     public:
-        explicit Raw(QWidget *parent = nullptr);
+        explicit Raw(QWidget *parent = nullptr,
+                     ResultsModel *resultsModel = nullptr,
+                     ProjectDataModel *project = nullptr,
+                     Status *status = nullptr);
         ~Raw();
 
     public slots:
@@ -104,40 +109,24 @@ class Raw : public QDialog{
         void on_moduleArquivo_clicked();
         void on_moduleUKWebArchive_clicked();
         void on_moduleCertspotterFree_clicked();
-
         void on_moduleCensys_clicked();
-
         void on_moduleEmailCrawlr_clicked();
-
         void on_moduleEmailFormat_clicked();
-
         void on_moduleEmailRep_clicked();
-
         void on_moduleSnov_clicked();
-
         void on_moduleTruMail_clicked();
-
         void on_moduleIpData_clicked();
-
         void on_moduleIpGeoLocation_clicked();
-
         void on_moduleIpRegistry_clicked();
-
         void on_moduleIpStack_clicked();
-
         void on_moduleAbuseIPDB_clicked();
-
         void on_moduleBotScout_clicked();
-
         void on_moduleFraudGuard_clicked();
-
         void on_moduleHybridAnalysis_clicked();
-
         void on_moduleIpQualityScore_clicked();
-
         void on_moduleLeakLookup_clicked();
 
-private:
+    private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         ScanArgs *m_scanArgs;

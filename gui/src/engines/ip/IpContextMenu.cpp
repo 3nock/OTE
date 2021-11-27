@@ -28,6 +28,7 @@ void Ip::connectActions(){
     connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::IP, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToBrute();});
     connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::IP, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToActive();});
     connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::IP, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToRecords();});
+    connect(&actionSendToCert, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(ENGINE::IP, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToCert();});
 
     /**** For Right-Click Context-Menu ****/
     connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
@@ -40,6 +41,7 @@ void Ip::connectActions(){
     connect(&actionSendToBrute_c, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
     connect(&actionSendToActive_c, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
     connect(&actionSendToRecords_c, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+    connect(&actionSendToCert_c, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(selectionModel); emit changeTabToCert();});
 }
 
 void Ip::on_buttonAction_clicked(){
@@ -95,6 +97,7 @@ void Ip::on_buttonAction_clicked(){
     Menu->addAction(&actionSendToBrute);
     Menu->addAction(&actionSendToActive);
     Menu->addAction(&actionSendToRecords);
+    Menu->addAction(&actionSendToCert);
     ///
     /// showing the context menu...
     ///
@@ -128,6 +131,7 @@ void Ip::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     Menu->addAction(&actionSendToBrute_c);
     Menu->addAction(&actionSendToActive_c);
     Menu->addAction(&actionSendToRecords_c);
+    Menu->addAction(&actionSendToCert_c);
     ///
     /// showing the menu...
     ///

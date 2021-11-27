@@ -49,6 +49,7 @@ void Pkey::replyFinishedSubdomain(QNetworkReply *reply){
     GumboOutput *output = gumbo_parse(reply->readAll());
     nodes.push(this->getBody(output->root));
 
+    bool isFirstMatch = true; // ignore the first-match which is a heading value...
     GumboNode *node;
     while(!nodes.isEmpty())
     {
@@ -56,21 +57,17 @@ void Pkey::replyFinishedSubdomain(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_TBODY && node->v.element.children.length > 1){
-            GumboVector tbodyChildren = node->v.element.children;
-            for(unsigned int i = 1; i < tbodyChildren.length; i++){
-                GumboNode *trNode = static_cast<GumboNode*>(tbodyChildren.data[i]);
-                if(trNode->type == GUMBO_NODE_ELEMENT && trNode->v.element.tag == GUMBO_TAG_TR && trNode->v.element.children.length > 1){
-                    GumboNode *td = static_cast<GumboNode*>(trNode->v.element.children.data[0]);
-                    if(td->type == GUMBO_NODE_ELEMENT && td->v.element.tag == GUMBO_TAG_TD && td->v.element.children.length >0){
-                        GumboNode *item = static_cast<GumboNode*>(td->v.element.children.data[0]);
-                        if(item->type == GUMBO_NODE_TEXT)
-                        {
-                            emit subdomain(QString::fromUtf8(item->v.text.text));
-                            log.resultsCount++;
-                        }
-                    }
+        if(node->v.element.tag == GUMBO_TAG_TD && node->v.element.attributes.length == 1 && node->v.element.children.length == 1){
+            GumboAttribute *style = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(style->value) == "border-left-style: none;")
+            {
+                if(isFirstMatch){
+                    isFirstMatch = false;
+                    continue;
                 }
+                GumboNode *domain = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                emit subdomain(QString::fromUtf8(domain->v.text.text));
+                log.resultsCount++;
             }
             continue;
         }

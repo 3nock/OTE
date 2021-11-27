@@ -8,9 +8,6 @@
 /*
  * store all wildcard ip into a database & check if domain check by the
  * active modules contains either of the wildcard ip
- *
- * actively pull ssl certificates for more enumeration
- * reply->sslConfiguration().peer---
  */
 Active::Active(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
     AbstractEngine(parent, resultsModel, project, status),

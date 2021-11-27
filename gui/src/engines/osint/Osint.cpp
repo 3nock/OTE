@@ -148,6 +148,10 @@ void Osint::onResultSubdomainIp(QString subdomain, QString ip){
 }
 
 void Osint::onResultSubdomain(QString subdomain){
+    result->osint->subdomain->appendRow(new QStandardItem(subdomain));
+    project->addPassiveSubdomain({subdomain});
+    ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
+    /*
     int prevSize = m_subdomainSet.count();
     m_subdomainSet.insert(subdomain);
     if(m_subdomainSet.count() > prevSize && !subdomain.isEmpty()){
@@ -155,6 +159,7 @@ void Osint::onResultSubdomain(QString subdomain){
         project->addPassiveSubdomain({subdomain});
         ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
     }
+    */
 }
 
 void Osint::onResultMightContainWildcards(QString subdomain){

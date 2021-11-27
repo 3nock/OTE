@@ -40,24 +40,62 @@ void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice, PROXYMOD
         return;
 
     case subdomainProxy:
-        model = result->osint->subdomainProxy;
+        switch(engineName){
+            case ENGINE::OSINT:
+                model = result->osint->subdomainProxy;
+                break;
+            case ENGINE::CERT:
+                model = result->cert->subdomainProxy;
+                break;
+            case ENGINE::BRUTE:
+                model = result->brute->subdomainIpProxy;
+                break;
+            case ENGINE::ACTIVE:
+                model = result->active->subdomainIpProxy;
+                break;
+            case ENGINE::IP:
+                model = result->ip->subdomainIpProxy;
+                break;
+            default:
+                return;
+        }
         for(int i = 0; i < model->rowCount(); i++)
         {
-            ///
-            /// only subdomains...
-            ///
             item = model->data(model->index(i, 0)).toString();
             targets->add(item);
         }
         return;
 
     case ipProxy:
-        model = result->osint->ipProxy;
+        switch(engineName){
+            case ENGINE::OSINT:
+                model = result->osint->ipProxy;
+                ///
+                /// osint ips are located at first column...
+                ///
+                for(int i = 0; i < model->rowCount(); i++)
+                {
+                    item = model->data(model->index(i, 0)).toString();
+                    targets->add(item);
+                }
+                return;
+            case ENGINE::BRUTE:
+                model = result->brute->subdomainIpProxy;
+                break;
+            case ENGINE::ACTIVE:
+                model = result->active->subdomainIpProxy;
+                break;
+            case ENGINE::IP:
+                model = result->ip->subdomainIpProxy;
+                break;
+            default:
+                break;
+        }
+        ///
+        /// all other models ip is located at second column...
+        ///
         for(int i = 0; i < model->rowCount(); i++)
         {
-            ///
-            /// only ip-addresses...
-            ///
             item = model->data(model->index(i, 1)).toString();
             targets->add(item);
         }
@@ -67,10 +105,16 @@ void AbstractEngine::onReceiveTargets(ENGINE engineName, CHOICE choice, PROXYMOD
         model = result->records->srvProxy;
         for(int i = 0; i < model->rowCount(); i++)
         {
-            ///
-            /// only hostnames...
-            ///
             item = model->data(model->index(i, 1)).toString();
+            targets->add(item);
+        }
+        return;
+
+    case sslCertProxy:
+        model = result->cert->sslCertProxy;
+        for(int i = 0; i < model->rowCount(); i++)
+        {
+            item = model->data(model->index(i, 0)).toString();
             targets->add(item);
         }
         return;

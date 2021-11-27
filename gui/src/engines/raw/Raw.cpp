@@ -15,7 +15,9 @@
 /*
  * save a list of QStandardItems b4 treeArray & treeObject for later on analysis...
  */
-Raw::Raw(QWidget *parent) : QDialog(parent), ui(new Ui::Raw),
+Raw::Raw(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, resultsModel, project, status),
+    ui(new Ui::Raw),
     m_model(new QStandardItemModel),
     m_scanArgs(new ScanArgs)
 {

@@ -10,22 +10,18 @@ void Cert::connectActions(){
     /// SAVE...
     ///
     connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomain);});
-    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ip);});
-    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomainIp);});
     ///
     /// COPY...
     ///
     connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomain);});
-    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ip);});
-    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomainIp);});
     ///
-    /// SUBDOMAINS AND IPS...
+    /// SUBDOMAINS...
     ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::ACTIVE, CHOICE::ip, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToIp();});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::ACTIVE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::ACTIVE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::ACTIVE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::ACTIVE, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToRecords();});
+    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::CERT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToOsint();});
+    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::CERT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToBrute();});
+    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::CERT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToActive();});
+    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::CERT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToRecords();});
+    connect(&actionSendToCert, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(ENGINE::CERT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToCert();});
 
     /***** For Right CLick *****/
     ///
@@ -37,17 +33,17 @@ void Cert::connectActions(){
     connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
     //...
     connect(&actionSendToOsint_c, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
-    connect(&actionSendToIp_c, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
     connect(&actionSendToBrute_c, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
     connect(&actionSendToActive_c, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
     connect(&actionSendToRecords_c, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
+    connect(&actionSendToCert_c, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(selectionModel); emit changeTabToCert();});
 }
 
 void Cert::on_buttonAction_clicked(){
     ///
     /// check if there are results available else dont show the context menu...
     ///
-    if(result->active->subdomainIp->rowCount() < 1){
+    if(result->cert->subdomain->rowCount() < 1){
         return;
     }
     ///
@@ -70,12 +66,8 @@ void Cert::on_buttonAction_clicked(){
     /// ADDING ACTIONS TO THE CONTEXT MENU...
     ///
     saveMenu->addAction(&actionSaveSubdomains);
-    saveMenu->addAction(&actionSaveIpAddresses);
-    saveMenu->addAction(&actionSaveAll);
     //...
     copyMenu->addAction(&actionCopySubdomains);
-    copyMenu->addAction(&actionCopyIpAddresses);
-    copyMenu->addAction(&actionCopyAll);
     ///
     /// ....
     ///
@@ -85,11 +77,11 @@ void Cert::on_buttonAction_clicked(){
     Menu->addMenu(saveMenu);
     //...
     Menu->addSeparator();
-    Menu->addAction(&actionSendToIp);
     Menu->addAction(&actionSendToOsint);
     Menu->addAction(&actionSendToBrute);
     Menu->addAction(&actionSendToActive);
     Menu->addAction(&actionSendToRecords);
+    Menu->addAction(&actionSendToCert);
     ///
     /// showing the context menu...
     ///
@@ -121,11 +113,11 @@ void Cert::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     Menu->addSeparator();
     Menu->addAction(&actionOpenInBrowser);
     Menu->addSeparator();
-    Menu->addAction(&actionSendToIp_c);
     Menu->addAction(&actionSendToOsint_c);
     Menu->addAction(&actionSendToBrute_c);
     Menu->addAction(&actionSendToActive_c);
     Menu->addAction(&actionSendToRecords_c);
+    Menu->addAction(&actionSendToCert_c);
     ///
     /// showing the menu...
     ///
@@ -160,36 +152,15 @@ void Cert::onSaveResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::subdomain:
-        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
+        for(int i = 0; i != result->cert->subdomainProxy->rowCount(); ++i)
         {
-            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
+            item = result->cert->subdomainProxy->data(result->cert->subdomainProxy->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 file.write(item.toUtf8());
             }
         }
         break;
-    case CHOICE::ip:
-        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
-        {
-            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
-            if(!itemSet.contains(item)){
-                itemSet.insert(item);
-                file.write(item.toUtf8());
-            }
-        }
-        break;
-    case CHOICE::subdomainIp:
-        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
-        {
-            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString()+":"+result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
-            if(!itemSet.contains(item)){
-                itemSet.insert(item);
-                file.write(item.toUtf8());
-            }
-        }
-        break;
-
     default:
         break;
     }
@@ -236,29 +207,9 @@ void Cert::onCopyResults(CHOICE choice){
     ///
     switch(choice){
     case CHOICE::subdomain:
-        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
+        for(int i = 0; i != result->cert->subdomainProxy->rowCount(); ++i)
         {
-            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
-            if(!itemSet.contains(item)){
-                itemSet.insert(item);
-                clipboardData.append(item);
-            }
-        }
-        break;
-    case CHOICE::ip:
-        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
-        {
-            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
-            if(!itemSet.contains(item)){
-                itemSet.insert(item);
-                clipboardData.append(item);
-            }
-        }
-        break;
-    case CHOICE::subdomainIp:
-        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
-        {
-            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString()+"|"+result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
+            item = result->cert->subdomainProxy->data(result->cert->subdomainProxy->index(i, 0)).toString().append(NEWLINE);
             if(!itemSet.contains(item)){
                 itemSet.insert(item);
                 clipboardData.append(item);
