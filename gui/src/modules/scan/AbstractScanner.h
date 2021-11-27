@@ -51,8 +51,13 @@ class AbstractScanner : public QObject{
         void infoLog(QString log);
         void errorLog(QString log);
         void scanProgress(int value);
-        /* ... */
-        void rawCert(QByteArray);
+        ///
+        /// for certScanner...
+        ///
+        void resultSHA1(QString);
+        void resultSHA256(QString);
+        void resultRaw(QByteArray);
+        void resultSubdomain(QString);
 };
 
 #endif // ABSTRACTSCANNER_H

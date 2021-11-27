@@ -11,7 +11,7 @@
 class CertModel{
 public:
     CertModel():
-        model(new QStandardItemModel),
+        main(new QStandardItem),
         /* ... */
         info(new QStandardItem("Info")),
         fingerprint(new QStandardItem("Fingerprint")),
@@ -89,24 +89,20 @@ public:
         key->appendRow({new QStandardItem("Type"), key_type});
         key->appendRow({new QStandardItem("Algorithm"), key_algorithm});
 
-        /* the model */
-        model->setColumnCount(2);
-        model->setHorizontalHeaderLabels({"  Property", "  Value"});
-
         /* appending to the model */
-        model->appendRow(info);
-        model->appendRow(fingerprint);
-        model->appendRow(validity);
-        model->appendRow(issuer);
-        model->appendRow(subject);
-        model->appendRow(key);
-        model->appendRow(subjectAltNames);
+        main->appendRow(info);
+        main->appendRow(fingerprint);
+        main->appendRow(validity);
+        main->appendRow(issuer);
+        main->appendRow(subject);
+        main->appendRow(key);
+        main->appendRow(subjectAltNames);
     }
     ~CertModel(){
-        delete model;
+        delete main;
     }
     // the model...
-    QStandardItemModel *model;
+    QStandardItem *main;
 
 private:
     /* ... */

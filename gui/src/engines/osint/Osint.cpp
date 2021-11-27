@@ -9,6 +9,8 @@
 
 
 /*
+ * clear proxyModel to delete certain results...
+ *
  * write the ultimate article on subdomain enumeration
  *
  * fix the regex for filter, it breaks on special chars

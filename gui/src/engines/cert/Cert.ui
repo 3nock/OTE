@@ -29,13 +29,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>*Output</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="comboBoxOutput">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -46,7 +39,7 @@
        <property name="minimumSize">
         <size>
          <width>110</width>
-         <height>22</height>
+         <height>0</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -68,6 +61,26 @@
        <item>
         <property name="text">
          <string>Cert Info</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxOption">
+       <property name="minimumSize">
+        <size>
+         <width>110</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>SHA-1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>SHA-256</string>
         </property>
        </item>
       </widget>

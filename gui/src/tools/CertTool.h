@@ -36,6 +36,7 @@ class CertTool : public QDialog{
     private:
         Ui::CertTool *ui;
         CertModel *m_certModel;
+        QStandardItemModel *m_model;
         QSortFilterProxyModel *m_proxyModel;
         ScanArgs *m_scanArgs;
 

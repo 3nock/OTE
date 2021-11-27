@@ -30,6 +30,7 @@ enum MODULE{
  */
 CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
     m_certModel(new CertModel),
+    m_model(new QStandardItemModel),
     m_proxyModel(new QSortFilterProxyModel),
     m_scanArgs(new ScanArgs)
 {
@@ -40,7 +41,11 @@ CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
 
     /* setting the models */
-    m_proxyModel->setSourceModel(m_certModel->model);
+    /* the model */
+    m_model->setColumnCount(2);
+    m_model->setHorizontalHeaderLabels({"  Property", "  Value"});
+    m_model->appendRow(m_certModel->main);
+    m_proxyModel->setSourceModel(m_model);
     ui->treeResults->setModel(m_proxyModel);
 }
 CertTool::~CertTool(){
@@ -51,6 +56,7 @@ CertTool::~CertTool(){
 }
 
 void CertTool::on_buttonAnalyze_clicked(){
+    m_certModel->main->setText(ui->lineEditTarget->text());
     ui->buttonStop->setEnabled(true);
     ui->buttonAnalyze->setDisabled(true);
 
@@ -86,6 +92,7 @@ void CertTool::on_buttonAnalyze_clicked(){
         /* getting target, and determining target type */
         certificate::ScanArguments args;
         args.target = ui->lineEditTarget->text();
+        args.singleTarget = true;
 
         /* getting protocal to use */
         switch(ui->comboBoxOption->currentIndex()){
@@ -104,7 +111,7 @@ void CertTool::on_buttonAnalyze_clicked(){
         certificate::Scanner *scanner = new certificate::Scanner(args);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
-        connect(scanner, &certificate::Scanner::rawCert, this, &CertTool::onRawCert);
+        connect(scanner, &certificate::Scanner::resultRaw, this, &CertTool::onRawCert);
         connect(scanner, &certificate::Scanner::errorLog, this, &CertTool::onErrorLog);
         connect(scanner, &certificate::Scanner::infoLog, this, &CertTool::onInfoLog);
         connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);

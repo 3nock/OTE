@@ -5,6 +5,10 @@
 #include "../AbstractEngine.h"
 #include "src/modules/scan/CertScanner.h"
 
+#define OUTPUT_SUBDOMAIN 0
+#define OUTPUT_SSLCERT 1
+#define OUTPUT_CERTINFO 2
+
 namespace Ui {
     class Cert;
 }
@@ -23,7 +27,10 @@ class Cert : public AbstractEngine{
         void onScanThreadEnded();
         void onInfoLog(QString log);
         void onErrorLog(QString log);
-        void onScanResult(QByteArray cert);
+        void onScanResultSHA1(QString sha1);
+        void onScanResultSHA256(QString sha256);
+        void onScanResultCertInfo(QByteArray cert);
+        void onScanResultSubdomain(QString subdomain);
 
     private slots:
         void onClearResults();
@@ -38,12 +45,14 @@ class Cert : public AbstractEngine{
         void on_buttonStop_clicked();
         void on_buttonAction_clicked();
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
+        void on_comboBoxOutput_currentIndexChanged(int index);
+        void on_lineEditFilter_textChanged(const QString &arg1);
 
     private:
         Ui::Cert *ui;
         certificate::ScanArguments *m_args;
         void stopScan();
-        void startScan();
+        void startScan(certificate::ScanArguments*);
         void pauseScan();
         void ResumeScan();
         //...
