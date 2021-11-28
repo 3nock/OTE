@@ -11,8 +11,6 @@
 class CertModel{
 public:
     CertModel():
-        main(new QStandardItem),
-        /* ... */
         info(new QStandardItem("Info")),
         fingerprint(new QStandardItem("Fingerprint")),
         issuer(new QStandardItem("Issuer")),
@@ -88,21 +86,36 @@ public:
 
         key->appendRow({new QStandardItem("Type"), key_type});
         key->appendRow({new QStandardItem("Algorithm"), key_algorithm});
-
-        /* appending to the model */
-        main->appendRow(info);
-        main->appendRow(fingerprint);
-        main->appendRow(validity);
-        main->appendRow(issuer);
-        main->appendRow(subject);
-        main->appendRow(key);
-        main->appendRow(subjectAltNames);
     }
     ~CertModel(){
-        delete main;
     }
-    // the model...
-    QStandardItem *main;
+    void initModel(){
+        mainModel = new QStandardItemModel;
+        mainModel->setColumnCount(2);
+        mainModel->setHorizontalHeaderLabels({"  Property", "  Value"});
+
+        /* appending to the model */
+        mainModel->appendRow(info);
+        mainModel->appendRow(fingerprint);
+        mainModel->appendRow(validity);
+        mainModel->appendRow(issuer);
+        mainModel->appendRow(subject);
+        mainModel->appendRow(key);
+        mainModel->appendRow(subjectAltNames);
+    }
+    void initItem(){
+        mainItem = new QStandardItem;
+        /* appending to the item */
+        mainItem->appendRow(info);
+        mainItem->appendRow(fingerprint);
+        mainItem->appendRow(validity);
+        mainItem->appendRow(issuer);
+        mainItem->appendRow(subject);
+        mainItem->appendRow(key);
+        mainItem->appendRow(subjectAltNames);
+    }
+    QStandardItem *mainItem = nullptr;
+    QStandardItemModel *mainModel = nullptr;
 
 private:
     /* ... */

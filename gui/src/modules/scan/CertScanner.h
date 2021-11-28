@@ -32,14 +32,14 @@ struct ScanArguments{
 class Scanner : public AbstractScanner{
 
     public:
-        Scanner(certificate::ScanArguments args);
+        Scanner(certificate::ScanArguments *args);
         ~Scanner() override;
 
     private slots:
         void lookup() override;
 
     private:
-        certificate::ScanArguments m_args;
+        certificate::ScanArguments *m_args;
 };
 }
 

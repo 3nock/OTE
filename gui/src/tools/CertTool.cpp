@@ -30,7 +30,6 @@ enum MODULE{
  */
 CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
     m_certModel(new CertModel),
-    m_model(new QStandardItemModel),
     m_proxyModel(new QSortFilterProxyModel),
     m_scanArgs(new ScanArgs)
 {
@@ -41,11 +40,8 @@ CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
 
     /* setting the models */
-    /* the model */
-    m_model->setColumnCount(2);
-    m_model->setHorizontalHeaderLabels({"  Property", "  Value"});
-    m_model->appendRow(m_certModel->main);
-    m_proxyModel->setSourceModel(m_model);
+    m_certModel->initModel();
+    m_proxyModel->setSourceModel(m_certModel->mainModel);
     ui->treeResults->setModel(m_proxyModel);
 }
 CertTool::~CertTool(){
@@ -56,7 +52,6 @@ CertTool::~CertTool(){
 }
 
 void CertTool::on_buttonAnalyze_clicked(){
-    m_certModel->main->setText(ui->lineEditTarget->text());
     ui->buttonStop->setEnabled(true);
     ui->buttonAnalyze->setDisabled(true);
 
@@ -90,20 +85,21 @@ void CertTool::on_buttonAnalyze_clicked(){
     case TARGET_HOSTNAME:
     {
         /* getting target, and determining target type */
-        certificate::ScanArguments args;
-        args.target = ui->lineEditTarget->text();
-        args.singleTarget = true;
+        certificate::ScanArguments *args = new certificate::ScanArguments;
+        args->target = ui->lineEditTarget->text();
+        args->singleTarget = true;
+        args->raw = true;
 
         /* getting protocal to use */
         switch(ui->comboBoxOption->currentIndex()){
         case PROTOCAL::HTTPS:
-            args.https = true;
+            args->https = true;
             break;
         case PROTOCAL::SSH:
-            args.ssh = true;
+            args->ssh = true;
             break;
         case PROTOCAL::FTP:
-            args.ftp = true;
+            args->ftp = true;
             break;
         }
 
@@ -117,6 +113,7 @@ void CertTool::on_buttonAnalyze_clicked(){
         connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, scanner, &certificate::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        connect(cThread, &QThread::finished, this, [=](){delete args;});
         cThread->start();
         break;
     }
@@ -181,9 +178,8 @@ void CertTool::onInfoLog(QString log){
 }
 
 void CertTool::onRawCert(QByteArray rawCert){
-    QList<QSslCertificate> certList = QSslCertificate::fromData(rawCert, QSsl::Pem);
 
-    foreach(const QSslCertificate &cert, certList)
+    foreach(const QSslCertificate &cert, QSslCertificate::fromData(rawCert, QSsl::Pem))
     {
         /* ... */
         m_certModel->info_verison->setText(cert.version());

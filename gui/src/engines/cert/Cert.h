@@ -52,7 +52,7 @@ class Cert : public AbstractEngine{
         Ui::Cert *ui;
         certificate::ScanArguments *m_args;
         void stopScan();
-        void startScan(certificate::ScanArguments*);
+        void startScan();
         void pauseScan();
         void ResumeScan();
         //...

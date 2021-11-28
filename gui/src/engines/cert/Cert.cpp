@@ -24,8 +24,18 @@ Cert::Cert(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *projec
 
     ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
-
+    ///
+    /// labels...
+    ///
+    result->cert->subdomain->setHorizontalHeaderLabels({"Subdomains"});
+    result->cert->sslCert->setHorizontalHeaderLabels({"Certificate Fingerprints"});
+    result->cert->certInfo->setHorizontalHeaderLabels({"Property", "Value"});
+    ///
+    /// ...
+    ///
     ui->treeViewResults->setModel(result->cert->subdomainProxy);
+
+    /* ... */
     result->active->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     result->active->subdomainIpProxy->setRecursiveFilteringEnabled(true);
 
@@ -57,43 +67,25 @@ void Cert::on_buttonStart_clicked(){
     ui->progressBar->show();
     ui->progressBar->reset();
     ui->progressBar->setMaximum(ui->targets->listModel->rowCount());
+
     ///
-    /// Resetting the scan arguments values...
+    /// start scan...
     ///
-    certificate::ScanArguments *args = new certificate::ScanArguments;
-    args->singleTarget = false;
-
-    foreach(const QString &target, ui->targets->listModel->stringList())
-        args->targetList.push(target);
-
-    switch (ui->comboBoxOutput->currentIndex()) {
-    case OUTPUT_SUBDOMAIN:
-        args->subdomain = true;
-        break;
-    case OUTPUT_SSLCERT:
-        switch (ui->comboBoxOption->currentIndex()) {
-        case 0: // SHA1
-            args->sha1 = true;
-            break;
-        case 1: // SHA256
-            args->sha256 = true;
-            break;
-        }
-        break;
-    case OUTPUT_CERTINFO:
-        args->raw = true;
-        break;
-    }
-
-    this->startScan(args);
+    this->startScan();
 }
 
 void Cert::on_buttonStop_clicked(){
-
+    emit stopScanThread();
 }
 
 void Cert::onScanThreadEnded(){
+    status->cert->activeThreads--;
 
+    if(status->cert->activeThreads == 0){
+        ui->progressBar->setValue(ui->progressBar->maximum());
+        ui->buttonStop->setDisabled(true);
+        ui->buttonStart->setEnabled(true);
+    }
 }
 
 void Cert::onInfoLog(QString log){
@@ -119,12 +111,12 @@ void Cert::onScanResultSHA256(QString sha256){
 }
 
 void Cert::onScanResultCertInfo(QByteArray rawCert){
-    QList<QSslCertificate> certList = QSslCertificate::fromData(rawCert, QSsl::Pem);
-    CertModel *certModel = new CertModel;
 
-    foreach(const QSslCertificate &cert, certList)
+    foreach(const QSslCertificate &cert, QSslCertificate::fromData(rawCert, QSsl::Pem))
     {
-        certModel->main->setText(cert.digest(QCryptographicHash::Sha1).toHex());
+        CertModel *certModel = new CertModel;
+        certModel->initItem();
+        certModel->mainItem->setText(cert.digest(QCryptographicHash::Sha1).toHex());
 
         /* ... */
         certModel->info_verison->setText(cert.version());
@@ -162,13 +154,13 @@ void Cert::onScanResultCertInfo(QByteArray rawCert){
         if(cert.subjectInfo(QSslCertificate::EmailAddress).length() > 0)
             certModel->subject_email->setText(cert.subjectInfo(QSslCertificate::EmailAddress)[0]);
 
-        // key type...
+        /* key type */
         if(cert.publicKey().type() == QSsl::PrivateKey)
             certModel->key_type->setText("Private Key");
         if(cert.publicKey().type() == QSsl::PublicKey)
             certModel->key_type->setText("Public Key");
 
-        // algorithm type...
+        /* algorithm type */
         if(cert.publicKey().algorithm() == QSsl::Rsa)
             certModel->key_algorithm->setText("RSA algorithm.");
         if(cert.publicKey().algorithm() == QSsl::Dsa)
@@ -183,9 +175,9 @@ void Cert::onScanResultCertInfo(QByteArray rawCert){
         /* ... */
         foreach(const QString &altName, cert.subjectAlternativeNames())
             certModel->subjectAltNames->appendRow(new QStandardItem(altName));
-    }
 
-    result->cert->certInfo->appendRow(certModel->main);
+        result->cert->certInfo->invisibleRootItem()->appendRow(certModel->mainItem);
+    }
     ui->labelResultsCount->setNum(result->cert->certInfo->rowCount());
 }
 
@@ -225,16 +217,22 @@ void Cert::on_comboBoxOutput_currentIndexChanged(int index){
         ui->treeViewResults->setModel(result->cert->subdomainProxy);
         ui->comboBoxOption->hide();
         ui->labelResultsCount->setNum(result->cert->subdomainProxy->rowCount());
+        ui->labelInfo->setText("Enumerated Subdomains");
+        ui->treeViewResults->setIndentation(0);
         break;
     case OUTPUT_SSLCERT:
         ui->treeViewResults->setModel(result->cert->sslCertProxy);
         ui->comboBoxOption->show();
         ui->labelResultsCount->setNum(result->cert->sslCertProxy->rowCount());
+        ui->labelInfo->setText("Enumerated Certificates:");
+        ui->treeViewResults->setIndentation(0);
         break;
     case OUTPUT_CERTINFO:
         ui->treeViewResults->setModel(result->cert->certInfo);
         ui->comboBoxOption->hide();
         ui->labelResultsCount->setNum(result->cert->certInfoProxy->rowCount());
+        ui->labelInfo->setText("Enumerated Certificates:");
+        ui->treeViewResults->setIndentation(20);
         break;
     }
 }
@@ -259,7 +257,32 @@ void Cert::on_lineEditFilter_textChanged(const QString &filterKeyword){
     }
 }
 
-void Cert::startScan(certificate::ScanArguments *args){
+void Cert::startScan(){
+
+    certificate::ScanArguments *args = new certificate::ScanArguments;
+    args->singleTarget = false;
+
+    foreach(const QString &target, ui->targets->listModel->stringList())
+        args->targetList.push(target);
+
+    switch (ui->comboBoxOutput->currentIndex()) {
+        case OUTPUT_SUBDOMAIN:
+            args->subdomain = true;
+            break;
+        case OUTPUT_SSLCERT:
+            switch (ui->comboBoxOption->currentIndex()) {
+                case 0: // SHA1
+                    args->sha1 = true;
+                    break;
+                case 1: // SHA256
+                    args->sha256 = true;
+                    break;
+            }
+            break;
+        case OUTPUT_CERTINFO:
+            args->raw = true;
+            break;
+    }
     ///
     /// if the numner of threads is greater than the number of wordlists, set the
     /// number of threads to use to the number of wordlists available to avoid
@@ -277,7 +300,7 @@ void Cert::startScan(certificate::ScanArguments *args){
     ///
     for(int i = 0; i < threadsCount; i++)
     {
-        certificate::Scanner *scanner = new certificate::Scanner(*args);
+        certificate::Scanner *scanner = new certificate::Scanner(args);
         QThread *cThread = new QThread;
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
@@ -311,7 +334,6 @@ void Cert::startScan(certificate::ScanArguments *args){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         //connect(cThread, &QThread::finished, this, [=](){delete args;});
         connect(this, &Cert::stopScanThread, scanner, &certificate::Scanner::onStopScan);
-        //...
         cThread->start();
     }
     status->active->isRunning = true;
