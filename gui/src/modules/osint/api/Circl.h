@@ -3,11 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: ip, subdomain
- * INPUT ip-address:        OUTPUT: ip, asn, subdomain, ssl
- * INPUT ssl:               OUTPUT: ip
- */
 
 namespace ModuleInfo {
     struct Circl{
@@ -28,6 +23,13 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_SSLCERT, "CIRCL Passive SSL is a database storing historical X.509 certificates seen per IP address."}},
                                             {"Ip 2 ASN",
                                              {PLACEHOLDERTEXT_IP, "IP ASN History to find ASN announcing an IP and the closest prefix announcing it at a specific date"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_IP, OUT_ASN, OUT_SUBDOMAIN, OUT_SSLCERT}},
+                                              {IN_SSLCERT,
+                                               {OUT_IP}}};
     };
 }
 

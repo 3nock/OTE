@@ -49,7 +49,7 @@ class NetworksDB: public AbstractOsintModule{
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedPrefixes(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
 
     private:
         QString m_key;

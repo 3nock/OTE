@@ -4,7 +4,7 @@ DogPile::DogPile(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &DogPile::replyFinished);
+    connect(manager, &MyNetworkAccessManager::finished, this, &DogPile::replyFinishedSubdomain);
 }
 DogPile::~DogPile(){
     delete manager;
@@ -21,7 +21,7 @@ void DogPile::start(){
     }
 }
 
-void DogPile::replyFinished(QNetworkReply *reply){
+void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
         GumboOutput *output = gumbo_parse(reply->readAll());

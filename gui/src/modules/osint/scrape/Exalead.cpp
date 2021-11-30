@@ -5,7 +5,7 @@ Exalead::Exalead(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Exalead::replyFinished);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Exalead::replyFinishedSubdomain);
 }
 Exalead::~Exalead(){
     delete manager;
@@ -22,7 +22,7 @@ void Exalead::start(){
     }
 }
 
-void Exalead::replyFinished(QNetworkReply *reply){
+void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
         GumboOutput *output = gumbo_parse(reply->readAll());

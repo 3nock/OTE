@@ -13,6 +13,8 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"subdomain",
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains of a particular domain"}}};
+
+        QMap<int, QList<int>> input_output = {}; // not yet done...
     };
 }
 

@@ -585,6 +585,26 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
+    if(ui->moduleUrlscan->isChecked()){
+        Urlscan *urlscan = new Urlscan(scanArgs);
+        QThread *cThread = new QThread(this);
+        urlscan->Enumerator(cThread);
+        urlscan->moveToThread(cThread);
+        //...
+        connect(urlscan, &Urlscan::subdomain, this, &Osint::onResultSubdomain);
+        connect(urlscan, &Urlscan::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(urlscan, &Urlscan::ip, this, &Osint::onResultIp);
+        connect(urlscan, &Urlscan::email, this, &Osint::onResultEmail);
+        connect(urlscan, &Urlscan::url, this, &Osint::onResultUrl);
+        connect(urlscan, &Urlscan::errorLog, this, &Osint::onErrorLog);
+        connect(urlscan, &Urlscan::infoLog, this, &Osint::onInfoLog);
+        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
+        connect(cThread, &QThread::finished, urlscan, &Urlscan::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        //...
+        cThread->start();
+        status->osint->activeThreads++;
+    }
     if(ui->moduleViewDns->isChecked()){
         ViewDns *viewdns = new ViewDns(scanArgs);
         QThread *cThread = new QThread(this);
@@ -1209,8 +1229,7 @@ void Osint::startScan(){
         //...
         connect(pkey, &Pkey::subdomain, this, &Osint::onResultSubdomain);
         connect(pkey, &Pkey::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(pkey, &Pkey::ipA, this, &Osint::onResultA);
-        connect(pkey, &Pkey::ipAAAA, this, &Osint::onResultAAAA);
+        connect(pkey, &Pkey::ip, this, &Osint::onResultIp);
         connect(pkey, &Pkey::errorLog, this, &Osint::onErrorLog);
         connect(pkey, &Pkey::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -1228,11 +1247,7 @@ void Osint::startScan(){
         //...
         connect(rapiddns, &Rapiddns::subdomainIp, this, &Osint::onResultSubdomainIp);
         connect(rapiddns, &Rapiddns::subdomain, this, &Osint::onResultSubdomain);
-        connect(rapiddns, &Rapiddns::MX, this, &Osint::onResultMX);
-        connect(rapiddns, &Rapiddns::CNAME, this, &Osint::onResultCNAME);
-        connect(rapiddns, &Rapiddns::NS, this, &Osint::onResultNS);
-        connect(rapiddns, &Rapiddns::ipA, this, &Osint::onResultA);
-        connect(rapiddns, &Rapiddns::ipAAAA, this, &Osint::onResultAAAA);
+        connect(rapiddns, &Rapiddns::ip, this, &Osint::onResultIp);
         connect(rapiddns, &Rapiddns::errorLog, this, &Osint::onErrorLog);
         connect(rapiddns, &Rapiddns::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
@@ -1258,46 +1273,11 @@ void Osint::startScan(){
         cThread->start();
         status->osint->activeThreads++;
     }
-    if(ui->moduleUrlscan->isChecked()){
-        Urlscan *urlscan = new Urlscan(scanArgs);
-        QThread *cThread = new QThread(this);
-        urlscan->Enumerator(cThread);
-        urlscan->moveToThread(cThread);
-        //...
-        connect(urlscan, &Urlscan::subdomain, this, &Osint::onResultSubdomain);
-        connect(urlscan, &Urlscan::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(urlscan, &Urlscan::ip, this, &Osint::onResultIp);
-        connect(urlscan, &Urlscan::email, this, &Osint::onResultEmail);
-        connect(urlscan, &Urlscan::url, this, &Osint::onResultUrl);
-        connect(urlscan, &Urlscan::errorLog, this, &Osint::onErrorLog);
-        connect(urlscan, &Urlscan::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, urlscan, &Urlscan::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
-    if(ui->moduleGithub->isChecked()){
-        Github *github = new Github(scanArgs);
-        QThread *cThread = new QThread(this);
-        github->Enumerator(cThread);
-        github->moveToThread(cThread);
-        //...
-        connect(github, &Github::subdomain, this, &Osint::onResultSubdomain);
-        connect(github, &Github::subdomainIp, this, &Osint::onResultSubdomainIp);
-        connect(github, &Github::ip, this, &Osint::onResultIp);
-        connect(github, &Github::email, this, &Osint::onResultEmail);
-        connect(github, &Github::url, this, &Osint::onResultUrl);
-        connect(github, &Github::errorLog, this, &Osint::onErrorLog);
-        connect(github, &Github::infoLog, this, &Osint::onInfoLog);
-        connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
-        connect(cThread, &QThread::finished, github, &Github::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //...
-        cThread->start();
-        status->osint->activeThreads++;
-    }
+
+    /****************************************************************************
+                                 SCRAPE
+    *****************************************************************************/
+
     if(ui->moduleAsk->isChecked()){
         Ask *ask = new Ask(scanArgs);
         QThread *cThread = new QThread(this);

@@ -107,7 +107,7 @@ class Ripe: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedAsn(QNetworkReply *reply) override;
-        void replyFinishedPrefixes(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
 };
 
 #endif // RIPE_H

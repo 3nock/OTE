@@ -63,7 +63,7 @@ void RobtexFree::start(){
             activeRequests++;
         }
 
-        if(args->outputIp || args->outputSubdomain || args->subdomainsAndIp){
+        if(args->outputIp || args->outputSubdomain || args->outputSubdomainIp){
             url.setUrl("https://freeapi.robtex.com/pdns/reverse/"+args->target);
             request.setAttribute(QNetworkRequest::User, PDNS_REVERSE);
             request.setUrl(url);

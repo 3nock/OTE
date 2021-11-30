@@ -43,6 +43,11 @@ void certificate::Scanner::lookup(){
             }
             socket.close();
         }
+        /* scan progress */
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
+
+        /* done */
         emit quitThread();
         return;
     }
@@ -52,10 +57,6 @@ void certificate::Scanner::lookup(){
     ///
     while(!m_args->targetList.isEmpty())
     {
-        /* scan progress */
-        m_args->progress++;
-        emit scanProgress(m_args->progress);
-
         /* making a blocking connection to domain/ip target provided */
         socket.connectToHostEncrypted(m_args->targetList.pop(), 443);
 
@@ -81,6 +82,9 @@ void certificate::Scanner::lookup(){
             }
             socket.close();
         }
+        /* scan progress */
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
     }
     emit quitThread();
 }

@@ -3,8 +3,7 @@
 
 
 /*
- * implement for subdomainIp & ip
- * it is one of my fav
+ * it is one of my fav...
  */
 Rapiddns::Rapiddns(ScanArgs *args): AbstractOsintModule(args)
 {
@@ -68,17 +67,13 @@ void Rapiddns::replyFinishedSubdomain(QNetworkReply *reply){
         if(node->v.element.tag == GUMBO_TAG_TBODY && node->v.element.children.length > 0){
             GumboVector tbodyChildren = node->v.element.children;
             for(unsigned int i = 0; i < tbodyChildren.length; i++){
-                GumboNode *trNode = static_cast<GumboNode*>(tbodyChildren.data[i]);
-                if(trNode->type == GUMBO_NODE_ELEMENT && trNode->v.element.tag == GUMBO_TAG_TR && trNode->v.element.children.length > 1){
-                    GumboNode *td = static_cast<GumboNode*>(trNode->v.element.children.data[3]);
-                    if(td->type == GUMBO_NODE_ELEMENT && td->v.element.tag == GUMBO_TAG_TD && td->v.element.children.length >0){
-                        GumboNode *item = static_cast<GumboNode*>(td->v.element.children.data[0]);
-                        if(item->type == GUMBO_NODE_TEXT)
-                        {
-                            emit subdomain(QString::fromUtf8(item->v.text.text));
-                            log.resultsCount++;
-                        }
-                    }
+                GumboNode *tr = static_cast<GumboNode*>(tbodyChildren.data[i]);
+                if(tr->type == GUMBO_NODE_ELEMENT && tr->v.element.tag == GUMBO_TAG_TR && tr->v.element.children.length > 1)
+                {
+                    GumboNode *td = static_cast<GumboNode*>(tr->v.element.children.data[3]);
+                    GumboNode *hostname = static_cast<GumboNode*>(td->v.element.children.data[0]);
+                    emit subdomain(hostname->v.text.text);
+                    log.resultsCount++;
                 }
             }
             continue;
@@ -110,7 +105,30 @@ void Rapiddns::replyFinishedSubdomainIp(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
             continue;
 
-        /* not yet implemented... */
+        if(node->v.element.tag == GUMBO_TAG_TBODY && node->v.element.children.length > 0){
+            GumboVector tbodyChildren = node->v.element.children;
+            for(unsigned int i = 0; i < tbodyChildren.length; i++){
+                GumboNode *tr = static_cast<GumboNode*>(tbodyChildren.data[i]);
+                if(tr->type == GUMBO_NODE_ELEMENT && tr->v.element.tag == GUMBO_TAG_TR && tr->v.element.children.length > 1)
+                {
+                    GumboNode *td_type = static_cast<GumboNode*>(tr->v.element.children.data[7]);
+                    GumboNode *type = static_cast<GumboNode*>(td_type->v.element.children.data[0]);
+
+                    if(QString::fromUtf8(type->v.text.text) == "A" || QString::fromUtf8(type->v.text.text) == "AAAA"){
+                        GumboNode *td_domain = static_cast<GumboNode*>(tr->v.element.children.data[3]);
+                        GumboNode *domain = static_cast<GumboNode*>(td_domain->v.element.children.data[0]);
+
+                        GumboNode *td_address = static_cast<GumboNode*>(tr->v.element.children.data[5]);
+                        GumboNode *a = static_cast<GumboNode*>(td_address->v.element.children.data[0]);
+                        GumboNode *address = static_cast<GumboNode*>(a->v.element.children.data[0]);
+
+                        emit subdomainIp(domain->v.text.text, address->v.text.text);
+                        log.resultsCount++;
+                    }
+                }
+            }
+            continue;
+        }
 
         GumboVector *children = &node->v.element.children;
         for(unsigned int i = 0; i < children->length; i++)
@@ -138,7 +156,28 @@ void Rapiddns::replyFinishedIp(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
             continue;
 
-        /* not yet implemented... */
+        if(node->v.element.tag == GUMBO_TAG_TBODY && node->v.element.children.length > 0){
+            GumboVector tbodyChildren = node->v.element.children;
+            for(unsigned int i = 0; i < tbodyChildren.length; i++){
+                GumboNode *tr = static_cast<GumboNode*>(tbodyChildren.data[i]);
+                if(tr->type == GUMBO_NODE_ELEMENT && tr->v.element.tag == GUMBO_TAG_TR && tr->v.element.children.length > 1)
+                {
+                    GumboNode *td_type = static_cast<GumboNode*>(tr->v.element.children.data[7]);
+                    GumboNode *type = static_cast<GumboNode*>(td_type->v.element.children.data[0]);
+
+                    if(QString::fromUtf8(type->v.text.text) == "A" || QString::fromUtf8(type->v.text.text) == "AAAA"){
+
+                        GumboNode *td_address = static_cast<GumboNode*>(tr->v.element.children.data[5]);
+                        GumboNode *a = static_cast<GumboNode*>(td_address->v.element.children.data[0]);
+                        GumboNode *address = static_cast<GumboNode*>(a->v.element.children.data[0]);
+
+                        emit ip(address->v.text.text);
+                        log.resultsCount++;
+                    }
+                }
+            }
+            continue;
+        }
 
         GumboVector *children = &node->v.element.children;
         for(unsigned int i = 0; i < children->length; i++)

@@ -30,7 +30,7 @@ NetworksDB::NetworksDB(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedIp);
     if(args->outputCidr)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedPrefixes);
+        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedCidr);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomainIp);
     ///
@@ -214,7 +214,7 @@ void NetworksDB::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void NetworksDB::replyFinishedPrefixes(QNetworkReply *reply){
+void NetworksDB::replyFinishedCidr(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

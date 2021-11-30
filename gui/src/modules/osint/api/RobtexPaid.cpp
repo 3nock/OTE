@@ -70,7 +70,7 @@ void RobtexPaid::start(){
             activeRequests++;
         }
 
-        if(args->outputIp || args->outputSubdomain || args->subdomainsAndIp){
+        if(args->outputIp || args->outputSubdomain || args->outputSubdomainIp){
             url.setUrl("https://proapi.robtex.com/pdns/reverse/"+args->target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, PDNS_REVERSE);
             request.setUrl(url);

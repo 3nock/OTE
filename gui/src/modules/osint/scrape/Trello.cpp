@@ -5,7 +5,7 @@ Trello::Trello(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Trello::replyFinished);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Trello::replyFinishedSubdomain);
 }
 Trello::~Trello(){
     delete manager;
@@ -22,7 +22,7 @@ void Trello::start(){
     }
 }
 
-void Trello::replyFinished(QNetworkReply *reply){
+void Trello::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
         GumboOutput *output = gumbo_parse(reply->readAll());

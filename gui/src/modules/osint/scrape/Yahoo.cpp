@@ -5,7 +5,7 @@ Yahoo::Yahoo(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Yahoo::replyFinished);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Yahoo::replyFinishedSubdomain);
 }
 Yahoo::~Yahoo(){
     delete manager;
@@ -22,7 +22,7 @@ void Yahoo::start(){
     }
 }
 
-void Yahoo::replyFinished(QNetworkReply *reply){
+void Yahoo::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
         GumboOutput *output = gumbo_parse(reply->readAll());

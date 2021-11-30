@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain
- */
 
 namespace ModuleInfo {
     struct C99{
@@ -67,6 +64,9 @@ namespace ModuleInfo {
                                               {PLACEHOLDERTEXT_NONE, "Creates you various links which you can send to anyone to log their IP."}},
                                              {"Proxy Detector",
                                               {PLACEHOLDERTEXT_IP, "Detects whether an IP address is a proxy/vpn or not. High accuracy!"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN}}}; // others not yet done...
     };
 }
 

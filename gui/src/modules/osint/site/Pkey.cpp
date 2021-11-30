@@ -2,10 +2,6 @@
 #include <QStack>
 
 
-/*
- * fix the parser...
- * has subdomains&ip...
- */
 Pkey::Pkey(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
@@ -49,7 +45,6 @@ void Pkey::replyFinishedSubdomain(QNetworkReply *reply){
     GumboOutput *output = gumbo_parse(reply->readAll());
     nodes.push(this->getBody(output->root));
 
-    bool isFirstMatch = true; // ignore the first-match which is a heading value...
     GumboNode *node;
     while(!nodes.isEmpty())
     {
@@ -61,13 +56,14 @@ void Pkey::replyFinishedSubdomain(QNetworkReply *reply){
             GumboAttribute *style = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
             if(QString::fromUtf8(style->value) == "border-left-style: none;")
             {
-                if(isFirstMatch){
-                    isFirstMatch = false;
-                    continue;
-                }
                 GumboNode *domain = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                emit subdomain(QString::fromUtf8(domain->v.text.text));
-                log.resultsCount++;
+                QString hostname = domain->v.text.text;
+                if(hostname.endsWith("."))
+                    hostname.chop(1);
+                if(hostname.contains(".")){
+                    emit subdomain(hostname);
+                    log.resultsCount++;
+                }
             }
             continue;
         }
@@ -91,6 +87,7 @@ void Pkey::replyFinishedSubdomainIp(QNetworkReply *reply){
     GumboOutput *output = gumbo_parse(reply->readAll());
     nodes.push(this->getBody(output->root));
 
+    QString hostname;
     GumboNode *node;
     while(!nodes.isEmpty())
     {
@@ -98,7 +95,37 @@ void Pkey::replyFinishedSubdomainIp(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
             continue;
 
-        /* not yet implemented... */
+        if(node->v.element.tag == GUMBO_TAG_TD && node->v.element.attributes.length == 1 && node->v.element.children.length == 1){
+            GumboAttribute *style = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(style->value) == "border-left-style: none;")
+            {
+                GumboNode *domain = static_cast<GumboNode*>(node->v.element.children.data[0]);
+
+                hostname = domain->v.text.text;
+                if(hostname.endsWith("."))
+                    hostname.chop(1);
+                if(hostname.contains("."))
+                {
+                    GumboNode *tr = node->parent;
+                    GumboNode *td_type = static_cast<GumboNode*>(tr->v.element.children.data[5]);
+                    if(td_type->v.element.tag == GUMBO_TAG_TD && td_type->v.element.attributes.length == 0 && td_type->v.element.children.length == 1)
+                    {
+                        GumboNode *type = static_cast<GumboNode*>(td_type->v.element.children.data[0]);
+                        if(QString::fromUtf8(type->v.text.text) == "A" || QString::fromUtf8(type->v.text.text) == "AAAA")
+                        {
+                            GumboNode *td_value = static_cast<GumboNode*>(tr->v.element.children.data[7]);
+                            if(td_type->v.element.tag == GUMBO_TAG_TD && td_value->v.element.attributes.length == 1 && td_value->v.element.children.length == 1){
+                                GumboNode *value = static_cast<GumboNode*>(td_value->v.element.children.data[0]);
+                                QString address = value->v.text.text;
+                                emit subdomainIp(hostname, address);
+                                log.resultsCount++;
+                            }
+                        }
+                    }
+                }
+            }
+            continue;
+        }
 
         GumboVector *children = &node->v.element.children;
         for(unsigned int i = 0; i < children->length; i++)
@@ -126,7 +153,29 @@ void Pkey::replyFinishedIp(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
             continue;
 
-        /* not yet implemented... */
+        if(node->v.element.tag == GUMBO_TAG_TD && node->v.element.attributes.length == 1 && node->v.element.children.length == 1){
+            GumboAttribute *style = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(style->value) == "border-left-style: none;")
+            {
+                GumboNode *tr = node->parent;
+                GumboNode *td_type = static_cast<GumboNode*>(tr->v.element.children.data[5]);
+                if(td_type->v.element.tag == GUMBO_TAG_TD && td_type->v.element.attributes.length == 0 && td_type->v.element.children.length == 1)
+                {
+                    GumboNode *type = static_cast<GumboNode*>(td_type->v.element.children.data[0]);
+                    if(QString::fromUtf8(type->v.text.text) == "A" || QString::fromUtf8(type->v.text.text) == "AAAA")
+                    {
+                        GumboNode *td_value = static_cast<GumboNode*>(tr->v.element.children.data[7]);
+                        if(td_type->v.element.tag == GUMBO_TAG_TD && td_value->v.element.attributes.length == 1 && td_value->v.element.children.length == 1){
+                            GumboNode *value = static_cast<GumboNode*>(td_value->v.element.children.data[0]);
+                            QString address = value->v.text.text;
+                            emit ip(address);
+                            log.resultsCount++;
+                        }
+                    }
+                }
+            }
+            continue;
+        }
 
         GumboVector *children = &node->v.element.children;
         for(unsigned int i = 0; i < children->length; i++)

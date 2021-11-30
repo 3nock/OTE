@@ -3,12 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT ip:            OUTPUT: asn, ip, email
- * INPUT cidr:          OUTPUT:
- * INPUT asn:           OUTPUT: asn, ip, email, subdomain
- * INPUT query-term:    OUTPUT: asn, ip, email
- */
 
 namespace ModuleInfo {
     struct Bgpview{
@@ -36,6 +30,15 @@ namespace ModuleInfo {
                                               {"ixs", "Returns all asn associated with the ixs"}},
                                              {"query",
                                               {PLACEHOLDERTEXT_QUERY, "Returns all analytical data of the query term"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_IP,
+                                                {OUT_ASN, OUT_IP, OUT_EMAIL}},
+                                              {IN_ASN,
+                                                {OUT_ASN, OUT_IP, OUT_EMAIL, OUT_SUBDOMAIN}},
+                                              {IN_QUERYTERM,
+                                                {OUT_ASN, OUT_IP, OUT_EMAIL}},
+                                              {IN_CIDR,
+                                                {}}}; // cidr not done...
     };
 }
 

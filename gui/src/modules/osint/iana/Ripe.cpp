@@ -59,7 +59,7 @@ Ripe::Ripe(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputAsn)
         connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
     if(args->outputCidr)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedPrefixes);
+        connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedCidr);
 }
 Ripe::~Ripe(){
     delete manager;
@@ -227,7 +227,7 @@ void Ripe::replyFinishedAsn(QNetworkReply *reply){
     end(reply);
 }
 
-void Ripe::replyFinishedPrefixes(QNetworkReply *reply){
+void Ripe::replyFinishedCidr(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

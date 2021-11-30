@@ -3,12 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT ip:            OUTPUT: subdomainIp, subdomain, ip
- * INPUT cidr:          OUTPUT:
- * INPUT search term:   OUTPUT:
- * INPUT domain:        OUTPUT: subdomainIP, subdomain, ip
- */
 
 namespace ModuleInfo {
     struct BinaryEdge{
@@ -44,6 +38,15 @@ namespace ModuleInfo {
                                              {"domains homoglyphs",
                                               {PLACEHOLDERTEXT_DOMAIN, "This endpoint generates a list of homoglyphs for a base domain. The validate flag can be used to have all homoglyphs "
                                                                        "resolved on the fly and only those with DNS entries behind them returned."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_CIDR,  // cidr not yet done...
+                                               {}},
+                                              {IN_QUERYTERM, // query term not yet done...
+                                               {}}};
     };
 }
 

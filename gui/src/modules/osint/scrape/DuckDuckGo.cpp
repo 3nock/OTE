@@ -5,7 +5,7 @@ DuckDuckGo::DuckDuckGo(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &DuckDuckGo::replyFinished);
+    connect(manager, &MyNetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedSubdomain);
 }
 DuckDuckGo::~DuckDuckGo(){
     delete manager;
@@ -22,7 +22,7 @@ void DuckDuckGo::start(){
     }
 }
 
-void DuckDuckGo::replyFinished(QNetworkReply *reply){
+void DuckDuckGo::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
         GumboOutput *output = gumbo_parse(reply->readAll());

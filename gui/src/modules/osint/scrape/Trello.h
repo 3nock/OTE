@@ -12,7 +12,7 @@ class Trello: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinished(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *) override;
 
     private:
         int m_page = 0;

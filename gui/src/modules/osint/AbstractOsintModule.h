@@ -15,6 +15,25 @@
 
 #define REQUEST_TYPE "type"
 
+/* input option */
+#define IN_DOMAIN 0
+#define IN_IP 1
+#define IN_EMAIL 2
+#define IN_URL 3
+#define IN_ASN 4
+#define IN_SSLCERT 5
+#define IN_CIDR 6
+#define IN_QUERYTERM 7
+
+/* output option */
+#define OUT_SUBDOMAINIP 0
+#define OUT_SUBDOMAIN 1
+#define OUT_IP 2
+#define OUT_EMAIL 3
+#define OUT_URL 4
+#define OUT_ASN 5
+#define OUT_SSLCERT 6
+#define OUT_CIDR 7
 
 struct ScanLog{
     QString moduleName;
@@ -27,17 +46,8 @@ struct ScanArgs{
     QString target;
     QString module;
     QString option;
-    ///
-    /// for info...
-    ///
-    bool info = false;
-    IpModel *ipModel = nullptr;
-    ///
-    /// for raw...
-    ///
-    int rawOption;
-    bool raw = false;
-    //...
+
+    /* input type */
     bool inputIp = false;
     bool inputAsn = false;
     bool inputCidr = false;
@@ -45,7 +55,8 @@ struct ScanArgs{
     bool inputEmail = false;
     bool inputDomain = false;
     bool inputSSLCert = false;
-    //...
+
+    /* output type */
     bool outputSSLCert = false;
     bool outputSubdomainIp = false;
     bool outputSubdomain = false;
@@ -55,12 +66,13 @@ struct ScanArgs{
     bool outputIp = false;
     bool outputCidr = false;
 
-    /* old */
-    bool ip = false;
-    bool urls = false;
-    bool emails = false;
-    bool subdomains = false;
-    bool subdomainsAndIp = false;
+    /* for info... */
+    bool info = false;
+    IpModel *ipModel = nullptr;
+
+    /* for raw... */
+    int rawOption;
+    bool raw = false;
 };
 
 class MyNetworkAccessManager: public QNetworkAccessManager {
@@ -77,6 +89,10 @@ class MyNetworkAccessManager: public QNetworkAccessManager {
             return reply;
         }
 };
+
+/*
+ * create an error system...
+ */
 
 class AbstractOsintModule : public QObject {
         Q_OBJECT
@@ -159,12 +175,11 @@ class AbstractOsintModule : public QObject {
 
     public slots:
         virtual void start() = 0;
-        virtual void replyFinished(QNetworkReply*){}
+        virtual void replyFinishedSubdomain(QNetworkReply*){}
         virtual void replyFinishedInfo(QNetworkReply*){}
-        virtual void replyFinishedPrefixes(QNetworkReply *){} // ip/cidr prefixes
+        virtual void replyFinishedCidr(QNetworkReply *){} // ip/cidr
         virtual void replyFinishedSSLCert(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
         virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
-        virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains
         virtual void replyFinishedIp(QNetworkReply*){} // returns ip-addresses
         virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
         virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails

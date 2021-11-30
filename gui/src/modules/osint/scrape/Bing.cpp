@@ -5,7 +5,7 @@ Bing::Bing(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Bing::replyFinished);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Bing::replyFinishedSubdomain);
 }
 Bing::~Bing(){
     delete manager;
@@ -22,7 +22,7 @@ void Bing::start(){
     }
 }
 
-void Bing::replyFinished(QNetworkReply *reply){
+void Bing::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
         GumboOutput *output = gumbo_parse(reply->readAll());

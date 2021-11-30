@@ -5,7 +5,7 @@ Baidu::Baidu(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Baidu::replyFinished);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Baidu::replyFinishedSubdomain);
 }
 Baidu::~Baidu(){
     delete manager;
@@ -22,7 +22,7 @@ void Baidu::start(){
     }
 }
 
-void Baidu::replyFinished(QNetworkReply *reply){
+void Baidu::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
         GumboOutput *output = gumbo_parse(reply->readAll());

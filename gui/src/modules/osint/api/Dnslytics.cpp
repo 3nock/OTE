@@ -37,7 +37,7 @@ Dnslytics::Dnslytics(ScanArgs *args): AbstractOsintModule(args)
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomainIp);
     if(args->outputCidr)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedPrefixes);
+        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedCidr);
     ///
     /// getting api key...
     ///
@@ -329,7 +329,7 @@ void Dnslytics::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void Dnslytics::replyFinishedPrefixes(QNetworkReply *reply){
+void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

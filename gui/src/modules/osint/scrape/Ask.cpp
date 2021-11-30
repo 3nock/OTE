@@ -4,7 +4,7 @@ Ask::Ask(ScanArgs *args):
     AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinished);
+    connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinishedSubdomain);
 }
 Ask::~Ask(){
     delete manager;
@@ -21,7 +21,7 @@ void Ask::start(){
     }
 }
 
-void Ask::replyFinished(QNetworkReply *reply){
+void Ask::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError)
     {
         GumboOutput *output = gumbo_parse(reply->readAll());

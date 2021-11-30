@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT ip:            OUTPUT: asn, ip, subdomain, subdomainIp, prefix
- * INPUT domain:        OUTPUT: ip, subdomain, subdomainIp
- */
 
 namespace ModuleInfo {
     struct Dnslytics{
@@ -44,6 +40,11 @@ namespace ModuleInfo {
                                             {"SubnetInfo",
                                              {PLACEHOLDERTEXT_CIDR, "The SubnetInfo API call retrieves information about a subnet. It is based on the IP subnet report displayed on the website."
                                               "We calculate statistics of all subnets allocated by the RIRs (ARIN, RIPE etc.) and subnets part of the global routing table. In total about 700K IPv4 subnets."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN, OUT_CIDR}}};
     };
 }
 
@@ -59,7 +60,7 @@ class Dnslytics: public AbstractOsintModule{
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedPrefixes(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
 
     private:
         QString m_key;
