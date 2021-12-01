@@ -343,15 +343,13 @@ void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
         /* prefixesv4 */
         foreach(const QJsonValue &value, data["prefixesv4"].toArray()){
             QString Prefix = value.toObject()["prefix"].toString();
-            QString shortname = value.toObject()["shortname"].toString();
-            emit prefix(Prefix, shortname);
+            emit cidr(Prefix);
             log.resultsCount++;
         }
         /* prefixesv6 */
         foreach(const QJsonValue &value, data["prefixesv6"].toArray()){
             QString Prefix = value.toObject()["prefix"].toString();
-            QString shortname = value.toObject()["shortname"].toString();
-            emit prefix(Prefix, shortname);
+            emit cidr(Prefix);
             log.resultsCount++;
         }
     }

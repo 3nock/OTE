@@ -3,9 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT hostname:          OUTPUT: subdomains
- */
+
 namespace ModuleInfo {
     struct N45HT{
         QString name = "N45HT";
@@ -14,6 +12,9 @@ namespace ModuleInfo {
         QString summary = "n45ht";
         QMap<QString, QStringList> flags = {{"subdomain",
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains of a particular domain"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

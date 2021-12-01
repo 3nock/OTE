@@ -25,6 +25,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_ORG, "Reverse Whois API lets you perform a comprehensive search on our database, to find domains owned by a company."}},
                                             {"Reverse Whois Keyword",
                                              {"domain keyword eg google", "Reverse Whois API lets you perform a comprehensive search on our database, to find domains by a domain name keyword."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

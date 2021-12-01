@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct Waybackmachine{
         QString name = "Waybackmachine";
@@ -19,6 +20,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "will return results from host archive.org"}},
                                             {"MatchType Domain",
                                              {PLACEHOLDERTEXT_DOMAIN, "will return results from host archive.org and all subhosts *.archive.org"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN, OUT_URL}}};
     };
 }
 

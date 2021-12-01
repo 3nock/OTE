@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct EmailFormat{
         QString name = "EmailFormat";
@@ -19,6 +20,8 @@ namespace ModuleInfo {
                                             {"Get Best Formats",
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns a JSON-encoded object with the best known formats for the given domain. Calls to the API are metered and billed if there are any formats returned with the result. "
                                                                       "If there are no formats available you will not be billed."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

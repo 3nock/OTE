@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct Snov{
         QString name = "Snov";
@@ -23,6 +24,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_EMAIL, "Check if the provided email addresses are valid and deliverable. API endpoint will return the email verification results."}},
                                             {"Check user balance",
                                              {PLACEHOLDERTEXT_NONE, "Use this method to check your credit balance."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_EMAIL}}};
     };
 }
 

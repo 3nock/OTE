@@ -3,9 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain
- */
+
 namespace ModuleInfo {
     struct SiteDossier{
         QString name = "SiteDossier";
@@ -13,6 +11,8 @@ namespace ModuleInfo {
         QString url_apiDoc = "";
         QString summary = "";
         QMap<QString, QStringList> flags = {};
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

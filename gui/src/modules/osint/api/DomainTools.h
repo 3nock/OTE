@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * input: hostname output: subdomains
- */
 
 namespace ModuleInfo {
     struct DomainTools{
@@ -65,6 +62,8 @@ namespace ModuleInfo {
                                             {"Whois Lookup",
                                              {PLACEHOLDERTEXT_NONE, "Whois records for domain names and IP addresses"}},
                                            };
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

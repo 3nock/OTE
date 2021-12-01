@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct TruMail{
         QString name = "TruMail";
@@ -12,6 +13,8 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"Email",
                                              {PLACEHOLDERTEXT_EMAIL, "Perform a single lookup on our real-time email verification"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

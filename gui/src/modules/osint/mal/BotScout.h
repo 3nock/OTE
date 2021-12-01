@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct BotScout{
         QString name = "BotScout";
@@ -19,6 +20,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_NAME, "Check a user name."}},
                                             {"ALL",
                                              {PLACEHOLDERTEXT_QUERY, "Check all."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

@@ -1,14 +1,8 @@
 #ifndef THREATCROWD_H
 #define THREATCROWD_H
 
-
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, ip, email
- * INPUT domain:            OUTPUT: subdomain
- * INPUT email:             OUTPUT: subdomain
- */
 
 namespace ModuleInfo {
     struct Threatcrowd{
@@ -26,6 +20,13 @@ namespace ModuleInfo {
                                              {"antivirus", "Search by antivirus"}},
                                             {"file",
                                              {"file hash", "Search by file hash"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_IP, OUT_EMAIL}},
+                                              {IN_DOMAIN,
+                                               {OUT_SUBDOMAIN}},
+                                              {IN_EMAIL,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

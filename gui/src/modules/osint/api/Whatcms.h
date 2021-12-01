@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct Whatcms{
         QString name = "WhatCMS";
@@ -24,6 +25,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_HOSTNAME, "Fetch Who-Hosts-This.com data with curl, guzzle or your favorite HTTP client."}},
                                             {"Status Endpoint",
                                              {PLACEHOLDERTEXT_NONE, "You can use the status endpoint for checking your account totals."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

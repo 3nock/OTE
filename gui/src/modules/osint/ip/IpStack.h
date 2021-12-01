@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct IpStack{
         QString name = "IpStack";
@@ -16,6 +17,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_BULK_IP, "The ipstack API also offers the ability to request data for multiple IPv4 or IPv6 addresses at the same time."}},
                                             {"Requester IP Lookup",
                                              {PLACEHOLDERTEXT_NONE, "The ipstack API also offers a separate API endpoint capable of detecting the IP address which the current API request is coming from."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT ip:            OUTPUT: subdomain
- */
 
 namespace ModuleInfo {
     struct IpInfo{
@@ -23,6 +20,9 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns a list of Ip ranges of the Ip address"}},
                                             {"hosted domains",
                                              {PLACEHOLDERTEXT_IP, "Returns a List of Domains hosted on the Ip address"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_IP,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

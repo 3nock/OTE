@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
- * INPUT ip:                OUTPUT: ip, asn
- */
 
 namespace ModuleInfo {
     struct Shodan{
@@ -38,6 +34,11 @@ namespace ModuleInfo {
                                              {"domain name, domain name", "Look up the IP address for the provided list of hostnames."}},
                                             {"dns reverse",
                                              {"ip-address, ip-address", "Look up the hostnames that have been defined for the given list of IP addresses."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_IP, OUT_ASN}}};
     };
 }
 

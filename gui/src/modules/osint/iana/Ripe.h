@@ -95,6 +95,11 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_NONE, "his data call returns the IP address of the requestor."}},
                                             {"Whois",
                                              {PLACEHOLDERTEXT_ANY, "This data call returns whois information from the relevant Regional Internet Registry and Routing Registry."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_IP,
+                                               {OUT_ASN}},
+                                              {IN_ASN,
+                                               {OUT_CIDR}}};
     };
 }
 

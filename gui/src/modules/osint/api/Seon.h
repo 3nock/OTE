@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct Seon{
         QString name = "Seon";
@@ -20,6 +21,8 @@ namespace ModuleInfo {
                                             {"Ip",
                                              {PLACEHOLDERTEXT_IP, "Fraudsters bypass IP address bans with proxies and VPNs. This API determines how likely an IP address is to be faked using modern computing techniques, "
                                                                   "so you can block TOR, VPN and proxy users. This reduces ATO (account takeover), spyware, malware, criminal netblocks, botnets, spammers and exploit scanners."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

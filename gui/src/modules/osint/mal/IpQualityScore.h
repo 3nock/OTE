@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct IpQualityScore{
         QString name = "IpQualityScore";
@@ -22,6 +23,8 @@ namespace ModuleInfo {
                                                                     "country of origin, carrier, validity, and line connection status while also detecting fraudulent activity in real time. The IPQS phone number lookup API can enrich landline and cellular numbers in over 150 countries."}},
                                             {"Malicious URL Scanner",
                                              {PLACEHOLDERTEXT_URL, "IPQualityScore's Malicious URL Scanner API scans links in real-time to detect suspicious URLs. Accurately identify phishing links, malware URLs and viruses, parked domains, and suspicious URLs with real-time risk scores."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

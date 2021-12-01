@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct IpGeoLocation{
         QString name = "IpGeoLocation";
@@ -13,6 +14,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP_OR_DOMAIN, "IP Geolocation API provides real-time and accurate geolocation, and security information for any IPv4 or IPv6 address and domain name along with the user-agent detail for the provided user-agent string."}},
                                             {"IP To Time zone",
                                              {PLACEHOLDERTEXT_IP, "Time zone API provides current time, date, and time zone related information."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

@@ -10,6 +10,7 @@ namespace ModuleInfo {
         QString url_apiDoc = "";
         QString summary = "https://zetalytics.com/";
         QMap<QString, QStringList> flags = {};
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

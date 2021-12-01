@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:                OUTPUT: subdomain
- */
 
 namespace ModuleInfo {
     struct Sublist3r{
@@ -15,6 +12,8 @@ namespace ModuleInfo {
         QString summary = "Sublist3r";
         QMap<QString, QStringList> flags = {{"subdomains",
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns list of all available subdomains"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN}}};
     };
 }
 

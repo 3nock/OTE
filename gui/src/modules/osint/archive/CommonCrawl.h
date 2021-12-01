@@ -1,11 +1,8 @@
 #ifndef COMMONCRAWL_H
 #define COMMONCRAWL_H
 
-/*
- * INPUT hostname:          OUTPUT: subdomain, url
- */
-
 #include "../AbstractOsintModule.h"
+
 
 namespace ModuleInfo {
     struct CommonCrawl{
@@ -19,6 +16,9 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_NONE, "get the index urls..."}},
                                             {"url",
                                              {PLACEHOLDERTEXT_DOMAIN, "/* not yet implemented */"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_URL}}};
     };
 }
 
@@ -37,4 +37,5 @@ class CommonCrawl: public AbstractOsintModule{
     private:
         QStringList urlList;
 };
+
 #endif // COMMONCRAWL_H

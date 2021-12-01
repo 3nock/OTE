@@ -4,6 +4,7 @@
 
 /*
  * next page implementation not yet...
+ * also has a reverse-ip...
  */
 PagesInventory::PagesInventory(ScanArgs *args): AbstractOsintModule(args)
 {

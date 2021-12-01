@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, email, ip
- * INPUT ip:                OUTPUT: subdomain
- */
 
 namespace ModuleInfo {
     struct ViewDns{
@@ -47,6 +43,11 @@ namespace ModuleInfo {
                                             {"Reverse Whois Lookup",
                                              {PLACEHOLDERTEXT_DOMAIN, "This tool will allow you to find domain names owned by an individual person or company. "
                                                                       "Simply provide the email address or name of the person or company to find other domains registered using those same details. Returns 1,000 results at a time."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_EMAIL, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

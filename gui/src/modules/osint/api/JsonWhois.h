@@ -16,6 +16,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, ""}},
                                             {"Screenshot",
                                              {PLACEHOLDERTEXT_DOMAIN, "The fastest and most reliable screenshot API available. Grab a full page screenshot of any domain, which you can then thumbnail or display as is."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

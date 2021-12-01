@@ -12,6 +12,8 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"Host",
                                              {PLACEHOLDERTEXT_IP, "All available data on the Host."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

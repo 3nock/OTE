@@ -1,13 +1,8 @@
 #ifndef CENSYS_H
 #define CENSYS_H
 
-/*
- * INPUT domain:           OUTPUT: cert, subdomain
- * INPUT ip:               OUTPUT: cert, subdomain
- * INPUT cert:             OUTPUT: cert, subdomain
- */
-
 #include "../AbstractOsintModule.h"
+
 
 namespace ModuleInfo {
     struct Censys{
@@ -24,6 +19,13 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP4, "The View API exposes a single endpoint, /api/v1/view, which can be used to fetch full document from IP address"}},
                                             {"View Certificate",
                                              {PLACEHOLDERTEXT_SSLCERT, "The View API exposes a single endpoint, /api/v1/view, which can be used to fetch full document from certificate"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_SSLCERT}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN, OUT_SSLCERT}},
+                                              {IN_SSLCERT,
+                                               {OUT_SUBDOMAIN, OUT_SSLCERT}}};
     };
 }
 class Censys: public AbstractOsintModule{

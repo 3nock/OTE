@@ -879,7 +879,7 @@ void Osint::startScan(){
         connect(networksdb, &NetworksDB::subdomainIp, this, &Osint::onResultSubdomainIp);
         connect(networksdb, &NetworksDB::subdomain, this, &Osint::onResultSubdomain);
         connect(networksdb, &NetworksDB::ip, this, &Osint::onResultIp);
-        connect(networksdb, &NetworksDB::prefix, this, &Osint::onResultCidr);
+        connect(networksdb, &NetworksDB::cidr, this, &Osint::onResultCidr);
         connect(networksdb, &NetworksDB::errorLog, this, &Osint::onErrorLog);
         connect(networksdb, &NetworksDB::infoLog, this, &Osint::onInfoLog);
         connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);

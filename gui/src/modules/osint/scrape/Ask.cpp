@@ -1,7 +1,6 @@
 #include "Ask.h"
 
-Ask::Ask(ScanArgs *args):
-    AbstractOsintModule(args)
+Ask::Ask(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
     connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinishedSubdomain);

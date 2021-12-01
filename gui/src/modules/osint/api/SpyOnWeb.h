@@ -1,11 +1,6 @@
 #ifndef SPYONWEB_H
 #define SPYONWEB_H
 
-/*
- * INPUT ip:            OUTPUT: subdomains
- * INPUT domain:        OUTPUT: ip, subdomains
- */
-
 #include "../AbstractOsintModule.h"
 
 
@@ -31,6 +26,11 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP, "The Nameservers on IP Address API allows you to input an IP address and get a list of nameservers using this IP address."}},
                                             {"Summary",
                                              {PLACEHOLDERTEXT_DOMAIN, "The Request Summary API allows you to input a domain name and get the number of domains with the same Google Adsense, Google Analytics identifiers, IP Address, and Nameserver"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: email
- */
 
 namespace ModuleInfo {
     struct Hunter{
@@ -27,6 +24,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "This API endpoint allows you to know how many email addresses we have for one domain or for one company. "}},
                                             {"Account Information",
                                              {PLACEHOLDERTEXT_NONE, "This API endpoint enables you to get information regarding your Hunter account at any time"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_EMAIL}}};
     };
 }
 

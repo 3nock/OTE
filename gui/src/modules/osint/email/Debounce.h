@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct Debounce{
         QString name = "Debounce";
@@ -18,6 +19,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_NONE, "Get the remaining balance of your DeBounce account."}},
                                             {"Api Usage History",
                                              {PLACEHOLDERTEXT_NONE, "You can get the number of calls between two dates for the desired API key"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

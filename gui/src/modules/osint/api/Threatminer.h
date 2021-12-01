@@ -1,14 +1,8 @@
 #ifndef THREATMINER_H
 #define THREATMINER_H
 
-
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, ip, email, url
- * INPUT ip:                OUTPUT: subdomain, asn, ssl
- * INPUT ssl:               OUTPUT: ip
- */
 
 namespace ModuleInfo {
     struct Threatminer{
@@ -34,6 +28,13 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP, "Search ssl certificate data of an ip address"}},
                                             {"ssl Hosts",
                                              {PLACEHOLDERTEXT_SSLCERT, "Search hosts data of an ssl certificate"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_IP, OUT_EMAIL, OUT_URL}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN, OUT_ASN, OUT_SSLCERT}},
+                                              {IN_SSLCERT,
+                                               {OUT_IP}}};
     };
 }
 

@@ -1,11 +1,8 @@
 #ifndef ARCHIVETODAY_H
 #define ARCHIVETODAY_H
 
-/*
- * INPUT url/domain/hostname:           OUTPUT: url, subdomain
- */
-
 #include "../AbstractOsintModule.h"
+
 
 namespace ModuleInfo {
     struct ArchiveToday{
@@ -17,6 +14,9 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"url",
                                              {PLACEHOLDERTEXT_URL, "Urls archived in Archive..."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_URL}}};
     };
 }
 

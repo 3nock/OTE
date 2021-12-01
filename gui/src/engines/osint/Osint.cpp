@@ -9,6 +9,8 @@
 
 
 /*
+ * cidr not implemented in many modules...
+ *
  * clear proxyModel to delete certain results...
  *
  * write the ultimate article on subdomain enumeration

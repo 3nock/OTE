@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain
- * INPUT ip:                OUTPUT: subdomain
- */
 
 namespace ModuleInfo {
     struct Omnisint{
@@ -26,6 +22,11 @@ namespace ModuleInfo {
                                             {"reverse ip",
                                              {PLACEHOLDERTEXT_IP_OR_CIDR, "Identify other domains hosted on the IP address of your target, or even their ASN as supported by CIDR range searchs."
                                                                           "Access a comprehensive reverse DNS database without limits"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

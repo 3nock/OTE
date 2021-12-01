@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIp, subdomain, asn, ip
- * INPUT ip:                OUTPUT: subdomainIp, subdomain, asn, ip
- */
 
 namespace ModuleInfo {
     struct OtxPaid{
@@ -69,6 +65,11 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_URL, "Historical geographic info, any pulses this indicator is on, list of the other sections currently available for this URL."}},
                                             {"indicator url url_list",
                                              {PLACEHOLDERTEXT_URL, "Full results (potentially multiple) from AlienVault Labs url analysis."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN}}};
     };
 }
 

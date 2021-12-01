@@ -3,11 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, email
- * INPUT ip:                OUTPUT: subdomain, asn
- * INPUT asn:               OUTPUT: asn
- */
 
 namespace ModuleInfo {
     struct WhoisXmlApi{
@@ -49,6 +44,13 @@ namespace ModuleInfo {
                                                                       "PDF file with embedded links which you can easily integrate into your product or use for any other business purposes."}},
                                             {"whois history",
                                              {PLACEHOLDERTEXT_DOMAIN, "Start checking historical WHOIS records via API calls in your developed systems and commercial applications."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_EMAIL}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN, OUT_ASN}},
+                                              {IN_IP,
+                                               {OUT_ASN}}};
     };
 }
 

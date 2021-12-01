@@ -3,11 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip, ssl
- * INPUT ip:                OUTPUT: subdomainIp, subdomain, ip, ssl
- * INPUT ssl:               OUTPUT: ip, ssl
- */
 
 namespace ModuleInfo {
     struct RiskIq{
@@ -45,8 +40,14 @@ namespace ModuleInfo {
                                             {"cert sha1",
                                              {PLACEHOLDERTEXT_SSLCERT, "Get SSL certificate by SHA1 hash"}},
                                             {"hosts",
-                                             {PLACEHOLDERTEXT_SSLCERT, "Get hosts by certificate"}}
-                                           };
+                                             {PLACEHOLDERTEXT_SSLCERT, "Get hosts by certificate"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_SSLCERT}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_SSLCERT}},
+                                              {IN_SSLCERT,
+                                               {OUT_IP, OUT_SSLCERT}}};
     };
 }
 

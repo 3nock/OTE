@@ -3,9 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain
- */
+
 namespace ModuleInfo {
     struct Pkey{
         QString name = "Pkey";
@@ -13,6 +11,8 @@ namespace ModuleInfo {
         QString url_apiDoc = "";
         QString summary = "";
         QMap<QString, QStringList> flags = {};
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
     };
 }
 

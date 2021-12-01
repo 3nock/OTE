@@ -2,11 +2,8 @@
 #define PAGESINVENTORY_H
 
 #include "../AbstractOsintModule.h"
-#include "gumbo-parser/src/gumbo.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
- */
+
 namespace ModuleInfo {
     struct PagesInventory{
         QString name = "PagesInventory";
@@ -14,6 +11,8 @@ namespace ModuleInfo {
         QString url_apiDoc = "";
         QString summary = "";
         QMap<QString, QStringList> flags = {};
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
     };
 }
 

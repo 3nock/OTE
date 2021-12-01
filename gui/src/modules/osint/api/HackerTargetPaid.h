@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
- * INPUT ip-address:        OUTPUT: asn, subdomain
- */
 
 namespace ModuleInfo {
     struct HackerTargetPaid{
@@ -46,6 +42,11 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP, "Using mtr an advanced traceroute tool trace the path of an Internet connection."}},
                                             {"whois",
                                              {PLACEHOLDERTEXT_IP, "Determine the registered owner of a domain or IP address block with the whois tool."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN, OUT_ASN}}};
     };
 }
 

@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, ip
- * INPUT ip:                OUTPUT: subdomain, ip, asn
- */
 
 namespace ModuleInfo {
     struct ThreatBook{
@@ -24,6 +20,11 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP, "IP advanced query, get current IP domain name and historical domain name information."}},
                                             {"ip query",
                                              {PLACEHOLDERTEXT_IP, "It can analyze business logs and external IP obtained from security devices such as firewalls and WAF. Obtain IP-related geographic location and ASN information, and comprehensively determine threat types such as: remote control (C2), zombie, compromised host (Compromised), scanning (Scanner), phishing, etc., related attack groups or security incidents Labels, original information, relevant sample information, etc."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN, OUT_IP, OUT_ASN}}};
     };
 }
 

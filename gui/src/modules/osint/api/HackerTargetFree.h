@@ -1,13 +1,8 @@
 #ifndef HACKERTARGETFREE_H
 #define HACKERTARGETFREE_H
 
-
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
- * INPUT ip-address:        OUTPUT: asn, subdomain
- */
 
 namespace ModuleInfo {
     struct HackerTargetFree{
@@ -41,6 +36,11 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Dump all the links from a web page."}},
                                             {"aslookup",
                                              {PLACEHOLDERTEXT_IP, "Get Autonomous System Number or ASN details from an AS or an IP address."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN, OUT_ASN}}};
     };
 }
 

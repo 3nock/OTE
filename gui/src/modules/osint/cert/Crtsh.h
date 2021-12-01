@@ -2,8 +2,8 @@
 #define CRTSH_H
 
 #include "../AbstractOsintModule.h"
-#include "gumbo-parser/src/gumbo.h"
 #include "src/models/certmodel.h"
+
 
 namespace ModuleInfo {
     struct Crtsh{
@@ -15,6 +15,9 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Search by Domain"}},
                                             {"ssl cert",
                                              {PLACEHOLDERTEXT_SSLCERT, "Search by ssl certificate: sha1/sha256/id"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_SSLCERT}}};
     };
 }
 

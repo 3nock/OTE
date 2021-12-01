@@ -19,6 +19,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Get a count of the number of related domains for all supported lookups we offer"}},
                                             {"full",
                                              {PLACEHOLDERTEXT_DOMAIN, "A single endpoint that includes the data from /api/web, /api/dns, /api/related and IPinfo."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

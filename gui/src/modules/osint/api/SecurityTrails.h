@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, ip
- * INPUT ip:                OUTPUT: subdomain
- */
 
 namespace ModuleInfo {
     struct SecurityTrails{
@@ -45,6 +41,11 @@ namespace ModuleInfo {
                                             {"company associated ip",
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns associated IPs for a company domain. The result is not paginated nor limited. "
                                                                       "The data is based on whois data with the names matched to the domains."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

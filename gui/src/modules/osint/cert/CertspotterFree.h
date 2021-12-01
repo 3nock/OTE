@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct CertspotterFree{
         QString name = "Certspotter";
@@ -13,6 +14,9 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"issuances",
                                              {PLACEHOLDERTEXT_DOMAIN, "List issuances"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_SSLCERT}}};
     };
 }
 

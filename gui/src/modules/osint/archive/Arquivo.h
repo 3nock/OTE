@@ -1,11 +1,8 @@
 #ifndef ARQUIVO_H
 #define ARQUIVO_H
 
-/*
- * INPUT url/domain/hostname:           OUTPUT: url, subdomain
- */
-
 #include "../AbstractOsintModule.h"
+
 
 namespace ModuleInfo {
     struct Arquivo{
@@ -20,6 +17,9 @@ namespace ModuleInfo {
                                                                    "It is also possible to search by URL, accessing all versions of preserved web content."}},
                                             {"CDX Server",
                                              {PLACEHOLDERTEXT_DOMAIN, "CDX-server API allows automatic access in order to list, sort, and filter preserved pages from a given URL."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_URL}}};
     };
 }
 

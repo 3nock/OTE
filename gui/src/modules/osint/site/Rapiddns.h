@@ -3,11 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
- * INPUT ip:                OUTPUT: subdomainIp, subdomain, ip
- * INPUT cidr:              OUTPUT: subdomainIp, subdomain, ip
- */
+
 namespace ModuleInfo {
     struct Rapiddns{
         QString name = "Rapiddns";
@@ -15,6 +11,12 @@ namespace ModuleInfo {
         QString url_apiDoc = "";
         QString summary = "RapidDNS is a dns query tool which make querying subdomains or sites of a same ip easy!";
         QMap<QString, QStringList> flags = {};
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_CIDR,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
     };
 }
 

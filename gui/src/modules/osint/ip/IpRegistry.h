@@ -19,6 +19,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_NONE, "Look up the IP address the current API request is coming from."}}/*,
                                             {"User-Agent Parsing",
                                              {PLACEHOLDERTEXT_UA, "User-Agent parsing allows detecting any browser, device & OS in real-time to bring user experience to perfection"}}*/};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

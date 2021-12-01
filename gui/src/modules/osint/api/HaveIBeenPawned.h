@@ -17,6 +17,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Getting all breached sites in the system"}},
                                             {"Single Breach",
                                              {"breach name", "Getting a single breached site"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

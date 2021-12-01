@@ -226,10 +226,8 @@ void NetworksDB::replyFinishedCidr(QNetworkReply *reply){
 
     if(requestType == IPS_FOR_DOMAIN){
         foreach(const QJsonValue &value, results){
-            QString cidr = value.toObject()["cidr"].toString();
-            QString org = value.toObject()["organisation"].toObject()["name"].toString();
-
-            emit prefix(cidr, org);
+            QString prefix = value.toObject()["cidr"].toString();
+            emit cidr(prefix);
             log.resultsCount++;
         }
     }

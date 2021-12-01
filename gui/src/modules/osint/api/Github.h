@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUPUT: subdomain
- */
 
 namespace ModuleInfo {
     struct Github{
@@ -13,7 +10,11 @@ namespace ModuleInfo {
         QString url = "https://github.com/";
         QString url_apiDoc = "";
         QString summary = "Github API";
-        QMap<QString, QStringList> flags = {{"code", {PLACEHOLDERTEXT_DOMAIN, ""}}};
+        QMap<QString, QStringList> flags = {{"code",
+                                             {PLACEHOLDERTEXT_DOMAIN, ""}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN}}};
     };
 }
 

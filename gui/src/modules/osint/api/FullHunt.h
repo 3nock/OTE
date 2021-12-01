@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:          OUTPUT: subdomains
- */
 
 namespace ModuleInfo {
     struct FullHunt{
@@ -21,6 +18,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "List all discovered subdomains for a given domain."}},
                                             {"Host details",
                                              {PLACEHOLDERTEXT_HOSTNAME, "This endpoint retrieves details for a given host."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN}}};
     };
 }
 

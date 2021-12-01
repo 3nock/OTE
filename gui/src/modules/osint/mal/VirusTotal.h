@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, ip, url, cert
- * INPUT ip:                OUTPUT: subdomain, ip, url, cert
- */
 
 namespace ModuleInfo {
     struct VirusTotal{
@@ -52,6 +48,11 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns all the available data assosiated with domain, uses v2 api"}},
                                             {"v2 api ipaddress",
                                              {PLACEHOLDERTEXT_IP, "Returns all the available data assosiated with ip-address, uses v2 api"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_IP, OUT_URL, OUT_SSLCERT}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN, OUT_IP, OUT_URL, OUT_SSLCERT}}};
     };
 }
 

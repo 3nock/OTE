@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct IpApi{
         QString name = "IpApi";
@@ -17,6 +18,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_BULK_IP, "Look up multiple IP addresses in bulk."}},
                                             {"origin lookup",
                                              {PLACEHOLDERTEXT_NONE, "Look up the IP address the current API request is coming from."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

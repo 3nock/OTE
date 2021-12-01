@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct HybridAnalysis{
         QString name = "HybridAnalysis";
@@ -12,6 +13,8 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"Url Quick-Scan",
                                              {PLACEHOLDERTEXT_URL, "Analyses Url"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

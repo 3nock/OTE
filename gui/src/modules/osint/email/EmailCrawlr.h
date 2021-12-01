@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct EmailCrawlr{
         QString name = "EmailCrawlr";
@@ -19,6 +20,9 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_EMAIL, "Check/Validate an email address's deliverability. Checks MX records as well as email receipt."}},
                                             {"Account",
                                              {PLACEHOLDERTEXT_NONE, "This call does not count towards your usage."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_EMAIL}}};
     };
 }
 

@@ -3,9 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain
- */
+
 namespace ModuleInfo {
     struct Netcraft{
         QString name = "Netcraft";
@@ -14,6 +12,7 @@ namespace ModuleInfo {
         QString summary = "Netcraft is an internet services company based in the United Kingdom which provides internet security services, including cybercrime disruption, application security testing and automated vulnerability scanning."
                           "We have explored the internet for a quarter of a century and are an authority on many aspects of the internet.";
         QMap<QString, QStringList> flags = {};
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN}}};
     };
 }
 

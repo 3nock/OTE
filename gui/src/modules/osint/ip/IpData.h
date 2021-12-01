@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct IpData{
         QString name = "IpData";
@@ -21,6 +22,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP, "We have over 600M malicious IP addresses in our IP Threat Intelligence database. We also track Tor nodes and open proxies. This data is updated every 15mins and is aggregated and published hourly."}},
                                             {"ASN Data",
                                              {PLACEHOLDERTEXT_IP, "We provide detailed ASN data for all IP Addresses with the following fields: AS Name, AS Number, AS Route, the AS Organization's domain and the usage type."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

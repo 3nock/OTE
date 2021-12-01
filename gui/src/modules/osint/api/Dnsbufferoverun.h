@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: ip, subdomain, subdomainIp
- */
-
 namespace ModuleInfo {
     struct Dnsbufferoverun{
         QString name = "Dnsbufferoverun";

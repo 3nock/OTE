@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIP, subdomain, ip
- */
 
 namespace ModuleInfo {
     struct WebResolver{
@@ -33,6 +30,9 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP, "Tries to find any websites linked to an IP you entered."}},
                                             {"Domain information",
                                              {PLACEHOLDERTEXT_DOMAIN, "Get all the information from a domain such as: IP history, subdomains & domain score"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
     };
 }
 

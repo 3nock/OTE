@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct AbuseIPDB{
         QString name = "AbuseIPDB";
@@ -17,6 +18,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_NONE, "The blacklist is the culmination of all of the valiant reporting by AbuseIPDB users. It's a list of the most reported IP addresses."}},
                                             {"CHECK-BLOCK Endpoint",
                                              {PLACEHOLDERTEXT_CIDR, "The check-block endpoint accepts a subnet (v4 or v6) denoted with CIDR notation."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

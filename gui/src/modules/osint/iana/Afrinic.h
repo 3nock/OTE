@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct Afrinic{
         QString name = "Afrinic";
@@ -19,6 +20,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Used to identify reverse DNS information and associated data referenced"}},
                                             {"Entity",
                                              {"eg TEAM-AFRINIC", "Used to retrieve entity related information using an entity string identifier"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

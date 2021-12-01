@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT hostname:          OUTPUT: subdomains
- */
 
 namespace ModuleInfo {
     struct Onyphe{
@@ -70,6 +67,8 @@ namespace ModuleInfo {
                                             {"simple enterprise best whois",
                                              {PLACEHOLDERTEXT_IP, " It will return one result about whois category of information we have for the given IPv{4,6} address. There will be no history of changes, "
                                                                   "the goal of this API is to return the best matching subnet regarding the given address. Best matching subnet means the one with the smallest CIDR mask."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

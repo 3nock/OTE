@@ -12,6 +12,8 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"Email Query",
                                              {PLACEHOLDERTEXT_EMAIL, "Query an email..."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

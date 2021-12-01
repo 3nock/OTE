@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, ip
- * INPUT ip:                OUTPUT: subdomain, ip
- */
 
 namespace ModuleInfo {
     struct MnemonicFree{
@@ -28,6 +24,11 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns MX dns Records"}},
                                             {"pdns NS",
                                              {PLACEHOLDERTEXT_DOMAIN, "Returns NS dns Records"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN, IN_IP}}};
     };
 }
 

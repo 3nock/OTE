@@ -1,11 +1,8 @@
 #ifndef UKWEBARCHIVE_H
 #define UKWEBARCHIVE_H
 
-/*
- * INPUT url/domain/hostname:           OUTPUT: url, subdomain
- */
-
 #include "../AbstractOsintModule.h"
+
 
 namespace ModuleInfo {
     struct UKWebArchive{
@@ -17,6 +14,9 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"url",
                                              {PLACEHOLDERTEXT_URL, "Urls archived in UKWebArchive..."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_URL}}};
     };
 }
 

@@ -26,6 +26,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_IP, "The IP Blocklist API will detect potentially malicious or dangerous IP addresses."}},
                                             {"Host Reputation",
                                              {PLACEHOLDERTEXT_DOMAIN_OR_IP, "Check the reputation of an IP address, domain name or URL against a comprehensive list of blacklists and blocklists."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

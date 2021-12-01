@@ -3,11 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomainIp, subdomain, ip
- * INPUT ip:                OUTPUT: subdomainIp, subdomain, ip, asn
- * INPUT asn:               OUTPUT: ip
- */
 
 namespace ModuleInfo {
 struct RobtexPaid{
@@ -24,6 +19,13 @@ struct RobtexPaid{
                                          {PLACEHOLDERTEXT_DOMAIN, "Returns Passive dns Data of a domain"}},
                                         {"pdns reverse",
                                          {PLACEHOLDERTEXT_IP, "Returns Passive dns Data of an Ip address"}}};
+
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                          {IN_IP,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN}},
+                                          {IN_ASN,
+                                           {OUT_IP}}};
 };
 }
 

@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct SpamHaus{
         QString name = "SpamHaus";
@@ -13,6 +14,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_DOMAIN, "Forward search..."}},
                                             {"Reverse Search",
                                              {PLACEHOLDERTEXT_CIDR, "Reverse search..."}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

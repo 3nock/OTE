@@ -3,13 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: subdomain, email, ip, ssl, asn, url
- * INPUT ip:                OUTPUT: asn
- * INPUT asn:               OUTPUT: ip, asn
- * INPUT ssl:               OUTPUT: email
- * INPUT email:             OUTPUT: email
- */
 
 namespace ModuleInfo {
     struct Spyse{
@@ -32,6 +25,17 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_EMAIL, ""}},
                                             {"DNS History",
                                              {PLACEHOLDERTEXT_DOMAIN, ""}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_EMAIL, OUT_IP, OUT_SSLCERT, OUT_ASN, OUT_URL}},
+                                              {IN_IP,
+                                               {OUT_ASN}},
+                                              {IN_ASN,
+                                               {OUT_IP, OUT_ASN}},
+                                              {IN_SSLCERT,
+                                               {OUT_EMAIL}},
+                                              {IN_EMAIL,
+                                               {OUT_EMAIL}}};
     };
 }
 

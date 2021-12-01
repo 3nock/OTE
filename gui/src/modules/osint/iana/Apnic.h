@@ -12,8 +12,9 @@ namespace ModuleInfo {
                           "Users querying the database can determine who is responsible for an IP address range or an AS Number.";
 
         QMap<QString, QStringList> flags = {{"IP networks",
-                                             {PLACEHOLDERTEXT_IP, "This query will return the most-specific or smallest IP network which completely encompasses it in a hierarchy of IP networks"}}
-                                           };
+                                             {PLACEHOLDERTEXT_IP, "This query will return the most-specific or smallest IP network which completely encompasses it in a hierarchy of IP networks"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

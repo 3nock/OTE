@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct FraudGuard{
         QString name = "FraudGuard";
@@ -24,6 +25,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_NONE, "This API endpoint retrieves your custom whitelist built in FraudGuard.io"}},
                                             {"Get Custom GeoBlock",
                                              {PLACEHOLDERTEXT_NONE, "This API endpoint retrieves your custom Geographic blacklist built in FraudGuard.io"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

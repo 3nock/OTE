@@ -159,7 +159,6 @@ class AbstractOsintModule : public QObject {
         void url(QString url);
         void asn(QString asn, QString asnName);
         void rawResults(QByteArray reply);
-        void prefix(QString prefix, QString name);
         /* dns */
         void ipA(QString ip);
         void ipAAAA(QString ip);

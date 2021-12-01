@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct GoogleCert{
         QString name = "GoogleCert";
@@ -13,6 +14,9 @@ namespace ModuleInfo {
 
         QMap<QString, QStringList> flags = {{"Domain cert",
                                              {PLACEHOLDERTEXT_DOMAIN, "Search SSL cert by domain name"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN, OUT_SSLCERT}}};
     };
 }
 

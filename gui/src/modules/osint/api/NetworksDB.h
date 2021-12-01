@@ -3,9 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT cidr:          OUTPUT: subdomainIp, subdomain, ip
- */
 
 namespace ModuleInfo {
     struct NetworksDB{
@@ -35,6 +32,15 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_ASN, "Search for an autonomous system."}},
                                             {"Autonomous System Networks",
                                              {PLACEHOLDERTEXT_ASN, "Search for the networks announced by an autonomous system."}}};
+
+        QMap<int, QList<int>> input_output = {{IN_CIDR,
+                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                              {IN_DOMAIN,
+                                               {OUT_IP, OUT_CIDR}},
+                                              {IN_IP,
+                                               {OUT_SUBDOMAIN}},
+                                              {IN_ASN,
+                                               {}}};
     };
 }
 

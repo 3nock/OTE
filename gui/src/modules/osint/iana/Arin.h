@@ -52,6 +52,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_NET, "Lists the delegations of a given network"}},
                                             {"rdns nets",
                                              {PLACEHOLDERTEXT_HOSTNAME, "Lists networks related to a given delegation"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

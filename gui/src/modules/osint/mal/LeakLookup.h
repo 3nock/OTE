@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
     struct LeakLookup{
         QString name = "Leak-Lookup";
@@ -18,6 +19,8 @@ namespace ModuleInfo {
                                              {PLACEHOLDERTEXT_USERNAME, "Search Username"}},
                                             {"DOMAIN",
                                              {PLACEHOLDERTEXT_DOMAIN, "Search Domain"}}};
+
+        QMap<int, QList<int>> input_output = {};
     };
 }
 

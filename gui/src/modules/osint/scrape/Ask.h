@@ -2,7 +2,7 @@
 #define ASK_H
 
 #include "../AbstractOsintModule.h"
-#include "gumbo-parser/src/gumbo.h"
+
 
 class Ask: public AbstractOsintModule{
 
@@ -16,7 +16,6 @@ class Ask: public AbstractOsintModule{
 
     private:
         int m_page = 0;
-        int activeRequests = 0;
         void getLinks(GumboNode *node);
         GumboNode *getBody(GumboNode *node);
 };

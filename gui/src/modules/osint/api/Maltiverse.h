@@ -3,10 +3,6 @@
 
 #include "../AbstractOsintModule.h"
 
-/*
- * INPUT domain:            OUTPUT: ip, asn
- * INPUT ip:                OUTPUT: email, asn
- */
 
 namespace ModuleInfo {
     struct Maltiverse{
@@ -19,8 +15,12 @@ namespace ModuleInfo {
                                             {"Hostname",
                                              {PLACEHOLDERTEXT_DOMAIN, "Hostname IoC related methods"}},
                                             {"Url",
-                                             {PLACEHOLDERTEXT_CHECKSUM, "Url IOC related methods"}}
-                                           };
+                                             {PLACEHOLDERTEXT_CHECKSUM, "Url IOC related methods"}}};
+
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_IP, OUT_ASN}},
+                                              {IN_IP,
+                                               {OUT_EMAIL, OUT_ASN}}};
     };
 }
 
