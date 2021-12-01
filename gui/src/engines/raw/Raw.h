@@ -9,6 +9,7 @@
 #include "src/modules/osint/OsintModulesHeaders.h"
 #include "src/utils/JsonSyntaxHighlighter.h"
 
+
 namespace Ui {
     class Raw;
 }
@@ -142,6 +143,7 @@ class Raw : public AbstractEngine{
         void onClear();
         //...
         void startScan();
+        void startScanThread(AbstractOsintModule *);
         //...
         void setJsonText(QJsonDocument &document);
         void setJsonTree(QJsonDocument &document);

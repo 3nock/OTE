@@ -12,12 +12,12 @@ class Ask: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedSubdomain(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedUrl(QNetworkReply *reply) override;
 
     private:
         int m_page = 0;
-        void getLinks(GumboNode *node);
-        GumboNode *getBody(GumboNode *node);
+        bool firstReply = false;
 };
 
 #endif // ASK_H

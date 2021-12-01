@@ -29,9 +29,18 @@ include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
     src/engines/active/ActiveContextMenu.cpp \
+    src/engines/active/ActiveScan.cpp \
     src/engines/brute/BruteContextMenu.cpp \
+    src/engines/brute/BruteScan.cpp \
     src/engines/cert/Cert.cpp \
     src/engines/cert/CertContextMenu.cpp \
+    src/engines/cert/CertResults.cpp \
+    src/engines/cert/CertScan.cpp \
+    src/engines/ip/IpScan.cpp \
+    src/engines/osint/OsintResults.cpp \
+    src/engines/osint/OsintScan.cpp \
+    src/engines/raw/RawResults.cpp \
+    src/engines/raw/RawScan.cpp \
     src/engines/records/DnsRecordsContextMenu.cpp \
     src/engines/ip/IpContextMenu.cpp \
     src/engines/osint/OsintContextMenu.cpp \
@@ -39,6 +48,7 @@ SOURCES += \
     src/engines/osint/OsintProfiles.cpp \
     src/engines/raw/RawContextMenu.cpp \
     src/engines/raw/RawModules.cpp \
+    src/engines/records/DnsRecordsScan.cpp \
     src/modules/osint/api/HaveIBeenPawned.cpp \
     src/modules/osint/api/Host.cpp \
     src/modules/osint/api/JsonWhois.cpp \

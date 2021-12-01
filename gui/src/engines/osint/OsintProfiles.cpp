@@ -843,3 +843,4 @@ void Osint::initProfiles(){
     }
     Config::generalConfig().endArray();
 }
+

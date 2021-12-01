@@ -159,6 +159,7 @@ class AbstractOsintModule : public QObject {
         void url(QString url);
         void asn(QString asn, QString asnName);
         void rawResults(QByteArray reply);
+        void rawResultsTxt(QByteArray reply);
         /* dns */
         void ipA(QString ip);
         void ipAAAA(QString ip);
@@ -183,12 +184,21 @@ class AbstractOsintModule : public QObject {
         virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
         virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails
         virtual void replyFinishedUrl(QNetworkReply*){} // returns URLs
-        virtual void replyFinishedRaw(QNetworkReply *reply) // returns raw results
+        virtual void replyFinishedRaw(QNetworkReply *reply) // returns raw json results
         {
             if(reply->error())
                 this->onError(reply);
             else
                 emit rawResults(reply->readAll());
+
+            end(reply);
+        }
+        virtual void replyFinishedRawTxt(QNetworkReply *reply) // returns raw txt results
+        {
+            if(reply->error())
+                this->onError(reply);
+            else
+                emit rawResultsTxt(reply->readAll());
 
             end(reply);
         }

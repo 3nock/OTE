@@ -6,6 +6,7 @@
 #include "src/modules/scan/OsintScanner.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ConfigDialog.h"
+#include "src/modules/osint/AbstractOsintModule.h"
 
 /* output option */
 #define OUTPUT_SUBDOMAINIP 0
@@ -109,11 +110,13 @@ class Osint : public AbstractEngine{
         void startScan();
         void pauseScan();
         void ResumeScan();
-        void connectActions();
+        void startScanThread(AbstractOsintModule *);
         ///
         ///...
         ///
+        void connectActions();
         void initProfiles();
+        void initModules();
 };
 
 #endif // OSINT_H
