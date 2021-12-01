@@ -33,7 +33,7 @@
        <property name="minimumSize">
         <size>
          <width>100</width>
-         <height>0</height>
+         <height>21</height>
         </size>
        </property>
        <item>
@@ -590,7 +590,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>170</width>
-                  <height>0</height>
+                  <height>21</height>
                  </size>
                 </property>
                </widget>
@@ -923,7 +923,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-38</y>
+                  <y>0</y>
                   <width>169</width>
                   <height>1422</height>
                  </rect>

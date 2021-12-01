@@ -36,42 +36,42 @@
        <property name="minimumSize">
         <size>
          <width>110</width>
-         <height>0</height>
+         <height>21</height>
         </size>
        </property>
        <item>
         <property name="text">
-         <string>Domain</string>
+         <string> Domain</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Ip</string>
+         <string> Ip</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Email</string>
+         <string> Email</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Url</string>
+         <string> Url</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Asn</string>
+         <string> Asn</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>SSL Cert</string>
+         <string> SSL Cert</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Cidr</string>
+         <string> Cidr</string>
         </property>
        </item>
       </widget>
@@ -81,7 +81,7 @@
        <property name="minimumSize">
         <size>
          <width>110</width>
-         <height>20</height>
+         <height>21</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -136,7 +136,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Cidr</string>
+         <string> Cidr</string>
         </property>
        </item>
       </widget>
@@ -599,18 +599,18 @@
               <widget class="QComboBox" name="comboBoxFilter">
                <property name="minimumSize">
                 <size>
-                 <width>90</width>
-                 <height>0</height>
+                 <width>100</width>
+                 <height>20</height>
                 </size>
                </property>
                <item>
                 <property name="text">
-                 <string>Subdomains</string>
+                 <string> Subdomains</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Ip</string>
+                 <string> Ip</string>
                 </property>
                </item>
               </widget>
@@ -739,7 +739,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>22</height>
+                  <height>21</height>
                  </size>
                 </property>
                 <property name="focusPolicy">
@@ -921,7 +921,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-499</y>
+                  <y>0</y>
                   <width>175</width>
                   <height>1002</height>
                  </rect>
