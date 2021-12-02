@@ -100,6 +100,7 @@ void Osint::startScan(){
 
     if(ui->moduleOmnisint->isChecked())
         this->startScanThread(new Omnisint(scanArgs));
+
     if(ui->moduleOtxFree->isChecked())
         this->startScanThread(new OtxFree(scanArgs));
 

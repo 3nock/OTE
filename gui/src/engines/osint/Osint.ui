@@ -101,12 +101,12 @@
        </property>
        <item>
         <property name="text">
-         <string> Subdomain &amp; Ip</string>
+         <string> Subdomain</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Subdomain</string>
+         <string> Subdomain &amp; Ip</string>
         </property>
        </item>
        <item>
@@ -410,7 +410,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="labelResultsInfo">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -427,7 +427,7 @@
                 <string notr="true"/>
                </property>
                <property name="text">
-                <string>Enumerated Subdomains:</string>
+                <string>Enumerated Subdomains</string>
                </property>
               </widget>
              </item>

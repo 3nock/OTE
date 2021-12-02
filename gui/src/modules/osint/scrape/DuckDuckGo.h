@@ -3,6 +3,17 @@
 
 #include "../AbstractOsintModule.h"
 
+namespace ModuleInfo {
+    struct DuckDuckGo{
+        QString name = "DuckDuckGo";
+        QString url = "https://duckduckgo.com/";
+        QString url_apiDoc = "";
+        QString summary = "";
+        QMap<QString, QStringList> flags = {};
+        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                               {OUT_SUBDOMAIN}}};
+    };
+}
 
 class DuckDuckGo: public AbstractOsintModule{
 

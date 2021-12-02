@@ -9,8 +9,8 @@
 #include "src/modules/osint/AbstractOsintModule.h"
 
 /* output option */
-#define OUTPUT_SUBDOMAINIP 0
-#define OUTPUT_SUBDOMAIN 1
+#define OUTPUT_SUBDOMAIN 0
+#define OUTPUT_SUBDOMAINIP 1
 #define OUTPUT_IP 2
 #define OUTPUT_EMAIL 3
 #define OUTPUT_URL 4

@@ -121,6 +121,7 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     ui->lineEditNewProfile->setPlaceholderText("Enter New Profile's Name...");
     ui->frameProfiles->hide();
     this->initProfiles();
+    this->initModules();
 }
 Osint::~Osint(){
     delete m_scanArguments;
@@ -235,59 +236,6 @@ void Osint::on_checkBoxMultipleTargets_clicked(bool checked){
         ui->targets->hide();
 }
 
-void Osint::on_comboBoxOutput_currentIndexChanged(int index){
-    switch(index){
-    case OUTPUT_SUBDOMAINIP:
-        ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
-        ui->labelResultsCount->setNum(result->osint->subdomainIpProxy->rowCount());
-        ui->comboBoxFilter->clear();
-        ui->comboBoxFilter->addItems({"Subdomain", "Ip"});
-        ui->comboBoxFilter->show();
-        break;
-    case OUTPUT_SUBDOMAIN:
-        ui->tableViewResults->setModel(result->osint->subdomainProxy);
-        ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
-        ui->comboBoxFilter->hide();
-        break;
-    case OUTPUT_IP:
-        ui->tableViewResults->setModel(result->osint->ipProxy);
-        ui->labelResultsCount->setNum(result->osint->ipProxy->rowCount());
-        ui->comboBoxFilter->hide();
-        break;
-    case OUTPUT_EMAIL:
-        ui->tableViewResults->setModel(result->osint->emailProxy);
-        ui->labelResultsCount->setNum(result->osint->emailProxy->rowCount());
-        ui->comboBoxFilter->hide();
-        break;
-    case OUTPUT_URL:
-        ui->tableViewResults->setModel(result->osint->urlProxy);
-        ui->labelResultsCount->setNum(result->osint->urlProxy->rowCount());
-        ui->comboBoxFilter->hide();
-        break;
-    case OUTPUT_ASN:
-        ui->tableViewResults->setModel(result->osint->asnProxy);
-        ui->labelResultsCount->setNum(result->osint->asnProxy->rowCount());
-        ui->comboBoxFilter->clear();
-        ui->comboBoxFilter->addItems({"ASN", "Name"});
-        ui->comboBoxFilter->show();
-        break;
-    case OUTPUT_SSLCERT:
-        ui->tableViewResults->setModel(result->osint->sslCertProxy);
-        ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
-        ui->comboBoxFilter->clear();
-        ui->comboBoxFilter->hide();
-        break;
-    case OUTPUT_CIDR:
-        ui->tableViewResults->setModel(result->osint->cidrProxy);
-        ui->labelResultsCount->setNum(result->osint->cidrProxy->rowCount());
-        ui->comboBoxFilter->clear();
-        ui->comboBoxFilter->hide();
-        break;
-    }
-
-    /* only show modules that supports both input-type and output-type */
-}
-
 void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
     switch(ui->comboBoxOutput->currentIndex()){
     case OUTPUT_SUBDOMAINIP:
@@ -363,6 +311,66 @@ void Osint::on_comboBoxInput_currentIndexChanged(int index){
         ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_CIDR);
         break;
     }
-
     /* only show modules that supports both input-type and output-type */
+    this->initModules();
+}
+
+void Osint::on_comboBoxOutput_currentIndexChanged(int index){
+    switch(index){
+    case OUTPUT_SUBDOMAINIP:
+        ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
+        ui->labelResultsCount->setNum(result->osint->subdomainIpProxy->rowCount());
+        ui->comboBoxFilter->clear();
+        ui->comboBoxFilter->addItems({"Subdomain", "Ip"});
+        ui->comboBoxFilter->show();
+        ui->labelResultsInfo->setText("Enumerated Subdomains");
+        break;
+    case OUTPUT_SUBDOMAIN:
+        ui->tableViewResults->setModel(result->osint->subdomainProxy);
+        ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
+        ui->comboBoxFilter->hide();
+        break;
+    case OUTPUT_IP:
+        ui->tableViewResults->setModel(result->osint->ipProxy);
+        ui->labelResultsCount->setNum(result->osint->ipProxy->rowCount());
+        ui->comboBoxFilter->hide();
+        ui->labelResultsInfo->setText("Enumerated Subdomains");
+        break;
+    case OUTPUT_EMAIL:
+        ui->tableViewResults->setModel(result->osint->emailProxy);
+        ui->labelResultsCount->setNum(result->osint->emailProxy->rowCount());
+        ui->comboBoxFilter->hide();
+        ui->labelResultsInfo->setText("Enumerated Emails");
+        break;
+    case OUTPUT_URL:
+        ui->tableViewResults->setModel(result->osint->urlProxy);
+        ui->labelResultsCount->setNum(result->osint->urlProxy->rowCount());
+        ui->comboBoxFilter->hide();
+        ui->labelResultsInfo->setText("Enumerated Urls");
+        break;
+    case OUTPUT_ASN:
+        ui->tableViewResults->setModel(result->osint->asnProxy);
+        ui->labelResultsCount->setNum(result->osint->asnProxy->rowCount());
+        ui->comboBoxFilter->clear();
+        ui->comboBoxFilter->addItems({"ASN", "Name"});
+        ui->comboBoxFilter->show();
+        ui->labelResultsInfo->setText("Enumerated ASNs");
+        break;
+    case OUTPUT_SSLCERT:
+        ui->tableViewResults->setModel(result->osint->sslCertProxy);
+        ui->labelResultsCount->setNum(result->osint->sslCertProxy->rowCount());
+        ui->comboBoxFilter->clear();
+        ui->comboBoxFilter->hide();
+        ui->labelResultsInfo->setText("Enumerated Certificates");
+        break;
+    case OUTPUT_CIDR:
+        ui->tableViewResults->setModel(result->osint->cidrProxy);
+        ui->labelResultsCount->setNum(result->osint->cidrProxy->rowCount());
+        ui->comboBoxFilter->clear();
+        ui->comboBoxFilter->hide();
+        ui->labelResultsInfo->setText("Enumerated Cidr");
+        break;
+    }
+    /* only show modules that supports both input-type and output-type */
+    this->initModules();
 }
