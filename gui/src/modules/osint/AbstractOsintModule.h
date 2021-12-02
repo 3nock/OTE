@@ -26,8 +26,8 @@
 #define IN_QUERYTERM 7
 
 /* output option */
-#define OUT_SUBDOMAINIP 0
-#define OUT_SUBDOMAIN 1
+#define OUT_SUBDOMAIN 0
+#define OUT_SUBDOMAINIP 1
 #define OUT_IP 2
 #define OUT_EMAIL 3
 #define OUT_URL 4
