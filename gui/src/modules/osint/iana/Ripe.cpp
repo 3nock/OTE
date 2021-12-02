@@ -54,8 +54,8 @@ Ripe::Ripe(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Ripe";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedRawJson);
     if(args->outputAsn)
         connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
     if(args->outputCidr)
@@ -69,7 +69,7 @@ void Ripe::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ABUSE_CONTACT_FINDER:
             url.setUrl("https://stat.ripe.net/data/abuse-contact-finder/data.json?resource="+args->target);

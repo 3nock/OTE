@@ -102,15 +102,15 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     result->osint->sslCert->setHorizontalHeaderLabels({"SSL-Cert FingerPrint"});
     result->osint->cidr->setHorizontalHeaderLabels({"Cidr"});
     //...
-    ui->tableViewResults->setModel(result->osint->subdomainIpProxy);
+    ui->tableViewResults->setModel(result->osint->subdomainProxy);
     //...
-    //ui->buttonPause->setDisabled(true);
     ui->buttonStop->setDisabled(true);
     ///
     /// hide widgets...
     ///
     ui->progressBar->hide();
     ui->targets->hide();
+    ui->comboBoxFilter->hide();
 
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
@@ -122,11 +122,25 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     ui->frameProfiles->hide();
     this->initProfiles();
     this->initModules();
+
+    /* registering meta-objects */
+    qRegisterMetaType<ScanLog>("ScanLog");
 }
 Osint::~Osint(){
     delete m_scanArguments;
     delete m_scanResults;
     delete ui;
+}
+
+void Osint::m_infoLog(QString log){
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
+}
+
+void Osint::m_errorLog(QString log){
+    QString fontedLog("<font color=\"red\">"+log+"</font>");
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendHtml("\n"+logTime+fontedLog+"\n");
 }
 
 void Osint::on_buttonStart_clicked(){
@@ -169,6 +183,8 @@ void Osint::onScanThreadEnded(){
     ///
     /// status...
     ///
+    //...
+    this->m_infoLog("------------------ End ----------------");
     emit sendStatus("[END] Enumeration Complete!");
 }
 

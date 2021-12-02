@@ -13,8 +13,8 @@ Apnic::Apnic(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Apnic";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Apnic::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Apnic::replyFinishedRawJson);
 }
 Apnic::~Apnic(){
     delete manager;
@@ -24,7 +24,7 @@ void Apnic::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case IP:
             url.setUrl("http://rdap.apnic.net/ip/"+args->target);

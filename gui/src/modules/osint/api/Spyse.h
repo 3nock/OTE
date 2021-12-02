@@ -5,38 +5,38 @@
 
 
 namespace ModuleInfo {
-    struct Spyse{
-        QString name = "Spyse";
-        QString url = "https://spyse.com/";
-        QString url_apiDoc = "https://spyse.com/api";
-        QString summary = "Find any Internet asset by digital fingerprints";
+struct Spyse{
+    QString name = "Spyse";
+    QString url = "https://spyse.com/";
+    QString url_apiDoc = "https://spyse.com/api";
+    QString summary = "Find any Internet asset by digital fingerprints";
 
-        QMap<QString, QStringList> flags = {{"Domain",
-                                             {PLACEHOLDERTEXT_DOMAIN, ""}},
-                                            {"IPv4 Host",
-                                             {PLACEHOLDERTEXT_IP, ""}},
-                                            {"SSL/TLS Certificate",
-                                             {PLACEHOLDERTEXT_SSLCERT, ""}},
-                                            {"AS",
-                                             {PLACEHOLDERTEXT_ASN, ""}},
-                                            {"CVE",
-                                             {"CVE id", ""}},
-                                            {"Emails",
-                                             {PLACEHOLDERTEXT_EMAIL, ""}},
-                                            {"DNS History",
-                                             {PLACEHOLDERTEXT_DOMAIN, ""}}};
+    QMap<QString, QStringList> flags = {{"Domain",
+                                         {PLACEHOLDERTEXT_DOMAIN, ""}},
+                                        {"IPv4 Host",
+                                         {PLACEHOLDERTEXT_IP, ""}},
+                                        {"SSL/TLS Certificate",
+                                         {PLACEHOLDERTEXT_SSLCERT, ""}},
+                                        {"AS",
+                                         {PLACEHOLDERTEXT_ASN, ""}},
+                                        {"CVE",
+                                         {"CVE id", ""}},
+                                        {"Emails",
+                                         {PLACEHOLDERTEXT_EMAIL, ""}},
+                                        {"DNS History",
+                                         {PLACEHOLDERTEXT_DOMAIN, ""}}};
 
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAIN, OUT_EMAIL, OUT_IP, OUT_SSLCERT, OUT_ASN, OUT_URL}},
-                                              {IN_IP,
-                                               {OUT_ASN}},
-                                              {IN_ASN,
-                                               {OUT_IP, OUT_ASN}},
-                                              {IN_SSLCERT,
-                                               {OUT_EMAIL}},
-                                              {IN_EMAIL,
-                                               {OUT_EMAIL}}};
-    };
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_EMAIL, OUT_IP, OUT_SSLCERT, OUT_ASN, OUT_URL}},
+                                          {IN_IP,
+                                           {OUT_ASN}},
+                                          {IN_ASN,
+                                           {OUT_IP, OUT_ASN}},
+                                          {IN_SSLCERT,
+                                           {OUT_EMAIL}},
+                                          {IN_EMAIL,
+                                           {OUT_EMAIL}}};
+};
 }
 
 class Spyse: public AbstractOsintModule{

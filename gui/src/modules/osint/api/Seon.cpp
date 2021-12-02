@@ -11,8 +11,8 @@ Seon::Seon(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Seon";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Seon::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Seon::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -29,7 +29,7 @@ void Seon::start(){
     request.setRawHeader("X-API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case EMAIL:
             url.setUrl("https://api.seon.io/SeonRestService/email-api/v2.1/"+args->target);

@@ -13,8 +13,8 @@ N45HT::N45HT(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "N45HT";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &N45HT::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &N45HT::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &N45HT::replyFinishedSubdomain);
 }
@@ -26,7 +26,7 @@ void N45HT::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case SUBDOMAIN:
             url.setUrl("https://api.n45ht.or.id/v1/subdomain-enumeration?domain="+args->target);

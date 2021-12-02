@@ -22,8 +22,7 @@ IpTool::IpTool(QWidget *parent) : QDialog(parent), ui(new Ui::IpTool),
     /// for scan...
     ///
     m_scanArgs = new ScanArgs;
-    m_scanArgs->ipModel = ipModel;
-    m_scanArgs->info = true;
+    m_scanArgs->outputInfo = true;
 }
 IpTool::~IpTool(){
     delete ui;
@@ -70,8 +69,8 @@ void IpTool::on_buttonAnalyze_clicked(){
         ipinfo->Enumerator(cThread);
         ipinfo->moveToThread(cThread);
         //...
-        connect(ipinfo, &IpInfo::errorLog, this, &IpTool::onErrorLog);
-        connect(ipinfo, &IpInfo::infoLog, this, &IpTool::onInfoLog);
+        //connect(ipinfo, &IpInfo::errorLog, this, &IpTool::onErrorLog);
+        //connect(ipinfo, &IpInfo::infoLog, this, &IpTool::onInfoLog);
         connect(cThread, &QThread::finished, this, &IpTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -85,8 +84,8 @@ void IpTool::on_buttonAnalyze_clicked(){
         ipApi->Enumerator(cThread);
         ipApi->moveToThread(cThread);
         //...
-        connect(ipApi, &IpInfo::errorLog, this, &IpTool::onErrorLog);
-        connect(ipApi, &IpInfo::infoLog, this, &IpTool::onInfoLog);
+        //connect(ipApi, &IpInfo::errorLog, this, &IpTool::onErrorLog);
+        //connect(ipApi, &IpInfo::infoLog, this, &IpTool::onInfoLog);
         connect(cThread, &QThread::finished, this, &IpTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, ipApi, &IpInfo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

@@ -19,8 +19,8 @@ Maltiverse::Maltiverse(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Maltiverse";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Maltiverse::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Maltiverse::replyFinishedRawJson);
     if(args->outputEmail)
         connect(manager, &MyNetworkAccessManager::finished, this, &Maltiverse::replyFinishedEmail);
     if(args->outputAsn)
@@ -36,7 +36,7 @@ void Maltiverse::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case HOSTNAME:
             url.setUrl("https://api.maltiverse.com/hostname/"+args->target);

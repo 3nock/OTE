@@ -3,7 +3,7 @@
 //...
 #include <QSslKey>
 #include "src/utils/Definitions.h"
-#include "src/models/certmodel.h"
+#include "src/models/CertModel.h"
 #include "src/modules/scan/CertScanner.h"
 
 

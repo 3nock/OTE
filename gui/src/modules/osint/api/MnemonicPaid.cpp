@@ -20,12 +20,12 @@ MnemonicPaid::MnemonicPaid(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Mnemonic";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedRawJson);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedRaw);
+        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedSubdomain);
     ///
     /// getting api key...
     ///
@@ -42,7 +42,7 @@ void MnemonicPaid::start(){
     request.setRawHeader("Argus-API-Key", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case IP_ANY_RECORD:
             url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?limit=999");

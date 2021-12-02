@@ -23,8 +23,8 @@ HackerTargetPaid::HackerTargetPaid(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "HackerTarget";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedRawTxt);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
@@ -48,7 +48,7 @@ void HackerTargetPaid::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case ASLOOKUP:
             url.setUrl("https://api.hackertarget.com/aslookup/?q="+args->target+"&apikey="+m_key);

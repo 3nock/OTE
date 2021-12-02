@@ -17,8 +17,8 @@ EmailCrawlr::EmailCrawlr(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "EmailCrawlr";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedRawJson);
     if(args->outputEmail)
         connect(manager, &MyNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedEmail);
     ///
@@ -37,7 +37,7 @@ void EmailCrawlr::start(){
     request.setRawHeader("x-api-key", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case ACCOUNT:
             url.setUrl("https://api.emailcrawlr.com/v2/account");

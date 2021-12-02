@@ -10,8 +10,8 @@ Detectify::Detectify(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Detectify";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Detectify::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Detectify::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Detectify::replyFinishedSubdomain);
 }
@@ -22,7 +22,7 @@ Detectify::~Detectify(){
 void Detectify::start(){
     QNetworkRequest request;
 
-    if(args->raw){
+    if(args->outputRaw){
         QUrl url("https://jldc.me/Detectify/subdomains/"+args->target);
         request.setUrl(url);
         manager->get(request);

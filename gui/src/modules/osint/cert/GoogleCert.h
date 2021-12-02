@@ -5,19 +5,19 @@
 
 
 namespace ModuleInfo {
-    struct GoogleCert{
-        QString name = "GoogleCert";
-        QString url = "https://transparencyreport.google.com/";
-        QString url_apiDoc = "https://transparencyreport.google.com/";
-        QString summary = "Sharing data that sheds light on how the policies and actions of governments and \n"
-                          "corporations affect privacy, security, and access to information.";
+struct GoogleCert{
+    QString name = "GoogleCert";
+    QString url = "https://transparencyreport.google.com/";
+    QString url_apiDoc = "https://transparencyreport.google.com/";
+    QString summary = "Sharing data that sheds light on how the policies and actions of governments and \n"
+                      "corporations affect privacy, security, and access to information.";
 
-        QMap<QString, QStringList> flags = {{"Domain cert",
-                                             {PLACEHOLDERTEXT_DOMAIN, "Search SSL cert by domain name"}}};
+    QMap<QString, QStringList> flags = {{"Domain cert",
+                                         {PLACEHOLDERTEXT_DOMAIN, "Search SSL cert by domain name"}}};
 
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAIN, OUT_SSLCERT}}};
-    };
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_SSLCERT}}};
+};
 }
 
 class GoogleCert: public AbstractOsintModule{

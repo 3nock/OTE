@@ -97,6 +97,17 @@ void Raw::find(QString searchTerm, QTextDocument::FindFlags flags){
     }
 }
 
+void Raw::m_infoLog(QString log){
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText(logTime+log);
+}
+
+void Raw::m_errorLog(QString log){
+    QString fontedLog("<font color=\"red\">"+log+"</font>");
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendHtml(logTime+fontedLog);
+}
+
 void Raw::on_lineEditFind_textEdited(const QString &searchTerm){
     ///
     /// set cursor to the begining of the document...

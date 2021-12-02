@@ -18,8 +18,8 @@ FraudGuard::FraudGuard(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "FraudGuard";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &FraudGuard::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &FraudGuard::replyFinishedRawJson);
     ///
     /// get api key...
     ///
@@ -41,7 +41,7 @@ void FraudGuard::start(){
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case GET_CUSTOM_GEOBLOCK:
             url.setUrl("https://@api.fraudguard.io/geoblock");

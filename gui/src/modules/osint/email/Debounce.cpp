@@ -12,8 +12,8 @@ Debounce::Debounce(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Debounce";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Debounce::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Debounce::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///
@@ -29,7 +29,7 @@ void Debounce::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case ACCOUNT_BALANCE:
             url.setUrl("https://api.debounce.io/v1/balance?api="+m_key);

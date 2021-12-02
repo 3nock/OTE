@@ -12,8 +12,8 @@ Certspotter::Certspotter(ScanArgs *args) : AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "CertSpotter";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Certspotter::replyFinishedSubdomain);
     if(args->outputSSLCert)
@@ -34,7 +34,7 @@ void Certspotter::start(){
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ISSUEANCES:
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&include_subdomains=true&expand=cert&expand=issuer&expand=dns_names");

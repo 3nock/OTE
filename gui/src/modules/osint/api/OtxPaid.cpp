@@ -39,8 +39,8 @@ OtxPaid::OtxPaid(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "otx";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxPaid::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &OtxPaid::replyFinishedRawJson);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
@@ -65,7 +65,7 @@ void OtxPaid::start(){
     request.setRawHeader("X-OTX-API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case INDICATOR_DOMAIN_GENERAL:
             url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/general");

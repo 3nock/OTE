@@ -6,16 +6,24 @@
  *
  */
 
-void Osint::onInfoLog(QString log){
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
+void Osint::onInfoLog(ScanLog log){
+    QString module("<font color=\"green\">"+log.moduleName+"</font>");
+    QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
+    QString count("<font color=\"green\">"+QString::number(log.resultsCount)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+    ui->plainTextEditLogs->appendHtml("[Results Count] :"+count);
+    ui->plainTextEditLogs->appendPlainText("");
 }
 
-void Osint::onErrorLog(QString log){
-    QString fontedLog;
-    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
+void Osint::onErrorLog(ScanLog log){
+    QString message("<font color=\"red\">"+log.message+"</font>");
+    QString module("<font color=\"red\">"+log.moduleName+"</font>");
+    QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
+    ui->plainTextEditLogs->appendPlainText("");
 }
 
 void Osint::onResultSubdomainIp(QString subdomain, QString ip){
@@ -30,10 +38,6 @@ void Osint::onResultSubdomainIp(QString subdomain, QString ip){
 }
 
 void Osint::onResultSubdomain(QString subdomain){
-    result->osint->subdomain->appendRow(new QStandardItem(subdomain));
-    project->addPassiveSubdomain({subdomain});
-    ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
-    /*
     int prevSize = m_subdomainSet.count();
     m_subdomainSet.insert(subdomain);
     if(m_subdomainSet.count() > prevSize && !subdomain.isEmpty()){
@@ -41,7 +45,6 @@ void Osint::onResultSubdomain(QString subdomain){
         project->addPassiveSubdomain({subdomain});
         ui->labelResultsCount->setNum(result->osint->subdomainProxy->rowCount());
     }
-    */
 }
 
 void Osint::onResultMightContainWildcards(QString subdomain){

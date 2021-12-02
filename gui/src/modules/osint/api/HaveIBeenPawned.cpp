@@ -14,8 +14,8 @@ HaveIBeenPawned::HaveIBeenPawned(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "HaveIBeenPawned";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HaveIBeenPawned::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &HaveIBeenPawned::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -32,7 +32,7 @@ void HaveIBeenPawned::start(){
     request.setRawHeader("hibp-api-key", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case BREACHED_ACCOUNT:
             url.setUrl("https://haveibeenpwned.com/api/v3/breachedaccount/"+args->target);

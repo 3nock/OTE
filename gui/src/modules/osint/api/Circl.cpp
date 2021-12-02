@@ -14,8 +14,8 @@ Circl::Circl(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Circl";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedSubdomain);
     if(args->outputIp)
@@ -36,7 +36,7 @@ void Circl::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case IP_2_ASN:
             url.setUrl("https://bgpranking-ng.circl.lu/ipasn_history/asn_meta");

@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
 struct Anubis{
     QString name = "Anubis";

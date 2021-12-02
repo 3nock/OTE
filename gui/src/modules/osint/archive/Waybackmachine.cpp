@@ -18,8 +18,8 @@ Waybackmachine::Waybackmachine(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "WaybackMachine";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedRawJson);
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedUrl);
     if(args->outputSubdomain)
@@ -33,7 +33,7 @@ void Waybackmachine::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case MATCHTYPE_DOMAIN:
             url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&output=json&collapse=urlkey&url="+args->target);

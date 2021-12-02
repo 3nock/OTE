@@ -11,8 +11,8 @@ Host::Host(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Host";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Host::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Host::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -28,7 +28,7 @@ void Host::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case DNS:
             url.setUrl("https://host.io/api/dns/"+args->target+"?token="+m_key);

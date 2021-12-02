@@ -27,6 +27,7 @@
 #define INPUT_SSLCERT 5
 #define INPUT_CIDR 6
 
+
 namespace Ui {
     class Osint;
 }
@@ -43,8 +44,9 @@ class Osint : public AbstractEngine{
 
     public slots:
         void onScanThreadEnded();
-        void onInfoLog(QString log);
-        void onErrorLog(QString log);
+        void onInfoLog(ScanLog log);
+        void onErrorLog(ScanLog log);
+        //...
         void onResultSubdomainIp(QString subdomain, QString ip);
         void onResultSubdomain(QString subdomain);
         void onResultMightContainWildcards(QString subdomain);
@@ -53,7 +55,6 @@ class Osint : public AbstractEngine{
         void onResultUrl(QString url);
         void onResultAsn(QString asnValue, QString asnName);
         void onResultCidr(QString cidr);
-        /* dns */
         void onResultA(QString A);
         void onResultAAAA(QString AAAA);
         void onResultCNAME(QString CNAME);
@@ -112,11 +113,16 @@ class Osint : public AbstractEngine{
         void ResumeScan();
         void startScanThread(AbstractOsintModule *);
         ///
-        ///...
+        /// ...
         ///
         void connectActions();
         void initProfiles();
         void initModules();
+        ///
+        /// ...
+        ///
+        void m_infoLog(QString log);
+        void m_errorLog(QString log);
 };
 
 #endif // OSINT_H

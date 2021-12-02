@@ -10,8 +10,8 @@ ZETAlytics::ZETAlytics(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "ZETAlytics";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedSubdomain);
     ///
@@ -30,7 +30,7 @@ void ZETAlytics::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+args->target+"&token="+m_key);
         request.setUrl(url);
         manager->get(request);

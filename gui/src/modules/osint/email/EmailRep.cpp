@@ -9,8 +9,8 @@ EmailRep::EmailRep(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "EmailRep";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &EmailRep::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &EmailRep::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///
@@ -28,7 +28,7 @@ void EmailRep::start(){
     // request.setRawHeader("User-Agent", userAget);
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case EMAIL_QUERY:
             url.setUrl("https://emailrep.io/"+args->target);

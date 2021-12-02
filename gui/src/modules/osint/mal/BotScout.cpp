@@ -14,8 +14,8 @@ BotScout::BotScout(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "BotScout";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BotScout::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &BotScout::replyFinishedRawJson);
 }
 BotScout::~BotScout(){
     delete manager;
@@ -25,7 +25,7 @@ void BotScout::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ALL:
             url.setUrl("http://botscout.com/test/?all="+args->target);

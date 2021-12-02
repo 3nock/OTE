@@ -15,8 +15,8 @@ BuiltWith::BuiltWith(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "BuiltWith";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BuiltWith::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -32,7 +32,7 @@ void BuiltWith::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case LOOKUP:
             url.setUrl("https://api.builtwith.com/free1/api.json?KEY="+m_key+"&LOOKUP="+args->target);

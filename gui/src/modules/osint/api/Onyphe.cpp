@@ -40,8 +40,8 @@ Onyphe::Onyphe(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Onyphe";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Onyphe::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Onyphe::replyFinishedRawJson);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
@@ -67,7 +67,7 @@ void Onyphe::start(){
     request.setRawHeader("Authorization", "apikey "+m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case USER:
             url.setUrl("https://www.onyphe.io/api/v2/user");

@@ -9,7 +9,7 @@ Crtsh::Crtsh(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Crtsh";
 
-    if(args->info)
+    if(args->outputInfo)
         connect(manager, &MyNetworkAccessManager::finished, this, &Crtsh::replyFinishedInfo);
     if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &Crtsh::replyFinishedSSLCert);

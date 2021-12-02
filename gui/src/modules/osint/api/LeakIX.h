@@ -4,17 +4,17 @@
 #include "../AbstractOsintModule.h"
 
 namespace ModuleInfo {
-    struct LeakIX{
-        QString name = "LeakIX";
-        QString url = "https://leakix.net/";
-        QString url_apiDoc = "https://leakix.net/api-documentation";
-        QString summary = "LeakIX is the first platform combining a search engine indexing public information AND an open reporting platform linked to the results.";
+struct LeakIX{
+    QString name = "LeakIX";
+    QString url = "https://leakix.net/";
+    QString url_apiDoc = "https://leakix.net/api-documentation";
+    QString summary = "LeakIX is the first platform combining a search engine indexing public information AND an open reporting platform linked to the results.";
 
-        QMap<QString, QStringList> flags = {{"Host",
-                                             {PLACEHOLDERTEXT_IP, "All available data on the Host."}}};
+    QMap<QString, QStringList> flags = {{"Host",
+                                         {PLACEHOLDERTEXT_IP, "All available data on the Host."}}};
 
-        QMap<int, QList<int>> input_output = {};
-    };
+    QMap<int, QList<int>> input_output = {};
+};
 }
 
 class LeakIX: public AbstractOsintModule{

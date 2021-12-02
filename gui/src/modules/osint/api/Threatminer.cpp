@@ -20,8 +20,8 @@ Threatminer::Threatminer(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "ThreatMiner";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Threatminer::replyFinishedSubdomain);
     if(args->outputEmail)
@@ -43,7 +43,7 @@ void Threatminer::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption){
         case DOMAIN_WHOIS:
             url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=1");

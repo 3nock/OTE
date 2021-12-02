@@ -5,18 +5,18 @@
 
 
 namespace ModuleInfo {
-    struct SpamHaus{
-        QString name = "SpamHaus";
-        QString url = "https://spamhaus.com/";
-        QString url_apiDoc = "https://docs.spamhaus.com/";
-        QString summary = "Protect and investigate using IP and domain reputation data.";
-        QMap<QString, QStringList> flags = {{"Forward Search",
-                                             {PLACEHOLDERTEXT_DOMAIN, "Forward search..."}},
-                                            {"Reverse Search",
-                                             {PLACEHOLDERTEXT_CIDR, "Reverse search..."}}};
+struct SpamHaus{
+    QString name = "SpamHaus";
+    QString url = "https://spamhaus.com/";
+    QString url_apiDoc = "https://docs.spamhaus.com/";
+    QString summary = "Protect and investigate using IP and domain reputation data.";
+    QMap<QString, QStringList> flags = {{"Forward Search",
+                                         {PLACEHOLDERTEXT_DOMAIN, "Forward search..."}},
+                                        {"Reverse Search",
+                                         {PLACEHOLDERTEXT_CIDR, "Reverse search..."}}};
 
-        QMap<int, QList<int>> input_output = {};
-    };
+    QMap<int, QList<int>> input_output = {};
+};
 }
 
 class SpamHaus: public AbstractOsintModule{

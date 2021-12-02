@@ -26,8 +26,9 @@ class Raw : public AbstractEngine{
 
     public slots:
         void onEnumerationComplete();
-        void onErrorLog(QString log);
-        void onInfoLog(QString log);
+        void onErrorLog(ScanLog log);
+        void onInfoLog(ScanLog log);
+        //...
         void onResults(QByteArray); // for Json results
         void onResultsTxt(QByteArray); // for normal txt results
 
@@ -138,6 +139,9 @@ class Raw : public AbstractEngine{
         int m_resultsCountJson = 0;
         int m_resultsCountTree = 0;
         //...
+        QString m_currentModule;
+        QString m_currentTarget;
+        //...
         void onCopy();
         void onSave();
         void onClear();
@@ -151,6 +155,9 @@ class Raw : public AbstractEngine{
         void treeArray(QJsonArray array, QStandardItem *item);
         //...
         void find(QString, QTextDocument::FindFlags);
+        //...
+        void m_errorLog(QString log);
+        void m_infoLog(QString log);
 };
 
 #endif // Raw_H

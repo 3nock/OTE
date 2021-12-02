@@ -14,8 +14,8 @@ Whoxy::Whoxy(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Whoxy";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Whoxy::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Whoxy::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -31,7 +31,7 @@ void Whoxy::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ACCOUNT_BALANCE_CHECK:
             url.setUrl("http://api.whoxy.com/?key="+m_key+"&account=balance");

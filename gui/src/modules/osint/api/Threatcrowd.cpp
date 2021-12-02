@@ -15,8 +15,8 @@ Threatcrowd::Threatcrowd(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "ThreatCrowd";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedSubdomain);
     if(args->outputIp)
@@ -32,7 +32,7 @@ void Threatcrowd::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case EMAIL:
             url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+args->target);

@@ -17,8 +17,8 @@ FullHunt::FullHunt(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "FullHunt";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &FullHunt::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &FullHunt::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &FullHunt::replyFinishedSubdomain);
     ///
@@ -37,7 +37,7 @@ void FullHunt::start(){
     request.setRawHeader("X-API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case DOMAIN_DETAILS:
             url.setUrl("https://fullhunt.io/api/v1/domain/"+args->target+"/details");

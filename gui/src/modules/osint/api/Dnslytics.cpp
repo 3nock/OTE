@@ -26,8 +26,8 @@ Dnslytics::Dnslytics(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Dnslytics";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomain);
     if(args->outputIp)
@@ -53,7 +53,7 @@ void Dnslytics::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ACCOUNTINFO:
             url.setUrl("https://api.dnslytics.net/v1/accountinfo?apikey="+m_key);

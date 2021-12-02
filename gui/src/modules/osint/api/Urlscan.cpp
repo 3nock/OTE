@@ -12,8 +12,8 @@ Urlscan::Urlscan(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "UrlScan";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedSubdomain);
     if(args->outputAsn)
@@ -31,7 +31,7 @@ void Urlscan::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
         request.setUrl(url);
         manager->get(request);

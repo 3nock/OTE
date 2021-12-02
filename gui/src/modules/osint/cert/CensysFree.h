@@ -5,20 +5,20 @@
 
 
 namespace ModuleInfo {
-    struct CensysFree{
-        QString name = "Censys";
-        QString url = "https://censys.io/";
-        QString url_apiDoc = "https://censys.io/api/v1/docs/";
-        QString summary = "Censys reduces your Internet attack surface by continually discovering unknown assets and helping remediate Internet facing risks";
-        QMap<QString, QStringList> flags = {};
+struct CensysFree{
+    QString name = "Censys";
+    QString url = "https://censys.io/";
+    QString url_apiDoc = "https://censys.io/api/v1/docs/";
+    QString summary = "Censys reduces your Internet attack surface by continually discovering unknown assets and helping remediate Internet facing risks";
+    QMap<QString, QStringList> flags = {};
 
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAIN, OUT_SSLCERT}},
-                                              {IN_IP,
-                                               {OUT_SUBDOMAIN, OUT_SSLCERT}},
-                                              {IN_SSLCERT,
-                                               {OUT_SUBDOMAIN, OUT_SSLCERT}}};
-    };
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_SSLCERT}},
+                                          {IN_IP,
+                                           {OUT_SUBDOMAIN, OUT_SSLCERT}},
+                                          {IN_SSLCERT,
+                                           {OUT_SUBDOMAIN, OUT_SSLCERT}}};
+};
 }
 
 class CensysFree: public AbstractOsintModule{

@@ -9,8 +9,8 @@ LeakIX::LeakIX(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "LeakIX";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &LeakIX::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &LeakIX::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -28,7 +28,7 @@ void LeakIX::start(){
     request.setRawHeader("api-key", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case HOST:
             url.setUrl("https://leakix.net/host/"+args->target);

@@ -13,8 +13,8 @@ CertspotterFree::CertspotterFree(ScanArgs *args) : AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "CertspotterFree";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSubdomain);
     if(args->outputSSLCert)
@@ -28,7 +28,7 @@ void CertspotterFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ISSUEANCES:
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&include_subdomains=true&expand=cert&expand=issuer&expand=dns_names");

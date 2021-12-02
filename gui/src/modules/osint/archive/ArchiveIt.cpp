@@ -8,7 +8,7 @@ ArchiveIt::ArchiveIt(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "ArchiveIt";
 
-    if(args->raw)
+    if(args->outputRaw)
         connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedRawNdjson);
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedUrl);
@@ -23,7 +23,7 @@ void ArchiveIt::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case URL:
             url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+args->target);

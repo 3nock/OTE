@@ -9,8 +9,8 @@ SpamHaus::SpamHaus(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "SpamHaus";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SpamHaus::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &SpamHaus::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///
@@ -28,7 +28,7 @@ void SpamHaus::start(){
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case FORWARD_SEARCH:
             url.setUrl("https://api-pdns.spamhaustech.com/v2/_search/rrset/"+args->target);

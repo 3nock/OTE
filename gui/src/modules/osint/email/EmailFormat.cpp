@@ -11,8 +11,8 @@ EmailFormat::EmailFormat(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "EmailFormat";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &EmailFormat::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &EmailFormat::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///
@@ -30,7 +30,7 @@ void EmailFormat::start(){
     request.setRawHeader("Authorization", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case FORMATS:
             url.setUrl("https://www.email-format.com/api/v2/get_formats?domain="+args->target);

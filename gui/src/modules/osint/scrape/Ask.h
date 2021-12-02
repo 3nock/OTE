@@ -4,15 +4,15 @@
 #include "../AbstractOsintModule.h"
 
 namespace ModuleInfo {
-    struct Ask{
-        QString name = "Ask";
-        QString url = "https://ask.com/";
-        QString url_apiDoc = "";
-        QString summary = "";
-        QMap<QString, QStringList> flags = {};
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAIN}}};
-    };
+struct Ask{
+    QString name = "Ask";
+    QString url = "https://ask.com/";
+    QString url_apiDoc = "";
+    QString summary = "";
+    QMap<QString, QStringList> flags = {};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_URL}}};
+};
 }
 
 class Ask: public AbstractOsintModule{

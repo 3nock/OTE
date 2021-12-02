@@ -9,8 +9,8 @@ Anubis::Anubis(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Anubis";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
 }
@@ -22,7 +22,7 @@ void Anubis::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case SUBDOMAIN:
             url.setUrl("https://jldc.me/anubis/subdomains/"+args->target);

@@ -19,8 +19,8 @@ ZoomEye::ZoomEye(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "ZoomEye";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedRawJson);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
@@ -46,7 +46,7 @@ void ZoomEye::start(){
     request.setRawHeader("API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case HOST_ASN:
             url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+args->target);

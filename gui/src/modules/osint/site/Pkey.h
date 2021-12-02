@@ -5,15 +5,15 @@
 
 
 namespace ModuleInfo {
-    struct Pkey{
-        QString name = "Pkey";
-        QString url = "https://pkey.in/";
-        QString url_apiDoc = "";
-        QString summary = "";
-        QMap<QString, QStringList> flags = {};
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
-    };
+struct Pkey{
+    QString name = "Pkey";
+    QString url = "https://pkey.in/";
+    QString url_apiDoc = "";
+    QString summary = "";
+    QMap<QString, QStringList> flags = {};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
+};
 }
 
 class Pkey: public AbstractOsintModule{

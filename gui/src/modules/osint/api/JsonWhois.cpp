@@ -11,8 +11,8 @@ JsonWhois::JsonWhois(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "JsonWhois";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &JsonWhois::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &JsonWhois::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -30,7 +30,7 @@ void JsonWhois::start(){
     request.setRawHeader("Authorization", "Token token="+m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case SCREENSHOT:
             url.setUrl("https://jsonwhois/api/v1/screenshot?domain="+args->target);

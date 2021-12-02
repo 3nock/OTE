@@ -20,8 +20,8 @@ BinaryEdge::BinaryEdge(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "BinaryEdge";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedRawJson);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
@@ -45,7 +45,7 @@ void BinaryEdge::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case DOMAIN_DNS:
             url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+args->target);

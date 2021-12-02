@@ -16,8 +16,8 @@ Afrinic::Afrinic(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Afrinic";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Afrinic::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Afrinic::replyFinishedRawJson);
 }
 Afrinic::~Afrinic(){
     delete manager;
@@ -27,7 +27,7 @@ void Afrinic::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case AS_NUMBERS:
             url.setUrl("https://rdap.afrinic.net/rdap/autnum/"+args->target);

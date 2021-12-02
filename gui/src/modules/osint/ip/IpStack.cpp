@@ -13,8 +13,8 @@ IpStack::IpStack(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "IpStack";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpStack::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpStack::replyFinishedRawJson);
     ///
     /// get api key...
     ///
@@ -30,7 +30,7 @@ void IpStack::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case STANDARD_IP_LOOKUP:
             url.setUrl("http://api.ipstack.com/"+args->target+"?access_key="+m_key);

@@ -22,8 +22,8 @@ Spyse::Spyse(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Spyse";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedSubdomain);
     if(args->outputEmail)
@@ -54,7 +54,7 @@ void Spyse::start(){
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case DOMAINS:
             url.setUrl("https://api.spyse.com/v4/data/domain/"+args->target);

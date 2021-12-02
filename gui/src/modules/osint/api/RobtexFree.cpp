@@ -14,8 +14,8 @@ RobtexFree::RobtexFree(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "RobtexFree";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexFree::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexFree::replyFinishedRawJson);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &RobtexFree::replyFinishedIp);
     if(args->outputSubdomain)
@@ -34,7 +34,7 @@ void RobtexFree::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ASQUERY:
             url.setUrl("https://freeapi.robtex.com/asquery/"+args->target);

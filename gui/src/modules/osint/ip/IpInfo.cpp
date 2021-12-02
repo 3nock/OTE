@@ -17,9 +17,9 @@ IpInfo::IpInfo(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "IpInfo";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedRaw);
-    if(args->info)
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedRawJson);
+    if(args->outputInfo)
         connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedInfo);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
@@ -39,7 +39,7 @@ void IpInfo::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case IP:
             url.setUrl("https://ipinfo.io/"+args->target+"/json?token="+m_key);
@@ -60,7 +60,7 @@ void IpInfo::start(){
         return;
     }
 
-    if(args->info){
+    if(args->outputInfo){
         url.setUrl("https://ipinfo.io/"+args->target+"/json?token="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -107,6 +107,8 @@ void IpInfo::replyFinishedInfo(QNetworkReply *reply){
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
+
+    /*
 
     args->ipModel->info_ip->setText(mainObj["ip"].toString());
     args->ipModel->info_city->setText(mainObj["city"].toString());
@@ -167,6 +169,7 @@ void IpInfo::replyFinishedInfo(QNetworkReply *reply){
             args->ipModel->domains->appendRow(new QStandardItem(value.toString()));
         }
     }
+    */
 
     emit quitThread();
 }

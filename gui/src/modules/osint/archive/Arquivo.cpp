@@ -16,8 +16,8 @@ Arquivo::Arquivo(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Arquivo";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Arquivo::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Arquivo::replyFinishedRawJson);
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &Arquivo::replyFinishedUrl);
     if(args->outputSubdomain)
@@ -31,7 +31,7 @@ void Arquivo::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case CDX_SERVER:
             url.setUrl("https://arquivo.pt/wayback/cdx?url=*."+args->target+"&output=json");

@@ -21,8 +21,8 @@ WebResolver::WebResolver(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "WebResolver";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &WebResolver::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &WebResolver::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomain);
     if(args->outputIp)
@@ -44,7 +44,7 @@ void WebResolver::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case GEOIP:
             url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=geoip&string="+args->target);

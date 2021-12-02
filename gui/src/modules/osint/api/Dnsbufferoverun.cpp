@@ -10,8 +10,8 @@ Dnsbufferoverun::Dnsbufferoverun(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "DnsBufferoverRun";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
@@ -27,7 +27,7 @@ void Dnsbufferoverun::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         url.setUrl("https://dns.bufferover.run/dns?q="+args->target);
     }
     if(args->inputDomain){

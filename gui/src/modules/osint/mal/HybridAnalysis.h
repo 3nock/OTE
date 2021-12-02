@@ -5,17 +5,17 @@
 
 
 namespace ModuleInfo {
-    struct HybridAnalysis{
-        QString name = "HybridAnalysis";
-        QString url = "https://www.hybrid-analysis.com/";
-        QString url_apiDoc = "https://www.hybrid-analysis.com/docs/api/v2";
-        QString summary = "Detects and analyzes unknown threats using a unique Hybrid Analysis technology.";
+struct HybridAnalysis{
+    QString name = "HybridAnalysis";
+    QString url = "https://www.hybrid-analysis.com/";
+    QString url_apiDoc = "https://www.hybrid-analysis.com/docs/api/v2";
+    QString summary = "Detects and analyzes unknown threats using a unique Hybrid Analysis technology.";
 
-        QMap<QString, QStringList> flags = {{"Url Quick-Scan",
-                                             {PLACEHOLDERTEXT_URL, "Analyses Url"}}};
+    QMap<QString, QStringList> flags = {{"Url Quick-Scan",
+                                         {PLACEHOLDERTEXT_URL, "Analyses Url"}}};
 
-        QMap<int, QList<int>> input_output = {};
-    };
+    QMap<int, QList<int>> input_output = {};
+};
 }
 
 class HybridAnalysis: public AbstractOsintModule{

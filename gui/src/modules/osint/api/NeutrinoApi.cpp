@@ -18,8 +18,8 @@ NeutrinoApi::NeutrinoApi(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "NeutrinoApi";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NeutrinoApi::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &NeutrinoApi::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -36,7 +36,7 @@ void NeutrinoApi::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case EMAIL_VALIDATE:
             url.setUrl("https://neutrinoapi.net/email-validate?email="+args->target+"&user-id="+m_userId+"&api-key="+m_key);

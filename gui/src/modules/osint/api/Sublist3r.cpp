@@ -8,8 +8,8 @@ Sublist3r::Sublist3r(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Sublist3r";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinishedSubdomain);
 }
@@ -21,7 +21,7 @@ void Sublist3r::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         url.setUrl("https://api.sublist3r.com/search.php?domain="+args->target);
         request.setUrl(url);
         manager->get(request);

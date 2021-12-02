@@ -5,18 +5,18 @@
 
 
 namespace ModuleInfo {
-    struct Projectdiscovery{
-        QString name = "Projectdiscovery";
-        QString url = "https://chaos.projectdiscovery.io/";
-        QString url_apiDoc = "";
-        QString summary = "We actively collect and maintain internet-wide assets' data, \n"
-                          "this project is meant to enhance research and analyse changes around DNS for better insights";
+struct Projectdiscovery{
+    QString name = "Projectdiscovery";
+    QString url = "https://chaos.projectdiscovery.io/";
+    QString url_apiDoc = "";
+    QString summary = "We actively collect and maintain internet-wide assets' data, \n"
+                      "this project is meant to enhance research and analyse changes around DNS for better insights";
 
-        QMap<QString, QStringList> flags = {{"subdomain",
-                                             {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains Associated with the domain"}}};
+    QMap<QString, QStringList> flags = {{"subdomain",
+                                         {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains Associated with the domain"}}};
 
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN}}};
-    };
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN}}};
+};
 }
 
 class Projectdiscovery: public AbstractOsintModule{

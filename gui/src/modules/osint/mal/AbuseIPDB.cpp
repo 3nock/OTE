@@ -14,8 +14,8 @@ AbuseIPDB::AbuseIPDB(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "AbuseIPDB";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &AbuseIPDB::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &AbuseIPDB::replyFinishedRawJson);
     ///
     /// get api key...
     ///
@@ -33,7 +33,7 @@ void AbuseIPDB::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case BLACKLIST_ENDPOINT:
             url.setUrl("https://api.abuseipdb.com/api/v2/blacklist");

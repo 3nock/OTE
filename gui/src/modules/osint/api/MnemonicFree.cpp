@@ -19,12 +19,12 @@ MnemonicFree::MnemonicFree(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Mnemonic";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedRawJson);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedRaw);
+        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedSubdomain);
 }
 MnemonicFree::~MnemonicFree(){
     delete manager;
@@ -34,7 +34,7 @@ void MnemonicFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case IP_ANY_RECORD:
             url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?limit=999");

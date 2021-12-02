@@ -19,8 +19,8 @@ HackerTargetFree::HackerTargetFree(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "HackerTarget";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedRawTxt);
     if(args->outputSubdomainIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
@@ -38,7 +38,7 @@ void HackerTargetFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case ASLOOKUP:
             url.setUrl("https://api.hackertarget.com/aslookup/?q="+args->target);

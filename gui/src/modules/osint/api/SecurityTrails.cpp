@@ -30,8 +30,8 @@ SecurityTrails::SecurityTrails(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "SecurityTrails";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedSubdomain);
     if(args->outputIp)
@@ -53,7 +53,7 @@ void SecurityTrails::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case HISTORY_DNS:
             url.setUrl("https://api.securitytrails.com/v1/history/"+args->target+"/dns/any");

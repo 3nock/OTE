@@ -29,8 +29,8 @@ ViewDns::ViewDns(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "ViewDns";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedSubdomain);
     if(args->outputIp)
@@ -52,7 +52,7 @@ void ViewDns::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ABUSE_CONTACT_LOOKUP:
             url.setUrl("https://api.viewdns.info/abuselookup/?domain="+args->target+"&apikey="+m_key+"&output=json");

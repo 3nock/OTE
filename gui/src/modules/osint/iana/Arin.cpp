@@ -33,8 +33,8 @@ Arin::Arin(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Arin";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Arin::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Arin::replyFinishedRawJson);
 }
 Arin::~Arin(){
     delete manager;
@@ -45,7 +45,7 @@ void Arin::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case REGISTRY_IP:
             url.setUrl("https://rdap.arin.net/registry/ip/"+args->target);

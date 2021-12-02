@@ -4,15 +4,15 @@
 #include "../AbstractOsintModule.h"
 
 namespace ModuleInfo {
-    struct DuckDuckGo{
-        QString name = "DuckDuckGo";
-        QString url = "https://duckduckgo.com/";
-        QString url_apiDoc = "";
-        QString summary = "";
-        QMap<QString, QStringList> flags = {};
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAIN}}};
-    };
+struct DuckDuckGo{
+    QString name = "DuckDuckGo";
+    QString url = "https://duckduckgo.com/";
+    QString url_apiDoc = "";
+    QString summary = "";
+    QMap<QString, QStringList> flags = {};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_URL}}};
+};
 }
 
 class DuckDuckGo: public AbstractOsintModule{
@@ -23,11 +23,10 @@ class DuckDuckGo: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedSubdomain(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedUrl(QNetworkReply *reply) override;
 
     private:
         int m_page = 0;
-        void getLinks(GumboNode *node);
-        GumboNode *getBody(GumboNode *node);
 };
 #endif // DUCKDUCKGO_H

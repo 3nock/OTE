@@ -2,23 +2,23 @@
 #define CRTSH_H
 
 #include "../AbstractOsintModule.h"
-#include "src/models/certmodel.h"
+#include "src/models/CertModel.h"
 
 
 namespace ModuleInfo {
-    struct Crtsh{
-        QString name = "Crtsh";
-        QString url = "https://crt.sh";
-        QString url_apiDoc = "https://crt.sh";
-        QString summary = "crt.sh";
-        QMap<QString, QStringList> flags = {{"domain",
-                                             {PLACEHOLDERTEXT_DOMAIN, "Search by Domain"}},
-                                            {"ssl cert",
-                                             {PLACEHOLDERTEXT_SSLCERT, "Search by ssl certificate: sha1/sha256/id"}}};
+struct Crtsh{
+    QString name = "Crtsh";
+    QString url = "https://crt.sh";
+    QString url_apiDoc = "https://crt.sh";
+    QString summary = "crt.sh";
+    QMap<QString, QStringList> flags = {{"domain",
+                                         {PLACEHOLDERTEXT_DOMAIN, "Search by Domain"}},
+                                        {"ssl cert",
+                                         {PLACEHOLDERTEXT_SSLCERT, "Search by ssl certificate: sha1/sha256/id"}}};
 
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAIN, OUT_SSLCERT}}};
-    };
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_SSLCERT}}};
+};
 }
 
 class Crtsh: public AbstractOsintModule{

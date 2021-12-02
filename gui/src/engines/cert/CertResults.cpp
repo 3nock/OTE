@@ -2,7 +2,7 @@
 #include "ui_Cert.h"
 //...
 #include <QSslKey>
-#include "src/models/certmodel.h"
+#include "src/models/CertModel.h"
 
 /*
  *

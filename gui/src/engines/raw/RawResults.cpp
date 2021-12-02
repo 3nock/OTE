@@ -11,16 +11,24 @@
  *
  */
 
-void Raw::onErrorLog(QString log){
-    QString fontedLog;
-    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
-    QString logTime = QDateTime::currentDateTime().toString("[hh:mm]  ");
-    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
+void Raw::onInfoLog(ScanLog log){
+    QString module("<font color=\"green\">"+log.moduleName+"</font>");
+    QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
+    QString count("<font color=\"green\">"+QString::number(log.resultsCount)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+    ui->plainTextEditLogs->appendHtml("[Results Count] :"+count);
+    ui->plainTextEditLogs->appendPlainText("");
 }
 
-void Raw::onInfoLog(QString log){
-    QString logTime = QDateTime::currentDateTime().toString("[hh:mm]  ");
-    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
+void Raw::onErrorLog(ScanLog log){
+    QString message("<font color=\"red\">"+log.message+"</font>");
+    QString module("<font color=\"red\">"+log.moduleName+"</font>");
+    QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
+    ui->plainTextEditLogs->appendPlainText("");
 }
 
 void Raw::onResults(QByteArray reply){
@@ -49,7 +57,7 @@ void Raw::setJsonTree(QJsonDocument &results){
     if(results.isNull() || results.isEmpty())
         return;
 
-    QStandardItem *item = new QStandardItem(m_scanArgs->module+"("+m_scanArgs->target+")");
+    QStandardItem *item = new QStandardItem(m_currentModule+"("+m_currentTarget+")");
 
     QFont font("Segoe UI", 9, QFont::Bold);
     item->setFont(font);

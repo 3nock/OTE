@@ -12,8 +12,8 @@ IpGeoLocation::IpGeoLocation(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "IpGeoLocation";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpGeoLocation::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpGeoLocation::replyFinishedRawJson);
     ///
     /// get api key...
     ///
@@ -29,7 +29,7 @@ void IpGeoLocation::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case IP_GEOLOCATION:
             url.setUrl("https://api.ipgeolocation.io/ipgeo?apiKey="+m_key+"&ip="+args->target);

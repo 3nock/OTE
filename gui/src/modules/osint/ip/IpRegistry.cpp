@@ -13,8 +13,8 @@ IpRegistry::IpRegistry(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "IpRegistry";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpRegistry::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpRegistry::replyFinishedRawJson);
     ///
     /// get api key...
     ///
@@ -30,7 +30,7 @@ void IpRegistry::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case SINGLE_IP_LOOKUP:
             url.setUrl("https://api.ipregistry.co/"+args->target+"?key="+m_key);

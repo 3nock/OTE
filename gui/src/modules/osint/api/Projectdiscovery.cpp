@@ -12,8 +12,8 @@ Projectdiscovery::Projectdiscovery(ScanArgs *args):
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "ProjectDiscovery";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedSubdomain);
     ///
@@ -32,7 +32,7 @@ void Projectdiscovery::start(){
     request.setRawHeader("Authorization", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case SUBDOMAIN:
             url.setUrl("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");

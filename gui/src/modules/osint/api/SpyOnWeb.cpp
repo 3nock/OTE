@@ -20,8 +20,8 @@ SpyOnWeb::SpyOnWeb(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "SpyOnWeb";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedRawJson);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedIp);
     if(args->outputSubdomain)
@@ -43,7 +43,7 @@ void SpyOnWeb::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case DOMAIN_API:
             url.setUrl("https://api.spyonweb.com/v1/domain/"+args->target+"?access_token="+m_key);

@@ -11,8 +11,8 @@ Github::Github(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Github";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinishedSubdomain);
     ///
@@ -32,7 +32,7 @@ void Github::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case CODE:
             url.setUrl("https://api.github.com/search/code?q="+args->target+"&type=Code&page=1&per_page=100");

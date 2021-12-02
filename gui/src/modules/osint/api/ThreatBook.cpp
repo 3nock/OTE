@@ -17,8 +17,8 @@ ThreatBook::ThreatBook(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "ThreatBook";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ThreatBook::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &ThreatBook::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &ThreatBook::replyFinishedSubdomain);
     if(args->outputAsn)
@@ -41,7 +41,7 @@ void ThreatBook::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case SUBDOMAINS:
             url.setUrl("https://api.threatbook.cn/v3/domain/sub_domains?apikey="+m_key+"&resource="+args->target);

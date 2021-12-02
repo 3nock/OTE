@@ -1,11 +1,14 @@
 #include "Bing.h"
+#include <QStack>
 
 
-Bing::Bing(ScanArgs *args):
-    AbstractOsintModule(args)
+Bing::Bing(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
-    connect(manager, &MyNetworkAccessManager::finished, this, &Bing::replyFinishedSubdomain);
+    log.moduleName = "Bing";
+
+    if(args->outputSubdomain)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bing::replyFinishedSubdomain);
 }
 Bing::~Bing(){
     delete manager;
@@ -23,54 +26,87 @@ void Bing::start(){
 }
 
 void Bing::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error() == QNetworkReply::NoError)
-    {
-        GumboOutput *output = gumbo_parse(reply->readAll());
-        GumboNode *body = getBody(output->root);
-        if(body != nullptr)
-            getLinks(body);
-        gumbo_destroy_output(&kGumboDefaultOptions, output);
-    }
-    else{
-        emit errorLog(reply->errorString());
-    }
-    reply->deleteLater();
-    activeRequests--;
-    if(activeRequests == 0)
-        emit quitThread();
-}
-
-void Bing::getLinks(GumboNode *node){
-    if(node->type != GUMBO_NODE_ELEMENT || node->v.element.tag == GUMBO_TAG_SCRIPT)
+    if(reply->error()){
+        this->onError(reply);
         return;
+    }
 
-    if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
     {
-        GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-        QString name = QString::fromUtf8(a->name);
-        QString value = QString::fromUtf8(a->value);
-        if(name == "class" && value == "PartialSearchResults-item-url")
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT)
+            continue;
+
+        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
         {
-            GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-            if(child->type == GUMBO_NODE_TEXT){
-                QString item = QString::fromUtf8(child->v.text.text);
-                item = item.split("/")[0];
-                emit subdomain(item);
+            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            QString name = QString::fromUtf8(a->name);
+            QString value = QString::fromUtf8(a->value);
+            if(name == "class" && value == "PartialSearchResults-item-url")
+            {
+                GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                if(child->type == GUMBO_NODE_TEXT){
+                    QString item = QString::fromUtf8(child->v.text.text);
+                    item = item.split("/")[0];
+                    emit subdomain(item);
+                    log.resultsCount++;
+                }
             }
         }
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
     }
 
-    GumboVector *children = &node->v.element.children;
-    for(unsigned int i = 0; i < children->length; i++)
-        getLinks(static_cast<GumboNode*>(children->data[i]));
-    return;
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
 }
 
-GumboNode *Bing::getBody(GumboNode *node){
-    for(unsigned int i = 0; i < node->v.element.children.length; i++){
-        GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[i]);
-        if(child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_BODY)
-            return child;
+void Bing::replyFinishedUrl(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
     }
-    return nullptr;
+
+    QStack<GumboNode*> nodes;
+    GumboOutput *output = gumbo_parse(reply->readAll());
+    nodes.push(this->getBody(output->root));
+
+    GumboNode *node;
+    while(!nodes.isEmpty())
+    {
+        node = nodes.pop();
+        if(node->type != GUMBO_NODE_ELEMENT)
+            continue;
+
+        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
+        {
+            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            QString name = QString::fromUtf8(a->name);
+            QString value = QString::fromUtf8(a->value);
+            if(name == "class" && value == "PartialSearchResults-item-url")
+            {
+                GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                if(child->type == GUMBO_NODE_TEXT){
+                    QString item = QString::fromUtf8(child->v.text.text);
+                    item = item.split("/")[0];
+                    emit subdomain(item);
+                    log.resultsCount++;
+                }
+            }
+        }
+
+        GumboVector *children = &node->v.element.children;
+        for(unsigned int i = 0; i < children->length; i++)
+            nodes.push(static_cast<GumboNode*>(children->data[i]));
+    }
+
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    end(reply);
 }

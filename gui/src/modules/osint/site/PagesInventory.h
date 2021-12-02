@@ -5,15 +5,15 @@
 
 
 namespace ModuleInfo {
-    struct PagesInventory{
-        QString name = "PagesInventory";
-        QString url = "https://pagesinventory.com/";
-        QString url_apiDoc = "";
-        QString summary = "";
-        QMap<QString, QStringList> flags = {};
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
-    };
+struct PagesInventory{
+    QString name = "PagesInventory";
+    QString url = "https://pagesinventory.com/";
+    QString url_apiDoc = "";
+    QString summary = "";
+    QMap<QString, QStringList> flags = {};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
+};
 }
 
 class PagesInventory: public AbstractOsintModule{

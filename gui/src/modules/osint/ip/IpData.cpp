@@ -15,8 +15,8 @@ IpData::IpData(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "IpData";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpData::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpData::replyFinishedRawJson);
     ///
     /// get api key...
     ///
@@ -32,7 +32,7 @@ void IpData::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ASN_DATA:
             url.setUrl("https://api.ipdata.co/"+args->target+"/asn?api-key="+m_key);

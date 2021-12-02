@@ -23,8 +23,8 @@ NetworksDB::NetworksDB(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "NetworksDB";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomain);
     if(args->outputIp)
@@ -49,7 +49,7 @@ void NetworksDB::start(){
     request.setRawHeader("X-Api-Key", m_key.toUtf8());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case AS_INFO:
             url.setUrl("https://networksdb.io/api/asn-info?asn="+args->target);

@@ -62,7 +62,7 @@ void CertTool::on_buttonAnalyze_clicked(){
     {
         /* acquire scan arguments */
         m_scanArgs->target = ui->lineEditTarget->text();
-        m_scanArgs->info = true;
+        m_scanArgs->outputInfo = true;
 
         /* enumeration module */
         switch (ui->comboBoxOption->currentIndex()) {
@@ -72,8 +72,8 @@ void CertTool::on_buttonAnalyze_clicked(){
             crtsh->Enumerator(cThread);
             crtsh->moveToThread(cThread);
             connect(crtsh, &Crtsh::rawCert, this, &CertTool::onRawCert);
-            connect(crtsh, &Crtsh::errorLog, this, &CertTool::onErrorLog);
-            connect(crtsh, &Crtsh::infoLog, this, &CertTool::onInfoLog);
+            //connect(crtsh, &Crtsh::errorLog, this, &CertTool::onErrorLog);
+            //connect(crtsh, &Crtsh::infoLog, this, &CertTool::onInfoLog);
             connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
             connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);
             connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

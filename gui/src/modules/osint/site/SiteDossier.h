@@ -5,15 +5,15 @@
 
 
 namespace ModuleInfo {
-    struct SiteDossier{
-        QString name = "SiteDossier";
-        QString url = "https://sitedossier.com/";
-        QString url_apiDoc = "";
-        QString summary = "";
-        QMap<QString, QStringList> flags = {};
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAIN}}};
-    };
+struct SiteDossier{
+    QString name = "SiteDossier";
+    QString url = "https://sitedossier.com/";
+    QString url_apiDoc = "";
+    QString summary = "";
+    QMap<QString, QStringList> flags = {};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN}}};
+};
 }
 
 class SiteDossier: public AbstractOsintModule{

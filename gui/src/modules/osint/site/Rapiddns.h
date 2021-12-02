@@ -5,19 +5,19 @@
 
 
 namespace ModuleInfo {
-    struct Rapiddns{
-        QString name = "Rapiddns";
-        QString url = "https://rapiddns.io/";
-        QString url_apiDoc = "";
-        QString summary = "RapidDNS is a dns query tool which make querying subdomains or sites of a same ip easy!";
-        QMap<QString, QStringList> flags = {};
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
-                                              {IN_IP,
-                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
-                                              {IN_CIDR,
-                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
-    };
+struct Rapiddns{
+    QString name = "Rapiddns";
+    QString url = "https://rapiddns.io/";
+    QString url_apiDoc = "";
+    QString summary = "RapidDNS is a dns query tool which make querying subdomains or sites of a same ip easy!";
+    QMap<QString, QStringList> flags = {};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                          {IN_IP,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                          {IN_CIDR,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
+};
 }
 
 class Rapiddns: public AbstractOsintModule{

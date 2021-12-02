@@ -15,8 +15,8 @@ RobtexPaid::RobtexPaid(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "RobtexPaid";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedRawJson);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedIp);
     if(args->outputSubdomain)
@@ -41,7 +41,7 @@ void RobtexPaid::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ASQUERY:
             url.setUrl("https://proapi.robtex.com/asquery/"+args->target+"?key="+m_key);

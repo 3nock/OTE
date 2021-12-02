@@ -12,8 +12,8 @@ Omnisint::Omnisint(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Omnisint";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Omnisint::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Omnisint::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Omnisint::replyFinishedSubdomain);
 }
@@ -25,7 +25,7 @@ void Omnisint::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case ALL:
             url.setUrl("https://sonar.omnisint.io/all/"+args->target);

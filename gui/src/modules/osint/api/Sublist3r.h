@@ -5,16 +5,16 @@
 
 
 namespace ModuleInfo {
-    struct Sublist3r{
-        QString name = "Sublist3r";
-        QString url = "https://api.sublist3r.com/";
-        QString url_apiDoc = "";
-        QString summary = "Sublist3r";
-        QMap<QString, QStringList> flags = {{"subdomains",
-                                             {PLACEHOLDERTEXT_DOMAIN, "Returns list of all available subdomains"}}};
+struct Sublist3r{
+    QString name = "Sublist3r";
+    QString url = "https://api.sublist3r.com/";
+    QString url_apiDoc = "";
+    QString summary = "Sublist3r";
+    QMap<QString, QStringList> flags = {{"subdomains",
+                                         {PLACEHOLDERTEXT_DOMAIN, "Returns list of all available subdomains"}}};
 
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN}}};
-    };
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN}}};
+};
 }
 
 class Sublist3r: public AbstractOsintModule{

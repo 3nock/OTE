@@ -27,8 +27,8 @@ Shodan::Shodan(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Shodan";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomain);
     if(args->outputIp)
@@ -52,7 +52,7 @@ void Shodan::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption){
         case HOST_IP:
             url.setUrl("https://api.shodan.io/shodan/host/"+args->target+"?key="+m_key);
@@ -116,11 +116,6 @@ void Shodan::replyFinishedSubdomainIp(QNetworkReply *reply){
         this->onError(reply);
         return;
     }
-    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200){
-        emit errorLog("Error occurred!");
-        end(reply);
-        return;
-    }
 
     int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
@@ -144,11 +139,6 @@ void Shodan::replyFinishedSubdomainIp(QNetworkReply *reply){
 void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
-        return;
-    }
-    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200){
-        emit errorLog("Error occurred!");
-        end(reply);
         return;
     }
 
@@ -203,11 +193,6 @@ void Shodan::replyFinishedIp(QNetworkReply *reply){
         this->onError(reply);
         return;
     }
-    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200){
-        emit errorLog("Error occurred!");
-        end(reply);
-        return;
-    }
 
     int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
@@ -235,11 +220,6 @@ void Shodan::replyFinishedIp(QNetworkReply *reply){
 void Shodan::replyFinishedAsn(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
-        return;
-    }
-    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200){
-        emit errorLog("Error occurred!");
-        end(reply);
         return;
     }
 

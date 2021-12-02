@@ -39,8 +39,8 @@ C99::C99(ScanArgs *args):
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "C99";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &C99::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &C99::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
     ///
@@ -58,7 +58,7 @@ void C99::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ALEXA_RANK:
             url.setUrl("https://api.c99.nl/alexarank?key="+m_key+"&url="+args->target+"&json");

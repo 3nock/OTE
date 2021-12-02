@@ -15,8 +15,8 @@ IpQualityScore::IpQualityScore(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "IpQualityScore";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRawJson);
     ///
     /// get api key...
     ///
@@ -34,7 +34,7 @@ void IpQualityScore::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case EMAIL_VALIDATION:
             url.setUrl("https://ipqualityscore.com/api/json/email/"+m_key+"/"+args->target);

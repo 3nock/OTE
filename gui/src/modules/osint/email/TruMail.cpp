@@ -8,8 +8,8 @@ TruMail::TruMail(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "TruMail";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &TruMail::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &TruMail::replyFinishedRawJson);
 }
 TruMail::~TruMail(){
     delete manager;
@@ -19,7 +19,7 @@ void TruMail::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case EMAIL:
             url.setUrl("https://api.trumail.io/v2/lookups/json?email="+args->target);

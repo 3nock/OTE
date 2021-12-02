@@ -4,14 +4,14 @@
 #include "../AbstractOsintModule.h"
 
 namespace ModuleInfo {
-    struct ZETAlytics{
-        QString name = "ZETAlytics";
-        QString url = "https://zetalytics.com/";
-        QString url_apiDoc = "";
-        QString summary = "https://zetalytics.com/";
-        QMap<QString, QStringList> flags = {};
-        QMap<int, QList<int>> input_output = {};
-    };
+struct ZETAlytics{
+    QString name = "ZETAlytics";
+    QString url = "https://zetalytics.com/";
+    QString url_apiDoc = "";
+    QString summary = "https://zetalytics.com/";
+    QMap<QString, QStringList> flags = {};
+    QMap<int, QList<int>> input_output = {};
+};
 }
 
 class ZETAlytics: public AbstractOsintModule{

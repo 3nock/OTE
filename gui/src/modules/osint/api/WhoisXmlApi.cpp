@@ -32,8 +32,8 @@ WhoisXmlApi::WhoisXmlApi(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "WhoisXmlApi";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedSubdomain);
     if(args->outputIp)
@@ -58,7 +58,7 @@ void WhoisXmlApi::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption){
         case WHOIS:
             url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&domainName="+args->target);

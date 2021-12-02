@@ -15,7 +15,7 @@ UKWebArchive::UKWebArchive(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "UKWebArchive";
 
-    if(args->raw)
+    if(args->outputRaw)
         connect(manager, &MyNetworkAccessManager::finished, this, &UKWebArchive::replyFinishedRawNdjson);
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &UKWebArchive::replyFinishedUrl);
@@ -30,7 +30,7 @@ void UKWebArchive::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case URL:
             url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+args->target);

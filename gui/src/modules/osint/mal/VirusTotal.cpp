@@ -31,8 +31,8 @@ VirusTotal::VirusTotal(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "VirusTotal";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedRawJson);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &VirusTotal::replyFinishedIp);
     if(args->outputUrl)
@@ -56,7 +56,7 @@ void VirusTotal::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case DOMAIN_HISTORICAL_WHOIS:
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+args->target+"/historical_whois");

@@ -18,8 +18,8 @@ Snov::Snov(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Snov";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Snov::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Snov::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///
@@ -35,7 +35,7 @@ void Snov::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case CHECK_USER_BALANCE:
         {

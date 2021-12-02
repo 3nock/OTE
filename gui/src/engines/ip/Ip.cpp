@@ -4,6 +4,11 @@
 #include <QDateTime>
 #include <QClipboard>
 
+
+/*
+ * check if ip is active for https/ftp/ssh
+ */
+
 Ip::Ip(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
     AbstractEngine(parent, resultsModel, project, status),
     ui(new Ui::Ip),

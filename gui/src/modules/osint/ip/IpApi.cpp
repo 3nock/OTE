@@ -16,9 +16,9 @@ IpApi::IpApi(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "IpApi";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinishedRaw);
-    if(args->info)
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinishedRawJson);
+    if(args->outputInfo)
         connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinishedInfo);
     ///
     /// get api key...
@@ -35,7 +35,7 @@ void IpApi::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case STANDARD_LOOKUP:
             url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
@@ -53,7 +53,7 @@ void IpApi::start(){
         return;
     }
 
-    if(args->info){
+    if(args->outputInfo){
         url.setUrl("http://api.ipapi.com/api/"+args->target+"?access_key="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -70,6 +70,7 @@ void IpApi::replyFinishedInfo(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
+    /*
     args->ipModel->info_ip->setText(mainObj["ip"].toString());
     args->ipModel->info_type->setText(mainObj["type"].toString());
     args->ipModel->info_host->setText(mainObj["hostname"].toString());
@@ -84,9 +85,6 @@ void IpApi::replyFinishedInfo(QNetworkReply *reply){
     QString latitude = QString::number(mainObj["latitude"].toDouble());
     QString longitude = QString::number(mainObj["longitude"].toDouble());
     args->ipModel->info_geoLocation->setText(latitude+","+longitude);
-
-    /* for paid subscription...
-
 
     ///
     /// for timezone...

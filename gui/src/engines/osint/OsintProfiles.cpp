@@ -345,21 +345,6 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleGithub->setChecked(false);
     }
-    if(settings.value(OSINT_CLOUDFLARE).toString() == TRUE){
-        ui->moduleCloudflare->setChecked(true);
-    }else{
-        ui->moduleCloudflare->setChecked(false);
-    }
-    if(settings.value(OSINT_INTELX).toString() == TRUE){
-        ui->moduleIntelx->setChecked(true);
-    }else{
-        ui->moduleIntelx->setChecked(false);
-    }
-    if(settings.value(OSINT_GOOGLE).toString() == TRUE){
-        ui->moduleGoogle->setChecked(true);
-    }else{
-        ui->moduleGoogle->setChecked(false);
-    }
     if(settings.value(OSINT_DOGPILE).toString() == TRUE){
         ui->moduleDogpile->setChecked(true);
     }else{
@@ -404,11 +389,6 @@ void Osint::on_buttonLoadProfile_clicked(){
         ui->moduleUrlscan->setChecked(true);
     }else{
         ui->moduleUrlscan->setChecked(false);
-    }
-    if(settings.value(OSINT_PENTESTTOOLS).toString() == TRUE){
-        ui->modulePentesttools->setChecked(true);
-    }else{
-        ui->modulePentesttools->setChecked(false);
     }
     settings.endGroup();
 }
@@ -759,20 +739,10 @@ void Osint::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_EXALEAD, FALSE);
     }
-    if(ui->moduleIntelx->isChecked()){
-        settings.setValue(OSINT_INTELX, TRUE);
-    }else{
-        settings.setValue(OSINT_INTELX, FALSE);
-    }
     if(ui->moduleTrello->isChecked()){
         settings.setValue(OSINT_TRELLO, TRUE);
     }else{
         settings.setValue(OSINT_TRELLO, FALSE);
-    }
-    if(ui->moduleCloudflare->isChecked()){
-        settings.setValue(OSINT_CLOUDFLARE, TRUE);
-    }else{
-        settings.setValue(OSINT_CLOUDFLARE, FALSE);
     }
     if(ui->moduleDnsbufferoverrun->isChecked()){
         settings.setValue(OSINT_DNSBUFFEROVERRUN, TRUE);
@@ -794,11 +764,6 @@ void Osint::on_buttonCreateProfile_clicked(){
     }else{
         settings.setValue(OSINT_BING, FALSE);
     }
-    if(ui->moduleGoogle->isChecked()){
-        settings.setValue(OSINT_GOOGLE, TRUE);
-    }else{
-        settings.setValue(OSINT_GOOGLE, FALSE);
-    }
     if(ui->moduleYahoo->isChecked()){
         settings.setValue(OSINT_YAHOO, TRUE);
     }else{
@@ -808,11 +773,6 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_URLSCAN, TRUE);
     }else{
         settings.setValue(OSINT_URLSCAN, FALSE);
-    }
-    if(ui->modulePentesttools->isChecked()){
-        settings.setValue(OSINT_PENTESTTOOLS, TRUE);
-    }else{
-        settings.setValue(OSINT_PENTESTTOOLS, FALSE);
     }
     settings.endGroup();
 }

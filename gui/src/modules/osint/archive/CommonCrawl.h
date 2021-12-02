@@ -5,21 +5,21 @@
 
 
 namespace ModuleInfo {
-    struct CommonCrawl{
-        QString name = "CommonCrawl";
-        QString url = "http://commoncrawl.org/";
-        QString url_apiDoc = "https://commoncrawl.org/the-data/get-started/";
-        QString summary = "We build and maintain an open repository of web crawl data that can be accessed and \n"
-                          "analyzed by anyone.";
+struct CommonCrawl{
+    QString name = "CommonCrawl";
+    QString url = "http://commoncrawl.org/";
+    QString url_apiDoc = "https://commoncrawl.org/the-data/get-started/";
+    QString summary = "We build and maintain an open repository of web crawl data that can be accessed and \n"
+                      "analyzed by anyone.";
 
-        QMap<QString, QStringList> flags = {{"index",
-                                             {PLACEHOLDERTEXT_NONE, "get the index urls..."}},
-                                            {"url",
-                                             {PLACEHOLDERTEXT_DOMAIN, "/* not yet implemented */"}}};
+    QMap<QString, QStringList> flags = {{"index",
+                                         {PLACEHOLDERTEXT_NONE, "get the index urls..."}},
+                                        {"url",
+                                         {PLACEHOLDERTEXT_DOMAIN, "/* not yet implemented */"}}};
 
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAIN, OUT_URL}}};
-    };
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_URL}}};
+};
 }
 
 class CommonCrawl: public AbstractOsintModule{

@@ -37,8 +37,8 @@ DomainTools::DomainTools(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "DomainTools";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &DomainTools::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
@@ -59,7 +59,7 @@ void DomainTools::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case BRAND_MONITOR:
             url.setUrl("https://api.domaintools.com/v1/account/?api_username="+m_username+"&api_key="+m_key);

@@ -301,6 +301,8 @@ void Osint::startScan(){
     {
         ui->buttonStart->setDisabled(true);
         ui->buttonStop->setEnabled(true);
+        //...
+        this->m_infoLog("------------------ start --------------");
     }
     else{
         QMessageBox::warning(this, "Error!", "Please Choose Engine For Enumeration!");

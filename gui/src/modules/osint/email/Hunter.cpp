@@ -16,8 +16,8 @@ Hunter::Hunter(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Hunter";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Hunter::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Hunter::replyFinishedRawJson);
     if(args->outputEmail)
         connect(manager, &MyNetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
     ///
@@ -35,7 +35,7 @@ void Hunter::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case ACCOUNT_INFO:
             url.setUrl("https://api.hunter.io/v2/account?api_key="+m_key);

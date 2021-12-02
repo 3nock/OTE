@@ -14,8 +14,8 @@ GoogleCert::GoogleCert(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "GoogleCert";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &GoogleCert::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &GoogleCert::replyFinishedRawJson);
     if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &GoogleCert::replyFinishedSSLCert);
     if(args->outputSubdomain)

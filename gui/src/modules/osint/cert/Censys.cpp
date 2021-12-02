@@ -15,8 +15,8 @@ Censys::Censys(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Censys";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Censys::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Censys::replyFinishedRawJson);
     if(args->outputSSLCert)
         connect(manager, &MyNetworkAccessManager::finished, this, &Censys::replyFinishedSSLCert);
     if(args->outputSubdomain)
@@ -42,7 +42,7 @@ void Censys::start(){
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case ACCOUNT:
             url.setUrl("https://censys.io/api/v1/account");

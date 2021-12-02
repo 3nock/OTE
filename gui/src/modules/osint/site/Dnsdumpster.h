@@ -5,15 +5,15 @@
 
 
 namespace ModuleInfo {
-    struct Dnsdumpster{
-        QString name = "Dnsdumpster";
-        QString url = "https://dnsdumpster.com/";
-        QString url_apiDoc = "";
-        QString summary = "";
-        QMap<QString, QStringList> flags = {};
-        QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                               {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
-    };
+struct Dnsdumpster{
+    QString name = "Dnsdumpster";
+    QString url = "https://dnsdumpster.com/";
+    QString url_apiDoc = "";
+    QString summary = "";
+    QMap<QString, QStringList> flags = {};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
+};
 }
 
 class Dnsdumpster: public AbstractOsintModule{

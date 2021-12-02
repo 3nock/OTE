@@ -29,8 +29,8 @@ RiskIq::RiskIq(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "RiskIq";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedRawJson);
     if(args->outputIp)
         connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedIp);
     if(args->outputSubdomain)
@@ -62,7 +62,7 @@ void RiskIq::start(){
     request.setRawHeader("Authorization", "Basic "+data);
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case CERT_HOST:
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);

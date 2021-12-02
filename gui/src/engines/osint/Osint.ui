@@ -1326,9 +1326,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>0</y>
+                  <y>-521</y>
                   <width>174</width>
-                  <height>918</height>
+                  <height>780</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -1405,13 +1405,6 @@
                   <widget class="QCheckBox" name="moduleCircl">
                    <property name="text">
                     <string>Circl</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleDetectify">
-                   <property name="text">
-                    <string>Detectify</string>
                    </property>
                   </widget>
                  </item>
@@ -1580,41 +1573,6 @@
                   <widget class="QCheckBox" name="moduleZoomeye">
                    <property name="text">
                     <string>ZoomEye</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleBingPaid">
-                   <property name="text">
-                    <string>Bing</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleCloudflare">
-                   <property name="text">
-                    <string>CloudFlare</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleGoogle">
-                   <property name="text">
-                    <string>Google</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="moduleIntelx">
-                   <property name="text">
-                    <string>IntelX</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="modulePentesttools">
-                   <property name="text">
-                    <string>pentest-tools</string>
                    </property>
                   </widget>
                  </item>

@@ -5,17 +5,17 @@
 
 
 namespace ModuleInfo {
-    struct TruMail{
-        QString name = "TruMail";
-        QString url = "https://trumail.io/";
-        QString url_apiDoc = "https://trumail.io/documentation";
-        QString summary = "Prevent bounced emails and low-quality users with FREE professional grade email verification";
+struct TruMail{
+    QString name = "TruMail";
+    QString url = "https://trumail.io/";
+    QString url_apiDoc = "https://trumail.io/documentation";
+    QString summary = "Prevent bounced emails and low-quality users with FREE professional grade email verification";
 
-        QMap<QString, QStringList> flags = {{"Email",
-                                             {PLACEHOLDERTEXT_EMAIL, "Perform a single lookup on our real-time email verification"}}};
+    QMap<QString, QStringList> flags = {{"Email",
+                                         {PLACEHOLDERTEXT_EMAIL, "Perform a single lookup on our real-time email verification"}}};
 
-        QMap<int, QList<int>> input_output = {};
-    };
+    QMap<int, QList<int>> input_output = {};
+};
 }
 
 class TruMail: public AbstractOsintModule{

@@ -27,6 +27,7 @@ class Cert : public AbstractEngine{
         void onScanThreadEnded();
         void onInfoLog(QString log);
         void onErrorLog(QString log);
+        //...
         void onScanResultSHA1(QString sha1);
         void onScanResultSHA256(QString sha256);
         void onScanResultCertInfo(QByteArray cert);

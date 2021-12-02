@@ -13,8 +13,8 @@ Whatcms::Whatcms(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Whatcms";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Whatcms::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Whatcms::replyFinishedRawJson);
     ///
     /// getting api key...
     ///
@@ -30,7 +30,7 @@ void Whatcms::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case TECHNOLOGY_DETECTION:
             url.setUrl("https://whatcms.org/API/Tech?key="+m_key+"&url="+args->target);

@@ -18,8 +18,8 @@ Bgpview::Bgpview(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "Bgpview";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedRawJson);
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedSubdomain);
     if(args->outputIp)
@@ -38,7 +38,7 @@ void Bgpview::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch(args->rawOption){
         case ASN:
             url.setUrl("https://api.bgpview.io/asn/"+args->target);

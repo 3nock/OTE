@@ -9,8 +9,8 @@ HybridAnalysis::HybridAnalysis(ScanArgs *args): AbstractOsintModule(args)
     manager = new MyNetworkAccessManager(this);
     log.moduleName = "HybridAnalysis";
 
-    if(args->raw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HybridAnalysis::replyFinishedRaw);
+    if(args->outputRaw)
+        connect(manager, &MyNetworkAccessManager::finished, this, &HybridAnalysis::replyFinishedRawJson);
     ///
     /// get api key...
     ///
@@ -30,7 +30,7 @@ void HybridAnalysis::start(){
     request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
 
     QUrl url;
-    if(args->raw){
+    if(args->outputRaw){
         switch (args->rawOption) {
         case URL_QUICKSCAN:
             url.setUrl("https://www.hybrid-analysis.com/api/v2/quick-scan/url");

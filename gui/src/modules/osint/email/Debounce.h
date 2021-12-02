@@ -5,23 +5,23 @@
 
 
 namespace ModuleInfo {
-    struct Debounce{
-        QString name = "Debounce";
-        QString url = "https://debounce.io/";
-        QString url_apiDoc = "https://docs.debounce.io/";
-        QString summary = "Email Validation Tool; Simple, Fast & Accurate.";
+struct Debounce{
+    QString name = "Debounce";
+    QString url = "https://debounce.io/";
+    QString url_apiDoc = "https://docs.debounce.io/";
+    QString summary = "Email Validation Tool; Simple, Fast & Accurate.";
 
-        QMap<QString, QStringList> flags = {{"Single Validation",
-                                             {PLACEHOLDERTEXT_EMAIL, "Perform a single email validation request."}},
-                                            {"Disposable Email Detector",
-                                             {PLACEHOLDERTEXT_EMAIL, "DeBounce provides a free & powerful API endpoint for checking a domain or email address against a realtime up-to-date list of disposable domains."}},
-                                            {"Account Balance",
-                                             {PLACEHOLDERTEXT_NONE, "Get the remaining balance of your DeBounce account."}},
-                                            {"Api Usage History",
-                                             {PLACEHOLDERTEXT_NONE, "You can get the number of calls between two dates for the desired API key"}}};
+    QMap<QString, QStringList> flags = {{"Single Validation",
+                                         {PLACEHOLDERTEXT_EMAIL, "Perform a single email validation request."}},
+                                        {"Disposable Email Detector",
+                                         {PLACEHOLDERTEXT_EMAIL, "DeBounce provides a free & powerful API endpoint for checking a domain or email address against a realtime up-to-date list of disposable domains."}},
+                                        {"Account Balance",
+                                         {PLACEHOLDERTEXT_NONE, "Get the remaining balance of your DeBounce account."}},
+                                        {"Api Usage History",
+                                         {PLACEHOLDERTEXT_NONE, "You can get the number of calls between two dates for the desired API key"}}};
 
-        QMap<int, QList<int>> input_output = {};
-    };
+    QMap<int, QList<int>> input_output = {};
+};
 }
 
 class Debounce: public AbstractOsintModule{
