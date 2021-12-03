@@ -921,9 +921,9 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>0</y>
+                  <y>-720</y>
                   <width>175</width>
-                  <height>1002</height>
+                  <height>979</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -1185,13 +1185,6 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="moduleTrello">
-                   <property name="text">
-                    <string>Trello</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QCheckBox" name="moduleYahoo">
                    <property name="text">
                     <string>Yahoo</string>
@@ -1326,7 +1319,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-521</y>
+                  <y>0</y>
                   <width>174</width>
                   <height>780</height>
                  </rect>

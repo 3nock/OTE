@@ -410,12 +410,6 @@ void Osint::initModules(){
     else
         ui->moduleExalead->hide();
 
-    ModuleInfo::Trello trello;
-    if(trello.input_output.contains(INPUT_TYPE) && trello.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
-        ui->moduleTrello->show();
-    else
-        ui->moduleTrello->hide();
-
     ModuleInfo::Yahoo yahoo;
     if(yahoo.input_output.contains(INPUT_TYPE) && yahoo.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
         ui->moduleYahoo->show();

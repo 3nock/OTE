@@ -2,6 +2,9 @@
 #include <QStack>
 
 
+/*
+ * not very accurate...
+ */
 Exalead::Exalead(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
@@ -9,6 +12,10 @@ Exalead::Exalead(ScanArgs *args): AbstractOsintModule(args)
 
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Exalead::replyFinishedSubdomain);
+    if(args->outputEmail)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Exalead::replyFinishedEmail);
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Exalead::replyFinishedUrl);
 }
 Exalead::~Exalead(){
     delete manager;
@@ -16,12 +23,21 @@ Exalead::~Exalead(){
 
 void Exalead::start(){
     QNetworkRequest request;
-    while(m_page < 10){
-        m_page++;
-        QUrl url("https://www.Exalead.com/web?q=site:"+args->target+"&page="+QString::number(m_page)+"&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            QUrl url("https://www.exalead.com/search/web/results/?q="+args->target+"&collapsing=off");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+
+        if(args->outputUrl){
+            QUrl url("https://www.exalead.com/search/web/results/?q="+args->target+"&collapsing=off");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 }
 
@@ -42,20 +58,14 @@ void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
+        if(node->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length == 2 && node->v.element.children.length == 1)
         {
-            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            QString name = QString::fromUtf8(a->name);
-            QString value = QString::fromUtf8(a->value);
-            if(name == "class" && value == "PartialSearchResults-item-url")
+            GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(classAttribute->value) == "ellipsis")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->type == GUMBO_NODE_TEXT){
-                    QString item = QString::fromUtf8(child->v.text.text);
-                    item = item.split("/")[0];
-                    emit subdomain(item);
-                    log.resultsCount++;
-                }
+                emit subdomain(QString::fromUtf8(child->v.text.text));
+                log.resultsCount++;
             }
         }
 
@@ -65,6 +75,20 @@ void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    end(reply);
+}
+
+void Exalead::replyFinishedEmail(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    /*
+     * not yet implemented...
+     */
+
     end(reply);
 }
 
@@ -85,20 +109,14 @@ void Exalead::replyFinishedUrl(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
+        if(node->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length == 2 && node->v.element.children.length == 1)
         {
-            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            QString name = QString::fromUtf8(a->name);
-            QString value = QString::fromUtf8(a->value);
-            if(name == "class" && value == "PartialSearchResults-item-url")
+            GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(classAttribute->value) == "ellipsis")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->type == GUMBO_NODE_TEXT){
-                    QString item = QString::fromUtf8(child->v.text.text);
-                    item = item.split("/")[0];
-                    emit subdomain(item);
-                    log.resultsCount++;
-                }
+                emit url(QString::fromUtf8(child->v.text.text));
+                log.resultsCount++;
             }
         }
 
@@ -108,5 +126,6 @@ void Exalead::replyFinishedUrl(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
     end(reply);
 }

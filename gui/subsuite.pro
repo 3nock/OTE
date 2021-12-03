@@ -158,7 +158,6 @@ SOURCES += \
     src/modules/osint/scrape/DogPile.cpp \
     src/modules/osint/scrape/DuckDuckGo.cpp \
     src/modules/osint/scrape/Exalead.cpp \
-    src/modules/osint/scrape/Trello.cpp \
     src/modules/osint/scrape/Yahoo.cpp \
     src/modules/osint/site/Dnsdumpster.cpp \
     src/modules/osint/site/Netcraft.cpp \
@@ -309,7 +308,6 @@ HEADERS += \
     src/modules/osint/scrape/DogPile.h \
     src/modules/osint/scrape/DuckDuckGo.h \
     src/modules/osint/scrape/Exalead.h \
-    src/modules/osint/scrape/Trello.h \
     src/modules/osint/scrape/Yahoo.h \
     src/modules/osint/site/Dnsdumpster.h \
     src/modules/osint/site/Netcraft.h \

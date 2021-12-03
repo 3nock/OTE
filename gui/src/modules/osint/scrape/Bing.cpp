@@ -2,6 +2,10 @@
 #include <QStack>
 
 
+/*
+ * has a different type of next page...
+ * redirection probs...
+ */
 Bing::Bing(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
@@ -9,6 +13,10 @@ Bing::Bing(ScanArgs *args): AbstractOsintModule(args)
 
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Bing::replyFinishedSubdomain);
+    if(args->outputEmail)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bing::replyFinishedEmail);
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Bing::replyFinishedUrl);
 }
 Bing::~Bing(){
     delete manager;
@@ -16,12 +24,25 @@ Bing::~Bing(){
 
 void Bing::start(){
     QNetworkRequest request;
-    while(m_page < 10){
-        m_page++;
-        QUrl url("https://www.Bing.com/web?q=site:"+args->target+"&page="+QString::number(m_page)+"&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            QUrl url("https://www.bing.com/search?q=site:"+args->target+"&first=1&FORM=PORE");
+            //request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
+            request.setUrl(url);
+            manager->get(request);
+            m_firstRequest = true;
+            activeRequests++;
+        }
+
+        if(args->outputUrl){
+            QUrl url("https://www.bing.com/search?q=site:"+args->target+"&first=1&FORM=PORE");
+            //request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
+            request.setUrl(url);
+            manager->get(request);
+            m_firstRequest = true;
+            activeRequests++;
+        }
     }
 }
 
@@ -42,21 +63,27 @@ void Bing::replyFinishedSubdomain(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
-        {
-            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            QString name = QString::fromUtf8(a->name);
-            QString value = QString::fromUtf8(a->value);
-            if(name == "class" && value == "PartialSearchResults-item-url")
+        if(m_firstRequest){
+            if(node->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length > 0 && node->v.element.children.length == 1)
             {
-                GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->type == GUMBO_NODE_TEXT){
-                    QString item = QString::fromUtf8(child->v.text.text);
-                    item = item.split("/")[0];
-                    emit subdomain(item);
-                    log.resultsCount++;
+                GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(classAttribute->value) == "b_widePag sb_bp")
+                {
+                    GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                    int page = QString::fromUtf8(child->v.text.text).toInt();
+                    if(page > m_lastPage)
+                        m_lastPage = page;
                 }
             }
+        }
+
+        if(node->v.element.tag == GUMBO_TAG_CITE)
+        {
+            GumboNode *url = static_cast<GumboNode*>(node->v.element.children.data[0]);
+            QString domain = QString::fromUtf8(url->v.text.text);
+            domain = domain.remove("https://").remove("http://").split("/")[0];
+            emit subdomain(domain);
+            log.resultsCount++;
         }
 
         GumboVector *children = &node->v.element.children;
@@ -65,6 +92,23 @@ void Bing::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    if(m_firstRequest)
+        this->sendRequests();
+
+    end(reply);
+}
+
+void Bing::replyFinishedEmail(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    /*
+     * not yet implemented...
+     */
+
     end(reply);
 }
 
@@ -85,21 +129,25 @@ void Bing::replyFinishedUrl(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
-        {
-            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            QString name = QString::fromUtf8(a->name);
-            QString value = QString::fromUtf8(a->value);
-            if(name == "class" && value == "PartialSearchResults-item-url")
+        if(m_firstRequest){
+            if(node->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length > 0 && node->v.element.children.length == 1)
             {
-                GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->type == GUMBO_NODE_TEXT){
-                    QString item = QString::fromUtf8(child->v.text.text);
-                    item = item.split("/")[0];
-                    emit subdomain(item);
-                    log.resultsCount++;
+                GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(classAttribute->value) == "b_widePag sb_bp")
+                {
+                    GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                    int page = QString::fromUtf8(child->v.text.text).toInt();
+                    if(page > m_lastPage)
+                        m_lastPage = page;
                 }
             }
+        }
+
+        if(node->v.element.tag == GUMBO_TAG_CITE)
+        {
+            GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+            emit url(QString::fromUtf8(child->v.text.text));
+            log.resultsCount++;
         }
 
         GumboVector *children = &node->v.element.children;
@@ -108,5 +156,43 @@ void Bing::replyFinishedUrl(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    if(m_firstRequest)
+        this->sendRequests();
+
     end(reply);
+}
+
+void Bing::sendRequests(){
+    QNetworkRequest request;
+
+    if(args->inputDomain){
+        if(args->outputSubdomain)
+        {
+            ///
+            /// getting the max pages to query...
+            ///
+            int lastPage;
+            if(args->maxPage <= m_lastPage)
+                lastPage = args->maxPage;
+            else
+                lastPage = m_lastPage;
+
+            ///
+            /// loop to send appropriate requests...
+            ///
+            int currentPage = 2;
+            int first = 11;
+            while(currentPage < lastPage){
+                QUrl url("https://www.bing.com/search?q=site:"+args->target+"&first="+QString::number(first)+"&FORM=PORE");
+                //request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
+                request.setUrl(url);
+                manager->get(request);
+                m_firstRequest = false;
+                activeRequests++;
+                currentPage++;
+                first += 10;
+            }
+        }
+    }
 }

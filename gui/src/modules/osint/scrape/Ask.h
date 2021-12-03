@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
 struct Ask{
     QString name = "Ask";
@@ -11,7 +12,7 @@ struct Ask{
     QString summary = "";
     QMap<QString, QStringList> flags = {};
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                           {OUT_SUBDOMAIN, OUT_URL}}};
+                                           {OUT_SUBDOMAIN, OUT_URL, OUT_EMAIL}}};
 };
 }
 
@@ -24,11 +25,13 @@ class Ask: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedUrl(QNetworkReply *reply) override;
 
     private:
-        int m_page = 0;
-        bool firstReply = false;
+        bool m_firstRequest = false;
+        int m_lastPage = 1;
+        void sendRequests();
 };
 
 #endif // ASK_H

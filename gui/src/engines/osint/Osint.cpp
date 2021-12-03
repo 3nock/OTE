@@ -27,7 +27,6 @@
  * https://rapiddns.io/tools
  * pkey.in
  * https://skrapp.io/api
- * https://hunter.io/bulk-finders
  *
  * https://tools.epieos.com/email.php ->email-lookup
  *

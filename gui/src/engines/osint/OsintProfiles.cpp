@@ -360,11 +360,6 @@ void Osint::on_buttonLoadProfile_clicked(){
     }else{
         ui->moduleExalead->setChecked(false);
     }
-    if(settings.value(OSINT_TRELLO).toString() == TRUE){
-        ui->moduleTrello->setChecked(true);
-    }else{
-        ui->moduleTrello->setChecked(false);
-    }
     if(settings.value(OSINT_DNSBUFFEROVERRUN).toString() == TRUE){
         ui->moduleDnsbufferoverrun->setChecked(true);
     }else{
@@ -738,11 +733,6 @@ void Osint::on_buttonCreateProfile_clicked(){
         settings.setValue(OSINT_EXALEAD, TRUE);
     }else{
         settings.setValue(OSINT_EXALEAD, FALSE);
-    }
-    if(ui->moduleTrello->isChecked()){
-        settings.setValue(OSINT_TRELLO, TRUE);
-    }else{
-        settings.setValue(OSINT_TRELLO, FALSE);
     }
     if(ui->moduleDnsbufferoverrun->isChecked()){
         settings.setValue(OSINT_DNSBUFFEROVERRUN, TRUE);

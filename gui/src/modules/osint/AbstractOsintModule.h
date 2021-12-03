@@ -69,8 +69,9 @@ struct ScanArgs{
     bool outputCidr = false;
     bool outputSSLCert = false;
 
-    /* for raw... */
-    int rawOption = NULL;
+    /* ... */
+    int rawOption = 0;
+    int maxPage = 5;
 };
 
 class MyNetworkAccessManager: public QNetworkAccessManager {

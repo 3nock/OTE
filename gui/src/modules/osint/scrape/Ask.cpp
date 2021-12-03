@@ -9,6 +9,8 @@ Ask::Ask(ScanArgs *args): AbstractOsintModule(args)
 
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinishedSubdomain);
+    if(args->outputEmail)
+        connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinishedEmail);
     if(args->outputUrl)
         connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinishedUrl);
 }
@@ -18,12 +20,23 @@ Ask::~Ask(){
 
 void Ask::start(){
     QNetworkRequest request;
-    while(m_page < 10){
-        m_page++;
-        QUrl url("https://www.ask.com/web?q=site:"+args->target+"&page="+QString::number(m_page)+"&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            QUrl url("https://www.ask.com/web?q=site:"+args->target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+            request.setUrl(url);
+            manager->get(request);
+            m_firstRequest = true;
+            activeRequests++;
+        }
+
+        if(args->outputUrl){
+            QUrl url("https://www.ask.com/web?q=site:"+args->target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+            request.setUrl(url);
+            manager->get(request);
+            m_firstRequest = true;
+            activeRequests++;
+        }
     }
 }
 
@@ -44,20 +57,30 @@ void Ask::replyFinishedSubdomain(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
+        if(m_firstRequest){
+            if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length == 1)
+            {
+                GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(classAttribute->value) == "PartialWebPagination-link-text")
+                {
+                    GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                    int page = QString::fromUtf8(child->v.text.text).toInt();
+                    if(page > m_lastPage)
+                        m_lastPage = page;
+                }
+            }
+        }
+
+        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length == 1)
         {
-            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            QString name = QString::fromUtf8(a->name);
-            QString value = QString::fromUtf8(a->value);
-            if(name == "class" && value == "PartialSearchResults-item-url")
+            GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(classAttribute->value) == "PartialSearchResults-item-url PartialSearchResults-item-top-url")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->type == GUMBO_NODE_TEXT){
-                    QString item = QString::fromUtf8(child->v.text.text);
-                    item = item.split("/")[0];
-                    emit subdomain(item);
-                    log.resultsCount++;
-                }
+                QString domain = QString::fromUtf8(child->v.text.text);
+                domain = domain.split("/")[0];
+                emit subdomain(domain);
+                log.resultsCount++;
             }
         }
 
@@ -67,6 +90,23 @@ void Ask::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    if(m_firstRequest)
+        this->sendRequests();
+
+    end(reply);
+}
+
+void Ask::replyFinishedEmail(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    /*
+     * not yet implemented...
+     */
+
     end(reply);
 }
 
@@ -87,20 +127,28 @@ void Ask::replyFinishedUrl(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
+        if(m_firstRequest){
+            if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length == 1)
+            {
+                GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(classAttribute->value) == "PartialWebPagination-link-text")
+                {
+                    GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+                    int page = QString::fromUtf8(child->v.text.text).toInt();
+                    if(page > m_lastPage)
+                        m_lastPage = page;
+                }
+            }
+        }
+
+        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length == 1)
         {
-            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            QString name = QString::fromUtf8(a->name);
-            QString value = QString::fromUtf8(a->value);
-            if(name == "class" && value == "PartialSearchResults-item-url")
+            GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(classAttribute->value) == "PartialSearchResults-item-url PartialSearchResults-item-top-url")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->type == GUMBO_NODE_TEXT){
-                    QString item = QString::fromUtf8(child->v.text.text);
-                    item = item.split("/")[0];
-                    emit subdomain(item);
-                    log.resultsCount++;
-                }
+                emit url(QString::fromUtf8(child->v.text.text));
+                log.resultsCount++;
             }
         }
 
@@ -110,5 +158,40 @@ void Ask::replyFinishedUrl(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    if(m_firstRequest)
+        this->sendRequests();
+
     end(reply);
+}
+
+void Ask::sendRequests(){
+    QNetworkRequest request;
+
+    if(args->inputDomain){
+        if(args->outputSubdomain)
+        {
+            ///
+            /// getting the max pages to query...
+            ///
+            int lastPage;
+            if(args->maxPage <= m_lastPage)
+                lastPage = args->maxPage;
+            else
+                lastPage = m_lastPage;
+
+            ///
+            /// loop to send appropriate requests...
+            ///
+            int currentPage = 2;
+            while(currentPage < lastPage){
+                QUrl url("https://www.ask.com/web?q=site:"+args->target+"&page="+QString::number(currentPage)+"&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+                request.setUrl(url);
+                manager->get(request);
+                m_firstRequest = false;
+                activeRequests++;
+                currentPage++;
+            }
+        }
+    }
 }

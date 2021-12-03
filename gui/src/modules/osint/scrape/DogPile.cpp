@@ -2,6 +2,10 @@
 #include <QStack>
 
 
+/*
+ * doesnt show last page...
+ * redirection issues...
+ */
 DogPile::DogPile(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new MyNetworkAccessManager(this);
@@ -9,6 +13,10 @@ DogPile::DogPile(ScanArgs *args): AbstractOsintModule(args)
 
     if(args->outputSubdomain)
         connect(manager, &MyNetworkAccessManager::finished, this, &DogPile::replyFinishedSubdomain);
+    if(args->outputEmail)
+        connect(manager, &MyNetworkAccessManager::finished, this, &DogPile::replyFinishedEmail);
+    if(args->outputUrl)
+        connect(manager, &MyNetworkAccessManager::finished, this, &DogPile::replyFinishedUrl);
 }
 DogPile::~DogPile(){
     delete manager;
@@ -16,12 +24,23 @@ DogPile::~DogPile(){
 
 void DogPile::start(){
     QNetworkRequest request;
-    while(m_page < 10){
-        m_page++;
-        QUrl url("https://www.DogPile.com/web?q=site:"+args->target+"&page="+QString::number(m_page)+"&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            QUrl url("https://www.dogpile.com/serp?q="+args->target);
+            request.setUrl(url);
+            manager->get(request);
+            m_firstRequest = true;
+            activeRequests++;
+        }
+
+        if(args->outputUrl){
+            QUrl url("https://www.dogpile.com/serp?q="+args->target);
+            request.setUrl(url);
+            manager->get(request);
+            m_firstRequest = true;
+            activeRequests++;
+        }
     }
 }
 
@@ -42,20 +61,29 @@ void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
+        if(m_firstRequest){
+            if(node->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length == 3 && node->v.element.children.length == 1)
+            {
+                GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(classAttribute->value) == "pagination__num")
+                {
+                    GumboAttribute *hrefAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[1]);
+                    this->sendRequests(QString::fromUtf8(hrefAttribute->value));
+                }
+            }
+        }
+
+        if(node->v.element.tag == GUMBO_TAG_SPAN && node->v.element.attributes.length == 1 && node->v.element.children.length > 1)
         {
-            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            QString name = QString::fromUtf8(a->name);
-            QString value = QString::fromUtf8(a->value);
-            if(name == "class" && value == "PartialSearchResults-item-url")
+            GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(classAttribute->value) == "web-bing__url")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->type == GUMBO_NODE_TEXT){
-                    QString item = QString::fromUtf8(child->v.text.text);
-                    item = item.split("/")[0];
-                    emit subdomain(item);
-                    log.resultsCount++;
-                }
+                QString domain = QString::fromUtf8(child->v.text.text);
+                domain = domain.remove("http://").remove("https://");
+                domain.append(args->target);
+                emit subdomain(domain);
+                log.resultsCount++;
             }
         }
 
@@ -65,6 +93,20 @@ void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    end(reply);
+}
+
+void DogPile::replyFinishedEmail(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    /*
+     * not yet implemented...
+     */
+
     end(reply);
 }
 
@@ -85,20 +127,28 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_DIV && node->v.element.attributes.length == 1 && node->v.element.children.length > 0)
+        if(m_firstRequest){
+            if(node->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length == 3 && node->v.element.children.length == 1)
+            {
+                GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+                if(QString::fromUtf8(classAttribute->value) == "pagination__num")
+                {
+                    GumboAttribute *hrefAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[1]);
+                    this->sendRequests(QString::fromUtf8(hrefAttribute->value));
+                }
+            }
+        }
+
+        if(node->v.element.tag == GUMBO_TAG_SPAN && node->v.element.attributes.length == 1 && node->v.element.children.length > 1)
         {
-            GumboAttribute *a = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            QString name = QString::fromUtf8(a->name);
-            QString value = QString::fromUtf8(a->value);
-            if(name == "class" && value == "PartialSearchResults-item-url")
+            GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
+            if(QString::fromUtf8(classAttribute->value) == "web-bing__url")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->type == GUMBO_NODE_TEXT){
-                    QString item = QString::fromUtf8(child->v.text.text);
-                    item = item.split("/")[0];
-                    emit subdomain(item);
-                    log.resultsCount++;
-                }
+                QString domain = QString::fromUtf8(child->v.text.text);
+                domain.append(args->target);
+                emit url(domain);
+                log.resultsCount++;
             }
         }
 
@@ -108,5 +158,23 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
     end(reply);
+}
+
+void DogPile::sendRequests(QString anotherPage){
+    QNetworkRequest request;
+
+    if(args->inputDomain){
+        if(args->outputSubdomain){
+            if(m_sentPages < args->maxPage){
+                QUrl url("https://www.dogpile.com"+anotherPage);
+                request.setUrl(url);
+                manager->get(request);
+                m_firstRequest = false;
+                activeRequests++;
+                m_sentPages++;
+            }
+        }
+    }
 }

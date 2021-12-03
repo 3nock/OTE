@@ -286,9 +286,6 @@ void Osint::startScan(){
     if(ui->moduleExalead->isChecked())
         this->startScanThread(new Exalead(scanArgs));
 
-    if(ui->moduleTrello->isChecked())
-        this->startScanThread(new Trello(scanArgs));
-
     if(ui->moduleYahoo->isChecked())
         this->startScanThread(new Yahoo(scanArgs));
 
