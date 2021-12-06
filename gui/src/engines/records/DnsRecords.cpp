@@ -51,6 +51,10 @@ DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, ProjectDataM
     result->records->dnsProxy->setRecursiveFilteringEnabled(true);
     result->records->srvProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     result->records->srvProxy->setRecursiveFilteringEnabled(true);
+    ///
+    /// syntax higlighting...
+    ///
+    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 DnsRecords::~DnsRecords(){
     delete m_scanArguments;

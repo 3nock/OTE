@@ -12,15 +12,15 @@
  */
 UKWebArchive::UKWebArchive(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "UKWebArchive";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &UKWebArchive::replyFinishedRawNdjson);
+        connect(manager, &NetworkAccessManager::finished, this, &UKWebArchive::replyFinishedRawNdjson);
     if(args->outputUrl)
-        connect(manager, &MyNetworkAccessManager::finished, this, &UKWebArchive::replyFinishedUrl);
+        connect(manager, &NetworkAccessManager::finished, this, &UKWebArchive::replyFinishedUrl);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &UKWebArchive::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &UKWebArchive::replyFinishedSubdomain);
 }
 UKWebArchive::~UKWebArchive(){
     delete manager;

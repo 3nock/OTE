@@ -4,6 +4,7 @@
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/scan/BruteScanner.h"
+#include "src/utils/NotesSyntaxHighlighter.h"
 
 namespace Ui {
     class Brute;
@@ -52,6 +53,9 @@ private:
         Ui::Brute *ui;
         QSet<QString> m_subdomainsSet;
         brute::ScanArguments *m_scanArguments;
+        //...
+        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
+        //...
         void stopScan();
         void startScan();
         void pauseScan();

@@ -14,15 +14,15 @@
  */
 IpInfo::IpInfo(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "IpInfo";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &IpInfo::replyFinishedRawJson);
     if(args->outputInfo)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedInfo);
+        connect(manager, &NetworkAccessManager::finished, this, &IpInfo::replyFinishedInfo);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
     ///
     /// getting the api key...
     ///

@@ -24,19 +24,19 @@
  */
 Shodan::Shodan(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Shodan";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Shodan::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Shodan::replyFinishedIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &Shodan::replyFinishedAsn);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomainIp);
     ///
     /// getting api-key...
     ///

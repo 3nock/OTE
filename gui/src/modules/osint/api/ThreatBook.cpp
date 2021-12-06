@@ -14,17 +14,17 @@
 /* has some problems... */
 ThreatBook::ThreatBook(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "ThreatBook";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ThreatBook::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &ThreatBook::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ThreatBook::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &ThreatBook::replyFinishedSubdomain);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ThreatBook::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &ThreatBook::replyFinishedAsn);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ThreatBook::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &ThreatBook::replyFinishedIp);
     ///
     /// get api key...
     ///

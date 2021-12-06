@@ -4,15 +4,15 @@
 
 Pkey::Pkey(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "PKey";
 
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Pkey::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Pkey::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Pkey::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Pkey::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Pkey::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Pkey::replyFinishedIp);
 }
 Pkey::~Pkey(){
     delete manager;

@@ -29,19 +29,19 @@
 /* website contacts */
 WhoisXmlApi::WhoisXmlApi(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "WhoisXmlApi";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedAsn);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedEmail);
     ///
     /// get api key...
     ///

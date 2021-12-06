@@ -47,6 +47,10 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, S
     this->connectActions();
     result->ip->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     result->ip->subdomainIpProxy->setRecursiveFilteringEnabled(true);
+    ///
+    /// syntax higlighting...
+    ///
+    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Ip::~Ip(){
     delete m_scanArguments;

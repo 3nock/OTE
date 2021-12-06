@@ -10,11 +10,11 @@
  */
 IpRegistry::IpRegistry(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "IpRegistry";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpRegistry::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &IpRegistry::replyFinishedRawJson);
     ///
     /// get api key...
     ///

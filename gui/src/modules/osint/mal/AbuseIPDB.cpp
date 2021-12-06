@@ -11,11 +11,11 @@
  */
 AbuseIPDB::AbuseIPDB(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "AbuseIPDB";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &AbuseIPDB::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &AbuseIPDB::replyFinishedRawJson);
     ///
     /// get api key...
     ///

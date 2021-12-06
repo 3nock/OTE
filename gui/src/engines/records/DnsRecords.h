@@ -4,6 +4,7 @@
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/scan/DnsRecordsScanner.h"
+#include "src/utils/NotesSyntaxHighlighter.h"
 
 namespace Ui {
     class DnsRecords;
@@ -55,6 +56,9 @@ class DnsRecords : public AbstractEngine{
 private:
         Ui::DnsRecords *ui;
         records::ScanArguments* m_scanArguments;
+        //...
+        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
+        //...
         void stopScan();
         void startScan();
         void pauseScan();

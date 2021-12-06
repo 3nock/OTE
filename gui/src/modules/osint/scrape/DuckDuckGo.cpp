@@ -7,15 +7,15 @@
  */
 DuckDuckGo::DuckDuckGo(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "DuckDuckGo";
 
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedSubdomain);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedEmail);
     if(args->outputUrl)
-        connect(manager, &MyNetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedUrl);
+        connect(manager, &NetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedUrl);
 }
 DuckDuckGo::~DuckDuckGo(){
     delete manager;

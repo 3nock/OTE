@@ -35,19 +35,19 @@
 /* 1k per hour unauthenticated, and 10k authed*/
 OtxFree::OtxFree(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "otx";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxFree::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedRawJson);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxFree::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxFree::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxFree::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxFree::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedAsn);
 }
 OtxFree::~OtxFree(){
     delete manager;

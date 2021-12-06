@@ -36,13 +36,13 @@
 C99::C99(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "C99";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &C99::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &C99::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
     ///
     /// getting api key...
     ///

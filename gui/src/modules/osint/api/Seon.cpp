@@ -8,11 +8,11 @@
 
 Seon::Seon(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Seon";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Seon::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Seon::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

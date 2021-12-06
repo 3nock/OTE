@@ -34,15 +34,15 @@
  */
 DomainTools::DomainTools(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "DomainTools";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
     ///
     /// getting api key...
     ///

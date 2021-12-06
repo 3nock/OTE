@@ -51,15 +51,15 @@
  */
 Ripe::Ripe(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Ripe";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedRawJson);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
     if(args->outputCidr)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Ripe::replyFinishedCidr);
+        connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedCidr);
 }
 Ripe::~Ripe(){
     delete manager;

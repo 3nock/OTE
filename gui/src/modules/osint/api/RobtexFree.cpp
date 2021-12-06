@@ -11,19 +11,19 @@
 
 RobtexFree::RobtexFree(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "RobtexFree";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexFree::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedRawJson);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexFree::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexFree::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexFree::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedSubdomainIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RobtexFree::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedAsn);
 }
 RobtexFree::~RobtexFree(){
     delete manager;

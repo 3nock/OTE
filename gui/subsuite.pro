@@ -28,6 +28,7 @@ CONFIG += c++11
 include(includes/gumbo/gumbo-parser.pri)
 
 SOURCES += \
+    src/dialogs/FailedScansDialog.cpp \
     src/engines/active/ActiveContextMenu.cpp \
     src/engines/active/ActiveScan.cpp \
     src/engines/brute/BruteContextMenu.cpp \
@@ -178,7 +179,9 @@ SOURCES += \
     src/project/Project.cpp \
     src/tools/NSTool.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
+    src/utils/NotesSyntaxHighlighter.cpp \
     src/widgets/InputWidget.cpp \
+    src/widgets/Notes.cpp \
     src/widgets/WordlistGeneratorWidget.cpp \
     src/dialogs/AboutDialog.cpp \
     src/dialogs/ConfigDialog.cpp \
@@ -192,6 +195,7 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+    src/dialogs/FailedScansDialog.h \
     src/engines/cert/Cert.h \
     src/models/AsnModel.h \
     src/models/CertModel.h \
@@ -332,8 +336,10 @@ HEADERS += \
     src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/models/ResultsModels.h \
+    src/utils/NotesSyntaxHighlighter.h \
     src/utils/models.h \
     src/widgets/InputWidget.h \
+    src/widgets/Notes.h \
     src/widgets/WordlistGeneratorWidget.h \
     src/dialogs/AboutDialog.h \
     src/dialogs/ApiKeysDialog.h \
@@ -347,6 +353,7 @@ HEADERS += \
     src/MainWindow.h
 
 FORMS += \
+    src/dialogs/FailedScansDialog.ui \
     src/engines/cert/Cert.ui \
     src/tools/ASNTool.ui \
     src/tools/BannerGrabber.ui \
@@ -366,6 +373,7 @@ FORMS += \
     src/engines/active/Active.ui \
     src/tools/NSTool.ui \
     src/widgets/InputWidget.ui \
+    src/widgets/Notes.ui \
     src/widgets/WordlistGeneratorWidget.ui \
     src/dialogs/AboutDialog.ui \
     src/dialogs/ConfigDialog.ui \
@@ -388,4 +396,7 @@ RESOURCES += \
     res.qrc
 
 # setting the icon...
-RC_ICONS = res/icons/main.ico
+RC_ICONS = res/icons/logo.ico
+
+DISTFILES += \
+    res/files/Ideas

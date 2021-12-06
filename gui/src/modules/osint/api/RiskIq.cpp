@@ -26,19 +26,19 @@
  */
 RiskIq::RiskIq(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "RiskIq";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedRawJson);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomainIp);
     if(args->outputSSLCert)
-        connect(manager, &MyNetworkAccessManager::finished, this, &RiskIq::replyFinishedSSLCert);
+        connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedSSLCert);
     ///
     /// getting api-key...
     ///

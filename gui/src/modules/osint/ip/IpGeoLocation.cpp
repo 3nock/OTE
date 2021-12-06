@@ -9,11 +9,11 @@
  */
 IpGeoLocation::IpGeoLocation(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "IpGeoLocation";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpGeoLocation::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &IpGeoLocation::replyFinishedRawJson);
     ///
     /// get api key...
     ///

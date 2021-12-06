@@ -45,6 +45,10 @@ Cert::Cert(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *projec
     ///
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
+    ///
+    /// syntax higlighting...
+    ///
+    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Cert::~Cert(){
     delete ui;

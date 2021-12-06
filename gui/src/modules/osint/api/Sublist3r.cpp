@@ -5,13 +5,13 @@
 
 Sublist3r::Sublist3r(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Sublist3r";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Sublist3r::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Sublist3r::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Sublist3r::replyFinishedSubdomain);
 }
 Sublist3r::~Sublist3r(){
     delete manager;

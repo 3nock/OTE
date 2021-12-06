@@ -9,11 +9,11 @@
  */
 Netcraft::Netcraft(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Netcraft";
 
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Netcraft::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Netcraft::replyFinishedSubdomain);
 }
 Netcraft::~Netcraft(){
     delete manager;

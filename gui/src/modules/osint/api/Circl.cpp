@@ -11,19 +11,19 @@
 
 Circl::Circl(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Circl";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedIp);
     if(args->outputSSLCert)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedSSLCert);
+        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedSSLCert);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
     ///
     /// get login credentials...
     ///

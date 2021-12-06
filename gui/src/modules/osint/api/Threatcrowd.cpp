@@ -12,17 +12,17 @@
 /*  limit all requests to no more than one request every ten seconds */
 Threatcrowd::Threatcrowd(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "ThreatCrowd";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Threatcrowd::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Threatcrowd::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Threatcrowd::replyFinishedIp);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &Threatcrowd::replyFinishedEmail);
 }
 Threatcrowd::~Threatcrowd(){
     delete manager;

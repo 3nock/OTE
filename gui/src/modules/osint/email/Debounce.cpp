@@ -9,11 +9,11 @@
 
 Debounce::Debounce(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Debounce";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Debounce::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Debounce::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///

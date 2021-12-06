@@ -16,15 +16,15 @@
  */
 MnemonicFree::MnemonicFree(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Mnemonic";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &MnemonicFree::replyFinishedRawJson);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &MnemonicFree::replyFinishedIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &MnemonicFree::replyFinishedSubdomain);
 }
 MnemonicFree::~MnemonicFree(){
     delete manager;

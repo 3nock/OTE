@@ -27,15 +27,15 @@
  */
 SecurityTrails::SecurityTrails(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "SecurityTrails";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &SecurityTrails::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &SecurityTrails::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &SecurityTrails::replyFinishedIp);
     ///
     /// get api key....
     ///

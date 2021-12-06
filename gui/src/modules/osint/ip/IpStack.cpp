@@ -10,11 +10,11 @@
  */
 IpStack::IpStack(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "IpStack";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpStack::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &IpStack::replyFinishedRawJson);
     ///
     /// get api key...
     ///

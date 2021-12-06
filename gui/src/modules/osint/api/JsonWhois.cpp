@@ -8,11 +8,11 @@
 
 JsonWhois::JsonWhois(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "JsonWhois";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &JsonWhois::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &JsonWhois::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

@@ -11,11 +11,11 @@
  */
 LeakLookup::LeakLookup(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "LeakLookup";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &LeakLookup::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &LeakLookup::replyFinishedRawJson);
     ///
     /// get api key...
     ///

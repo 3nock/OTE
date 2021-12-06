@@ -10,15 +10,15 @@
  */
 CertspotterFree::CertspotterFree(ScanArgs *args) : AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "CertspotterFree";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &CertspotterFree::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSubdomain);
     if(args->outputSSLCert)
-        connect(manager, &MyNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSSLCert);
+        connect(manager, &NetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSSLCert);
 }
 CertspotterFree::~CertspotterFree(){
     delete manager;

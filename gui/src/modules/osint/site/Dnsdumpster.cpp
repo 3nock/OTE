@@ -6,15 +6,15 @@
  */
 Dnsdumpster::Dnsdumpster(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "DnsDumpster";
 
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedIp);
 }
 Dnsdumpster::~Dnsdumpster(){
     delete manager;

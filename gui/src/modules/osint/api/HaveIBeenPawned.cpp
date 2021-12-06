@@ -11,11 +11,11 @@
  */
 HaveIBeenPawned::HaveIBeenPawned(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "HaveIBeenPawned";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HaveIBeenPawned::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &HaveIBeenPawned::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

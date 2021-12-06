@@ -8,13 +8,13 @@
 
 Github::Github(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Github";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Github::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Github::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Github::replyFinishedSubdomain);
     ///
     /// getting the api-key...
     ///

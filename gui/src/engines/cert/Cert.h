@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "../AbstractEngine.h"
 #include "src/modules/scan/CertScanner.h"
+#include "src/utils/NotesSyntaxHighlighter.h"
 
 #define OUTPUT_SUBDOMAIN 0
 #define OUTPUT_SSLCERT 1
@@ -52,6 +53,9 @@ class Cert : public AbstractEngine{
     private:
         Ui::Cert *ui;
         certificate::ScanArguments *m_args;
+        //...
+        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
+        //...
         void stopScan();
         void startScan();
         void pauseScan();

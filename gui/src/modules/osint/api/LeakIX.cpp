@@ -6,11 +6,11 @@
 
 LeakIX::LeakIX(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "LeakIX";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &LeakIX::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &LeakIX::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

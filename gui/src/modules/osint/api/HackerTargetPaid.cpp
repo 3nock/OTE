@@ -20,19 +20,19 @@
 
 HackerTargetPaid::HackerTargetPaid(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "HackerTarget";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedRawTxt);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedRawTxt);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedAsn);
     ///
     /// getting api key...
     ///

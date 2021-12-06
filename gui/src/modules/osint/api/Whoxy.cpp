@@ -11,11 +11,11 @@
 
 Whoxy::Whoxy(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Whoxy";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Whoxy::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Whoxy::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

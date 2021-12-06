@@ -7,15 +7,15 @@
  */
 Rapiddns::Rapiddns(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "RapidDns";
 
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomainIp);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Rapiddns::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Rapiddns::replyFinishedIp);
 }
 Rapiddns::~Rapiddns(){
     delete manager;

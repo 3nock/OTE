@@ -9,19 +9,19 @@
  */
 Urlscan::Urlscan(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "UrlScan";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedSubdomain);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedAsn);
     if(args->outputUrl)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedUrl);
+        connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedUrl);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Urlscan::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedIp);
 }
 Urlscan::~Urlscan(){
     delete manager;

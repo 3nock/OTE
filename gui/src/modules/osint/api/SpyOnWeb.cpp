@@ -17,17 +17,17 @@
  */
 SpyOnWeb::SpyOnWeb(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "SpyOnWeb";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedRawJson);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomainIp);
     ///
     /// getting api key...
     ///

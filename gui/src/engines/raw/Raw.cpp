@@ -48,9 +48,10 @@ Raw::Raw(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project,
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
     ///
-    /// json syntax higlighting...
+    /// syntax higlighting...
     ///
-    syntaxHighlighter = new JsonSyntaxHighlighter(ui->plainTextEdit->document());
+    m_jsonSyntaxHighlighter = new JsonSyntaxHighlighter(ui->plainTextEdit->document());
+    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Raw::~Raw(){
     delete m_scanArgs;

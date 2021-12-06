@@ -6,15 +6,15 @@
  */
 Crtsh::Crtsh(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Crtsh";
 
     if(args->outputInfo)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Crtsh::replyFinishedInfo);
+        connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedInfo);
     if(args->outputSSLCert)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Crtsh::replyFinishedSSLCert);
+        connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedSSLCert);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Crtsh::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedSubdomain);
 }
 Crtsh::~Crtsh(){
     delete manager;

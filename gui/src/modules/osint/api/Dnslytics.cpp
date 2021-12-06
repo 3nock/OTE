@@ -23,21 +23,21 @@
  */
 Dnslytics::Dnslytics(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Dnslytics";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedAsn);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomainIp);
     if(args->outputCidr)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnslytics::replyFinishedCidr);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedCidr);
     ///
     /// getting api key...
     ///

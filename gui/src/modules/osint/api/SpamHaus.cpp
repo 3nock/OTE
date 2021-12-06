@@ -6,11 +6,11 @@
 
 SpamHaus::SpamHaus(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "SpamHaus";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &SpamHaus::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &SpamHaus::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///

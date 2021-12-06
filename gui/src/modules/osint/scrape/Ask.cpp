@@ -4,15 +4,15 @@
 
 Ask::Ask(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Ask";
 
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Ask::replyFinishedSubdomain);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &Ask::replyFinishedEmail);
     if(args->outputUrl)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Ask::replyFinishedUrl);
+        connect(manager, &NetworkAccessManager::finished, this, &Ask::replyFinishedUrl);
 }
 Ask::~Ask(){
     delete manager;

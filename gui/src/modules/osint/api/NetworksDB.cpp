@@ -20,19 +20,19 @@
  */
 NetworksDB::NetworksDB(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "NetworksDB";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedIp);
     if(args->outputCidr)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedCidr);
+        connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedCidr);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomainIp);
     ///
     /// getting api key...
     ///

@@ -15,11 +15,11 @@
  */
 NeutrinoApi::NeutrinoApi(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "NeutrinoApi";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &NeutrinoApi::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &NeutrinoApi::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

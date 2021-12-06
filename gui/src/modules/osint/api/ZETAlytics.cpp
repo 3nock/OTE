@@ -7,13 +7,13 @@
 
 ZETAlytics::ZETAlytics(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "ZETAlytics";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &ZETAlytics::replyFinishedSubdomain);
     ///
     /// get api key...
     ///

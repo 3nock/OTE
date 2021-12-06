@@ -17,17 +17,17 @@
 
 BinaryEdge::BinaryEdge(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "BinaryEdge";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedRawJson);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedIp);
     ///
     /// getting api key...
     ///

@@ -14,13 +14,13 @@
  */
 EmailCrawlr::EmailCrawlr(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "EmailCrawlr";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedRawJson);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedEmail);
     ///
     /// getting api-key...
     ///

@@ -15,19 +15,19 @@
 
 Bgpview::Bgpview(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Bgpview";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
 }
 Bgpview::~Bgpview(){
     delete manager;

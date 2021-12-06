@@ -36,19 +36,19 @@
 /* 1k per hour unauthenticated, and 10k authed*/
 OtxPaid::OtxPaid(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "otx";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxPaid::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedRawJson);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxPaid::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &OtxPaid::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedAsn);
     ///
     /// getting api key...
     ///

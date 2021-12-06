@@ -16,19 +16,19 @@
 
 HackerTargetFree::HackerTargetFree(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "HackerTarget";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedRawTxt);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedRawTxt);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedIp);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedAsn);
 }
 HackerTargetFree::~HackerTargetFree(){
     delete manager;

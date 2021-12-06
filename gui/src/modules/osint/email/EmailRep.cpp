@@ -6,11 +6,11 @@
 
 EmailRep::EmailRep(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "EmailRep";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &EmailRep::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &EmailRep::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///

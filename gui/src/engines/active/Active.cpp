@@ -54,6 +54,10 @@ Active::Active(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *pr
     connectActions();
     result->active->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     result->active->subdomainIpProxy->setRecursiveFilteringEnabled(true);
+    ///
+    /// syntax higlighting...
+    ///
+    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Active::~Active(){
     delete m_scanArguments;

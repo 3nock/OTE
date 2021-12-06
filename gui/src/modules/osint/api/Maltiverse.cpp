@@ -16,17 +16,17 @@
  */
 Maltiverse::Maltiverse(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Maltiverse";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Maltiverse::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Maltiverse::replyFinishedRawJson);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Maltiverse::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &Maltiverse::replyFinishedEmail);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Maltiverse::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &Maltiverse::replyFinishedAsn);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Maltiverse::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Maltiverse::replyFinishedIp);
 }
 Maltiverse::~Maltiverse(){
     delete manager;

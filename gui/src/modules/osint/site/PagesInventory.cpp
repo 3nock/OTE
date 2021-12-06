@@ -8,15 +8,15 @@
  */
 PagesInventory::PagesInventory(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "PagesInventory";
 
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &PagesInventory::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &PagesInventory::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &PagesInventory::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &PagesInventory::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &PagesInventory::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &PagesInventory::replyFinishedIp);
 }
 PagesInventory::~PagesInventory(){
     delete manager;

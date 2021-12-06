@@ -5,6 +5,7 @@
 #include "src/utils/utils.h"
 #include "src/modules/scan/IpScanner.h"
 #include "src/dialogs/ConfigDialog.h"
+#include "src/utils/NotesSyntaxHighlighter.h"
 
 namespace Ui {
     class Ip;
@@ -48,6 +49,9 @@ class Ip : public AbstractEngine{
 private:
         Ui::Ip *ui;
         ipEngine::ScanArguments *m_scanArguments;
+        //...
+        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
+        //...
         void stopScan();
         void startScan();
         void pauseScan();

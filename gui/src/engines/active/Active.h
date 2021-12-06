@@ -4,6 +4,7 @@
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/scan/ActiveScanner.h"
+#include "src/utils/NotesSyntaxHighlighter.h"
 
 namespace Ui {
     class Active;
@@ -47,6 +48,9 @@ class Active : public AbstractEngine{
     private:
         Ui::Active *ui;
         active::ScanArguments *m_scanArguments;
+        //...
+        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
+        //...
         void stopScan();
         void startScan();
         void pauseScan();

@@ -12,11 +12,11 @@
  */
 BuiltWith::BuiltWith(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "BuiltWith";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

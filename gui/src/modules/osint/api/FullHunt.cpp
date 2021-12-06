@@ -14,13 +14,13 @@
  */
 FullHunt::FullHunt(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "FullHunt";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &FullHunt::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &FullHunt::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &FullHunt::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &FullHunt::replyFinishedSubdomain);
     ///
     /// getting api key....
     ///

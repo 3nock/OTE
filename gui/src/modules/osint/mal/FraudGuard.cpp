@@ -15,11 +15,11 @@
  */
 FraudGuard::FraudGuard(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "FraudGuard";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &FraudGuard::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &FraudGuard::replyFinishedRawJson);
     ///
     /// get api key...
     ///

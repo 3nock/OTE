@@ -15,11 +15,11 @@
  */
 Snov::Snov(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Snov";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Snov::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Snov::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///

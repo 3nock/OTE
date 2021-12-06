@@ -74,9 +74,9 @@ struct ScanArgs{
     int maxPage = 5;
 };
 
-class MyNetworkAccessManager: public QNetworkAccessManager {
+class NetworkAccessManager: public QNetworkAccessManager {
     public:
-        MyNetworkAccessManager(QObject *parent = nullptr): QNetworkAccessManager(parent)
+        NetworkAccessManager(QObject *parent = nullptr): QNetworkAccessManager(parent)
         {
         }
 
@@ -186,7 +186,7 @@ class AbstractOsintModule : public QObject {
         ScanArgs *args;
         ScanLog log;
         int activeRequests = 0;
-        MyNetworkAccessManager *manager = nullptr;
+        NetworkAccessManager *manager = nullptr;
         ///
         /// methods...
         ///
@@ -194,7 +194,12 @@ class AbstractOsintModule : public QObject {
             log.message = reply->errorString();
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             emit errorLog(log);
-            end(reply);
+
+            /* implements its own end */
+            reply->deleteLater();
+            activeRequests--;
+            if(activeRequests == 0)
+                emit quitThread();
         }
 
         inline void end(QNetworkReply *reply){

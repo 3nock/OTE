@@ -30,11 +30,11 @@
  */
 Arin::Arin(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Arin";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Arin::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Arin::replyFinishedRawJson);
 }
 Arin::~Arin(){
     delete manager;

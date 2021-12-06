@@ -8,6 +8,7 @@
 #include "src/utils/utils.h"
 #include "src/modules/osint/OsintModulesHeaders.h"
 #include "src/utils/JsonSyntaxHighlighter.h"
+#include "src/utils/NotesSyntaxHighlighter.h"
 
 
 namespace Ui {
@@ -134,7 +135,8 @@ class Raw : public AbstractEngine{
         ScanArgs *m_scanArgs;
         //...
         QMap<QString, QStringList> m_optionSet;
-        JsonSyntaxHighlighter *syntaxHighlighter;
+        JsonSyntaxHighlighter *m_jsonSyntaxHighlighter;
+        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
         //...
         int m_resultsCountJson = 0;
         int m_resultsCountTree = 0;

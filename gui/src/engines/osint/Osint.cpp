@@ -13,39 +13,23 @@
  *
  * clear proxyModel to delete certain results...
  *
- * write the ultimate article on subdomain enumeration
- *
  * fix the regex for filter, it breaks on special chars
- *
- * log on every scan each module its results count
  *
  * http://ipv4info.com/account/register/
  * https://riddler.io/auth/register
  * https://dnschecker.org/subdomainIp-tools.php
  * https://suip.biz/
- * https://viewdns.info/api/
- * https://rapiddns.io/tools
- * pkey.in
  * https://skrapp.io/api
- *
  * https://tools.epieos.com/email.php ->email-lookup
  *
- * you can crawl the enumerated urls subdomainIp eg from archives
+ * you can crawl the enumerated urls all eg from archives
  * and return only the status codes of each url and show a graph
  * of status codes eg like screaming frog crawler analysis
  * eg. how many 200,301,404,501
  * create its own seperate analysis tool...
  *
- * add option for certificates and on comboBox and their own
- * modelView which show subdomainIp cert n subdomain info
- * graph of certificates
- *
- * create a dialog(program properties) that shows subdomainIp api-csubdomainIps url so
- * user can be able to fix them without compiling..
- *
- * emit a QStringList/QSet instead of individual list
- * automaticsubdomainIpy group the subdmains with stars into one group, from cert scans
- * for later multilevel scanning...
+ * create a dialog(program properties) that shows all api-calls url so
+ * user can be able to fix them without compiling...
  *
  * create a Map structure that has a subdomain name, ip-address, banners & other info
  * then only link the structure name to the modelview more additional info are to be
@@ -57,7 +41,7 @@
  *
  * same data different model views eg general treeView, subdomain-ip table view, subdomain-ListView
  * ip-listView
- * subdomainIp updated at the same time...
+ * all updated at the same time...
  *
  * osint config should contain every osint module with its options of what you
  * want to enumerate
@@ -70,7 +54,25 @@
  * dont count txt
  *
  * countries resources eg asns : ripe
- */
+ *
+DORKS
+
+inurl:"contact"
+intext:email filetype:log
+"Index of /mail"
+"admin account info" filetype:log
+intext:@
+administrator accounts/
+intitle:"Index of" .bash_history
+intitle:"index of" members OR accounts
+inurl:/shared/help.php
+inurl:public
+intitle:index.of inbox
+intitle:"Server Administration"
+inurl:passwd.txt
+robots.txt
+php-addressbook "This is the addressbook for *" -warning
+*/
 
 
 Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status):
@@ -124,6 +126,10 @@ Osint::Osint(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
 
     /* registering meta-objects */
     qRegisterMetaType<ScanLog>("ScanLog");
+    ///
+    /// syntax higlighting...
+    ///
+    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Osint::~Osint(){
     delete m_scanArguments;

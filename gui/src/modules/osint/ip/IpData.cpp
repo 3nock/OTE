@@ -12,11 +12,11 @@
  */
 IpData::IpData(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "IpData";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpData::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &IpData::replyFinishedRawJson);
     ///
     /// get api key...
     ///

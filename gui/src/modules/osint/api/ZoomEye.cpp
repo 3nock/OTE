@@ -16,19 +16,19 @@
  */
 ZoomEye::ZoomEye(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "ZoomEye";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedRawJson);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomainIp);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomain);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedAsn);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ZoomEye::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedIp);
     ///
     /// getting api key...
     ///

@@ -11,11 +11,11 @@
  */
 BotScout::BotScout(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "BotScout";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &BotScout::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &BotScout::replyFinishedRawJson);
 }
 BotScout::~BotScout(){
     delete manager;

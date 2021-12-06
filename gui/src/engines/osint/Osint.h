@@ -7,6 +7,7 @@
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ConfigDialog.h"
 #include "src/modules/osint/AbstractOsintModule.h"
+#include "src/utils/NotesSyntaxHighlighter.h"
 
 /* output option */
 #define OUTPUT_SUBDOMAIN 0
@@ -81,6 +82,7 @@ class Osint : public AbstractEngine{
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
         void on_checkBoxMultipleTargets_clicked(bool checked);
         void on_comboBoxOutput_currentIndexChanged(int index);
+        void on_comboBoxInput_currentIndexChanged(int index);
         void on_lineEditFilter_textChanged(const QString &arg1);
         ///
         /// ...
@@ -90,9 +92,7 @@ class Osint : public AbstractEngine{
         void on_buttonCreateProfile_clicked();
         void on_buttonDeleteProfile_clicked();
 
-        void on_comboBoxInput_currentIndexChanged(int index);
-
-    private:
+private:
         Ui::Osint *ui;
         //...
         osint::ScanArguments *m_scanArguments;
@@ -107,6 +107,9 @@ class Osint : public AbstractEngine{
         QSet<QString> m_asnSet;
         QSet<QString> m_sslCertSet;
         QSet<QString> m_cidrSet;
+        //...
+        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
+        //...
         void stopScan();
         void startScan();
         void pauseScan();

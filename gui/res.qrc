@@ -1,9 +1,10 @@
 <RCC>
     <qresource prefix="/img">
-        <file>res/icons/main.ico</file>
         <file>res/icons/folder2.png</file>
         <file>res/icons/arrow.png</file>
         <file>res/icons/checkBox2.png</file>
+        <file>res/icons/s3s.ico</file>
+        <file>res/icons/logo.ico</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/nameservers.txt</file>

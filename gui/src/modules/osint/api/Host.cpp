@@ -8,11 +8,11 @@
 
 Host::Host(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Host";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Host::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Host::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

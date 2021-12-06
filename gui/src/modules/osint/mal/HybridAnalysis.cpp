@@ -6,11 +6,11 @@
 
 HybridAnalysis::HybridAnalysis(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "HybridAnalysis";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &HybridAnalysis::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &HybridAnalysis::replyFinishedRawJson);
     ///
     /// get api key...
     ///

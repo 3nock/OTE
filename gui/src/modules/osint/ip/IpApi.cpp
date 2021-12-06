@@ -13,13 +13,13 @@
  */
 IpApi::IpApi(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "IpApi";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &IpApi::replyFinishedRawJson);
     if(args->outputInfo)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpApi::replyFinishedInfo);
+        connect(manager, &NetworkAccessManager::finished, this, &IpApi::replyFinishedInfo);
     ///
     /// get api key...
     ///

@@ -26,17 +26,17 @@
  */
 ViewDns::ViewDns(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "ViewDns";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &ViewDns::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &ViewDns::replyFinishedSubdomain);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &ViewDns::replyFinishedIp);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &ViewDns::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &ViewDns::replyFinishedEmail);
     ///
     /// getting api key...
     ///

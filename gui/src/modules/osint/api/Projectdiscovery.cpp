@@ -9,13 +9,13 @@
 Projectdiscovery::Projectdiscovery(ScanArgs *args):
     AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "ProjectDiscovery";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedSubdomain);
     ///
     /// getting api key...
     ///

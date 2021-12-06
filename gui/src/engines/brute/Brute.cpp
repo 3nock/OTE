@@ -126,6 +126,10 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     this->connectActions();
     result->brute->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     result->brute->subdomainIpProxy->setRecursiveFilteringEnabled(true);
+    ///
+    /// syntax higlighting...
+    ///
+    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Brute::~Brute(){
     delete m_scanArguments;

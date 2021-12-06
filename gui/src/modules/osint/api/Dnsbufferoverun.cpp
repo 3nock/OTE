@@ -7,17 +7,17 @@
 
 Dnsbufferoverun::Dnsbufferoverun(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "DnsBufferoverRun";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomain);
     if(args->outputSubdomainIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomainIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomainIp);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedIp);
 }
 Dnsbufferoverun::~Dnsbufferoverun(){
     delete manager;

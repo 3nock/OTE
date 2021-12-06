@@ -12,15 +12,15 @@
 
 Censys::Censys(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Censys";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Censys::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Censys::replyFinishedRawJson);
     if(args->outputSSLCert)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Censys::replyFinishedSSLCert);
+        connect(manager, &NetworkAccessManager::finished, this, &Censys::replyFinishedSSLCert);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Censys::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Censys::replyFinishedSubdomain);
     ///
     /// getting api key...
     ///

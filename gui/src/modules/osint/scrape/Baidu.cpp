@@ -7,15 +7,15 @@
  */
 Baidu::Baidu(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Baidu";
 
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Baidu::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedSubdomain);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Baidu::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedEmail);
     if(args->outputUrl)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Baidu::replyFinishedUrl);
+        connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedUrl);
 }
 Baidu::~Baidu(){
     delete manager;

@@ -800,7 +800,7 @@ void Raw::on_moduleAnubis_clicked(){
 
 void Raw::on_moduleBgpview_clicked(){
     ui->comboBoxOptions->clear();
-    ModuleInfo::LeakLookup meta;
+    ModuleInfo::Bgpview meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

@@ -12,11 +12,11 @@
  */
 IpQualityScore::IpQualityScore(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "IpQualityScore";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRawJson);
     ///
     /// get api key...
     ///

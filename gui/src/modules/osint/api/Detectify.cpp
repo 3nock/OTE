@@ -7,13 +7,13 @@
 
 Detectify::Detectify(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Detectify";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Detectify::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Detectify::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Detectify::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Detectify::replyFinishedSubdomain);
 }
 Detectify::~Detectify(){
     delete manager;

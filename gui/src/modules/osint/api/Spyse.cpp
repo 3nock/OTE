@@ -19,23 +19,23 @@
 /* 100 queries for a free account */
 Spyse::Spyse(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Spyse";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedSubdomain);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedEmail);
     if(args->outputAsn)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedAsn);
+        connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedAsn);
     if(args->outputSSLCert)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedSSLCert);
+        connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedSSLCert);
     if(args->outputUrl)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedUrl);
+        connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedUrl);
     if(args->outputIp)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Spyse::replyFinishedIp);
+        connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedIp);
     ///
     /// getting api-key...
     ///

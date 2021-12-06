@@ -13,13 +13,13 @@
 
 Hunter::Hunter(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Hunter";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Hunter::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Hunter::replyFinishedRawJson);
     if(args->outputEmail)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
+        connect(manager, &NetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
     ///
     /// getting api-key...
     ///

@@ -8,11 +8,11 @@
 
 EmailFormat::EmailFormat(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "EmailFormat";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &EmailFormat::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &EmailFormat::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///

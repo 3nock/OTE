@@ -10,11 +10,11 @@
 
 Whatcms::Whatcms(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Whatcms";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Whatcms::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Whatcms::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

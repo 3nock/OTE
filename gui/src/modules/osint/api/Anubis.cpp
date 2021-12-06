@@ -6,13 +6,13 @@
 
 Anubis::Anubis(ScanArgs *args): AbstractOsintModule(args)
 {
-    manager = new MyNetworkAccessManager(this);
+    manager = new NetworkAccessManager(this);
     log.moduleName = "Anubis";
 
     if(args->outputRaw)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedRawJson);
+        connect(manager, &NetworkAccessManager::finished, this, &Anubis::replyFinishedRawJson);
     if(args->outputSubdomain)
-        connect(manager, &MyNetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
+        connect(manager, &NetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
 }
 Anubis::~Anubis(){
     delete manager;
