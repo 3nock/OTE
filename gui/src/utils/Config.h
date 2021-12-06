@@ -20,7 +20,7 @@ class Config {
 
     public:
         static QSettings &generalConfig(){
-            static QSettings settings("subsuite.ini", QSettings::IniFormat);
+            static QSettings settings("sub3suite.ini", QSettings::IniFormat);
             return settings;
         }
         static QSettings &osintConfig(){
