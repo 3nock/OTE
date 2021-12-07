@@ -23,4 +23,3 @@ cov-int*
 *.js
 ui_*
 include/
-gui/includes

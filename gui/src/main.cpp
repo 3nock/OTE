@@ -2,6 +2,8 @@
 #include "src/utils/Config.h"
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QSplashScreen>
+#include <QTimer>
 
 ///
 /// perform some checkups when initializing eg. missing files...
@@ -18,6 +20,13 @@ int main(int argc, char *argv[]){
     initializationCheckUp();
     QApplication app(argc, argv);
     ///
+    /// splash screen...
+    ///
+    QPixmap splashImage = QPixmap(":/img/res/icons/splash.png");
+    splashImage.scaledToWidth(600);
+    QSplashScreen splash(splashImage);
+    splash.show();
+    ///
     /// removing all the question mark buttons on dialogs...
     ///
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
@@ -32,6 +41,10 @@ int main(int argc, char *argv[]){
     int y = (app.desktop()->height()-w.height()) / 2;
     w.move(x, y-35);
     w.show();
+    ///
+    /// splashscreen timer...
+    ///
+    splash.finish(&w);
     ///
     /// set styleSheet...
     ///

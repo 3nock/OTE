@@ -5,6 +5,7 @@
         <file>res/icons/checkBox2.png</file>
         <file>res/icons/s3s.ico</file>
         <file>res/icons/logo.ico</file>
+        <file>res/icons/splash.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/nameservers.txt</file>

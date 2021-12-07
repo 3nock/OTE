@@ -25,7 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-include(includes/gumbo/gumbo-parser.pri)
+include(includes/gumbo-parser.pri)
 
 SOURCES += \
     src/dialogs/FailedScansDialog.cpp \
