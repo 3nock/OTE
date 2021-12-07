@@ -1,0 +1,3 @@
+[submodule "gui/includes/gumbo-parser"]
+	path = gui/includes/gumbo-parser
+	url = https://github.com/google/gumbo-parser
