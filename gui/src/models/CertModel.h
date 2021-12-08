@@ -18,21 +18,26 @@ public:
         subject(new QStandardItem("Subject")),
         key(new QStandardItem("Key")),
         subjectAltNames(new QStandardItem("Subject Alternative Names")),
+
         /* info */
         info_verison(new QStandardItem),
         info_signatureAlgorithm(new QStandardItem),
         info_serialNumber(new QStandardItem),
+
         /* fingerprint */
         fingerprint_md5(new QStandardItem),
         fingerprint_sha1(new QStandardItem),
         fingerprint_sha256(new QStandardItem),
+
         /* issuer */
         issuer_commonName(new QStandardItem),
         issuer_organizationName(new QStandardItem),
         issuer_countryName(new QStandardItem),
+
         /* validity */
         validity_notBefore(new QStandardItem),
         validity_notAfter(new QStandardItem),
+
         /* subject */
         subject_commonName(new QStandardItem),
         subject_organizationName(new QStandardItem),
@@ -40,6 +45,7 @@ public:
         subject_stateOrProvinceName(new QStandardItem),
         subject_countryName(new QStandardItem),
         subject_email(new QStandardItem),
+
         /* key */
         key_type(new QStandardItem),
         key_algorithm(new QStandardItem)
@@ -53,7 +59,6 @@ public:
         subjectAltNames->setForeground(QColor(220,220,220));
 
         QFont font("Segoe UI", 9, QFont::Bold);
-        //...
         info->setFont(font);
         fingerprint->setFont(font);
         issuer->setFont(font);
@@ -89,6 +94,7 @@ public:
     }
     ~CertModel(){
     }
+
     void initModel(){
         mainModel = new QStandardItemModel;
         mainModel->setColumnCount(2);
@@ -103,6 +109,7 @@ public:
         mainModel->appendRow(key);
         mainModel->appendRow(subjectAltNames);
     }
+
     void initItem(){
         mainItem = new QStandardItem;
         /* appending to the item */

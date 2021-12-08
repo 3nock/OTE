@@ -26,7 +26,7 @@
        </property>
        <item>
         <property name="text">
-         <string>All</string>
+         <string>Bgpview</string>
         </property>
        </item>
        <item>
@@ -79,15 +79,33 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>*Scan Config</string>
+         <string>*Option</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="buttonConfig">
-        <property name="text">
-         <string>Config...</string>
+       <widget class="QComboBox" name="comboBoxOption">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
+        <item>
+         <property name="text">
+          <string>ASN</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ASN PEERS</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ASN PREFIXES</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item>
@@ -242,7 +260,7 @@
         <number>1</number>
        </property>
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEdit"/>
+        <widget class="QPlainTextEdit" name="plainTextEditLogs"/>
        </item>
       </layout>
      </widget>

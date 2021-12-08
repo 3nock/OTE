@@ -169,17 +169,27 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(active, SIGNAL(changeTabToCert()), this, SLOT(onChangeTabToCert()));
     connect(raw, SIGNAL(changeTabToCert()), this, SLOT(onChangeTabToCert()));
 
-    // creating tabs...
-    ui->tabWidget_mainTab->insertTab(0, osint, "Osint");
-    ui->tabWidget_mainTab->insertTab(1, raw, "Raw");
-    ui->tabWidget_mainTab->insertTab(2, brute, "Brute");
-    ui->tabWidget_mainTab->insertTab(3, active, "Active");
-    ui->tabWidget_mainTab->insertTab(4, records, "Record");
-    ui->tabWidget_mainTab->insertTab(5, cert, "Cert");
-    ui->tabWidget_mainTab->insertTab(6, ip, "Ip");
-    ui->tabWidget_mainTab->insertTab(7, project, "Project");
-    //...
-    ui->tabWidget_mainTab->setCurrentIndex(0);
+    ///
+    /// creating tabs...
+    ///
+
+    /* passive tabwidget */
+    ui->tabWidgetPassive->insertTab(0, osint, "Osint");
+    ui->tabWidgetPassive->insertTab(1, raw, "Raw");
+    ui->tabWidgetPassive->setCurrentIndex(0);
+
+    /* active tabwidget */
+    ui->tabWidgetActive->insertTab(0, brute, "Brute");
+    ui->tabWidgetActive->insertTab(1, active, "Active");
+    ui->tabWidgetActive->insertTab(2, records, "Record");
+    ui->tabWidgetActive->insertTab(3, cert, "Cert");
+    ui->tabWidgetActive->insertTab(4, ip, "Ip");
+    ui->tabWidgetActive->setCurrentIndex(0);
+
+    /* main tabwidget */
+    ui->tabWidgetMain->insertTab(2, project, "Project");
+    ui->tabWidgetMain->setCurrentIndex(0);
+
     ///
     /// Welcome...
     ///
@@ -218,25 +228,32 @@ void MainWindow::onReceiveLog(QString log){
 /// changing tabs...
 ///
 void MainWindow::onChangeTabToOsint(){
-    ui->tabWidget_mainTab->setCurrentIndex(0);
+    ui->tabWidgetMain->setCurrentIndex(0);
+    ui->tabWidgetPassive->setCurrentIndex(0);
 }
 void MainWindow::onChangeTabToRaw(){
-    ui->tabWidget_mainTab->setCurrentIndex(1);
+    ui->tabWidgetMain->setCurrentIndex(0);
+    ui->tabWidgetPassive->setCurrentIndex(1);
 }
 void MainWindow::onChangeTabToBrute(){
-    ui->tabWidget_mainTab->setCurrentIndex(2);
+    ui->tabWidgetMain->setCurrentIndex(1);
+    ui->tabWidgetActive->setCurrentIndex(0);
 }
 void MainWindow::onChangeTabToActive(){
-    ui->tabWidget_mainTab->setCurrentIndex(3);
+    ui->tabWidgetMain->setCurrentIndex(1);
+    ui->tabWidgetActive->setCurrentIndex(1);
 }
 void MainWindow::onChangeTabToRecords(){
-    ui->tabWidget_mainTab->setCurrentIndex(4);
+    ui->tabWidgetMain->setCurrentIndex(1);
+    ui->tabWidgetActive->setCurrentIndex(2);
 }
 void MainWindow::onChangeTabToCert(){
-    ui->tabWidget_mainTab->setCurrentIndex(5);
+    ui->tabWidgetMain->setCurrentIndex(1);
+    ui->tabWidgetActive->setCurrentIndex(3);
 }
 void MainWindow::onChangeTabToIp(){
-    ui->tabWidget_mainTab->setCurrentIndex(6);
+    ui->tabWidgetMain->setCurrentIndex(1);
+    ui->tabWidgetActive->setCurrentIndex(4);
 }
 
 ///

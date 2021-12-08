@@ -342,6 +342,7 @@ void Osint::startScanThread(AbstractOsintModule *module){
         connect(module, &AbstractOsintModule::sslCert, this, &Osint::onResultSSLCert);
         break;
     }
+    connect(module, &AbstractOsintModule::rateLimitLog, this, &Osint::onRateLimitLog);
     connect(module, &AbstractOsintModule::errorLog, this, &Osint::onErrorLog);
     connect(module, &AbstractOsintModule::infoLog, this, &Osint::onInfoLog);
     connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);

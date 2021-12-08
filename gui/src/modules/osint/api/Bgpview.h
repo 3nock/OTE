@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct Bgpview{
-    QString name = "Bgpview";
+    QString name = OSINT_MODULE_BGPVIEW;
     QString url = "https://bgpview.io/";
     QString url_apiDoc = "https://bgpview.docs.apiary.io/";
     QString summary = "BGPView is a simple API allowing consumers to view all sort of analytics data"\
@@ -54,6 +54,17 @@ class Bgpview: public AbstractOsintModule{
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
         void replyFinishedEmail(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
+        /* ... */
+        void replyFinishedInfoAsn(QNetworkReply *reply) override;
+        void replyFinishedInfoAsnPeers(QNetworkReply *reply) override;
+        void replyFinishedInfoAsnPrefixes(QNetworkReply *reply) override;
+        /* ... */
+        void replyFinishedInfoCidr(QNetworkReply *reply) override;
+
+    private:
+        int m_infoCount = 0;
+        AsModelStruct asModel;
 };
 
 #endif // BGPVIEW_H

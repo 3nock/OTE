@@ -6,9 +6,9 @@
 
 namespace ModuleInfo {
 struct Anubis{
-    QString name = "Anubis";
+    QString name = OSINT_MODULE_ANUBIS;
     QString url = "https://jldc.me/anubis/";
-    QString url_apiDoc = "";
+    QString url_apiDoc = "https://github.com/jonluca/anubis";
     QString summary = "Subdomain enumeration and information gathering tool";
     QMap<QString, QStringList> flags = {{"subdomain",
                                          {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains of a particular domain"}}};
@@ -26,6 +26,9 @@ class Anubis: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
+
+    private:
+        void m_checkRateLimit();
 };
 
 #endif // ANUBIS_H

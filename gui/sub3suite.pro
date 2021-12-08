@@ -199,8 +199,10 @@ HEADERS += \
     src/engines/cert/Cert.h \
     src/models/AsnModel.h \
     src/models/CertModel.h \
+    src/models/CidrModel.h \
     src/models/EmailModel.h \
     src/models/IpModel.h \
+    src/modules/osint/OsintDefinitions.h \
     src/modules/osint/api/HaveIBeenPawned.h \
     src/modules/osint/api/Host.h \
     src/modules/osint/api/JsonWhois.h \

@@ -12,6 +12,8 @@
 //...
 #include "src/models/IpModel.h"
 #include "src/models/AsnModel.h"
+//...
+#include "osintdefinitions.h"
 
 
 /* input option */
@@ -59,7 +61,16 @@ struct ScanArgs{
 
     /* output type */
     bool outputRaw = false;
+    //...
     bool outputInfo = false;
+    bool outputInfoIp = false;
+    bool outputInfoCidr = false;
+    bool outputInfoSSLCert = false;
+    /* ... */
+    bool outputInfoAsn = false;
+    bool outputInfoAsnPeers = false;
+    bool outputInfoAsnPrefixes = false;
+    //...
     bool outputSubdomainIp = false;
     bool outputSubdomain = false;
     bool outputEmail = false;
@@ -109,6 +120,7 @@ class AbstractOsintModule : public QObject {
         void quitThread();
         //...
         void infoLog(ScanLog log);
+        void rateLimitLog(ScanLog log);
         void errorLog(ScanLog error);
 
     signals:
@@ -130,6 +142,11 @@ class AbstractOsintModule : public QObject {
         void rawCert(QByteArray cert_in_perm_format);
         void rawResults(QByteArray reply);
         void rawResultsTxt(QByteArray reply);
+        //...
+        void infoASN(AsModelStruct);
+        void infoIP(QMap<int, QStringList>);
+        void infoCidr(QMap<int, QStringList>);
+        void infoSSLCert(QMap<int, QStringList>);
 
     protected slots:
         virtual void start() = 0;
@@ -141,7 +158,15 @@ class AbstractOsintModule : public QObject {
         virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
         virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails
         virtual void replyFinishedUrl(QNetworkReply*){} // returns URLs
+        /* ... */
+        virtual void replyFinishedInfoAsn(QNetworkReply*){} // returns multiple info on asn
+        virtual void replyFinishedInfoAsnPeers(QNetworkReply*){} // returns multiple info on asn peers
+        virtual void replyFinishedInfoAsnPrefixes(QNetworkReply*){} // returns multiple info on asn prefixes
+        /* ... */
         virtual void replyFinishedInfo(QNetworkReply*){} // returns multiple info on appropriate target
+        virtual void replyFinishedInfoIp(QNetworkReply*){} // returns multiple info on ip
+        virtual void replyFinishedInfoCidr(QNetworkReply*){} // returns multiple info on cidr
+        virtual void replyFinishedInfoSSLCert(QNetworkReply*){} // returns multiple info on ssl cert
         ///
         /// For raw output...
         ///
@@ -190,6 +215,18 @@ class AbstractOsintModule : public QObject {
         ///
         /// methods...
         ///
+        void  onRateLimit(QNetworkReply *reply){
+            log.message = "API rate limit reached";
+            log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            emit rateLimitLog(log);
+
+            /* implements its own end */
+            reply->deleteLater();
+            activeRequests--;
+            if(activeRequests == 0)
+                emit quitThread();
+        }
+
         void onError(QNetworkReply *reply){
             log.message = reply->errorString();
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
@@ -214,7 +251,8 @@ class AbstractOsintModule : public QObject {
         }
 
         GumboNode* getBody(GumboNode *node){
-            for(unsigned int i = 0; i < node->v.element.children.length; i++){
+            for(unsigned int i = 0; i < node->v.element.children.length; i++)
+            {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[i]);
                 if(child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_BODY)
                     return child;

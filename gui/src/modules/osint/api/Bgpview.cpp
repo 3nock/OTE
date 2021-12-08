@@ -1,4 +1,5 @@
 #include "Bgpview.h"
+#include "src/models/AsnModel.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -13,10 +14,13 @@
 #define IP_PREFIXES 7
 #define QUERY 8
 
+/*
+ * you can use query term...
+ */
 Bgpview::Bgpview(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
-    log.moduleName = "Bgpview";
+    log.moduleName = OSINT_MODULE_BGPVIEW;
 
     if(args->outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedRawJson);
@@ -28,6 +32,16 @@ Bgpview::Bgpview(ScanArgs *args): AbstractOsintModule(args)
         connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
     if(args->outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
+    if(args->outputCidr)
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedCidr);
+    if(args->outputInfoCidr)
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoCidr);
+    if(args->outputInfoAsn)
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsn);
+    if(args->outputInfoAsnPeers)
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsnPeers);
+    if(args->outputInfoAsnPrefixes)
+        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsnPrefixes);
 }
 Bgpview::~Bgpview(){
     delete manager;
@@ -68,6 +82,42 @@ void Bgpview::start(){
             url.setUrl("https://api.bgpview.io/search?query_term="+args->target);
             break;
         }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->outputInfoCidr){
+        url.setUrl("https://api.bgpview.io/prefix/"+args->target);
+        request.setAttribute(QNetworkRequest::User, IP_PREFIXES);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->outputInfoAsn){
+        url.setUrl("https://api.bgpview.io/asn/"+args->target);
+        request.setAttribute(QNetworkRequest::User, ASN);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->outputInfoAsnPeers){
+        url.setUrl("https://api.bgpview.io/asn/"+args->target+"/peers");
+        request.setAttribute(QNetworkRequest::User, ASN_PEERS);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args->outputInfoAsnPrefixes){
+        url.setUrl("https://api.bgpview.io/asn/"+args->target+"/prefixes");
+        request.setAttribute(QNetworkRequest::User, ASN_PREFIXES);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
@@ -117,6 +167,14 @@ void Bgpview::start(){
             activeRequests++;
             return;
         }
+        if(args->outputCidr){
+            url.setUrl("https://api.bgpview.io/asn/"+args->target+"/prefixes");
+            request.setAttribute(QNetworkRequest::User, ASN_PREFIXES);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+            return;
+        }
         if(args->outputAsn){
             url.setUrl("https://api.bgpview.io/asn/"+args->target+"/peers");
             request.setAttribute(QNetworkRequest::User, ASN_PEERS);
@@ -132,6 +190,17 @@ void Bgpview::start(){
 
             url.setUrl("https://api.bgpview.io/asn/"+args->target+"/upstreams");
             request.setAttribute(QNetworkRequest::User, ASN_UPSTREAMS);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        return;
+    }
+
+    if(args->inputCidr){
+        if(args->outputAsn){
+            url.setUrl("https://api.bgpview.io/prefix/"+args->target);
+            request.setAttribute(QNetworkRequest::User, IP_PREFIXES);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -271,5 +340,137 @@ void Bgpview::replyFinishedSubdomain(QNetworkReply *reply){
         emit subdomain(domain);
         log.resultsCount++;
     }
+    end(reply);
+}
+
+void Bgpview::replyFinishedCidr(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject data = document.object()["data"].toObject();
+
+    if(requestType == ASN_PREFIXES){
+        QJsonArray ipv4_prefixes = data["ipv4_prefixes"].toArray();
+        foreach(const QJsonValue &value, ipv4_prefixes){
+            emit cidr(value.toObject()["prefix"].toString());
+            log.resultsCount++;
+        }
+        QJsonArray ipv6_prefixes = data["ipv6_prefixes"].toArray();
+        foreach(const QJsonValue &value, ipv6_prefixes){
+            emit cidr(value.toObject()["prefix"].toString());
+            log.resultsCount++;
+        }
+    }
+
+    end(reply);
+}
+
+void Bgpview::replyFinishedInfoAsn(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject data = document.object()["data"].toObject();
+
+    if(requestType == ASN)
+    {
+        /* general info */
+        asModel.info_asn = data["asn"].toString();
+        asModel.info_name = data["name"].toString();
+        asModel.info_description = data["description_short"].toString();
+        asModel.info_country = data["country_code"].toString();
+        asModel.info_website = data["website"].toString();
+        /// owner's address...
+        QString address = "";
+        foreach(const QJsonValue &value, data["owner_address"].toArray())
+            address.append(value.toString()+", ");
+        asModel.info_ownerAddress = address;
+
+        /* email contacts */
+        foreach(const QJsonValue &value, data["email_contacts"].toArray())
+            asModel.emailcontacts.insert(value.toString());
+
+        /* abuse contacts */
+        foreach(const QJsonValue &value, data["abuse_contacts"].toArray())
+            asModel.abusecontacts.insert(value.toString());
+
+        /* rir allocation */
+        QJsonObject rirAllocation = data["rir_allocation"].toObject();
+        asModel.rir_name = rirAllocation["rir_name"].toString();
+        asModel.rir_country = rirAllocation["country_code"].toString();
+        asModel.rir_dateallocated = rirAllocation["date_allocated"].toString();
+
+        /* sending results */
+        emit infoASN(asModel);
+    }
+
+    end(reply);
+}
+
+void Bgpview::replyFinishedInfoAsnPeers(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject data = document.object()["data"].toObject();
+
+    if(requestType == ASN_PEERS){
+        foreach(const QJsonValue &value, data["ipv4_peers"].toArray())
+            asModel.peers.insert(QString::number(value.toObject()["asn"].toInt()));
+
+        foreach(const QJsonValue &value, data["ipv6_peers"].toArray())
+            asModel.peers.insert(QString::number(value.toObject()["asn"].toInt()));
+
+        /* sending results */
+        emit infoASN(asModel);
+    }
+
+    end(reply);
+}
+
+void Bgpview::replyFinishedInfoAsnPrefixes(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject data = document.object()["data"].toObject();
+
+    if(requestType == ASN_PREFIXES){
+        foreach(const QJsonValue &value, data["ipv4_prefixes"].toArray())
+            asModel.prefixes.insert(value.toObject()["prefix"].toString());
+
+        foreach(const QJsonValue &value, data["ipv6_prefixes"].toArray())
+            asModel.prefixes.insert(value.toObject()["prefix"].toString());
+
+        /* sending results */
+        emit infoASN(asModel);
+    }
+
+    end(reply);
+}
+
+void Bgpview::replyFinishedInfoCidr(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject data = document.object()["data"].toObject();
+
     end(reply);
 }

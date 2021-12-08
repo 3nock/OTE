@@ -26,6 +26,16 @@ void Osint::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
+void Osint::onRateLimitLog(ScanLog log){
+    QString message("<font color=\"yellow\">"+log.message+"</font>");
+    QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
+    QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
+    ui->plainTextEditLogs->appendPlainText("");
+}
+
 void Osint::onResultSubdomainIp(QString subdomain, QString ip){
     int prevSize = m_subdomainIpSet.count();
     /* inserting subdomain+ip */

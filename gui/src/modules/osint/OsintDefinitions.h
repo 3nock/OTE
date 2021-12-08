@@ -1,0 +1,7 @@
+#ifndef OSINTDEFINITIONS_H
+#define OSINTDEFINITIONS_H
+
+#define OSINT_MODULE_ANUBIS "Anubis"
+#define OSINT_MODULE_BGPVIEW "Bgpview"
+
+#endif // OSINTDEFINITIONS_H

@@ -47,6 +47,7 @@ class Osint : public AbstractEngine{
         void onScanThreadEnded();
         void onInfoLog(ScanLog log);
         void onErrorLog(ScanLog log);
+        void onRateLimitLog(ScanLog log);
         //...
         void onResultSubdomainIp(QString subdomain, QString ip);
         void onResultSubdomain(QString subdomain);

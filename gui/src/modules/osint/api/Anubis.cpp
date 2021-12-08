@@ -4,10 +4,14 @@
 
 #define SUBDOMAIN 0
 
+/*
+ *  https://jonlu.ca/anubis/subdomains/
+ *  https://jldc.me/anubis/subdomains/
+ */
 Anubis::Anubis(ScanArgs *args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
-    log.moduleName = "Anubis";
+    log.moduleName = OSINT_MODULE_ANUBIS;
 
     if(args->outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Anubis::replyFinishedRawJson);
@@ -49,11 +53,15 @@ void Anubis::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonArray subdomainList = document.array();
+    QJsonArray subdomains = document.array();
 
-    foreach(const QJsonValue &value, subdomainList){
+    foreach(const QJsonValue &value, subdomains){
         emit subdomain(value.toString());
         log.resultsCount++;
     }
     end(reply);
+}
+
+void Anubis::m_checkRateLimit(){
+
 }
