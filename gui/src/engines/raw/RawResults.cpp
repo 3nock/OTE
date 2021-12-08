@@ -111,6 +111,7 @@ void Raw::treeObject(QJsonObject object, QStandardItem *item){
 
 void Raw::treeArray(QJsonArray array, QStandardItem *item){
     int count = 0;
+    item->setIcon(QIcon(":/img/res/icons/array.png"));
     foreach(const QJsonValue &value, array)
     {
         if(value.isUndefined())

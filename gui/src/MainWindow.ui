@@ -143,8 +143,8 @@ QComboBox QWidget {
 }
 
 QComboBox::drop-down {
-    image: url(:/img/res/icons/arrow.png);
-    padding-top: 6px;
+    image: url(:/img/res/icons/downArrow.png);
+    padding-top: 3px;
     padding-right: 5px;
     padding-left: 5px;
 }
@@ -442,7 +442,7 @@ QCheckBox::indicator:checked {
     border-style:solid;
     border-width:1px;
     border-color: rgb(47,47,47);
-    image: url(:/img/res/icons/checkBox2.png);
+    image: url(:/img/res/icons/checkBox.png);
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(75, 75, 75, 255), stop:1 rgb(143, 143, 107));
 }
 
@@ -508,7 +508,7 @@ QRadioButton:hover {
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabPassive">
        <attribute name="title">
@@ -528,7 +528,15 @@ QRadioButton:hover {
          <number>0</number>
         </property>
         <item>
-         <widget class="QTabWidget" name="tabWidgetPassive"/>
+         <widget class="QTabWidget" name="tabWidgetPassive">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -550,7 +558,15 @@ QRadioButton:hover {
          <number>0</number>
         </property>
         <item>
-         <widget class="QTabWidget" name="tabWidgetActive"/>
+         <widget class="QTabWidget" name="tabWidgetActive">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
