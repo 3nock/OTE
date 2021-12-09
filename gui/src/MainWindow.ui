@@ -605,6 +605,7 @@ QRadioButton:hover {
      <string>Tools</string>
     </property>
     <addaction name="actionASNTool"/>
+    <addaction name="actionCIDRTool"/>
     <addaction name="actionCertTool"/>
     <addaction name="actionEmailTool"/>
     <addaction name="actionIpTool"/>
@@ -762,7 +763,7 @@ QRadioButton:hover {
   </action>
   <action name="actionIpTool">
    <property name="text">
-    <string>Ip Tool</string>
+    <string>IP Tool</string>
    </property>
   </action>
   <action name="actionASNTool">
@@ -772,12 +773,17 @@ QRadioButton:hover {
   </action>
   <action name="actionCertTool">
    <property name="text">
-    <string>Cert Tool</string>
+    <string>CERT Tool</string>
    </property>
   </action>
   <action name="actionEmailTool">
    <property name="text">
-    <string>Email Tool</string>
+    <string>EMAIL Tool</string>
+   </property>
+  </action>
+  <action name="actionCIDRTool">
+   <property name="text">
+    <string>CIDR Tool</string>
    </property>
   </action>
  </widget>

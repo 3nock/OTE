@@ -1,5 +1,4 @@
 #include "Bgpview.h"
-#include "src/models/AsnModel.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -381,6 +380,8 @@ void Bgpview::replyFinishedInfoAsn(QNetworkReply *reply){
 
     if(requestType == ASN)
     {
+        AsModelStruct asModel;
+
         /* general info */
         asModel.info_asn = data["asn"].toString();
         asModel.info_name = data["name"].toString();
@@ -425,6 +426,8 @@ void Bgpview::replyFinishedInfoAsnPeers(QNetworkReply *reply){
     QJsonObject data = document.object()["data"].toObject();
 
     if(requestType == ASN_PEERS){
+        AsModelStruct asModel;
+
         foreach(const QJsonValue &value, data["ipv4_peers"].toArray())
             asModel.peers.insert(QString::number(value.toObject()["asn"].toInt()));
 
@@ -449,6 +452,8 @@ void Bgpview::replyFinishedInfoAsnPrefixes(QNetworkReply *reply){
     QJsonObject data = document.object()["data"].toObject();
 
     if(requestType == ASN_PREFIXES){
+        AsModelStruct asModel;
+
         foreach(const QJsonValue &value, data["ipv4_prefixes"].toArray())
             asModel.prefixes.insert(value.toObject()["prefix"].toString());
 
@@ -471,6 +476,49 @@ void Bgpview::replyFinishedInfoCidr(QNetworkReply *reply){
     int requestType = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
+
+    if(requestType == IP_PREFIXES)
+    {
+        CidrModelStruct cidrModel;
+
+        /* general info */
+        cidrModel.info_prefix = data["prefix"].toString();
+        cidrModel.info_ip = data["ip"].toString();
+        cidrModel.info_cidr = QString::number(data["cidr"].toInt());
+        cidrModel.info_name = data["name"].toString();
+        cidrModel.info_description = data["description_short"].toString();
+        cidrModel.info_country = data["country_code"].toString();
+        cidrModel.info_website = data["website"].toString();
+        /// owner's address...
+        QString address = "";
+        foreach(const QJsonValue &value, data["owner_address"].toArray())
+            address.append(value.toString()+", ");
+        cidrModel.info_ownerAddress = address;
+
+        /* email contacts */
+        foreach(const QJsonValue &value, data["email_contacts"].toArray())
+            cidrModel.emailcontacts.insert(value.toString());
+
+        /* abuse contacts */
+        foreach(const QJsonValue &value, data["abuse_contacts"].toArray())
+            cidrModel.abusecontacts.insert(value.toString());
+
+        /* rir allocation */
+        QJsonObject rirAllocation = data["rir_allocation"].toObject();
+        cidrModel.rir_name = rirAllocation["rir_name"].toString();
+        cidrModel.rir_country = rirAllocation["country_code"].toString();
+        cidrModel.rir_prefix = rirAllocation["prefix"].toString();
+        cidrModel.rir_dateallocated = rirAllocation["date_allocated"].toString();
+
+        /* asns */
+        foreach(const QJsonValue &value, data["asns"].toArray()){
+            QString asn = QString::number(value.toObject()["asn"].toInt());
+            cidrModel.asns.insert(asn);
+        }
+
+        /* sending results */
+        emit infoCidr(cidrModel);
+    }
 
     end(reply);
 }

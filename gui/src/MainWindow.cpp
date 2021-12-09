@@ -7,6 +7,8 @@
 #include "src/tools/ASNTool.h"
 #include "src/tools/CertTool.h"
 #include "src/tools/EmailTool.h"
+#include "src/tools/CidrTool.h"
+
 
 /*
  * use https://www.qcustomplot.com/ for plots
@@ -298,4 +300,10 @@ void MainWindow::on_actionEmailTool_triggered(){
     EmailTool *emailTool = new EmailTool(this);
     emailTool->setAttribute(Qt::WA_DeleteOnClose, true);
     emailTool->show();
+}
+
+void MainWindow::on_actionCIDRTool_triggered(){
+    CidrTool *cidrTool = new CidrTool(this);
+    cidrTool->setAttribute(Qt::WA_DeleteOnClose, true);
+    cidrTool->show();
 }

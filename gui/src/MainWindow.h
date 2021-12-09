@@ -56,6 +56,8 @@ class MainWindow : public QMainWindow{
         void on_actionCertTool_triggered();
         void on_actionEmailTool_triggered();
 
+        void on_actionCIDRTool_triggered();
+
 private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;

@@ -61,10 +61,6 @@ class Bgpview: public AbstractOsintModule{
         void replyFinishedInfoAsnPrefixes(QNetworkReply *reply) override;
         /* ... */
         void replyFinishedInfoCidr(QNetworkReply *reply) override;
-
-    private:
-        int m_infoCount = 0;
-        AsModelStruct asModel;
 };
 
 #endif // BGPVIEW_H

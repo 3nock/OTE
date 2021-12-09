@@ -5,6 +5,7 @@
 #include <QStandardItem>
 #include <QSet>
 
+/* structure for sending asModel data along signals & slots */
 struct AsModelStruct{
     QSet<QString> emailcontacts;
     QSet<QString> abusecontacts;
@@ -25,7 +26,7 @@ struct AsModelStruct{
     QString rir_dateallocated;
 };
 
-
+/* the main AS results data model */
 class AsModel{
 public:
     AsModel():
@@ -90,7 +91,10 @@ public:
         model->appendRow(peers);
         model->appendRow(prefixes);
     }
-    ~AsModel(){}
+    ~AsModel()
+    {
+        /* not yet implemented */
+    }
 
 public:
     QStandardItemModel *model;

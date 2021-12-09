@@ -11,7 +11,7 @@ ASNTool::ASNTool(QWidget *parent) : QDialog(parent), ui(new Ui::ASNTool),
 
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText("Filter...");
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_AS);
+    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_ASN);
 
     /* setting model with tableView... */
     ui->treeResults->setModel(asModel->model);

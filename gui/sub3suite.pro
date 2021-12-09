@@ -108,6 +108,7 @@ SOURCES += \
     src/tools/ASNTool.cpp \
     src/tools/BannerGrabber.cpp \
     src/tools/CertTool.cpp \
+    src/tools/CidrTool.cpp \
     src/tools/DomainTool.cpp \
     src/tools/EmailTool.cpp \
     src/tools/IpTool.cpp \
@@ -263,6 +264,7 @@ HEADERS += \
     src/tools/ASNTool.h \
     src/tools/BannerGrabber.h \
     src/tools/CertTool.h \
+    src/tools/CidrTool.h \
     src/tools/DomainTool.h \
     src/tools/EmailTool.h \
     src/tools/IpTool.h \
@@ -360,6 +362,7 @@ FORMS += \
     src/tools/ASNTool.ui \
     src/tools/BannerGrabber.ui \
     src/tools/CertTool.ui \
+    src/tools/CidrTool.ui \
     src/tools/DomainTool.ui \
     src/tools/EmailTool.ui \
     src/tools/IpTool.ui \

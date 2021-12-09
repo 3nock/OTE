@@ -1,25 +1,24 @@
-#ifndef ASNTOOL_H
-#define ASNTOOL_H
+#ifndef CIDRTOOL_H
+#define CIDRTOOL_H
 
 #include <QDialog>
-#include "src/models/AsnModel.h"
+#include "src/models/CidrModel.h"
 #include "src/modules/osint/OsintModulesHeaders.h"
 
+
 namespace Ui {
-class ASNTool;
+class CidrTool;
 }
 
-class ASNTool : public QDialog{
+class CidrTool : public QDialog{
         Q_OBJECT
 
     public:
-        explicit ASNTool(QWidget *parent = nullptr);
-        ~ASNTool();
+        explicit CidrTool(QWidget *parent = nullptr);
+        ~CidrTool();
 
     public slots:
-        void onResultsAsn(AsModelStruct);
-        void onResultsAsnPeers(AsModelStruct);
-        void onResultsAsnPrefixes(AsModelStruct);
+        void onResultsCidr(CidrModelStruct);
         /* ... */
         void onEnumerationComplete();
         void onErrorLog(ScanLog log);
@@ -31,9 +30,9 @@ class ASNTool : public QDialog{
         void on_buttonAnalyze_clicked();
 
     private:
-        Ui::ASNTool *ui;
-        AsModel *asModel;
+        Ui::CidrTool *ui;
+        CidrModel *cidrModel;
         ScanArgs *m_scanArgs = nullptr;
 };
 
-#endif // ASNTOOL_H
+#endif // CIDRTOOL_H

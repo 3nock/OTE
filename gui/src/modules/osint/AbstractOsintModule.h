@@ -12,6 +12,7 @@
 //...
 #include "src/models/IpModel.h"
 #include "src/models/AsnModel.h"
+#include "src/models/CidrModel.h"
 //...
 #include "osintdefinitions.h"
 
@@ -144,9 +145,7 @@ class AbstractOsintModule : public QObject {
         void rawResultsTxt(QByteArray reply);
         //...
         void infoASN(AsModelStruct);
-        void infoIP(QMap<int, QStringList>);
-        void infoCidr(QMap<int, QStringList>);
-        void infoSSLCert(QMap<int, QStringList>);
+        void infoCidr(CidrModelStruct);
 
     protected slots:
         virtual void start() = 0;
