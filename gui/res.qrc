@@ -6,6 +6,7 @@
         <file>res/icons/logo.ico</file>
         <file>res/icons/downArrow.png</file>
         <file>res/icons/array.png</file>
+        <file>res/icons/obj.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/nameservers.txt</file>

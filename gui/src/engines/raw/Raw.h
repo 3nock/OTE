@@ -27,6 +27,7 @@ class Raw : public AbstractEngine{
 
     public slots:
         void onEnumerationComplete();
+        void onRateLimitLog(ScanLog log);
         void onErrorLog(ScanLog log);
         void onInfoLog(ScanLog log);
         //...
