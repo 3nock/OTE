@@ -7,11 +7,14 @@
         <file>res/icons/downArrow.png</file>
         <file>res/icons/array.png</file>
         <file>res/icons/obj.png</file>
+        <file>res/icons/s3s.png</file>
+        <file>res/icons/sub3suite.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/nameservers.txt</file>
         <file>res/files/srv.txt</file>
         <file>res/files/userAgents.txt</file>
+        <file>res/files/LICENSE</file>
     </qresource>
     <qresource prefix="/themes">
         <file>res/themes/stylesheet.qss</file>
