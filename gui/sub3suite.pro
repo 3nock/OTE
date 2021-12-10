@@ -104,9 +104,10 @@ SOURCES += \
     src/modules/osint/mal/HybridAnalysis.cpp \
     src/modules/osint/mal/IpQualityScore.cpp \
     src/modules/osint/mal/LeakLookup.cpp \
+    src/modules/scan/BannerScanner.cpp \
     src/modules/scan/CertScanner.cpp \
     src/tools/ASNTool.cpp \
-    src/tools/BannerGrabber.cpp \
+    src/tools/BannerTool.cpp \
     src/tools/CertTool.cpp \
     src/tools/CidrTool.cpp \
     src/tools/DomainTool.cpp \
@@ -260,9 +261,10 @@ HEADERS += \
     src/modules/osint/mal/HybridAnalysis.h \
     src/modules/osint/mal/IpQualityScore.h \
     src/modules/osint/mal/LeakLookup.h \
+    src/modules/scan/BannerScanner.h \
     src/modules/scan/CertScanner.h \
     src/tools/ASNTool.h \
-    src/tools/BannerGrabber.h \
+    src/tools/BannerTool.h \
     src/tools/CertTool.h \
     src/tools/CidrTool.h \
     src/tools/DomainTool.h \
@@ -360,7 +362,7 @@ FORMS += \
     src/dialogs/FailedScansDialog.ui \
     src/engines/cert/Cert.ui \
     src/tools/ASNTool.ui \
-    src/tools/BannerGrabber.ui \
+    src/tools/BannerTool.ui \
     src/tools/CertTool.ui \
     src/tools/CidrTool.ui \
     src/tools/DomainTool.ui \

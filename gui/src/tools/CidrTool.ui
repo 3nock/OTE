@@ -29,11 +29,6 @@
          <string>Bgpview</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Country</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>

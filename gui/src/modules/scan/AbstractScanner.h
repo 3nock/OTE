@@ -58,6 +58,10 @@ class AbstractScanner : public QObject{
         void resultSHA256(QString);
         void resultRaw(QByteArray);
         void resultSubdomain(QString);
+        ///
+        /// for banner...
+        ///
+        void scanResultBanner(QString banner);
 };
 
 #endif // ABSTRACTSCANNER_H

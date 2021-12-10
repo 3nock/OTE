@@ -58,6 +58,8 @@ class MainWindow : public QMainWindow{
 
         void on_actionCIDRTool_triggered();
 
+        void on_actionBannerTool_triggered();
+
 private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;

@@ -2,12 +2,14 @@
 #include "ui_MainWindow.h"
 //...
 #include "src/dialogs/AboutDialog.h"
-#include "src/tools/BannerGrabber.h"
+
+/* Tools */
 #include "src/tools/IpTool.h"
 #include "src/tools/ASNTool.h"
 #include "src/tools/CertTool.h"
 #include "src/tools/EmailTool.h"
 #include "src/tools/CidrTool.h"
+#include "src/tools/BannerTool.h"
 
 
 /*
@@ -183,7 +185,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     /* active tabwidget */
     ui->tabWidgetActive->insertTab(0, brute, "Brute");
     ui->tabWidgetActive->insertTab(1, active, "Active");
-    ui->tabWidgetActive->insertTab(2, records, "Record");
+    ui->tabWidgetActive->insertTab(2, records, "DNS");
     ui->tabWidgetActive->insertTab(3, cert, "Cert");
     ui->tabWidgetActive->insertTab(4, ip, "Ip");
     ui->tabWidgetActive->setCurrentIndex(0);
@@ -306,4 +308,10 @@ void MainWindow::on_actionCIDRTool_triggered(){
     CidrTool *cidrTool = new CidrTool(this);
     cidrTool->setAttribute(Qt::WA_DeleteOnClose, true);
     cidrTool->show();
+}
+
+void MainWindow::on_actionBannerTool_triggered(){
+    BannerTool *bannerTool = new BannerTool(this);
+    bannerTool->setAttribute(Qt::WA_DeleteOnClose, true);
+    bannerTool->show();
 }

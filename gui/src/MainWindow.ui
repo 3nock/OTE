@@ -609,6 +609,8 @@ QRadioButton:hover {
     <addaction name="actionCertTool"/>
     <addaction name="actionEmailTool"/>
     <addaction name="actionIpTool"/>
+    <addaction name="separator"/>
+    <addaction name="actionBannerTool"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -784,6 +786,11 @@ QRadioButton:hover {
   <action name="actionCIDRTool">
    <property name="text">
     <string>CIDR Tool</string>
+   </property>
+  </action>
+  <action name="actionBannerTool">
+   <property name="text">
+    <string>BANNER Tool</string>
    </property>
   </action>
  </widget>
