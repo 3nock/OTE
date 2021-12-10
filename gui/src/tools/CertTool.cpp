@@ -266,9 +266,12 @@ void CertTool::onResult(QByteArray rawCert){
         /* raw key */
         ui->plainTextEditRawKey->setPlainText(cert.publicKey().toPem());
 
-        /* ... */
-        foreach(const QString &altName, cert.subjectAlternativeNames())
-            m_model->subjectAltNames->appendRow(new QStandardItem(altName));
+        /* alternative names */
+        int alternativeName = 0;
+        foreach(const QString &value, cert.subjectAlternativeNames()){
+            m_model->subjectAltNames->appendRow({new QStandardItem(QString::number(alternativeName)), new QStandardItem(value)});
+            alternativeName++;
+        }
     }
 }
 

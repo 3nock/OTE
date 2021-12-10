@@ -136,7 +136,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEditDescription"/>
+        <widget class="QPlainTextEdit" name="plainTextEditDescription">
+         <property name="textInteractionFlags">
+          <set>Qt::NoTextInteraction</set>
+         </property>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -305,7 +309,11 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEditLicense"/>
+        <widget class="QPlainTextEdit" name="plainTextEditLicense">
+         <property name="textInteractionFlags">
+          <set>Qt::NoTextInteraction</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

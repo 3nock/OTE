@@ -101,6 +101,13 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_12">
       <item>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string>Multiple Targets</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
          <string>* Scan Config</string>
@@ -126,6 +133,20 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_17">
+        <property name="text">
+         <string>*Api Keys</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="buttoApiKeys">
+        <property name="text">
+         <string>Keys...</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

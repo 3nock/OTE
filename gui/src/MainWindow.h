@@ -66,6 +66,10 @@ class MainWindow : public QMainWindow{
 
         void on_actionMXTool_triggered();
 
+        void on_actionBlog_triggered();
+
+        void on_actionApiKeys_triggered();
+
 private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;

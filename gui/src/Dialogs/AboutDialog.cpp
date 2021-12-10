@@ -28,9 +28,11 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
     /* setting up description */
     ui->plainTextEditDescription->appendHtml("Copyright 2020-2022 Enock Nicholaus <font color=\"green\">3nock@protonmail.com</font> and contributors.");
 
-    ui->plainTextEditDescription->appendPlainText("\nLicense GPLv3: GNU GPL version 3 or later <https://www.gnu.org/licenses/gpl-3.0.html>"
-                                  "This is free software; see the source for copying conditions."
-                                  "There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
+    ui->plainTextEditDescription->appendPlainText("\n");
+
+    ui->plainTextEditDescription->appendHtml("License GPLv3: GNU GPL version 3 or later <font color=\"green\">https://www.gnu.org/licenses/gpl-3.0.html</font>."
+                                  " This is free software; see the source for copying conditions."
+                                  " There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
 
     ui->plainTextEditDescription->appendPlainText("\nsub3suite is Open Source Software released under the GNU General Public License.\n");
 

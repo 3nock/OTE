@@ -84,8 +84,11 @@ void Cert::onScanResultCertInfo(QByteArray rawCert){
             certModel->key_algorithm->setText("BlackBox");
 
         /* ... */
-        foreach(const QString &altName, cert.subjectAlternativeNames())
-            certModel->subjectAltNames->appendRow(new QStandardItem(altName));
+        int alternativeName = 0;
+        foreach(const QString &value, cert.subjectAlternativeNames()){
+            certModel->subjectAltNames->appendRow({new QStandardItem(QString::number(alternativeName)), new QStandardItem(value)});
+            alternativeName++;
+        }
 
         result->cert->certInfo->invisibleRootItem()->appendRow(certModel->mainItem);
     }

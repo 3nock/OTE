@@ -621,38 +621,24 @@ QRadioButton:hover {
      <string>Help</string>
     </property>
     <addaction name="actiondocumentation"/>
-    <addaction name="actionupdates"/>
     <addaction name="separator"/>
-    <addaction name="actionwebsite"/>
+    <addaction name="actionBlog"/>
     <addaction name="actionissues"/>
     <addaction name="actioncheck_for_updates"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
    </widget>
-   <widget class="QMenu" name="menuPassive">
+   <widget class="QMenu" name="menuConfig">
     <property name="title">
-     <string>Passive</string>
+     <string>Config</string>
     </property>
-    <addaction name="actionApi_Keys"/>
-    <addaction name="actionOsint_Engines"/>
-    <addaction name="actionConfig"/>
-   </widget>
-   <widget class="QMenu" name="menuActive">
-    <property name="title">
-     <string>Active</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuArsernal">
-    <property name="title">
-     <string>Arsernal</string>
-    </property>
+    <addaction name="actionApiKeys"/>
+    <addaction name="actionGeneral"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuConfig"/>
    <addaction name="menuProject"/>
-   <addaction name="menuPassive"/>
-   <addaction name="menuActive"/>
-   <addaction name="menuArsernal"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -747,9 +733,9 @@ QRadioButton:hover {
     <string>check for updates</string>
    </property>
   </action>
-  <action name="actionwebsite">
+  <action name="actionBlog">
    <property name="text">
-    <string>website</string>
+    <string>blog</string>
    </property>
   </action>
   <action name="actionclose">
@@ -810,6 +796,16 @@ QRadioButton:hover {
   <action name="actionMXTool">
    <property name="text">
     <string>MX Tool</string>
+   </property>
+  </action>
+  <action name="actionApiKeys">
+   <property name="text">
+    <string>api keys</string>
+   </property>
+  </action>
+  <action name="actionGeneral">
+   <property name="text">
+    <string>general</string>
    </property>
   </action>
  </widget>

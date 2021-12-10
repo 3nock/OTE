@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QTextCursor>
 
+#include "src/dialogs/ApiKeysDialog.h"
+
 /*
  * later on use custom icons to indicate this is a string, array or object instead
  * of numbers in the jsonarray..
@@ -133,4 +135,10 @@ void Raw::on_comboBoxOptions_currentIndexChanged(const QString &arg1){
         ui->lineEditTarget->setPlaceholderText(m_optionSet.value(arg1).at(0));
         ui->textEditOptionSummary->setText(m_optionSet.value(arg1).at(1));
     }
+}
+
+void Raw::on_buttoApiKeys_clicked(){
+    ApiKeysDialog *apiKeys = new ApiKeysDialog(this);
+    apiKeys->setAttribute(Qt::WA_DeleteOnClose, true);
+    apiKeys->show();
 }

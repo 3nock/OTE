@@ -1,7 +1,11 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 //...
+#include <QDesktopServices>
+
+/* ... */
 #include "src/dialogs/AboutDialog.h"
+#include "src/dialogs/ApiKeysDialog.h"
 
 /* Tools */
 #include "src/tools/IpTool.h"
@@ -335,4 +339,14 @@ void MainWindow::on_actionMXTool_triggered(){
     MXTool *mxTool = new MXTool(this);
     mxTool->setAttribute(Qt::WA_DeleteOnClose, true);
     mxTool->show();
+}
+
+void MainWindow::on_actionBlog_triggered(){
+    QDesktopServices::openUrl(QUrl("https://3nock.github.io", QUrl::TolerantMode));
+}
+
+void MainWindow::on_actionApiKeys_triggered(){
+    ApiKeysDialog *apiKeys = new ApiKeysDialog(this);
+    apiKeys->setAttribute(Qt::WA_DeleteOnClose, true);
+    apiKeys->show();
 }

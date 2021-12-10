@@ -83,6 +83,11 @@
          <string>SHA-256</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Serial No:</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -183,6 +188,13 @@
       <enum>QFrame::Sunken</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="checkBoxMultipleTargets">
+        <property name="text">
+         <string>Multiple Targets</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QCheckBox" name="checkBox">
         <property name="text">
