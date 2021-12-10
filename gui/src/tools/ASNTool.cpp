@@ -5,7 +5,7 @@
 
 
 ASNTool::ASNTool(QWidget *parent) : QDialog(parent), ui(new Ui::ASNTool),
-    asModel(new AsModel)
+    m_model(new AsModel)
 {
     ui->setupUi(this);
 
@@ -14,10 +14,10 @@ ASNTool::ASNTool(QWidget *parent) : QDialog(parent), ui(new Ui::ASNTool),
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_ASN);
 
     /* setting model with tableView... */
-    ui->treeResults->setModel(asModel->model);
+    ui->treeResults->setModel(m_model->model);
 
     /* for scan... */
-    m_scanArgs = new ScanArgs;
+    m_args = new ScanArgs;
 
     /* registering meta-objects */
     qRegisterMetaType<AsModelStruct>("AsModelStruct");
@@ -28,29 +28,29 @@ ASNTool::~ASNTool(){
 
 void ASNTool::onResultsAsn(AsModelStruct results){
     /* info */
-    asModel->info_asn->setText(results.info_asn);
-    asModel->info_name->setText(results.info_name);
-    asModel->info_description->setText(results.info_description);
-    asModel->info_country->setText(results.info_country);
-    asModel->info_website->setText(results.info_website);
-    asModel->info_ownerAddress->setText(results.info_ownerAddress);
+    m_model->info_asn->setText(results.info_asn);
+    m_model->info_name->setText(results.info_name);
+    m_model->info_description->setText(results.info_description);
+    m_model->info_country->setText(results.info_country);
+    m_model->info_website->setText(results.info_website);
+    m_model->info_ownerAddress->setText(results.info_ownerAddress);
 
     /* rir */
-    asModel->rir_name->setText(results.rir_name);
-    asModel->rir_country->setText(results.rir_country);
-    asModel->rir_dateAllocated->setText(results.rir_dateallocated);
+    m_model->rir_name->setText(results.rir_name);
+    m_model->rir_country->setText(results.rir_country);
+    m_model->rir_dateAllocated->setText(results.rir_dateallocated);
 
     /* email contacts */
     int emailContacts = 0;
     foreach(const QString &value, results.emailcontacts){
-        asModel->emailContacts->appendRow({new QStandardItem(QString::number(emailContacts)), new QStandardItem(value)});
+        m_model->emailContacts->appendRow({new QStandardItem(QString::number(emailContacts)), new QStandardItem(value)});
         emailContacts++;
     }
 
     /* abuse contacts */
     int abuseContacts = 0;
     foreach(const QString &value, results.abusecontacts){
-        asModel->abuseContacts->appendRow({new QStandardItem(QString::number(abuseContacts)), new QStandardItem(value)});
+        m_model->abuseContacts->appendRow({new QStandardItem(QString::number(abuseContacts)), new QStandardItem(value)});
         abuseContacts++;
     }
 }
@@ -58,7 +58,7 @@ void ASNTool::onResultsAsn(AsModelStruct results){
 void ASNTool::onResultsAsnPeers(AsModelStruct results){
     int peers = 0;
     foreach(const QString &value, results.peers){
-        asModel->peers->appendRow({new QStandardItem(QString::number(peers)), new QStandardItem(value)});
+        m_model->peers->appendRow({new QStandardItem(QString::number(peers)), new QStandardItem(value)});
         peers++;
     }
 }
@@ -66,13 +66,13 @@ void ASNTool::onResultsAsnPeers(AsModelStruct results){
 void ASNTool::onResultsAsnPrefixes(AsModelStruct results){
     int prefixes = 0;
     foreach(const QString &value, results.prefixes){
-        asModel->prefixes->appendRow({new QStandardItem(QString::number(prefixes)), new QStandardItem(value)});
+        m_model->prefixes->appendRow({new QStandardItem(QString::number(prefixes)), new QStandardItem(value)});
         prefixes++;
     }
 }
 
 void ASNTool::onEnumerationComplete(){
-    ui->buttonAnalyze->setEnabled(true);
+    ui->buttonStart->setEnabled(true);
     ui->buttonStop->setDisabled(true);
 }
 
@@ -111,35 +111,35 @@ void ASNTool::on_checkBoxExpand_clicked(bool checked){
         ui->treeResults->collapseAll();
 }
 
-void ASNTool::on_buttonAnalyze_clicked(){
-    m_scanArgs->target = ui->lineEditTarget->text();
+void ASNTool::on_buttonStart_clicked(){
+    m_args->target = ui->lineEditTarget->text();
     switch(ui->comboBoxOption->currentIndex()){
     case 0:
-        m_scanArgs->outputInfoAsn = true;
-        m_scanArgs->outputInfoAsnPeers = false;
-        m_scanArgs->outputInfoAsnPrefixes = false;
+        m_args->outputInfoAsn = true;
+        m_args->outputInfoAsnPeers = false;
+        m_args->outputInfoAsnPrefixes = false;
         break;
     case 1:
-        m_scanArgs->outputInfoAsn = false;
-        m_scanArgs->outputInfoAsnPeers = true;
-        m_scanArgs->outputInfoAsnPrefixes = false;
+        m_args->outputInfoAsn = false;
+        m_args->outputInfoAsnPeers = true;
+        m_args->outputInfoAsnPrefixes = false;
         break;
     case 2:
-        m_scanArgs->outputInfoAsn = false;
-        m_scanArgs->outputInfoAsnPeers = false;
-        m_scanArgs->outputInfoAsnPrefixes = true;
+        m_args->outputInfoAsn = false;
+        m_args->outputInfoAsnPeers = false;
+        m_args->outputInfoAsnPrefixes = true;
         break;
     }
 
     ui->buttonStop->setEnabled(true);
-    ui->buttonAnalyze->setDisabled(true);
+    ui->buttonStart->setDisabled(true);
 
     QThread *cThread = new QThread;
     int engineToUse = ui->comboBoxEngine->currentIndex();
 
     if(engineToUse == 0)
     {
-        Bgpview *bgpview = new Bgpview(m_scanArgs);
+        Bgpview *bgpview = new Bgpview(m_args);
         bgpview->Enumerator(cThread);
         bgpview->moveToThread(cThread);
 

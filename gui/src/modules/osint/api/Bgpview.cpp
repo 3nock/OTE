@@ -383,7 +383,7 @@ void Bgpview::replyFinishedInfoAsn(QNetworkReply *reply){
         AsModelStruct asModel;
 
         /* general info */
-        asModel.info_asn = data["asn"].toString();
+        asModel.info_asn = QString::number(data["asn"].toInt());
         asModel.info_name = data["name"].toString();
         asModel.info_description = data["description_short"].toString();
         asModel.info_country = data["country_code"].toString();

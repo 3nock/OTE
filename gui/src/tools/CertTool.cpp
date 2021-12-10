@@ -29,9 +29,9 @@ enum MODULE{
  * https://osintcurio.us/2019/03/12/certificates-the-osint-gift-that-keeps-on-giving/
  */
 CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
-    m_certModel(new CertModel),
+    m_model(new CertModel),
     m_proxyModel(new QSortFilterProxyModel),
-    m_scanArgs(new ScanArgs)
+    m_args(new ScanArgs)
 {
     ui->setupUi(this);
 
@@ -40,20 +40,20 @@ CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
 
     /* setting the models */
-    m_certModel->initModel();
-    m_proxyModel->setSourceModel(m_certModel->mainModel);
+    m_model->initModel();
+    m_proxyModel->setSourceModel(m_model->mainModel);
     ui->treeResults->setModel(m_proxyModel);
 }
 CertTool::~CertTool(){
     delete ui;
-    delete m_certModel;
+    delete m_model;
     delete m_proxyModel;
-    delete m_scanArgs;
+    delete m_args;
 }
 
-void CertTool::on_buttonAnalyze_clicked(){
+void CertTool::on_buttonStart_clicked(){
     ui->buttonStop->setEnabled(true);
-    ui->buttonAnalyze->setDisabled(true);
+    ui->buttonStart->setDisabled(true);
 
     /* creating and runing the enumeration thread */
     QThread *cThread = new QThread;
@@ -61,19 +61,20 @@ void CertTool::on_buttonAnalyze_clicked(){
     case TARGET_SSLCERT:
     {
         /* acquire scan arguments */
-        m_scanArgs->target = ui->lineEditTarget->text();
-        m_scanArgs->outputInfo = true;
+        m_args->target = ui->lineEditTarget->text();
+        m_args->outputInfo = true;
 
         /* enumeration module */
         switch (ui->comboBoxOption->currentIndex()) {
         case MODULE::CRTSH:
         {
-            Crtsh *crtsh = new Crtsh(m_scanArgs);
+            Crtsh *crtsh = new Crtsh(m_args);
             crtsh->Enumerator(cThread);
             crtsh->moveToThread(cThread);
-            connect(crtsh, &Crtsh::rawCert, this, &CertTool::onRawCert);
-            //connect(crtsh, &Crtsh::errorLog, this, &CertTool::onErrorLog);
-            //connect(crtsh, &Crtsh::infoLog, this, &CertTool::onInfoLog);
+            connect(crtsh, &Crtsh::rawCert, this, &CertTool::onResult);
+            connect(crtsh, &Crtsh::infoLog, this, &CertTool::onInfoLog);
+            connect(crtsh, &Crtsh::errorLog, this, &CertTool::onErrorLog);
+            connect(crtsh, &Crtsh::rateLimitLog, this, &CertTool::onRateLimitLog);
             connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
             connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);
             connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -107,9 +108,9 @@ void CertTool::on_buttonAnalyze_clicked(){
         certificate::Scanner *scanner = new certificate::Scanner(args);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
-        connect(scanner, &certificate::Scanner::resultRaw, this, &CertTool::onRawCert);
-        connect(scanner, &certificate::Scanner::errorLog, this, &CertTool::onErrorLog);
-        connect(scanner, &certificate::Scanner::infoLog, this, &CertTool::onInfoLog);
+        connect(scanner, &certificate::Scanner::resultRaw, this, &CertTool::onResult);
+        connect(scanner, &certificate::Scanner::errorLog, this, &CertTool::onErrorLogTxt);
+        connect(scanner, &certificate::Scanner::infoLog, this, &CertTool::onInfoLogTxt);
         connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, scanner, &certificate::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -161,79 +162,104 @@ void CertTool::on_comboBoxTargetType_currentIndexChanged(int index){
 ***********************************************************************/
 
 void CertTool::onEnumerationComplete(){
-    ui->buttonAnalyze->setEnabled(true);
+    ui->buttonStart->setEnabled(true);
     ui->buttonStop->setDisabled(true);
 }
 
-void CertTool::onErrorLog(QString log){
-    QString fontedLog;
-    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
-    QString logTime = QDateTime::currentDateTime().toString("[hh:mm]  ");
-    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
+void CertTool::onInfoLogTxt(QString log){
+    ui->plainTextEditLogs->appendPlainText(log);
 }
 
-void CertTool::onInfoLog(QString log){
-    QString logTime = QDateTime::currentDateTime().toString("[hh:mm]  ");
-    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
+void CertTool::onErrorLogTxt(QString log){
+    QString message("<font color=\"red\">"+log+"</font>");
+    ui->plainTextEditLogs->appendHtml(message);
 }
 
-void CertTool::onRawCert(QByteArray rawCert){
+void CertTool::onErrorLog(ScanLog log){
+    QString message("<font color=\"red\">"+log.message+"</font>");
+    QString module("<font color=\"red\">"+log.moduleName+"</font>");
+    QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
+    ui->plainTextEditLogs->appendPlainText("");
+}
+
+void CertTool::onInfoLog(ScanLog log){
+    QString module("<font color=\"green\">"+log.moduleName+"</font>");
+    QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+    ui->plainTextEditLogs->appendPlainText("");
+}
+
+void CertTool::onRateLimitLog(ScanLog log){
+    QString message("<font color=\"yellow\">"+log.message+"</font>");
+    QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
+    QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
+    ui->plainTextEditLogs->appendPlainText("");
+}
+
+void CertTool::onResult(QByteArray rawCert){
 
     foreach(const QSslCertificate &cert, QSslCertificate::fromData(rawCert, QSsl::Pem))
     {
         /* ... */
-        m_certModel->info_verison->setText(cert.version());
-        m_certModel->info_serialNumber->setText(cert.serialNumber());
-        m_certModel->info_signatureAlgorithm->setText(""); // none yet
+        m_model->info_verison->setText(cert.version());
+        m_model->info_serialNumber->setText(cert.serialNumber());
+        m_model->info_signatureAlgorithm->setText(""); // none yet
 
         /* fingerprint */
-        m_certModel->fingerprint_md5->setText(cert.digest(QCryptographicHash::Md5).toHex());
-        m_certModel->fingerprint_sha1->setText(cert.digest(QCryptographicHash::Sha1).toHex());
-        m_certModel->fingerprint_sha256->setText(cert.digest(QCryptographicHash::Sha256).toHex());
+        m_model->fingerprint_md5->setText(cert.digest(QCryptographicHash::Md5).toHex());
+        m_model->fingerprint_sha1->setText(cert.digest(QCryptographicHash::Sha1).toHex());
+        m_model->fingerprint_sha256->setText(cert.digest(QCryptographicHash::Sha256).toHex());
 
         /* validity */
-        m_certModel->validity_notBefore->setText(cert.effectiveDate().toString());
-        m_certModel->validity_notAfter->setText(cert.expiryDate().toString());
+        m_model->validity_notBefore->setText(cert.effectiveDate().toString());
+        m_model->validity_notAfter->setText(cert.expiryDate().toString());
 
         /* issuer Info */
         if(cert.issuerInfo(QSslCertificate::CommonName).length() > 0)
-            m_certModel->issuer_commonName->setText(cert.issuerInfo(QSslCertificate::CommonName)[0]);
+            m_model->issuer_commonName->setText(cert.issuerInfo(QSslCertificate::CommonName)[0]);
         if(cert.issuerInfo(QSslCertificate::Organization).length() > 0)
-            m_certModel->issuer_organizationName->setText(cert.issuerInfo(QSslCertificate::Organization)[0]);
+            m_model->issuer_organizationName->setText(cert.issuerInfo(QSslCertificate::Organization)[0]);
         if(cert.issuerInfo(QSslCertificate::CountryName).length() > 0)
-            m_certModel->issuer_countryName->setText(cert.issuerInfo(QSslCertificate::CountryName)[0]);
+            m_model->issuer_countryName->setText(cert.issuerInfo(QSslCertificate::CountryName)[0]);
 
         /* subject info */
         if(cert.subjectInfo(QSslCertificate::CommonName).length() > 0)
-            m_certModel->subject_commonName->setText(cert.subjectInfo(QSslCertificate::CommonName)[0]);
+            m_model->subject_commonName->setText(cert.subjectInfo(QSslCertificate::CommonName)[0]);
         if(cert.subjectInfo(QSslCertificate::CountryName).length() > 0)
-            m_certModel->subject_countryName->setText(cert.subjectInfo(QSslCertificate::CountryName)[0]);
+            m_model->subject_countryName->setText(cert.subjectInfo(QSslCertificate::CountryName)[0]);
         if(cert.subjectInfo(QSslCertificate::LocalityName).length() > 0)
-            m_certModel->subject_localityName->setText(cert.subjectInfo(QSslCertificate::LocalityName)[0]);
+            m_model->subject_localityName->setText(cert.subjectInfo(QSslCertificate::LocalityName)[0]);
         if(cert.subjectInfo(QSslCertificate::Organization).length() > 0)
-            m_certModel->subject_organizationName->setText(cert.subjectInfo(QSslCertificate::Organization)[0]);
+            m_model->subject_organizationName->setText(cert.subjectInfo(QSslCertificate::Organization)[0]);
         if(cert.subjectInfo(QSslCertificate::StateOrProvinceName).length() > 0)
-            m_certModel->subject_stateOrProvinceName->setText(cert.subjectInfo(QSslCertificate::StateOrProvinceName)[0]);
+            m_model->subject_stateOrProvinceName->setText(cert.subjectInfo(QSslCertificate::StateOrProvinceName)[0]);
         if(cert.subjectInfo(QSslCertificate::EmailAddress).length() > 0)
-            m_certModel->subject_email->setText(cert.subjectInfo(QSslCertificate::EmailAddress)[0]);
+            m_model->subject_email->setText(cert.subjectInfo(QSslCertificate::EmailAddress)[0]);
 
         // key type...
         if(cert.publicKey().type() == QSsl::PrivateKey)
-            m_certModel->key_type->setText("Private Key");
+            m_model->key_type->setText("Private Key");
         if(cert.publicKey().type() == QSsl::PublicKey)
-            m_certModel->key_type->setText("Public Key");
+            m_model->key_type->setText("Public Key");
 
         // algorithm type...
         if(cert.publicKey().algorithm() == QSsl::Rsa)
-            m_certModel->key_algorithm->setText("RSA algorithm.");
+            m_model->key_algorithm->setText("RSA algorithm.");
         if(cert.publicKey().algorithm() == QSsl::Dsa)
-            m_certModel->key_algorithm->setText("DSA algorithm.");
+            m_model->key_algorithm->setText("DSA algorithm.");
         if(cert.publicKey().algorithm() == QSsl::Ec)
-            m_certModel->key_algorithm->setText("Elliptic Curve algorithm.");
+            m_model->key_algorithm->setText("Elliptic Curve algorithm.");
         if(cert.publicKey().algorithm() == QSsl::Dh)
-            m_certModel->key_algorithm->setText("Diffie-Hellman algorithm.");
+            m_model->key_algorithm->setText("Diffie-Hellman algorithm.");
         if(cert.publicKey().algorithm() == QSsl::Opaque)
-            m_certModel->key_algorithm->setText("BlackBox");
+            m_model->key_algorithm->setText("BlackBox");
 
         /* raw cert */
         ui->plainTextEditRawCert->setPlainText(cert.toPem());
@@ -242,7 +268,7 @@ void CertTool::onRawCert(QByteArray rawCert){
 
         /* ... */
         foreach(const QString &altName, cert.subjectAlternativeNames())
-            m_certModel->subjectAltNames->appendRow(new QStandardItem(altName));
+            m_model->subjectAltNames->appendRow(new QStandardItem(altName));
     }
 }
 

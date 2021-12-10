@@ -17,7 +17,6 @@ class BannerTool : public QDialog{
 
     private slots:
         void on_buttonStart_clicked();
-
         void on_comboBoxTargetType_currentIndexChanged(int index);
 
 public slots:

@@ -1,0 +1,4 @@
+#ifndef DOMAINMODEL_H
+#define DOMAINMODEL_H
+
+#endif // DOMAINMODEL_H

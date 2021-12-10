@@ -10,6 +10,9 @@
 #include "src/tools/EmailTool.h"
 #include "src/tools/CidrTool.h"
 #include "src/tools/BannerTool.h"
+#include "src/tools/DomainTool.h"
+#include "src/tools/NSTool.h"
+#include "src/tools/MXTool.h"
 
 
 /*
@@ -314,4 +317,22 @@ void MainWindow::on_actionBannerTool_triggered(){
     BannerTool *bannerTool = new BannerTool(this);
     bannerTool->setAttribute(Qt::WA_DeleteOnClose, true);
     bannerTool->show();
+}
+
+void MainWindow::on_actionDomainTool_triggered(){
+    DomainTool *domainTool = new DomainTool(this);
+    domainTool->setAttribute(Qt::WA_DeleteOnClose, true);
+    domainTool->show();
+}
+
+void MainWindow::on_actionNSTool_triggered(){
+    NSTool *nsTool = new NSTool(this);
+    nsTool->setAttribute(Qt::WA_DeleteOnClose, true);
+    nsTool->show();
+}
+
+void MainWindow::on_actionMXTool_triggered(){
+    MXTool *mxTool = new MXTool(this);
+    mxTool->setAttribute(Qt::WA_DeleteOnClose, true);
+    mxTool->show();
 }

@@ -18,7 +18,7 @@ class CidrTool : public QDialog{
         ~CidrTool();
 
     public slots:
-        void onResultsCidr(CidrModelStruct);
+        void onResult(CidrModelStruct results);
         /* ... */
         void onEnumerationComplete();
         void onErrorLog(ScanLog log);
@@ -27,12 +27,12 @@ class CidrTool : public QDialog{
 
     private slots:
         void on_checkBoxExpand_clicked(bool checked);
-        void on_buttonAnalyze_clicked();
+        void on_buttonStart_clicked();
 
     private:
         Ui::CidrTool *ui;
-        CidrModel *cidrModel;
-        ScanArgs *m_scanArgs = nullptr;
+        CidrModel *m_model;
+        ScanArgs *m_args = nullptr;
 };
 
 #endif // CIDRTOOL_H

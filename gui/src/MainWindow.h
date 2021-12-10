@@ -60,6 +60,12 @@ class MainWindow : public QMainWindow{
 
         void on_actionBannerTool_triggered();
 
+        void on_actionDomainTool_triggered();
+
+        void on_actionNSTool_triggered();
+
+        void on_actionMXTool_triggered();
+
 private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;

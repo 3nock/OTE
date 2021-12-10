@@ -22,22 +22,25 @@ class CertTool : public QDialog{
         void analyzeCert(QString cert);
 
     private slots:
-        void on_buttonAnalyze_clicked();
+        void on_buttonStart_clicked();
         void on_checkBoxExpand_clicked(bool checked);
         void on_comboBoxTargetType_currentIndexChanged(int index);
 
     public slots:
-        void onRawCert(QByteArray);
+        void onResult(QByteArray results); // raw certificate in pem format...
         void onEnumerationComplete();
-        void onErrorLog(QString log);
-        void onInfoLog(QString log);
-
+        //...
+        void onInfoLogTxt(QString log);
+        void onErrorLogTxt(QString log);
+        void onInfoLog(ScanLog log);
+        void onErrorLog(ScanLog log);
+        void onRateLimitLog(ScanLog log);
 
     private:
         Ui::CertTool *ui;
-        CertModel *m_certModel;
+        CertModel *m_model;
         QSortFilterProxyModel *m_proxyModel;
-        ScanArgs *m_scanArgs;
+        ScanArgs *m_args;
 
         /* for option combobox */
         QStringList m_protocals{"HTTPS", "SSH", "FTP"};

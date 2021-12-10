@@ -17,23 +17,23 @@ class ASNTool : public QDialog{
         ~ASNTool();
 
     public slots:
-        void onResultsAsn(AsModelStruct);
-        void onResultsAsnPeers(AsModelStruct);
-        void onResultsAsnPrefixes(AsModelStruct);
-        /* ... */
+        void onResultsAsn(AsModelStruct results);
+        void onResultsAsnPeers(AsModelStruct results);
+        void onResultsAsnPrefixes(AsModelStruct results);
+        //...
         void onEnumerationComplete();
-        void onErrorLog(ScanLog log);
         void onInfoLog(ScanLog log);
+        void onErrorLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
 
     private slots:
         void on_checkBoxExpand_clicked(bool checked);
-        void on_buttonAnalyze_clicked();
+        void on_buttonStart_clicked();
 
     private:
         Ui::ASNTool *ui;
-        AsModel *asModel;
-        ScanArgs *m_scanArgs = nullptr;
+        AsModel *m_model;
+        ScanArgs *m_args = nullptr;
 };
 
 #endif // ASNTOOL_H

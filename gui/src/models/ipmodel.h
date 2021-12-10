@@ -8,6 +8,7 @@ class IpModel{
 public:
     IpModel():
         model(new QStandardItemModel),
+
         /* main */
         info(new QStandardItem("Ip Basic Information")),
         asnInfo(new QStandardItem("ASN information")),
@@ -15,6 +16,7 @@ public:
         privacyInfo(new QStandardItem("Privacy Information")),
         abuseInfo(new QStandardItem("Abuse Information")),
         domains(new QStandardItem("Domains")),
+
         /* info */
         info_ip(new QStandardItem),
         info_type(new QStandardItem),
@@ -27,16 +29,19 @@ public:
         info_geoLocation(new QStandardItem),
         info_organization(new QStandardItem),
         info_timezone(new QStandardItem),
+
         /* asnInfo */
         asnInfo_asn(new QStandardItem),
         asnInfo_name(new QStandardItem),
         asnInfo_domain(new QStandardItem),
         asnInfo_route(new QStandardItem),
         asnInfo_type(new QStandardItem),
+
         /* companyInfo */
         companyInfo_name(new QStandardItem),
         companyInfo_domain(new QStandardItem),
         companyInfo_type(new QStandardItem),
+
         /* privacy info */
         privacyInfo_vpn(new QStandardItem),
         privacyInfo_proxy(new QStandardItem),
@@ -44,6 +49,7 @@ public:
         privacyInfo_hosting(new QStandardItem),
         privacyInfo_relay(new QStandardItem),
         privacyInfo_threatLevel(new QStandardItem),
+
         /* abuse info */
         abuseInfo_address(new QStandardItem),
         abuseInfo_country(new QStandardItem),

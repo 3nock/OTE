@@ -4,9 +4,16 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 
+
 class EmailModel{
 public:
-    EmailModel(){}
+    EmailModel():
+        address(new QStandardItem),
+        domain(new QStandardItem),
+        free(new QStandardItem),
+        disposable(new QStandardItem)
+    {
+    }
     ~EmailModel();
     QStandardItemModel *model;
 

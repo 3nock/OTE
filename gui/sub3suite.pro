@@ -200,10 +200,14 @@ HEADERS += \
     src/dialogs/FailedScansDialog.h \
     src/engines/cert/Cert.h \
     src/models/AsnModel.h \
+    src/models/BannerModel.h \
     src/models/CertModel.h \
     src/models/CidrModel.h \
+    src/models/DomainModel.h \
     src/models/EmailModel.h \
     src/models/IpModel.h \
+    src/models/MXModel.h \
+    src/models/NSmodel.h \
     src/modules/osint/OsintDefinitions.h \
     src/modules/osint/api/HaveIBeenPawned.h \
     src/modules/osint/api/Host.h \
