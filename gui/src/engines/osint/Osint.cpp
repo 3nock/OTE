@@ -5,7 +5,7 @@
 #include <QClipboard>
 #include "src/utils/Config.h"
 #include "src/utils/Definitions.h"
-#include "src/dialogs/OsintConfigDialog.h"
+#include "src/dialogs/PassiveConfigDialog.h"
 
 
 /*
@@ -245,7 +245,7 @@ void Osint::on_buttonKeys_clicked(){
 }
 
 void Osint::on_buttonConfig_clicked(){
-    OsintConfigDialog *scanConfig = new OsintConfigDialog(this);
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
     scanConfig->show();
 }

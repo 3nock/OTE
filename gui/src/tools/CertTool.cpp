@@ -6,6 +6,7 @@
 #include <QSslKey>
 #include "src/utils/Definitions.h"
 #include "src/modules/scan/CertScanner.h"
+#include "src/dialogs/PassiveConfigDialog.h"
 
 #define TARGET_SSLCERT 0
 #define TARGET_HOSTNAME 1
@@ -299,3 +300,9 @@ void CertTool::onResult(QByteArray rawCert){
 |  |  |  01 00 01    ;hex for 65537
 
 */
+
+void CertTool::on_buttonConfig_clicked(){
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->show();
+}

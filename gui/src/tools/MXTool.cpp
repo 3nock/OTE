@@ -1,5 +1,8 @@
 #include "MXTool.h"
 #include "ui_MXTool.h"
+//...
+#include "src/dialogs/PassiveConfigDialog.h"
+
 
 MXTool::MXTool(QWidget *parent) : QDialog(parent), ui(new Ui::MXTool),
     m_model(new MXModel)
@@ -102,4 +105,10 @@ void MXTool::on_buttonStart_clicked(){
         cThread->start();
     }
     */
+}
+
+void MXTool::on_buttonConfig_clicked(){
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->show();
 }

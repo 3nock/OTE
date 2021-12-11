@@ -29,6 +29,7 @@ include(includes/gumbo-parser.pri)
 
 SOURCES += \
     src/dialogs/FailedScansDialog.cpp \
+    src/dialogs/PassiveConfigDialog.cpp \
     src/engines/active/ActiveContextMenu.cpp \
     src/engines/active/ActiveScan.cpp \
     src/engines/brute/BruteContextMenu.cpp \
@@ -189,7 +190,6 @@ SOURCES += \
     src/dialogs/ConfigDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
     src/dialogs/WordlistDialog.cpp \
-    src/dialogs/OsintConfigDialog.cpp \
     src/utils/utils.cpp \
     src/utils/Logger.cpp \
     src/SplashScreen.cpp \
@@ -198,6 +198,7 @@ SOURCES += \
 
 HEADERS += \
     src/dialogs/FailedScansDialog.h \
+    src/dialogs/PassiveConfigDialog.h \
     src/engines/cert/Cert.h \
     src/models/AsnModel.h \
     src/models/BannerModel.h \
@@ -355,7 +356,6 @@ HEADERS += \
     src/dialogs/ApiKeysDialog.h \
     src/dialogs/ConfigDialog.h \
     src/dialogs/WordlistDialog.h \
-    src/dialogs/OsintConfigDialog.h \
     src/utils/utils.h \
     src/utils/Config.h \
     src/utils/Logger.h \
@@ -364,6 +364,7 @@ HEADERS += \
 
 FORMS += \
     src/dialogs/FailedScansDialog.ui \
+    src/dialogs/PassiveConfigDialog.ui \
     src/engines/cert/Cert.ui \
     src/tools/ASNTool.ui \
     src/tools/BannerTool.ui \
@@ -390,7 +391,6 @@ FORMS += \
     src/dialogs/ConfigDialog.ui \
     src/dialogs/WordlistDialog.ui \
     src/dialogs/ApiKeysDialog.ui \
-    src/dialogs/OsintConfigDialog.ui \
     src/MainWindow.ui
 
 # including the python3 headers and libs for compile time...

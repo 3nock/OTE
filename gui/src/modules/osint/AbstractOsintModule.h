@@ -26,7 +26,6 @@
 #define IN_SSLCERT 5
 #define IN_CIDR 6
 #define IN_QUERYTERM 7
-
 /* output option */
 #define OUT_SUBDOMAIN 0
 #define OUT_SUBDOMAINIP 1
@@ -41,14 +40,26 @@
 #define REQUEST_TYPE "type"
 
 
-struct ScanLog{
-    QString moduleName;
-    QString message;
-    int statusCode;
-    unsigned int resultsCount;
+/* stores the scan configurations */
+struct PassiveScanConfig{
+    bool useProxy = false;
+    QString proxyAddress;
+    QString proxyPort;
+    /* ... */
+    int timeout;
+    int maxPage;
 };
 
+
+/*
+ * all arguments that an osint module needs including
+ * scan configurations
+ */
 struct ScanArgs{
+    /* scan configurations */
+    PassiveScanConfig config;
+
+    /* ... */
     QString target;
 
     /* input type */
@@ -62,7 +73,7 @@ struct ScanArgs{
 
     /* output type */
     bool outputRaw = false;
-    //...
+    /* ... */
     bool outputInfo = false;
     bool outputInfoIp = false;
     bool outputInfoCidr = false;
@@ -71,7 +82,7 @@ struct ScanArgs{
     bool outputInfoAsn = false;
     bool outputInfoAsnPeers = false;
     bool outputInfoAsnPrefixes = false;
-    //...
+    /* ... */
     bool outputSubdomainIp = false;
     bool outputSubdomain = false;
     bool outputEmail = false;
@@ -85,6 +96,14 @@ struct ScanArgs{
     int rawOption = 0;
     int maxPage = 5;
 };
+
+struct ScanLog{
+    QString moduleName;
+    QString message;
+    int statusCode;
+    unsigned int resultsCount;
+};
+
 
 class NetworkAccessManager: public QNetworkAccessManager {
     public:

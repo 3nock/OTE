@@ -29,7 +29,9 @@ class MXTool : public QDialog{
         void on_checkBoxExpand_clicked(bool checked);
         void on_buttonStart_clicked();
 
-    private:
+        void on_buttonConfig_clicked();
+
+private:
         Ui::MXTool *ui;
         MXModel *m_model;
         ScanArgs *m_args = nullptr;

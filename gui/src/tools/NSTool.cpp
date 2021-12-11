@@ -1,5 +1,7 @@
 #include "NSTool.h"
 #include "ui_NSTool.h"
+//...
+#include "src/dialogs/PassiveConfigDialog.h"
 
 
 NSTool::NSTool(QWidget *parent) : QDialog(parent), ui(new Ui::NSTool),
@@ -105,4 +107,10 @@ void NSTool::on_buttonStart_clicked(){
         cThread->start();
     }
     */
+}
+
+void NSTool::on_buttonConfig_clicked(){
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->show();
 }

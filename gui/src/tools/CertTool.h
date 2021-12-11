@@ -26,7 +26,9 @@ class CertTool : public QDialog{
         void on_checkBoxExpand_clicked(bool checked);
         void on_comboBoxTargetType_currentIndexChanged(int index);
 
-    public slots:
+        void on_buttonConfig_clicked();
+
+public slots:
         void onResult(QByteArray results); // raw certificate in pem format...
         void onEnumerationComplete();
         //...

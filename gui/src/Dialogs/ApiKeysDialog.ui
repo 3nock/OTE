@@ -50,7 +50,7 @@
       </font>
      </property>
      <property name="text">
-      <string> API Keys for Osint Engines:</string>
+      <string> API Keys for Osint Engines</string>
      </property>
     </widget>
    </item>

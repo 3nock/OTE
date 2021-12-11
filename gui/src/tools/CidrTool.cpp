@@ -1,7 +1,8 @@
 #include "CidrTool.h"
 #include "ui_CidrTool.h"
-
+//...
 #include "src/utils/Definitions.h"
+#include "src/dialogs/PassiveConfigDialog.h"
 
 
 CidrTool::CidrTool(QWidget *parent) : QDialog(parent), ui(new Ui::CidrTool),
@@ -128,4 +129,10 @@ void CidrTool::on_buttonStart_clicked(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         cThread->start();
     }
+}
+
+void CidrTool::on_buttonConfig_clicked(){
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->show();
 }

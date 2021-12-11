@@ -132,6 +132,8 @@ class Raw : public AbstractEngine{
 
         void on_buttoApiKeys_clicked();
 
+        void on_buttonConfig_clicked();
+
 private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;

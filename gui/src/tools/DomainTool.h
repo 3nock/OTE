@@ -15,6 +15,9 @@ public:
     explicit DomainTool(QWidget *parent = nullptr);
     ~DomainTool();
 
+private slots:
+    void on_buttonConfig_clicked();
+
 private:
     Ui::DomainTool *ui;
 };

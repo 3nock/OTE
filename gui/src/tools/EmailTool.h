@@ -15,6 +15,9 @@ public:
     explicit EmailTool(QWidget *parent = nullptr);
     ~EmailTool();
 
+private slots:
+    void on_buttonConfig_clicked();
+
 private:
     Ui::EmailTool *ui;
 };

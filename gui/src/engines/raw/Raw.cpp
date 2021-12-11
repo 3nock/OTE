@@ -5,6 +5,7 @@
 #include <QTextCursor>
 
 #include "src/dialogs/ApiKeysDialog.h"
+#include "src/dialogs/PassiveConfigDialog.h"
 
 /*
  * later on use custom icons to indicate this is a string, array or object instead
@@ -141,4 +142,10 @@ void Raw::on_buttoApiKeys_clicked(){
     ApiKeysDialog *apiKeys = new ApiKeysDialog(this);
     apiKeys->setAttribute(Qt::WA_DeleteOnClose, true);
     apiKeys->show();
+}
+
+void Raw::on_buttonConfig_clicked(){
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->show();
 }

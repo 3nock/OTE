@@ -94,6 +94,20 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>*Scan Config</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="buttonConfig">
+        <property name="text">
+         <string>Config...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

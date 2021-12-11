@@ -1,5 +1,7 @@
 #include "IpTool.h"
 #include "ui_IpTool.h"
+//...
+#include "src/dialogs/PassiveConfigDialog.h"
 
 #define ALL 0
 #define IPINFO 1
@@ -108,4 +110,10 @@ void IpTool::on_buttonStart_clicked(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         cThread->start();
     }
+}
+
+void IpTool::on_buttonConfig_clicked(){
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->show();
 }

@@ -29,7 +29,9 @@ class NSTool : public QDialog{
         void on_checkBoxExpand_clicked(bool checked);
         void on_buttonStart_clicked();
 
-    private:
+        void on_buttonConfig_clicked();
+
+private:
         Ui::NSTool *ui;
         NSModel *m_model;
         ScanArgs *m_args = nullptr;

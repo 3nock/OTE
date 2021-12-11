@@ -1,7 +1,8 @@
 #include "ASNTool.h"
 #include "ui_ASNTool.h"
-
+//...
 #include "src/utils/Definitions.h"
+#include "src/dialogs/PassiveConfigDialog.h"
 
 
 ASNTool::ASNTool(QWidget *parent) : QDialog(parent), ui(new Ui::ASNTool),
@@ -162,4 +163,10 @@ void ASNTool::on_buttonStart_clicked(){
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         cThread->start();
     }
+}
+
+void ASNTool::on_buttonConfig_clicked(){
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->show();
 }
