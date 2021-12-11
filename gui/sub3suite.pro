@@ -28,6 +28,7 @@ CONFIG += c++11
 include(includes/gumbo-parser.pri)
 
 SOURCES += \
+    src/dialogs/ActiveConfigDialog.cpp \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
     src/engines/active/ActiveContextMenu.cpp \
@@ -116,7 +117,6 @@ SOURCES += \
     src/tools/IpTool.cpp \
     src/tools/MXTool.cpp \
     src/modules/scan/BruteScanner.cpp \
-    src/modules/scan/OsintScanner.cpp \
     src/modules/scan/DnsRecordsScanner.cpp \
     src/modules/scan/ActiveScanner.cpp \
     src/modules/scan/IpScanner.cpp \
@@ -187,7 +187,6 @@ SOURCES += \
     src/widgets/Notes.cpp \
     src/widgets/WordlistGeneratorWidget.cpp \
     src/dialogs/AboutDialog.cpp \
-    src/dialogs/ConfigDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
     src/dialogs/WordlistDialog.cpp \
     src/utils/utils.cpp \
@@ -197,6 +196,7 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+    src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
     src/engines/cert/Cert.h \
@@ -275,7 +275,6 @@ HEADERS += \
     src/tools/DomainTool.h \
     src/tools/EmailTool.h \
     src/tools/IpTool.h \
-    src/modules/scan/OsintScanner.h \
     src/modules/scan/BruteScanner.h \
     src/modules/scan/DnsRecordsScanner.h \
     src/modules/scan/ActiveScanner.h \
@@ -354,7 +353,6 @@ HEADERS += \
     src/widgets/WordlistGeneratorWidget.h \
     src/dialogs/AboutDialog.h \
     src/dialogs/ApiKeysDialog.h \
-    src/dialogs/ConfigDialog.h \
     src/dialogs/WordlistDialog.h \
     src/utils/utils.h \
     src/utils/Config.h \
@@ -363,6 +361,7 @@ HEADERS += \
     src/MainWindow.h
 
 FORMS += \
+    src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \
     src/engines/cert/Cert.ui \
@@ -388,15 +387,9 @@ FORMS += \
     src/widgets/Notes.ui \
     src/widgets/WordlistGeneratorWidget.ui \
     src/dialogs/AboutDialog.ui \
-    src/dialogs/ConfigDialog.ui \
     src/dialogs/WordlistDialog.ui \
     src/dialogs/ApiKeysDialog.ui \
     src/MainWindow.ui
-
-# including the python3 headers and libs for compile time...
-INCLUDEPATH += -I ../include/python3/include
-
-LIBS += $$OUT_PWD/libs/python38.lib
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

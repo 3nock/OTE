@@ -3,6 +3,7 @@
 //...
 #include <QThread>
 #include <QDateTime>
+#include "src/dialogs/ActiveConfigDialog.h"
 
 
 /*
@@ -154,7 +155,7 @@ void Active::on_comboBoxOption_currentIndexChanged(int index){
 }
 
 void Active::on_buttonConfig_clicked(){
-    ConfigDialog *configDialog = new ConfigDialog(this, scanConfig);
+    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }

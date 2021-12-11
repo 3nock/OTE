@@ -468,6 +468,7 @@ QGroupBox{
     border-style: solid;
     border-width:1px;
     border-color: rgb(47,47,47);
+    padding-top: 5px;
 }
 </string>
   </property>

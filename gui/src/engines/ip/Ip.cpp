@@ -3,6 +3,7 @@
 //...
 #include <QDateTime>
 #include <QClipboard>
+#include "src/dialogs/ActiveConfigDialog.h"
 
 
 /*
@@ -111,7 +112,7 @@ void Ip::on_buttonStop_clicked(){
 }
 
 void Ip::on_buttonConfig_clicked(){
-    ConfigDialog *configDialog = new ConfigDialog(this, scanConfig);
+    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }

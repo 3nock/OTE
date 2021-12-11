@@ -4,7 +4,7 @@
 #include <QStack>
 #include <QSslCertificate>
 #include "AbstractScanner.h"
-#include "src/dialogs/ConfigDialog.h"
+#include "src/dialogs/ActiveConfigDialog.h"
 
 namespace certificate {
 

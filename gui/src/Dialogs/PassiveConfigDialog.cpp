@@ -9,6 +9,11 @@ PassiveConfigDialog::PassiveConfigDialog(QWidget *parent) : QDialog(parent), ui(
     ui->setupUi(this);
 
     ///
+    /// adjusting the dialog size...
+    ///
+    this->adjustSize();
+
+    ///
     /// setting placeholder texts..
     ///
     ui->lineEditTimeout->setPlaceholderText("e.g. 3");

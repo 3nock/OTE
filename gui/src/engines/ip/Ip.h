@@ -4,7 +4,7 @@
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/scan/IpScanner.h"
-#include "src/dialogs/ConfigDialog.h"
+#include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 namespace Ui {

@@ -2,6 +2,7 @@
 #include "ui_Cert.h"
 //...
 #include <QSslKey>
+#include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Definitions.h"
 #include "src/models/CertModel.h"
 #include "src/modules/scan/CertScanner.h"

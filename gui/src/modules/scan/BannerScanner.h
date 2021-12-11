@@ -4,7 +4,7 @@
 #include <QTcpSocket>
 #include <QStack>
 #include "AbstractScanner.h"
-#include "src/dialogs/ConfigDialog.h"
+#include "src/dialogs/ActiveConfigDialog.h"
 
 
 /*

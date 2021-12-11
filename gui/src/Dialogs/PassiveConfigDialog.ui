@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>349</width>
+    <width>330</width>
     <height>244</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>330</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Scan Configuration</string>
@@ -37,7 +43,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Timeout (secs)</string>
+           <string>Timeout (secs):</string>
           </property>
          </widget>
         </item>
@@ -57,7 +63,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Max Pages To Crawl</string>
+           <string>Max Pages To Crawl:</string>
           </property>
          </widget>
         </item>
@@ -99,7 +105,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Proxy Address</string>
+           <string>Proxy Address:</string>
           </property>
          </widget>
         </item>
@@ -119,7 +125,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Proxy Port</string>
+           <string>Proxy Port:</string>
           </property>
          </widget>
         </item>

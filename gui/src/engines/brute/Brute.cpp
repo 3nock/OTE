@@ -3,6 +3,7 @@
 //...
 #include <QDateTime>
 #include "src/utils/Definitions.h"
+#include "src/dialogs/ActiveConfigDialog.h"
 
 /*
  * option to resolve both A & AAAA, 3 models, one for A one for AAAA & one for A&AAAA
@@ -260,7 +261,7 @@ void Brute::on_buttonStop_clicked(){
 }
 
 void Brute::on_buttonConfig_clicked(){
-    ConfigDialog *configDialog = new ConfigDialog(this, scanConfig);
+    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }

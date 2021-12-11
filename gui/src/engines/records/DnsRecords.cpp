@@ -3,6 +3,7 @@
 //...
 #include <QDateTime>
 #include <QClipboard>
+#include "src/dialogs/ActiveConfigDialog.h"
 
 
 DnsRecords::DnsRecords(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
