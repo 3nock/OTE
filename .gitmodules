@@ -1,1 +1,5 @@
 
+[submodule "include/gumbo-parser"]
+	path = include/gumbo-parser
+	url = https://github.com/google/gumbo-parser
+	ignore = dirty
