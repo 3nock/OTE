@@ -25,7 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-include(includes/gumbo-parser.pri)
+include(../include/gumbo-parser.pri)
 
 SOURCES += \
     src/dialogs/ActiveConfigDialog.cpp \
