@@ -26,36 +26,6 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item>
-    <widget class="QLabel" name="label">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Wordlist Generator</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="tabSubBrute">
-      <attribute name="title">
-       <string>subbrute</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="tabTLD">
-      <attribute name="title">
-       <string>tld</string>
-      </attribute>
-     </widget>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>

@@ -185,10 +185,10 @@ SOURCES += \
     src/utils/NotesSyntaxHighlighter.cpp \
     src/widgets/InputWidget.cpp \
     src/widgets/Notes.cpp \
-    src/widgets/WordlistGeneratorWidget.cpp \
+    src/dialogs/wordlist/WordlistGeneratorWidget.cpp \
     src/dialogs/AboutDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
-    src/dialogs/WordlistDialog.cpp \
+    src/dialogs/wordlist/WordlistDialog.cpp \
     src/utils/utils.cpp \
     src/utils/Logger.cpp \
     src/SplashScreen.cpp \
@@ -350,10 +350,10 @@ HEADERS += \
     src/utils/models.h \
     src/widgets/InputWidget.h \
     src/widgets/Notes.h \
-    src/widgets/WordlistGeneratorWidget.h \
+    src/dialogs/wordlist/WordlistGeneratorWidget.h \
     src/dialogs/AboutDialog.h \
     src/dialogs/ApiKeysDialog.h \
-    src/dialogs/WordlistDialog.h \
+    src/dialogs/wordlist/WordlistDialog.h \
     src/utils/utils.h \
     src/utils/Config.h \
     src/utils/Logger.h \
@@ -385,9 +385,9 @@ FORMS += \
     src/tools/NSTool.ui \
     src/widgets/InputWidget.ui \
     src/widgets/Notes.ui \
-    src/widgets/WordlistGeneratorWidget.ui \
+    src/dialogs/wordlist/WordlistGeneratorWidget.ui \
     src/dialogs/AboutDialog.ui \
-    src/dialogs/WordlistDialog.ui \
+    src/dialogs/wordlist/WordlistDialog.ui \
     src/dialogs/ApiKeysDialog.ui \
     src/MainWindow.ui
 

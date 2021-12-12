@@ -2,8 +2,6 @@
 #define BRUTESCANNER_H
 
 #include "AbstractScanner.h"
-#include "src/dialogs/ActiveConfigDialog.h"
-#include "src/dialogs/WordlistDialog.h"
 
 
 namespace brute {

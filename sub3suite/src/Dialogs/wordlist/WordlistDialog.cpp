@@ -8,25 +8,28 @@
  * TODO: add wordlist generation functionality...
  *       refactor to be better interactively...
  */
-WordListDialog::WordListDialog(QWidget *parent, ENGINE engine)
-    :QDialog(parent), ui(new Ui::WordListDialog),
+WordListDialog::WordListDialog(QWidget *parent, ENGINE engine) :QDialog(parent), ui(new Ui::WordListDialog),
       m_engine(engine)
 {
     ui->setupUi(this);
+
     ///
     /// initializations...
     ///
     ui->specialWordlist->init("Wordlist");
+
     ///
     /// setting default texts...
     ///
-    if(m_engine == ENGINE::TLDBRUTE)
-        ui->labelTitle->setText("TLD Wordlist");
-    if(m_engine == ENGINE::SUBBRUTE)
-        ui->labelTitle->setText("Subdomain Wordlist");
     ui->lineEditName->setPlaceholderText("Enter Special wordlist Name...");
-    //...
+
+    ///
+    /// ...
+    ///
     loadWordlists();
+
+    ui->groupBoxSpecialWordlist->hide();
+    this->adjustSize();
 }
 WordListDialog::~WordListDialog(){
     delete ui;
@@ -107,4 +110,16 @@ void WordListDialog::on_buttonCreate_clicked(){
     Config::generalConfig().endGroup();
     ui->comboBoxSpecialWordlist->addItem(name);
     ui->lineEditName->clear();
+}
+
+void WordListDialog::on_checkBoxCreateNew_clicked(bool checked){
+    if(checked)
+        ui->groupBoxSpecialWordlist->show();
+    else
+        ui->groupBoxSpecialWordlist->hide();
+
+    ui->groupBoxSpecialWordlist->adjustSize();
+    ui->tabChoose->adjustSize();
+    ui->tabWidget->adjustSize();
+    this->adjustSize();
 }

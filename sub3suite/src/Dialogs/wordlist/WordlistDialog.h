@@ -20,7 +20,9 @@ class WordListDialog : public QDialog{
         void on_buttonCreate_clicked();
         void on_buttonOk_clicked();
 
-    signals:
+        void on_checkBoxCreateNew_clicked(bool checked);
+
+signals:
         void choosenWordlist(QString);
 
     private:

@@ -4,6 +4,7 @@
 #include <QDateTime>
 #include "src/utils/Definitions.h"
 #include "src/dialogs/ActiveConfigDialog.h"
+#include "src/dialogs/wordlist/WordlistDialog.h"
 
 /*
  * option to resolve both A & AAAA, 3 models, one for A one for AAAA & one for A&AAAA

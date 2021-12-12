@@ -26,7 +26,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
     ui->labelVersion->setText("Version 1.0");
 
     /* setting up description */
-    ui->plainTextEditDescription->appendHtml("Copyright 2020-2022 Enock Nicholaus <font color=\"green\">3nock@protonmail.com</font> and contributors.");
+    ui->plainTextEditDescription->appendHtml("Copyright 2020-2022 © Enock Nicholaus <font color=\"green\">3nock@protonmail.com</font> and contributors.");
 
     ui->plainTextEditDescription->appendPlainText("\n");
 
