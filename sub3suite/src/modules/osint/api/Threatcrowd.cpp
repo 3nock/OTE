@@ -10,18 +10,18 @@
 #define IP 4
 
 /*  limit all requests to no more than one request every ten seconds */
-Threatcrowd::Threatcrowd(ScanArgs *args): AbstractOsintModule(args)
+Threatcrowd::Threatcrowd(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "ThreatCrowd";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Threatcrowd::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Threatcrowd::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Threatcrowd::replyFinishedIp);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Threatcrowd::replyFinishedEmail);
 }
 Threatcrowd::~Threatcrowd(){
@@ -32,22 +32,22 @@ void Threatcrowd::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case EMAIL:
-            url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+args->target);
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+target);
             break;
         case DOMAINS:
-            url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+args->target);
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+target);
             break;
         case IP:
-            url.setUrl("https://www.threatcrowd.org/searchApi/v2/ip/report/?ip="+args->target);
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/ip/report/?ip="+target);
             break;
         case ANTIVIRUS:
-            url.setUrl("https://www.threatcrowd.org/searchApi/v2/antivirus/report/?antivirus="+args->target);
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/antivirus/report/?antivirus="+target);
             break;
         case FILE:
-            url.setUrl("https://www.threatcrowd.org/searchApi/v2/file/report/?resource="+args->target);
+            url.setUrl("https://www.threatcrowd.org/searchApi/v2/file/report/?resource="+target);
             break;
         }
         request.setUrl(url);
@@ -56,8 +56,8 @@ void Threatcrowd::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+target);
         request.setAttribute(QNetworkRequest::User, DOMAINS);
         request.setUrl(url);
         manager->get(request);
@@ -65,8 +65,8 @@ void Threatcrowd::start(){
         return;
     }
 
-    if(args->inputEmail){
-        url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+args->target);
+    if(args.inputEmail){
+        url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+target);
         request.setAttribute(QNetworkRequest::User, EMAIL);
         request.setUrl(url);
         manager->get(request);
@@ -74,8 +74,8 @@ void Threatcrowd::start(){
         return;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://www.threatcrowd.org/searchApi/v2/ip/report/?ip="+args->target);
+    if(args.inputIp){
+        url.setUrl("https://www.threatcrowd.org/searchApi/v2/ip/report/?ip="+target);
         request.setAttribute(QNetworkRequest::User, IP);
         request.setUrl(url);
         manager->get(request);
@@ -89,11 +89,11 @@ void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         QJsonArray subdomains = mainObj["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
             emit subdomain(value.toString());
@@ -101,7 +101,7 @@ void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == EMAIL){
+    if(QUERY_TYPE == EMAIL){
         if(mainObj["response_code"].toString() == "1"){
             QJsonArray domains = mainObj["domains"].toArray();
             foreach(const QJsonValue &value, domains){
@@ -111,7 +111,7 @@ void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == IP){
+    if(QUERY_TYPE == IP){
         if(mainObj["response_code"].toString() == "1"){
             QJsonArray resolutions = mainObj["resolutions"].toArray();
             foreach(const QJsonValue &value, resolutions){
@@ -129,11 +129,11 @@ void Threatcrowd::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         if(mainObj["response_code"].toString() == "1"){
             QJsonArray resolutions = mainObj["resolutions"].toArray();
             foreach(const QJsonValue &value, resolutions){
@@ -151,11 +151,11 @@ void Threatcrowd::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         if(mainObj["response_code"].toString() == "1"){
             QJsonArray emails = mainObj["emails"].toArray();
             foreach(const QJsonValue &value, emails){

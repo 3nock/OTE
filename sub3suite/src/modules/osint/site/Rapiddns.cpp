@@ -5,16 +5,16 @@
 /*
  * it is one of my fav...
  */
-Rapiddns::Rapiddns(ScanArgs *args): AbstractOsintModule(args)
+Rapiddns::Rapiddns(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "RapidDns";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomain);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomainIp);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Rapiddns::replyFinishedIp);
 }
 Rapiddns::~Rapiddns(){
@@ -25,22 +25,22 @@ void Rapiddns::start(){
     QNetworkRequest request;
     QUrl url;
 
-    if(args->inputDomain){
-        url.setUrl("https://rapiddns.io/subdomain/"+args->target+"?full=1#result");
+    if(args.inputDomain){
+        url.setUrl("https://rapiddns.io/subdomain/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://rapiddns.io/sameip/"+args->target+"?full=1#result");
+    if(args.inputIp){
+        url.setUrl("https://rapiddns.io/sameip/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputCidr){
-        url.setUrl("https://rapiddns.io/s/"+args->target+"?full=1#result");
+    if(args.inputCidr){
+        url.setUrl("https://rapiddns.io/s/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;

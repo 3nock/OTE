@@ -6,12 +6,12 @@
  * for now only page 1...
  * uses captcha...
  */
-SiteDossier::SiteDossier(ScanArgs *args): AbstractOsintModule(args)
+SiteDossier::SiteDossier(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.resultsCount++;
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &SiteDossier::replyFinishedSubdomain);
 }
 SiteDossier::~SiteDossier(){
@@ -20,7 +20,7 @@ SiteDossier::~SiteDossier(){
 
 void SiteDossier::start(){
     QNetworkRequest request;
-    QUrl url("http://www.sitedossier.com/parentdomain/"+args->target+"/1");
+    QUrl url("http://www.sitedossier.com/parentdomain/"+target+"/1");
     request.setUrl(url);
     manager->get(request);
     activeRequests++;

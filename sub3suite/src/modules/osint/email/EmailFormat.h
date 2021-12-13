@@ -28,7 +28,7 @@ struct EmailFormat{
 class EmailFormat: public AbstractOsintModule{
 
     public:
-        EmailFormat(ScanArgs *args);
+        EmailFormat(ScanArgs args);
         ~EmailFormat() override;
 
     public slots:

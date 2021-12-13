@@ -59,7 +59,7 @@ struct VirusTotal{
 class VirusTotal: public AbstractOsintModule{
 
     public:
-        VirusTotal(ScanArgs *args);
+        VirusTotal(ScanArgs args);
         ~VirusTotal() override;
 
     public slots:

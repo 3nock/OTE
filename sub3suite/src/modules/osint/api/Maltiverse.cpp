@@ -14,18 +14,18 @@
  * ratelimit-consumed: 1
  * ratelimit-limit: 20
  */
-Maltiverse::Maltiverse(ScanArgs *args): AbstractOsintModule(args)
+Maltiverse::Maltiverse(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Maltiverse";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Maltiverse::replyFinishedRawJson);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Maltiverse::replyFinishedEmail);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &Maltiverse::replyFinishedAsn);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Maltiverse::replyFinishedIp);
 }
 Maltiverse::~Maltiverse(){
@@ -36,16 +36,16 @@ void Maltiverse::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case HOSTNAME:
-            url.setUrl("https://api.maltiverse.com/hostname/"+args->target);
+            url.setUrl("https://api.maltiverse.com/hostname/"+target);
             break;
         case IPV4:
-            url.setUrl("https://api.maltiverse.com/ip/"+args->target);
+            url.setUrl("https://api.maltiverse.com/ip/"+target);
             break;
         case URL:
-            url.setUrl("https://api.maltiverse.com/url/"+args->target);
+            url.setUrl("https://api.maltiverse.com/url/"+target);
             break;
         }
         request.setUrl(url);
@@ -54,16 +54,16 @@ void Maltiverse::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://api.maltiverse.com/hostname/"+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://api.maltiverse.com/hostname/"+target);
         request.setAttribute(QNetworkRequest::User, HOSTNAME);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://api.maltiverse.com/urlchecksum/"+args->target);
+    if(args.inputIp){
+        url.setUrl("https://api.maltiverse.com/urlchecksum/"+target);
         request.setAttribute(QNetworkRequest::User, IPV4);
         request.setUrl(url);
         manager->get(request);
@@ -77,11 +77,11 @@ void Maltiverse::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(requestType == HOSTNAME || requestType == IPV4){
+    if(QUERY_TYPE == HOSTNAME || QUERY_TYPE == IPV4){
         QString asn_name = mainObj["asn_name"].toString();
         //...
         if(!asn_name.isEmpty()){
@@ -103,11 +103,11 @@ void Maltiverse::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(requestType == HOSTNAME){
+    if(QUERY_TYPE == HOSTNAME){
         foreach(const QJsonValue &value, mainObj["resolved_ip"].toArray()){
             QString address = value.toObject()["ip_addr"].toString();
             emit ip(address);
@@ -124,11 +124,11 @@ void Maltiverse::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray emails = document.object()["email"].toArray();
 
-    if(requestType == IPV4){
+    if(QUERY_TYPE == IPV4){
         foreach(const QJsonValue &value, emails){
             emit email(value.toString());
             log.resultsCount++;

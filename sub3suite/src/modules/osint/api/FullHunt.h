@@ -26,7 +26,7 @@ struct FullHunt{
 class FullHunt: public AbstractOsintModule{
 
     public:
-        FullHunt(ScanArgs *args);
+        FullHunt(ScanArgs args);
         ~FullHunt() override;
 
     public slots:

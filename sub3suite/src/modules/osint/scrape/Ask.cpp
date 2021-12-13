@@ -2,16 +2,16 @@
 #include <QStack>
 
 
-Ask::Ask(ScanArgs *args): AbstractOsintModule(args)
+Ask::Ask(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Ask";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Ask::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Ask::replyFinishedEmail);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Ask::replyFinishedUrl);
 }
 Ask::~Ask(){
@@ -21,17 +21,17 @@ Ask::~Ask(){
 void Ask::start(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            QUrl url("https://www.ask.com/web?q=site:"+args->target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
             activeRequests++;
         }
 
-        if(args->outputUrl){
-            QUrl url("https://www.ask.com/web?q=site:"+args->target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+        if(args.outputUrl){
+            QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
@@ -168,15 +168,15 @@ void Ask::replyFinishedUrl(QNetworkReply *reply){
 void Ask::sendRequests(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain)
+    if(args.inputDomain){
+        if(args.outputSubdomain)
         {
             ///
             /// getting the max pages to query...
             ///
             int lastPage;
-            if(args->maxPage <= m_lastPage)
-                lastPage = args->maxPage;
+            if(args.config->maxPage <= m_lastPage)
+                lastPage = args.config->maxPage;
             else
                 lastPage = m_lastPage;
 
@@ -185,7 +185,7 @@ void Ask::sendRequests(){
             ///
             int currentPage = 2;
             while(currentPage < lastPage){
-                QUrl url("https://www.ask.com/web?q=site:"+args->target+"&page="+QString::number(currentPage)+"&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+                QUrl url("https://www.ask.com/web?q=site:"+target+"&page="+QString::number(currentPage)+"&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
                 request.setUrl(url);
                 manager->get(request);
                 m_firstRequest = false;

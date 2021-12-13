@@ -21,7 +21,7 @@ struct HybridAnalysis{
 class HybridAnalysis: public AbstractOsintModule{
 
     public:
-        HybridAnalysis(ScanArgs *args);
+        HybridAnalysis(ScanArgs args);
         ~HybridAnalysis() override;
 
     public slots:

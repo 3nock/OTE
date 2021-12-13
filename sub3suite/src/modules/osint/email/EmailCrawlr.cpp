@@ -12,14 +12,14 @@
 /*
  * returns a BadGateway Error
  */
-EmailCrawlr::EmailCrawlr(ScanArgs *args): AbstractOsintModule(args)
+EmailCrawlr::EmailCrawlr(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "EmailCrawlr";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedRawJson);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedEmail);
     ///
     /// getting api-key...
@@ -37,19 +37,19 @@ void EmailCrawlr::start(){
     request.setRawHeader("x-api-key", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case ACCOUNT:
             url.setUrl("https://api.emailcrawlr.com/v2/account");
             break;
         case DOMAIN_LOOKUP:
-            url.setUrl("https://api.emailcrawlr.com/v2/domain?domain="+args->target);
+            url.setUrl("https://api.emailcrawlr.com/v2/domain?domain="+target);
             break;
         case EMAIL_LOOKUP:
-            url.setUrl("https://api.emailcrawlr.com/v2/email?email="+args->target);
+            url.setUrl("https://api.emailcrawlr.com/v2/email?email="+target);
             break;
         case EMAIL_VERIFICATION:
-            url.setUrl("https://api.emailcrawlr.com/v2/email/verify?email="+args->target);
+            url.setUrl("https://api.emailcrawlr.com/v2/email/verify?email="+target);
             break;
         }
         request.setUrl(url);
@@ -58,8 +58,8 @@ void EmailCrawlr::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://api.emailcrawlr.com/v2/domain?domain="+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://api.emailcrawlr.com/v2/domain?domain="+target);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;

@@ -15,16 +15,16 @@
  * access passive-dns, 1000 queries per day for public usage
  * you can query for any dns record type
  */
-MnemonicPaid::MnemonicPaid(ScanArgs *args): AbstractOsintModule(args)
+MnemonicPaid::MnemonicPaid(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Mnemonic";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedRawJson);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedSubdomain);
     ///
     /// getting api key...
@@ -42,25 +42,25 @@ void MnemonicPaid::start(){
     request.setRawHeader("Argus-API-Key", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case IP_ANY_RECORD:
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
             break;
         case PDNS_A:
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=A&limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=A&limit=999");
             break;
         case PDNS_AAAA:
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=AAAA&limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=AAAA&limit=999");
             break;
         case PDNS_CNAME:
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=CNAME&limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=CNAME&limit=999");
             break;
         case PDNS_MX:
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=MX&limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=MX&limit=999");
             break;
         case PDNS_NS:
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=NS&limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=NS&limit=999");
             break;
         }
         request.setUrl(url);
@@ -68,42 +68,42 @@ void MnemonicPaid::start(){
         activeRequests++;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?limit=999");
+    if(args.inputIp){
+        url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
         request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputDomain){
-        if(args->outputIp){
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=A&limit=999");
+    if(args.inputDomain){
+        if(args.outputIp){
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=A&limit=999");
             request.setAttribute(QNetworkRequest::User, PDNS_A);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
 
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=AAAA&limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=AAAA&limit=999");
             request.setAttribute(QNetworkRequest::User, PDNS_AAAA);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputSubdomain){
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=CNAME&limit=999");
+        if(args.outputSubdomain){
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=CNAME&limit=999");
             request.setAttribute(QNetworkRequest::User, PDNS_CNAME);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
 
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=MX&limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=MX&limit=999");
             request.setAttribute(QNetworkRequest::User, PDNS_MX);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
 
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+args->target+"?rrType=NS&limit=999");
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=NS&limit=999");
             request.setAttribute(QNetworkRequest::User, PDNS_NS);
             request.setUrl(url);
             manager->get(request);
@@ -118,12 +118,12 @@ void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray data = document.object()["data"].toArray();
     //int responseCode = document.object()["responseCode"].toInt();
 
-    if(requestType == IP_ANY_RECORD){
+    if(QUERY_TYPE == IP_ANY_RECORD){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "a"){
@@ -137,7 +137,7 @@ void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == PDNS_A){
+    if(QUERY_TYPE == PDNS_A){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "a"){
@@ -147,7 +147,7 @@ void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == PDNS_AAAA){
+    if(QUERY_TYPE == PDNS_AAAA){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "aaaa"){
@@ -166,12 +166,12 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray data = document.object()["data"].toArray();
     //int responseCode = document.object()["responseCode"].toInt();
 
-    if(requestType == IP_ANY_RECORD){
+    if(QUERY_TYPE == IP_ANY_RECORD){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "cname"){
@@ -189,7 +189,7 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == PDNS_CNAME){
+    if(QUERY_TYPE == PDNS_CNAME){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "cname"){
@@ -199,7 +199,7 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == PDNS_MX){
+    if(QUERY_TYPE == PDNS_MX){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "mx"){
@@ -209,7 +209,7 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == PDNS_NS){
+    if(QUERY_TYPE == PDNS_NS){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "ns"){

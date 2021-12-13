@@ -6,16 +6,16 @@
  * has a different type of next page...
  * redirection probs...
  */
-Bing::Bing(ScanArgs *args): AbstractOsintModule(args)
+Bing::Bing(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Bing";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Bing::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Bing::replyFinishedEmail);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Bing::replyFinishedUrl);
 }
 Bing::~Bing(){
@@ -25,9 +25,9 @@ Bing::~Bing(){
 void Bing::start(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            QUrl url("https://www.bing.com/search?q=site:"+args->target+"&first=1&FORM=PORE");
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            QUrl url("https://www.bing.com/search?q=site:"+target+"&first=1&FORM=PORE");
             //request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
             request.setUrl(url);
             manager->get(request);
@@ -35,8 +35,8 @@ void Bing::start(){
             activeRequests++;
         }
 
-        if(args->outputUrl){
-            QUrl url("https://www.bing.com/search?q=site:"+args->target+"&first=1&FORM=PORE");
+        if(args.outputUrl){
+            QUrl url("https://www.bing.com/search?q=site:"+target+"&first=1&FORM=PORE");
             //request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
             request.setUrl(url);
             manager->get(request);
@@ -166,15 +166,15 @@ void Bing::replyFinishedUrl(QNetworkReply *reply){
 void Bing::sendRequests(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain)
+    if(args.inputDomain){
+        if(args.outputSubdomain)
         {
             ///
             /// getting the max pages to query...
             ///
             int lastPage;
-            if(args->maxPage <= m_lastPage)
-                lastPage = args->maxPage;
+            if(args.config->maxPage <= m_lastPage)
+                lastPage = args.config->maxPage;
             else
                 lastPage = m_lastPage;
 
@@ -184,7 +184,7 @@ void Bing::sendRequests(){
             int currentPage = 2;
             int first = 11;
             while(currentPage < lastPage){
-                QUrl url("https://www.bing.com/search?q=site:"+args->target+"&first="+QString::number(first)+"&FORM=PORE");
+                QUrl url("https://www.bing.com/search?q=site:"+target+"&first="+QString::number(first)+"&FORM=PORE");
                 //request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
                 request.setUrl(url);
                 manager->get(request);

@@ -17,9 +17,6 @@ CidrTool::CidrTool(QWidget *parent) : QDialog(parent), ui(new Ui::CidrTool),
     /* setting model with tableView... */
     ui->treeResults->setModel(m_model->model);
 
-    /* for scan... */
-    m_args = new ScanArgs;
-
     /* registering meta-objects */
     qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
 }
@@ -106,27 +103,46 @@ void CidrTool::on_checkBoxExpand_clicked(bool checked){
 }
 
 void CidrTool::on_buttonStart_clicked(){
-    m_args->target = ui->lineEditTarget->text();
-    m_args->outputInfoCidr = true;
+    ScanArgs scanArgs;
+
+    ///
+    /// getting scan arguments...
+    ///
+    scanArgs.outputInfoCidr = true;
+    if(ui->checkBoxMultipleTargets->isChecked()){
+        // for multiple targets...
+    }else{
+        scanArgs.targets.push(ui->lineEditTarget->text());
+    }
 
     ui->buttonStop->setEnabled(true);
     ui->buttonStart->setDisabled(true);
 
+    ///
+    /// starting the scan thread...
+    ///
     QThread *cThread = new QThread;
     int engineToUse = ui->comboBoxEngine->currentIndex();
 
     if(engineToUse == 0)
     {
-        Bgpview *bgpview = new Bgpview(m_args);
-        bgpview->Enumerator(cThread);
+        Bgpview *bgpview = new Bgpview(scanArgs);
+        bgpview->startScan(cThread);
         bgpview->moveToThread(cThread);
+
         connect(bgpview, &IpInfo::infoCidr, this, &CidrTool::onResult);
+        /* ... */
         connect(bgpview, &IpInfo::infoLog, this, &CidrTool::onInfoLog);
         connect(bgpview, &IpInfo::errorLog, this, &CidrTool::onErrorLog);
         connect(bgpview, &IpInfo::rateLimitLog, this, &CidrTool::onRateLimitLog);
+        /* ... */
+        connect(this, &CidrTool::stopScanThread, bgpview, &AbstractOsintModule::onStop);
+        connect(this, &CidrTool::pauseScanThread, bgpview, &AbstractOsintModule::onPause);
+        /* ... */
         connect(cThread, &QThread::finished, this, &CidrTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+
         cThread->start();
     }
 }

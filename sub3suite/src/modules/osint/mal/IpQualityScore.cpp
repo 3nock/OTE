@@ -10,12 +10,12 @@
  * 5,000 per month for free-user...
  * url encode the url...
  */
-IpQualityScore::IpQualityScore(ScanArgs *args): AbstractOsintModule(args)
+IpQualityScore::IpQualityScore(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "IpQualityScore";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRawJson);
     ///
     /// get api key...
@@ -34,19 +34,19 @@ void IpQualityScore::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case EMAIL_VALIDATION:
-            url.setUrl("https://ipqualityscore.com/api/json/email/"+m_key+"/"+args->target);
+            url.setUrl("https://ipqualityscore.com/api/json/email/"+m_key+"/"+target);
             break;
         case MALICIOUS_URL_SCANNER:
-            url.setUrl("https://ipqualityscore.com/api/json/url/"+m_key+"/"+args->target);
+            url.setUrl("https://ipqualityscore.com/api/json/url/"+m_key+"/"+target);
             break;
         case PHONE_VALIDATION:
-            url.setUrl("https://ipqualityscore.com/api/json/phone/"+m_key+"/"+args->target);
+            url.setUrl("https://ipqualityscore.com/api/json/phone/"+m_key+"/"+target);
             break;
         case PROXY_VPN_DETECTION:
-            url.setUrl("https://ipqualityscore.com/api/json/ip/"+m_key+"/"+args->target+"?strictness=0&allow_public_access_points=true&fast=true&lighter_penalties=true&mobile=true");
+            url.setUrl("https://ipqualityscore.com/api/json/ip/"+m_key+"/"+target+"?strictness=0&allow_public_access_points=true&fast=true&lighter_penalties=true&mobile=true");
             break;
         }
         request.setUrl(url);

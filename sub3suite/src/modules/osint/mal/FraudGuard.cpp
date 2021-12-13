@@ -13,12 +13,12 @@
  * 1,000 per month for free-user...
  * has lots of apis i havent implemented...
  */
-FraudGuard::FraudGuard(ScanArgs *args): AbstractOsintModule(args)
+FraudGuard::FraudGuard(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "FraudGuard";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &FraudGuard::replyFinishedRawJson);
     ///
     /// get api key...
@@ -41,8 +41,8 @@ void FraudGuard::start(){
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case GET_CUSTOM_GEOBLOCK:
             url.setUrl("https://@api.fraudguard.io/geoblock");
             break;
@@ -53,16 +53,16 @@ void FraudGuard::start(){
             url.setUrl("https://@api.fraudguard.io/blacklist/0");
             break;
         case SPECIFIC_IP_REP_V1:
-            url.setUrl("https://@api.fraudguard.io/ip/"+args->target);
+            url.setUrl("https://@api.fraudguard.io/ip/"+target);
             break;
         case SPECIFIC_IP_REP_V2:
-            url.setUrl("https://@api.fraudguard.io/v2/ip/"+args->target);
+            url.setUrl("https://@api.fraudguard.io/v2/ip/"+target);
             break;
         case SPECIFIC_HOST_REP_V2:
-            url.setUrl("https://@api.fraudguard.io/v2/hostname/"+args->target);
+            url.setUrl("https://@api.fraudguard.io/v2/hostname/"+target);
             break;
         case SPECIFIC_IP_GEO_ISP_ORG:
-            url.setUrl("https://@api.fraudguard.io/v2/ip/geolookup/"+args->target);
+            url.setUrl("https://@api.fraudguard.io/v2/ip/geolookup/"+target);
             break;
         }
         request.setUrl(url);

@@ -16,9 +16,6 @@ NSTool::NSTool(QWidget *parent) : QDialog(parent), ui(new Ui::NSTool),
     /* setting model with tableView... */
     ui->treeResults->setModel(m_model->model);
 
-    /* for scan... */
-    m_args = new ScanArgs;
-
     /* registering meta-objects */
     qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
 }

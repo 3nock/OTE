@@ -5,16 +5,16 @@
 /*
  * find a way to get to next page...
  */
-DuckDuckGo::DuckDuckGo(ScanArgs *args): AbstractOsintModule(args)
+DuckDuckGo::DuckDuckGo(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "DuckDuckGo";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedEmail);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedUrl);
 }
 DuckDuckGo::~DuckDuckGo(){
@@ -24,16 +24,16 @@ DuckDuckGo::~DuckDuckGo(){
 void DuckDuckGo::start(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            QUrl url("https://html.duckduckgo.com/html/?q=site:"+args->target);
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            QUrl url("https://html.duckduckgo.com/html/?q=site:"+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputUrl){
-            QUrl url("https://html.duckduckgo.com/html/?q=site:"+args->target);
+        if(args.outputUrl){
+            QUrl url("https://html.duckduckgo.com/html/?q=site:"+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

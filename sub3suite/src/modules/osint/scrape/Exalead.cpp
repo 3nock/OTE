@@ -5,16 +5,16 @@
 /*
  * not very accurate...
  */
-Exalead::Exalead(ScanArgs *args): AbstractOsintModule(args)
+Exalead::Exalead(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Exalead";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Exalead::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Exalead::replyFinishedEmail);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Exalead::replyFinishedUrl);
 }
 Exalead::~Exalead(){
@@ -24,16 +24,16 @@ Exalead::~Exalead(){
 void Exalead::start(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            QUrl url("https://www.exalead.com/search/web/results/?q="+args->target+"&collapsing=off");
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            QUrl url("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputUrl){
-            QUrl url("https://www.exalead.com/search/web/results/?q="+args->target+"&collapsing=off");
+        if(args.outputUrl){
+            QUrl url("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

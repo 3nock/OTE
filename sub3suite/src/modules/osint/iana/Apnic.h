@@ -21,7 +21,7 @@ struct Apnic{
 class Apnic: public AbstractOsintModule{
 
     public:
-        Apnic(ScanArgs *args);
+        Apnic(ScanArgs args);
         ~Apnic() override;
 
     public slots:

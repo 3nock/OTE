@@ -11,14 +11,14 @@
 #define EMAIL_FINDER 4
 #define EMAIL_VERIFIER 5
 
-Hunter::Hunter(ScanArgs *args): AbstractOsintModule(args)
+Hunter::Hunter(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Hunter";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Hunter::replyFinishedRawJson);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
     ///
     /// getting api-key...
@@ -35,34 +35,34 @@ void Hunter::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case ACCOUNT_INFO:
             url.setUrl("https://api.hunter.io/v2/account?api_key="+m_key);
             break;
         case AUTHOR_FINDER:
-            url.setUrl("https://api.hunter.io/v2/author-finder?url="+args->target+"&api_key="+m_key);
+            url.setUrl("https://api.hunter.io/v2/author-finder?url="+target+"&api_key="+m_key);
             break;
         case DOMAIN_SEARCH:
-            url.setUrl("https://api.hunter.io/v2/domain-search?domain="+args->target+"&api_key="+m_key);
+            url.setUrl("https://api.hunter.io/v2/domain-search?domain="+target+"&api_key="+m_key);
             break;
         case EMAIL_COUNT:
-            url.setUrl("https://api.hunter.io/v2/email-count?domain="+args->target);
+            url.setUrl("https://api.hunter.io/v2/email-count?domain="+target);
             break;
         case EMAIL_FINDER:
-            url.setUrl("https://api.hunter.io/v2/email-finder?domain="+args->target+"&api_key="+m_key);
+            url.setUrl("https://api.hunter.io/v2/email-finder?domain="+target+"&api_key="+m_key);
             break;
         case EMAIL_VERIFIER:
-            url.setUrl("https://api.hunter.io/v2/email-verifier?email="+args->target+"&api_key="+m_key);
+            url.setUrl("https://api.hunter.io/v2/email-verifier?email="+target+"&api_key="+m_key);
             break;
         }
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
-    if(args->inputDomain){
-        if(args->outputEmail){
-            url.setUrl("https://api.hunter.io/v2/domain-search?domain="+args->target+"&api_key="+m_key);
+    if(args.inputDomain){
+        if(args.outputEmail){
+            url.setUrl("https://api.hunter.io/v2/domain-search?domain="+target+"&api_key="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAIN_SEARCH);
             request.setUrl(url);
             manager->get(request);
@@ -77,11 +77,11 @@ void Hunter::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document["data"].toObject();
 
-    if(requestType == DOMAIN_SEARCH){
+    if(QUERY_TYPE == DOMAIN_SEARCH){
         /*
          * QString OrganizationName = data["organization"].toString();
          */

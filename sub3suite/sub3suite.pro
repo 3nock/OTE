@@ -183,6 +183,8 @@ SOURCES += \
     src/tools/NSTool.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/utils/NotesSyntaxHighlighter.cpp \
+    src/utils/config/GeneralConfigDialog.cpp \
+    src/utils/logs/LogViewerDialog.cpp \
     src/widgets/InputWidget.cpp \
     src/widgets/Notes.cpp \
     src/dialogs/wordlist/WordlistGeneratorWidget.cpp \
@@ -347,6 +349,8 @@ HEADERS += \
     src/utils/JsonSyntaxHighlighter.h \
     src/models/ResultsModels.h \
     src/utils/NotesSyntaxHighlighter.h \
+    src/utils/config/GeneralConfigDialog.h \
+    src/utils/logs/LogViewerDialog.h \
     src/utils/models.h \
     src/widgets/InputWidget.h \
     src/widgets/Notes.h \
@@ -383,6 +387,8 @@ FORMS += \
     src/engines/osint/Osint.ui \
     src/engines/active/Active.ui \
     src/tools/NSTool.ui \
+    src/utils/config/GeneralConfigDialog.ui \
+    src/utils/logs/LogViewerDialog.ui \
     src/widgets/InputWidget.ui \
     src/widgets/Notes.ui \
     src/dialogs/wordlist/WordlistGeneratorWidget.ui \

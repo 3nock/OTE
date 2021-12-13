@@ -9,16 +9,16 @@
  * for now it goes request after request, later implement concurrent requests...
  * fix and cert output...
  */
-GoogleCert::GoogleCert(ScanArgs *args): AbstractOsintModule(args)
+GoogleCert::GoogleCert(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "GoogleCert";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &GoogleCert::replyFinishedRawJson);
-    if(args->outputSSLCert)
+    if(args.outputSSLCert)
         connect(manager, &NetworkAccessManager::finished, this, &GoogleCert::replyFinishedSSLCert);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &GoogleCert::replyFinishedSubdomain);
 }
 GoogleCert::~GoogleCert(){
@@ -27,7 +27,7 @@ GoogleCert::~GoogleCert(){
 
 void GoogleCert::start(){
     QNetworkRequest request;
-    QUrl url("https://www.google.com/transparencyreport/api/v3/httpsreport/ct/certsearch?include_subdomains=true&domain="+args->target);
+    QUrl url("https://www.google.com/transparencyreport/api/v3/httpsreport/ct/certsearch?include_subdomains=true&domain="+target);
     request.setUrl(url);
     request.setRawHeader("Connection", "close");
     request.setRawHeader("Referer", "https://transparencyreport.google.com/https/certificates");

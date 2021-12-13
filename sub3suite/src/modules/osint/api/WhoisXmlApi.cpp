@@ -27,20 +27,20 @@
 /* domain availability if domain can be purchased */
 /* good whois for domain & ip*/
 /* website contacts */
-WhoisXmlApi::WhoisXmlApi(ScanArgs *args): AbstractOsintModule(args)
+WhoisXmlApi::WhoisXmlApi(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "WhoisXmlApi";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedIp);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedAsn);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedEmail);
     ///
     /// get api key...
@@ -58,56 +58,56 @@ void WhoisXmlApi::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption){
+    if(args.outputRaw){
+        switch (args.rawOption){
         case WHOIS:
-            url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&domainName="+args->target);
+            url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&domainName="+target);
             break;
         case IP_WHOIS:
-            url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&ipWhois=1&ip=1&domainName="+args->target);
+            url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&ipWhois=1&ip=1&domainName="+target);
             break;
         case DNS_LOOKUP:
-            url.setUrl("https://www.whoisxmlapi.com/whoisserver/DNSService?apiKey="+m_key+"&domainName="+args->target+"&type=_subdomainIp");
+            url.setUrl("https://www.whoisxmlapi.com/whoisserver/DNSService?apiKey="+m_key+"&domainName="+target+"&type=_subdomainIp");
             break;
         case EMAIL_VERIFICATION:
-            url.setUrl("https://emailverification.whoisxmlapi.com/api/v1?apiKey="+m_key+"&emailAddress="+args->target);
+            url.setUrl("https://emailverification.whoisxmlapi.com/api/v1?apiKey="+m_key+"&emailAddress="+target);
             break;
         case SUBDOMAIN_LOOKUP:
-            url.setUrl("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+            url.setUrl("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             break;
         case WEBSITE_SCRRENSHOT:
-            url.setUrl("https://website-screenshot.whoisxmlapi.com/api/v1?apiKey="+m_key+"&url="+args->target);
+            url.setUrl("https://website-screenshot.whoisxmlapi.com/api/v1?apiKey="+m_key+"&url="+target);
             break;
         case WHOIS_HISTORY:
-            url.setUrl("https://whois-history.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+            url.setUrl("https://whois-history.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             break;
         case REVERSE_WHOIS:
             url.setUrl("https://reverse-whois.whoisxmlapi.com/api/v2");
             /* a post request */
             break;
         case REVERSE_NS:
-            url.setUrl("https://reverse-ns.whoisxmlapi.com/api/v1?apiKey="+m_key+"&ns="+args->target);
+            url.setUrl("https://reverse-ns.whoisxmlapi.com/api/v1?apiKey="+m_key+"&ns="+target);
             break;
         case REVERSE_MX:
-            url.setUrl("https://reverse-mx.whoisxmlapi.com/api/v1?apiKey="+m_key+"&mx="+args->target);
+            url.setUrl("https://reverse-mx.whoisxmlapi.com/api/v1?apiKey="+m_key+"&mx="+target);
             break;
         case REVERSE_IP:
-            url.setUrl("https://reverse-ip.whoisxmlapi.com/api/v1?apiKey="+m_key+"&ip="+args->target);
+            url.setUrl("https://reverse-ip.whoisxmlapi.com/api/v1?apiKey="+m_key+"&ip="+target);
             break;
         case IP_NETBLOCKS_IP:
-            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&ip="+args->target);
+            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&ip="+target);
             break;
         case IP_NETBLOCKS_ASN:
-            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&asn="+args->target);
+            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&asn="+target);
             break;
         case IP_NETBLOCKS_ORG:
-            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&org[]="+args->target);
+            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&org[]="+target);
             break;
         case DOMAIN_AVAILABILITY:
-            url.setUrl("https://domain-availability.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+            url.setUrl("https://domain-availability.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             break;
         case WEBSITE_CONTACTS:
-            url.setUrl("https://website-contacts.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+            url.setUrl("https://website-contacts.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             break;
         }
         request.setUrl(url);
@@ -116,23 +116,23 @@ void WhoisXmlApi::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            url.setUrl("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            url.setUrl("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             request.setAttribute(QNetworkRequest::User, SUBDOMAIN_LOOKUP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputEmail){
-            url.setUrl("https://whois-history.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+        if(args.outputEmail){
+            url.setUrl("https://whois-history.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             request.setAttribute(QNetworkRequest::User, WHOIS_HISTORY);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
 
-            url.setUrl("https://website-contacts.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+args->target);
+            url.setUrl("https://website-contacts.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             request.setAttribute(QNetworkRequest::User, WEBSITE_CONTACTS);
             request.setUrl(url);
             manager->get(request);
@@ -140,17 +140,17 @@ void WhoisXmlApi::start(){
         }
     }
 
-    if(args->inputIp){
-        if(args->outputSubdomain){
-            url.setUrl("https://reverse-ip.whoisxmlapi.com/api/v1?apiKey="+m_key+"&ip="+args->target);
+    if(args.inputIp){
+        if(args.outputSubdomain){
+            url.setUrl("https://reverse-ip.whoisxmlapi.com/api/v1?apiKey="+m_key+"&ip="+target);
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputAsn){
-            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&ip="+args->target);
+        if(args.outputAsn){
+            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&ip="+target);
             request.setAttribute(QNetworkRequest::User, IP_NETBLOCKS_IP);
             request.setUrl(url);
             manager->get(request);
@@ -158,9 +158,9 @@ void WhoisXmlApi::start(){
         }
     }
 
-    if(args->inputAsn){
-        if(args->outputAsn){
-            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&asn="+args->target);
+    if(args.inputAsn){
+        if(args.outputAsn){
+            url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&asn="+target);
             request.setAttribute(QNetworkRequest::User, IP_NETBLOCKS_ASN);
             request.setUrl(url);
             manager->get(request);
@@ -175,11 +175,11 @@ void WhoisXmlApi::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject result = document.object()["result"].toObject();
 
-    if(requestType == SUBDOMAIN_LOOKUP){
+    if(QUERY_TYPE == SUBDOMAIN_LOOKUP){
         QJsonArray records = result["records"].toArray();
         foreach(const QJsonValue &value, records){
             emit subdomain(value.toObject()["domain"].toString());
@@ -187,7 +187,7 @@ void WhoisXmlApi::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == REVERSE_IP){
+    if(QUERY_TYPE == REVERSE_IP){
         foreach(const QJsonValue &value, document.array()){
             QString hostname = value.toObject()["name"].toString();
             emit subdomain(hostname);
@@ -195,7 +195,7 @@ void WhoisXmlApi::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == DNS_LOOKUP){
+    if(QUERY_TYPE == DNS_LOOKUP){
         QJsonArray dnsRecords = document.object()["dnsRecords"].toArray();
         foreach(const QJsonValue &record, dnsRecords){
             QString dnsType = record.toObject()["dnsType"].toString();
@@ -233,10 +233,10 @@ void WhoisXmlApi::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == IP_NETBLOCKS_IP || requestType == IP_NETBLOCKS_ASN){
+    if(QUERY_TYPE == IP_NETBLOCKS_IP || QUERY_TYPE == IP_NETBLOCKS_ASN){
         QJsonArray inetnums = document.object()["inetnums"].toArray();
         foreach(const QJsonValue &value, inetnums){
             QString asnValue = QString::number(value.toObject()["as"].toObject()["asn"].toInt());
@@ -255,11 +255,11 @@ void WhoisXmlApi::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject result = document.object()["result"].toObject();
 
-    if(requestType == WHOIS_HISTORY){
+    if(QUERY_TYPE == WHOIS_HISTORY){
         QJsonArray records = result["records"].toArray();
         foreach(const QJsonValue &value, records){
             QString registrantContact = value.toObject()["registrantContact"].toObject()["email"].toString();
@@ -283,7 +283,7 @@ void WhoisXmlApi::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    if(requestType == WEBSITE_CONTACTS){
+    if(QUERY_TYPE == WEBSITE_CONTACTS){
         QJsonArray emails = document.object()["emails"].toArray();
         foreach(const QJsonValue &value, emails){
             emit email(value.toObject()["email"].toString());

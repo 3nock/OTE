@@ -27,7 +27,7 @@ struct Debounce{
 class Debounce: public AbstractOsintModule{
 
     public:
-        Debounce(ScanArgs *args);
+        Debounce(ScanArgs args);
         ~Debounce() override;
 
     public slots:

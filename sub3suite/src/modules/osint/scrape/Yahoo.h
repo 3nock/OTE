@@ -19,7 +19,7 @@ struct Yahoo{
 class Yahoo: public AbstractOsintModule{
 
     public:
-        Yahoo(ScanArgs *args);
+        Yahoo(ScanArgs args);
         ~Yahoo() override;
 
     public slots:

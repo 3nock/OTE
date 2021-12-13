@@ -32,7 +32,7 @@ struct Snov{
 class Snov: public AbstractOsintModule{
 
     public:
-        Snov(ScanArgs *args);
+        Snov(ScanArgs args);
         ~Snov() override;
 
     public slots:

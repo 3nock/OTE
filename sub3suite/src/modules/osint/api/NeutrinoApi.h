@@ -34,7 +34,7 @@ struct NeutrinoApi{
 class NeutrinoApi: public AbstractOsintModule{
 
     public:
-        NeutrinoApi(ScanArgs *args);
+        NeutrinoApi(ScanArgs args);
         ~NeutrinoApi() override;
 
     public slots:

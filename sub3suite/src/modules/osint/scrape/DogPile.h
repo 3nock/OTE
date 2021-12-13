@@ -18,7 +18,7 @@ struct DogPile{
 class DogPile: public AbstractOsintModule{
 
     public:
-        DogPile(ScanArgs *args);
+        DogPile(ScanArgs args);
         ~DogPile() override;
 
     public slots:

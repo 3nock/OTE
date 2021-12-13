@@ -5,14 +5,14 @@
  * has some problems with redirection, try using user agents...
  * keep updating the tld...
  */
-ArchiveToday::ArchiveToday(ScanArgs *args): AbstractOsintModule(args)
+ArchiveToday::ArchiveToday(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Archive";
 
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &ArchiveToday::replyFinishedUrl);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &ArchiveToday::replyFinishedSubdomain);
 }
 ArchiveToday::~ArchiveToday(){
@@ -26,15 +26,15 @@ void ArchiveToday::start(){
     request.setRawHeader("Connection", "close");
 
     QUrl url;
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            url.setUrl("https://archive.md/*."+args->target);
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            url.setUrl("https://archive.md/*."+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputUrl){
-            url.setUrl("https://archive.md/*."+args->target+"/*");
+        if(args.outputUrl){
+            url.setUrl("https://archive.md/*."+target+"/*");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

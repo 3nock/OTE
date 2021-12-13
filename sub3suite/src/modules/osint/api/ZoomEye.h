@@ -35,7 +35,7 @@ struct ZoomEye{
 class ZoomEye: public AbstractOsintModule{
 
     public:
-        ZoomEye(ScanArgs *args);
+        ZoomEye(ScanArgs args);
         ~ZoomEye() override;
 
     public slots:

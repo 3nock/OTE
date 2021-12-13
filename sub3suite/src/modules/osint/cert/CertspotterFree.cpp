@@ -8,16 +8,16 @@
 /*
  * free for 100 queries an hour - keep track
  */
-CertspotterFree::CertspotterFree(ScanArgs *args) : AbstractOsintModule(args)
+CertspotterFree::CertspotterFree(ScanArgs args) : AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "CertspotterFree";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &CertspotterFree::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSubdomain);
-    if(args->outputSSLCert)
+    if(args.outputSSLCert)
         connect(manager, &NetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSSLCert);
 }
 CertspotterFree::~CertspotterFree(){
@@ -28,10 +28,10 @@ void CertspotterFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ISSUEANCES:
-            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&include_subdomains=true&expand=cert&expand=issuer&expand=dns_names");
+            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert&expand=issuer&expand=dns_names");
             break;
         }
         request.setUrl(url);
@@ -40,15 +40,15 @@ void CertspotterFree::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&include_subdomains=true&expand=dns_names");
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=dns_names");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputSSLCert){
-            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+args->target+"&include_subdomains=true&expand=cert");
+        if(args.outputSSLCert){
+            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

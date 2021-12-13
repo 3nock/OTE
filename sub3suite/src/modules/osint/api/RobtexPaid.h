@@ -32,7 +32,7 @@ struct RobtexPaid{
 class RobtexPaid: public AbstractOsintModule{
 
     public:
-        RobtexPaid(ScanArgs *args);
+        RobtexPaid(ScanArgs args);
         ~RobtexPaid() override;
 
     public slots:

@@ -10,16 +10,16 @@
  * for now only one type of query...
  * needs more fixing...
  */
-UKWebArchive::UKWebArchive(ScanArgs *args): AbstractOsintModule(args)
+UKWebArchive::UKWebArchive(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "UKWebArchive";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &UKWebArchive::replyFinishedRawNdjson);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &UKWebArchive::replyFinishedUrl);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &UKWebArchive::replyFinishedSubdomain);
 }
 UKWebArchive::~UKWebArchive(){
@@ -30,10 +30,10 @@ void UKWebArchive::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case URL:
-            url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+args->target);
+            url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+target);
             break;
         }
         request.setUrl(url);
@@ -42,9 +42,9 @@ void UKWebArchive::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputUrl || args->outputSubdomain){
-            url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+args->target);
+    if(args.inputDomain){
+        if(args.outputUrl || args.outputSubdomain){
+            url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

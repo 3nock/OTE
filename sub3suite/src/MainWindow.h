@@ -70,6 +70,10 @@ class MainWindow : public QMainWindow{
 
         void on_actionApiKeys_triggered();
 
+        void on_actionlogViewer_triggered();
+
+        void on_actionGeneralConfig_triggered();
+
 private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;

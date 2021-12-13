@@ -8,12 +8,12 @@
 /*
  * not well implemented yet for osint, only raw...
  */
-Apnic::Apnic(ScanArgs *args): AbstractOsintModule(args)
+Apnic::Apnic(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Apnic";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Apnic::replyFinishedRawJson);
 }
 Apnic::~Apnic(){
@@ -24,10 +24,10 @@ void Apnic::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case IP:
-            url.setUrl("http://rdap.apnic.net/ip/"+args->target);
+            url.setUrl("http://rdap.apnic.net/ip/"+target);
             break;
         }
         request.setUrl(url);

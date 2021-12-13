@@ -6,16 +6,16 @@
  * has a different type of next page...
  * redirection probs...
  */
-Yahoo::Yahoo(ScanArgs *args): AbstractOsintModule(args)
+Yahoo::Yahoo(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Yahoo";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Yahoo::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Yahoo::replyFinishedEmail);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Yahoo::replyFinishedUrl);
 }
 Yahoo::~Yahoo(){
@@ -25,17 +25,17 @@ Yahoo::~Yahoo(){
 void Yahoo::start(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            QUrl url("https://search.yahoo.com/search?p=site:"+args->target+"&b=1&pz=10&bct=0&xargs=0");
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            QUrl url("https://search.yahoo.com/search?p=site:"+target+"&b=1&pz=10&bct=0&xargs=0");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
             activeRequests++;
         }
 
-        if(args->outputUrl){
-            QUrl url("https://search.yahoo.com/search?p=site:"+args->target+"&b=1&pz=10&bct=0&xargs=0");
+        if(args.outputUrl){
+            QUrl url("https://search.yahoo.com/search?p=site:"+target+"&b=1&pz=10&bct=0&xargs=0");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
@@ -172,16 +172,16 @@ void Yahoo::replyFinishedUrl(QNetworkReply *reply){
 void Yahoo::sendRequests(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain)
+    if(args.inputDomain){
+        if(args.outputSubdomain)
         {
             ///
             /// getting the max pages to query...
             ///
             int lastPage;
             m_lastPage = 5;
-            if(args->maxPage <= m_lastPage)
-                lastPage = args->maxPage;
+            if(args.config->maxPage <= m_lastPage)
+                lastPage = args.config->maxPage;
             else
                 lastPage = m_lastPage;
 
@@ -191,7 +191,7 @@ void Yahoo::sendRequests(){
             int currentPage = 2;
             int first = 11;
             while(currentPage < lastPage){
-                QUrl url("https://search.yahoo.com/search?p=site:"+args->target+"&b="+QString::number(first)+"&pz=10&bct=0&xargs=0");
+                QUrl url("https://search.yahoo.com/search?p=site:"+target+"&b="+QString::number(first)+"&pz=10&bct=0&xargs=0");
                 request.setUrl(url);
                 manager->get(request);
                 m_firstRequest = false;

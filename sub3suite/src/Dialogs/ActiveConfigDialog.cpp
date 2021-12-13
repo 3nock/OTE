@@ -53,3 +53,12 @@ void ActiveConfigDialog::on_radioButtonSingleNameserver_clicked(){
     ui->groupBoxNameserver->adjustSize();
     this->adjustSize();
 }
+
+void ActiveConfigDialog::on_checkBoxNoDuplicates_clicked(bool checked){
+    if(checked)
+        QMessageBox::warning(this, "Warning", "This option can be time-costly but results in no duplicates among results");
+}
+
+void ActiveConfigDialog::on_checkBoxAutosave_clicked(bool checked){
+
+}

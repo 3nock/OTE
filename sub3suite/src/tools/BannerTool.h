@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "src/modules/scan/BannerScanner.h"
 
+
 namespace Ui {
 class BannerTool;
 }

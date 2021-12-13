@@ -28,7 +28,7 @@ struct BotScout{
 class BotScout: public AbstractOsintModule{
 
     public:
-        BotScout(ScanArgs *args);
+        BotScout(ScanArgs args);
         ~BotScout() override;
 
     public slots:

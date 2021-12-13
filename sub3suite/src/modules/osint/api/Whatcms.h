@@ -33,7 +33,7 @@ struct Whatcms{
 class Whatcms: public AbstractOsintModule{
 
     public:
-        Whatcms(ScanArgs *args);
+        Whatcms(ScanArgs args);
         ~Whatcms() override;
 
     public slots:

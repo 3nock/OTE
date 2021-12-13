@@ -5,14 +5,14 @@
 #include <QJsonArray>
 
 
-ZETAlytics::ZETAlytics(ScanArgs *args): AbstractOsintModule(args)
+ZETAlytics::ZETAlytics(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "ZETAlytics";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &ZETAlytics::replyFinishedSubdomain);
     ///
     /// get api key...
@@ -30,16 +30,16 @@ void ZETAlytics::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+args->target+"&token="+m_key);
+    if(args.outputRaw){
+        url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+target+"&token="+m_key);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+args->target+"&token="+m_key);
+    if(args.inputDomain){
+        url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+target+"&token="+m_key);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;

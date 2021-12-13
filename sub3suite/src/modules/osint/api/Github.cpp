@@ -6,14 +6,14 @@
 
 #define CODE 0
 
-Github::Github(ScanArgs *args): AbstractOsintModule(args)
+Github::Github(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Github";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Github::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Github::replyFinishedSubdomain);
     ///
     /// getting the api-key...
@@ -32,10 +32,10 @@ void Github::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case CODE:
-            url.setUrl("https://api.github.com/search/code?q="+args->target+"&type=Code&page=1&per_page=100");
+            url.setUrl("https://api.github.com/search/code?q="+target+"&type=Code&page=1&per_page=100");
             break;
         }
         request.setUrl(url);
@@ -43,8 +43,8 @@ void Github::start(){
         activeRequests++;
         return;
     }
-    if(args->inputDomain){
-        url.setUrl("https://api.github.com/search/code?q="+args->target+"&type=Code&page=1&per_page=100");
+    if(args.inputDomain){
+        url.setUrl("https://api.github.com/search/code?q="+target+"&type=Code&page=1&per_page=100");
         request.setUrl(url);
         request.setAttribute(QNetworkRequest::User, CODE);
         manager->get(request);

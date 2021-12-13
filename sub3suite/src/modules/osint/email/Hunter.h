@@ -32,7 +32,7 @@ struct Hunter{
 class Hunter: public AbstractOsintModule{
 
     public:
-        Hunter(ScanArgs *args);
+        Hunter(ScanArgs args);
         ~Hunter() override;
 
     public slots:

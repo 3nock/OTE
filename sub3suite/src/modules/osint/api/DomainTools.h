@@ -71,7 +71,7 @@ struct DomainTools{
 class DomainTools: public AbstractOsintModule{
 
     public:
-        DomainTools(ScanArgs *args);
+        DomainTools(ScanArgs args);
         ~DomainTools() override;
 
     public slots:

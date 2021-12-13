@@ -28,7 +28,7 @@ struct Waybackmachine{
 class Waybackmachine: public AbstractOsintModule{
 
     public:
-        Waybackmachine(ScanArgs *args);
+        Waybackmachine(ScanArgs args);
         ~Waybackmachine() override;
 
     public slots:

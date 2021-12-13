@@ -39,7 +39,7 @@ struct WebResolver{
 class WebResolver: public AbstractOsintModule{
 
     public:
-        WebResolver(ScanArgs *args);
+        WebResolver(ScanArgs args);
         ~WebResolver() override;
 
     public slots:

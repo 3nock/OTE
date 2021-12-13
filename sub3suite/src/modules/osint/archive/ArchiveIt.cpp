@@ -3,16 +3,16 @@
 #define URL 0
 
 
-ArchiveIt::ArchiveIt(ScanArgs *args): AbstractOsintModule(args)
+ArchiveIt::ArchiveIt(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "ArchiveIt";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &ArchiveIt::replyFinishedRawNdjson);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &ArchiveIt::replyFinishedUrl);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &ArchiveIt::replyFinishedSubdomain);
 }
 ArchiveIt::~ArchiveIt(){
@@ -23,10 +23,10 @@ void ArchiveIt::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case URL:
-            url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+args->target);
+            url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+target);
             break;
         }
         request.setUrl(url);
@@ -35,9 +35,9 @@ void ArchiveIt::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputUrl || args->outputSubdomain){
-            url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+args->target);
+    if(args.inputDomain){
+        if(args.outputUrl || args.outputSubdomain){
+            url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

@@ -35,20 +35,20 @@
  * alot not yet implemented...
  * 2500 queries per month for free-api
  */
-Onyphe::Onyphe(ScanArgs *args): AbstractOsintModule(args)
+Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Onyphe";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedRawJson);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomainIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedIp);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedAsn);
     ///
     /// getting api key...
@@ -67,85 +67,85 @@ void Onyphe::start(){
     request.setRawHeader("Authorization", "apikey "+m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case USER:
             url.setUrl("https://www.onyphe.io/api/v2/user");
             break;
         case SUMMARY_IP:
-            url.setUrl("https://www.onyphe.io/api/v2/summary/ip/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/summary/ip/"+target);
             break;
         case SUMMARY_DOMAIN:
-            url.setUrl("https://www.onyphe.io/api/v2/summary/domain/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/summary/domain/"+target);
             break;
         case SUMMARY_HOSTNAME:
-            url.setUrl("https://www.onyphe.io/api/v2/summary/hostname/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/summary/hostname/"+target);
             break;
         case SIMPLE_GEOLOC:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/geoloc/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/geoloc/"+target);
             break;
         case SIMPLE_INETNUM:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/inetnum/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/inetnum/"+target);
             break;
         case SIMPLE_PASTRIES:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/pastries/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/pastries/"+target);
             break;
         case SIMPLE_RESOLVER:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/resolver/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/resolver/"+target);
             break;
         case SIMPLE_SNIFFER:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/sniffer/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/sniffer/"+target);
             break;
         case SIMPLE_SYNSCAN:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/synscan/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/synscan/"+target);
             break;
         case SIMPLE_THREATLIST:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/threatlist/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/threatlist/"+target);
             break;
         case SIMPLE_CTL:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/ctl/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/ctl/"+target);
             break;
         case SIMPLE_DATASCAN:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/datascan/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/datascan/"+target);
             break;
         case SIMPLE_DATAMD5:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/datascan/datamd5/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/datascan/datamd5/"+target);
             break;
         case SIMPLE_FORWARD:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/resolver/forward/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/resolver/forward/"+target);
             break;
         case SIMPLE_REVERSE:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/resolver/reverse/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/resolver/reverse/"+target);
             break;
         case SIMPLE_E_DATASHOT:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/datashot/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/datashot/"+target);
             break;
         case SIMPLE_E_ONIONSHOT:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/onionshot/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/onionshot/"+target);
             break;
         case SIMPLE_E_TOPSITE:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/topsite/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/topsite/"+target);
             break;
         case SIMPLE_E_VULNSCAN:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/vulnscan/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/vulnscan/"+target);
             break;
         case SIMPLE_E_WHOIS:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/whois/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/whois/"+target);
             break;
         case SIMPLE_E_ONIONSCAN:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/onionscan/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/onionscan/"+target);
             break;
         case SIMPLE_E_BEST_WHOIS:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/whois/best/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/whois/best/"+target);
             break;
         case SIMPLE_BEST_GEOLOC:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/geoloc/best/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/geoloc/best/"+target);
             break;
         case SIMPLE_BEST_INETNUM:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/inetnum/best/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/inetnum/best/"+target);
             break;
         case SIMPLE_BEST_THREATLIST:
-            url.setUrl("https://www.onyphe.io/api/v2/simple/threatlist/best/"+args->target);
+            url.setUrl("https://www.onyphe.io/api/v2/simple/threatlist/best/"+target);
             break;
         }
         request.setUrl(url);
@@ -154,7 +154,7 @@ void Onyphe::start(){
         return;
     }
 
-    if(args->inputDomain){
+    if(args.inputDomain){
         request.setUrl(url);
         manager->get(request);
         activeRequests++;

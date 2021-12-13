@@ -7,12 +7,12 @@
  *  using site+contains...
  *  has restrictions...
  */
-Netcraft::Netcraft(ScanArgs *args): AbstractOsintModule(args)
+Netcraft::Netcraft(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Netcraft";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Netcraft::replyFinishedSubdomain);
 }
 Netcraft::~Netcraft(){
@@ -21,7 +21,7 @@ Netcraft::~Netcraft(){
 
 void Netcraft::start(){
     QNetworkRequest request;
-    QUrl url("https://searchdns.netcraft.com/?restriction=site+contains&host="+args->target);
+    QUrl url("https://searchdns.netcraft.com/?restriction=site+contains&host="+target);
     request.setUrl(url);
     manager->get(request);
     activeRequests++;

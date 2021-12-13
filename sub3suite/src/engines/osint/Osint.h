@@ -93,7 +93,7 @@ class Osint : public AbstractEngine{
         void on_buttonCreateProfile_clicked();
         void on_buttonDeleteProfile_clicked();
 
-private:
+    private:
         Ui::Osint *ui;
         //...
         osint::ScanArguments *m_scanArguments;
@@ -122,6 +122,7 @@ private:
         void connectActions();
         void initProfiles();
         void initModules();
+        void uncheckAllModules();
         ///
         /// ...
         ///

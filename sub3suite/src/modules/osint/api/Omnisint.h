@@ -33,7 +33,7 @@ struct Omnisint{
 class Omnisint: public AbstractOsintModule{
 
     public:
-        Omnisint(ScanArgs *args);
+        Omnisint(ScanArgs args);
         ~Omnisint() override;
 
     public slots:

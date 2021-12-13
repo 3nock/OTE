@@ -22,7 +22,7 @@ struct Projectdiscovery{
 class Projectdiscovery: public AbstractOsintModule{
 
     public:
-        Projectdiscovery(ScanArgs *args);
+        Projectdiscovery(ScanArgs args);
         ~Projectdiscovery() override;
 
     public slots:

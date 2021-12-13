@@ -4,16 +4,16 @@
 /*
  * fix sometimes, returns words in ip-address place...
  */
-Dnsdumpster::Dnsdumpster(ScanArgs *args): AbstractOsintModule(args)
+Dnsdumpster::Dnsdumpster(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "DnsDumpster";
 
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomainIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedIp);
 }
 Dnsdumpster::~Dnsdumpster(){
@@ -217,7 +217,7 @@ void Dnsdumpster::m_getToken(QNetworkReply *reply){
 
     QByteArray data;
     data.append("csrfmiddlewaretoken="+token+"&");
-    data.append("targetip="+args->target+"&");
+    data.append("targetip="+target+"&");
     data.append("user=free");
 
     manager->post(request, data);

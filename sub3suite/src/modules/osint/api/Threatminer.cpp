@@ -15,24 +15,24 @@
 
 /*  rate limit is set to 10 queries per minute */
 /* email reverse-whois */
-Threatminer::Threatminer(ScanArgs *args): AbstractOsintModule(args)
+Threatminer::Threatminer(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "ThreatMiner";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedEmail);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedIp);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedAsn);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedUrl);
-    if(args->outputSSLCert)
+    if(args.outputSSLCert)
         connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedSSLCert);
 }
 Threatminer::~Threatminer(){
@@ -43,34 +43,34 @@ void Threatminer::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption){
+    if(args.outputRaw){
+        switch (args.rawOption){
         case DOMAIN_WHOIS:
-            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=1");
+            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=1");
             break;
         case DOMAIN_PASSIVE_DNS:
-            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=2");
+            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=2");
             break;
         case DOMAIN_SUBDOMAINS:
-            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=5");
+            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=5");
             break;
         case DOMAIN_QUERY_URI:
-            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=3");
+            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=3");
             break;
         case IP_WHOIS:
-            url.setUrl("https://api.threatminer.org/v2/host.php?q="+args->target+"&rt=1");
+            url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=1");
             break;
         case IP_PASSIVE_DNS:
-            url.setUrl("https://api.threatminer.org/v2/host.php?q="+args->target+"&rt=2");
+            url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=2");
             break;
         case IP_QUERY_URI:
-            url.setUrl("https://api.threatminer.org/v2/host.php?q="+args->target+"&rt=3");
+            url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=3");
             break;
         case IP_SSL_CERTS:
-            url.setUrl("https://api.threatminer.org/v2/host.php?q="+args->target+"&rt=5");
+            url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=5");
             break;
         case SSL_HOSTS:
-            url.setUrl("https://api.threatminer.org/v2/ssl.php?q="+args->target+"&rt=1");
+            url.setUrl("https://api.threatminer.org/v2/ssl.php?q="+target+"&rt=1");
             break;
         }
         request.setUrl(url);
@@ -80,33 +80,33 @@ void Threatminer::start(){
     }
 
     /* for domain name target */
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=5");
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=5");
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputEmail){
-            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=1");
+        if(args.outputEmail){
+            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=1");
             request.setAttribute(QNetworkRequest::User, DOMAIN_WHOIS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputIp){
-            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=2");
+        if(args.outputIp){
+            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=2");
             request.setAttribute(QNetworkRequest::User, DOMAIN_PASSIVE_DNS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputUrl){
-            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+args->target+"&rt=3");
+        if(args.outputUrl){
+            url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=3");
             request.setAttribute(QNetworkRequest::User, DOMAIN_QUERY_URI);
             request.setUrl(url);
             manager->get(request);
@@ -115,25 +115,25 @@ void Threatminer::start(){
     }
 
     /* For ip-address target */
-    if(args->inputIp){
-        if(args->outputAsn){
-            url.setUrl("https://api.threatminer.org/v2/host.php?q="+args->target+"&rt=1");
+    if(args.inputIp){
+        if(args.outputAsn){
+            url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=1");
             request.setAttribute(QNetworkRequest::User, IP_WHOIS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputSubdomain){
-            url.setUrl("https://api.threatminer.org/v2/host.php?q="+args->target+"&rt=2");
+        if(args.outputSubdomain){
+            url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=2");
             request.setAttribute(QNetworkRequest::User, IP_PASSIVE_DNS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputSSLCert){
-            url.setUrl("https://api.threatminer.org/v2/host.php?q="+args->target+"&rt=5");
+        if(args.outputSSLCert){
+            url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=5");
             request.setAttribute(QNetworkRequest::User, IP_SSL_CERTS);
             request.setUrl(url);
             manager->get(request);
@@ -142,9 +142,9 @@ void Threatminer::start(){
     }
 
     /* for ssl-cert hash target */
-    if(args->inputSSLCert){
-        if(args->outputIp){
-            url.setUrl("https://api.threatminer.org/v2/ssl.php?q="+args->target+"&rt=1");
+    if(args.inputSSLCert){
+        if(args.outputIp){
+            url.setUrl("https://api.threatminer.org/v2/ssl.php?q="+target+"&rt=1");
             request.setAttribute(QNetworkRequest::User, SSL_HOSTS);
             request.setUrl(url);
             manager->get(request);
@@ -159,11 +159,11 @@ void Threatminer::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == DOMAIN_SUBDOMAINS){
+    if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
         foreach(const QJsonValue &result, results){
             QString hostname = result.toString();
             emit subdomain(hostname);
@@ -171,7 +171,7 @@ void Threatminer::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == IP_PASSIVE_DNS){
+    if(QUERY_TYPE == IP_PASSIVE_DNS){
         foreach(const QJsonValue &result, results){
             QString hostname = result.toObject()["domain"].toString();
             emit subdomain(hostname);
@@ -187,11 +187,11 @@ void Threatminer::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == DOMAIN_PASSIVE_DNS){
+    if(QUERY_TYPE == DOMAIN_PASSIVE_DNS){
         foreach(const QJsonValue &result, results){
             QString address = result.toObject()["ip"].toString();
             emit ip(address);
@@ -199,7 +199,7 @@ void Threatminer::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == SSL_HOSTS){
+    if(QUERY_TYPE == SSL_HOSTS){
         foreach(const QJsonValue &result, results){
             QString address = result.toString();
             emit ip(address);
@@ -215,11 +215,11 @@ void Threatminer::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == DOMAIN_WHOIS){
+    if(QUERY_TYPE == DOMAIN_WHOIS){
         foreach(const QJsonValue &result, results){
             QJsonObject emails = result.toObject()["whois"].toObject()["emails"].toObject();
             QStringList keys = emails.keys();
@@ -239,11 +239,11 @@ void Threatminer::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == IP_WHOIS){
+    if(QUERY_TYPE == IP_WHOIS){
         foreach(const QJsonValue &result, results){
             QString asnValue = result.toObject()["asn"].toString();
             QString asnName = result.toObject()["asn_name"].toString();
@@ -260,11 +260,11 @@ void Threatminer::replyFinishedUrl(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == DOMAIN_QUERY_URI || requestType == IP_QUERY_URI){
+    if(QUERY_TYPE == DOMAIN_QUERY_URI || QUERY_TYPE == IP_QUERY_URI){
         foreach(const QJsonValue &result, results){
             QString uri = result.toObject()["uri"].toString();
             emit url(uri);
@@ -280,11 +280,11 @@ void Threatminer::replyFinishedSSLCert(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == IP_SSL_CERTS){
+    if(QUERY_TYPE == IP_SSL_CERTS){
         foreach(const QJsonValue &result, results){
             QString hash = result.toString();
             emit sslCert(hash);

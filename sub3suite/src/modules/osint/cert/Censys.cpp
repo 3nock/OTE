@@ -10,16 +10,16 @@
 #define VIEW_WEBSITES 3
 
 
-Censys::Censys(ScanArgs *args): AbstractOsintModule(args)
+Censys::Censys(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Censys";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Censys::replyFinishedRawJson);
-    if(args->outputSSLCert)
+    if(args.outputSSLCert)
         connect(manager, &NetworkAccessManager::finished, this, &Censys::replyFinishedSSLCert);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Censys::replyFinishedSubdomain);
     ///
     /// getting api key...
@@ -42,19 +42,19 @@ void Censys::start(){
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ACCOUNT:
             url.setUrl("https://censys.io/api/v1/account");
             break;
         case VIEW_CERTIFICATE:
-            url.setUrl("https://censys.io/api/v1/view/certificates/"+args->target);
+            url.setUrl("https://censys.io/api/v1/view/certificates/"+target);
             break;
         case VIEW_IPV4:
-            url.setUrl("https://censys.io/api/v1/view/ipv4/"+args->target);
+            url.setUrl("https://censys.io/api/v1/view/ipv4/"+target);
             break;
         case VIEW_WEBSITES:
-            url.setUrl("https://censys.io/api/v1/view/websites/"+args->target);
+            url.setUrl("https://censys.io/api/v1/view/websites/"+target);
             break;
         }
         request.setUrl(url);
@@ -63,9 +63,9 @@ void Censys::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputUrl || args->outputSubdomain){
-            url.setUrl("https://censys.io/api/v1/view/websites/"+args->target);
+    if(args.inputDomain){
+        if(args.outputUrl || args.outputSubdomain){
+            url.setUrl("https://censys.io/api/v1/view/websites/"+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -73,9 +73,9 @@ void Censys::start(){
         }
     }
 
-    if(args->inputIp){
-        if(args->outputSSLCert || args->outputSubdomain){
-            url.setUrl("https://censys.io/api/v1/view/ipv4/"+args->target);
+    if(args.inputIp){
+        if(args.outputSSLCert || args.outputSubdomain){
+            url.setUrl("https://censys.io/api/v1/view/ipv4/"+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -83,9 +83,9 @@ void Censys::start(){
         }
     }
 
-    if(args->inputSSLCert){
-        if(args->outputSSLCert || args->outputSubdomain){
-            url.setUrl("https://censys.io/api/v1/view/certificates/"+args->target);
+    if(args.inputSSLCert){
+        if(args.outputSSLCert || args.outputSubdomain){
+            url.setUrl("https://censys.io/api/v1/view/certificates/"+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

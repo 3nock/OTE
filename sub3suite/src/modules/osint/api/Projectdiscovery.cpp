@@ -6,15 +6,15 @@
 
 #define SUBDOMAIN 0
 
-Projectdiscovery::Projectdiscovery(ScanArgs *args):
+Projectdiscovery::Projectdiscovery(ScanArgs args):
     AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "ProjectDiscovery";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedSubdomain);
     ///
     /// getting api key...
@@ -32,10 +32,10 @@ void Projectdiscovery::start(){
     request.setRawHeader("Authorization", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case SUBDOMAIN:
-            url.setUrl("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");
+            url.setUrl("https://dns.projectdiscovery.io/dns/"+target+"/subdomains");
             break;
         }
         request.setUrl(url);
@@ -44,8 +44,8 @@ void Projectdiscovery::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://dns.projectdiscovery.io/dns/"+args->target+"/subdomains");
+    if(args.inputDomain){
+        url.setUrl("https://dns.projectdiscovery.io/dns/"+target+"/subdomains");
         request.setAttribute(QNetworkRequest::User, SUBDOMAIN);
         request.setUrl(url);
         manager->get(request);

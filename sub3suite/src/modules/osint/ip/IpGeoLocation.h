@@ -22,7 +22,7 @@ struct IpGeoLocation{
 class IpGeoLocation: public AbstractOsintModule{
 
     public:
-        IpGeoLocation(ScanArgs *args);
+        IpGeoLocation(ScanArgs args);
         ~IpGeoLocation() override;
 
     public slots:

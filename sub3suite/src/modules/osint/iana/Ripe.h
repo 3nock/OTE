@@ -106,7 +106,7 @@ struct Ripe{
 class Ripe: public AbstractOsintModule{
 
     public:
-        Ripe(ScanArgs *args);
+        Ripe(ScanArgs args);
         ~Ripe() override;
 
     public slots:

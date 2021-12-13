@@ -20,6 +20,10 @@ class ActiveConfigDialog : public QDialog{
         void on_radioButtonRandomNameservers_clicked();
         void on_radioButtonSingleNameserver_clicked();
 
+        void on_checkBoxNoDuplicates_clicked(bool checked);
+
+        void on_checkBoxAutosave_clicked(bool checked);
+
 private:
         Ui::ActiveConfigDialog *ui;
 };

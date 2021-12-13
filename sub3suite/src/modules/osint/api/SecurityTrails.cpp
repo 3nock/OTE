@@ -25,16 +25,16 @@
 /*
  * many not implemented yet, needs more fixing...
  */
-SecurityTrails::SecurityTrails(ScanArgs *args): AbstractOsintModule(args)
+SecurityTrails::SecurityTrails(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "SecurityTrails";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &SecurityTrails::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &SecurityTrails::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &SecurityTrails::replyFinishedIp);
     ///
     /// get api key....
@@ -53,40 +53,40 @@ void SecurityTrails::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case HISTORY_DNS:
-            url.setUrl("https://api.securitytrails.com/v1/history/"+args->target+"/dns/any");
+            url.setUrl("https://api.securitytrails.com/v1/history/"+target+"/dns/any");
             break;
         case DOMAIN_SUBDOMAIN:
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/subdomains?children_only=false&include_inactive=true");
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target+"/subdomains?children_only=false&include_inactive=true");
             break;
         case HISTORY_WHOIS:
-            url.setUrl("https://api.securitytrails.com/v1/history/"+args->target+"/whois");
+            url.setUrl("https://api.securitytrails.com/v1/history/"+target+"/whois");
             break;
         case DOMAIN_WHOIS:
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/whois");
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target+"/whois");
             break;
         case DOMAIN_ASSOCIATED_DOMAINS:
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/associated");
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target+"/associated");
             break;
         case DOMAIN_DETAILS:
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target);
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target);
             break;
         case COMPANY_DETAILS:
-            url.setUrl("https://api.securitytrails.com/v1/company/"+args->target);
+            url.setUrl("https://api.securitytrails.com/v1/company/"+target);
             break;
         case COMPANY_ASSOCIATED_IP:
-            url.setUrl("https://api.securitytrails.com/v1/company/"+args->target+"/associated-ips");
+            url.setUrl("https://api.securitytrails.com/v1/company/"+target+"/associated-ips");
             break;
         case DOMAIN_SSL_CERT:
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/ssl?include_subdomains=false&status=valid");
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target+"/ssl?include_subdomains=false&status=valid");
             break;
         case IP_NEIGHBOURS:
-            url.setUrl("https://api.securitytrails.com/v1/ips/nearby/"+args->target);
+            url.setUrl("https://api.securitytrails.com/v1/ips/nearby/"+target);
             break;
         case IP_WHOIS:
-            url.setUrl("https://api.securitytrails.com/v1/ips/"+args->target+"/whois");
+            url.setUrl("https://api.securitytrails.com/v1/ips/"+target+"/whois");
             break;
         case GENERAL_PING:
             url.setUrl("https://api.securitytrails.com/v1/ping");
@@ -100,29 +100,29 @@ void SecurityTrails::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target+"/subdomains?children_only=false&include_inactive=true");
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target+"/subdomains?children_only=false&include_inactive=true");
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAIN);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
 
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target);
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputIp){
-            url.setUrl("https://api.securitytrails.com/v1/company/"+args->target+"/associated-ips");
+        if(args.outputIp){
+            url.setUrl("https://api.securitytrails.com/v1/company/"+target+"/associated-ips");
             request.setAttribute(QNetworkRequest::User, COMPANY_ASSOCIATED_IP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
 
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+args->target);
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
             request.setUrl(url);
             manager->get(request);
@@ -130,9 +130,9 @@ void SecurityTrails::start(){
         }
     }
 
-    if(args->inputIp){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.securitytrails.com/v1/ips/nearby/"+args->target);
+    if(args.inputIp){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.securitytrails.com/v1/ips/nearby/"+target);
             request.setAttribute(QNetworkRequest::User, IP_NEIGHBOURS);
             request.setUrl(url);
             manager->get(request);
@@ -147,18 +147,18 @@ void SecurityTrails::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == DOMAIN_SUBDOMAIN){
+    if(QUERY_TYPE == DOMAIN_SUBDOMAIN){
         QJsonArray subdomainList = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomainList){
-            emit subdomain(value.toString().append(".").append(args->target));
+            emit subdomain(value.toString().append(".").append(target));
             log.resultsCount++;
         }
     }
 
-    if(requestType == DOMAIN_DETAILS){
+    if(QUERY_TYPE == DOMAIN_DETAILS){
         QJsonObject txt = document.object()["current_dns"].toObject()["txt"].toObject();
         QJsonObject ns = document.object()["current_dns"].toObject()["ns"].toObject();
         QJsonObject mx = document.object()["current_dns"].toObject()["mx"].toObject();
@@ -185,7 +185,7 @@ void SecurityTrails::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     /* for getting neighbouring addresses cidr/hostnames... */
-    if(requestType == IP_NEIGHBOURS){
+    if(QUERY_TYPE == IP_NEIGHBOURS){
         foreach(const QJsonValue &value, document.object()["blocks"].toArray()){
             QString ipCidr = value.toObject()["ip"].toString();
             QJsonArray hostnames = value.toObject()["hostnames"].toArray();
@@ -205,10 +205,10 @@ void SecurityTrails::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == COMPANY_ASSOCIATED_IP){
+    if(QUERY_TYPE == COMPANY_ASSOCIATED_IP){
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &value, records){
             emit ip(value.toObject()["cidr"].toString());
@@ -217,7 +217,7 @@ void SecurityTrails::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == DOMAIN_DETAILS){
+    if(QUERY_TYPE == DOMAIN_DETAILS){
         QJsonObject a = document.object()["current_dns"].toObject()["a"].toObject();
         QJsonObject aaaa = document.object()["current_dns"].toObject()["aaaa"].toObject();
 

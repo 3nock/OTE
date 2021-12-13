@@ -16,18 +16,18 @@
 #define WEBSITE_WHOIS 9
 
 
-WebResolver::WebResolver(ScanArgs *args): AbstractOsintModule(args)
+WebResolver::WebResolver(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "WebResolver";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &WebResolver::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &WebResolver::replyFinishedIp);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomainIp);
     ///
     /// getting api key...
@@ -44,37 +44,37 @@ void WebResolver::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case GEOIP:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=geoip&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=geoip&string="+target);
             break;
         case DNSRESOLVER:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=dns&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=dns&string="+target);
             break;
         case PHONENUMBER_CHECK:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=phonenumbercheck&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=phonenumbercheck&string="+target);
             break;
         case SCREENSHOT_TOOL:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=screenshot&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=screenshot&string="+target);
             break;
         case WEBSITE_HEADERS:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&html=0&action=header&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&html=0&action=header&string="+target);
             break;
         case WEBSITE_WHOIS:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&html=0&action=whois&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&html=0&action=whois&string="+target);
             break;
         case PORTSCAN:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=portscan&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=portscan&string="+target);
             break;
         case DISPOSABLE_MAIL_CHECK:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=disposable_email&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=disposable_email&string="+target);
             break;
         case IP_TO_WEBSITE:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=ip2websites&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=ip2websites&string="+target);
             break;
         case DOMAIN_INFO:
-            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=domaininfo&string="+args->target);
+            url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=domaininfo&string="+target);
             break;
         }
         request.setUrl(url);
@@ -83,8 +83,8 @@ void WebResolver::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=dns&string="+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=dns&string="+target);
         request.setAttribute(QNetworkRequest::User, DNSRESOLVER);
         request.setUrl(url);
         manager->get(request);
@@ -98,10 +98,10 @@ void WebResolver::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == DNSRESOLVER){
+    if(QUERY_TYPE == DNSRESOLVER){
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString type = record.toObject()["type"].toString();
@@ -123,10 +123,10 @@ void WebResolver::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == DNSRESOLVER){
+    if(QUERY_TYPE == DNSRESOLVER){
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString address = record.toObject()["ip"].toString();
@@ -143,10 +143,10 @@ void WebResolver::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == DNSRESOLVER){
+    if(QUERY_TYPE == DNSRESOLVER){
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString type = record.toObject()["type"].toString();

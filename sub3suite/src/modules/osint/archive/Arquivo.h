@@ -27,7 +27,7 @@ struct Arquivo{
 class Arquivo: public AbstractOsintModule{
 
     public:
-        Arquivo(ScanArgs *args);
+        Arquivo(ScanArgs args);
         ~Arquivo() override;
 
     public slots:

@@ -41,7 +41,7 @@ struct Threatminer{
 class Threatminer: public AbstractOsintModule{
 
     public:
-        Threatminer(ScanArgs *args);
+        Threatminer(ScanArgs args);
         ~Threatminer() override;
 
     public slots:

@@ -21,7 +21,7 @@ struct Detectify{
 class Detectify: public AbstractOsintModule{
 
     public:
-        Detectify(ScanArgs *args);
+        Detectify(ScanArgs args);
         ~Detectify() override;
 
     public slots:

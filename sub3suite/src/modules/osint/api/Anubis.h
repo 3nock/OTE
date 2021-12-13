@@ -20,7 +20,7 @@ struct Anubis{
 class Anubis: public AbstractOsintModule{
 
     public:
-        Anubis(ScanArgs *args);
+        Anubis(ScanArgs args);
         ~Anubis() override;
 
     public slots:

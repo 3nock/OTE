@@ -9,12 +9,12 @@
 /*
  * something is wrong!...
  */
-LeakLookup::LeakLookup(ScanArgs *args): AbstractOsintModule(args)
+LeakLookup::LeakLookup(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "LeakLookup";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &LeakLookup::replyFinishedRawJson);
     ///
     /// get api key...
@@ -31,19 +31,19 @@ void LeakLookup::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case DOMAINS:
-            url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=domain&query="+args->target);
+            url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=domain&query="+target);
             break;
         case EMAIL:
-            url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=email_address&query="+args->target);
+            url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=email_address&query="+target);
             break;
         case IP:
-            url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=ipaddress&query="+args->target);
+            url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=ipaddress&query="+target);
             break;
         case USERNAME:
-            url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=username&query="+args->target);
+            url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=username&query="+target);
             break;
         }
         request.setUrl(url);

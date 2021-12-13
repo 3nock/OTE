@@ -19,7 +19,7 @@ struct Netcraft{
 class Netcraft: public AbstractOsintModule{
 
     public:
-        Netcraft(ScanArgs *args);
+        Netcraft(ScanArgs args);
         ~Netcraft() override;
 
     public slots:

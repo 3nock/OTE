@@ -422,3 +422,7 @@ void Osint::initModules(){
     else
         ui->moduleBing->hide();
 }
+
+void Osint::uncheckAllModules(){
+    /* uncheck all modules */
+}

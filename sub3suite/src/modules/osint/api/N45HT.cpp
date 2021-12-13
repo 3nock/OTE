@@ -8,14 +8,14 @@
 /*
  * havent seen the api documentation yet...
  */
-N45HT::N45HT(ScanArgs *args): AbstractOsintModule(args)
+N45HT::N45HT(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "N45HT";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &N45HT::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &N45HT::replyFinishedSubdomain);
 }
 N45HT::~N45HT(){
@@ -26,10 +26,10 @@ void N45HT::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case SUBDOMAIN:
-            url.setUrl("https://api.n45ht.or.id/v1/subdomain-enumeration?domain="+args->target);
+            url.setUrl("https://api.n45ht.or.id/v1/subdomain-enumeration?domain="+target);
             break;
         }
         request.setUrl(url);
@@ -38,8 +38,8 @@ void N45HT::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://api.n45ht.or.id/v1/subdomain-enumeration?domain="+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://api.n45ht.or.id/v1/subdomain-enumeration?domain="+target);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;

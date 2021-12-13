@@ -35,7 +35,7 @@ struct MnemonicPaid{
 class MnemonicPaid: public AbstractOsintModule{
 
     public:
-        MnemonicPaid(ScanArgs *args);
+        MnemonicPaid(ScanArgs args);
         ~MnemonicPaid() override;
 
     public slots:

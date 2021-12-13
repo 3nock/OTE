@@ -42,7 +42,7 @@ struct Spyse{
 class Spyse: public AbstractOsintModule{
 
     public:
-        Spyse(ScanArgs *args);
+        Spyse(ScanArgs args);
         ~Spyse() override;
 
     public slots:

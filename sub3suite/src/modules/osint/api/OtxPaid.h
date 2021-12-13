@@ -76,7 +76,7 @@ struct OtxPaid{
 class OtxPaid: public AbstractOsintModule{
 
     public:
-        OtxPaid(ScanArgs *args);
+        OtxPaid(ScanArgs args);
         ~OtxPaid() override;
 
     public slots:

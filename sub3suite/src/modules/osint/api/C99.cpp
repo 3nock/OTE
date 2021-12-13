@@ -33,15 +33,15 @@
 #define WHOIS_CHECKER 26
 
 
-C99::C99(ScanArgs *args):
+C99::C99(ScanArgs args):
     AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "C99";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &C99::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
     ///
     /// getting api key...
@@ -58,88 +58,88 @@ void C99::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ALEXA_RANK:
-            url.setUrl("https://api.c99.nl/alexarank?key="+m_key+"&url="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/alexarank?key="+m_key+"&url="+target+"&json");
             break;
         case DISPOSABLE_MAIL_CHECK:
-            url.setUrl("https://api.c99.nl/disposablemailchecker?key="+m_key+"&email="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/disposablemailchecker?key="+m_key+"&email="+target+"&json");
             break;
         case DOMAIN_CHECKER:
-            url.setUrl("https://api.c99.nl/domainchecker?key="+m_key+"&domain="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/domainchecker?key="+m_key+"&domain="+target+"&json");
             break;
         case DOMAIN_HISTORY_CHECKER:
-            url.setUrl("https://api.c99.nl/domainhistory?key="+m_key+"&domain="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/domainhistory?key="+m_key+"&domain="+target+"&json");
             break;
         case EMAIL_VALIDATOR:
-            url.setUrl("https://api.c99.nl/emailvalidator?key="+m_key+"&email="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/emailvalidator?key="+m_key+"&email="+target+"&json");
             break;
         case WAF_CHECKER:
-            url.setUrl("https://api.c99.nl/firewsubdomainIpdetector?key="+m_key+"&url="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/firewsubdomainIpdetector?key="+m_key+"&url="+target+"&json");
             break;
         case GEOIP:
-            url.setUrl("https://api.c99.nl/geoip?key="+m_key+"&host="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/geoip?key="+m_key+"&host="+target+"&json");
             break;
         case HOST_TO_IP:
-            url.setUrl("https://api.c99.nl/dnsresolver?key="+m_key+"&host="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/dnsresolver?key="+m_key+"&host="+target+"&json");
             break;
         case IP_2_DOMAINS:
-            url.setUrl("https://api.c99.nl/ip2domains?key="+m_key+"&ip="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/ip2domains?key="+m_key+"&ip="+target+"&json");
             break;
         case IP_LOGGER:
             url.setUrl("https://api.c99.nl/iplogger?key="+m_key+"&action=viewloggers&json");
             break;
         case IP_VALIDATOR:
-            url.setUrl("https://api.c99.nl/ipvalidator?key="+m_key+"&ip="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/ipvalidator?key="+m_key+"&ip="+target+"&json");
             break;
         case IP_2_HOST:
-            url.setUrl("https://api.c99.nl/gethostname?key="+m_key+"&host="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/gethostname?key="+m_key+"&host="+target+"&json");
             break;
         case IP_2_SKYPE:
-            url.setUrl("https://api.c99.nl/ip2skype?key="+m_key+"&ip="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/ip2skype?key="+m_key+"&ip="+target+"&json");
             break;
         case LINK_BACKUP:
-            url.setUrl("https://api.c99.nl/linkbackup?key="+m_key+"&url="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/linkbackup?key="+m_key+"&url="+target+"&json");
             break;
         case MULTIPLE_PORT_SCANNER:
-            url.setUrl("https://api.c99.nl/portscanner?key="+m_key+"&host="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/portscanner?key="+m_key+"&host="+target+"&json");
             break;
         case NMAP_SCANNER:
-            url.setUrl("https://api.c99.nl/nmap?key="+m_key+"&host="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/nmap?key="+m_key+"&host="+target+"&json");
             break;
         case PHONE_LOOKUP:
-            url.setUrl("https://api.c99.nl/phonelookup?key="+m_key+"&number="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/phonelookup?key="+m_key+"&number="+target+"&json");
             break;
         case PING:
-            url.setUrl("https://api.c99.nl/ping?key="+m_key+"&host="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/ping?key="+m_key+"&host="+target+"&json");
             break;
         case PROXY_DETECTOR:
-            url.setUrl("https://api.c99.nl/proxydetector?key="+m_key+"&ip="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/proxydetector?key="+m_key+"&ip="+target+"&json");
             break;
         case SCREENSHOT_TOOL:
-            url.setUrl("https://api.c99.nl/createscreenshot?key="+m_key+"&url="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/createscreenshot?key="+m_key+"&url="+target+"&json");
             break;
         case SITE_REPUTATION_CHECKER:
-            url.setUrl("https://api.c99.nl/reputationchecker?key="+m_key+"&url="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/reputationchecker?key="+m_key+"&url="+target+"&json");
             break;
         case SKYPE_RESOLVER:
-            url.setUrl("https://api.c99.nl/skyperesolver?key="+m_key+"&username="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/skyperesolver?key="+m_key+"&username="+target+"&json");
             break;
         case SUBDOMAIN_FINDER:
-            url.setUrl("https://api.c99.nl/subdomainfinder?key="+m_key+"&domain="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/subdomainfinder?key="+m_key+"&domain="+target+"&json");
             break;
         case TOR_CHECKER:
-            url.setUrl("https://api.c99.nl/torchecker?key="+m_key+"&ip="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/torchecker?key="+m_key+"&ip="+target+"&json");
             break;
         case WEBSITE_HEADERS:
-            url.setUrl("https://api.c99.nl/getheaders?key="+m_key+"&host="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/getheaders?key="+m_key+"&host="+target+"&json");
             break;
         case WEBSITE_UP_OR_DOWN_CHECKER:
-            url.setUrl("https://api.c99.nl/upordown?key="+m_key+"&host="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/upordown?key="+m_key+"&host="+target+"&json");
             break;
         case WHOIS_CHECKER:
-            url.setUrl("https://api.c99.nl/whois?key="+m_key+"&domain="+args->target+"&json");
+            url.setUrl("https://api.c99.nl/whois?key="+m_key+"&domain="+target+"&json");
             break;
         }
         request.setUrl(url);
@@ -147,8 +147,8 @@ void C99::start(){
         activeRequests++;
     }
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
+    if(args.inputDomain){
+        if(args.outputSubdomain){
             request.setUrl(url);
             request.setAttribute(QNetworkRequest::User, SUBDOMAIN_FINDER);
             manager->get(request);
@@ -166,11 +166,11 @@ void C99::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject jsonObject = document.object();
 
-    if(requestType == SUBDOMAIN_FINDER){
+    if(QUERY_TYPE == SUBDOMAIN_FINDER){
         bool success = jsonObject["success"].toBool();
         if(success){
             QJsonArray subdomainList = jsonObject["subdomains"].toArray();

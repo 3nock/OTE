@@ -18,8 +18,7 @@
 Raw::Raw(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
     AbstractEngine(parent, resultsModel, project, status),
     ui(new Ui::Raw),
-    m_model(new QStandardItemModel),
-    m_scanArgs(new ScanArgs)
+    m_model(new QStandardItemModel)
 {
     ui->setupUi(this);
     ///
@@ -57,7 +56,6 @@ Raw::Raw(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project,
     m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Raw::~Raw(){
-    delete m_scanArgs;
     delete m_model;
     delete ui;
 }

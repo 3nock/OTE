@@ -17,24 +17,24 @@
 /* returns a good ssl cert summary */
 /* have not implemented bulk-seacrh & dns history */
 /* 100 queries for a free account */
-Spyse::Spyse(ScanArgs *args): AbstractOsintModule(args)
+Spyse::Spyse(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Spyse";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedEmail);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedAsn);
-    if(args->outputSSLCert)
+    if(args.outputSSLCert)
         connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedSSLCert);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedUrl);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Spyse::replyFinishedIp);
     ///
     /// getting api-key...
@@ -54,28 +54,28 @@ void Spyse::start(){
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case DOMAINS:
-            url.setUrl("https://api.spyse.com/v4/data/domain/"+args->target);
+            url.setUrl("https://api.spyse.com/v4/data/domain/"+target);
             break;
         case IPV4:
-            url.setUrl("https://api.spyse.com/v4/data/ip/"+args->target);
+            url.setUrl("https://api.spyse.com/v4/data/ip/"+target);
             break;
         case SSL_CERT:
-            url.setUrl("https://api.spyse.com/v4/data/certificate/"+args->target);
+            url.setUrl("https://api.spyse.com/v4/data/certificate/"+target);
             break;
         case AS:
-            url.setUrl("https://api.spyse.com/v4/data/as/"+args->target);
+            url.setUrl("https://api.spyse.com/v4/data/as/"+target);
             break;
         case CVE:
-            url.setUrl("https://api.spyse.com/v4/data/cve/"+args->target);
+            url.setUrl("https://api.spyse.com/v4/data/cve/"+target);
             break;
         case EMAILS:
-            url.setUrl("https://api.spyse.com/v4/data/email/"+args->target);
+            url.setUrl("https://api.spyse.com/v4/data/email/"+target);
             break;
         case DNS_HISTORY:
-            url.setUrl("https://api.spyse.com/v4/data/history/dns/ANY/"+args->target);
+            url.setUrl("https://api.spyse.com/v4/data/history/dns/ANY/"+target);
             break;
         }
         request.setUrl(url);
@@ -84,8 +84,8 @@ void Spyse::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://api.spyse.com/v3/data/domain/subdomain?limit=100&domain="+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://api.spyse.com/v3/data/domain/subdomain?limit=100&domain="+target);
         request.setAttribute(QNetworkRequest::User, DOMAINS);
         request.setUrl(url);
         manager->get(request);
@@ -93,8 +93,8 @@ void Spyse::start(){
         return;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://api.spyse.com/v4/data/ip/"+args->target);
+    if(args.inputIp){
+        url.setUrl("https://api.spyse.com/v4/data/ip/"+target);
         request.setAttribute(QNetworkRequest::User, IPV4);
         request.setUrl(url);
         manager->get(request);
@@ -102,8 +102,8 @@ void Spyse::start(){
         return;
     }
 
-    if(args->inputSSLCert){
-        url.setUrl("https://api.spyse.com/v4/data/certificate/"+args->target);
+    if(args.inputSSLCert){
+        url.setUrl("https://api.spyse.com/v4/data/certificate/"+target);
         request.setAttribute(QNetworkRequest::User, SSL_CERT);
         request.setUrl(url);
         manager->get(request);
@@ -111,8 +111,8 @@ void Spyse::start(){
         return;
     }
 
-    if(args->inputAsn){
-        url.setUrl("https://api.spyse.com/v4/data/as/"+args->target);
+    if(args.inputAsn){
+        url.setUrl("https://api.spyse.com/v4/data/as/"+target);
         request.setAttribute(QNetworkRequest::User, AS);
         request.setUrl(url);
         manager->get(request);
@@ -120,8 +120,8 @@ void Spyse::start(){
         return;
     }
 
-    if(args->inputEmail){
-        url.setUrl("https://api.spyse.com/v4/data/email/"+args->target);
+    if(args.inputEmail){
+        url.setUrl("https://api.spyse.com/v4/data/email/"+target);
         request.setAttribute(QNetworkRequest::User, EMAILS);
         request.setUrl(url);
         manager->get(request);
@@ -135,11 +135,11 @@ void Spyse::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray items = document.object()["data"].toObject()["items"].toArray();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         foreach(const QJsonValue &item, items){
             QJsonArray emails = item.toObject()["http_extract"].toObject()["emails"].toArray();
             foreach(const QJsonValue &value, emails){
@@ -149,7 +149,7 @@ void Spyse::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    if(requestType == SSL_CERT){
+    if(QUERY_TYPE == SSL_CERT){
         foreach(const QJsonValue &item, items){
             QJsonArray email_address = item.toObject()["issuer"].toObject()["email_address"].toArray();
             foreach(const QJsonValue &value, email_address){
@@ -159,7 +159,7 @@ void Spyse::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    if(requestType == EMAILS){
+    if(QUERY_TYPE == EMAILS){
         foreach(const QJsonValue &item, items){
             QString email_address = item.toObject()["email"].toString();
             emit email(email_address);
@@ -175,11 +175,11 @@ void Spyse::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray items = document.object()["data"].toObject()["items"].toArray();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         foreach(const QJsonValue &item, items){
             /* from hosts_enrichment */
             QJsonArray hosts_enrichment = item.toObject()["hosts_enrichment"].toArray();
@@ -202,7 +202,7 @@ void Spyse::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == AS){
+    if(QUERY_TYPE == AS){
         foreach(const QJsonValue &item, items){
             QJsonArray ipv4_prefixes = item["ipv4_prefixes"].toArray();
             foreach(const QJsonValue &value, ipv4_prefixes){
@@ -226,11 +226,11 @@ void Spyse::replyFinishedSSLCert(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray items = document.object()["data"].toObject()["items"].toArray();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         foreach(const QJsonValue &item, items){
             QJsonObject cert_summary = item.toObject()["cert_summary"].toObject();
             QString fingerprint = cert_summary["fingerprint_sha256"].toString();
@@ -247,11 +247,11 @@ void Spyse::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray items = document.object()["data"].toObject()["items"].toArray();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         foreach(const QJsonValue &item, items){
             QJsonArray hosts_enrichment = item.toObject()["hosts_enrichment"].toArray();
             foreach(const QJsonValue &value, hosts_enrichment){
@@ -263,7 +263,7 @@ void Spyse::replyFinishedAsn(QNetworkReply *reply){
         }
     }
 
-    if(requestType == AS){
+    if(QUERY_TYPE == AS){
         foreach(const QJsonValue &item, items){
             QString as_num = QString::number(item.toObject()["as_num"].toInt());
             QString as_org = item.toObject()["as_org"].toString();
@@ -273,7 +273,7 @@ void Spyse::replyFinishedAsn(QNetworkReply *reply){
         }
     }
 
-    if(requestType == IPV4){
+    if(QUERY_TYPE == IPV4){
         foreach(const QJsonValue &item, items){
             QJsonObject isp_info = item.toObject()["isp_info"].toObject();
 
@@ -293,11 +293,11 @@ void Spyse::replyFinishedUrl(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray items = document.object()["data"].toObject()["items"].toArray();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         foreach(const QJsonValue &item, items){
             QJsonArray urls = item.toObject()["http_extract"].toObject()["links"].toArray();
             foreach(const QJsonValue &value, urls){
@@ -315,11 +315,11 @@ void Spyse::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray items = document.object()["data"].toObject()["items"].toArray();
 
-    if(requestType == DOMAINS){
+    if(QUERY_TYPE == DOMAINS){
         foreach(const QJsonValue &item, items)
         {
             emit subdomain(item["name"].toString());

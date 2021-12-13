@@ -51,7 +51,7 @@ struct Dnslytics{
 class Dnslytics: public AbstractOsintModule{
 
     public:
-        Dnslytics(ScanArgs *args);
+        Dnslytics(ScanArgs args);
         ~Dnslytics() override;
 
     public slots:

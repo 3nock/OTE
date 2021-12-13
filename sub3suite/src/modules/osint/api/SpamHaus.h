@@ -22,7 +22,7 @@ struct SpamHaus{
 class SpamHaus: public AbstractOsintModule{
 
     public:
-        SpamHaus(ScanArgs *args);
+        SpamHaus(ScanArgs args);
         ~SpamHaus() override;
 
     public slots:

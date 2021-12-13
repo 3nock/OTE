@@ -17,7 +17,9 @@ class PassiveConfigDialog : public QDialog{
     private slots:
         void on_buttonOk_clicked();
 
-    private:
+        void on_checkBoxNoDuplicates_clicked(bool checked);
+
+private:
         Ui::PassiveConfigDialog *ui;
 };
 

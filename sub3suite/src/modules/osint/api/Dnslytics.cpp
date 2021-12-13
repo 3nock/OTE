@@ -21,22 +21,22 @@
 /*
  * has reverse ip, reverse mx and reverse ns
  */
-Dnslytics::Dnslytics(ScanArgs *args): AbstractOsintModule(args)
+Dnslytics::Dnslytics(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Dnslytics";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedIp);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedAsn);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomainIp);
-    if(args->outputCidr)
+    if(args.outputCidr)
         connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedCidr);
     ///
     /// getting api key...
@@ -53,46 +53,46 @@ void Dnslytics::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ACCOUNTINFO:
             url.setUrl("https://api.dnslytics.net/v1/accountinfo?apikey="+m_key);
             break;
         case ASINFO:
-            url.setUrl("https://api.dnslytics.net/v1/asinfo/"+args->target+"/summary?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/asinfo/"+target+"/summary?apikey="+m_key);
             break;
         case DOMAINSEARCH:
-            url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+target+"?apikey="+m_key);
             break;
         case DOMAINTYPOS:
-            url.setUrl("https://api.dnslytics.net/v1/domaintypos/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/domaintypos/"+target+"?apikey="+m_key);
             break;
         case HOSTINGHISTORY:
-            url.setUrl("https://api.dnslytics.net/v1/hostinghistory/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/hostinghistory/"+target+"?apikey="+m_key);
             break;
         case IPINFO:
-            url.setUrl("https://api.dnslytics.net/v1/ipinfo/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/ipinfo/"+target+"?apikey="+m_key);
             break;
         case IP2ASN:
-            url.setUrl("https://freeapi.dnslytics.net/v1/ip2asn/"+args->target);
+            url.setUrl("https://freeapi.dnslytics.net/v1/ip2asn/"+target);
             break;
         case REVERSEADSENSE:
-            url.setUrl("https://api.dnslytics.net/v1/reverseadsense/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/reverseadsense/"+target+"?apikey="+m_key);
             break;
         case REVERSEGANALYTICS:
-            url.setUrl("https://api.dnslytics.net/v1/reverseganalytics/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/reverseganalytics/"+target+"?apikey="+m_key);
             break;
         case REVERSEIP:
-            url.setUrl("https://api.dnslytics.net/v1/reverseip/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/reverseip/"+target+"?apikey="+m_key);
             break;
         case REVERSEMX:
-            url.setUrl("https://api.dnslytics.net/v1/reversemx/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/reversemx/"+target+"?apikey="+m_key);
             break;
         case REVERSENS:
-            url.setUrl("https://api.dnslytics.net/v1/reversens/"+args->target+"?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/reversens/"+target+"?apikey="+m_key);
             break;
         case SUBNETINFO:
-            url.setUrl("https://api.dnslytics.net/v1/subnetinfo/"+args->target+"/summary?apikey="+m_key);
+            url.setUrl("https://api.dnslytics.net/v1/subnetinfo/"+target+"/summary?apikey="+m_key);
         }
         request.setUrl(url);
         manager->get(request);
@@ -100,9 +100,9 @@ void Dnslytics::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+args->target+"?apikey="+m_key);
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+target+"?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAINSEARCH);
             request.setUrl(url);
             manager->get(request);
@@ -110,8 +110,8 @@ void Dnslytics::start(){
             return;
         }
 
-        if(args->outputIp || args->outputSubdomain){
-            url.setUrl("https://api.dnslytics.net/v1/hostinghistory/"+args->target+"?apikey="+m_key);
+        if(args.outputIp || args.outputSubdomain){
+            url.setUrl("https://api.dnslytics.net/v1/hostinghistory/"+target+"?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, HOSTINGHISTORY);
             request.setUrl(url);
             manager->get(request);
@@ -120,9 +120,9 @@ void Dnslytics::start(){
         }
     }
 
-    if(args->inputAsn){
-        if(args->outputIp || args->outputAsn || args->outputSubdomain || args->outputSubdomainIp || args->outputCidr){
-            url.setUrl("https://api.dnslytics.net/v1/asinfo/"+args->target+"/summary?apikey="+m_key);
+    if(args.inputAsn){
+        if(args.outputIp || args.outputAsn || args.outputSubdomain || args.outputSubdomainIp || args.outputCidr){
+            url.setUrl("https://api.dnslytics.net/v1/asinfo/"+target+"/summary?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, ASINFO);
             request.setUrl(url);
             manager->get(request);
@@ -130,8 +130,8 @@ void Dnslytics::start(){
             return;
         }
 
-        if(args->outputSubdomain){
-            url.setUrl("https://api.dnslytics.net/v1/reverseip/"+args->target+"?apikey="+m_key);
+        if(args.outputSubdomain){
+            url.setUrl("https://api.dnslytics.net/v1/reverseip/"+target+"?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, REVERSEIP);
             request.setUrl(url);
             manager->get(request);
@@ -147,11 +147,11 @@ void Dnslytics::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    if(requestType == ASINFO){
+    if(QUERY_TYPE == ASINFO){
         /* mxrecords */
         foreach(const QJsonValue &value, data["mxrecords"].toArray()){
             QString mxrecord = value.toObject()["mxrecord"].toString();
@@ -172,7 +172,7 @@ void Dnslytics::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == DOMAINSEARCH){
+    if(QUERY_TYPE == DOMAINSEARCH){
         foreach(const QJsonValue &value, data["domains"].toArray()){
             QString domain = value.toObject()["domain"].toString();
             emit subdomain(domain);
@@ -180,7 +180,7 @@ void Dnslytics::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == HOSTINGHISTORY){
+    if(QUERY_TYPE == HOSTINGHISTORY){
         /* mxrecords */
         foreach(const QJsonValue &value, data["mx"].toArray()){
             QString mx = value.toObject()["mx"].toString();
@@ -201,7 +201,7 @@ void Dnslytics::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == REVERSEIP){
+    if(QUERY_TYPE == REVERSEIP){
         foreach(const QJsonValue &value, data["domains"].toArray()){
             QString domain = value.toString();
             emit subdomain(domain);
@@ -218,11 +218,11 @@ void Dnslytics::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    if(requestType == ASINFO){
+    if(QUERY_TYPE == ASINFO){
         /* mxrecords */
         foreach(const QJsonValue &value, data["mxrecords"].toArray()){
             QString mxrecord = value.toObject()["mxrecord"].toString();
@@ -256,11 +256,11 @@ void Dnslytics::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    if(requestType == ASINFO){
+    if(QUERY_TYPE == ASINFO){
         /* peersv4 */
         foreach(const QJsonValue &value, data["peersv4"].toArray()){
             QString aspeer = value.toObject()["aspeer"].toString();
@@ -286,11 +286,11 @@ void Dnslytics::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    if(requestType == ASINFO){
+    if(QUERY_TYPE == ASINFO){
         /* mxrecords */
         foreach(const QJsonValue &value, data["mxrecords"].toArray()){
             QString ipv4 = value.toObject()["ipv4"].toString();
@@ -311,7 +311,7 @@ void Dnslytics::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == HOSTINGHISTORY){
+    if(QUERY_TYPE == HOSTINGHISTORY){
         /* ipv6 */
         foreach(const QJsonValue &value, data["ipv6"].toArray()){
             QString ipv6 = value.toObject()["ip"].toString();
@@ -335,11 +335,11 @@ void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    if(requestType == ASINFO){
+    if(QUERY_TYPE == ASINFO){
         /* prefixesv4 */
         foreach(const QJsonValue &value, data["prefixesv4"].toArray()){
             QString Prefix = value.toObject()["prefix"].toString();

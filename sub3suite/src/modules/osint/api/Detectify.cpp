@@ -5,14 +5,14 @@
 
 #define SUBDOMAIN 0
 
-Detectify::Detectify(ScanArgs *args): AbstractOsintModule(args)
+Detectify::Detectify(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Detectify";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Detectify::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Detectify::replyFinishedSubdomain);
 }
 Detectify::~Detectify(){
@@ -22,8 +22,8 @@ Detectify::~Detectify(){
 void Detectify::start(){
     QNetworkRequest request;
 
-    if(args->outputRaw){
-        QUrl url("https://jldc.me/Detectify/subdomains/"+args->target);
+    if(args.outputRaw){
+        QUrl url("https://jldc.me/Detectify/subdomains/"+target);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
@@ -36,7 +36,7 @@ void Detectify::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
 

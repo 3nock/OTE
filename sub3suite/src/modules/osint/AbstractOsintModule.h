@@ -1,20 +1,26 @@
 #ifndef ABSTRACTOSINTMODULE_H
 #define ABSTRACTOSINTMODULE_H
 
+
 #include <QObject>
 #include <QThread>
+#include <QStack>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
-//...
+/* ... */
+#include "OsintDefinitions.h"
 #include "src/utils/Definitions.h"
 #include "gumbo-parser/src/gumbo.h"
-//...
+/* ... */
 #include "src/models/IpModel.h"
 #include "src/models/AsnModel.h"
 #include "src/models/CidrModel.h"
-//...
-#include "osintdefinitions.h"
+#include "src/models/CertModel.h"
+#include "src/models/DomainModel.h"
+#include "src/models/EmailModel.h"
+#include "src/models/MXModel.h"
+#include "src/models/NSmodel.h"
 
 
 /* input option */
@@ -57,10 +63,10 @@ struct PassiveScanConfig{
  */
 struct ScanArgs{
     /* scan configurations */
-    PassiveScanConfig config;
+    PassiveScanConfig *config;
 
-    /* ... */
-    QString target;
+    /* target */
+    QStack<QString> targets;
 
     /* input type */
     bool inputIp = false;
@@ -92,14 +98,15 @@ struct ScanArgs{
     bool outputCidr = false;
     bool outputSSLCert = false;
 
-    /* ... */
+    /* for raw output */
     int rawOption = 0;
-    int maxPage = 5;
+    QMap<int, QString> rawParameters;
 };
 
 struct ScanLog{
     QString moduleName;
     QString message;
+    QString target;
     int statusCode;
     unsigned int resultsCount;
 };
@@ -125,25 +132,31 @@ class AbstractOsintModule : public QObject {
         Q_OBJECT
 
     public:
-        explicit AbstractOsintModule(ScanArgs *args)
+        explicit AbstractOsintModule(ScanArgs args)
             : QObject(nullptr),
               args(args)
         {
         }
-        void Enumerator(QThread* cThread) const
+        void startScan(QThread* cThread)
         {
-            connect(cThread, &QThread::started, this, &AbstractOsintModule::start);
-            connect(this, &AbstractOsintModule::quitThread, cThread, &QThread::quit);
+            /* signal & slots */
+            connect(cThread, &QThread::started, this, &AbstractOsintModule::start); // to start the enumeration when the thread starts
+            connect(this, &AbstractOsintModule::nextTarget, this, &AbstractOsintModule::start); // goes to next target
+            connect(this, &AbstractOsintModule::quitThread, cThread, &QThread::quit); // ends(terminates) the thread
+
+            /* first target */
+            target = args.targets.pop();
+            log.target = target;
         }
 
     signals:
         void quitThread();
-        //...
+        void nextTarget();
+        /* ... */
         void infoLog(ScanLog log);
         void rateLimitLog(ScanLog log);
         void errorLog(ScanLog error);
-
-    signals:
+        /* ... */
         void subdomain(QString subdomain);
         void subdomainIp(QString subdomain, QString ip);
         void ip(QString ip);
@@ -158,13 +171,28 @@ class AbstractOsintModule : public QObject {
         void cidr(QString cidr);
         void url(QString url);
         void asn(QString asn, QString name);
-        //...
+        /* ... */
         void rawCert(QByteArray cert_in_perm_format);
         void rawResults(QByteArray reply);
         void rawResultsTxt(QByteArray reply);
-        //...
+        /* ... */
         void infoASN(AsModelStruct);
         void infoCidr(CidrModelStruct);
+
+    public slots:
+        void onStop(){
+            log.statusCode = 0;
+            log.message = "Stopped...";
+            emit infoLog(log);
+            emit quitThread();
+        }
+
+        void onPause(){
+            log.statusCode = 0;
+            log.message = "Paused...";
+            emit infoLog(log);
+            emit quitThread();
+        }
 
     protected slots:
         virtual void start() = 0;
@@ -185,9 +213,7 @@ class AbstractOsintModule : public QObject {
         virtual void replyFinishedInfoIp(QNetworkReply*){} // returns multiple info on ip
         virtual void replyFinishedInfoCidr(QNetworkReply*){} // returns multiple info on cidr
         virtual void replyFinishedInfoSSLCert(QNetworkReply*){} // returns multiple info on ssl cert
-        ///
-        /// For raw output...
-        ///
+        /* ... */
         virtual void replyFinishedRawNdjson(QNetworkReply *reply) // returns raw json results from ndjson
         {
             if(reply->error())
@@ -206,6 +232,7 @@ class AbstractOsintModule : public QObject {
 
             end(reply);
         }
+
         virtual void replyFinishedRawJson(QNetworkReply *reply) // returns raw json results
         {
             if(reply->error())
@@ -215,6 +242,7 @@ class AbstractOsintModule : public QObject {
 
             end(reply);
         }
+
         virtual void replyFinishedRawTxt(QNetworkReply *reply) // returns raw txt results
         {
             if(reply->error())
@@ -226,19 +254,19 @@ class AbstractOsintModule : public QObject {
         }
 
     protected:
-        ScanArgs *args;
         ScanLog log;
+        ScanArgs args;
+        QString target;
         int activeRequests = 0;
+        int QUERY_TYPE;
         NetworkAccessManager *manager = nullptr;
-        ///
-        /// methods...
-        ///
+
         void  onRateLimit(QNetworkReply *reply){
             log.message = "API rate limit reached";
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             emit rateLimitLog(log);
 
-            /* implements its own end */
+            /* has its own end */
             reply->deleteLater();
             activeRequests--;
             if(activeRequests == 0)
@@ -250,21 +278,31 @@ class AbstractOsintModule : public QObject {
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             emit errorLog(log);
 
-            /* implements its own end */
+            /* has its own end */
             reply->deleteLater();
             activeRequests--;
             if(activeRequests == 0)
                 emit quitThread();
         }
 
-        inline void end(QNetworkReply *reply){
+        void end(QNetworkReply *reply){
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             reply->deleteLater();
             activeRequests--;
             if(activeRequests == 0)
             {
+                /* send logs on the target scanned */
                 emit infoLog(log);
-                emit quitThread();
+
+                /* enumerate next target if there are still targets available */
+                if(args.targets.length()){
+                    target = args.targets.pop();
+                    emit nextTarget();
+                }
+
+                /* if no targets available quit the scanThread */
+                else
+                    emit quitThread();
             }
         }
 

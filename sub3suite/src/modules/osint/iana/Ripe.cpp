@@ -49,16 +49,16 @@
  * has dns reverse
  * has visibility
  */
-Ripe::Ripe(ScanArgs *args): AbstractOsintModule(args)
+Ripe::Ripe(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Ripe";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedRawJson);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
-    if(args->outputCidr)
+    if(args.outputCidr)
         connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedCidr);
 }
 Ripe::~Ripe(){
@@ -69,115 +69,115 @@ void Ripe::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ABUSE_CONTACT_FINDER:
-            url.setUrl("https://stat.ripe.net/data/abuse-contact-finder/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/abuse-contact-finder/data.json?resource="+target);
             break;
         case ADDRESS_SPACE_HIERARCHY:
-            url.setUrl("https://stat.ripe.net/data/address-space-hierarchy/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/address-space-hierarchy/data.json?resource="+target);
             break;
         case ADDRESS_SPACE_USAGE:
-            url.setUrl("https://stat.ripe.net/data/address-space-usage/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/address-space-usage/data.json?resource="+target);
             break;
         case AS_OVERVIEW:
-            url.setUrl("https://stat.ripe.net/data/as-overview/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/as-overview/data.json?resource="+target);
             break;
         case AS_PATH_LENGTH:
-            url.setUrl("https://stat.ripe.net/data/as-path-length/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/as-path-length/data.json?resource="+target);
             break;
         case AS_ROOTING_CONSISTENCY:
-            url.setUrl("https://stat.ripe.net/data/as-routing-consistency/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/as-routing-consistency/data.json?resource="+target);
             break;
         case AS_NEIGHBOURS:
-            url.setUrl("https://stat.ripe.net/data/asn-neighbours/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/asn-neighbours/data.json?resource="+target);
             break;
         case AS_NEIGHBOURS_HISTORY:
-            url.setUrl("https://stat.ripe.net/data/asn-neighbours-history/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/asn-neighbours-history/data.json?resource="+target);
             break;
         case BLOCKLIST:
-            url.setUrl("https://stat.ripe.net/data/blocklist/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/blocklist/data.json?resource="+target);
             break;
         case COUNTRY_ASNS:
-            url.setUrl("https://stat.ripe.net/data/country-asns/data.json?resource="+args->target+"&lod=1");
+            url.setUrl("https://stat.ripe.net/data/country-asns/data.json?resource="+target+"&lod=1");
             break;
         case COUNTRY_RESOURCE_STATS:
-            url.setUrl("https://stat.ripe.net/data/country-resource-stats/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/country-resource-stats/data.json?resource="+target);
             break;
         case COUNTRY_RESOURCE_LISTS:
-            url.setUrl(" https://stat.ripe.net/data/country-resource-list/data.json?resource="+args->target);
+            url.setUrl(" https://stat.ripe.net/data/country-resource-list/data.json?resource="+target);
             break;
         case DNS_CHAIN:
-            url.setUrl("https://stat.ripe.net/data/dns-chain/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/dns-chain/data.json?resource="+target);
             break;
         case HISTORICAL_WHOIS:
-            url.setUrl("https://stat.ripe.net/data/historical-whois/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/historical-whois/data.json?resource="+target);
             break;
         case IANA_REGISTRY_INFO:
-            url.setUrl("https://stat.ripe.net/data/iana-registry-info/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/iana-registry-info/data.json?resource="+target);
             break;
         case LOOKING_GLASS:
-            url.setUrl("https://stat.ripe.net/data/looking-glass/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/looking-glass/data.json?resource="+target);
             break;
         case MAXMIND_GEO_LITE:
-            url.setUrl("https://stat.ripe.net/data/maxmind-geo-lite/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/maxmind-geo-lite/data.json?resource="+target);
             break;
         case MAXMIND_GEO_LITE_AS:
-            url.setUrl("https://stat.ripe.net/data/maxmind-geo-lite-announced-by-as/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/maxmind-geo-lite-announced-by-as/data.json?resource="+target);
             break;
         case NETWORK_INFO:
-            url.setUrl("https://stat.ripe.net/data/network-info/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/network-info/data.json?resource="+target);
             break;
         case PREFIX_OVERVIEW:
-            url.setUrl("https://stat.ripe.net/data/prefix-overview/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/prefix-overview/data.json?resource="+target);
             break;
         case PREFIX_ROUTING_CONSISTENCY:
-            url.setUrl("https://stat.ripe.net/data/prefix-routing-consistency/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/prefix-routing-consistency/data.json?resource="+target);
             break;
         case RIR:
-            url.setUrl("https://stat.ripe.net/data/rir/data.json?resource="+args->target+"&lod=2");
+            url.setUrl("https://stat.ripe.net/data/rir/data.json?resource="+target+"&lod=2");
             break;
         case RIR_STATS_COUNTRY:
-            url.setUrl("https://stat.ripe.net/data/rir-stats-country/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/rir-stats-country/data.json?resource="+target);
             break;
         case RIR_PREFIX_SIZE_DISTRIBUTION:
-            url.setUrl("https://stat.ripe.net/data/rir-prefix-size-distribution/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/rir-prefix-size-distribution/data.json?resource="+target);
             break;
         case RIS_FIRST_LAST_SEEN:
-            url.setUrl("https://stat.ripe.net/data/ris-first-last-seen/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/ris-first-last-seen/data.json?resource="+target);
             break;
         case RIS_PREFIXES:
-            url.setUrl("https://stat.ripe.net/data/ris-prefixes/data.json?resource="+args->target+"&list_prefixes=true");
+            url.setUrl("https://stat.ripe.net/data/ris-prefixes/data.json?resource="+target+"&list_prefixes=true");
             break;
         case RIS_PEERINGS:
-            url.setUrl("https://stat.ripe.net/data/ris-peerings/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/ris-peerings/data.json?resource="+target);
             break;
         case RELATED_PREFIXES:
-            url.setUrl("https://stat.ripe.net/data/related-prefixes/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/related-prefixes/data.json?resource="+target);
             break;
         case REVERSE_DNS:
-            url.setUrl("https://stat.ripe.net/data/reverse-dns/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/reverse-dns/data.json?resource="+target);
             break;
         case REVERSE_DNS_IP:
-            url.setUrl("https://stat.ripe.net/data/reverse-dns-ip/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/reverse-dns-ip/data.json?resource="+target);
             break;
         case ROUTING_HISTORY:
-            url.setUrl("https://stat.ripe.net/data/routing-history/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/routing-history/data.json?resource="+target);
             break;
         case ROUTING_STATUS:
-            url.setUrl("https://stat.ripe.net/data/routing-status/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/routing-status/data.json?resource="+target);
             break;
         case RRC_INFO:
-            url.setUrl("https://stat.ripe.net/data/rrc-info/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/rrc-info/data.json?resource="+target);
             break;
         case VISIBILITY:
-            url.setUrl(" https://stat.ripe.net/data/visibility/data.json?resource="+args->target);
+            url.setUrl(" https://stat.ripe.net/data/visibility/data.json?resource="+target);
             break;
         case WHATS_MY_IP:
-            url.setUrl("https://stat.ripe.net/data/whats-my-ip/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/whats-my-ip/data.json?resource="+target);
             break;
         case WHOIS:
-            url.setUrl("https://stat.ripe.net/data/whois/data.json?resource="+args->target);
+            url.setUrl("https://stat.ripe.net/data/whois/data.json?resource="+target);
             break;
         }
         request.setUrl(url);
@@ -186,9 +186,9 @@ void Ripe::start(){
         return;
     }
 
-    if(args->inputIp){
-        if(args->outputAsn){
-            url.setUrl("https://stat.ripe.net/data/network-info/data.json?resource="+args->target);
+    if(args.inputIp){
+        if(args.outputAsn){
+            url.setUrl("https://stat.ripe.net/data/network-info/data.json?resource="+target);
             request.setAttribute(QNetworkRequest::User, NETWORK_INFO);
             request.setUrl(url);
             manager->get(request);
@@ -196,9 +196,9 @@ void Ripe::start(){
         }
     }
 
-    if(args->inputAsn){
-        if(args->outputCidr){
-            url.setUrl("https://stat.ripe.net/data/ris-prefixes/data.json?resource="+args->target+"&list_prefixes=true");
+    if(args.inputAsn){
+        if(args.outputCidr){
+            url.setUrl("https://stat.ripe.net/data/ris-prefixes/data.json?resource="+target+"&list_prefixes=true");
             request.setAttribute(QNetworkRequest::User, RIS_PREFIXES);
             request.setUrl(url);
             manager->get(request);
@@ -213,10 +213,10 @@ void Ripe::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == NETWORK_INFO){
+    if(QUERY_TYPE == NETWORK_INFO){
         QJsonArray asns = document.object()["data"].toObject()["asns"].toArray();
         foreach(const QJsonValue &value, asns){
             emit asn(value.toString(), "");
@@ -233,10 +233,10 @@ void Ripe::replyFinishedCidr(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == RIS_PREFIXES){
+    if(QUERY_TYPE == RIS_PREFIXES){
         QJsonObject prefixes = document.object()["data"].toObject()["prefixes"].toObject();
 
         /* for ipv4 */

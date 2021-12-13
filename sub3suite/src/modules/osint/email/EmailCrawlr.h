@@ -29,7 +29,7 @@ struct EmailCrawlr{
 class EmailCrawlr: public AbstractOsintModule{
 
     public:
-        EmailCrawlr(ScanArgs *args);
+        EmailCrawlr(ScanArgs args);
         ~EmailCrawlr() override;
 
     public slots:

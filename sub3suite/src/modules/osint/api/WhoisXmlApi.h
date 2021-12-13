@@ -57,7 +57,7 @@ struct WhoisXmlApi{
 class WhoisXmlApi: public AbstractOsintModule{
 
     public:
-        WhoisXmlApi(ScanArgs *args);
+        WhoisXmlApi(ScanArgs args);
         ~WhoisXmlApi() override;
 
     public slots:

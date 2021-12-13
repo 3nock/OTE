@@ -21,7 +21,7 @@ struct N45HT{
 class N45HT: public AbstractOsintModule{
 
     public:
-        N45HT(ScanArgs *args);
+        N45HT(ScanArgs args);
         ~N45HT() override;
 
     public slots:

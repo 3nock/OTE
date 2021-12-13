@@ -52,7 +52,7 @@ struct SecurityTrails{
 class SecurityTrails: public AbstractOsintModule{
 
     public:
-        SecurityTrails(ScanArgs *args);
+        SecurityTrails(ScanArgs args);
         ~SecurityTrails() override;
 
     public slots:

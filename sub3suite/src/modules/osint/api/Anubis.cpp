@@ -8,14 +8,14 @@
  *  https://jonlu.ca/anubis/subdomains/
  *  https://jldc.me/anubis/subdomains/
  */
-Anubis::Anubis(ScanArgs *args): AbstractOsintModule(args)
+Anubis::Anubis(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_ANUBIS;
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Anubis::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
 }
 Anubis::~Anubis(){
@@ -26,10 +26,10 @@ void Anubis::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case SUBDOMAIN:
-            url.setUrl("https://jldc.me/anubis/subdomains/"+args->target);
+            url.setUrl("https://jldc.me/anubis/subdomains/"+target);
             break;
         }
         request.setUrl(url);
@@ -38,8 +38,8 @@ void Anubis::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://jldc.me/anubis/subdomains/"+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://jldc.me/anubis/subdomains/"+target);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;

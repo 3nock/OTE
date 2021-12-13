@@ -17,9 +17,6 @@ ASNTool::ASNTool(QWidget *parent) : QDialog(parent), ui(new Ui::ASNTool),
     /* setting model with tableView... */
     ui->treeResults->setModel(m_model->model);
 
-    /* for scan... */
-    m_args = new ScanArgs;
-
     /* registering meta-objects */
     qRegisterMetaType<AsModelStruct>("AsModelStruct");
 }
@@ -113,35 +110,51 @@ void ASNTool::on_checkBoxExpand_clicked(bool checked){
 }
 
 void ASNTool::on_buttonStart_clicked(){
-    m_args->target = ui->lineEditTarget->text();
+    ScanArgs scanArgs;
+
+    ///
+    /// getting arguments...
+    ///
+    if(ui->checkBoxMultipleTargets->isChecked()){
+        // for multiple targets...
+    }else{
+        scanArgs.targets.push(ui->lineEditTarget->text());
+    }
+
     switch(ui->comboBoxOption->currentIndex()){
     case 0:
-        m_args->outputInfoAsn = true;
-        m_args->outputInfoAsnPeers = false;
-        m_args->outputInfoAsnPrefixes = false;
+        scanArgs.outputInfoAsn = true;
+        scanArgs.outputInfoAsnPeers = false;
+        scanArgs.outputInfoAsnPrefixes = false;
         break;
     case 1:
-        m_args->outputInfoAsn = false;
-        m_args->outputInfoAsnPeers = true;
-        m_args->outputInfoAsnPrefixes = false;
+        scanArgs.outputInfoAsn = false;
+        scanArgs.outputInfoAsnPeers = true;
+        scanArgs.outputInfoAsnPrefixes = false;
         break;
     case 2:
-        m_args->outputInfoAsn = false;
-        m_args->outputInfoAsnPeers = false;
-        m_args->outputInfoAsnPrefixes = true;
+        scanArgs.outputInfoAsn = false;
+        scanArgs.outputInfoAsnPeers = false;
+        scanArgs.outputInfoAsnPrefixes = true;
         break;
     }
 
+    ///
+    /// enabling/disabling widgets...
+    ///
     ui->buttonStop->setEnabled(true);
     ui->buttonStart->setDisabled(true);
 
+    ///
+    /// start scan-thread...
+    ///
     QThread *cThread = new QThread;
     int engineToUse = ui->comboBoxEngine->currentIndex();
 
     if(engineToUse == 0)
     {
-        Bgpview *bgpview = new Bgpview(m_args);
-        bgpview->Enumerator(cThread);
+        Bgpview *bgpview = new Bgpview(scanArgs);
+        bgpview->startScan(cThread);
         bgpview->moveToThread(cThread);
 
         switch(ui->comboBoxOption->currentIndex()){
@@ -158,6 +171,10 @@ void ASNTool::on_buttonStart_clicked(){
         connect(bgpview, &IpInfo::infoLog, this, &ASNTool::onInfoLog);
         connect(bgpview, &IpInfo::errorLog, this, &ASNTool::onErrorLog);
         connect(bgpview, &IpInfo::rateLimitLog, this, &ASNTool::onRateLimitLog);
+        /* ... */
+        connect(this, &ASNTool::stopScanThread, bgpview, &AbstractOsintModule::onStop);
+        connect(this, &ASNTool::pauseScanThread, bgpview, &AbstractOsintModule::onPause);
+        /* ... */
         connect(cThread, &QThread::finished, this, &ASNTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

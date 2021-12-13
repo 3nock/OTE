@@ -24,20 +24,20 @@
  * Error in Basic Authentication
  * returns hosts using cert-id HOSTS
  */
-RiskIq::RiskIq(ScanArgs *args): AbstractOsintModule(args)
+RiskIq::RiskIq(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "RiskIq";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedRawJson);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomain);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomainIp);
-    if(args->outputSSLCert)
+    if(args.outputSSLCert)
         connect(manager, &NetworkAccessManager::finished, this, &RiskIq::replyFinishedSSLCert);
     ///
     /// getting api-key...
@@ -62,52 +62,52 @@ void RiskIq::start(){
     request.setRawHeader("Authorization", "Basic "+data);
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case CERT_HOST:
-            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             break;
         case CERT_NAME:
-            url.setUrl("https://api.riskiq.net /v1/ssl/cert/name?name="+args->target);
+            url.setUrl("https://api.riskiq.net /v1/ssl/cert/name?name="+target);
             break;
         case CERT_SERIAL:
-            url.setUrl("https://api.riskiq.net/v1/ssl/cert/serial?serial="+args->target);
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/serial?serial="+target);
             break;
         case CERT_SHA1:
-            url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+args->target);
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+target);
             break;
         case PDNS_IP:
-            url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+target);
             break;
         case PDNS_NAME:
-            url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+target);
             break;
         case PDNS_RAW:
-            url.setUrl("https://api.riskiq.net/v0/pdns/data/raw?hex="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/raw?hex="+target);
             break;
         case WHOIS_ADDRESS:
-            url.setUrl("https://api.riskiq.net/v0/whois/address?address="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/whois/address?address="+target);
             break;
         case WHOIS_DOMAIN:
-            url.setUrl("https://api.riskiq.net/v0/whois/domain?domain="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/whois/domain?domain="+target);
             break;
         case WHOIS_EMAIL:
-            url.setUrl("https://api.riskiq.net/v0/whois/email?email="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/whois/email?email="+target);
             break;
         case WHOIS_NAME:
-            url.setUrl("https://api.riskiq.net/v0/whois/name?name="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/whois/name?name="+target);
             break;
         case WHOIS_NAMESERVER:
-            url.setUrl("https://api.riskiq.net/v0/whois/nameserver?nameserver="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/whois/nameserver?nameserver="+target);
             break;
         case WHOIS_ORG:
-            url.setUrl("https://api.riskiq.net/v0/whois/org?org="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/whois/org?org="+target);
             break;
         case WHOIS_PHONE:
-            url.setUrl("https://api.riskiq.net/v0/whois/phone?phone="+args->target);
+            url.setUrl("https://api.riskiq.net/v0/whois/phone?phone="+target);
             break;
         case HOSTS:
-            url.setUrl("https://api.riskiq.net/v1/ssl/host?certSha1="+args->target);
+            url.setUrl("https://api.riskiq.net/v1/ssl/host?certSha1="+target);
             break;
         }
         request.setUrl(url);
@@ -116,16 +116,16 @@ void RiskIq::start(){
         return;
     }
 
-    if(args->inputIp){
-        if(args->outputIp || args->outputSubdomain || args->outputSubdomainIp){
-            url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+args->target);
+    if(args.inputIp){
+        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+target);
             request.setAttribute(QNetworkRequest::User, PDNS_IP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputSSLCert){
-            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);
+        if(args.outputSSLCert){
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
             manager->get(request);
@@ -134,16 +134,16 @@ void RiskIq::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputIp || args->outputSubdomain || args->outputSubdomainIp){
-            url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+args->target);
+    if(args.inputDomain){
+        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+            url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+target);
             request.setAttribute(QNetworkRequest::User, PDNS_NAME);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputSSLCert){
-            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+args->target);
+        if(args.outputSSLCert){
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
             manager->get(request);
@@ -152,9 +152,9 @@ void RiskIq::start(){
         return;
     }
 
-    if(args->inputSSLCert){
-        if(args->outputIp || args->outputSSLCert){
-            url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+args->target);
+    if(args.inputSSLCert){
+        if(args.outputIp || args.outputSSLCert){
+            url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+target);
             request.setAttribute(QNetworkRequest::User, CERT_SHA1);
             request.setUrl(url);
             manager->get(request);
@@ -169,11 +169,11 @@ void RiskIq::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray records = document.object()["records"].toArray();
 
-    if(requestType == PDNS_IP || requestType == PDNS_NAME){
+    if(QUERY_TYPE == PDNS_IP || QUERY_TYPE == PDNS_NAME){
         foreach(const QJsonValue &record, records){
             QString rrtype = record.toObject()["rrtype"].toString();
             if(rrtype == "A" || rrtype == "AAAA"){
@@ -195,11 +195,11 @@ void RiskIq::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray records = document.object()["records"].toArray();
 
-    if(requestType == PDNS_IP || requestType == PDNS_NAME){
+    if(QUERY_TYPE == PDNS_IP || QUERY_TYPE == PDNS_NAME){
         foreach(const QJsonValue &record, records){
             QString rrtype = record.toObject()["rrtype"].toString();
             if(rrtype == "A" || rrtype == "AAAA"){
@@ -239,9 +239,9 @@ void RiskIq::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == PDNS_IP || requestType == PDNS_NAME){
+    if(QUERY_TYPE == PDNS_IP || QUERY_TYPE == PDNS_NAME){
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
         QJsonArray records = document.object()["records"].toArray();
 
@@ -264,7 +264,7 @@ void RiskIq::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == CERT_HOST || requestType == CERT_SHA1){
+    if(QUERY_TYPE == CERT_HOST || QUERY_TYPE == CERT_SHA1){
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
         QJsonArray content = document.object()["content"].toArray();
 
@@ -284,11 +284,11 @@ void RiskIq::replyFinishedSSLCert(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray content = document.object()["content"].toArray();
 
-    if(requestType == CERT_HOST || requestType == CERT_SHA1){
+    if(QUERY_TYPE == CERT_HOST || QUERY_TYPE == CERT_SHA1){
         foreach(const QJsonValue &record, content){
             QJsonObject cert = record.toObject()["cert"].toObject();
             QString sha1 = cert["sha1"].toString();

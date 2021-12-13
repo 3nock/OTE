@@ -20,7 +20,7 @@ struct LeakIX{
 class LeakIX: public AbstractOsintModule{
 
     public:
-        LeakIX(ScanArgs *args);
+        LeakIX(ScanArgs args);
         ~LeakIX() override;
 
     public slots:

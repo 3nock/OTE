@@ -12,14 +12,14 @@
  * https://api-docs.fullhunt.io/#rate-limiting
  * some error with domain queries...
  */
-FullHunt::FullHunt(ScanArgs *args): AbstractOsintModule(args)
+FullHunt::FullHunt(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "FullHunt";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &FullHunt::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &FullHunt::replyFinishedSubdomain);
     ///
     /// getting api key....
@@ -37,16 +37,16 @@ void FullHunt::start(){
     request.setRawHeader("X-API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case DOMAIN_DETAILS:
-            url.setUrl("https://fullhunt.io/api/v1/domain/"+args->target+"/details");
+            url.setUrl("https://fullhunt.io/api/v1/domain/"+target+"/details");
             break;
         case DOMAIN_SUBDOMAINS:
-            url.setUrl("https://fullhunt.io/api/v1/domain/"+args->target+"/subdomains");
+            url.setUrl("https://fullhunt.io/api/v1/domain/"+target+"/subdomains");
             break;
         case HOST_DETAILS:
-            url.setUrl("https://fullhunt.io/api/v1/host/"+args->target);
+            url.setUrl("https://fullhunt.io/api/v1/host/"+target);
             break;
         }
         request.setUrl(url);
@@ -55,9 +55,9 @@ void FullHunt::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            QUrl url("https://jldc.me/FullHunt/subdomains/"+args->target);
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            QUrl url("https://jldc.me/FullHunt/subdomains/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
             manager->get(request);
@@ -72,10 +72,10 @@ void FullHunt::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(requestType == DOMAIN_SUBDOMAINS){
+    if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
         QJsonArray subdomains = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
             emit subdomain(value.toString());

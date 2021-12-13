@@ -5,18 +5,18 @@
 
 #define SUBOMAINS 0
 
-Dnsbufferoverun::Dnsbufferoverun(ScanArgs *args): AbstractOsintModule(args)
+Dnsbufferoverun::Dnsbufferoverun(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "DnsBufferoverRun";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomain);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomainIp);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedIp);
 }
 Dnsbufferoverun::~Dnsbufferoverun(){
@@ -27,11 +27,11 @@ void Dnsbufferoverun::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        url.setUrl("https://dns.bufferover.run/dns?q="+args->target);
+    if(args.outputRaw){
+        url.setUrl("https://dns.bufferover.run/dns?q="+target);
     }
-    if(args->inputDomain){
-        url.setUrl("https://dns.bufferover.run/dns?q="+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://dns.bufferover.run/dns?q="+target);
     }
 
     request.setUrl(url);

@@ -9,20 +9,20 @@
 #define PDNS_REVERSE 3
 
 
-RobtexFree::RobtexFree(ScanArgs *args): AbstractOsintModule(args)
+RobtexFree::RobtexFree(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "RobtexFree";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedRawJson);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedSubdomain);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedSubdomainIp);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexFree::replyFinishedAsn);
 }
 RobtexFree::~RobtexFree(){
@@ -34,19 +34,19 @@ void RobtexFree::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ASQUERY:
-            url.setUrl("https://freeapi.robtex.com/asquery/"+args->target);
+            url.setUrl("https://freeapi.robtex.com/asquery/"+target);
             break;
         case IPQUERY:
-            url.setUrl("https://freeapi.robtex.com/ipquery/"+args->target);
+            url.setUrl("https://freeapi.robtex.com/ipquery/"+target);
             break;
         case PDNS_FORWARD:
-            url.setUrl("https://freeapi.robtex.com/pdns/forward/"+args->target);
+            url.setUrl("https://freeapi.robtex.com/pdns/forward/"+target);
             break;
         case PDNS_REVERSE:
-            url.setUrl("https://freeapi.robtex.com/pdns/reverse/"+args->target);
+            url.setUrl("https://freeapi.robtex.com/pdns/reverse/"+target);
         }
         request.setUrl(url);
         manager->get(request);
@@ -54,17 +54,17 @@ void RobtexFree::start(){
         return;
     }
 
-    if(args->inputIp){
-        if(args->outputIp || args->outputAsn){
-            url.setUrl("https://freeapi.robtex.com/ipquery/"+args->target);
+    if(args.inputIp){
+        if(args.outputIp || args.outputAsn){
+            url.setUrl("https://freeapi.robtex.com/ipquery/"+target);
             request.setAttribute(QNetworkRequest::User, IPQUERY);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputIp || args->outputSubdomain || args->outputSubdomainIp){
-            url.setUrl("https://freeapi.robtex.com/pdns/reverse/"+args->target);
+        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+            url.setUrl("https://freeapi.robtex.com/pdns/reverse/"+target);
             request.setAttribute(QNetworkRequest::User, PDNS_REVERSE);
             request.setUrl(url);
             manager->get(request);
@@ -73,8 +73,8 @@ void RobtexFree::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://freeapi.robtex.com/pdns/forward/"+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://freeapi.robtex.com/pdns/forward/"+target);
         request.setAttribute(QNetworkRequest::User, PDNS_FORWARD);
         request.setUrl(url);
         manager->get(request);
@@ -82,8 +82,8 @@ void RobtexFree::start(){
         return;
     }
 
-    if(args->inputAsn){
-        url.setUrl("https://freeapi.robtex.com/asquery/"+args->target);
+    if(args.inputAsn){
+        url.setUrl("https://freeapi.robtex.com/asquery/"+target);
         request.setAttribute(QNetworkRequest::User, ASQUERY);
         request.setUrl(url);
         manager->get(request);
@@ -97,9 +97,9 @@ void RobtexFree::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 
@@ -127,7 +127,7 @@ void RobtexFree::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == IPQUERY){
+    if(QUERY_TYPE == IPQUERY){
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
         QJsonArray act = document.object()["act"].toArray();
@@ -153,9 +153,9 @@ void RobtexFree::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 
@@ -175,7 +175,7 @@ void RobtexFree::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == ASQUERY){
+    if(QUERY_TYPE == ASQUERY){
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
         QJsonArray nets = document.object()["nets"].toArray();
         foreach(const QJsonValue &value, nets){
@@ -194,9 +194,9 @@ void RobtexFree::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == IPQUERY){
+    if(QUERY_TYPE == IPQUERY){
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
         QJsonObject mainObj = document.object();
         QString asnValue = mainObj["as"].toString();
@@ -214,9 +214,9 @@ void RobtexFree::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 

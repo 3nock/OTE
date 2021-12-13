@@ -2,16 +2,16 @@
 #include <QStack>
 
 
-Pkey::Pkey(ScanArgs *args): AbstractOsintModule(args)
+Pkey::Pkey(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "PKey";
 
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &Pkey::replyFinishedSubdomainIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Pkey::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Pkey::replyFinishedIp);
 }
 Pkey::~Pkey(){
@@ -27,7 +27,7 @@ void Pkey::start(){
     request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
     //...
     QByteArray data;
-    data.append("zone="+args->target+"&");
+    data.append("zone="+target+"&");
     data.append("submit=");
 
     /* send request */

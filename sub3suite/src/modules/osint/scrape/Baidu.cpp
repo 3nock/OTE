@@ -5,16 +5,16 @@
 /*
  * has scrape prevention...
  */
-Baidu::Baidu(ScanArgs *args): AbstractOsintModule(args)
+Baidu::Baidu(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Baidu";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedEmail);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedUrl);
 }
 Baidu::~Baidu(){
@@ -24,17 +24,17 @@ Baidu::~Baidu(){
 void Baidu::start(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            QUrl url("https://www.baidu.com/s?wd=site:"+args->target+"&oq=site:"+args->target+"&pn=1");
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            QUrl url("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn=1");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
             activeRequests++;
         }
 
-        if(args->outputUrl){
-            QUrl url("https://www.baidu.com/s?wd=site:"+args->target+"&oq=site:"+args->target+"&pn=1");
+        if(args.outputUrl){
+            QUrl url("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn=1");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
@@ -173,15 +173,15 @@ void Baidu::replyFinishedUrl(QNetworkReply *reply){
 void Baidu::sendRequests(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain)
+    if(args.inputDomain){
+        if(args.outputSubdomain)
         {
             ///
             /// getting the max pages to query...
             ///
             int lastPage;
-            if(args->maxPage <= m_lastPage)
-                lastPage = args->maxPage;
+            if(args.config->maxPage <= m_lastPage)
+                lastPage = args.config->maxPage;
             else
                 lastPage = m_lastPage;
 
@@ -190,7 +190,7 @@ void Baidu::sendRequests(){
             ///
             int currentPage = 2;
             while(currentPage < lastPage){
-                QUrl url("https://www.baidu.com/s?wd=site:"+args->target+"&oq=site:"+args->target+"&pn="+QString::number(currentPage));
+                QUrl url("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn="+QString::number(currentPage));
                 request.setUrl(url);
                 manager->get(request);
                 m_firstRequest = false;

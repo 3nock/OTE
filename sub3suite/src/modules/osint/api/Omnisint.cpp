@@ -7,14 +7,14 @@
 #define SUBDOMAIN 2
 #define TLD 3
 
-Omnisint::Omnisint(ScanArgs *args): AbstractOsintModule(args)
+Omnisint::Omnisint(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Omnisint";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Omnisint::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Omnisint::replyFinishedSubdomain);
 }
 Omnisint::~Omnisint(){
@@ -25,19 +25,19 @@ void Omnisint::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case ALL:
-            url.setUrl("https://sonar.omnisint.io/all/"+args->target);
+            url.setUrl("https://sonar.omnisint.io/all/"+target);
             break;
         case REVERSE_IP:
-            url.setUrl("https://sonar.omnisint.io/reverse/"+args->target);
+            url.setUrl("https://sonar.omnisint.io/reverse/"+target);
             break;
         case SUBDOMAIN:
-            url.setUrl("https://sonar.omnisint.io/subdomains/"+args->target);
+            url.setUrl("https://sonar.omnisint.io/subdomains/"+target);
             break;
         case TLD:
-            url.setUrl("https://sonar.omnisint.io/tlds/"+args->target);
+            url.setUrl("https://sonar.omnisint.io/tlds/"+target);
             break;
         }
         request.setUrl(url);
@@ -45,16 +45,16 @@ void Omnisint::start(){
         activeRequests++;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://sonar.omnisint.io/reverse/"+args->target);
+    if(args.inputIp){
+        url.setUrl("https://sonar.omnisint.io/reverse/"+target);
         request.setAttribute(QNetworkRequest::User, REVERSE_IP);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->outputSubdomain){
-        url.setUrl("https://sonar.omnisint.io/all/"+args->target);
+    if(args.outputSubdomain){
+        url.setUrl("https://sonar.omnisint.io/all/"+target);
         request.setAttribute(QNetworkRequest::User, ALL);
         request.setUrl(url);
         manager->get(request);
@@ -68,18 +68,18 @@ void Omnisint::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray subdomains = document.array();
 
-    if(requestType == ALL){
+    if(QUERY_TYPE == ALL){
         foreach(const QJsonValue &value, subdomains){
             emit subdomain(value.toString());
             log.resultsCount++;
         }
     }
 
-    if(requestType == REVERSE_IP){
+    if(QUERY_TYPE == REVERSE_IP){
         foreach(const QJsonValue &value, subdomains){
             emit subdomain(value.toString());
             log.resultsCount++;

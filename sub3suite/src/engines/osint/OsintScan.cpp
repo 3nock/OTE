@@ -1,63 +1,76 @@
 #include "Osint.h"
 #include "ui_Osint.h"
-
+/* ... */
 #include "src/modules/osint/OsintModulesHeaders.h"
 
 
 void Osint::startScan(){
-    ScanArgs *scanArgs = new ScanArgs;
-    scanArgs->target = ui->lineEditTarget->text();
+    ScanArgs scanArgs;
 
-    /* getting input type as specified by user */
+    ///
+    /// get the targets...
+    ///
+    if(ui->checkBoxMultipleTargets->isChecked()){
+        // get all the targets...
+    }
+    else{
+        scanArgs.targets.push(ui->lineEditTarget->text());
+    }
+
+    ///
+    /// getting input type as specified by user...
+    ///
     switch(ui->comboBoxInput->currentIndex()){
     case INPUT_DOMAIN:
-        scanArgs->inputDomain = true;
+        scanArgs.inputDomain = true;
         break;
     case INPUT_IP:
-        scanArgs->inputIp = true;
+        scanArgs.inputIp = true;
         break;
     case INPUT_EMAIL:
-        scanArgs->inputEmail = true;
+        scanArgs.inputEmail = true;
         break;
     case INPUT_URL:
-        scanArgs->inputUrl = true;
+        scanArgs.inputUrl = true;
         break;
     case INPUT_ASN:
-        scanArgs->inputAsn = true;
+        scanArgs.inputAsn = true;
         break;
     case INPUT_SSLCERT:
-        scanArgs->inputSSLCert = true;
+        scanArgs.inputSSLCert = true;
         break;
     case INPUT_CIDR:
-        scanArgs->inputCidr = true;
+        scanArgs.inputCidr = true;
         break;
     }
 
-    /* getting output type as specified by user */
+    ///
+    /// getting output type as specified by user...
+    ///
     switch(ui->comboBoxOutput->currentIndex()){
     case OUTPUT_SUBDOMAINIP:
-        scanArgs->outputSubdomainIp = true;
+        scanArgs.outputSubdomainIp = true;
         break;
     case OUTPUT_SUBDOMAIN:
-        scanArgs->outputSubdomain = true;
+        scanArgs.outputSubdomain = true;
         break;
     case OUTPUT_IP:
-        scanArgs->outputIp = true;
+        scanArgs.outputIp = true;
         break;
     case OUTPUT_EMAIL:
-        scanArgs->outputEmail = true;
+        scanArgs.outputEmail = true;
         break;
     case OUTPUT_URL:
-        scanArgs->outputUrl = true;
+        scanArgs.outputUrl = true;
         break;
     case OUTPUT_ASN:
-        scanArgs->outputAsn = true;
+        scanArgs.outputAsn = true;
         break;
     case OUTPUT_SSLCERT:
-        scanArgs->outputSSLCert = true;
+        scanArgs.outputSSLCert = true;
         break;
     case OUTPUT_CIDR:
-        scanArgs->outputCidr = true;
+        scanArgs.outputCidr = true;
         break;
     }
 
@@ -291,9 +304,8 @@ void Osint::startScan(){
 
     if(ui->moduleBing->isChecked())
         this->startScanThread(new Bing(scanArgs));
-    ///
-    /// after starting all choosen enumerations...
-    ///
+
+    /* after starting all choosen enumerations... */
     if(status->osint->activeThreads)
     {
         ui->buttonStart->setDisabled(true);
@@ -308,7 +320,7 @@ void Osint::startScan(){
 
 void Osint::startScanThread(AbstractOsintModule *module){
     QThread *cThread = new QThread(this);
-    module->Enumerator(cThread);
+    module->startScan(cThread);
     module->moveToThread(cThread);
 
     switch (ui->comboBoxOutput->currentIndex()) {
@@ -345,9 +357,14 @@ void Osint::startScanThread(AbstractOsintModule *module){
     connect(module, &AbstractOsintModule::rateLimitLog, this, &Osint::onRateLimitLog);
     connect(module, &AbstractOsintModule::errorLog, this, &Osint::onErrorLog);
     connect(module, &AbstractOsintModule::infoLog, this, &Osint::onInfoLog);
+    /* ... */
+    connect(this, &Osint::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(this, &Osint::pauseScanThread, module, &AbstractOsintModule::onPause);
+    /* ... */
     connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+
     cThread->start();
     status->osint->activeThreads++;
 }

@@ -13,12 +13,12 @@
 /*
  * 50 free request per day...
  */
-NeutrinoApi::NeutrinoApi(ScanArgs *args): AbstractOsintModule(args)
+NeutrinoApi::NeutrinoApi(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "NeutrinoApi";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &NeutrinoApi::replyFinishedRawJson);
     ///
     /// getting api key...
@@ -36,31 +36,31 @@ void NeutrinoApi::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case EMAIL_VALIDATE:
-            url.setUrl("https://neutrinoapi.net/email-validate?email="+args->target+"&user-id="+m_userId+"&api-key="+m_key);
+            url.setUrl("https://neutrinoapi.net/email-validate?email="+target+"&user-id="+m_userId+"&api-key="+m_key);
             break;
         case HOST_REPUTATION:
-            url.setUrl("https://neutrinoapi.net/host-reputation?host="+args->target+"&user-id="+m_userId+"&api-key="+m_key);
+            url.setUrl("https://neutrinoapi.net/host-reputation?host="+target+"&user-id="+m_userId+"&api-key="+m_key);
             break;
         case IP_BLOCKLIST:
-            url.setUrl("https://neutrinoapi.net/ip-blocklist?ip="+args->target+"&user-id="+m_userId+"&api-key="+m_key);
+            url.setUrl("https://neutrinoapi.net/ip-blocklist?ip="+target+"&user-id="+m_userId+"&api-key="+m_key);
             break;
         case IP_INFO:
-            url.setUrl("https://neutrinoapi.net/ip-info?reverse-lookup=true&ip="+args->target+"&user-id="+m_userId+"&api-key="+m_key);
+            url.setUrl("https://neutrinoapi.net/ip-info?reverse-lookup=true&ip="+target+"&user-id="+m_userId+"&api-key="+m_key);
             break;
         case IP_PROBE:
-            url.setUrl("https://neutrinoapi.net/ip-probe?ip="+args->target+"&user-id="+m_userId+"&api-key="+m_key);
+            url.setUrl("https://neutrinoapi.net/ip-probe?ip="+target+"&user-id="+m_userId+"&api-key="+m_key);
             break;
         case PHONE_VALIDATE:
-            url.setUrl("https://neutrinoapi.net/phone-validate?number="+args->target+"&user-id="+m_userId+"&api-key="+m_key);
+            url.setUrl("https://neutrinoapi.net/phone-validate?number="+target+"&user-id="+m_userId+"&api-key="+m_key);
             break;
         case UA_LOOKUP:
-            url.setUrl("https://neutrinoapi.net/ua-lookup?ua="+args->target+"&user-id="+m_userId+"&api-key="+m_key);
+            url.setUrl("https://neutrinoapi.net/ua-lookup?ua="+target+"&user-id="+m_userId+"&api-key="+m_key);
             break;
         case URL_INFO:
-            url.setUrl("https://neutrinoapi.net/url-info?url="+args->target+"&user-id="+m_userId+"&api-key="+m_key);
+            url.setUrl("https://neutrinoapi.net/url-info?url="+target+"&user-id="+m_userId+"&api-key="+m_key);
             break;
         }
         request.setUrl(url);

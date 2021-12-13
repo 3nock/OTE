@@ -14,20 +14,20 @@
 #define ZONETRANSFER 11
 
 
-HackerTargetFree::HackerTargetFree(ScanArgs *args): AbstractOsintModule(args)
+HackerTargetFree::HackerTargetFree(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "HackerTarget";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedRawTxt);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomainIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedIp);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedAsn);
 }
 HackerTargetFree::~HackerTargetFree(){
@@ -38,43 +38,43 @@ void HackerTargetFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case ASLOOKUP:
-            url.setUrl("https://api.hackertarget.com/aslookup/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/aslookup/?q="+target);
             break;
         case BANNER_GRABBER:
-            url.setUrl("https://api.hackertarget.com/bannerlookup/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/bannerlookup/?q="+target);
             break;
         case DNSLOOKUP:
-            url.setUrl("https://api.hackertarget.com/dnslookup/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/dnslookup/?q="+target);
             break;
         case FIND_SHARED_DNS:
-            url.setUrl("https://api.hackertarget.com/findshareddns/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/findshareddns/?q="+target);
             break;
         case GEOIP:
-            url.setUrl("https://api.hackertarget.com/geoip/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/geoip/?q="+target);
             break;
         case HOSTSEARCH:
-            url.setUrl("https://api.hackertarget.com/hostsearch/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/hostsearch/?q="+target);
             break;
         case HTTP_HEADERS:
-            url.setUrl("https://api.hackertarget.com/httpheaders/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/httpheaders/?q="+target);
             break;
         case PAGELINKS:
-            url.setUrl("https://api.hackertarget.com/pagelinks/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/pagelinks/?q="+target);
             break;
         case REVERSE_DNS:
-            url.setUrl("https://api.hackertarget.com/reversedns/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/reversedns/?q="+target);
             break;
         case REVERSE_IPLOOKUP:
-            url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+target);
             break;
         case SUBNET_CALC:
-            url.setUrl("https://api.hackertarget.com/subnetcalc/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/subnetcalc/?q="+target);
             break;
         case ZONETRANSFER:
-            url.setUrl("https://api.hackertarget.com/zonetransfer/?q="+args->target);
+            url.setUrl("https://api.hackertarget.com/zonetransfer/?q="+target);
             break;
         }
         request.setUrl(url);
@@ -82,16 +82,16 @@ void HackerTargetFree::start(){
         activeRequests++;
     }
 
-    if(args->inputDomain){
-        if(args->outputSubdomainIp || args->outputSubdomain || args->outputIp){
-            url.setUrl("https://api.hackertarget.com/hostsearch/?q="+args->target);
+    if(args.inputDomain){
+        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
+            url.setUrl("https://api.hackertarget.com/hostsearch/?q="+target);
             request.setAttribute(QNetworkRequest::User, HOSTSEARCH);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputSubdomain || args->outputIp){
-            url.setUrl("https://api.hackertarget.com/dnslookup/?q="+args->target);
+        if(args.outputSubdomain || args.outputIp){
+            url.setUrl("https://api.hackertarget.com/dnslookup/?q="+target);
             request.setAttribute(QNetworkRequest::User, DNSLOOKUP);
             request.setUrl(url);
             manager->get(request);
@@ -99,16 +99,16 @@ void HackerTargetFree::start(){
         }
     }
 
-    if(args->inputIp){
-        if(args->outputAsn){
-            url.setUrl("https://api.hackertarget.com/aslookup/?q="+args->target);
+    if(args.inputIp){
+        if(args.outputAsn){
+            url.setUrl("https://api.hackertarget.com/aslookup/?q="+target);
             request.setAttribute(QNetworkRequest::User, ASLOOKUP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputSubdomain){
-            url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+args->target);
+        if(args.outputSubdomain){
+            url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+target);
             request.setAttribute(QNetworkRequest::User, REVERSE_IPLOOKUP);
             request.setUrl(url);
             manager->get(request);
@@ -123,9 +123,9 @@ void HackerTargetFree::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == HOSTSEARCH){
+    if(QUERY_TYPE == HOSTSEARCH){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
             QStringList domainAndIp = item.split(","); // ["subdomain", "ip-address"]
@@ -148,9 +148,9 @@ void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == HOSTSEARCH){
+    if(QUERY_TYPE == HOSTSEARCH){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
             emit subdomain(item.split(",").at(0));
@@ -158,7 +158,7 @@ void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == DNSLOOKUP){
+    if(QUERY_TYPE == DNSLOOKUP){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
             QString type = item.split(":").at(0);
@@ -183,7 +183,7 @@ void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == REVERSE_IPLOOKUP){
+    if(QUERY_TYPE == REVERSE_IPLOOKUP){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
             emit subdomain(item);
@@ -200,9 +200,9 @@ void HackerTargetFree::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == HOSTSEARCH){
+    if(QUERY_TYPE == HOSTSEARCH){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
             emit ip(item.split(",").at(1));
@@ -210,7 +210,7 @@ void HackerTargetFree::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == DNSLOOKUP){
+    if(QUERY_TYPE == DNSLOOKUP){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
             QString type = item.split(":").at(0);
@@ -239,9 +239,9 @@ void HackerTargetFree::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == ASLOOKUP){
+    if(QUERY_TYPE == ASLOOKUP){
         QString result = reply->readAll();
         result = result.remove("\"");
         QStringList resultList = result.split(",");

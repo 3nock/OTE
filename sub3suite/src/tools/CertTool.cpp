@@ -31,8 +31,7 @@ enum MODULE{
  */
 CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
     m_model(new CertModel),
-    m_proxyModel(new QSortFilterProxyModel),
-    m_args(new ScanArgs)
+    m_proxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
 
@@ -49,7 +48,6 @@ CertTool::~CertTool(){
     delete ui;
     delete m_model;
     delete m_proxyModel;
-    delete m_args;
 }
 
 void CertTool::on_buttonStart_clicked(){
@@ -61,24 +59,41 @@ void CertTool::on_buttonStart_clicked(){
     switch (ui->comboBoxTargetType->currentIndex()) {
     case TARGET_SSLCERT:
     {
-        /* acquire scan arguments */
-        m_args->target = ui->lineEditTarget->text();
-        m_args->outputInfo = true;
+        ScanArgs scanArgs;
+        ///
+        /// acquire scan arguments...
+        ///
+        scanArgs.outputInfo = true;
+        if(ui->checkBoxMultipleTargets->isChecked()){
+            // for multpile targets...
+        }
+        else{
+            scanArgs.targets.push(ui->lineEditTarget->text());
+        }
 
-        /* enumeration module */
+        ///
+        /// enumeration module...
+        ///
         switch (ui->comboBoxOption->currentIndex()) {
         case MODULE::CRTSH:
         {
-            Crtsh *crtsh = new Crtsh(m_args);
-            crtsh->Enumerator(cThread);
+            Crtsh *crtsh = new Crtsh(scanArgs);
+            crtsh->startScan(cThread);
             crtsh->moveToThread(cThread);
+
             connect(crtsh, &Crtsh::rawCert, this, &CertTool::onResult);
+            /* ... */
             connect(crtsh, &Crtsh::infoLog, this, &CertTool::onInfoLog);
             connect(crtsh, &Crtsh::errorLog, this, &CertTool::onErrorLog);
             connect(crtsh, &Crtsh::rateLimitLog, this, &CertTool::onRateLimitLog);
+            /* ... */
+            connect(this, &CertTool::stopScanThread, crtsh, &AbstractOsintModule::onStop);
+            connect(this, &CertTool::pauseScanThread, crtsh, &AbstractOsintModule::onPause);
+            /* ... */
             connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
             connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);
             connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+
             cThread->start();
         }
         }

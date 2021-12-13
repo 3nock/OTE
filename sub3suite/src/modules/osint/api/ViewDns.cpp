@@ -24,18 +24,18 @@
  * also has a reverse dns lookup...
  * has mx,ip & ns reverse lookups...
  */
-ViewDns::ViewDns(ScanArgs *args): AbstractOsintModule(args)
+ViewDns::ViewDns(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "ViewDns";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &ViewDns::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &ViewDns::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &ViewDns::replyFinishedIp);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &ViewDns::replyFinishedEmail);
     ///
     /// getting api key...
@@ -52,49 +52,49 @@ void ViewDns::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ABUSE_CONTACT_LOOKUP:
-            url.setUrl("https://api.viewdns.info/abuselookup/?domain="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/abuselookup/?domain="+target+"&apikey="+m_key+"&output=json");
             break;
         case DNS_PROPAGATION_CHECKER:
-            url.setUrl("https://api.viewdns.info/propagation/?domain="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/propagation/?domain="+target+"&apikey="+m_key+"&output=json");
             break;
         case DNS_RECORD_LOOKUP:
-            url.setUrl("https://api.viewdns.info/dnsrecord/?domain="+args->target+"&recordtype=ANY&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/dnsrecord/?domain="+target+"&recordtype=ANY&apikey="+m_key+"&output=json");
             break;
         case DOMAIN_IP_WHOIS:
-            url.setUrl("https://api.viewdns.info/whois/?domain="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/whois/?domain="+target+"&apikey="+m_key+"&output=json");
             break;
         case IP_HISTORY:
-            url.setUrl("https://api.viewdns.info/iphistory/?domain="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/iphistory/?domain="+target+"&apikey="+m_key+"&output=json");
             break;
         case IP_LOCATION_FINDER:
-            url.setUrl("https://api.viewdns.info/iplocation/?ip="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/iplocation/?ip="+target+"&apikey="+m_key+"&output=json");
             break;
         case MAC_ADDRESS_LOOKUP:
-            url.setUrl("https://api.viewdns.info/maclookup/?mac="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/maclookup/?mac="+target+"&apikey="+m_key+"&output=json");
             break;
         case PING:
-            url.setUrl("https://api.viewdns.info/ping/?host="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/ping/?host="+target+"&apikey="+m_key+"&output=json");
             break;
         case PORT_SCANNER:
-            url.setUrl("https://api.viewdns.info/portscan/?host="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/portscan/?host="+target+"&apikey="+m_key+"&output=json");
             break;
         case REVERSE_DNS_LOOKUP:
-            url.setUrl("https://api.viewdns.info/reversedns/?ip="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/reversedns/?ip="+target+"&apikey="+m_key+"&output=json");
             break;
         case REVERSE_IP_LOOKUP:
-            url.setUrl("https://api.viewdns.info/reverseip/?host="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/reverseip/?host="+target+"&apikey="+m_key+"&output=json");
             break;
         case REVERSE_MX_LOOKUP:
-            url.setUrl("https://api.viewdns.info/reversemx/?mx="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/reversemx/?mx="+target+"&apikey="+m_key+"&output=json");
             break;
         case REVERSE_NS_LOOKUP:
-            url.setUrl("https://api.viewdns.info/reversens/?ns="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/reversens/?ns="+target+"&apikey="+m_key+"&output=json");
             break;
         case REVERSE_WHOIS_LOOKUP:
-            url.setUrl("https://api.viewdns.info/reversewhois/?q="+args->target+"&apikey="+m_key+"&output=json");
+            url.setUrl("https://api.viewdns.info/reversewhois/?q="+target+"&apikey="+m_key+"&output=json");
             break;
         }
         request.setUrl(url);
@@ -103,25 +103,25 @@ void ViewDns::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputSubdomain || args->outputIp){
-            url.setUrl("https://api.viewdns.info/dnsrecord/?domain="+args->target+"&recordtype=ANY&apikey="+m_key+"&output=json");
+    if(args.inputDomain){
+        if(args.outputSubdomain || args.outputIp){
+            url.setUrl("https://api.viewdns.info/dnsrecord/?domain="+target+"&recordtype=ANY&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, DNS_RECORD_LOOKUP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputIp){
-            url.setUrl("https://api.viewdns.info/iphistory/?domain="+args->target+"&apikey="+m_key+"&output=json");
+        if(args.outputIp){
+            url.setUrl("https://api.viewdns.info/iphistory/?domain="+target+"&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, IP_HISTORY);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputEmail){
-            url.setUrl("https://api.viewdns.info/abuselookup/?domain="+args->target+"&apikey="+m_key+"&output=json");
+        if(args.outputEmail){
+            url.setUrl("https://api.viewdns.info/abuselookup/?domain="+target+"&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, ABUSE_CONTACT_LOOKUP);
             request.setUrl(url);
             manager->get(request);
@@ -129,9 +129,9 @@ void ViewDns::start(){
         }
     }
 
-    if(args->inputIp){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.viewdns.info/reverseip/?host="+args->target+"&apikey="+m_key+"&output=json");
+    if(args.inputIp){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.viewdns.info/reverseip/?host="+target+"&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, REVERSE_IP_LOOKUP);
             request.setUrl(url);
             manager->get(request);
@@ -139,9 +139,9 @@ void ViewDns::start(){
         }
     }
 
-    if(args->inputEmail){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.viewdns.info/reversewhois/?q="+args->target+"&apikey="+m_key+"&output=json");
+    if(args.inputEmail){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.viewdns.info/reversewhois/?q="+target+"&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, REVERSE_WHOIS_LOOKUP);
             request.setUrl(url);
             manager->get(request);
@@ -157,11 +157,11 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
-    if(requestType == DNS_RECORD_LOOKUP){
+    if(QUERY_TYPE == DNS_RECORD_LOOKUP){
         QJsonArray records = response["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString type = record.toObject()["type"].toString();
@@ -189,7 +189,7 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == REVERSE_IP_LOOKUP){
+    if(QUERY_TYPE == REVERSE_IP_LOOKUP){
         QJsonArray domains = response["domains"].toArray();
         foreach(const QJsonValue &domain, domains){
             QString hostname = domain.toObject()["name"].toString();
@@ -198,7 +198,7 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == REVERSE_WHOIS_LOOKUP){
+    if(QUERY_TYPE == REVERSE_WHOIS_LOOKUP){
         QJsonArray matches = response["matches"].toArray();
         foreach(const QJsonValue &match, matches){
             QString hostname = match.toObject()["domain"].toString();
@@ -215,11 +215,11 @@ void ViewDns::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
-    if(requestType == ABUSE_CONTACT_LOOKUP){
+    if(QUERY_TYPE == ABUSE_CONTACT_LOOKUP){
         QString emailAddress = response["abusecontact"].toString();
         emit email(emailAddress);
         log.resultsCount++;
@@ -234,11 +234,11 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
-    if(requestType == DNS_RECORD_LOOKUP){
+    if(QUERY_TYPE == DNS_RECORD_LOOKUP){
         QJsonArray records = response["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString type = record.toObject()["type"].toString();
@@ -256,7 +256,7 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == IP_HISTORY){
+    if(QUERY_TYPE == IP_HISTORY){
         QJsonArray records = response["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString address = record.toObject()["ip"].toString();

@@ -6,16 +6,16 @@
  * next page implementation not yet...
  * also has a reverse-ip...
  */
-PagesInventory::PagesInventory(ScanArgs *args): AbstractOsintModule(args)
+PagesInventory::PagesInventory(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "PagesInventory";
 
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &PagesInventory::replyFinishedSubdomainIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &PagesInventory::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &PagesInventory::replyFinishedIp);
 }
 PagesInventory::~PagesInventory(){
@@ -24,7 +24,7 @@ PagesInventory::~PagesInventory(){
 
 void PagesInventory::start(){
     QNetworkRequest request;
-    QUrl url("https://www.pagesinventory.com/search/?s="+args->target);
+    QUrl url("https://www.pagesinventory.com/search/?s="+target);
     request.setUrl(url);
     manager->get(request);
     activeRequests++;

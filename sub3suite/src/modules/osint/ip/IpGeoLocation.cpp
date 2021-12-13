@@ -7,12 +7,12 @@
 /*
  * 1,000 free queries...
  */
-IpGeoLocation::IpGeoLocation(ScanArgs *args): AbstractOsintModule(args)
+IpGeoLocation::IpGeoLocation(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "IpGeoLocation";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &IpGeoLocation::replyFinishedRawJson);
     ///
     /// get api key...
@@ -29,13 +29,13 @@ void IpGeoLocation::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case IP_GEOLOCATION:
-            url.setUrl("https://api.ipgeolocation.io/ipgeo?apiKey="+m_key+"&ip="+args->target);
+            url.setUrl("https://api.ipgeolocation.io/ipgeo?apiKey="+m_key+"&ip="+target);
             break;
         case TIMEZONE:
-            url.setUrl("https://api.ipgeolocation.io/timezone?apiKey="+m_key+"&ip="+args->target);
+            url.setUrl("https://api.ipgeolocation.io/timezone?apiKey="+m_key+"&ip="+target);
             break;
         }
         request.setUrl(url);

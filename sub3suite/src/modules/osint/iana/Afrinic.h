@@ -28,7 +28,7 @@ struct Afrinic{
 class Afrinic: public AbstractOsintModule{
 
     public:
-        Afrinic(ScanArgs *args);
+        Afrinic(ScanArgs args);
         ~Afrinic() override;
 
     public slots:

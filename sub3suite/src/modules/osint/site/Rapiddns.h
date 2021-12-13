@@ -23,7 +23,7 @@ struct Rapiddns{
 class Rapiddns: public AbstractOsintModule{
 
     public:
-        Rapiddns(ScanArgs *args);
+        Rapiddns(ScanArgs args);
         ~Rapiddns() override;
 
     public slots:

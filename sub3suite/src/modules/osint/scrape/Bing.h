@@ -18,7 +18,7 @@ struct Bing{
 class Bing: public AbstractOsintModule{
 
     public:
-        Bing(ScanArgs *args);
+        Bing(ScanArgs args);
         ~Bing() override;
 
     public slots:

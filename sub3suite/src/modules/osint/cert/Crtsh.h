@@ -23,7 +23,7 @@ struct Crtsh{
 
 class Crtsh: public AbstractOsintModule{
     public:
-        Crtsh(ScanArgs *args);
+        Crtsh(ScanArgs args);
         ~Crtsh() override;
 
     public slots:

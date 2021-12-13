@@ -98,6 +98,9 @@ class AbstractEngine : public QWidget{
         ScanConfig *scanConfig;
         InputWidget* targets = nullptr;
         QItemSelectionModel *selectionModel = nullptr;
+        /* ... */
+        bool autoSaveResultsToProject = false;
+        bool noDuplicateResults = false;
 
     signals:
         ///

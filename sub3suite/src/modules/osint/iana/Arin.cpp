@@ -28,12 +28,12 @@
 /*
  * not well implemented yet for osint, only raw...
  */
-Arin::Arin(ScanArgs *args): AbstractOsintModule(args)
+Arin::Arin(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Arin";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Arin::replyFinishedRawJson);
 }
 Arin::~Arin(){
@@ -45,67 +45,67 @@ void Arin::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case REGISTRY_IP:
-            url.setUrl("https://rdap.arin.net/registry/ip/"+args->target);
+            url.setUrl("https://rdap.arin.net/registry/ip/"+target);
             break;
         case REGISTRY_ASN:
-            url.setUrl("https://rdap.arin.net/registry/autnum/"+args->target);
+            url.setUrl("https://rdap.arin.net/registry/autnum/"+target);
             break;
         case WHOIS_ASN:
-            url.setUrl("http://whois.arin.net/rest/asn/"+args->target);
+            url.setUrl("http://whois.arin.net/rest/asn/"+target);
             break;
         case WHOIS_NET:
-            url.setUrl("http://whois.arin.net/rest/net/"+args->target);
+            url.setUrl("http://whois.arin.net/rest/net/"+target);
             break;
         case WHOIS_ORG:
-            url.setUrl("http://whois.arin.net/rest/asn/"+args->target);
+            url.setUrl("http://whois.arin.net/rest/asn/"+target);
             break;
         case WHOIS_POC:
-            url.setUrl("http://whois.arin.net/rest/poc/"+args->target);
+            url.setUrl("http://whois.arin.net/rest/poc/"+target);
             break;
         case WHOIS_RDNS:
-            url.setUrl("http://whois.arin.net/rest/rdns/"+args->target);
+            url.setUrl("http://whois.arin.net/rest/rdns/"+target);
             break;
         case WHOIS_CUSTOMER:
-            url.setUrl("http://whois.arin.net/rest/customer/"+args->target);
+            url.setUrl("http://whois.arin.net/rest/customer/"+target);
             break;
         case POC_ASNS:
-            url.setUrl("http://whois.arin.net/rest/poc/"+args->target+"/asns");
+            url.setUrl("http://whois.arin.net/rest/poc/"+target+"/asns");
             break;
         case POC_NETS:
-            url.setUrl("http://whois.arin.net/rest/poc/"+args->target+"/nets");
+            url.setUrl("http://whois.arin.net/rest/poc/"+target+"/nets");
             break;
         case POC_ORGS:
-            url.setUrl("http://whois.arin.net/rest/poc/"+args->target+"/orgs");
+            url.setUrl("http://whois.arin.net/rest/poc/"+target+"/orgs");
             break;
         case ORG_ASNS:
-            url.setUrl("http://whois.arin.net/rest/org/"+args->target+"/asns");
+            url.setUrl("http://whois.arin.net/rest/org/"+target+"/asns");
             break;
         case ORG_NETS:
-            url.setUrl("http://whois.arin.net/rest/org/"+args->target+"/nets");
+            url.setUrl("http://whois.arin.net/rest/org/"+target+"/nets");
             break;
         case ORG_POCS:
-            url.setUrl("http://whois.arin.net/rest/org/"+args->target+"/pocs");
+            url.setUrl("http://whois.arin.net/rest/org/"+target+"/pocs");
             break;
         case ASN_POCS:
-            url.setUrl("http://whois.arin.net/rest/asn/"+args->target+"/pocs");
+            url.setUrl("http://whois.arin.net/rest/asn/"+target+"/pocs");
             break;
         case NET_POCS:
-            url.setUrl("http://whois.arin.net/rest/net/"+args->target+"/pocs");
+            url.setUrl("http://whois.arin.net/rest/net/"+target+"/pocs");
             break;
         case NET_RDNS:
-            url.setUrl("http://whois.arin.net/rest/net/"+args->target+"/rdns");
+            url.setUrl("http://whois.arin.net/rest/net/"+target+"/rdns");
             break;
         case NET_PARENTS:
-            url.setUrl("http://whois.arin.net/rest/net/"+args->target+"/parent");
+            url.setUrl("http://whois.arin.net/rest/net/"+target+"/parent");
             break;
         case NET_CHILDREN:
-            url.setUrl("http://whois.arin.net/rest/poc/"+args->target+"/children");
+            url.setUrl("http://whois.arin.net/rest/poc/"+target+"/children");
             break;
         case RDNS_NETS:
-            url.setUrl("http://whois.arin.net/rest/rdns/"+args->target+"/nets");
+            url.setUrl("http://whois.arin.net/rest/rdns/"+target+"/nets");
             break;
         }
         request.setUrl(url);

@@ -9,12 +9,12 @@
  * 100 per day for free-user...
  * has subscription module for more than 100 queries a day...
  */
-BotScout::BotScout(ScanArgs *args): AbstractOsintModule(args)
+BotScout::BotScout(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "BotScout";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &BotScout::replyFinishedRawJson);
 }
 BotScout::~BotScout(){
@@ -25,19 +25,19 @@ void BotScout::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ALL:
-            url.setUrl("http://botscout.com/test/?all="+args->target);
+            url.setUrl("http://botscout.com/test/?all="+target);
             break;
         case EMAIL:
-            url.setUrl("http://botscout.com/test/?mail="+args->target);
+            url.setUrl("http://botscout.com/test/?mail="+target);
             break;
         case IP:
-            url.setUrl("http://botscout.com/test/?ip="+args->target);
+            url.setUrl("http://botscout.com/test/?ip="+target);
             break;
         case NAME:
-            url.setUrl("http://botscout.com/test/?name="+args->target);
+            url.setUrl("http://botscout.com/test/?name="+target);
             break;
         }
         request.setUrl(url);

@@ -1,38 +1,37 @@
 #include "Osint.h"
 #include "ui_Osint.h"
 
-/*
- *
- *
- */
 
 void Osint::onInfoLog(ScanLog log){
-    QString module("<font color=\"green\">"+log.moduleName+"</font>");
-    QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
-    QString count("<font color=\"green\">"+QString::number(log.resultsCount)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Results Count] :"+count);
+    ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"green\">"+log.moduleName+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"green\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"green\">"+QString::number(log.resultsCount)+"</font>");
+    if(!log.message.isEmpty())
+        ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"green\">"+log.message+"</font>");
+
+    // add a new line...
     ui->plainTextEditLogs->appendPlainText("");
 }
 
 void Osint::onErrorLog(ScanLog log){
-    QString message("<font color=\"red\">"+log.message+"</font>");
-    QString module("<font color=\"red\">"+log.moduleName+"</font>");
-    QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
+    ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"red\">"+log.moduleName+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"red\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"red\">"+QString::number(log.resultsCount)+"</font>");
+    if(!log.message.isEmpty())
+        ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"red\">"+log.message+"</font>");
+
+    // add a new line...
     ui->plainTextEditLogs->appendPlainText("");
 }
 
 void Osint::onRateLimitLog(ScanLog log){
-    QString message("<font color=\"yellow\">"+log.message+"</font>");
-    QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
-    QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
+    ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"yellow\">"+log.moduleName+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"yellow\">"+QString::number(log.resultsCount)+"</font>");
+    if(!log.message.isEmpty())
+        ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"yellow\">"+log.message+"</font>");
+
+    // add a new line...
     ui->plainTextEditLogs->appendPlainText("");
 }
 

@@ -9,12 +9,12 @@
  * 1,000 per day for free-user...
  * url-encode the data, maxAgeInDays...
  */
-AbuseIPDB::AbuseIPDB(ScanArgs *args): AbstractOsintModule(args)
+AbuseIPDB::AbuseIPDB(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "AbuseIPDB";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &AbuseIPDB::replyFinishedRawJson);
     ///
     /// get api key...
@@ -33,17 +33,17 @@ void AbuseIPDB::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case BLACKLIST_ENDPOINT:
             url.setUrl("https://api.abuseipdb.com/api/v2/blacklist");
             break;
         case CHECK_ENDPOINT:
-            url.setUrl("https://api.abuseipdb.com/api/v2/check?ipAddress="+args->target);
+            url.setUrl("https://api.abuseipdb.com/api/v2/check?ipAddress="+target);
             url.toEncoded();
             break;
         case CHECK_BLOCK_ENDPOINT:
-            url.setUrl("https://api.abuseipdb.com/api/v2/check-block?network="+args->target);
+            url.setUrl("https://api.abuseipdb.com/api/v2/check-block?network="+target);
             url.toEncoded();
             break;
         }

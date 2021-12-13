@@ -5,6 +5,7 @@
 #include "src/models/AsnModel.h"
 #include "src/modules/osint/OsintModulesHeaders.h"
 
+
 namespace Ui {
 class ASNTool;
 }
@@ -15,6 +16,10 @@ class ASNTool : public QDialog{
     public:
         explicit ASNTool(QWidget *parent = nullptr);
         ~ASNTool();
+
+    signals:
+        void stopScanThread();
+        void pauseScanThread();
 
     public slots:
         void onResultsAsn(AsModelStruct results);
@@ -29,13 +34,11 @@ class ASNTool : public QDialog{
     private slots:
         void on_checkBoxExpand_clicked(bool checked);
         void on_buttonStart_clicked();
-
         void on_buttonConfig_clicked();
 
-private:
+    private:
         Ui::ASNTool *ui;
         AsModel *m_model;
-        ScanArgs *m_args = nullptr;
 };
 
 #endif // ASNTOOL_H

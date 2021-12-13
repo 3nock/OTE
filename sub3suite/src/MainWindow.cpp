@@ -6,6 +6,8 @@
 /* ... */
 #include "src/dialogs/AboutDialog.h"
 #include "src/dialogs/ApiKeysDialog.h"
+#include "src/utils/logs/LogViewerDialog.h"
+#include "src/utils/config/GeneralConfigDialog.h"
 
 /* Tools */
 #include "src/tools/IpTool.h"
@@ -349,4 +351,16 @@ void MainWindow::on_actionApiKeys_triggered(){
     ApiKeysDialog *apiKeys = new ApiKeysDialog(this);
     apiKeys->setAttribute(Qt::WA_DeleteOnClose, true);
     apiKeys->show();
+}
+
+void MainWindow::on_actionlogViewer_triggered(){
+    LogViewerDialog *logViewerDialog = new LogViewerDialog(this);
+    logViewerDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    logViewerDialog->show();
+}
+
+void MainWindow::on_actionGeneralConfig_triggered(){
+    GeneralConfigDialog *generalConfigDialog = new GeneralConfigDialog(this);
+    generalConfigDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    generalConfigDialog->show();
 }

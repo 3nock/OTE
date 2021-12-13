@@ -17,6 +17,10 @@ class CidrTool : public QDialog{
         explicit CidrTool(QWidget *parent = nullptr);
         ~CidrTool();
 
+    signals:
+        void stopScanThread();
+        void pauseScanThread();
+
     public slots:
         void onResult(CidrModelStruct results);
         /* ... */
@@ -28,13 +32,11 @@ class CidrTool : public QDialog{
     private slots:
         void on_checkBoxExpand_clicked(bool checked);
         void on_buttonStart_clicked();
-
         void on_buttonConfig_clicked();
 
-private:
+    private:
         Ui::CidrTool *ui;
         CidrModel *m_model;
-        ScanArgs *m_args = nullptr;
 };
 
 #endif // CIDRTOOL_H

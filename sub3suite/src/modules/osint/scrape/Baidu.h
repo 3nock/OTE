@@ -18,7 +18,7 @@ struct Baidu{
 class Baidu: public AbstractOsintModule{
 
     public:
-        Baidu(ScanArgs *args);
+        Baidu(ScanArgs args);
         ~Baidu() override;
 
     public slots:

@@ -7,20 +7,20 @@
  * does not produce clean results yet...
  * use for malicious url analysis...
  */
-Urlscan::Urlscan(ScanArgs *args): AbstractOsintModule(args)
+Urlscan::Urlscan(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "UrlScan";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedSubdomain);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedAsn);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedUrl);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &Urlscan::replyFinishedIp);
 }
 Urlscan::~Urlscan(){
@@ -31,15 +31,15 @@ void Urlscan::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
+    if(args.outputRaw){
+        url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+target);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+target);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;

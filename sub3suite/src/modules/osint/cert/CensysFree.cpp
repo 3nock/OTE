@@ -5,14 +5,14 @@
 /*
  * fix for ip-input and sslcert-input
  */
-CensysFree::CensysFree(ScanArgs *args): AbstractOsintModule(args)
+CensysFree::CensysFree(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "CensysFree";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &CensysFree::replyFinishedSubdomain);
-    if(args->outputSSLCert)
+    if(args.outputSSLCert)
         connect(manager, &NetworkAccessManager::finished, this, &CensysFree::replyFinishedSSLCert);
 }
 CensysFree::~CensysFree(){
@@ -23,22 +23,22 @@ void CensysFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->inputDomain){
-        url.setUrl("https://censys.io/domain/"+args->target+"/table");
+    if(args.inputDomain){
+        url.setUrl("https://censys.io/domain/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://censys.io/ipv4/"+args->target+"/table");
+    if(args.inputIp){
+        url.setUrl("https://censys.io/ipv4/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputSSLCert){
-        url.setUrl("https://censys.io/certificates/"+args->target+"/table");
+    if(args.inputSSLCert){
+        url.setUrl("https://censys.io/certificates/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;

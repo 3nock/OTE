@@ -27,7 +27,7 @@ struct LeakLookup{
 class LeakLookup: public AbstractOsintModule{
 
     public:
-        LeakLookup(ScanArgs *args);
+        LeakLookup(ScanArgs args);
         ~LeakLookup() override;
 
     public slots:

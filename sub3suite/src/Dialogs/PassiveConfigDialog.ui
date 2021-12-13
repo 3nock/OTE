@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>330</width>
-    <height>244</height>
+    <height>323</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -71,6 +71,29 @@
          <widget class="QLineEdit" name="lineEditMaxPages"/>
         </item>
        </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Results</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QCheckBox" name="checkBoxNoDuplicates">
+        <property name="text">
+         <string>No Duplicates</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxAutosave">
+        <property name="text">
+         <string>AutoSave To Project</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

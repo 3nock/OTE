@@ -25,16 +25,18 @@ class MXTool : public QDialog{
         void onErrorLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
 
+    signals:
+        void stopScanThread();
+        void pauseScanThread();
+
     private slots:
         void on_checkBoxExpand_clicked(bool checked);
         void on_buttonStart_clicked();
-
         void on_buttonConfig_clicked();
 
-private:
+    private:
         Ui::MXTool *ui;
         MXModel *m_model;
-        ScanArgs *m_args = nullptr;
 };
 
 #endif // MXTOOL_H

@@ -627,6 +627,7 @@ QGroupBox{
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionlogViewer"/>
     <addaction name="actiondocumentation"/>
     <addaction name="separator"/>
     <addaction name="actionBlog"/>
@@ -641,7 +642,7 @@ QGroupBox{
      <string>Config</string>
     </property>
     <addaction name="actionApiKeys"/>
-    <addaction name="actionGeneral"/>
+    <addaction name="actionGeneralConfig"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuConfig"/>
@@ -807,12 +808,17 @@ QGroupBox{
   </action>
   <action name="actionApiKeys">
    <property name="text">
-    <string>api keys</string>
+    <string>API Keys</string>
    </property>
   </action>
-  <action name="actionGeneral">
+  <action name="actionGeneralConfig">
    <property name="text">
-    <string>general</string>
+    <string>General Config</string>
+   </property>
+  </action>
+  <action name="actionlogViewer">
+   <property name="text">
+    <string>log viewer</string>
    </property>
   </action>
  </widget>

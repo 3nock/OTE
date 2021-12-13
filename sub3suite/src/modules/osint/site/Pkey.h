@@ -19,7 +19,7 @@ struct Pkey{
 class Pkey: public AbstractOsintModule{
 
     public:
-        Pkey(ScanArgs *args);
+        Pkey(ScanArgs args);
         ~Pkey() override;
 
     public slots:

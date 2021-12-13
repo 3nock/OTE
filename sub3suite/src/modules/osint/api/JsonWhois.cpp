@@ -6,12 +6,12 @@
 #define WHOIS 2
 
 
-JsonWhois::JsonWhois(ScanArgs *args): AbstractOsintModule(args)
+JsonWhois::JsonWhois(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "JsonWhois";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &JsonWhois::replyFinishedRawJson);
     ///
     /// getting api key...
@@ -30,16 +30,16 @@ void JsonWhois::start(){
     request.setRawHeader("Authorization", "Token token="+m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case SCREENSHOT:
-            url.setUrl("https://jsonwhois/api/v1/screenshot?domain="+args->target);
+            url.setUrl("https://jsonwhois/api/v1/screenshot?domain="+target);
             break;
         case SOCIAL_DATA:
-            url.setUrl("https://jsonwhois/api/v1/social?domain="+args->target);
+            url.setUrl("https://jsonwhois/api/v1/social?domain="+target);
             break;
         case WHOIS:
-            url.setUrl("https://jsonwhois/api/v1/whois?domain="+args->target);
+            url.setUrl("https://jsonwhois/api/v1/whois?domain="+target);
             break;
         }
         request.setUrl(url);

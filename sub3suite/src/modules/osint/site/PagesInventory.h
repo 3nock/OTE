@@ -19,7 +19,7 @@ struct PagesInventory{
 class PagesInventory: public AbstractOsintModule{
 
     public:
-        PagesInventory(ScanArgs *args);
+        PagesInventory(ScanArgs args);
         ~PagesInventory() override;
 
     public slots:

@@ -32,7 +32,7 @@ struct Censys{
 class Censys: public AbstractOsintModule{
 
     public:
-        Censys(ScanArgs *args);
+        Censys(ScanArgs args);
         ~Censys() override;
 
     public slots:

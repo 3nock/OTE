@@ -8,12 +8,12 @@
 /*
  * 100 per month for free-user, uses http instead of https for free users...
  */
-IpStack::IpStack(ScanArgs *args): AbstractOsintModule(args)
+IpStack::IpStack(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "IpStack";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &IpStack::replyFinishedRawJson);
     ///
     /// get api key...
@@ -30,13 +30,13 @@ void IpStack::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case STANDARD_IP_LOOKUP:
-            url.setUrl("http://api.ipstack.com/"+args->target+"?access_key="+m_key);
+            url.setUrl("http://api.ipstack.com/"+target+"?access_key="+m_key);
             break;
         case BULK_IP_LOOKUP:
-            url.setUrl("http://api.ipstack.com/"+args->target+"?access_key="+m_key);
+            url.setUrl("http://api.ipstack.com/"+target+"?access_key="+m_key);
             break;
         case REQUESTER_IP_LOOKUP:
             url.setUrl("http://api.ipstack.com/check?access_key="+m_key);

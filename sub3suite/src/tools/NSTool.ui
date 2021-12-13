@@ -100,6 +100,13 @@
        <number>2</number>
       </property>
       <item>
+       <widget class="QCheckBox" name="checkBoxMultipleTargets">
+        <property name="text">
+         <string>Multiple Targets</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label">
         <property name="text">
          <string>*Data Type</string>

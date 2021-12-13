@@ -19,7 +19,7 @@ struct BuiltWith{
 class BuiltWith: public AbstractOsintModule{
 
     public:
-        BuiltWith(ScanArgs *args);
+        BuiltWith(ScanArgs args);
         ~BuiltWith() override;
 
     public slots:

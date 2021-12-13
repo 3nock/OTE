@@ -26,7 +26,7 @@ struct IpApi{
 class IpApi: public AbstractOsintModule{
 
     public:
-        IpApi(ScanArgs *args);
+        IpApi(ScanArgs args);
         ~IpApi() override;
 
     public slots:

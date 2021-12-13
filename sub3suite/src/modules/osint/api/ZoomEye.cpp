@@ -14,20 +14,20 @@
  * 10K queries for free...
  * also has many query types...
  */
-ZoomEye::ZoomEye(ScanArgs *args): AbstractOsintModule(args)
+ZoomEye::ZoomEye(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "ZoomEye";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedRawJson);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomainIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomain);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedAsn);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &ZoomEye::replyFinishedIp);
     ///
     /// getting api key...
@@ -46,19 +46,19 @@ void ZoomEye::start(){
     request.setRawHeader("API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case HOST_ASN:
-            url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+args->target);
+            url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+target);
             break;
         case HOST_CIDR:
-            url.setUrl("https://api.zoomeye.org/host/search?query=cidr:"+args->target);
+            url.setUrl("https://api.zoomeye.org/host/search?query=cidr:"+target);
             break;
         case HOST_HOSTNAME:
-            url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+            url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+target);
             break;
         case HOST_IP:
-            url.setUrl("https://api.zoomeye.org/host/search?query=ip:"+args->target);
+            url.setUrl("https://api.zoomeye.org/host/search?query=ip:"+target);
             break;
         case USER_INFO:
             url.setUrl("https://api.zoomeye.org/resources-info");
@@ -70,24 +70,24 @@ void ZoomEye::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+args->target);
+    if(args.inputDomain){
+        url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+target);
         request.setAttribute(QNetworkRequest::User, HOST_HOSTNAME);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputIp){
-        url.setUrl("https://api.zoomeye.org/host/search?query=ip:"+args->target);
+    if(args.inputIp){
+        url.setUrl("https://api.zoomeye.org/host/search?query=ip:"+target);
         request.setAttribute(QNetworkRequest::User, HOST_IP);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args->inputAsn){
-        url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+args->target);
+    if(args.inputAsn){
+        url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+target);
         request.setAttribute(QNetworkRequest::User, HOST_ASN);
         request.setUrl(url);
         manager->get(request);
@@ -101,11 +101,11 @@ void ZoomEye::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray matches = document.object()["matches"].toArray();
 
-    if(requestType == HOST_HOSTNAME || requestType == HOST_IP){
+    if(QUERY_TYPE == HOST_HOSTNAME || QUERY_TYPE == HOST_IP){
         foreach(const QJsonValue &value, matches){
             QString hostname = value.toObject()["rdns"].toString();
             QString address = value.toObject()["ip"].toString();
@@ -123,11 +123,11 @@ void ZoomEye::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray matches = document.object()["matches"].toArray();
 
-    if(requestType == HOST_IP || requestType == HOST_ASN || requestType == HOST_HOSTNAME){
+    if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_ASN || QUERY_TYPE == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
             emit ip(value.toObject()["ip"].toString());
             log.resultsCount++;
@@ -143,11 +143,11 @@ void ZoomEye::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray matches = document.object()["matches"].toArray();
 
-    if(requestType == HOST_IP || requestType == HOST_ASN || requestType == HOST_HOSTNAME){
+    if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_ASN || QUERY_TYPE == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
             QString ASN = value.toObject()["geoinfo"].toObject()["asn"].toString();
             QString org = value.toObject()["geoinfo"].toObject()["organization"].toString();
@@ -165,11 +165,11 @@ void ZoomEye::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray matches = document.object()["matches"].toArray();
 
-    if(requestType == HOST_IP || requestType == HOST_HOSTNAME){
+    if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
             emit subdomain(value.toObject()["rdns"].toString());
             log.resultsCount++;

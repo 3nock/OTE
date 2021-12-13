@@ -27,7 +27,7 @@ struct IpRegistry{
 class IpRegistry: public AbstractOsintModule{
 
     public:
-        IpRegistry(ScanArgs *args);
+        IpRegistry(ScanArgs args);
         ~IpRegistry() override;
 
     public slots:

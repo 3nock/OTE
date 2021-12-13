@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>390</width>
-    <height>380</height>
+    <height>410</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -112,6 +112,29 @@
          </widget>
         </item>
        </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Results</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item>
+       <widget class="QCheckBox" name="checkBoxNoDuplicates">
+        <property name="text">
+         <string>No Duplicates</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxAutosave">
+        <property name="text">
+         <string>AutoSave To Project</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

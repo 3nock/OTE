@@ -134,10 +134,9 @@ class Raw : public AbstractEngine{
 
         void on_buttonConfig_clicked();
 
-private:
+    private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
-        ScanArgs *m_scanArgs;
         //...
         QMap<QString, QStringList> m_optionSet;
         JsonSyntaxHighlighter *m_jsonSyntaxHighlighter;

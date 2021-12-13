@@ -32,16 +32,16 @@
 /*
  * has reverse ip, and reverse ns
  */
-DomainTools::DomainTools(ScanArgs *args): AbstractOsintModule(args)
+DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "DomainTools";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
     ///
     /// getting api key...
@@ -59,79 +59,79 @@ void DomainTools::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case BRAND_MONITOR:
             url.setUrl("https://api.domaintools.com/v1/account/?api_username="+m_username+"&api_key="+m_key);
             break;
         case ACCOUNT_INFO:
-            url.setUrl("https://api.domaintools.com/v1/mark-alert/?query="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/mark-alert/?query="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case DOMAIN_PROFILE:
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"?api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/"+target+"?api_username="+m_username+"&api_key="+m_key);
             break;
         case DOMAIN_REPUTATION:
-            url.setUrl("https://api.domaintools.com/v1/reputation/?domain="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/reputation/?domain="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case DOMAIN_RISK_SCORE:
-            url.setUrl("https://api.domaintools.com/v1/risk/evidence/?domain="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/risk/evidence/?domain="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case DOMAIN_SEARCH:
-            url.setUrl("https://api.domaintools.com/v2/domain-search/?query="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v2/domain-search/?query="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case HOSTING_HISTORY:
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"/hosting-history/?api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/hosting-history/?api_username="+m_username+"&api_key="+m_key);
             break;
         case IP_MONITOR:
-            url.setUrl("https://api.domaintools.com/v1/ip-monitor/?query="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/ip-monitor/?query="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case IP_REGISTRANT_MONITOR:
-            url.setUrl("https://api.domaintools.com/v1/ip-registrant-monitor/?query="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/ip-registrant-monitor/?query="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case IRIS_ENRICH:
-            url.setUrl("https://api.domaintools.com/v1/iris-enrich/?domain="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/iris-enrich/?domain="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case IRIS_INVESTIGATE_DOMAIN:
-            url.setUrl("https://api.domaintools.com/v1/iris-investigate/?domain="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/iris-investigate/?domain="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case IRIS_INVESTIGATE_IP:
-            url.setUrl("https://api.domaintools.com/v1/iris-investigate/?ip="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/iris-investigate/?ip="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case IRIS_PIVOT_DOMAIN:
-            url.setUrl("https://api.domaintools.com/v1/iris/?domain="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/iris/?domain="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case IRIS_PIVOT_IP:
-            url.setUrl("https://api.domaintools.com/v1/iris/?ip="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/iris/?ip="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case NAMESERVER_MONITOR:
-            url.setUrl("https://api.domaintools.com/v1/name-server-monitor/?query="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/name-server-monitor/?query="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case PARSED_WHOIS:
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"/whois/parsed?api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/whois/parsed?api_username="+m_username+"&api_key="+m_key);
             break;
         case REGISTRANT_MONITOR:
-            url.setUrl("https://api.domaintools.com/v1/registrant-alert/?query="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/registrant-alert/?query="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case PHISHEYE:
-            url.setUrl("https://api.domaintools.com/v1/phisheye?query="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/phisheye?query="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case REVERSE_IP:
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"/host-domains/?api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/host-domains/?api_username="+m_username+"&api_key="+m_key);
             break;
         case REVERSE_IP_WHOIS:
-            url.setUrl("https://api.domaintools.com/v1/reverse-ip-whois/?ip="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/reverse-ip-whois/?ip="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case REVERSE_NAMESERVER:
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"/name-server-domains/?api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/name-server-domains/?api_username="+m_username+"&api_key="+m_key);
             break;
         case REVERSE_WHOIS:
-            url.setUrl("https://api.domaintools.com/v1/reverse-whois/?terms="+args->target+"&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/reverse-whois/?terms="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
         case WHOIS_HISTORY:
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"/whois/history/?sort=date_asc&api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/whois/history/?sort=date_asc&api_username="+m_username+"&api_key="+m_key);
             break;
         case WHOIS_LOOKUP:
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"/whois/?api_username="+m_username+"&api_key="+m_key);
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/whois/?api_username="+m_username+"&api_key="+m_key);
             break;
         }
         request.setUrl(url);
@@ -140,9 +140,9 @@ void DomainTools::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputIp){
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"/hosting-history/");
+    if(args.inputDomain){
+        if(args.outputIp){
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/hosting-history/");
             request.setAttribute(QNetworkRequest::User, HOSTING_HISTORY);
             request.setUrl(url);
             manager->get(request);
@@ -151,9 +151,9 @@ void DomainTools::start(){
         }
     }
 
-    if(args->inputIp){
-        if(args->outputSubdomain){
-            url.setUrl("https://api.domaintools.com/v1/"+args->target+"/host-domains/");
+    if(args.inputIp){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/host-domains/");
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
             manager->get(request);
@@ -169,11 +169,11 @@ void DomainTools::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
-    if(requestType == REVERSE_IP){
+    if(QUERY_TYPE == REVERSE_IP){
         foreach(const QJsonValue &ip_address, response["ip_addresses"].toArray()){
             QString ip = ip_address.toObject()["ip_address"].toString();
             foreach(const QJsonValue &domain, ip_address.toObject()["domain_names"].toArray()){
@@ -192,12 +192,12 @@ void DomainTools::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
 
-    if(requestType == HOSTING_HISTORY){
+    if(QUERY_TYPE == HOSTING_HISTORY){
         foreach(const QJsonValue &value, response["ip_history"].toArray()){
             QJsonObject ip_history = value.toObject();
             if(!ip_history["post_ip"].isNull() || !ip_history["post_ip"].toString().isEmpty()){
@@ -213,7 +213,7 @@ void DomainTools::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == REVERSE_IP){
+    if(QUERY_TYPE == REVERSE_IP){
         foreach(const QJsonValue &ip_address, response["ip_addresses"].toArray()){
             foreach(const QJsonValue &domain, ip_address.toObject()["domain_names"].toArray()){
                 emit subdomain(domain.toString());

@@ -25,7 +25,7 @@ struct HaveIBeenPawned{
 class HaveIBeenPawned: public AbstractOsintModule{
 
     public:
-        HaveIBeenPawned(ScanArgs *args);
+        HaveIBeenPawned(ScanArgs args);
         ~HaveIBeenPawned() override;
 
     public slots:

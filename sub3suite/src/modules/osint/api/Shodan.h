@@ -45,7 +45,7 @@ struct Shodan{
 class Shodan: public AbstractOsintModule{
 
     public:
-        Shodan(ScanArgs *args);
+        Shodan(ScanArgs args);
         ~Shodan() override;
 
     public slots:

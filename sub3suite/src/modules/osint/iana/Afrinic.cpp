@@ -11,12 +11,12 @@
 /*
  * not well implemented yet for osint, only raw...
  */
-Afrinic::Afrinic(ScanArgs *args): AbstractOsintModule(args)
+Afrinic::Afrinic(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Afrinic";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Afrinic::replyFinishedRawJson);
 }
 Afrinic::~Afrinic(){
@@ -27,19 +27,19 @@ void Afrinic::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case AS_NUMBERS:
-            url.setUrl("https://rdap.afrinic.net/rdap/autnum/"+args->target);
+            url.setUrl("https://rdap.afrinic.net/rdap/autnum/"+target);
             break;
         case ENTITY:
-            url.setUrl("https://rdap.afrinic.net/rdap/entity/"+args->target);
+            url.setUrl("https://rdap.afrinic.net/rdap/entity/"+target);
             break;
         case IP_NETWORKS:
-            url.setUrl("https://rdap.afrinic.net/rdap/ip/"+args->target);
+            url.setUrl("https://rdap.afrinic.net/rdap/ip/"+target);
             break;
         case RDNS:
-            url.setUrl("https://rdap.afrinic.net/rdap/domain/"+args->target);
+            url.setUrl("https://rdap.afrinic.net/rdap/domain/"+target);
             break;
         }
         request.setUrl(url);

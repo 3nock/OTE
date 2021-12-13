@@ -75,7 +75,7 @@ struct Onyphe{
 class Onyphe: public AbstractOsintModule{
 
     public:
-        Onyphe(ScanArgs *args);
+        Onyphe(ScanArgs args);
         ~Onyphe() override;
 
     public slots:

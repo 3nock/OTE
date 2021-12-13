@@ -9,12 +9,12 @@
 /*
  * url encode the email...
  */
-HaveIBeenPawned::HaveIBeenPawned(ScanArgs *args): AbstractOsintModule(args)
+HaveIBeenPawned::HaveIBeenPawned(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "HaveIBeenPawned";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &HaveIBeenPawned::replyFinishedRawJson);
     ///
     /// getting api key...
@@ -32,19 +32,19 @@ void HaveIBeenPawned::start(){
     request.setRawHeader("hibp-api-key", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case BREACHED_ACCOUNT:
-            url.setUrl("https://haveibeenpwned.com/api/v3/breachedaccount/"+args->target);
+            url.setUrl("https://haveibeenpwned.com/api/v3/breachedaccount/"+target);
             break;
         case BREACHED_SITE:
-            url.setUrl("GET https://haveibeenpwned.com/api/v3/breaches?domain="+args->target);
+            url.setUrl("GET https://haveibeenpwned.com/api/v3/breaches?domain="+target);
             break;
         case PASTES_ACCOUNT:
-            url.setUrl("https://haveibeenpwned.com/api/v3/pasteaccount/"+args->target);
+            url.setUrl("https://haveibeenpwned.com/api/v3/pasteaccount/"+target);
             break;
         case SINGLE_BREACH:
-            url.setUrl("https://haveibeenpwned.com/api/v3/breach/"+args->target);
+            url.setUrl("https://haveibeenpwned.com/api/v3/breach/"+target);
             break;
         }
         request.setUrl(url);

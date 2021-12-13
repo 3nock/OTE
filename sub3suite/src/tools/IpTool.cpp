@@ -19,10 +19,6 @@ IpTool::IpTool(QWidget *parent) : QDialog(parent), ui(new Ui::IpTool),
 
     /* setting model with tableView...*/
     ui->treeResults->setModel(m_model->model);
-
-    /* for scan... */
-    m_args = new ScanArgs;
-    m_args->outputInfo = true;
 }
 IpTool::~IpTool(){
     delete ui;
@@ -73,41 +69,63 @@ void IpTool::on_checkBoxExpand_clicked(bool checked){
 }
 
 void IpTool::on_buttonStart_clicked(){
-    m_args->target = ui->lineEditTarget->text();
+    ScanArgs scanArgs;
+
     ///
-    /// ....
+    /// getting arguments...
     ///
+    if(ui->checkBoxMultipleTargets->isChecked()){
+        // for multiple targets...
+    }else{
+        scanArgs.targets.push(ui->lineEditTarget->text());
+    }
+
     ui->buttonStop->setEnabled(true);
     ui->buttonStart->setDisabled(true);
 
+    ///
+    /// starting the scan thread...
+    ///
     QThread *cThread = new QThread;
     int engineToUse = ui->comboBoxEngine->currentIndex();
 
     if(engineToUse == ALL || engineToUse == IPINFO)
     {
-        IpInfo *ipinfo = new IpInfo(m_args);
-        ipinfo->Enumerator(cThread);
+        IpInfo *ipinfo = new IpInfo(scanArgs);
+        ipinfo->startScan(cThread);
         ipinfo->moveToThread(cThread);
+
         connect(ipinfo, &IpInfo::infoLog, this, &IpTool::onInfoLog);
         connect(ipinfo, &IpInfo::errorLog, this, &IpTool::onErrorLog);
         connect(ipinfo, &IpInfo::rateLimitLog, this, &IpTool::onRateLimitLog);
+        /* ... */
+        connect(this, &IpTool::stopScanThread, ipinfo, &AbstractOsintModule::onStop);
+        connect(this, &IpTool::pauseScanThread, ipinfo, &AbstractOsintModule::onPause);
+        /* ... */
         connect(cThread, &QThread::finished, this, &IpTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+
         cThread->start();
     }
 
     if(engineToUse == ALL || engineToUse == IPAPI)
     {
-        IpApi *ipApi = new IpApi(m_args);
-        ipApi->Enumerator(cThread);
+        IpApi *ipApi = new IpApi(scanArgs);
+        ipApi->startScan(cThread);
         ipApi->moveToThread(cThread);
+
         connect(ipApi, &IpInfo::infoLog, this, &IpTool::onInfoLog);
         connect(ipApi, &IpInfo::errorLog, this, &IpTool::onErrorLog);
         connect(ipApi, &IpInfo::rateLimitLog, this, &IpTool::onRateLimitLog);
+        /* ... */
+        connect(this, &IpTool::stopScanThread, ipApi, &AbstractOsintModule::onStop);
+        connect(this, &IpTool::pauseScanThread, ipApi, &AbstractOsintModule::onPause);
+        /* ... */
         connect(cThread, &QThread::finished, this, &IpTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, ipApi, &IpInfo::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+
         cThread->start();
     }
 }

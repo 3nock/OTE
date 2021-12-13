@@ -89,6 +89,13 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
+       <widget class="QCheckBox" name="checkBoxMultipleTargets">
+        <property name="text">
+         <string>Multiple Targets</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="labelOption">
         <property name="minimumSize">
          <size>

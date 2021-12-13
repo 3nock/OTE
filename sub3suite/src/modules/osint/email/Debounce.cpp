@@ -7,12 +7,12 @@
 #define SINGLE_VALIDATION 3
 
 
-Debounce::Debounce(ScanArgs *args): AbstractOsintModule(args)
+Debounce::Debounce(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Debounce";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Debounce::replyFinishedRawJson);
     ///
     /// getting api-key...
@@ -29,8 +29,8 @@ void Debounce::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case ACCOUNT_BALANCE:
             url.setUrl("https://api.debounce.io/v1/balance?api="+m_key);
             break;
@@ -38,10 +38,10 @@ void Debounce::start(){
             url.setUrl("https://api.debounce.io/v1/usage?api="+m_key);
             break;
         case DISPOSABLE_EMAIL:
-            url.setUrl("https://disposable.debounce.io?email="+args->target);
+            url.setUrl("https://disposable.debounce.io?email="+target);
             break;
         case SINGLE_VALIDATION:
-            url.setUrl("https://api.debounce.io/v1?api="+m_key+"&email="+args->target);
+            url.setUrl("https://api.debounce.io/v1?api="+m_key+"&email="+target);
             break;
         }
         request.setUrl(url);

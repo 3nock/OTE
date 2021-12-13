@@ -53,7 +53,7 @@ struct HackerTargetPaid{
 class HackerTargetPaid: public AbstractOsintModule{
 
     public:
-        HackerTargetPaid(ScanArgs *args);
+        HackerTargetPaid(ScanArgs args);
         ~HackerTargetPaid() override;
 
     public slots:

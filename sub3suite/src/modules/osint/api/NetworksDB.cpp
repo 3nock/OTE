@@ -18,20 +18,20 @@
 /*
  * 1000 queries per month for free account...
  */
-NetworksDB::NetworksDB(ScanArgs *args): AbstractOsintModule(args)
+NetworksDB::NetworksDB(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "NetworksDB";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedRawJson);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedIp);
-    if(args->outputCidr)
+    if(args.outputCidr)
         connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedCidr);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomainIp);
     ///
     /// getting api key...
@@ -49,37 +49,37 @@ void NetworksDB::start(){
     request.setRawHeader("X-Api-Key", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case AS_INFO:
-            url.setUrl("https://networksdb.io/api/asn-info?asn="+args->target);
+            url.setUrl("https://networksdb.io/api/asn-info?asn="+target);
             break;
         case AS_NETWORKS:
-            url.setUrl("https://networksdb.io/api/asn-networks?asn="+args->target);
+            url.setUrl("https://networksdb.io/api/asn-networks?asn="+target);
             break;
         case DOMAINS_IN_NETWORK:
-            url.setUrl("https://networksdb.io/api/mass-reverse-dns?cidr="+args->target);
+            url.setUrl("https://networksdb.io/api/mass-reverse-dns?cidr="+target);
             break;
         case DOMAINS_ON_IP:
-            url.setUrl("https://networksdb.io/api/reverse-dns?ip="+args->target);
+            url.setUrl("https://networksdb.io/api/reverse-dns?ip="+target);
             break;
         case IP_GEOLOCATION:
-            url.setUrl("https://networksdb.io/api/ip-geo?ip="+args->target);
+            url.setUrl("https://networksdb.io/api/ip-geo?ip="+target);
             break;
         case IP_INFO:
-            url.setUrl("https://networksdb.io/api/ip-info?ip="+args->target);
+            url.setUrl("https://networksdb.io/api/ip-info?ip="+target);
             break;
         case IPS_FOR_DOMAIN:
-            url.setUrl("https://networksdb.io/api/dns?domain="+args->target);
+            url.setUrl("https://networksdb.io/api/dns?domain="+target);
             break;
         case ORG_INFO:
-            url.setUrl("https://networksdb.io/api/org-info?id="+args->target);
+            url.setUrl("https://networksdb.io/api/org-info?id="+target);
             break;
         case ORG_NETWORK:
-            url.setUrl("https://networksdb.io/api/org-networks?id="+args->target);
+            url.setUrl("https://networksdb.io/api/org-networks?id="+target);
             break;
         case ORG_SEARCH:
-            url.setUrl("https://networksdb.io/api/org-search?search="+args->target);
+            url.setUrl("https://networksdb.io/api/org-search?search="+target);
             break;
         }
         request.setUrl(url);
@@ -88,9 +88,9 @@ void NetworksDB::start(){
         return;
     }
 
-    if(args->inputIp){
-        if(args->outputSubdomain){
-            url.setUrl("https://networksdb.io/api/reverse-dns?ip="+args->target);
+    if(args.inputIp){
+        if(args.outputSubdomain){
+            url.setUrl("https://networksdb.io/api/reverse-dns?ip="+target);
             request.setAttribute(QNetworkRequest::User, DOMAINS_ON_IP);
             request.setUrl(url);
             manager->get(request);
@@ -99,9 +99,9 @@ void NetworksDB::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputIp){
-            url.setUrl("https://networksdb.io/api/dns?domain="+args->target);
+    if(args.inputDomain){
+        if(args.outputIp){
+            url.setUrl("https://networksdb.io/api/dns?domain="+target);
             request.setAttribute(QNetworkRequest::User, IPS_FOR_DOMAIN);
             request.setUrl(url);
             manager->get(request);
@@ -110,9 +110,9 @@ void NetworksDB::start(){
         return;
     }
 
-    if(args->inputAsn){
-        if(args->outputCidr){
-            url.setUrl("https://networksdb.io/api/asn-networks?asn="+args->target);
+    if(args.inputAsn){
+        if(args.outputCidr){
+            url.setUrl("https://networksdb.io/api/asn-networks?asn="+target);
             request.setAttribute(QNetworkRequest::User, AS_NETWORKS);
             request.setUrl(url);
             manager->get(request);
@@ -121,9 +121,9 @@ void NetworksDB::start(){
         return;
     }
 
-    if(args->inputCidr){
-        if(args->outputSubdomain || args->outputIp || args->outputSubdomainIp){
-            url.setUrl("https://networksdb.io/api/mass-reverse-dns?cidr="+args->target);
+    if(args.inputCidr){
+        if(args.outputSubdomain || args.outputIp || args.outputSubdomainIp){
+            url.setUrl("https://networksdb.io/api/mass-reverse-dns?cidr="+target);
             request.setAttribute(QNetworkRequest::User, DOMAINS_IN_NETWORK);
             request.setUrl(url);
             manager->get(request);
@@ -138,11 +138,11 @@ void NetworksDB::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == DOMAINS_IN_NETWORK){
+    if(QUERY_TYPE == DOMAINS_IN_NETWORK){
         foreach(const QJsonValue &value, results){
             QJsonArray domains = value.toObject()["domains"].toArray();
             QString address = value.toObject()["ip"].toString();
@@ -162,11 +162,11 @@ void NetworksDB::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == DOMAINS_IN_NETWORK){
+    if(QUERY_TYPE == DOMAINS_IN_NETWORK){
         foreach(const QJsonValue &value, results){
             QJsonArray domains = value.toObject()["domains"].toArray();
             foreach(const QJsonValue &domain, domains){
@@ -176,7 +176,7 @@ void NetworksDB::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == DOMAINS_ON_IP){
+    if(QUERY_TYPE == DOMAINS_ON_IP){
         foreach(const QJsonValue &value, results){
             emit subdomain(value.toString());
             log.resultsCount++;
@@ -192,11 +192,11 @@ void NetworksDB::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == DOMAINS_IN_NETWORK){
+    if(QUERY_TYPE == DOMAINS_IN_NETWORK){
         foreach(const QJsonValue &value, results){
             QString address = value.toObject()["ip"].toString();
             emit ip(address);
@@ -204,7 +204,7 @@ void NetworksDB::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == IPS_FOR_DOMAIN){
+    if(QUERY_TYPE == IPS_FOR_DOMAIN){
         foreach(const QJsonValue &value, results){
             emit ip(value.toString());
             log.resultsCount++;
@@ -220,11 +220,11 @@ void NetworksDB::replyFinishedCidr(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(requestType == IPS_FOR_DOMAIN){
+    if(QUERY_TYPE == IPS_FOR_DOMAIN){
         foreach(const QJsonValue &value, results){
             QString prefix = value.toObject()["cidr"].toString();
             emit cidr(prefix);

@@ -72,6 +72,13 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QCheckBox" name="checkBoxMultipleTargets">
+        <property name="text">
+         <string>Multiple Target</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label">
         <property name="text">
          <string>*Option</string>

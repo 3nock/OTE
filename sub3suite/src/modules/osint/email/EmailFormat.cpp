@@ -6,12 +6,12 @@
 #define PING 2
 
 
-EmailFormat::EmailFormat(ScanArgs *args): AbstractOsintModule(args)
+EmailFormat::EmailFormat(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "EmailFormat";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &EmailFormat::replyFinishedRawJson);
     ///
     /// getting api-key...
@@ -30,13 +30,13 @@ void EmailFormat::start(){
     request.setRawHeader("Authorization", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch(args->rawOption){
+    if(args.outputRaw){
+        switch(args.rawOption){
         case FORMATS:
-            url.setUrl("https://www.email-format.com/api/v2/get_formats?domain="+args->target);
+            url.setUrl("https://www.email-format.com/api/v2/get_formats?domain="+target);
             break;
         case BEST_FORMATS:
-            url.setUrl("https://www.email-format.com/api/v2/get_best_format?domain="+args->target);
+            url.setUrl("https://www.email-format.com/api/v2/get_best_format?domain="+target);
             break;
         case PING:
             url.setUrl("https://www.email-format.com/api/v2/ping");

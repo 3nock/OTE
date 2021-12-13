@@ -33,20 +33,20 @@
 
 
 /* 1k per hour unauthenticated, and 10k authed*/
-OtxFree::OtxFree(ScanArgs *args): AbstractOsintModule(args)
+OtxFree::OtxFree(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "otx";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedRawJson);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedSubdomainIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedSubdomain);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedIp);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &OtxFree::replyFinishedAsn);
 }
 OtxFree::~OtxFree(){
@@ -57,88 +57,88 @@ void OtxFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case INDICATOR_DOMAIN_GENERAL:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/general");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/general");
             break;
         case INDICATOR_DOMAIN_GEO:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/geo");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/geo");
             break;
         case INDICATOR_DOMAIN_HTTPSCANS:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/http_scans");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/http_scans");
             break;
         case INDICATOR_DOMAIN_MALWARE:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/malware");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/malware");
             break;
         case INDICATOR_DOMAIN_PASSIVEDNS:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/passive_dns");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/passive_dns");
             break;
         case INDICATOR_DOMAIN_URLLIST:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/url_list");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/url_list");
             break;
         case INDICATOR_DOMAIN_WHOIS:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+args->target+"/whois");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/whois");
             break;
         case INDICATOR_HOSTNAME_GENERAL:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+args->target+"/general");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/general");
             break;
         case INDICATOR_HOSTNAME_GEO:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+args->target+"/geo");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/geo");
             break;
         case INDICATOR_HOSTNAME_HTTPSCANS:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+args->target+"/http_scans");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/http_scans");
             break;
         case INDICATOR_HOSTNAME_MALWARE:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+args->target+"/malware");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/malware");
             break;
         case INDICATOR_HOSTNAME_PASSIVEDNS:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+args->target+"/passive_dns");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/passive_dns");
             break;
         case INDICATOR_HOSTNAME_URLLIST:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+args->target+"/url_list");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/url_list");
             break;
         case INDICATOR_IPV4_GENERAL:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+args->target+"/general");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/general");
             break;
         case INDICATOR_IPV4_GEO:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+args->target+"/geo");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/geo");
             break;
         case INDICATOR_IPV4_MALWARE:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+args->target+"/malware");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/malware");
             break;
         case INDICATOR_IPV4_PASSIVEDNS:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+args->target+"/passive_dns");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/passive_dns");
             break;
         case INDICATOR_IPV4_REPUTATION:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+args->target+"/reputation");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/reputation");
             break;
         case INDICATOR_IPV4_URLLIST:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+args->target+"/url_list");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/url_list");
             break;
         case INDICATOR_IPV6_GENERAL:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+args->target+"/general");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+target+"/general");
             break;
         case INDICATOR_IPV6_GEO:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+args->target+"/geo");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+target+"/geo");
             break;
         case INDICATOR_IPV6_MALWARE:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+args->target+"/malware");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+target+"/malware");
             break;
         case INDICATOR_IPV6_PASSIVEDNS:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+args->target+"/passive_dns");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+target+"/passive_dns");
             break;
         case INDICATOR_IPV6_REPUTATION:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+args->target+"/reputation");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+target+"/reputation");
             break;
         case INDICATOR_IPV6_URLLIST:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+args->target+"/url_list");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+target+"/url_list");
             break;
         case INDICATOR_URL_GENERAL:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/url/"+args->target+"/general");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/url/"+target+"/general");
             break;
         case INDICATOR_URL_URLLIST:
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/url/"+args->target+"/url_list");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/url/"+target+"/url_list");
             break;
         }
         request.setUrl(url);
@@ -147,10 +147,10 @@ void OtxFree::start(){
         return;
     }
 
-    if(args->inputIp){
+    if(args.inputIp){
         /* if target ip-address contains  ":" then its an ipv6 */
-        if(args->target.contains(":")){
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+args->target+"/passive_dns");
+        if(target.contains(":")){
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/passive_dns");
             request.setAttribute(QNetworkRequest::User, INDICATOR_IPV4_PASSIVEDNS);
             request.setUrl(url);
             manager->get(request);
@@ -158,7 +158,7 @@ void OtxFree::start(){
         }
         /* if target ip-address doesnt contains  ":" then its an ipv4 */
         else{
-            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+args->target+"/passive_dns");
+            url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv6/"+target+"/passive_dns");
             request.setAttribute(QNetworkRequest::User, INDICATOR_IPV6_PASSIVEDNS);
             request.setUrl(url);
             manager->get(request);
@@ -167,8 +167,8 @@ void OtxFree::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+args->target+"/passive_dns");
+    if(args.inputDomain){
+        url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/passive_dns");
         request.setAttribute(QNetworkRequest::User, INDICATOR_HOSTNAME_PASSIVEDNS);
         request.setUrl(url);
         manager->get(request);

@@ -161,8 +161,7 @@ void Osint::on_lineEditTarget_returnPressed(){
 }
 
 void Osint::on_buttonStop_clicked(){
-    emit stopScan();
-    sendStatus("[*] Stopping...");
+    emit stopScanThread();
 }
 
 void Osint::stopScan(){

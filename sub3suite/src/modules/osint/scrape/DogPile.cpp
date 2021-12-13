@@ -6,16 +6,16 @@
  * doesnt show last page...
  * redirection issues...
  */
-DogPile::DogPile(ScanArgs *args): AbstractOsintModule(args)
+DogPile::DogPile(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "DogPile";
 
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &DogPile::replyFinishedSubdomain);
-    if(args->outputEmail)
+    if(args.outputEmail)
         connect(manager, &NetworkAccessManager::finished, this, &DogPile::replyFinishedEmail);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &DogPile::replyFinishedUrl);
 }
 DogPile::~DogPile(){
@@ -25,17 +25,17 @@ DogPile::~DogPile(){
 void DogPile::start(){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            QUrl url("https://www.dogpile.com/serp?q="+args->target);
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            QUrl url("https://www.dogpile.com/serp?q="+target);
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
             activeRequests++;
         }
 
-        if(args->outputUrl){
-            QUrl url("https://www.dogpile.com/serp?q="+args->target);
+        if(args.outputUrl){
+            QUrl url("https://www.dogpile.com/serp?q="+target);
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
@@ -81,7 +81,7 @@ void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 QString domain = QString::fromUtf8(child->v.text.text);
                 domain = domain.remove("http://").remove("https://");
-                domain.append(args->target);
+                domain.append(target);
                 emit subdomain(domain);
                 log.resultsCount++;
             }
@@ -146,7 +146,7 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 QString domain = QString::fromUtf8(child->v.text.text);
-                domain.append(args->target);
+                domain.append(target);
                 emit url(domain);
                 log.resultsCount++;
             }
@@ -165,9 +165,9 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
 void DogPile::sendRequests(QString anotherPage){
     QNetworkRequest request;
 
-    if(args->inputDomain){
-        if(args->outputSubdomain){
-            if(m_sentPages < args->maxPage){
+    if(args.inputDomain){
+        if(args.outputSubdomain){
+            if(m_sentPages < args.config->maxPage){
                 QUrl url("https://www.dogpile.com"+anotherPage);
                 request.setUrl(url);
                 manager->get(request);

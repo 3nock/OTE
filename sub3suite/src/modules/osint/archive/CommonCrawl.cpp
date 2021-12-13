@@ -6,7 +6,7 @@
 /*
  * for now only use the first index url to obtain crawled urls...
  */
-CommonCrawl::CommonCrawl(ScanArgs *args): AbstractOsintModule(args)
+CommonCrawl::CommonCrawl(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "CommonCrawl";
@@ -46,13 +46,13 @@ void CommonCrawl::replyFinishedIndex(QNetworkReply *reply){
     disconnect(manager, &NetworkAccessManager::finished, this, &CommonCrawl::replyFinishedIndex);
 
     /* make new manager connection depending on user output */
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &CommonCrawl::replyFinishedUrl);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &CommonCrawl::replyFinishedSubdomain);
 
     /* send request to get the subdomains/urls */
-    QUrl url(urlList.at(0)+"?url=*."+args->target+"&output=json&fl=url");
+    QUrl url(urlList.at(0)+"?url=*."+target+"&output=json&fl=url");
     QNetworkRequest request;
     request.setUrl(url);
     manager->get(request);

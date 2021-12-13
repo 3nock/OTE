@@ -10,20 +10,20 @@
 #define PDNS_REVERSE 3
 
 
-RobtexPaid::RobtexPaid(ScanArgs *args): AbstractOsintModule(args)
+RobtexPaid::RobtexPaid(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "RobtexPaid";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedRawJson);
-    if(args->outputIp)
+    if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedIp);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomain);
-    if(args->outputSubdomainIp)
+    if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomainIp);
-    if(args->outputAsn)
+    if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedAsn);
     ///
     /// getting api key...
@@ -41,19 +41,19 @@ void RobtexPaid::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ASQUERY:
-            url.setUrl("https://proapi.robtex.com/asquery/"+args->target+"?key="+m_key);
+            url.setUrl("https://proapi.robtex.com/asquery/"+target+"?key="+m_key);
             break;
         case IPQUERY:
-            url.setUrl("https://proapi.robtex.com/ipquery/"+args->target+"?key="+m_key);
+            url.setUrl("https://proapi.robtex.com/ipquery/"+target+"?key="+m_key);
             break;
         case PDNS_FORWARD:
-            url.setUrl("https://proapi.robtex.com/pdns/forward/"+args->target+"?key="+m_key);
+            url.setUrl("https://proapi.robtex.com/pdns/forward/"+target+"?key="+m_key);
             break;
         case PDNS_REVERSE:
-            url.setUrl("https://proapi.robtex.com/pdns/reverse/"+args->target+"?key="+m_key);
+            url.setUrl("https://proapi.robtex.com/pdns/reverse/"+target+"?key="+m_key);
         }
         request.setUrl(url);
         manager->get(request);
@@ -61,17 +61,17 @@ void RobtexPaid::start(){
         return;
     }
 
-    if(args->inputIp){
-        if(args->outputIp || args->outputAsn){
-            url.setUrl("https://proapi.robtex.com/ipquery/"+args->target+"?key="+m_key);
+    if(args.inputIp){
+        if(args.outputIp || args.outputAsn){
+            url.setUrl("https://proapi.robtex.com/ipquery/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, IPQUERY);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args->outputIp || args->outputSubdomain || args->outputSubdomainIp){
-            url.setUrl("https://proapi.robtex.com/pdns/reverse/"+args->target+"?key="+m_key);
+        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+            url.setUrl("https://proapi.robtex.com/pdns/reverse/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, PDNS_REVERSE);
             request.setUrl(url);
             manager->get(request);
@@ -80,8 +80,8 @@ void RobtexPaid::start(){
         return;
     }
 
-    if(args->inputDomain){
-        url.setUrl("https://proapi.robtex.com/pdns/forward/"+args->target+"?key="+m_key);
+    if(args.inputDomain){
+        url.setUrl("https://proapi.robtex.com/pdns/forward/"+target+"?key="+m_key);
         request.setAttribute(QNetworkRequest::User, PDNS_FORWARD);
         request.setUrl(url);
         manager->get(request);
@@ -89,8 +89,8 @@ void RobtexPaid::start(){
         return;
     }
 
-    if(args->inputAsn){
-        url.setUrl("https://proapi.robtex.com/asquery/"+args->target+"?key="+m_key);
+    if(args.inputAsn){
+        url.setUrl("https://proapi.robtex.com/asquery/"+target+"?key="+m_key);
         request.setAttribute(QNetworkRequest::User, ASQUERY);
         request.setUrl(url);
         manager->get(request);
@@ -104,9 +104,9 @@ void RobtexPaid::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 
@@ -134,7 +134,7 @@ void RobtexPaid::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(requestType == IPQUERY){
+    if(QUERY_TYPE == IPQUERY){
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
         QJsonArray act = document.object()["act"].toArray();
@@ -160,9 +160,9 @@ void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 
@@ -182,7 +182,7 @@ void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    if(requestType == ASQUERY){
+    if(QUERY_TYPE == ASQUERY){
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
         QJsonArray nets = document.object()["nets"].toArray();
         foreach(const QJsonValue &value, nets){
@@ -201,9 +201,9 @@ void RobtexPaid::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == IPQUERY){
+    if(QUERY_TYPE == IPQUERY){
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
         QJsonObject mainObj = document.object();
         QString asnValue = mainObj["as"].toString();
@@ -221,9 +221,9 @@ void RobtexPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    int requestType = reply->property(REQUEST_TYPE).toInt();
+    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
 
-    if(requestType == PDNS_FORWARD || requestType == PDNS_REVERSE){
+    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 

@@ -6,12 +6,12 @@
 #define PHONE 2
 #define IP 3
 
-Seon::Seon(ScanArgs *args): AbstractOsintModule(args)
+Seon::Seon(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Seon";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Seon::replyFinishedRawJson);
     ///
     /// getting api key...
@@ -29,19 +29,19 @@ void Seon::start(){
     request.setRawHeader("X-API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case EMAIL:
-            url.setUrl("https://api.seon.io/SeonRestService/email-api/v2.1/"+args->target);
+            url.setUrl("https://api.seon.io/SeonRestService/email-api/v2.1/"+target);
             break;
         case EMAIL_VERIFICATION:
-            url.setUrl("https://api.seon.io/SeonRestService/email-verification/v1.0/"+args->target);
+            url.setUrl("https://api.seon.io/SeonRestService/email-verification/v1.0/"+target);
             break;
         case PHONE:
-            url.setUrl("https://api.seon.io/SeonRestService/phone-api/v1.2/"+args->target);
+            url.setUrl("https://api.seon.io/SeonRestService/phone-api/v1.2/"+target);
             break;
         case IP:
-            url.setUrl("https://api.seon.io/SeonRestService/ip-api/v1.1/"+args->target);
+            url.setUrl("https://api.seon.io/SeonRestService/ip-api/v1.1/"+target);
             break;
         }
         request.setUrl(url);

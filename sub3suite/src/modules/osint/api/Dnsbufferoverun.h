@@ -19,7 +19,7 @@ struct Dnsbufferoverun{
 class Dnsbufferoverun: public AbstractOsintModule{
 
     public:
-        Dnsbufferoverun(ScanArgs *args);
+        Dnsbufferoverun(ScanArgs args);
         ~Dnsbufferoverun() override;
 
     public slots:

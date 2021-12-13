@@ -11,16 +11,16 @@
  * cdx uses ndjson...
  * maxItems set to 100...
  */
-Arquivo::Arquivo(ScanArgs *args): AbstractOsintModule(args)
+Arquivo::Arquivo(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Arquivo";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Arquivo::replyFinishedRawJson);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Arquivo::replyFinishedUrl);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Arquivo::replyFinishedSubdomain);
 }
 Arquivo::~Arquivo(){
@@ -31,13 +31,13 @@ void Arquivo::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case CDX_SERVER:
-            url.setUrl("https://arquivo.pt/wayback/cdx?url=*."+args->target+"&output=json");
+            url.setUrl("https://arquivo.pt/wayback/cdx?url=*."+target+"&output=json");
             break;
         case TEXTSEARCH:
-            url.setUrl("https://arquivo.pt/textsearch?q=*."+args->target+"&prettyPrint=false&maxItems=100");
+            url.setUrl("https://arquivo.pt/textsearch?q=*."+target+"&prettyPrint=false&maxItems=100");
             break;
         }
         request.setUrl(url);
@@ -46,9 +46,9 @@ void Arquivo::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputUrl || args->outputSubdomain){
-            url.setUrl("https://arquivo.pt/textsearch?q=*."+args->target+"&prettyPrint=false&maxItems=100");
+    if(args.inputDomain){
+        if(args.outputUrl || args.outputSubdomain){
+            url.setUrl("https://arquivo.pt/textsearch?q=*."+target+"&prettyPrint=false&maxItems=100");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

@@ -9,12 +9,12 @@
 #define WHOIS_HISTORY 5
 #define WHOIS_LOOKUP 6
 
-Whoxy::Whoxy(ScanArgs *args): AbstractOsintModule(args)
+Whoxy::Whoxy(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Whoxy";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Whoxy::replyFinishedRawJson);
     ///
     /// getting api key...
@@ -31,28 +31,28 @@ void Whoxy::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case ACCOUNT_BALANCE_CHECK:
             url.setUrl("http://api.whoxy.com/?key="+m_key+"&account=balance");
             break;
         case WHOIS_LOOKUP:
-            url.setUrl("http://api.whoxy.com/?key="+m_key+"&whois="+args->target+"&format=json");
+            url.setUrl("http://api.whoxy.com/?key="+m_key+"&whois="+target+"&format=json");
             break;
         case WHOIS_HISTORY:
-            url.setUrl("http://api.whoxy.com/?key="+m_key+"&history="+args->target+"&format=json");
+            url.setUrl("http://api.whoxy.com/?key="+m_key+"&history="+target+"&format=json");
             break;
         case REVERSE_WHOIS_NAME:
-            url.setUrl("http://api.whoxy.com/?key="+m_key+"&reverse=whois&name="+args->target+"&format=json");
+            url.setUrl("http://api.whoxy.com/?key="+m_key+"&reverse=whois&name="+target+"&format=json");
             break;
         case REVERSE_WHOIS_EMAIL:
-            url.setUrl("http://api.whoxy.com/?key="+m_key+"&reverse=whois&email="+args->target+"&format=json");
+            url.setUrl("http://api.whoxy.com/?key="+m_key+"&reverse=whois&email="+target+"&format=json");
             break;
         case REVERSE_WHOIS_COMPANY:
-            url.setUrl("http://api.whoxy.com/?key="+m_key+"&reverse=whois&company="+args->target+"&format=json");
+            url.setUrl("http://api.whoxy.com/?key="+m_key+"&reverse=whois&company="+target+"&format=json");
             break;
         case REVERSE_WHOIS_KEYWORD:
-            url.setUrl("http://api.whoxy.com/?key="+m_key+"&reverse=whois&keyword="+args->target+"&format=json");
+            url.setUrl("http://api.whoxy.com/?key="+m_key+"&reverse=whois&keyword="+target+"&format=json");
             break;
         }
         request.setUrl(url);

@@ -24,7 +24,7 @@ struct ArchiveIt{
 class ArchiveIt: public AbstractOsintModule{
 
     public:
-        ArchiveIt(ScanArgs *args);
+        ArchiveIt(ScanArgs args);
         ~ArchiveIt() override;
 
     public slots:

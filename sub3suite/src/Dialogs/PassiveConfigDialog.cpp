@@ -2,6 +2,7 @@
 #include "ui_PassiveConfigDialog.h"
 //...
 #include <QIntValidator>
+#include <QMessageBox>
 
 
 PassiveConfigDialog::PassiveConfigDialog(QWidget *parent) : QDialog(parent), ui(new Ui::PassiveConfigDialog)
@@ -34,4 +35,9 @@ PassiveConfigDialog::~PassiveConfigDialog(){
 
 void PassiveConfigDialog::on_buttonOk_clicked(){
 
+}
+
+void PassiveConfigDialog::on_checkBoxNoDuplicates_clicked(bool checked){
+    if(checked)
+        QMessageBox::warning(this, "Warning", "This option can be time-costly but results in no duplicates among results");
 }

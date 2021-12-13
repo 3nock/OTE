@@ -328,12 +328,12 @@
        <number>5</number>
       </property>
       <item>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="checkBoxMultipleTargets">
         <property name="text">
-         <string>Autosave to Project</string>
+         <string>Multiple Targets</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>

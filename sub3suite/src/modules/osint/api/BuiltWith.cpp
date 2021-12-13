@@ -10,12 +10,12 @@
  * for now only raw results...
  * for free api, 1 request per second...
  */
-BuiltWith::BuiltWith(ScanArgs *args): AbstractOsintModule(args)
+BuiltWith::BuiltWith(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "BuiltWith";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
     ///
     /// getting api key...
@@ -32,10 +32,10 @@ void BuiltWith::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case LOOKUP:
-            url.setUrl("https://api.builtwith.com/free1/api.json?KEY="+m_key+"&LOOKUP="+args->target);
+            url.setUrl("https://api.builtwith.com/free1/api.json?KEY="+m_key+"&LOOKUP="+target);
             break;
         }
         request.setUrl(url);

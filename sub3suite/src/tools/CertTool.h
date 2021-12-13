@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QSortFilterProxyModel>
-#include "src/models/certmodel.h"
+#include "src/models/CertModel.h"
 #include "src/modules/osint/OsintModulesHeaders.h"
 
 
@@ -21,14 +21,17 @@ class CertTool : public QDialog{
         void analyzeDomain(QString domain);
         void analyzeCert(QString cert);
 
+    signals:
+        void stopScanThread();
+        void pauseScanThread();
+
     private slots:
         void on_buttonStart_clicked();
         void on_checkBoxExpand_clicked(bool checked);
         void on_comboBoxTargetType_currentIndexChanged(int index);
-
         void on_buttonConfig_clicked();
 
-public slots:
+    public slots:
         void onResult(QByteArray results); // raw certificate in pem format...
         void onEnumerationComplete();
         //...
@@ -42,7 +45,6 @@ public slots:
         Ui::CertTool *ui;
         CertModel *m_model;
         QSortFilterProxyModel *m_proxyModel;
-        ScanArgs *m_args;
 
         /* for option combobox */
         QStringList m_protocals{"HTTPS", "SSH", "FTP"};

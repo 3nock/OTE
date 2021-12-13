@@ -47,7 +47,7 @@ struct HackerTargetFree{
 class HackerTargetFree: public AbstractOsintModule{
 
     public:
-        HackerTargetFree(ScanArgs *args);
+        HackerTargetFree(ScanArgs args);
         ~HackerTargetFree() override;
 
     public slots:

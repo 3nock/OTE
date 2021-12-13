@@ -13,16 +13,16 @@
  *   &limit=999999
  */
 
-Waybackmachine::Waybackmachine(ScanArgs *args): AbstractOsintModule(args)
+Waybackmachine::Waybackmachine(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "WaybackMachine";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Waybackmachine::replyFinishedRawJson);
-    if(args->outputUrl)
+    if(args.outputUrl)
         connect(manager, &NetworkAccessManager::finished, this, &Waybackmachine::replyFinishedUrl);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Waybackmachine::replyFinishedSubdomain);
 }
 Waybackmachine::~Waybackmachine(){
@@ -33,19 +33,19 @@ void Waybackmachine::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case MATCHTYPE_DOMAIN:
-            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&output=json&collapse=urlkey&url="+args->target);
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&output=json&collapse=urlkey&url="+target);
             break;
         case MATCHTYPE_EXACT:
-            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=exact&output=json&collapse=urlkey&url="+args->target);
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=exact&output=json&collapse=urlkey&url="+target);
             break;
         case MATCHTYPE_HOST:
-            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=host&output=json&collapse=urlkey&url="+args->target);
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=host&output=json&collapse=urlkey&url="+target);
             break;
         case MATCHTYPE_PREFIX:
-            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&output=json&collapse=urlkey&url="+args->target);
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&output=json&collapse=urlkey&url="+target);
             break;
         }
         request.setUrl(url);
@@ -54,15 +54,15 @@ void Waybackmachine::start(){
         return;
     }
 
-    if(args->inputDomain){
-        if(args->outputUrl){
-            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&fl=original&output=json&collapse=urlkey&url="+args->target);
+    if(args.inputDomain){
+        if(args.outputUrl){
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&fl=original&output=json&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args->outputSubdomain){
-            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=json&collapse=urlkey&url="+args->target);
+        if(args.outputSubdomain){
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=json&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

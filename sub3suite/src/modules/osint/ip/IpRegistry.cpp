@@ -8,12 +8,12 @@
 /*
  * starts with 100,000 free lookups...
  */
-IpRegistry::IpRegistry(ScanArgs *args): AbstractOsintModule(args)
+IpRegistry::IpRegistry(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "IpRegistry";
 
-    if(args->outputRaw)
+    if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &IpRegistry::replyFinishedRawJson);
     ///
     /// get api key...
@@ -30,13 +30,13 @@ void IpRegistry::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args->outputRaw){
-        switch (args->rawOption) {
+    if(args.outputRaw){
+        switch (args.rawOption) {
         case SINGLE_IP_LOOKUP:
-            url.setUrl("https://api.ipregistry.co/"+args->target+"?key="+m_key);
+            url.setUrl("https://api.ipregistry.co/"+target+"?key="+m_key);
             break;
         case BATCH_IP_LOOKUP:
-            url.setUrl("https://api.ipregistry.co/"+args->target+"?key="+m_key);
+            url.setUrl("https://api.ipregistry.co/"+target+"?key="+m_key);
             break;
         case ORIGIN_IP_LOOKUP:
             url.setUrl("https://api.ipregistry.co/?key="+m_key);

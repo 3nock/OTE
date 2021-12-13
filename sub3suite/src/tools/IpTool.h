@@ -15,6 +15,10 @@ class IpTool : public QDialog{
         explicit IpTool(QWidget *parent = nullptr);
         ~IpTool();
 
+    signals:
+        void stopScanThread();
+        void pauseScanThread();
+
     public slots:
         void onResult();
         //...
@@ -26,13 +30,11 @@ class IpTool : public QDialog{
     private slots:
         void on_checkBoxExpand_clicked(bool checked);
         void on_buttonStart_clicked();
-
         void on_buttonConfig_clicked();
 
-private:
+    private:
         Ui::IpTool *ui;
         IpModel *m_model;
-        ScanArgs *m_args = nullptr;
 };
 
 #endif // IPTOOL_H

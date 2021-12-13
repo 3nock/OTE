@@ -17,7 +17,7 @@ struct ZETAlytics{
 class ZETAlytics: public AbstractOsintModule{
 
     public:
-        ZETAlytics(ScanArgs *args);
+        ZETAlytics(ScanArgs args);
         ~ZETAlytics() override;
 
     public slots:

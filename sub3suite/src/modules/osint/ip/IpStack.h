@@ -25,7 +25,7 @@ struct IpStack{
 class IpStack: public AbstractOsintModule{
 
     public:
-        IpStack(ScanArgs *args);
+        IpStack(ScanArgs args);
         ~IpStack() override;
 
     public slots:

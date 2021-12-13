@@ -4,16 +4,16 @@
 /*
  * use regex for some queries
  */
-Crtsh::Crtsh(ScanArgs *args): AbstractOsintModule(args)
+Crtsh::Crtsh(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
     log.moduleName = "Crtsh";
 
-    if(args->outputInfo)
+    if(args.outputInfo)
         connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedInfo);
-    if(args->outputSSLCert)
+    if(args.outputSSLCert)
         connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedSSLCert);
-    if(args->outputSubdomain)
+    if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedSubdomain);
 }
 Crtsh::~Crtsh(){
@@ -22,7 +22,7 @@ Crtsh::~Crtsh(){
 
 void Crtsh::start(){
     QNetworkRequest request;
-    QUrl url("https://crt.sh/?q="+args->target);
+    QUrl url("https://crt.sh/?q="+target);
     request.setUrl(url);
     manager->get(request);
     activeRequests++;
@@ -34,7 +34,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    if(args->inputDomain){
+    if(args.inputDomain){
         /* a stack for storing the GumboNodes for parsing by backtracking... */
         QStack<GumboNode*> m_nodes;
         /* getting the body node... */
@@ -71,7 +71,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
         gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
 
-    if(args->inputSSLCert)
+    if(args.inputSSLCert)
     {
         if(m_queryToGetId)
             m_getCertId(reply); // get the crtsh certificate id and request to download the certificate...
