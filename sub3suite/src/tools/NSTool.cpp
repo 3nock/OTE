@@ -1,6 +1,6 @@
 #include "NSTool.h"
 #include "ui_NSTool.h"
-//...
+
 #include "src/dialogs/PassiveConfigDialog.h"
 
 

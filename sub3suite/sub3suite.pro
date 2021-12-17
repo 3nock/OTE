@@ -175,7 +175,6 @@ SOURCES += \
     src/engines/records/DnsRecords.cpp \
     src/engines/brute/Brute.cpp \
     src/engines/osint/Osint.cpp \
-    src/engines/AbstractEngine.cpp \
     src/project/general/GeneralAnalysis.cpp \
     src/project/specific/SpecificAnalysis.cpp \
     src/project/ProjectDataModel.cpp \

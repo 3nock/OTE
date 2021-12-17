@@ -1,10 +1,9 @@
 #include "BannerScanner.h"
 
 
-banner::Scanner::Scanner(ScanConfig *scanConfig, banner::ScanArguments *scanArguments)
+banner::Scanner::Scanner(banner::ScanArgs *args)
     : AbstractScanner (nullptr),
-      m_config(scanConfig),
-      m_args(scanArguments),
+      m_args(args),
       m_socket(new QTcpSocket(this))
 {
 }
@@ -13,9 +12,7 @@ banner::Scanner::~Scanner(){
 }
 
 void banner::Scanner::lookup(){
-    ///
-    /// getting service type...
-    ///
+    /* getting service type... */
     quint16 service = NULL;
     if(m_args->http)
         service = 80;
@@ -28,21 +25,17 @@ void banner::Scanner::lookup(){
     if(m_args->smtp)
         service = 25;
 
-    ///
-    /// getting target type and establishing connection...
-    ///
+    /* getting target type and establishing connection... */
     if(m_args->hostname)
         m_socket->connectToHost(m_args->target, service);
     if(m_args->ipaddress)
         m_socket->connectToHost(QHostAddress(m_args->target), service);
 
-    ///
-    /// reading response...
-    ///
-    if(m_socket->waitForConnected(m_config->timeout))
+    /* reading response...*/
+    if(m_socket->waitForConnected(m_args->config->timeout))
     {
         m_socket->write("HEAD / HTTP/1.1");
-        if(m_socket->waitForReadyRead(m_config->timeout)){
+        if(m_socket->waitForReadyRead(m_args->config->timeout)){
             emit scanResultBanner(m_socket->readAll());
         }
         m_socket->close();

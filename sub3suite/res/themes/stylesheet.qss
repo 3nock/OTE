@@ -314,7 +314,7 @@ QMenuBar {
 }
 
 QMenu {
-    min-width: 60px;
+    min-width: 100px;
     border-style: solid;
     border-color: black;
     border-width: 1px;

@@ -1,6 +1,6 @@
 #include "CidrTool.h"
 #include "ui_CidrTool.h"
-//...
+
 #include "src/utils/Definitions.h"
 #include "src/dialogs/PassiveConfigDialog.h"
 

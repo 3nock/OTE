@@ -2,9 +2,8 @@
 #include <QDnsLookup>
 
 
-records::Scanner::Scanner(ScanConfig *scanConfig, records::ScanArguments *scanArguments)
-    : m_scanConfig(scanConfig),
-      m_scanArguments(scanArguments),
+records::Scanner::Scanner(records::ScanArgs *args)
+    : m_args(args),
       m_dns_srv(new QDnsLookup(this)),
       m_dns_a(new QDnsLookup(this)),
       m_dns_aaaa(new QDnsLookup(this)),
@@ -15,7 +14,7 @@ records::Scanner::Scanner(ScanConfig *scanConfig, records::ScanArguments *scanAr
 {
     connect(this, SIGNAL(doLookup()), this, SLOT(lookup()));
     connect(this, SIGNAL(doLookup_srv()), this, SLOT(lookup_srv()));
-    //...
+
     m_dns_srv->setType(QDnsLookup::SRV);
     m_dns_a->setType(QDnsLookup::A);
     m_dns_aaaa->setType(QDnsLookup::AAAA);
@@ -23,15 +22,15 @@ records::Scanner::Scanner(ScanConfig *scanConfig, records::ScanArguments *scanAr
     m_dns_ns->setType(QDnsLookup::NS);
     m_dns_txt->setType(QDnsLookup::TXT);
     m_dns_cname->setType(QDnsLookup::CNAME);
-    //...
-    m_dns_srv->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    m_dns_a->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    m_dns_a->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    m_dns_mx->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    m_dns_ns->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    m_dns_txt->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    m_dns_cname->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    //...
+
+    m_dns_srv->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+    m_dns_a->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+    m_dns_a->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+    m_dns_mx->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+    m_dns_ns->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+    m_dns_txt->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+    m_dns_cname->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+
     connect(m_dns_srv, SIGNAL(finished()), this, SLOT(srvLookupFinished()));
     connect(m_dns_a, SIGNAL(finished()), this, SLOT(aLookupFinished()));
     connect(m_dns_aaaa, SIGNAL(finished()), this, SLOT(aaaaLookupFinished()));
@@ -56,112 +55,96 @@ void records::Scanner::startScan_srv(QThread *cThread){
 }
 
 void records::Scanner::lookup(){
-    ///
-    /// ...
-    ///
-    m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
-    m_scanArguments->currentTargetToEnumerate++;
-    ///
-    /// ...
-    ///
-    if(m_currentTargetToEnumerate < m_scanArguments->targetList.count())
+    /* ... */
+    m_currentTargetToEnumerate = m_args->currentTargetToEnumerate;
+    m_args->currentTargetToEnumerate++;
+
+    /* ... */
+    if(m_currentTargetToEnumerate < m_args->targetList.count())
     {
-        m_currentTarget = m_scanArguments->targetList.at(m_currentTargetToEnumerate);
+        m_currentTarget = m_args->targetList.at(m_currentTargetToEnumerate);
         m_results.domain = m_currentTarget;
         hasAtleastOneRecord = false;
-        ///
-        /// ...
-        ///
-        if(m_scanArguments->RecordType_a)
+
+        if(m_args->RecordType_a)
         {
             m_results.A.clear();
-            //...
+
             m_dns_a->setName(m_currentTarget);
             m_dns_a->lookup();
             m_activeLookups++;
         }
-        if(m_scanArguments->RecordType_aaaa)
+        if(m_args->RecordType_aaaa)
         {
             m_results.AAAA.clear();
-            //...
+
             m_dns_aaaa->setName(m_currentTarget);
             m_dns_aaaa->lookup();
             m_activeLookups++;
         }
-        if(m_scanArguments->RecordType_mx)
+        if(m_args->RecordType_mx)
         {
             m_results.MX.clear();
-            //...
+
             m_dns_mx->setName(m_currentTarget);
             m_dns_mx->lookup();
             m_activeLookups++;
         }
-        if(m_scanArguments->RecordType_ns)
+        if(m_args->RecordType_ns)
         {
             m_results.NS.clear();
-            //...
+
             m_dns_ns->setName(m_currentTarget);
             m_dns_ns->lookup();
             m_activeLookups++;
         }
-        if(m_scanArguments->RecordType_txt)
+        if(m_args->RecordType_txt)
         {
             m_results.TXT.clear();
-            //...
+
             m_dns_txt->setName(m_currentTarget);
             m_dns_txt->lookup();
             m_activeLookups++;
         }
-        if(m_scanArguments->RecordType_cname)
+        if(m_args->RecordType_cname)
         {
             m_results.CNAME.clear();
-            //...
+
             m_dns_cname->setName(m_currentTarget);
             m_dns_cname->lookup();
             m_activeLookups++;
         }
     }
     else
-    {
-        ///
-        /// No More wordlist to enumerate, enumeration Complete...
-        ///
+        /* No More wordlist to enumerate, enumeration Complete... */
         emit quitThread();
-    }
 }
 
 void records::Scanner::lookup_srv(){
-    ///
-    /// ...
-    ///
-    m_currentSrvToEnumerate = m_scanArguments->currentSrvToEnumerate;
-    m_currentTargetToEnumerate = m_scanArguments->currentTargetToEnumerate;
-    m_scanArguments->currentSrvToEnumerate++;
-    ///
-    /// ...
-    ///
-    if(m_currentSrvToEnumerate < m_scanArguments->srvWordlist.count())
+    /* ... */
+    m_currentSrvToEnumerate = m_args->currentSrvToEnumerate;
+    m_currentTargetToEnumerate = m_args->currentTargetToEnumerate;
+    m_args->currentSrvToEnumerate++;
+
+    /* ... */
+    if(m_currentSrvToEnumerate < m_args->srvWordlist.count())
     {
-        m_currentTarget = m_scanArguments->srvWordlist.at(m_currentSrvToEnumerate)+"."+m_scanArguments->targetList.at(m_currentTargetToEnumerate);
-        m_results.domain = m_scanArguments->targetList.at(m_currentTargetToEnumerate);
+        m_currentTarget = m_args->srvWordlist.at(m_currentSrvToEnumerate)+"."+m_args->targetList.at(m_currentTargetToEnumerate);
+        m_results.domain = m_args->targetList.at(m_currentTargetToEnumerate);
         m_dns_srv->setName(m_currentTarget);
         m_dns_srv->lookup();
     }
-    ///
-    /// reached end of the wordlist...
-    ///
+    /* reached end of the wordlist... */
     else
     {
-        if(m_scanArguments->currentTargetToEnumerate < m_scanArguments->targetList.count()-1)
+        if(m_args->currentTargetToEnumerate < m_args->targetList.count()-1)
         {
-            m_scanArguments->currentTargetToEnumerate++;
-            m_scanArguments->currentSrvToEnumerate = 0;
+            m_args->currentTargetToEnumerate++;
+            m_args->currentSrvToEnumerate = 0;
             emit doLookup_srv();
         }
         else
-        {
             emit quitThread();
-        }
     }
 }
 
@@ -179,20 +162,21 @@ void records::Scanner::srvLookupFinished(){
             }
         }
     }
-    m_scanArguments->progress++;
-    emit scanProgress(m_scanArguments->progress);
+
+    m_args->progress++;
+    emit scanProgress(m_args->progress);
     emit doLookup_srv();
 }
 
-/******************************************************************************/
 void records::Scanner::finish(){
     m_activeLookups--;
     if(m_activeLookups == 0)
     {
         if(hasAtleastOneRecord)
             emit scanResult(m_results);
-        m_scanArguments->progress++;
-        emit scanProgress(m_scanArguments->progress);
+
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
         emit doLookup();
     }
 }

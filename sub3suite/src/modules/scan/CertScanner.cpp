@@ -4,7 +4,7 @@
 /*
  * implement use of different protocals that use TLS...
  */
-certificate::Scanner::Scanner(certificate::ScanArguments *args): AbstractScanner (nullptr),
+certificate::Scanner::Scanner(certificate::ScanArgs *args): AbstractScanner (nullptr),
     m_args(args)
 {
 }
@@ -14,16 +14,14 @@ certificate::Scanner::~Scanner(){
 void certificate::Scanner::lookup(){
     QSslSocket socket;
 
-    ///
-    /// for single target...
-    ///
+    /* for single target... */
     if(m_args->singleTarget)
     {
         /* making a blocking connection to domain/ip target provided */
         socket.connectToHostEncrypted(m_args->target, 443);
 
         /* waiting SSL-handshake to finish, if done emit the acquired target's ssl-cert */
-        if(!socket.waitForEncrypted(m_args->timeout*1000))
+        if(!socket.waitForEncrypted(m_args->config->timeout))
             emit errorLog(socket.errorString());
         else
         {
@@ -52,16 +50,14 @@ void certificate::Scanner::lookup(){
         return;
     }
 
-    ///
-    /// for multiple targets...
-    ///
+    /* for multiple targets... */
     while(!m_args->targetList.isEmpty())
     {
         /* making a blocking connection to domain/ip target provided */
         socket.connectToHostEncrypted(m_args->targetList.pop(), 443);
 
         /* waiting SSL-handshake to finish, if done emit the acquired target's ssl-cert */
-        if(!socket.waitForEncrypted(m_args->timeout*1000))
+        if(!socket.waitForEncrypted(m_args->config->timeout))
             emit errorLog(socket.errorString());
 
         else
@@ -82,6 +78,7 @@ void certificate::Scanner::lookup(){
             }
             socket.close();
         }
+
         /* scan progress */
         m_args->progress++;
         emit scanProgress(m_args->progress);

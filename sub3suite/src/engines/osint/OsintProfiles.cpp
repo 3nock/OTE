@@ -1,6 +1,6 @@
 #include "Osint.h"
 #include "ui_Osint.h"
-//...
+
 #include <QSettings>
 #include "src/utils/utils.h"
 #include "src/utils/Config.h"
@@ -785,7 +785,7 @@ void Osint::on_buttonDeleteProfile_clicked(){
     ui->comboBoxProfiles->removeItem(ui->comboBoxProfiles->currentIndex());
 }
 
-void Osint::initProfiles(){
+void Osint::m_initProfiles(){
     int size = Config::generalConfig().beginReadArray("Osint-Profiles");
     for(int i = 0; i < size; i++){
         Config::generalConfig().setArrayIndex(i);

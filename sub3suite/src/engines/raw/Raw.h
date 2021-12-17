@@ -25,6 +25,9 @@ class Raw : public AbstractEngine{
                      Status *status = nullptr);
         ~Raw();
 
+    signals:
+        void stopScanThread();
+
     public slots:
         void onEnumerationComplete();
         void onRateLimitLog(ScanLog log);
@@ -33,22 +36,38 @@ class Raw : public AbstractEngine{
         //...
         void onResults(QByteArray); // for Json results
         void onResultsTxt(QByteArray); // for normal txt results
+        /* receiving targets from other engines */
+        void onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
 
-    signals:
-        void stopScanThread();
+    private slots:
+        void onOpenInBrowser(QItemSelectionModel*);
+        void onClearResults();
+        void onRemoveResults(QItemSelectionModel*);
+        void onExpandResults();
+        void onCollapseResults();
+        void onSaveResultsJson();
+        void onSaveResults(RESULT_TYPE);
+        void onSaveResults(QItemSelectionModel*);
+        void onCopyResultsJson();
+        void onCopyResults(RESULT_TYPE);
+        void onCopyResults(QItemSelectionModel*);
 
     private slots:
         void on_buttonStart_clicked();
         void on_comboBoxOptions_currentIndexChanged(const QString &arg1);
-        ///
-        /// for Find...
-        ///
+        void on_buttoApiKeys_clicked();
+        void on_buttonConfig_clicked();
+        void on_buttonActionJson_clicked();
+        void on_buttonActionTree_clicked();
+        void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
+
+        /* for Find... */
         void on_buttonNext_clicked();
         void on_buttonPrev_clicked();
         void on_lineEditFind_textEdited(const QString &arg1);
-        ///
-        /// modules...
-        ///
+
+        /* modules... */
         void on_moduleCertspotter_clicked();
         void on_moduleOtx_clicked();
         void on_moduleSublist3r_clicked();
@@ -130,13 +149,16 @@ class Raw : public AbstractEngine{
         void on_moduleIpQualityScore_clicked();
         void on_moduleLeakLookup_clicked();
 
-        void on_buttoApiKeys_clicked();
-
-        void on_buttonConfig_clicked();
-
     private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
+        //...
+        QStringListModel *m_targetListModelHostname;
+        QStringListModel *m_targetListModelIp;
+        QStringListModel *m_targetListModelAsn;
+        QStringListModel *m_targetListModelCidr;
+        QStringListModel *m_targetListModelCert;
+        QStringListModel *m_targetListModelEmail;
         //...
         QMap<QString, QStringList> m_optionSet;
         JsonSyntaxHighlighter *m_jsonSyntaxHighlighter;
@@ -148,12 +170,11 @@ class Raw : public AbstractEngine{
         QString m_currentModule;
         QString m_currentTarget;
         //...
-        void onCopy();
-        void onSave();
-        void onClear();
-        //...
-        void startScan();
-        void startScanThread(AbstractOsintModule *);
+        void m_startScan();
+        void m_pauseScan();
+        void m_resumeScan();
+        void m_stopScan();
+        void m_startScanThread(AbstractOsintModule *);
         //...
         void setJsonText(QJsonDocument &document);
         void setJsonTree(QJsonDocument &document);
@@ -164,6 +185,69 @@ class Raw : public AbstractEngine{
         //...
         void m_errorLog(QString log);
         void m_infoLog(QString log);
+        void m_initActions();
+
+    protected:
+        /* general actions */
+        QAction a_RemoveResults{"Remove"};
+        QAction a_ClearResults{"Clear Results"};
+        QAction a_OpenInBrowser{"Open in Browser"};
+        QAction a_ExpandResults{"Expand Results"};
+        QAction a_CollapseResults{"Collapse Results"};
+
+        /* action button */
+        QAction a_SendIpToIp{"Send Addresses To Ip"};
+        QAction a_SendIpToOsint{"Send Addresses To Osint"};
+        QAction a_SendIpToRaw{"Send Address To Raw"};
+        QAction a_SendHostToOsint{"Send Hostnames To Osint"};
+        QAction a_SendHostToRaw{"Send Hostnames To Raw"};
+        QAction a_SendHostToBrute{"Send Hostnames To Brute"};
+        QAction a_SendHostToActive{"Send Hostnames To Active"};
+        QAction a_SendHostToDns{"Send Hostnames To Records"};
+        QAction a_SendHostToCert{"Send Hostnames To Cert"};
+        QAction a_SendCertToOsint{"Send Cert To Osint"};
+        QAction a_SendAsnToOsint{"Send ASN To Osint"};
+        QAction a_SendEmailToOsint{"Send Email To Osint"};
+        QAction a_SendCidrToOsint{"Send Cidr To Osint"};
+        QAction a_SendIpToIpTool{"Send Addresses To IpTool"};
+        QAction a_SendHostToCertTool{"Send Hostnames To CertTool"};
+        QAction a_SendHostToDomainTool{"Send Hostnames To DomainTool"};
+        QAction a_SendAsnToAsnTool{"Send ASN to ASNTool"};
+        QAction a_SendCertToCertTool{"Send Cert To CertTool"};
+        QAction a_SendCidrToCidrTool{"Send Cidr To CidrTool"};
+        QAction a_SendEmailToEmailTool{"Send Emails To EmailTool"};
+        QAction a_SendMXToMXTool{"Send MX to MXTool"};
+        QAction a_SendNSToNSTool{"Send NS to NSTool"};
+        /* Right-Click */
+        QAction a_SendSelectedIpToIp{"Send Addresses To Ip"};
+        QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
+        QAction a_SendSelectedIpToRaw{"Send Address To Raw"};
+        QAction a_SendSelectedHostToOsint{"Send Hostnames To Osint"};
+        QAction a_SendSelectedHostToRaw{"Send Hostnames To Raw"};
+        QAction a_SendSelectedHostToBrute{"Send Hostnames To Brute"};
+        QAction a_SendSelectedHostToActive{"Send Hostnames To Active"};
+        QAction a_SendSelectedHostToDns{"Send Hostnames To Records"};
+        QAction a_SendSelectedHostToCert{"Send Hostnames To Cert"};
+        QAction a_SendSelectedCertToOsint{"Send Cert To Osint"};
+        QAction a_SendSelectedAsnToOsint{"Send ASN To Osint"};
+        QAction a_SendSelectedEmailToOsint{"Send Email To Osint"};
+        QAction a_SendSelectedCidrToOsint{"Send Cidr To Osint"};
+        QAction a_SendSelectedIpToIpTool{"Send Addresses To IpTool"};
+        QAction a_SendSelectedHostToCertTool{"Send Hostnames To CertTool"};
+        QAction a_SendSelectedHostToDomainTool{"Send Hostnames To DomainTool"};
+        QAction a_SendSelectedAsnToAsnTool{"Send ASN to ASNTool"};
+        QAction a_SendSelectedCertToCertTool{"Send Cert To CertTool"};
+        QAction a_SendSelectedCidrToCidrTool{"Send Cidr To CidrTool"};
+        QAction a_SendSelectedEmailToEmailTool{"Send Emails To EmailTool"};
+        QAction a_SendSelectedMXToMXTool{"Send MX to MXTool"};
+        QAction a_SendSelectedNSToNSTool{"Send NS to NSTool"};
+
+        /* save */
+        QAction a_Save{"Save"};
+        QAction a_SaveJson{"Save as Json"};
+        /* copy */
+        QAction a_Copy{"Copy"};
+        QAction a_CopyJson{"Copy as Json"};
 };
 
 #endif // Raw_H

@@ -4,22 +4,33 @@
 #include "AbstractScanner.h"
 #include <QHostInfo>
 
-namespace ipEngine{
+namespace ip{
 
-struct ScanArguments{
+struct ScanConfig{
+    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
+    bool useCustomNameServers = false;
+    QStringList customNameServers;
+    int threadsCount = 50;
+    int timeout = 3000;
+
+    bool checkWildcard = false;
+    bool hasWildcard = false;
+};
+
+struct ScanArgs{
+    ip::ScanConfig *config;
     QStringList targetList;
-    //...
+
     int progress;
     int currentTargetToEnumerate;
 };
-typedef struct ScanArguments ScanArguments;
 
 
 class Scanner : public AbstractScanner{
     Q_OBJECT
 
     public:
-        Scanner(ScanConfig *scanConfig, ipEngine::ScanArguments *scanArguments);
+        Scanner(ip::ScanArgs *args);
         ~Scanner() override;
 
     private slots:
@@ -32,10 +43,7 @@ class Scanner : public AbstractScanner{
 
     private:
         int m_currentTargetToEnumerate = 0;
-        //...
-        ScanConfig *m_scanConfig;
-        ipEngine::ScanArguments *m_scanArguments;
-        //...
+        ip::ScanArgs *m_args;
         QHostInfo *hostInfo;
 };
 }

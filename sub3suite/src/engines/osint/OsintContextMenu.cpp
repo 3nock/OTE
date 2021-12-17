@@ -1,218 +1,320 @@
 #include "Osint.h"
 #include "ui_Osint.h"
-//...
+
 #include <QClipboard>
 
-/*
- * implement for cidr
- */
-void Osint::connectActions(){
-    connect(&actionClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
-    ///
-    /// SAVE...
-    ///
-    connect(&actionSaveSubdomains, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy);});
-    connect(&actionSaveIpAddresses, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ip, PROXYMODEL_TYPE::subdomainIpProxy);});
-    connect(&actionSaveAll, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomainIp, PROXYMODEL_TYPE::subdomainIpProxy);});
-    connect(&actionSaveEmails, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::email, PROXYMODEL_TYPE::emailProxy);});
-    connect(&actionSaveUrls, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::url, PROXYMODEL_TYPE::urlProxy);});
-    connect(&actionSaveAsns, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::asn, PROXYMODEL_TYPE::asnProxy);});
-    connect(&actionSaveCerts, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::cert, PROXYMODEL_TYPE::sslCertProxy);});
-    //...
-    connect(&actionSaveSubdomains_subdomain, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy);});
-    connect(&actionSaveIpAddresses_ip, &QAction::triggered, this, [=](){this->onSaveResults(CHOICE::ip, PROXYMODEL_TYPE::ipProxy);});
 
-    ///
-    /// COPY...
-    ///
-    connect(&actionCopySubdomains, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy);});
-    connect(&actionCopyIpAddresses, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ip, PROXYMODEL_TYPE::subdomainIpProxy);});
-    connect(&actionCopyAll, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomainIp, PROXYMODEL_TYPE::subdomainIpProxy);});
-    connect(&actionCopyEmails, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::email, PROXYMODEL_TYPE::emailProxy);});
-    connect(&actionCopyUrls, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::url, PROXYMODEL_TYPE::urlProxy);});
-    connect(&actionCopyAsns, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::asn, PROXYMODEL_TYPE::asnProxy);});
-    connect(&actionCopyCerts, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::cert, PROXYMODEL_TYPE::sslCertProxy);});
-    //...
-    connect(&actionCopySubdomains_subdomain, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy);});
-    connect(&actionCopyIpAddresses_ip, &QAction::triggered, this, [=](){this->onCopyResults(CHOICE::ip, PROXYMODEL_TYPE::ipProxy);});
-    ///
-    /// SUBDOMAINS AND IPS...
-    ///
-    connect(&actionSendToIp, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::OSINT, CHOICE::ip, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToIp();});
-    connect(&actionSendToOsint, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToOsint();});
-    connect(&actionSendToBrute, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToBrute();});
-    connect(&actionSendToActive, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToActive();});
-    connect(&actionSendToRecords, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToRecords();});
-    connect(&actionSendToCert, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainIpProxy); emit changeTabToCert();});
-    //...
-    connect(&actionSendToIp_ip, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(ENGINE::OSINT, CHOICE::ip, PROXYMODEL_TYPE::ipProxy); emit changeTabToIp();});
-    connect(&actionSendToOsint_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToOsint();});
-    connect(&actionSendToBrute_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToBrute();});
-    connect(&actionSendToActive_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToActive();});
-    connect(&actionSendToRecords_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToRecords();});
-    connect(&actionSendToCert_subdomain, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(ENGINE::OSINT, CHOICE::subdomain, PROXYMODEL_TYPE::subdomainProxy); emit changeTabToCert();});
-    /**** For Right-Click ContextMenu ****/
-    connect(&actionSave, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
-    connect(&actionCopy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
-    //...
-    connect(&actionOpenInBrowser, &QAction::triggered, this, [=](){this->openInBrowser(selectionModel);});
-    //...
-    connect(&actionSendToOsint_c, &QAction::triggered, this, [=](){emit sendSubdomainsToOsint(selectionModel); emit changeTabToOsint();});
-    connect(&actionSendToIp_c, &QAction::triggered, this, [=](){emit sendIpAddressesToIp(selectionModel); emit changeTabToIp();});
-    connect(&actionSendToBrute_c, &QAction::triggered, this, [=](){emit sendSubdomainsToBrute(selectionModel); emit changeTabToBrute();});
-    connect(&actionSendToActive_c, &QAction::triggered, this, [=](){emit sendSubdomainsToActive(selectionModel); emit changeTabToActive();});
-    connect(&actionSendToRecords_c, &QAction::triggered, this, [=](){emit sendSubdomainsToRecord(selectionModel); emit changeTabToRecords();});
-    connect(&actionSendToCert_c, &QAction::triggered, this, [=](){emit sendSubdomainsToCert(selectionModel); emit changeTabToCert();});
+void Osint::m_initActions(){
+    connect(&a_ClearResults, &QAction::triggered, this, [=](){this->onClearResults();});
+    connect(&a_RemoveResults, &QAction::triggered, this, [=](){this->onRemoveResults(selectionModel);});
+    connect(&a_OpenInBrowser, &QAction::triggered, this, [=](){this->onOpenInBrowser(selectionModel);});
+    /* ... */
+    connect(&a_SendIpToIpFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToIp(ENGINE::OSINT, RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToIp();});
+    connect(&a_SendIpToIpFromIp, &QAction::triggered, this, [=](){emit sendResultsToIp(ENGINE::OSINT, RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP); emit changeTabToIp();});
+    connect(&a_SendIpToOsintFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToOsint(ENGINE::OSINT, RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToOsint();});
+    connect(&a_SendIpToOsintFromIp, &QAction::triggered, this, [=](){emit sendResultsToOsint(ENGINE::OSINT, RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP); emit changeTabToOsint();});
+    connect(&a_SendIpToRawFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToRaw();});
+    connect(&a_SendIpToRawFromIp, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP); emit changeTabToRaw();});
+    connect(&a_SendHostToOsintFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToOsint(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToOsint();});
+    connect(&a_SendHostToOsintFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToOsint(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToOsint();});
+    connect(&a_SendHostToRawFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToRaw();});
+    connect(&a_SendHostToRawFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToRaw();});
+    connect(&a_SendHostToBruteFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToBrute(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToBrute();});
+    connect(&a_SendHostToBruteFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToBrute(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToBrute();});
+    connect(&a_SendHostToActiveFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToActive(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToActive();});
+    connect(&a_SendHostToActiveFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToActive(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToActive();});
+    connect(&a_SendHostToDnsFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToDns(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToDns();});
+    connect(&a_SendHostToDnsFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToDns(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToDns();});
+    connect(&a_SendHostToCertFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToCert(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToCert();});
+    connect(&a_SendHostToCertFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToCert(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToCert();});
+    connect(&a_SendEmailToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::EMAIL, RESULT_MODEL_TYPE::EMAIL); emit changeTabToRaw();});
+    connect(&a_SendUrlToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::URL, RESULT_MODEL_TYPE::URL); emit changeTabToRaw();});
+    connect(&a_SendAsnToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::ASN, RESULT_MODEL_TYPE::ASN); emit changeTabToRaw();});
+    connect(&a_SendCidrToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::CIDR, RESULT_MODEL_TYPE::CIDR); emit changeTabToRaw();});
+    connect(&a_SendCertToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(ENGINE::OSINT, RESULT_TYPE::CERT_ID, RESULT_MODEL_TYPE::CERT_ID); emit changeTabToRaw();});
+    connect(&a_SendIpToIpToolFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToIpTool(ENGINE::OSINT, RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SendIpToIpToolFromIp, &QAction::triggered, this, [=](){emit sendResultsToIpTool(ENGINE::OSINT, RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP);});
+    connect(&a_SendHostToCertToolFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToCertTool(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SendHostToCertToolFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToCertTool(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN);});
+    connect(&a_SendHostToDomainToolFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToDomainTool(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SendHostToDomainToolFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToDomainTool(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN);});
+    connect(&a_SendAsnToAsnTool, &QAction::triggered, this, [=](){emit sendResultsToASNTool(ENGINE::OSINT, RESULT_TYPE::ASN, RESULT_MODEL_TYPE::ASN);});
+    connect(&a_SendEmailToEmailTool, &QAction::triggered, this, [=](){emit sendResultsToEmailTool(ENGINE::OSINT, RESULT_TYPE::EMAIL, RESULT_MODEL_TYPE::EMAIL);});
+    connect(&a_SendCidrToCidrTool, &QAction::triggered, this, [=](){emit sendResultsToCidrTool(ENGINE::OSINT, RESULT_TYPE::CIDR, RESULT_MODEL_TYPE::CIDR);});
+    connect(&a_SendCertToCertTool, &QAction::triggered, this, [=](){emit sendResultsToCertTool(ENGINE::OSINT, RESULT_TYPE::CERT_ID, RESULT_MODEL_TYPE::CERT_ID);});
+    /* ... */
+    connect(&a_SendSelectedIpToIpFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToIp(selectionModel, RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToIp();});
+    connect(&a_SendSelectedIpToIpFromIp, &QAction::triggered, this, [=](){emit sendResultsToIp(selectionModel, RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP); emit changeTabToIp();});
+    connect(&a_SendSelectedIpToOsintFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToOsint(selectionModel, RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToOsint();});
+    connect(&a_SendSelectedIpToOsintFromIp, &QAction::triggered, this, [=](){emit sendResultsToOsint(selectionModel, RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP); emit changeTabToOsint();});
+    connect(&a_SendSelectedIpToRawFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToRaw();});
+    connect(&a_SendSelectedIpToRawFromIp, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP); emit changeTabToRaw();});
+    connect(&a_SendSelectedHostToOsintFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToOsint(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToOsint();});
+    connect(&a_SendSelectedHostToOsintFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToOsint(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToOsint();});
+    connect(&a_SendSelectedHostToRawFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToRaw();});
+    connect(&a_SendSelectedHostToRawFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToRaw();});
+    connect(&a_SendSelectedHostToBruteFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToBrute(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToBrute();});
+    connect(&a_SendSelectedHostToBruteFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToBrute(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToBrute();});
+    connect(&a_SendSelectedHostToActiveFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToActive(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToActive();});
+    connect(&a_SendSelectedHostToActiveFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToActive(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToActive();});
+    connect(&a_SendSelectedHostToDnsFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToDns(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToDns();});
+    connect(&a_SendSelectedHostToDnsFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToDns(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToDns();});
+    connect(&a_SendSelectedHostToCertFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToCert(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP); emit changeTabToCert();});
+    connect(&a_SendSelectedHostToCertFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToCert(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN); emit changeTabToCert();});
+    connect(&a_SendSelectedEmailToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::EMAIL, RESULT_MODEL_TYPE::EMAIL); emit changeTabToRaw();});
+    connect(&a_SendSelectedUrlToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::URL, RESULT_MODEL_TYPE::URL); emit changeTabToRaw();});
+    connect(&a_SendSelectedAsnToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::ASN, RESULT_MODEL_TYPE::ASN); emit changeTabToRaw();});
+    connect(&a_SendSelectedCidrToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::CIDR, RESULT_MODEL_TYPE::CIDR); emit changeTabToRaw();});
+    connect(&a_SendSelectedCertToRaw, &QAction::triggered, this, [=](){emit sendResultsToRaw(selectionModel, RESULT_TYPE::CERT_ID, RESULT_MODEL_TYPE::CERT_ID); emit changeTabToRaw();});
+    connect(&a_SendSelectedIpToIpToolFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToIpTool(selectionModel, RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SendSelectedIpToIpToolFromIp, &QAction::triggered, this, [=](){emit sendResultsToIpTool(selectionModel, RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP);});
+    connect(&a_SendSelectedHostToCertToolFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToCertTool(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SendSelectedHostToCertToolFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToCertTool(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN);});
+    connect(&a_SendSelectedHostToDomainToolFromSubdomainIp, &QAction::triggered, this, [=](){emit sendResultsToDomainTool(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SendSelectedHostToDomainToolFromSubdomain, &QAction::triggered, this, [=](){emit sendResultsToDomainTool(selectionModel, RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN);});
+    connect(&a_SendSelectedAsnToAsnTool, &QAction::triggered, this, [=](){emit sendResultsToASNTool(selectionModel, RESULT_TYPE::ASN, RESULT_MODEL_TYPE::ASN);});
+    connect(&a_SendSelectedEmailToEmailTool, &QAction::triggered, this, [=](){emit sendResultsToEmailTool(selectionModel, RESULT_TYPE::EMAIL, RESULT_MODEL_TYPE::EMAIL);});
+    connect(&a_SendSelectedCidrToCidrTool, &QAction::triggered, this, [=](){emit sendResultsToCidrTool(selectionModel, RESULT_TYPE::CIDR, RESULT_MODEL_TYPE::CIDR);});
+    connect(&a_SendSelectedCertToCertTool, &QAction::triggered, this, [=](){emit sendResultsToCertTool(selectionModel, RESULT_TYPE::CERT_ID, RESULT_MODEL_TYPE::CERT_ID);});
+    /* ... */
+    connect(&a_Save, &QAction::triggered, this, [=](){this->onSaveResults(selectionModel);});
+    connect(&a_SaveSubdomainIp, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::SUBDOMAINIP, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SaveSubdomainFromSubdomainIp, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SaveSubdomainFromSubdomain, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN);});
+    connect(&a_SaveIpFromSubdomainIp, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_SaveIpFromIp, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP);});
+    connect(&a_SaveEmail, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::EMAIL, RESULT_MODEL_TYPE::EMAIL);});
+    connect(&a_SaveUrl, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::URL, RESULT_MODEL_TYPE::URL);});
+    connect(&a_SaveAsn, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::ASN, RESULT_MODEL_TYPE::ASN);});
+    connect(&a_SaveCidr, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::CIDR, RESULT_MODEL_TYPE::CIDR);});
+    connect(&a_SaveCert, &QAction::triggered, this, [=](){this->onSaveResults(RESULT_TYPE::CERT_ID, RESULT_MODEL_TYPE::CERT_ID);});
+    connect(&a_Copy, &QAction::triggered, this, [=](){this->onCopyResults(selectionModel);});
+    connect(&a_CopySubdomainIp, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::SUBDOMAINIP, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_CopySubdomainFromSubdomainIp, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_CopySubdomainFromSubdomain, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::SUBDOMAIN, RESULT_MODEL_TYPE::SUBDOMAIN);});
+    connect(&a_CopyIpFromSubdomainIp, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::IP, RESULT_MODEL_TYPE::SUBDOMAINIP);});
+    connect(&a_CopyIpFromIp, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::IP, RESULT_MODEL_TYPE::IP);});
+    connect(&a_CopyEmail, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::EMAIL, RESULT_MODEL_TYPE::EMAIL);});
+    connect(&a_CopyUrl, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::URL, RESULT_MODEL_TYPE::URL);});
+    connect(&a_CopyAsn, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::ASN, RESULT_MODEL_TYPE::ASN);});
+    connect(&a_CopyCidr, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::CIDR, RESULT_MODEL_TYPE::CIDR);});
+    connect(&a_CopyCert, &QAction::triggered, this, [=](){this->onCopyResults(RESULT_TYPE::CERT_ID, RESULT_MODEL_TYPE::CERT_ID);});
 }
 
 void Osint::on_buttonAction_clicked(){
-    int option = ui->comboBoxOutput->currentIndex();
+    /* check if there are results available else dont show the context menu */
 
-    switch(option){
-    case OUTPUT_SUBDOMAINIP:
-        if(result->osint->subdomainIpProxy->rowCount() < 1)
-            return;
-        break;
-    case OUTPUT_SUBDOMAIN:
-        if(result->osint->subdomainProxy->rowCount() < 1)
-            return;
-        break;
-    case OUTPUT_IP:
-        if(result->osint->ipProxy->rowCount() < 1)
-            return;
-        break;
-    case OUTPUT_EMAIL:
-        if(result->osint->emailProxy->rowCount() < 1)
-            return;
-        break;
-    case OUTPUT_URL:
-        if(result->osint->urlProxy->rowCount() < 1)
-            return;
-        break;
-    case OUTPUT_ASN:
-        if(result->osint->asnProxy->rowCount() < 1)
-            return;
-        break;
-    case OUTPUT_SSLCERT:
-        if(result->osint->sslCertProxy->rowCount() < 1)
-            return;
-        break;
-    }
-
+    /* getting the position of the action button to place the context menu and
+       showing the context menu right by the side of the action button... */
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
     pos = QPoint(pos.x()+65, pos.y());
 
-    QMenu *Menu = new QMenu(this);
+    /* creating the context menu... */
+    QMenu *mainMenu = new QMenu(this);
     QMenu *saveMenu = new QMenu(this);
     QMenu *copyMenu = new QMenu(this);
-    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
-
+    QMenu *sendToToolMenu = new QMenu(this);
+    QMenu *sendToEngineMenu = new QMenu(this);
     saveMenu->setTitle("Save");
     copyMenu->setTitle("Copy");
+    sendToToolMenu->setTitle("Send To Tool");
+    sendToEngineMenu->setTitle("Send To Engine");
+    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
 
-    ///
-    /// ADDING ACTIONS TO THE CONTEXT MENU...
-    ///
-    if(option == OUTPUT_SUBDOMAINIP){
-        saveMenu->addAction(&actionSaveSubdomains);
-        copyMenu->addAction(&actionCopySubdomains);
-        saveMenu->addAction(&actionSaveIpAddresses);
-        copyMenu->addAction(&actionCopyIpAddresses);
-        saveMenu->addAction(&actionSaveAll);
-        copyMenu->addAction(&actionCopyAll);
+    /* adding actions */
+    if(ui->comboBoxOutput->currentIndex() == 0){
+        saveMenu->addAction(&a_SaveSubdomainFromSubdomain);
+        copyMenu->addAction(&a_CopySubdomainFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendHostToOsintFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendHostToRawFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendHostToBruteFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendHostToActiveFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendHostToDnsFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendHostToCertFromSubdomain);
+        sendToToolMenu->addAction(&a_SendHostToCertToolFromSubdomain);
+        sendToToolMenu->addAction(&a_SendHostToDomainToolFromSubdomain);
     }
-    if(option == OUTPUT_SUBDOMAIN){
-        saveMenu->addAction(&actionSaveSubdomains_subdomain);
-        copyMenu->addAction(&actionCopySubdomains_subdomain);
+    if(ui->comboBoxOutput->currentIndex() == 1){
+        saveMenu->addAction(&a_SaveSubdomainIp);
+        saveMenu->addAction(&a_SaveSubdomainFromSubdomainIp);
+        saveMenu->addAction(&a_SaveIpFromSubdomainIp);
+        copyMenu->addAction(&a_CopySubdomainIp);
+        copyMenu->addAction(&a_CopySubdomainFromSubdomainIp);
+        copyMenu->addAction(&a_CopyIpFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendIpToIpFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendIpToOsintFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendIpToRawFromSubdomainIp);
+        sendToEngineMenu->addSeparator();
+        sendToEngineMenu->addAction(&a_SendHostToOsintFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendHostToRawFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendHostToBruteFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendHostToActiveFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendHostToDnsFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendHostToCertFromSubdomainIp);
+        sendToToolMenu->addAction(&a_SendIpToIpToolFromSubdomainIp);
+        sendToToolMenu->addAction(&a_SendHostToCertToolFromSubdomainIp);
+        sendToToolMenu->addAction(&a_SendHostToDomainToolFromSubdomainIp);
     }
-    if(option == OUTPUT_IP){
-        saveMenu->addAction(&actionSaveIpAddresses_ip);
-        copyMenu->addAction(&actionCopyIpAddresses_ip);
+    if(ui->comboBoxOutput->currentIndex() == 2){
+        saveMenu->addAction(&a_SaveIpFromIp);
+        copyMenu->addAction(&a_CopyIpFromIp);
+        sendToEngineMenu->addAction(&a_SendIpToIpFromIp);
+        sendToEngineMenu->addAction(&a_SendIpToOsintFromIp);
+        sendToEngineMenu->addAction(&a_SendIpToRawFromIp);
+        sendToToolMenu->addAction(&a_SendIpToIpToolFromIp);
     }
-    if(option == OUTPUT_EMAIL){
-        saveMenu->addAction(&actionSaveEmails);
-        copyMenu->addAction(&actionCopyEmails);
+    if(ui->comboBoxOutput->currentIndex() == 3){
+        saveMenu->addAction(&a_SaveEmail);
+        copyMenu->addAction(&a_CopyEmail);
+        //sendToEngineMenu->addAction(&a_SendEmailToOsint);
+        sendToEngineMenu->addAction(&a_SendEmailToRaw);
+        sendToToolMenu->addAction(&a_SendEmailToEmailTool);
     }
-    if(option == OUTPUT_URL){
-        saveMenu->addAction(&actionSaveUrls);
-        copyMenu->addAction(&actionCopyUrls);
+    if(ui->comboBoxOutput->currentIndex() == 4){
+        saveMenu->addAction(&a_SaveUrl);
+        copyMenu->addAction(&a_CopyUrl);
+        sendToEngineMenu->addAction(&a_SendUrlToRaw);
     }
-    if(option == OUTPUT_ASN){
-        saveMenu->addAction(&actionSaveAsns);
-        copyMenu->addAction(&actionCopyAsns);
+    if(ui->comboBoxOutput->currentIndex() == 5){
+        saveMenu->addAction(&a_SaveAsn);
+        copyMenu->addAction(&a_CopyAsn);
+        //sendToEngineMenu->addAction(&a_SendAsnToOsint);
+        sendToEngineMenu->addAction(&a_SendAsnToRaw);
+        sendToToolMenu->addAction(&a_SendAsnToAsnTool);
     }
-    if(option == OUTPUT_SSLCERT){
-        saveMenu->addAction(&actionSaveCerts);
-        copyMenu->addAction(&actionCopyCerts);
+    if(ui->comboBoxOutput->currentIndex() == 6){
+        saveMenu->addAction(&a_SaveCert);
+        copyMenu->addAction(&a_CopyCert);
+        //sendToEngineMenu->addAction(&a_SendCertToOsint);
+        sendToEngineMenu->addAction(&a_SendCertToRaw);
+        sendToToolMenu->addAction(&a_SendCertToCertTool);
     }
-    Menu->addAction(&actionClearResults);
-    Menu->addSeparator();
-    Menu->addMenu(copyMenu);
-    Menu->addMenu(saveMenu);
-    Menu->addSeparator();
-    if(option == IP)
-        Menu->addAction(&actionSendToIp_ip);
-    if(option == OUTPUT_SUBDOMAINIP){
-        Menu->addAction(&actionSendToIp);
-        Menu->addAction(&actionSendToOsint);
-        Menu->addAction(&actionSendToBrute);
-        Menu->addAction(&actionSendToActive);
-        Menu->addAction(&actionSendToRecords);
-        Menu->addAction(&actionSendToCert);
+    if(ui->comboBoxOutput->currentIndex() == 7){
+        saveMenu->addAction(&a_SaveCidr);
+        copyMenu->addAction(&a_CopyCidr);
+        //sendToEngineMenu->addAction(&a_SendCidrToOsint);
+        sendToEngineMenu->addAction(&a_SendCidrToRaw);
+        sendToToolMenu->addAction(&a_SendCidrToCidrTool);
     }
-    if(option == OUTPUT_SUBDOMAIN){
-        Menu->addAction(&actionSendToOsint_subdomain);
-        Menu->addAction(&actionSendToBrute_subdomain);
-        Menu->addAction(&actionSendToActive_subdomain);
-        Menu->addAction(&actionSendToRecords_subdomain);
-        Menu->addAction(&actionSendToCert_subdomain);
-    }
-    ///
-    /// showing the context menu...
-    ///
-    Menu->exec(pos);
+
+    /* adding to mainMenu */
+    mainMenu->addAction(&a_ClearResults);
+    mainMenu->addSeparator();
+    mainMenu->addMenu(saveMenu);
+    mainMenu->addMenu(copyMenu);
+    mainMenu->addSeparator();
+    mainMenu->addMenu(sendToEngineMenu);
+    mainMenu->addMenu(sendToToolMenu);
+
+    /* showing the context menu... */
+    mainMenu->exec(pos);
 }
 
 void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
-    int option = ui->comboBoxOutput->currentIndex();
 
+    /* check if user right clicked on items else dont show the context menu... */
     if(!ui->tableViewResults->selectionModel()->isSelected(ui->tableViewResults->currentIndex())){
         return;
     }
+
+    /* getting the selected items... */
     selectionModel = ui->tableViewResults->selectionModel();
 
-    QMenu *Menu = new QMenu(this);
-    Menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    /* creating the context menu... */
+    QMenu *mainMenu = new QMenu(this);
+    QMenu *saveMenu = new QMenu(this);
+    QMenu *copyMenu = new QMenu(this);
+    QMenu *sendToToolMenu = new QMenu(this);
+    QMenu *sendToEngineMenu = new QMenu(this);
+    saveMenu->setTitle("Save");
+    copyMenu->setTitle("Copy");
+    sendToToolMenu->setTitle("Send To Tool");
+    sendToEngineMenu->setTitle("Send To Engine");
+    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
 
-    Menu->addAction(&actionCopy);
-    Menu->addAction(&actionSave);
-    Menu->addSeparator();
-    if(option != OUTPUT_EMAIL){
-        Menu->addAction(&actionOpenInBrowser);
-        Menu->addSeparator();
+    /* adding actions */
+    saveMenu->addAction(&a_Save);
+    copyMenu->addAction(&a_Copy);
+
+    if(ui->comboBoxOutput->currentIndex() == 0){
+        sendToEngineMenu->addAction(&a_SendSelectedHostToOsintFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToRawFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToBruteFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToActiveFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToDnsFromSubdomain);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToCertFromSubdomain);
+        sendToToolMenu->addAction(&a_SendSelectedHostToCertToolFromSubdomain);
+        sendToToolMenu->addAction(&a_SendSelectedHostToDomainToolFromSubdomain);
     }
-    if(option == OUTPUT_SUBDOMAINIP || option == IP)
-        Menu->addAction(&actionSendToIp_c);
-    if(option == OUTPUT_SUBDOMAINIP || option == OUTPUT_SUBDOMAIN){
-        Menu->addAction(&actionSendToOsint_c);
-        Menu->addAction(&actionSendToBrute_c);
-        Menu->addAction(&actionSendToActive_c);
-        Menu->addAction(&actionSendToRecords_c);
-        Menu->addAction(&actionSendToCert_c);
+    if(ui->comboBoxOutput->currentIndex() == 1){
+        sendToEngineMenu->addAction(&a_SendSelectedIpToIpFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendSelectedIpToOsintFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendSelectedIpToRawFromSubdomainIp);
+        sendToEngineMenu->addSeparator();
+        sendToEngineMenu->addAction(&a_SendSelectedHostToOsintFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToRawFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToBruteFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToActiveFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToDnsFromSubdomainIp);
+        sendToEngineMenu->addAction(&a_SendSelectedHostToCertFromSubdomainIp);
+        sendToToolMenu->addAction(&a_SendSelectedIpToIpToolFromSubdomainIp);
+        sendToToolMenu->addAction(&a_SendSelectedHostToCertToolFromSubdomainIp);
+        sendToToolMenu->addAction(&a_SendSelectedHostToDomainToolFromSubdomainIp);
     }
-    ///
-    /// showing the menu...
-    ///
-    Menu->exec(QCursor::pos());
+    if(ui->comboBoxOutput->currentIndex() == 2){
+        sendToEngineMenu->addAction(&a_SendSelectedIpToIpFromIp);
+        sendToEngineMenu->addAction(&a_SendSelectedIpToOsintFromIp);
+        sendToEngineMenu->addAction(&a_SendSelectedIpToRawFromIp);
+        sendToToolMenu->addAction(&a_SendSelectedIpToIpToolFromIp);
+    }
+    if(ui->comboBoxOutput->currentIndex() == 3){
+        //sendToEngineMenu->addAction(&a_SendSelectedEmailToOsint);
+        sendToEngineMenu->addAction(&a_SendSelectedEmailToRaw);
+        sendToToolMenu->addAction(&a_SendSelectedEmailToEmailTool);
+    }
+    if(ui->comboBoxOutput->currentIndex() == 4){
+        sendToEngineMenu->addAction(&a_SendSelectedUrlToRaw);
+    }
+    if(ui->comboBoxOutput->currentIndex() == 5){
+        //sendToEngineMenu->addAction(&a_SendSelectedAsnToOsint);
+        sendToEngineMenu->addAction(&a_SendSelectedAsnToRaw);
+        sendToToolMenu->addAction(&a_SendSelectedAsnToAsnTool);
+    }
+    if(ui->comboBoxOutput->currentIndex() == 6){
+        //sendToEngineMenu->addAction(&a_SendSelectedCertToOsint);
+        sendToEngineMenu->addAction(&a_SendSelectedCertToRaw);
+        sendToToolMenu->addAction(&a_SendSelectedCertToCertTool);
+    }
+    if(ui->comboBoxOutput->currentIndex() == 7){
+        //sendToEngineMenu->addAction(&a_SendSelectedCidrToOsint);
+        sendToEngineMenu->addAction(&a_SendSelectedCidrToRaw);
+        sendToToolMenu->addAction(&a_SendSelectedCidrToCidrTool);
+    }
+
+    /* adding to mainMenu */
+    mainMenu->addAction(&a_RemoveResults);
+    mainMenu->addAction(&a_OpenInBrowser);
+    mainMenu->addSeparator();
+    mainMenu->addMenu(saveMenu);
+    mainMenu->addMenu(copyMenu);
+    mainMenu->addSeparator();
+    mainMenu->addMenu(sendToEngineMenu);
+    mainMenu->addMenu(sendToToolMenu);
+
+    /* showing the context menu... */
+    mainMenu->exec(QCursor::pos());
 }
 
+void Osint::onOpenInBrowser(QItemSelectionModel *){
 
-/********************************************************************************
+}
 
-*********************************************************************************/
+void Osint::onRemoveResults(QItemSelectionModel *selectionModel){
+    Q_UNUSED(selectionModel);
+}
 
-void Osint::onSaveResults(CHOICE choice, PROXYMODEL_TYPE proxyType){
+void Osint::onSaveResults(RESULT_TYPE resultType, RESULT_MODEL_TYPE){
     ///
     /// checks...
     ///
@@ -225,92 +327,43 @@ void Osint::onSaveResults(CHOICE choice, PROXYMODEL_TYPE proxyType){
     if(!file.isOpen()){
         return;
     }
-
+    ///
+    /// variable declarations...
+    ///
+    QSet<QString> itemSet;
     QString item;
-    ui->plainTextEditLogs->setPlainText("hi there...");
-    switch(proxyType){
-    case PROXYMODEL_TYPE::subdomainIpProxy:
-    {
-        switch(choice){
-        case CHOICE::subdomain:
-            for(int i = 0; i != result->osint->subdomainIpProxy->rowCount(); ++i)
-            {
-                item = result->osint->subdomainIpProxy->data(result->osint->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
+    ///
+    /// choice of item to save...
+    ///
+    switch(resultType){
+    case RESULT_TYPE::SUBDOMAIN:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
+        {
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
                 file.write(item.toUtf8());
             }
-            break;
-        case CHOICE::ip:
-        {
-            QSet<QString> itemSet;
-            for(int i = 0; i != result->osint->subdomainIpProxy->rowCount(); ++i)
-            {
-                item = result->osint->subdomainIpProxy->data(result->osint->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
-                if(!itemSet.contains(item)){
-                    itemSet.insert(item);
-                    file.write(item.toUtf8());
-                }
-            }
-            break;
         }
-        case CHOICE::subdomainIp:
-            for(int i = 0; i != result->osint->subdomainIpProxy->rowCount(); ++i)
-            {
-                item = result->osint->subdomainIpProxy->data(result->osint->subdomainIpProxy->index(i, 0)).toString()+":"+result->osint->subdomainIpProxy->data(result->osint->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
+        break;
+    case RESULT_TYPE::IP:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
+        {
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
                 file.write(item.toUtf8());
             }
-            break;
-        default:
-            break;
         }
         break;
-    }
-
-    case PROXYMODEL_TYPE::subdomainProxy:
-        ui->plainTextEditLogs->setPlainText("hello there...");
-        for(int i = 0; i != result->osint->subdomainProxy->rowCount(); ++i)
+    case RESULT_TYPE::SUBDOMAINIP:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
         {
-            item = result->osint->subdomainProxy->data(result->osint->subdomainProxy->index(i, 0)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
-        }
-        break;
-
-    case PROXYMODEL_TYPE::ipProxy:
-        for(int i = 0; i != result->osint->ipProxy->rowCount(); ++i)
-        {
-            item = result->osint->ipProxy->data(result->osint->ipProxy->index(i, 0)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
-        }
-        break;
-
-    case PROXYMODEL_TYPE::emailProxy:
-        for(int i = 0; i != result->osint->emailProxy->rowCount(); ++i)
-        {
-            item = result->osint->emailProxy->data(result->osint->emailProxy->index(i, 0)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
-        }
-        break;
-
-    case PROXYMODEL_TYPE::urlProxy:
-        for(int i = 0; i != result->osint->urlProxy->rowCount(); ++i)
-        {
-            item = result->osint->urlProxy->data(result->osint->urlProxy->index(i, 0)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
-        }
-        break;
-
-    case PROXYMODEL_TYPE::asnProxy:
-        for(int i = 0; i != result->osint->asnProxy->rowCount(); ++i)
-        {
-            item = result->osint->asnProxy->data(result->osint->asnProxy->index(i, 0)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
-        }
-        break;
-
-    case PROXYMODEL_TYPE::sslCertProxy:
-        for(int i = 0; i != result->osint->sslCertProxy->rowCount(); ++i)
-        {
-            item = result->osint->sslCertProxy->data(result->osint->sslCertProxy->index(i, 0)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString()+":"+result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                file.write(item.toUtf8());
+            }
         }
         break;
 
@@ -325,111 +378,70 @@ void Osint::onSaveResults(QItemSelectionModel *selectionModel){
     if(filename.isEmpty()){
         return;
     }
+    QSet<QString> itemSet;
     QString data;
     QString item;
-    QFile file(filename);
 
-    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
+    /* ... */
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(file.isOpen())
     {
         foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
             item = index.data().toString();
-            data.append(item.append(NEWLINE));
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                data.append(item.append(NEWLINE));
+            }
         }
         file.write(data.toUtf8());
         file.close();
     }
 }
 
-void Osint::onCopyResults(CHOICE choice, PROXYMODEL_TYPE proxyType){
+
+void Osint::onCopyResults(RESULT_TYPE resultType, RESULT_MODEL_TYPE){
+    ///
+    /// variable declaration...
+    ///
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString clipboardData;
+    QSet<QString> itemSet;
     QString item;
-
-    switch(proxyType){
-    case PROXYMODEL_TYPE::subdomainIpProxy:
-    {
-        switch(choice){
-        case CHOICE::subdomain:
-            for(int i = 0; i != result->osint->subdomainIpProxy->rowCount(); ++i)
-            {
-                item = result->osint->subdomainIpProxy->data(result->osint->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
+    ///
+    /// type of item to save...
+    ///
+    switch(resultType){
+    case RESULT_TYPE::SUBDOMAIN:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
+        {
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
                 clipboardData.append(item);
             }
-            break;
-        case CHOICE::ip:
-        {
-            QSet<QString> itemSet;
-            for(int i = 0; i != result->osint->subdomainIpProxy->rowCount(); ++i)
-            {
-                item = result->osint->subdomainIpProxy->data(result->osint->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
-                if(!itemSet.contains(item)){
-                    itemSet.insert(item);
-                    clipboardData.append(item);
-                }
-            }
-            break;
         }
-        case CHOICE::subdomainIp:
-            for(int i = 0; i != result->osint->subdomainIpProxy->rowCount(); ++i)
-            {
-                item = result->osint->subdomainIpProxy->data(result->osint->subdomainIpProxy->index(i, 0)).toString()+":"+result->osint->subdomainIpProxy->data(result->osint->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
+        break;
+    case RESULT_TYPE::IP:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
+        {
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
                 clipboardData.append(item);
             }
-            break;
-        default:
-            break;
         }
         break;
-    }
-
-    case PROXYMODEL_TYPE::subdomainProxy:
-        for(int i = 0; i != result->osint->subdomainProxy->rowCount(); ++i)
+    case RESULT_TYPE::SUBDOMAINIP:
+        for(int i = 0; i != result->active->subdomainIpProxy->rowCount(); ++i)
         {
-            item = result->osint->subdomainProxy->data(result->osint->subdomainProxy->index(i, 0)).toString().append(NEWLINE);
-            clipboardData.append(item);
+            item = result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 0)).toString()+"|"+result->active->subdomainIpProxy->data(result->active->subdomainIpProxy->index(i, 1)).toString().append(NEWLINE);
+            if(!itemSet.contains(item)){
+                itemSet.insert(item);
+                clipboardData.append(item);
+            }
         }
         break;
-
-    case PROXYMODEL_TYPE::ipProxy:
-        for(int i = 0; i != result->osint->ipProxy->rowCount(); ++i)
-        {
-            item = result->osint->ipProxy->data(result->osint->ipProxy->index(i, 0)).toString().append(NEWLINE);
-            clipboardData.append(item);
-        }
-        break;
-
-    case PROXYMODEL_TYPE::emailProxy:
-        for(int i = 0; i != result->osint->emailProxy->rowCount(); ++i)
-        {
-            item = result->osint->emailProxy->data(result->osint->emailProxy->index(i, 0)).toString().append(NEWLINE);
-            clipboardData.append(item);
-        }
-        break;
-
-    case PROXYMODEL_TYPE::urlProxy:
-        for(int i = 0; i != result->osint->urlProxy->rowCount(); ++i)
-        {
-            item = result->osint->urlProxy->data(result->osint->urlProxy->index(i, 0)).toString().append(NEWLINE);
-            clipboardData.append(item);
-        }
-        break;
-
-    case PROXYMODEL_TYPE::asnProxy:
-        for(int i = 0; i != result->osint->asnProxy->rowCount(); ++i)
-        {
-            item = result->osint->asnProxy->data(result->osint->asnProxy->index(i, 0)).toString().append(NEWLINE);
-            clipboardData.append(item);
-        }
-        break;
-
-    case PROXYMODEL_TYPE::sslCertProxy:
-        for(int i = 0; i != result->osint->sslCertProxy->rowCount(); ++i)
-        {
-            item = result->osint->sslCertProxy->data(result->osint->sslCertProxy->index(i, 0)).toString().append(NEWLINE);
-            clipboardData.append(item);
-        }
-        break;
-
     default:
         break;
     }
@@ -438,12 +450,25 @@ void Osint::onCopyResults(CHOICE choice, PROXYMODEL_TYPE proxyType){
 
 void Osint::onCopyResults(QItemSelectionModel *selectionModel){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data, item;
-
+    QSet<QString> itemSet;
+    QString data;
+    QString item;
+    /* ... */
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
         item = index.data().toString();
-        data.append(item.append(NEWLINE));
+        if(!itemSet.contains(item)){
+            itemSet.insert(item);
+            data.append(item.append(NEWLINE));
+        }
     }
     clipboard->setText(data);
+}
+
+void Osint::onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
+
+}
+
+void Osint::onReceiveTargets(QItemSelectionModel *, RESULT_TYPE, RESULT_MODEL_TYPE){
+
 }

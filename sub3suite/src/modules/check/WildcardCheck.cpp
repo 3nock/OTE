@@ -1,13 +1,12 @@
 #include "WildcardCheck.h"
 
-WildcardCheck::WildcardCheck(ScanConfig *scanConfig, brute::ScanArguments *scanArguments)
-    : m_scanArguments(scanArguments),
-      m_scanConfig(scanConfig),
+WildcardCheck::WildcardCheck(brute::ScanArgs *args)
+    : m_args(args),
       m_dns(new QDnsLookup(this))
 {
-    m_dns->setType(m_scanConfig->dnsRecordType);
-    m_dns->setNameserver(RandomNameserver(m_scanConfig->useCustomNameServers));
-    //...
+    m_dns->setType(m_args->config->dnsRecordType);
+    m_dns->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+
     connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
 }
 WildcardCheck::~WildcardCheck(){
@@ -21,27 +20,28 @@ void WildcardCheck::enumerate(QThread *cThread){
 
 void WildcardCheck::onLookupFinished(){
     switch(m_dns->error()){
-    //...
+
     case QDnsLookup::NoError:
-        m_scanConfig->hasWildcard = true;
-        m_scanConfig->wildcardIp = m_dns->hostAddressRecords()[0].value().toString();
+        m_args->config->hasWildcard = true;
+        m_args->config->wildcardIp = m_dns->hostAddressRecords()[0].value().toString();
         break;
-    //...
+
     case QDnsLookup::NotFoundError:
-        m_scanConfig->hasWildcard = false;
+        m_args->config->hasWildcard = false;
         break;
-    //....
+
     default:
         break;
     }
+
     emit quitThread();
 }
 
 void WildcardCheck::lookup(){
-    ///
-    /// check for random non-existent subdomains name
-    /// TODO: make it more advanced...
-    ///
-    m_dns->setName("3nocknicolas."+m_scanArguments->targetList[m_scanArguments->currentTargetToEnumerate]);
+    /*
+     check for random non-existent subdomains name
+     TODO: make it more advanced...
+    */
+    m_dns->setName("3nocknicolas."+m_args->targetList[m_args->currentTargetToEnumerate]);
     m_dns->lookup();
 }

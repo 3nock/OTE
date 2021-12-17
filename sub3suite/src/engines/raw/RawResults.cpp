@@ -1,15 +1,10 @@
 #include "Raw.h"
 #include "ui_Raw.h"
-//...
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 
-
-/*
- *
- *
- */
 
 void Raw::onInfoLog(ScanLog log){
     QString module("<font color=\"green\">"+log.moduleName+"</font>");
@@ -47,7 +42,7 @@ void Raw::onResults(QByteArray reply){
 
 void Raw::onResultsTxt(QByteArray results){
     if(!results.isNull() && !results.isEmpty()){
-        ui->plainTextEdit->appendPlainText(results);
+        ui->plainTextEditResults->appendPlainText(results);
         m_resultsCountJson++;
         ui->labelResultsCount->setNum(m_resultsCountJson);
     }
@@ -55,7 +50,7 @@ void Raw::onResultsTxt(QByteArray results){
 
 void Raw::setJsonText(QJsonDocument &results){
     if(!results.isNull() && !results.isEmpty()){
-        ui->plainTextEdit->appendPlainText(results.toJson());
+        ui->plainTextEditResults->appendPlainText(results.toJson());
         m_resultsCountJson++;
         ui->labelResultsCount->setNum(m_resultsCountJson);
     }
@@ -77,9 +72,8 @@ void Raw::setJsonTree(QJsonDocument &results){
         this->treeArray(results.array(), item);
     if(results.isObject())
         this->treeObject(results.object(), item);
-    ///
-    /// results Count...
-    ///
+
+    /* results Count... */
     m_resultsCountTree++;
     ui->labelResultsCountTree->setNum(m_resultsCountTree);
 }

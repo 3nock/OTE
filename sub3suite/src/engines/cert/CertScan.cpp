@@ -1,20 +1,15 @@
 #include "Cert.h"
 #include "ui_Cert.h"
-//...
+
 #include "src/modules/scan/CertScanner.h"
 
-/*
- *
- *
- *
- */
 
-void Cert::startScan(){
+void Cert::m_startScan(){
 
-    certificate::ScanArguments *args = new certificate::ScanArguments;
+    certificate::ScanArgs *args = new certificate::ScanArgs;
     args->singleTarget = false;
 
-    foreach(const QString &target, ui->targets->listModel->stringList())
+    foreach(const QString &target, m_targetListModel->stringList())
         args->targetList.push(target);
 
     switch (ui->comboBoxOutput->currentIndex()) {
@@ -35,21 +30,19 @@ void Cert::startScan(){
             args->raw = true;
             break;
     }
-    ///
-    /// if the numner of threads is greater than the number of wordlists, set the
-    /// number of threads to use to the number of wordlists available to avoid
-    /// creating more threads than needed...
-    ///
-    int wordlistCount = ui->targets->listModel->rowCount();
-    int threadsCount = scanConfig->threadsCount;
+    /*
+     if the numner of threads is greater than the number of wordlists, set the
+     number of threads to use to the number of wordlists available to avoid
+     creating more threads than needed...
+    */
+    int wordlistCount = m_targetListModel->rowCount();
+    int threadsCount = m_scanArgs->config->threadsCount;
     if(threadsCount > wordlistCount)
-    {
         threadsCount = wordlistCount;
-    }
-    status->cert->activeThreads = threadsCount;
-    ///
-    /// loop to create threads for enumeration...
-    ///
+
+    status->cert->activeScanThreads = threadsCount;
+
+    /* loop to create threads for enumeration... */
     for(int i = 0; i < threadsCount; i++)
     {
         certificate::Scanner *scanner = new certificate::Scanner(args);
@@ -57,9 +50,7 @@ void Cert::startScan(){
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
 
-        ///
-        /// results signals & slots...
-        ///
+        /* results signals & slots... */
         switch (ui->comboBoxOutput->currentIndex()) {
         case OUTPUT_SUBDOMAIN:
             connect(scanner, &certificate::Scanner::resultSubdomain, this, &Cert::onScanResultSubdomain);
@@ -84,7 +75,6 @@ void Cert::startScan(){
         connect(cThread, &QThread::finished, this, &Cert::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &certificate::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        //connect(cThread, &QThread::finished, this, [=](){delete args;});
         connect(this, &Cert::stopScanThread, scanner, &certificate::Scanner::onStopScan);
         cThread->start();
     }

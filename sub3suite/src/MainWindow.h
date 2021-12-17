@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QSettings>
-//..
+/* ... */
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
 #include "src/engines/ip/Ip.h"
@@ -13,6 +13,7 @@
 #include "src/engines/active/Active.h"
 #include "src/engines/raw/Raw.h"
 #include "src/engines/cert/Cert.h"
+
 
 namespace Ui {
     class MainWindow;
@@ -27,7 +28,7 @@ class MainWindow : public QMainWindow{
     public:
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
-        //...
+        /* ... */
         Status *status;
         ResultsModel *resultsModel;
         ProjectDataModel *projectDataModel;
@@ -35,46 +36,53 @@ class MainWindow : public QMainWindow{
     public slots:
         void onReceiveLog(QString log);
         void onReceiveStatus(QString status);
-        //...
+        /* ... */
         void onChangeTabToOsint();
         void onChangeTabToActive();
         void onChangeTabToBrute();
         void onChangeTabToIp();
-        void onChangeTabToRecords();
+        void onChangeTabToDns();
         void onChangeTabToRaw();
         void onChangeTabToCert();
+        /* ... */
+        void onSendResultsToDomainTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToNSTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToMXTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToCertTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToIpTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToASNTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToCidrTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToEmailTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        /* ... */
+        void onSendResultsToDomainTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToNSTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToMXTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToCertTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToIpTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToASNTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToCidrTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onSendResultsToEmailTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
 
     private slots:
         void on_actionAbout_triggered();
         void on_actionAboutQt_triggered();
         void on_actionExit_triggered();
-        ///
-        /// tools actions...
-        ///
+        /* tools actions */
         void on_actionIpTool_triggered();
         void on_actionASNTool_triggered();
         void on_actionCertTool_triggered();
         void on_actionEmailTool_triggered();
-
         void on_actionCIDRTool_triggered();
-
         void on_actionBannerTool_triggered();
-
         void on_actionDomainTool_triggered();
-
         void on_actionNSTool_triggered();
-
         void on_actionMXTool_triggered();
-
         void on_actionBlog_triggered();
-
         void on_actionApiKeys_triggered();
-
         void on_actionlogViewer_triggered();
-
         void on_actionGeneralConfig_triggered();
 
-private:
+    private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;
         Brute *brute = nullptr;
@@ -83,6 +91,8 @@ private:
         Project *project = nullptr;
         Raw *raw = nullptr;
         Cert *cert = nullptr;
+        //...
+        void m_connectSignals(AbstractEngine *engine);
 };
 
 #endif // MAINWINDOW_H

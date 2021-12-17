@@ -1,6 +1,6 @@
 #include "BannerTool.h"
 #include "ui_BannerTool.h"
-//..
+
 #include <QDateTime>
 #include "src/utils/Definitions.h"
 
@@ -16,7 +16,7 @@
 
 BannerTool::BannerTool(QWidget *parent) : QDialog(parent),
     ui(new Ui::BannerTool),
-    scanConfig(new ScanConfig)
+    scanConfig(new banner::ScanConfig)
 {
     ui->setupUi(this);
     ///
@@ -54,7 +54,8 @@ void BannerTool::onInfoLog(QString log){
 }
 
 void BannerTool::m_startScan(){
-    banner::ScanArguments *scanArgs = new banner::ScanArguments;
+    banner::ScanArgs *scanArgs = new banner::ScanArgs;
+    scanArgs->config = scanConfig;
     ///
     /// getting target...
     ///
@@ -99,7 +100,7 @@ void BannerTool::m_startScan(){
     ///
     /// starting the scan...
     ///
-    banner::Scanner *scanner = new banner::Scanner(scanConfig, scanArgs);
+    banner::Scanner *scanner = new banner::Scanner(scanArgs);
     QThread *cThread = new QThread;
     scanner->startScan(cThread);
     scanner->moveToThread(cThread);

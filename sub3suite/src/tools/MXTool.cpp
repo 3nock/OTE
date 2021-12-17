@@ -1,6 +1,6 @@
 #include "MXTool.h"
 #include "ui_MXTool.h"
-//...
+
 #include "src/dialogs/PassiveConfigDialog.h"
 
 

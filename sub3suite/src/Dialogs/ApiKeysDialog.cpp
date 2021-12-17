@@ -1,6 +1,6 @@
 #include "ApiKeysDialog.h"
 #include "ui_ApiKeysDialog.h"
-//...
+
 #include "src/utils/Config.h"
 #include <QUrl>
 #include <QDesktopServices>

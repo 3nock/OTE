@@ -1,6 +1,6 @@
 #include "Cert.h"
 #include "ui_Cert.h"
-//...
+
 #include <QSslKey>
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Definitions.h"
@@ -11,72 +11,68 @@
 Cert::Cert(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
     AbstractEngine(parent, resultsModel, project, status),
     ui(new Ui::Cert),
-    m_args(new certificate::ScanArguments)
+    m_scanConfig(new certificate::ScanConfig),
+    m_scanArgs(new certificate::ScanArgs),
+    m_targetListModel(new QStringListModel)
 {
     ui->setupUi(this);
 
-    ui->targets->init("Targets");
-    targets = ui->targets;
-    scanConfig->name = tr("ScanConfig-Cert");
+    /* init */
+    ui->targets->setListName("Targets");
 
+    /* enabling and disabling widgets */
     ui->progressBar->hide();
     ui->comboBoxOption->hide();
     ui->buttonStop->setDisabled(true);
 
+    /* placeholdertxt */
     ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
-    ///
-    /// labels...
-    ///
+
+    /* result models */
     result->cert->subdomain->setHorizontalHeaderLabels({"Subdomains"});
     result->cert->sslCert->setHorizontalHeaderLabels({"Certificate Fingerprints"});
     result->cert->certInfo->setHorizontalHeaderLabels({"Property", "Value"});
-    ///
-    /// ...
-    ///
-    ui->treeViewResults->setModel(result->cert->subdomainProxy);
 
-    /* ... */
+    ui->treeViewResults->setModel(result->cert->subdomainProxy);
     result->active->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     result->active->subdomainIpProxy->setRecursiveFilteringEnabled(true);
 
-    connectActions();
-    ///
-    /// equally seperate the widgets...
-    ///
+    /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-    ///
-    /// syntax higlighting...
-    ///
+    /* syntax higlighting...*/
     m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
+
+    /* initiate all actions for the context menus */
+    this->m_initActions();
+
+    /* ... */
+    m_scanArgs->config = m_scanConfig;
 }
 Cert::~Cert(){
     delete ui;
-    delete m_args;
+    delete m_scanArgs;
+    delete m_scanConfig;
+    delete m_targetListModel;
 }
 
 void Cert::on_buttonStart_clicked(){
-    ///
-    /// check...
-    ///
-    if(!(ui->targets->listModel->rowCount() > 0)){
+    /* check... */
+    if(!(m_targetListModel->rowCount() > 0)){
         QMessageBox::warning(this, "Error!", "Please Enter Targets for Enumeration!");
         return;
     }
-    ///
-    /// disabling and Enabling widgets...
-    ///
+
+    /* disabling and Enabling widgets... */
     ui->buttonStart->setDisabled(true);
     ui->buttonStop->setEnabled(true);
     ui->progressBar->show();
     ui->progressBar->reset();
-    ui->progressBar->setMaximum(ui->targets->listModel->rowCount());
+    ui->progressBar->setMaximum(m_targetListModel->rowCount());
 
-    ///
-    /// start scan...
-    ///
-    this->startScan();
+    /* start scan... */
+    this->m_startScan();
 }
 
 void Cert::on_buttonStop_clicked(){
@@ -84,9 +80,9 @@ void Cert::on_buttonStop_clicked(){
 }
 
 void Cert::onScanThreadEnded(){
-    status->cert->activeThreads--;
+    status->cert->activeScanThreads--;
 
-    if(status->cert->activeThreads == 0){
+    if(status->cert->activeScanThreads == 0){
         ui->progressBar->setValue(ui->progressBar->maximum());
         ui->buttonStop->setDisabled(true);
         ui->buttonStart->setEnabled(true);
@@ -103,31 +99,6 @@ void Cert::onErrorLog(QString log){
     fontedLog.append("<font color=\"red\">").append(log).append("</font>");
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
-}
-
-void Cert::onClearResults(){
-    ui->labelResultsCount->clear();
-    ///
-    /// clear the progressbar...
-    ///
-    ui->progressBar->clearMask();
-    ui->progressBar->reset();
-    ui->progressBar->hide();
-
-    switch (ui->comboBoxOutput->currentIndex()) {
-    case OUTPUT_SUBDOMAIN:
-        result->cert->subdomain->clear();
-        ui->lineEditFilter->clear();
-        break;
-    case OUTPUT_SSLCERT:
-        result->cert->sslCert->clear();
-        ui->lineEditFilter->clear();
-        break;
-    case OUTPUT_CERTINFO:
-        result->cert->certInfo->clear();
-        ui->lineEditFilter->clear();
-        break;
-    }
 }
 
 void Cert::on_comboBoxOutput_currentIndexChanged(int index){

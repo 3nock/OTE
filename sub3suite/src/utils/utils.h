@@ -10,16 +10,13 @@
 /***************************************************
                     MACROS
 ****************************************************/
-///
-/// common macros....
-///
+
+/* common macros.... */
 #define NEWLINE "\n"
 #define TRUE "1"
 #define FALSE "0"
 
-///
-/// osint engines...
-///
+/* osint engines... */
 #define OSINT_VIRUSTOTALAPI "virustotalapi"
 #define OSINT_OMNISINT "omnisint"
 #define OSINT_QWANT "qwant"
@@ -62,39 +59,68 @@
 /****************************************
                 ENUMS
 *****************************************/
-enum ENGINE{
-    // brute...
-    BRUTE = 0,
-    SUBBRUTE = 1,
-    TLDBRUTE = 2,
-    // records...
-    RECORDS = 3,
-    DNSRECORDS = 4,
-    SRVRECORDS = 5,
-    // ...
-    ACTIVE = 6,
-    OSINT = 7,
-    IP = 8,
-    RAW = 9,
-    CERT = 10
+
+enum class TARGET_TYPE{
+    HOSTNAME = 0,
+    IP,
+    ASN,
+    CIDR,
+    CERT,
+    URL,
+    EMAIL,
+};
+
+enum class RESULT_TYPE{
+    SUBDOMAINIP,
+    SUBDOMAIN,
+    TLD,
+    IP,
+    SRV,
+    CNAME,
+    TXT,
+    NS,
+    MX,
+    A,
+    AAAA,
+    ASN,
+    CIDR,
+    CERT_ID,
+    CERT_INFO,
+    URL,
+    EMAIL
+};
+
+enum class RESULT_MODEL_TYPE{
+    SUBDOMAINIP,
+    SUBDOMAIN,
+    TLD,
+    IP,
+    DNS,
+    ASN,
+    CIDR,
+    CERT_ID,
+    CERT_INFO,
+    URL,
+    EMAIL,
+    RAW
+};
+
+enum class ENGINE{
+    BRUTE,
+    SUBBRUTE,
+    TLDBRUTE,
+    RECORDS,
+    DNS,
+    ACTIVE,
+    OSINT,
+    IP,
+    RAW,
+    CERT
 };
 
 /***************************************************
                     STRUCTURES
 ****************************************************/
-struct ScanConfig{
-    QString name = nullptr;
-    //...
-    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
-    bool useCustomNameServers = false;
-    QStringList customNameServers;
-    int threadsCount = 50;
-    int timeout = 3000;
-    //...
-    bool checkWildcard = false;
-    bool hasWildcard = false;
-    QString wildcardIp = nullptr;
-};
 
 
 /***************************************************

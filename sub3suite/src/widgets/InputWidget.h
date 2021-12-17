@@ -10,6 +10,7 @@
 #include <QListWidget>
 #include <QSet>
 
+
 namespace Ui {
     class InputWidget;
 }
@@ -19,19 +20,17 @@ class InputWidget : public QWidget{
 
     private:
         Ui::InputWidget *ui;
-        //...
-        QStringList m_list;
-        QSet<const QString> m_wordlist;
+        /* ... */
+        QStringListModel *m_listModel;
 
     public:
         explicit InputWidget(QWidget *parent = nullptr);
         ~InputWidget();
-        //...
-        void init(const QString& name);
-        void add(const QString&);
-        void add(QFile&);
-        //...
-        QStringListModel *listModel;
+        /* ... */
+        void setListModel(QStringListModel *listModel);
+        void setListName(const QString& listName);
+        void add(const QString& item);
+        void add(QFile& file);
 
     private slots:
         void on_buttonClear_clicked();

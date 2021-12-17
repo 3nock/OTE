@@ -229,7 +229,7 @@
            </layout>
           </item>
           <item>
-           <widget class="InputWidget" name="specialWordlist" native="true">
+           <widget class="InputWidget" name="customWordlist" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>

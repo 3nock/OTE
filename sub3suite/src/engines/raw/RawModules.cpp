@@ -2,12 +2,6 @@
 #include "ui_Raw.h"
 
 
-/*******************************************************************************
-*
-*
-*
-********************************************************************************/
-
 void Raw::on_moduleCertspotter_clicked(){
     ui->comboBoxOptions->clear();
     ModuleInfo::Certspotter meta;

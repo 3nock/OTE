@@ -14,54 +14,36 @@ enum ACTIVE{
     SMTP = 4
 };
 
-enum PORTS{
-    /*
-    Web
-    80	HTTP
-    443	SSL
-    21	FTP
-    990	FTPs
-    22	SFTP / SSH
-    3306	MySQL
-
-    Email
-    110	POP – Incoming
-    995	POP SSL – Incoming
-    143	IMAP – Incoming
-    993	IMAP SSL – Incoming
-    25, 80, 3535	SMTP – Outgoing
-    465	SMTP SSL – Outgoing
-
-    Cpanel
-    2082	cPanel TCP inbound
-    2083	cPanel SSL TCP inbound
-    2086	WHM TCP inbound
-    2087	WHM SSL TCP inbound
-    2089	WHM SSL TCP inbound
-    2095	Webmail TCP inbound
-    2096	Webmail SSL TCP inbound
-    */
-};
-
 namespace active {
 
-struct ScanArguments{
+struct ScanConfig{
+    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
+    bool useCustomNameServers = false;
+    QStringList customNameServers;
+    int threadsCount = 50;
+    int timeout = 3000;
+
+    bool checkWildcard = false;
+    bool hasWildcard = false;
+};
+
+struct ScanArgs{
+    active::ScanConfig *config;
     QStringList targetList;
-    //...
+
     int progress;
     int currentTargetToEnumerate;
-    //...
+
     quint16 service;
     bool checkActiveService;
 };
-typedef struct ScanArguments ScanArguments;
 
 
 class Scanner : public AbstractScanner{
     Q_OBJECT
 
     public:
-        Scanner(ScanConfig *scanConfig, active::ScanArguments *scanArguments);
+        Scanner(active::ScanArgs *args);
         ~Scanner() override;
 
 
@@ -75,10 +57,8 @@ class Scanner : public AbstractScanner{
 
     private:
         int m_currentTargetToEnumerate = 0;
-        //...
-        ScanConfig *m_scanConfig;
-        active::ScanArguments *m_scanArguments;
-        //...
+        active::ScanArgs *m_args;
+        /* ... */
         QDnsLookup *m_dns;
         QTcpSocket *m_socket;
 };

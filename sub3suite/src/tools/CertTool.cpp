@@ -1,6 +1,6 @@
 #include "CertTool.h"
 #include "ui_CertTool.h"
-//...
+
 #include <QSslCertificate>
 #include <QStandardItem>
 #include <QSslKey>
@@ -102,7 +102,7 @@ void CertTool::on_buttonStart_clicked(){
     case TARGET_HOSTNAME:
     {
         /* getting target, and determining target type */
-        certificate::ScanArguments *args = new certificate::ScanArguments;
+        certificate::ScanArgs *args = new certificate::ScanArgs;
         args->target = ui->lineEditTarget->text();
         args->singleTarget = true;
         args->raw = true;

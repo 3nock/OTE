@@ -6,9 +6,16 @@
 #include "AbstractScanner.h"
 #include "src/dialogs/ActiveConfigDialog.h"
 
+
 namespace certificate {
 
-struct ScanArguments{
+struct ScanConfig{
+    int threadsCount = 50;
+    int timeout = 3000;
+};
+
+struct ScanArgs{
+    certificate::ScanConfig *config;
     QString target;
     QStack<QString> targetList;
     bool singleTarget = false;
@@ -25,22 +32,22 @@ struct ScanArguments{
     bool ftp = false;
 
     /* ... */
-    int timeout = 3;
     int progress = 0;
 };
 
 class Scanner : public AbstractScanner{
 
     public:
-        Scanner(certificate::ScanArguments *args);
+        Scanner(certificate::ScanArgs *args);
         ~Scanner() override;
 
     private slots:
         void lookup() override;
 
     private:
-        certificate::ScanArguments *m_args;
+        certificate::ScanArgs *m_args;
 };
+
 }
 
 #endif // CERTSCANNER_H

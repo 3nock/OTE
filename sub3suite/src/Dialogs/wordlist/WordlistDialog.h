@@ -2,7 +2,9 @@
 #define WORDLISTDIALOG_H
 
 #include <QDialog>
+#include <QStringListModel>
 #include "src/utils/utils.h"
+
 
 namespace Ui {
     class WordListDialog;
@@ -19,17 +21,17 @@ class WordListDialog : public QDialog{
         void on_buttonCancel_clicked();
         void on_buttonCreate_clicked();
         void on_buttonOk_clicked();
-
         void on_checkBoxCreateNew_clicked(bool checked);
 
-signals:
+    signals:
         void choosenWordlist(QString);
 
     private:
         Ui::WordListDialog *ui;
         const ENGINE m_engine;
+        QStringListModel *m_customWordlistModel;
         void loadWordlists();
-        //...
+        /* ... */
         QString m_defaultWordlist;
         QString m_specialWordlist;
 };

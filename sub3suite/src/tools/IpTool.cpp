@@ -1,6 +1,6 @@
 #include "IpTool.h"
 #include "ui_IpTool.h"
-//...
+
 #include "src/dialogs/PassiveConfigDialog.h"
 
 #define ALL 0

@@ -503,19 +503,6 @@
              <item>
               <widget class="QLineEdit" name="lineEditFilter"/>
              </item>
-             <item>
-              <widget class="QPushButton" name="buttonFilter">
-               <property name="minimumSize">
-                <size>
-                 <width>75</width>
-                 <height>23</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Filter</string>
-               </property>
-              </widget>
-             </item>
             </layout>
            </item>
           </layout>

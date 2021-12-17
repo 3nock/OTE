@@ -5,9 +5,6 @@
 #include <QSortFilterProxyModel>
 
 
-/*
- * The Results Models of all Engines...
- */
 namespace Model {
 
 class Osint{
@@ -81,9 +78,6 @@ class Osint{
             delete sslCertProxy;
             delete cidrProxy;
         }
-        ///
-        /// the models...
-        ///
         QStandardItemModel *subdomainIp;
         QStandardItemModel *subdomain;
         QStandardItemModel *ip;
@@ -106,32 +100,19 @@ class Ip{
     public:
         Ip()
             : subdomainIp(new QStandardItemModel),
-              asn(new QStandardItemModel),
-              subdomainIpProxy(new QSortFilterProxyModel),
-              asnProxy(new QSortFilterProxyModel)
+              subdomainIpProxy(new QSortFilterProxyModel)
         {
             subdomainIpProxy->setSourceModel(subdomainIp);
             subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
             subdomainIpProxy->setRecursiveFilteringEnabled(true);
             subdomainIpProxy->setFilterKeyColumn(0);
-            asnProxy->setSourceModel(asn);
-            asnProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
-            asnProxy->setRecursiveFilteringEnabled(true);
-            asnProxy->setFilterKeyColumn(0);
         }
         ~Ip(){
             delete subdomainIp;
-            delete asn;
             delete subdomainIpProxy;
-            delete asnProxy;
         }
-        ///
-        /// the models...
-        ///
         QStandardItemModel *subdomainIp;
-        QStandardItemModel *asn;
         QSortFilterProxyModel *subdomainIpProxy;
-        QSortFilterProxyModel *asnProxy;
 };
 
 class Records{
@@ -139,7 +120,6 @@ class Records{
         Records()
             : dns(new QStandardItemModel),
               srv(new QStandardItemModel),
-              //...
               dnsProxy(new QSortFilterProxyModel),
               srvProxy(new QSortFilterProxyModel)
         {
@@ -158,9 +138,6 @@ class Records{
             delete dnsProxy;
             delete srvProxy;
         }
-        ///
-        /// the models...
-        ///
         QStandardItemModel *dns;
         QStandardItemModel *srv;
         QSortFilterProxyModel *dnsProxy;
@@ -171,22 +148,29 @@ class Brute{
     public:
         Brute()
             : subdomainIp(new QStandardItemModel),
-              subdomainIpProxy(new QSortFilterProxyModel)
+              tld(new QStandardItemModel),
+              subdomainIpProxy(new QSortFilterProxyModel),
+              tldProxy(new QSortFilterProxyModel)
         {
             subdomainIpProxy->setSourceModel(subdomainIp);
             subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
             subdomainIpProxy->setRecursiveFilteringEnabled(true);
             subdomainIpProxy->setFilterKeyColumn(0);
+            tldProxy->setSourceModel(tld);
+            tldProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            tldProxy->setRecursiveFilteringEnabled(true);
+            tldProxy->setFilterKeyColumn(0);
         }
         ~Brute(){
             delete subdomainIp;
+            delete tld;
             delete subdomainIpProxy;
+            delete tldProxy;
         }
-        ///
-        /// the models...
-        ///
         QStandardItemModel *subdomainIp;
+        QStandardItemModel *tld;
         QSortFilterProxyModel *subdomainIpProxy;
+        QSortFilterProxyModel *tldProxy;
 };
 
 class Active{
@@ -204,9 +188,6 @@ class Active{
             delete subdomainIp;
             delete subdomainIpProxy;
         }
-        ///
-        /// the models...
-        ///
         QStandardItemModel *subdomainIp;
         QSortFilterProxyModel *subdomainIpProxy;
 };
@@ -242,9 +223,6 @@ class Cert{
             delete sslCertProxy;
             delete certInfoProxy;
         }
-        ///
-        /// the models...
-        ///
         QStandardItemModel *subdomain;
         QStandardItemModel *sslCert;
         QStandardItemModel *certInfo;
@@ -274,27 +252,12 @@ class ResultsModel{
             delete records;
             delete cert;
         }
-        ///
-        /// the results Models...
-        ///
         Model::Ip *ip;
         Model::Osint *osint;
         Model::Brute *brute;
         Model::Active *active;
         Model::Records *records;
         Model::Cert *cert;
-};
-
-enum PROXYMODEL_TYPE{
-    subdomainIpProxy,
-    subdomainProxy,
-    ipProxy,
-    emailProxy,
-    urlProxy,
-    asnProxy,
-    dnsProxy,
-    srvProxy,
-    sslCertProxy
 };
 
 #endif // RESULTSMODELS_H

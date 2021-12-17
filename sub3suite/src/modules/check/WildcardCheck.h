@@ -9,7 +9,7 @@ class WildcardCheck: public QObject {
     Q_OBJECT
 
     public:
-        WildcardCheck(ScanConfig *scanConfig, brute::ScanArguments *scanArguments);
+        WildcardCheck(brute::ScanArgs *args);
         ~WildcardCheck();
         //...
         void enumerate(QThread *cThread);
@@ -22,8 +22,8 @@ class WildcardCheck: public QObject {
         void quitThread();
 
     private:
-        brute::ScanArguments *m_scanArguments;
-        ScanConfig *m_scanConfig;
+        brute::ScanArgs *m_args;
         QDnsLookup *m_dns;
 };
+
 #endif // WILDCARDCHECK_H

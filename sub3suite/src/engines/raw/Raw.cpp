@@ -1,45 +1,39 @@
 #include "Raw.h"
 #include "ui_Raw.h"
-//...
+
 #include <QMessageBox>
 #include <QTextCursor>
-
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/PassiveConfigDialog.h"
 
-/*
- * later on use custom icons to indicate this is a string, array or object instead
- * of numbers in the jsonarray..
- */
 
-/*
- * save a list of QStandardItems b4 treeArray & treeObject for later on analysis...
- */
 Raw::Raw(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
     AbstractEngine(parent, resultsModel, project, status),
     ui(new Ui::Raw),
-    m_model(new QStandardItemModel)
+    m_model(new QStandardItemModel),
+    m_targetListModelHostname(new QStringListModel),
+    m_targetListModelIp(new QStringListModel),
+    m_targetListModelAsn(new QStringListModel),
+    m_targetListModelCidr(new QStringListModel),
+    m_targetListModelCert(new QStringListModel),
+    m_targetListModelEmail(new QStringListModel)
 {
     ui->setupUi(this);
-    ///
-    /// ...
-    ///
+
+    /* ... */
     ui->buttonStop->setDisabled(true);
-    ///
-    /// ...
-    ///
+
+    /* placeholder texts */
     ui->lineEditTarget->setPlaceholderText("Enter target...");
     ui->lineEditFind->setPlaceholderText("Find...");
     ui->lineEditTreeFilter->setPlaceholderText("Filter...");
-    ///
-    ///...
-    ///
+
+    /* results model */
     m_model->setColumnCount(2);
     m_model->setHorizontalHeaderLabels({"Key", "Value"});
-    ui->treeView->setModel(m_model);
-    ///
-    /// ...
-    ///
+    ui->treeViewResults->setModel(m_model);
+
+    /* ... */
     ui->labelUrl->setTextFormat(Qt::RichText);
     ui->labelApiDoc->setTextFormat(Qt::RichText);
     ui->labelUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -47,16 +41,25 @@ Raw::Raw(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project,
     ui->labelUrl->setOpenExternalLinks(true);
     ui->labelApiDoc->setOpenExternalLinks(true);
 
+    /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-    ///
-    /// syntax higlighting...
-    ///
-    m_jsonSyntaxHighlighter = new JsonSyntaxHighlighter(ui->plainTextEdit->document());
+
+    /* initiate all actions for the context menus */
+    this->m_initActions();
+
+    /* syntax higlighting... */
+    m_jsonSyntaxHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditResults->document());
     m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Raw::~Raw(){
     delete m_model;
+    delete m_targetListModelIp;
+    delete m_targetListModelAsn;
+    delete m_targetListModelCert;
+    delete m_targetListModelCidr;
+    delete m_targetListModelEmail;
+    delete m_targetListModelHostname;
     delete ui;
 }
 
@@ -68,7 +71,7 @@ void Raw::onEnumerationComplete(){
 void Raw::on_buttonStart_clicked(){
     ui->buttonStart->setDisabled(true);
     ui->buttonStop->setEnabled(true);
-    this->startScan();
+    this->m_startScan();
 }
 
 void Raw::on_buttonNext_clicked(){
@@ -91,7 +94,7 @@ void Raw::on_buttonPrev_clicked(){
 }
 
 void Raw::find(QString searchTerm, QTextDocument::FindFlags flags){
-    if(ui->plainTextEdit->find(searchTerm, flags)){
+    if(ui->plainTextEditResults->find(searchTerm, flags)){
         ui->lineEditFind->setStyleSheet("color: white");
     }else{
         ui->lineEditFind->setStyleSheet("color: rgb(255, 86, 80);");
@@ -111,15 +114,12 @@ void Raw::m_errorLog(QString log){
 }
 
 void Raw::on_lineEditFind_textEdited(const QString &searchTerm){
-    ///
-    /// set cursor to the begining of the document...
-    ///
+    /* set cursor to the begining of the document... */
     QTextCursor currentCursorPosition;
     currentCursorPosition.setPosition(QTextCursor::Start);
-    ui->plainTextEdit->setTextCursor(currentCursorPosition);
-    ///
-    /// get option flags...
-    ///
+    ui->plainTextEditResults->setTextCursor(currentCursorPosition);
+
+    /* get option flags... */
     QTextDocument::FindFlags flags;
     if(ui->checkBoxCaseSensitive->isChecked()){
         flags |= QTextDocument::FindCaseSensitively;

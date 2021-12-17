@@ -29,7 +29,7 @@ public slots:
 
     private:
         Ui::BannerTool *ui;
-        ScanConfig *scanConfig;
+        banner::ScanConfig *scanConfig;
         //...
         void m_startScan();
 

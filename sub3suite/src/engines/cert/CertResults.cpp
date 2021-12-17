@@ -1,14 +1,8 @@
 #include "Cert.h"
 #include "ui_Cert.h"
-//...
+
 #include <QSslKey>
 #include "src/models/CertModel.h"
-
-/*
- *
- *
- *
- */
 
 
 void Cert::onScanResultSHA1(QString sha1){

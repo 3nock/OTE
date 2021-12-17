@@ -2,29 +2,30 @@
 #include "ui_ActiveConfigDialog.h"
 
 
-ActiveConfigDialog::ActiveConfigDialog(QWidget *parent) : QDialog(parent), ui(new Ui::ActiveConfigDialog)
+ActiveConfigDialog::ActiveConfigDialog(QWidget *parent) : QDialog(parent), ui(new Ui::ActiveConfigDialog),
+    m_customNameserverListModel(new QStringListModel)
 {
     ui->setupUi(this);
-    ///
-    /// hiding appropriate widgets...
-    ///
+
+    /* hiding appropriate widgets... */
     ui->customNameservers->hide();
     this->adjustSize();
 
-    ///
-    /// setting placeholdertxts...
-    ///
+    /* setting placeholdertxts... */
     ui->lineEditTimeout->setPlaceholderText("e.g. 3");
     ui->lineEditThreads->setPlaceholderText("e.g. 100");
 
-    ///
-    /// setting validators...
-    ///
+    /* setting validators... */
     ui->lineEditTimeout->setValidator(new QIntValidator(1, 1000, this));
     ui->lineEditThreads->setValidator(new QIntValidator(1, 200, this));
+
+    /* custom-nameserver list */
+    ui->customNameservers->setListName("Namerserver");
+    ui->customNameservers->setListModel(m_customNameserverListModel);
 }
 ActiveConfigDialog::~ActiveConfigDialog(){
     delete ui;
+    delete m_customNameserverListModel;
 }
 
 void ActiveConfigDialog::on_radioButtonCustomNameservers_clicked(){
@@ -60,5 +61,5 @@ void ActiveConfigDialog::on_checkBoxNoDuplicates_clicked(bool checked){
 }
 
 void ActiveConfigDialog::on_checkBoxAutosave_clicked(bool checked){
-
+    Q_UNUSED(checked);
 }

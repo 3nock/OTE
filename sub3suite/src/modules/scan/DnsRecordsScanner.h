@@ -3,6 +3,7 @@
 
 #include "AbstractScanner.h"
 
+
 enum OPTION{
     ALLRECORDS = 0,
     SRV = 1
@@ -11,14 +12,26 @@ enum OPTION{
 
 namespace records{
 
-struct ScanArguments{
+struct ScanConfig{
+    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
+    bool useCustomNameServers = false;
+    QStringList customNameServers;
+    int threadsCount = 50;
+    int timeout = 3000;
+
+    bool checkWildcard = false;
+    bool hasWildcard = false;
+};
+
+struct ScanArgs{
+    records::ScanConfig *config;
     QStringList srvWordlist;
     QStringList targetList;
-    //...
+
     int currentTargetToEnumerate;
     int currentSrvToEnumerate;
     int progress;
-    //...
+
     bool RecordType_srv;
     bool RecordType_a;
     bool RecordType_aaaa;
@@ -26,20 +39,20 @@ struct ScanArguments{
     bool RecordType_ns;
     bool RecordType_txt;
     bool RecordType_cname;
-    //...
+
     int count;
 };
 
 struct Results{
     QString domain;
-    //...
+
     QStringList A;
     QStringList AAAA;
     QStringList MX;
     QStringList NS;
     QStringList TXT;
     QStringList CNAME;
-    //...
+
     int srvPort = NULL;
     QString srvName = nullptr;
     QString srvTarget = nullptr;
@@ -49,7 +62,7 @@ class Scanner: public AbstractScanner{
     Q_OBJECT
 
     public:
-        Scanner(ScanConfig *scanConfig, records::ScanArguments *scanArguments);
+        Scanner(records::ScanArgs *args);
         ~Scanner() override;
         //...
         void startScan_srv(QThread *cThread);
@@ -75,8 +88,7 @@ class Scanner: public AbstractScanner{
         void doLookup_srv();
 
     private:
-        ScanConfig *m_scanConfig;
-        records::ScanArguments *m_scanArguments;
+        records::ScanArgs *m_args;
         records::Results m_results;
         //...
         QStandardItem *m_dnsNameItem;

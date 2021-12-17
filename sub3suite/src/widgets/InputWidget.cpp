@@ -2,99 +2,86 @@
 #include "ui_InputWidget.h"
 
 
-InputWidget::InputWidget(QWidget *parent) : QWidget(parent), ui(new Ui::InputWidget),
-    listModel(new QStringListModel)
+InputWidget::InputWidget(QWidget *parent) : QWidget(parent), ui(new Ui::InputWidget)
 {
     ui->setupUi(this);
-    ///
-    /// setting name...
-    ///
+
     ui->lineEdit->setPlaceholderText("Enter new item...");
-    ui->listView->setModel(listModel);
 }
 InputWidget::~InputWidget(){
     delete ui;
 }
 
-void InputWidget::init(const QString &name){
-    ui->labelName->setText(name+" Count: ");
+void InputWidget::setListModel(QStringListModel *listModel){
+    ui->listView->setModel(listModel);
+    m_listModel = listModel;
 }
 
-void InputWidget::add(const QString &item){
-    ///
-    /// checks...
-    ///
+void InputWidget::setListName(const QString& listName){
+    ui->labelName->setText(listName+" Count: ");
+}
+
+void InputWidget::add(const QString& item){
+    /* checks */
     if(item.isEmpty())
         return;
-    int qsetSize = m_wordlist.size();
-    m_wordlist.insert(item);
-    if(m_wordlist.size() == qsetSize)
-        return;
-    ///
-    /// appending the item to the list...
-    ///
-    if(listModel->insertRow(listModel->rowCount()))
-        listModel->setData(listModel->index(listModel->rowCount()-1, 0), item);
 
-    ui->labelCount->setNum(listModel->rowCount());
+    /* appending the item to the list */
+    if(m_listModel->insertRow(m_listModel->rowCount()))
+        m_listModel->setData(m_listModel->index(m_listModel->rowCount()-1, 0), item);
+
+    ui->labelCount->setNum(m_listModel->rowCount());
 }
 
-void InputWidget::add(QFile &file){
-    ///
-    /// checks...
-    ///
+void InputWidget::add(QFile& file){
+    /* checks */
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
         QMessageBox::warning(this, "Error Ocurred!", "Failed To Open the File!");
         return;
     }
-    ///
-    /// loading the file contents...
-    ///
+
+    /* loading the file contents */
     QString item;
     QTextStream in(&file);
     while (!in.atEnd())
     {
         item = in.readLine();
-        int qsetSize = m_wordlist.size();
-        m_wordlist.insert(item);
-        if(m_wordlist.size() > qsetSize){
-            ///
-            /// appending the item to the list...
-            ///
-            if(listModel->insertRow(listModel->rowCount()))
-                listModel->setData(listModel->index(listModel->rowCount()-1, 0), item);
-        }
+
+        /* appending the item to the list */
+        if(m_listModel->insertRow(m_listModel->rowCount()))
+            m_listModel->setData(m_listModel->index(m_listModel->rowCount()-1, 0), item);
     }
-    ui->labelCount->setNum(listModel->rowCount());
+    ui->labelCount->setNum(m_listModel->rowCount());
     file.close();
 }
 
-void InputWidget::on_buttonClear_clicked(){
-    listModel->removeRows(0, listModel->rowCount());
-    ui->labelCount->clear();
-    m_wordlist.clear();
-}
-
-void InputWidget::on_buttonRemove_clicked(){
-    QModelIndexList selectedIndexes(ui->listView->selectionModel()->selectedIndexes());
-
-    for (QModelIndexList::const_iterator i = selectedIndexes.constEnd() - 1;
-            i >= selectedIndexes.constBegin(); --i) {
-        listModel->removeRow(i->row());
-    }
-    ui->labelCount->setNum(listModel->rowCount());
-}
-
 void InputWidget::on_buttonLoad_clicked(){
-    ///
-    /// check...
-    ///
+    /* get file to load wordlist from */
     QString filename = QFileDialog::getOpenFileName(this, "Load From File...", "./");
     if(filename.isEmpty()){
         return;
     }
+
+    /* load file contents */
     QFile file(filename);
-    this->add(file);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QMessageBox::warning(this, "Error Ocurred!", "Failed To Open the File!");
+        return;
+    }
+
+    /* loading the file contents */
+    QString item;
+    QTextStream in(&file);
+    while (!in.atEnd())
+    {
+        item = in.readLine();
+
+        /* appending the item to the list */
+        if(m_listModel->insertRow(m_listModel->rowCount()))
+            m_listModel->setData(m_listModel->index(m_listModel->rowCount()-1, 0), item);
+    }
+    ui->labelCount->setNum(m_listModel->rowCount());
+    file.close();
 }
 
 void InputWidget::on_buttonAdd_clicked(){
@@ -105,4 +92,18 @@ void InputWidget::on_buttonAdd_clicked(){
 void InputWidget::on_lineEdit_returnPressed(){
     this->add(ui->lineEdit->text());
     ui->lineEdit->clear();
+}
+
+void InputWidget::on_buttonClear_clicked(){
+    m_listModel->removeRows(0, m_listModel->rowCount());
+    ui->labelCount->clear();
+}
+
+void InputWidget::on_buttonRemove_clicked(){
+    QModelIndexList selectedIndexes(ui->listView->selectionModel()->selectedIndexes());
+
+    for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+        m_listModel->removeRow(i->row());
+
+    ui->labelCount->setNum(m_listModel->rowCount());
 }

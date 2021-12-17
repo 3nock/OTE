@@ -1,39 +1,24 @@
 #ifndef ABSTRACTCLASS_H
 #define ABSTRACTCLASS_H
-//...
+
 #include <QMenu>
+#include <QMap>
 #include <QAction>
+#include <QStringListModel>
 #include "src/utils/utils.h"
 #include "src/models/ResultsModels.h"
 #include "src/widgets/InputWidget.h"
 #include "src/project/ProjectDataModel.h"
 
-enum CHOICE{
-    subdomainIp,
-    subdomain,
-    ip,
-    email,
-    url,
-    asn,
-    srv,
-    CNAME,
-    TXT,
-    NS,
-    MX,
-    A,
-    AAAA,
-    cert
-};
 
 struct ScanStatus{
     bool isRunning = false;
     bool isStopped = false;
     bool isPaused = false;
-    int activeThreads = 0;
+    int activeScanThreads = 0;
 };
 
 class Status{
-
     public:
         Status()
             : osint(new ScanStatus),
@@ -42,7 +27,7 @@ class Status{
               active(new ScanStatus),
               ip(new ScanStatus),
               cert(new ScanStatus),
-              records(new ScanStatus)
+              dns(new ScanStatus)
         {
         }
         ~Status(){
@@ -50,7 +35,7 @@ class Status{
             delete brute;
             delete active;
             delete ip;
-            delete records;
+            delete dns;
         }
         ScanStatus *osint;
         ScanStatus *raw;
@@ -58,18 +43,19 @@ class Status{
         ScanStatus *active;
         ScanStatus *ip;
         ScanStatus *cert;
-        ScanStatus *records;
-        //...
+        ScanStatus *dns;
+        /* ... */
         int totalThreadsInUse(){
-            return osint->activeThreads+
-                    raw->activeThreads+
-                    brute->activeThreads+
-                    active->activeThreads+
-                    ip->activeThreads+
-                    cert->activeThreads+
-                    records->activeThreads;
+            return osint->activeScanThreads+
+                    raw->activeScanThreads+
+                    brute->activeScanThreads+
+                    active->activeScanThreads+
+                    ip->activeScanThreads+
+                    cert->activeScanThreads+
+                    dns->activeScanThreads;
         }
 };
+
 
 class AbstractEngine : public QWidget{
         Q_OBJECT
@@ -81,172 +67,76 @@ class AbstractEngine : public QWidget{
                        Status *status = nullptr)
             : QWidget(parent),
               status(status),
-              project(project),
               result(resultsModel),
-              scanConfig(new ScanConfig)
+              project(project)
         {
         }
-        ~AbstractEngine()
-        {
-            delete scanConfig;
-        }
+        ~AbstractEngine(){}
 
     protected:
         Status *status;
-        ProjectDataModel *project;
         ResultsModel *result;
-        ScanConfig *scanConfig;
-        InputWidget* targets = nullptr;
-        QItemSelectionModel *selectionModel = nullptr;
+        ProjectDataModel *project;
+        QItemSelectionModel *selectionModel;
         /* ... */
         bool autoSaveResultsToProject = false;
         bool noDuplicateResults = false;
+        bool noDuplicateTargets = false;
 
     signals:
-        ///
-        /// signals to scanning threads
-        ///
+        /* signals to scanning threads */
         void stopScanThread();
         void pauseScanThread();
         void resumeScanThread();
-        ///
-        /// signals to the mainwindow...
-        ///
-        void sendNotes(QString notes);
+
+        /* status To mainwindow */
         void sendStatus(QString status);
-        ///
-        /// tab change...
-        ///
+
+        /* tab change */
         void changeTabToIp();
         void changeTabToOsint();
         void changeTabToRaw();
         void changeTabToBrute();
         void changeTabToActive();
-        void changeTabToRecords();
+        void changeTabToDns();
         void changeTabToCert();
         void changeTabToProject();
 
-/*
- *
- * For Engine's Context Menu...
- *
- */
-    signals:
-        void sendIpAddressesToIp(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        void sendSubdomainsToBrute(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        void sendSubdomainsToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        void sendSubdomainsToActive(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        void sendSubdomainsToRecord(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        void sendSubdomainsToCert(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        void sendSubdomainsToProject(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        void sendSSLCertToOsint(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        //...
-        void sendIpAddressesToIp(QItemSelectionModel*);
-        void sendSubdomainsToBrute(QItemSelectionModel*);
-        void sendSubdomainsToOsint(QItemSelectionModel*);
-        void sendSubdomainsToActive(QItemSelectionModel*);
-        void sendSubdomainsToRecord(QItemSelectionModel*);
-        void sendSubdomainsToCert(QItemSelectionModel*);
-        void sendSubdomainsToProject(QItemSelectionModel*);
-        void sendSSLCertToOsint(QItemSelectionModel*);
+        /* sending results using action-button */
+        void sendResultsToOsint(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToRaw(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToBrute(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToActive(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToDns(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToIp(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToCert(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToASNTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToCertTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToCidrTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToDomainTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToEmailTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToIpTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToMXTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToNSTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToProject(ENGINE, RESULT_TYPE);
 
-    public slots:
-        void onReceiveTargets(ENGINE, CHOICE, PROXYMODEL_TYPE);
-        void onReceiveTargets(QItemSelectionModel*);
-        void openInBrowser(QItemSelectionModel*);
-
-    protected:
-        QAction actionClearResults{"Clear Results"};
-        QAction actionExpandResults{"Expand Results"};
-        QAction actionCollapseResults{"Collapse Results"};
-        QAction actionShowFilter{"Show Filter"};
-        QAction actionHideFilter{"Hide Filter"};
-        ///
-        ///...
-        ///
-        QAction actionSendToIp{"Send Addresses To Ip"};
-        QAction actionSendToOsint{"Send Hostnames To Osint"};
-        QAction actionSendToActive{"Send Hostnames To Active"};
-        QAction actionSendToBrute{"Send Hostnames To Brute"};
-        QAction actionSendToRecords{"Send Hostnames To Records"};
-        QAction actionSendToCert{"Send Hostnames To Cert"};
-        //...
-        QAction actionSendToIp_ip{"Send Addresses To Ip"};
-        QAction actionSendToOsint_subdomain{"Send Hostnames To Osint"};
-        QAction actionSendToActive_subdomain{"Send Hostnames To Active"};
-        QAction actionSendToBrute_subdomain{"Send Hostnames To Brute"};
-        QAction actionSendToRecords_subdomain{"Send Hostnames To Records"};
-        QAction actionSendToCert_subdomain{"Send Hostnames To Cert"};
-        //...
-        QAction actionSendToOsint_dns{"Send Hostnames To Osint"};
-        QAction actionSendToActive_dns{"Send Hostnames To Active"};
-        QAction actionSendToBrute_dns{"Send Hostnames To Brute"};
-        QAction actionSendToRecords_dns{"Send Hostnames To Records"};
-        QAction actionSendToCert_dns{"Send Hostnames To Cert"};
-        //...
-        QAction actionSendToOsint_srv{"Send Hostnames To Osint"};
-        QAction actionSendToActive_srv{"Send Hostnames To Active"};
-        QAction actionSendToBrute_srv{"Send Hostnames To Brute"};
-        QAction actionSendToRecords_srv{"Send Hostnames To Records"};
-        QAction actionSendToCert_srv{"Send Hostnames To Cert"};
-        //...
-        QAction actionOpenInBrowser{"Open in Browser"};
-        //...
-        QAction actionSendToIp_c{"Send Selected To Ip"};
-        QAction actionSendToOsint_c{"Send Selected To Osint"};
-        QAction actionSendToActive_c{"Send Selected To Active"};
-        QAction actionSendToBrute_c{"Send Selected To Brute"};
-        QAction actionSendToRecords_c{"Send Selected To Records"};
-        QAction actionSendToCert_c{"Send Selected To Cert"};
-        QAction actionOpenInBrowser_c{"Open Selected in Browser"};
-        ///
-        /// save actions...
-        ///
-        QAction actionSave{"Save"};
-        QAction actionSaveAll{"subdomain | ip"};
-        QAction actionSaveSubdomains{"subdomains"};
-        QAction actionSaveIpAddresses{"ip-addresses"};
-        QAction actionSaveEmails{"emails"};
-        QAction actionSaveUrls{"urls"};
-        QAction actionSaveAsns{"Asns"};
-        QAction actionSaveCerts{"SSL Certs"};
-        QAction actionSaveCertInfo{"Cert Info"};
-        //...
-        QAction actionSaveSubdomains_subdomain{"subdomains"};
-        QAction actionSaveIpAddresses_ip{"ip-addresses"};
-        // for dns-records...
-        QAction actionSaveA{"A Records"};
-        QAction actionSaveAAAA{"AAAA Records"};
-        QAction actionSaveMX{"MX Records"};
-        QAction actionSaveNS{"NS Records"};
-        QAction actionSaveCNAME{"CNAME Records"};
-        QAction actionSaveTXT{"TXT Records"};
-        QAction actionSaveSRV{"SRV Targets"};
-        QAction actionSaveSRVName{"SRV Names"};
-        ///
-        /// copy actions...
-        ///
-        QAction actionCopy{"Copy"};
-        QAction actionCopyAll{"subdomain | ip"};
-        QAction actionCopySubdomains{"subdomains"};
-        QAction actionCopyIpAddresses{"ip-addresses"};
-        QAction actionCopyEmails{"emails"};
-        QAction actionCopyUrls{"urls"};
-        QAction actionCopyAsns{"Asns"};
-        QAction actionCopyCerts{"SSL Certs"};
-        QAction actionCopyCertInfo{"Cert Info"};
-        //...
-        QAction actionCopySubdomains_subdomain{"subdomains"};
-        QAction actionCopyIpAddresses_ip{"ip-addresses"};
-        // for dns-records...
-        QAction actionCopyA{"A Records"};
-        QAction actionCopyAAAA{"AAAA Records"};
-        QAction actionCopyMX{"MX Records"};
-        QAction actionCopyNS{"NS Records"};
-        QAction actionCopyCNAME{"CNAME Records"};
-        QAction actionCopyTXT{"TXT Records"};
-        QAction actionCopySRV{"SRV Targets"};
-        QAction actionCopySRVName{"SRV Names"};
+        /* sending results using right-click */
+        void sendResultsToOsint(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToRaw(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToBrute(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToActive(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToDns(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToIp(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToCert(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToASNTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToCertTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToCidrTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToDomainTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToEmailTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToIpTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToMXTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToNSTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void sendResultsToProject(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
 };
 
 #endif // ABSTRACTCLASS_H

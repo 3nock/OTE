@@ -4,7 +4,7 @@
 #include "src/modules/osint/OsintModulesHeaders.h"
 
 
-void Osint::initModules(){
+void Osint::m_initModules(){
     int INPUT_TYPE = ui->comboBoxInput->currentIndex();
     int OUTPUT_TYPE = ui->comboBoxOutput->currentIndex();
 
@@ -421,8 +421,4 @@ void Osint::initModules(){
         ui->moduleBing->show();
     else
         ui->moduleBing->hide();
-}
-
-void Osint::uncheckAllModules(){
-    /* uncheck all modules */
 }

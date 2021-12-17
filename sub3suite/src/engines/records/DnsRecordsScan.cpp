@@ -1,80 +1,67 @@
 #include "DnsRecords.h"
 #include "ui_DnsRecords.h"
 
-/*
- *
- *
- *
- */
 
-void DnsRecords::stopScan(){
+void DnsRecords::m_stopScan(){
 
 }
 
-void DnsRecords::pauseScan(){
-    ///
-    /// if the scan was already paused, then this current click is to
-    /// Resume the scan, just csubdomainIp the startScan, with the same arguments and
-    /// it will continue at where it ended...
-    ///
-    if(status->records->isPaused)
-    {
-        //ui->buttonPause->setText("Pause");
-        status->records->isPaused = false;
-        //...
-        startScan();
-        //...
-        sendStatus("[START] Resumed Subdomain Enumeration!");
+void DnsRecords::m_pauseScan(){
+    /*
+     if the scan was already paused, then this current click is to
+     Resume the scan, just csubdomainIp the startScan, with the same arguments and
+     it will continue at where it ended...
+    */
+    if(status->dns->isPaused){
+        status->dns->isPaused = false;
+        this->m_startScan();
     }
-    else
-    {
-        status->records->isPaused = true;
-        emit stopScan();
+    else{
+        status->dns->isPaused = true;
+        emit stopScanThread();
     }
 }
 
-void DnsRecords::ResumeScan(){
+void DnsRecords::m_resumeScan(){
 
 }
 
-void DnsRecords::startScan(){
-    ///
-    /// if the numner of threads is greater than the number of wordlists, set the
-    /// number of threads to use to the number of wordlists available to avoid
-    /// creating more threads than needed...
-    ///
-    int wordlistCount = ui->targets->listModel->rowCount();
-    int srvWordlistCount = ui->srvWordlist->listModel->rowCount();
-    int threadsCount = scanConfig->threadsCount;
+void DnsRecords::m_startScan(){
+    /*
+     if the numner of threads is greater than the number of wordlists, set the
+     number of threads to use to the number of wordlists available to avoid
+     creating more threads than needed...
+    */
+    int wordlistCount = m_targetListModel->rowCount();
+    int srvWordlistCount = m_srvWordlitsModel->rowCount();
+    int threadsCount = m_scanArgs->config->threadsCount;
+
     if((ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS) && (threadsCount > wordlistCount))
-    {
         threadsCount = wordlistCount;
-    }
+
     if((ui->comboBoxOption->currentIndex() == OPTION::SRV) && (threadsCount > srvWordlistCount))
-    {
         threadsCount = wordlistCount;
-    }
-    status->records->activeThreads = threadsCount;
-    ///
-    /// loop to create threads for scan...
-    ///
+
+    status->dns->activeScanThreads = threadsCount;
+
+    /* loop to create threads for scan... */
     for(int i = 0; i < threadsCount; i++)
     {
-        records::Scanner *scanner = new records::Scanner(scanConfig, m_scanArguments);
+        records::Scanner *scanner = new records::Scanner(m_scanArgs);
         QThread *cThread = new QThread(this);
-        //...
-        if(ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS){
+
+        if(ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS)
             scanner->startScan(cThread);
-        }
-        if(ui->comboBoxOption->currentIndex() == OPTION::SRV){
+        if(ui->comboBoxOption->currentIndex() == OPTION::SRV)
             scanner->startScan_srv(cThread);
-        }
+
         scanner->moveToThread(cThread);
-        //...
-        if(m_scanArguments->RecordType_srv)
+
+        if(m_scanArgs->RecordType_srv)
             connect(scanner, &records::Scanner::scanProgress, ui->progressBarSRV, &QProgressBar::setValue);
         else
             connect(scanner, &records::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+
         connect(scanner, &records::Scanner::infoLog, this, &DnsRecords::onInfoLog);
         connect(scanner, &records::Scanner::errorLog, this, &DnsRecords::onErrorLog);
         connect(scanner, &records::Scanner::scanResult, this, &DnsRecords::onScanResult);
@@ -82,66 +69,56 @@ void DnsRecords::startScan(){
         connect(cThread, &QThread::finished, scanner, &QThread::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         connect(this, &DnsRecords::stopScanThread, scanner, &records::Scanner::onStopScan);
-        //...
         cThread->start();
     }
-    status->records->isRunning = true;
+    status->dns->isRunning = true;
 }
 
 void DnsRecords::onScanThreadEnded(){
-    status->records->activeThreads--;
-    ///
-    /// if subdomainIp Scan Threads have finished...
-    ///
-    if(status->records->activeThreads == 0)
+    status->dns->activeScanThreads--;
+
+    /* if subdomainIp Scan Threads have finished... */
+    if(status->dns->activeScanThreads == 0)
     {
-        if(status->records->isPaused)
+        if(status->dns->isPaused)
         {
-            //ui->buttonPause->setText("Resume");
-            status->records->isRunning = false;
-            //...
-            sendStatus("[*] Scan Paused!");
+            status->dns->isRunning = false;
             return;
         }
         else
         {
-            // set the progress bar to 100% just in case...
-            if(!status->records->isStopped){
+            /* set the progress bar to 100% just in case... */
+            if(!status->dns->isStopped)
                 ui->progressBar->setValue(ui->progressBar->maximum());
-            }
-            status->records->isPaused = false;
-            status->records->isStopped = false;
-            status->records->isRunning = false;
-            //...
+
+            status->dns->isPaused = false;
+            status->dns->isStopped = false;
+            status->dns->isRunning = false;
+
+            /* ... */
             ui->buttonStart->setEnabled(true);
-            //ui->buttonPause->setDisabled(true);
             ui->buttonStop->setDisabled(true);
-            //...
-            sendStatus("[*] Enumeration Complete!");
         }
     }
 }
 
 void DnsRecords::onScanResult(records::Results results){
-    if(m_scanArguments->RecordType_srv)
+    if(m_scanArgs->RecordType_srv)
     {
         result->records->srv->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
         project->addActiveSRV(QStringList() <<results.srvName <<results.srvTarget <<results.domain);
         ui->labelResultsCountSRV->setNum(result->records->srv->rowCount());
         return;
     }
-    ///
-    /// for other record types...
-    ///
+
+    /* for other record types...*/
     QStandardItem *domainItem = new QStandardItem(results.domain);
     domainItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
     domainItem->setForeground(Qt::white);
     result->records->dns->invisibleRootItem()->appendRow(domainItem);
     ui->labelResultsCount->setNum(result->records->dns->invisibleRootItem()->rowCount());
-    ///
-    /// ...
-    ///
-    if(m_scanArguments->RecordType_a && !results.A.isEmpty()){
+
+    if(m_scanArgs->RecordType_a && !results.A.isEmpty()){
         QStandardItem *recordItem = new QStandardItem("A");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
@@ -152,7 +129,8 @@ void DnsRecords::onScanResult(records::Results results){
         }
         domainItem->appendRow(recordItem);
     }
-    if(m_scanArguments->RecordType_aaaa && !results.AAAA.isEmpty()){
+
+    if(m_scanArgs->RecordType_aaaa && !results.AAAA.isEmpty()){
         QStandardItem *recordItem = new QStandardItem("AAAA");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
@@ -163,7 +141,8 @@ void DnsRecords::onScanResult(records::Results results){
         }
         domainItem->appendRow(recordItem);
     }
-    if(m_scanArguments->RecordType_ns  && !results.NS.isEmpty()){
+
+    if(m_scanArgs->RecordType_ns  && !results.NS.isEmpty()){
         QStandardItem *recordItem = new QStandardItem("NS");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
@@ -174,7 +153,8 @@ void DnsRecords::onScanResult(records::Results results){
         }
         domainItem->appendRow(recordItem);
     }
-    if(m_scanArguments->RecordType_mx && !results.MX.isEmpty()){
+
+    if(m_scanArgs->RecordType_mx && !results.MX.isEmpty()){
         QStandardItem *recordItem = new QStandardItem("MX");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
@@ -185,7 +165,8 @@ void DnsRecords::onScanResult(records::Results results){
         }
         domainItem->appendRow(recordItem);
     }
-    if(m_scanArguments->RecordType_txt && !results.TXT.isEmpty()){
+
+    if(m_scanArgs->RecordType_txt && !results.TXT.isEmpty()){
         QStandardItem *recordItem = new QStandardItem("TXT");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
@@ -196,7 +177,8 @@ void DnsRecords::onScanResult(records::Results results){
         }
         domainItem->appendRow(recordItem);
     }
-    if(m_scanArguments->RecordType_cname  && !results.CNAME.isEmpty()){
+
+    if(m_scanArgs->RecordType_cname  && !results.CNAME.isEmpty()){
         QStandardItem *recordItem = new QStandardItem("CNAME");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);

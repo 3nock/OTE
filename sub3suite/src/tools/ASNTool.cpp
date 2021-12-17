@@ -1,6 +1,6 @@
 #include "ASNTool.h"
 #include "ui_ASNTool.h"
-//...
+
 #include "src/utils/Definitions.h"
 #include "src/dialogs/PassiveConfigDialog.h"
 

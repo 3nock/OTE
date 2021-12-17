@@ -116,7 +116,7 @@ void Osint::onResultCidr(QString cidr){
     int prevSize = m_cidrSet.count();
     m_cidrSet.insert(cidr);
     if(m_cidrSet.count() > prevSize && !cidr.isEmpty()){
-        result->osint->cidr->appendRow(new QStandardItem(A));
+        result->osint->cidr->appendRow(new QStandardItem(cidr));
         project->addPassiveCidr({cidr});
         ui->labelResultsCount->setNum(result->osint->cidrProxy->rowCount());
     }
