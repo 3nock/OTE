@@ -1,22 +1,22 @@
-#ifndef CERTTOOL_H
-#define CERTTOOL_H
+#ifndef SSLTOOL_H
+#define SSLTOOL_H
 
 #include <QDialog>
 #include <QSortFilterProxyModel>
-#include "src/models/CertModel.h"
+#include "src/models/SSLModel.h"
 #include "src/modules/osint/OsintModulesHeaders.h"
 
 
 namespace Ui {
-class CertTool;
+class SSLTool;
 }
 
-class CertTool : public QDialog{
+class SSLTool : public QDialog{
         Q_OBJECT
 
     public:
-        explicit CertTool(QWidget *parent = nullptr);
-        ~CertTool();
+        explicit SSLTool(QWidget *parent = nullptr);
+        ~SSLTool();
         //...
         void analyzeDomain(QString domain);
         void analyzeCert(QString cert);
@@ -42,7 +42,7 @@ class CertTool : public QDialog{
         void onRateLimitLog(ScanLog log);
 
     private:
-        Ui::CertTool *ui;
+        Ui::SSLTool *ui;
         CertModel *m_model;
         QSortFilterProxyModel *m_proxyModel;
 
@@ -51,4 +51,4 @@ class CertTool : public QDialog{
         QStringList m_osintModules{"Crtsh", "Certspotter"};
 };
 
-#endif // CERTTOOL_H
+#endif // SSLTOOL_H

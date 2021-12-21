@@ -20,7 +20,6 @@ class Raw : public AbstractEngine{
 
     public:
         explicit Raw(QWidget *parent = nullptr,
-                     ResultsModel *resultsModel = nullptr,
                      ProjectDataModel *project = nullptr,
                      Status *status = nullptr);
         ~Raw();
@@ -36,22 +35,9 @@ class Raw : public AbstractEngine{
         //...
         void onResults(QByteArray); // for Json results
         void onResultsTxt(QByteArray); // for normal txt results
-        /* receiving targets from other engines */
-        void onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
 
-    private slots:
-        void onOpenInBrowser(QItemSelectionModel*);
-        void onClearResults();
-        void onRemoveResults(QItemSelectionModel*);
-        void onExpandResults();
-        void onCollapseResults();
-        void onSaveResultsJson();
-        void onSaveResults(RESULT_TYPE);
-        void onSaveResults(QItemSelectionModel*);
-        void onCopyResultsJson();
-        void onCopyResults(RESULT_TYPE);
-        void onCopyResults(QItemSelectionModel*);
+        /* receiving targets from other engines */
+        void onReceiveTargets(QString, RESULT_TYPE);
 
     private slots:
         void on_buttonStart_clicked();
@@ -185,7 +171,36 @@ class Raw : public AbstractEngine{
         //...
         void m_errorLog(QString log);
         void m_infoLog(QString log);
+
+    /* for context menu */
+    private:
         void m_initActions();
+        /* ... */
+        void m_openInBrowser(QItemSelectionModel*);
+        void m_clearResults();
+        void m_expandResults();
+        void m_collapseResults();
+        void m_removeResults(QItemSelectionModel*);
+        void m_saveResultsJson();
+        void m_saveResults(RESULT_TYPE);
+        void m_saveResults(QItemSelectionModel*);
+        void m_copyResultsJson();
+        void m_copyResults(RESULT_TYPE);
+        void m_copyResults(QItemSelectionModel*);
+        /* sending results to other parts */
+        void m_sendToEngine(ENGINE); // for asn, cidr, email, cert
+        void m_sendSubdomainToEngine(ENGINE);
+        void m_sendIpToEngine(ENGINE);
+        void m_sendSubdomainToTool(TOOL);
+        void m_sendIpToTool(TOOL);
+        void m_sendToTool(TOOL);
+
+        void m_sendToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
+        void m_sendIpToTool(TOOL, QItemSelectionModel*);
+        void m_sendToTool(TOOL, QItemSelectionModel*);
 
     protected:
         /* general actions */
@@ -195,30 +210,33 @@ class Raw : public AbstractEngine{
         QAction a_ExpandResults{"Expand Results"};
         QAction a_CollapseResults{"Collapse Results"};
 
-        /* action button */
-        QAction a_SendIpToIp{"Send Addresses To Ip"};
-        QAction a_SendIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendIpToRaw{"Send Address To Raw"};
-        QAction a_SendHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendHostToActive{"Send Hostnames To Active"};
-        QAction a_SendHostToDns{"Send Hostnames To Records"};
-        QAction a_SendHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendCertToOsint{"Send Cert To Osint"};
-        QAction a_SendAsnToOsint{"Send ASN To Osint"};
-        QAction a_SendEmailToOsint{"Send Email To Osint"};
-        QAction a_SendCidrToOsint{"Send Cidr To Osint"};
-        QAction a_SendIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendHostToDomainTool{"Send Hostnames To DomainTool"};
-        QAction a_SendAsnToAsnTool{"Send ASN to ASNTool"};
-        QAction a_SendCertToCertTool{"Send Cert To CertTool"};
-        QAction a_SendCidrToCidrTool{"Send Cidr To CidrTool"};
-        QAction a_SendEmailToEmailTool{"Send Emails To EmailTool"};
-        QAction a_SendMXToMXTool{"Send MX to MXTool"};
-        QAction a_SendNSToNSTool{"Send NS to NSTool"};
-        /* Right-Click */
+        /* for all */
+        QAction a_SendAllIpToIp{"Send Addresses To Ip"};
+        QAction a_SendAllIpToOsint{"Send Addresses To Osint"};
+        QAction a_SendAllIpToRaw{"Send Address To Raw"};
+        QAction a_SendAllHostToOsint{"Send Hostnames To Osint"};
+        QAction a_SendAllHostToRaw{"Send Hostnames To Raw"};
+        QAction a_SendAllHostToBrute{"Send Hostnames To Brute"};
+        QAction a_SendAllHostToActive{"Send Hostnames To Active"};
+        QAction a_SendAllHostToDns{"Send Hostnames To Records"};
+        QAction a_SendAllHostToCert{"Send Hostnames To Cert"};
+        QAction a_SendAllEmailToRaw{"Send Emails To Raw"};
+        QAction a_SendAllUrlToRaw{"Send Urls To Raw"};
+        QAction a_SendAllAsnToRaw{"Send ASNs To Raw"};
+        QAction a_SendAllCertToRaw{"Send Cert To Raw"};
+        QAction a_SendAllCidrToRaw{"Send Cidr To Raw"};
+        QAction a_SendAllEmailToOsint{"Send Emails To Osint"};
+        QAction a_SendAllAsnToOsint{"Send ASNs To Osint"};
+        QAction a_SendAllCertToOsint{"Send Cert To Osint"};
+        QAction a_SendAllCidrToOsint{"Send Cidr To Osint"};
+        QAction a_SendAllIpToIpTool{"Send Addresses To IpTool"};
+        QAction a_SendAllHostToCertTool{"Send Hostnames To CertTool"};
+        QAction a_SendAllHostToDomainTool{"Send Hostnames To DomainTool"};
+        QAction a_SendAllAsnToAsnTool{"Send ASN to ASNTool"};
+        QAction a_SendAllCertToCertTool{"Send Cert To CertTool"};
+        QAction a_SendAllCidrToCidrTool{"Send Cidr To CidrTool"};
+        QAction a_SendAllEmailToEmailTool{"Send Emails To EmailTool"};
+        /* for selected */
         QAction a_SendSelectedIpToIp{"Send Addresses To Ip"};
         QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
         QAction a_SendSelectedIpToRaw{"Send Address To Raw"};
@@ -228,9 +246,14 @@ class Raw : public AbstractEngine{
         QAction a_SendSelectedHostToActive{"Send Hostnames To Active"};
         QAction a_SendSelectedHostToDns{"Send Hostnames To Records"};
         QAction a_SendSelectedHostToCert{"Send Hostnames To Cert"};
+        QAction a_SendSelectedEmailToRaw{"Send Emails To Raw"};
+        QAction a_SendSelectedUrlToRaw{"Send Urls To Raw"};
+        QAction a_SendSelectedAsnToRaw{"Send ASNs To Raw"};
+        QAction a_SendSelectedCertToRaw{"Send Cert To Raw"};
+        QAction a_SendSelectedCidrToRaw{"Send Cidr To Raw"};
+        QAction a_SendSelectedEmailToOsint{"Send Emails To Osint"};
+        QAction a_SendSelectedAsnToOsint{"Send ASNs To Osint"};
         QAction a_SendSelectedCertToOsint{"Send Cert To Osint"};
-        QAction a_SendSelectedAsnToOsint{"Send ASN To Osint"};
-        QAction a_SendSelectedEmailToOsint{"Send Email To Osint"};
         QAction a_SendSelectedCidrToOsint{"Send Cidr To Osint"};
         QAction a_SendSelectedIpToIpTool{"Send Addresses To IpTool"};
         QAction a_SendSelectedHostToCertTool{"Send Hostnames To CertTool"};
@@ -239,8 +262,6 @@ class Raw : public AbstractEngine{
         QAction a_SendSelectedCertToCertTool{"Send Cert To CertTool"};
         QAction a_SendSelectedCidrToCidrTool{"Send Cidr To CidrTool"};
         QAction a_SendSelectedEmailToEmailTool{"Send Emails To EmailTool"};
-        QAction a_SendSelectedMXToMXTool{"Send MX to MXTool"};
-        QAction a_SendSelectedNSToNSTool{"Send NS to NSTool"};
 
         /* save */
         QAction a_Save{"Save"};

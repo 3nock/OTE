@@ -89,8 +89,8 @@ void Ip::onScanThreadEnded(){
 
 void Ip::onScanResult(QString subdomain, QString ipAddress){
     /* save to ip model model... */
-    result->ip->subdomainIp->appendRow(QList<QStandardItem*>() <<new QStandardItem(ipAddress) <<new QStandardItem(subdomain));
-    ui->labelResultsCount->setNum(result->ip->subdomainIp->rowCount());
+    m_resultModel->appendRow(QList<QStandardItem*>() <<new QStandardItem(ipAddress) <<new QStandardItem(subdomain));
+    ui->labelResultsCount->setNum(m_resultModel->rowCount());
 
     /* save to project model... */
     project->addActiveSubdomain(QStringList()<<subdomain<<ipAddress<<subdomain);

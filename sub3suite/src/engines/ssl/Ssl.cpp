@@ -1,24 +1,39 @@
-#include "Cert.h"
-#include "ui_Cert.h"
+#include "Ssl.h"
+#include "ui_Ssl.h"
 
 #include <QSslKey>
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Definitions.h"
-#include "src/models/CertModel.h"
-#include "src/modules/scan/CertScanner.h"
+#include "src/models/SSLModel.h"
+#include "src/modules/scan/SSLScanner.h"
 
 
-Cert::Cert(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, resultsModel, project, status),
-    ui(new Ui::Cert),
+Ssl::Ssl(QWidget *parent, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, project, status),
+    ui(new Ui::Ssl),
     m_scanConfig(new certificate::ScanConfig),
     m_scanArgs(new certificate::ScanArgs),
-    m_targetListModel(new QStringListModel)
+    m_targetListModel(new QStringListModel),
+    m_resultModelSubdomain(new QStandardItemModel),
+    m_resultModelCertId(new QStandardItemModel),
+    m_resultModelCertInfo(new QStandardItemModel),
+    m_resultProxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
 
     /* init */
     ui->targets->setListName("Targets");
+    ui->targets->setListModel(m_targetListModel);
+
+    /* result models */
+    m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomains"});
+    m_resultModelCertId->setHorizontalHeaderLabels({"Certificate Fingerprints"});
+    m_resultModelCertInfo->setHorizontalHeaderLabels({"Property", "Value"});
+    m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
+    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_resultProxyModel->setRecursiveFilteringEnabled(true);
+    m_resultProxyModel->setFilterKeyColumn(0);
+    ui->treeViewResults->setModel(m_resultProxyModel);
 
     /* enabling and disabling widgets */
     ui->progressBar->hide();
@@ -28,15 +43,6 @@ Cert::Cert(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *projec
     /* placeholdertxt */
     ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
-
-    /* result models */
-    result->cert->subdomain->setHorizontalHeaderLabels({"Subdomains"});
-    result->cert->sslCert->setHorizontalHeaderLabels({"Certificate Fingerprints"});
-    result->cert->certInfo->setHorizontalHeaderLabels({"Property", "Value"});
-
-    ui->treeViewResults->setModel(result->cert->subdomainProxy);
-    result->active->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    result->active->subdomainIpProxy->setRecursiveFilteringEnabled(true);
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -50,14 +56,18 @@ Cert::Cert(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *projec
     /* ... */
     m_scanArgs->config = m_scanConfig;
 }
-Cert::~Cert(){
-    delete ui;
+Ssl::~Ssl(){
     delete m_scanArgs;
     delete m_scanConfig;
     delete m_targetListModel;
+    delete m_resultModelSubdomain;
+    delete m_resultModelCertInfo;
+    delete m_resultModelCertId;
+    delete m_resultProxyModel;
+    delete ui;
 }
 
-void Cert::on_buttonStart_clicked(){
+void Ssl::on_buttonStart_clicked(){
     /* check... */
     if(!(m_targetListModel->rowCount() > 0)){
         QMessageBox::warning(this, "Error!", "Please Enter Targets for Enumeration!");
@@ -75,11 +85,11 @@ void Cert::on_buttonStart_clicked(){
     this->m_startScan();
 }
 
-void Cert::on_buttonStop_clicked(){
+void Ssl::on_buttonStop_clicked(){
     emit stopScanThread();
 }
 
-void Cert::onScanThreadEnded(){
+void Ssl::onScanThreadEnded(){
     status->cert->activeScanThreads--;
 
     if(status->cert->activeScanThreads == 0){
@@ -89,60 +99,44 @@ void Cert::onScanThreadEnded(){
     }
 }
 
-void Cert::onInfoLog(QString log){
+void Ssl::onInfoLog(QString log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText(logTime.append(log));
 }
 
-void Cert::onErrorLog(QString log){
+void Ssl::onErrorLog(QString log){
     QString fontedLog;
     fontedLog.append("<font color=\"red\">").append(log).append("</font>");
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
 }
 
-void Cert::on_comboBoxOutput_currentIndexChanged(int index){
+void Ssl::on_comboBoxOutput_currentIndexChanged(int index){
     switch (index) {
-    case OUTPUT_SUBDOMAIN:
-        ui->treeViewResults->setModel(result->cert->subdomainProxy);
+    case ssl::OUTPUT::SUBDOMAIN:
+        m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
         ui->comboBoxOption->hide();
-        ui->labelResultsCount->setNum(result->cert->subdomainProxy->rowCount());
         ui->labelInfo->setText("Enumerated Subdomains");
         ui->treeViewResults->setIndentation(0);
         break;
-    case OUTPUT_SSLCERT:
-        ui->treeViewResults->setModel(result->cert->sslCertProxy);
+    case ssl::OUTPUT::CERT_ID:
+        m_resultProxyModel->setSourceModel(m_resultModelCertId);
         ui->comboBoxOption->show();
-        ui->labelResultsCount->setNum(result->cert->sslCertProxy->rowCount());
         ui->labelInfo->setText("Enumerated Certificates:");
         ui->treeViewResults->setIndentation(0);
         break;
-    case OUTPUT_CERTINFO:
-        ui->treeViewResults->setModel(result->cert->certInfo);
+    case ssl::OUTPUT::CERT_INFO:
+        m_resultProxyModel->setSourceModel(m_resultModelCertInfo);
         ui->comboBoxOption->hide();
-        ui->labelResultsCount->setNum(result->cert->certInfoProxy->rowCount());
         ui->labelInfo->setText("Enumerated Certificates:");
         ui->treeViewResults->setIndentation(20);
         break;
     }
+
+    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
 }
 
-void Cert::on_lineEditFilter_textChanged(const QString &filterKeyword){
-    switch (ui->comboBoxOutput->currentIndex()) {
-    case OUTPUT_SUBDOMAIN:
-        result->cert->subdomainProxy->setFilterRegExp(filterKeyword);
-        ui->treeViewResults->setModel(result->cert->subdomainProxy);
-        ui->labelResultsCount->setNum(result->cert->subdomainProxy->rowCount());
-        break;
-    case OUTPUT_SSLCERT:
-        result->cert->sslCertProxy->setFilterRegExp(filterKeyword);
-        ui->treeViewResults->setModel(result->cert->sslCertProxy);
-        ui->labelResultsCount->setNum(result->cert->sslCertProxy->rowCount());
-        break;
-    case OUTPUT_CERTINFO:
-        result->cert->certInfoProxy->setFilterRegExp(filterKeyword);
-        ui->treeViewResults->setModel(result->cert->certInfoProxy);
-        ui->labelResultsCount->setNum(result->cert->certInfoProxy->rowCount());
-        break;
-    }
+void Ssl::on_lineEditFilter_textChanged(const QString &filterKeyword){
+    m_resultProxyModel->setFilterRegExp(filterKeyword);
+    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
 }

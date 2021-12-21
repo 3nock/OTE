@@ -15,9 +15,7 @@ void Osint::on_useProfiles_clicked(bool checked){
 }
 
 void Osint::on_buttonLoadProfile_clicked(){
-    ///
-    /// opening the file containing the profiles...
-    ///
+    /* opening the file containing the profiles... */
     QSettings settings(m_currentPath+"/profiles.ini", QSettings::IniFormat);
     settings.beginGroup(ui->comboBoxProfiles->currentText());
 

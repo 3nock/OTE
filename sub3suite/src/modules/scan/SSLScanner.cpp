@@ -1,4 +1,4 @@
-#include "CertScanner.h"
+#include "SSLScanner.h"
 #include <QSslSocket>
 
 /*

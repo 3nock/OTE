@@ -1,11 +1,11 @@
-#include "CertTool.h"
-#include "ui_CertTool.h"
+#include "SSLTool.h"
+#include "ui_SSLTool.h"
 
 #include <QSslCertificate>
 #include <QStandardItem>
 #include <QSslKey>
 #include "src/utils/Definitions.h"
-#include "src/modules/scan/CertScanner.h"
+#include "src/modules/scan/SSLScanner.h"
 #include "src/dialogs/PassiveConfigDialog.h"
 
 #define TARGET_SSLCERT 0
@@ -29,7 +29,7 @@ enum MODULE{
  * articles on ssl-cert osint
  * https://osintcurio.us/2019/03/12/certificates-the-osint-gift-that-keeps-on-giving/
  */
-CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
+SSLTool::SSLTool(QWidget *parent) : QDialog(parent), ui(new Ui::SSLTool),
     m_model(new CertModel),
     m_proxyModel(new QSortFilterProxyModel)
 {
@@ -44,13 +44,13 @@ CertTool::CertTool(QWidget *parent) : QDialog(parent), ui(new Ui::CertTool),
     m_proxyModel->setSourceModel(m_model->mainModel);
     ui->treeResults->setModel(m_proxyModel);
 }
-CertTool::~CertTool(){
+SSLTool::~SSLTool(){
     delete ui;
     delete m_model;
     delete m_proxyModel;
 }
 
-void CertTool::on_buttonStart_clicked(){
+void SSLTool::on_buttonStart_clicked(){
     ui->buttonStop->setEnabled(true);
     ui->buttonStart->setDisabled(true);
 
@@ -81,16 +81,16 @@ void CertTool::on_buttonStart_clicked(){
             crtsh->startScan(cThread);
             crtsh->moveToThread(cThread);
 
-            connect(crtsh, &Crtsh::rawCert, this, &CertTool::onResult);
+            connect(crtsh, &Crtsh::rawCert, this, &SSLTool::onResult);
             /* ... */
-            connect(crtsh, &Crtsh::infoLog, this, &CertTool::onInfoLog);
-            connect(crtsh, &Crtsh::errorLog, this, &CertTool::onErrorLog);
-            connect(crtsh, &Crtsh::rateLimitLog, this, &CertTool::onRateLimitLog);
+            connect(crtsh, &Crtsh::infoLog, this, &SSLTool::onInfoLog);
+            connect(crtsh, &Crtsh::errorLog, this, &SSLTool::onErrorLog);
+            connect(crtsh, &Crtsh::rateLimitLog, this, &SSLTool::onRateLimitLog);
             /* ... */
-            connect(this, &CertTool::stopScanThread, crtsh, &AbstractOsintModule::onStop);
-            connect(this, &CertTool::pauseScanThread, crtsh, &AbstractOsintModule::onPause);
+            connect(this, &SSLTool::stopScanThread, crtsh, &AbstractOsintModule::onStop);
+            connect(this, &SSLTool::pauseScanThread, crtsh, &AbstractOsintModule::onPause);
             /* ... */
-            connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
+            connect(cThread, &QThread::finished, this, &SSLTool::onEnumerationComplete);
             connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);
             connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
 
@@ -124,10 +124,10 @@ void CertTool::on_buttonStart_clicked(){
         certificate::Scanner *scanner = new certificate::Scanner(args);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
-        connect(scanner, &certificate::Scanner::resultRaw, this, &CertTool::onResult);
-        connect(scanner, &certificate::Scanner::errorLog, this, &CertTool::onErrorLogTxt);
-        connect(scanner, &certificate::Scanner::infoLog, this, &CertTool::onInfoLogTxt);
-        connect(cThread, &QThread::finished, this, &CertTool::onEnumerationComplete);
+        connect(scanner, &certificate::Scanner::resultRaw, this, &SSLTool::onResult);
+        connect(scanner, &certificate::Scanner::errorLog, this, &SSLTool::onErrorLogTxt);
+        connect(scanner, &certificate::Scanner::infoLog, this, &SSLTool::onInfoLogTxt);
+        connect(cThread, &QThread::finished, this, &SSLTool::onEnumerationComplete);
         connect(cThread, &QThread::finished, scanner, &certificate::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         connect(cThread, &QThread::finished, this, [=](){delete args;});
@@ -137,14 +137,14 @@ void CertTool::on_buttonStart_clicked(){
     }
 }
 
-void CertTool::on_checkBoxExpand_clicked(bool checked){
+void SSLTool::on_checkBoxExpand_clicked(bool checked){
     if(checked)
         ui->treeResults->expandAll();
     else
         ui->treeResults->collapseAll();
 }
 
-void CertTool::on_comboBoxTargetType_currentIndexChanged(int index){
+void SSLTool::on_comboBoxTargetType_currentIndexChanged(int index){
     ui->lineEditTarget->clear();
 
     /* set new placeholdertext */
@@ -177,21 +177,21 @@ void CertTool::on_comboBoxTargetType_currentIndexChanged(int index){
                         scan slots
 ***********************************************************************/
 
-void CertTool::onEnumerationComplete(){
+void SSLTool::onEnumerationComplete(){
     ui->buttonStart->setEnabled(true);
     ui->buttonStop->setDisabled(true);
 }
 
-void CertTool::onInfoLogTxt(QString log){
+void SSLTool::onInfoLogTxt(QString log){
     ui->plainTextEditLogs->appendPlainText(log);
 }
 
-void CertTool::onErrorLogTxt(QString log){
+void SSLTool::onErrorLogTxt(QString log){
     QString message("<font color=\"red\">"+log+"</font>");
     ui->plainTextEditLogs->appendHtml(message);
 }
 
-void CertTool::onErrorLog(ScanLog log){
+void SSLTool::onErrorLog(ScanLog log){
     QString message("<font color=\"red\">"+log.message+"</font>");
     QString module("<font color=\"red\">"+log.moduleName+"</font>");
     QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
@@ -201,7 +201,7 @@ void CertTool::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
-void CertTool::onInfoLog(ScanLog log){
+void SSLTool::onInfoLog(ScanLog log){
     QString module("<font color=\"green\">"+log.moduleName+"</font>");
     QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
     ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
@@ -209,7 +209,7 @@ void CertTool::onInfoLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
-void CertTool::onRateLimitLog(ScanLog log){
+void SSLTool::onRateLimitLog(ScanLog log){
     QString message("<font color=\"yellow\">"+log.message+"</font>");
     QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
     QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
@@ -219,7 +219,7 @@ void CertTool::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
-void CertTool::onResult(QByteArray rawCert){
+void SSLTool::onResult(QByteArray rawCert){
 
     foreach(const QSslCertificate &cert, QSslCertificate::fromData(rawCert, QSsl::Pem))
     {
@@ -316,7 +316,7 @@ void CertTool::onResult(QByteArray rawCert){
 
 */
 
-void CertTool::on_buttonConfig_clicked(){
+void SSLTool::on_buttonConfig_clicked(){
     PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
     scanConfig->show();

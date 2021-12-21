@@ -6,7 +6,6 @@
 #include <QAction>
 #include <QStringListModel>
 #include "src/utils/utils.h"
-#include "src/models/ResultsModels.h"
 #include "src/widgets/InputWidget.h"
 #include "src/project/ProjectDataModel.h"
 
@@ -32,9 +31,11 @@ class Status{
         }
         ~Status(){
             delete osint;
+            delete raw;
             delete brute;
             delete active;
             delete ip;
+            delete cert;
             delete dns;
         }
         ScanStatus *osint;
@@ -62,12 +63,10 @@ class AbstractEngine : public QWidget{
 
     public:
         AbstractEngine(QWidget *parent = nullptr,
-                       ResultsModel *resultsModel = nullptr,
                        ProjectDataModel *project = nullptr,
                        Status *status = nullptr)
             : QWidget(parent),
               status(status),
-              result(resultsModel),
               project(project)
         {
         }
@@ -75,7 +74,6 @@ class AbstractEngine : public QWidget{
 
     protected:
         Status *status;
-        ResultsModel *result;
         ProjectDataModel *project;
         QItemSelectionModel *selectionModel;
         /* ... */
@@ -102,41 +100,14 @@ class AbstractEngine : public QWidget{
         void changeTabToCert();
         void changeTabToProject();
 
-        /* sending results using action-button */
-        void sendResultsToOsint(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToRaw(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToBrute(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToActive(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToDns(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToIp(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToCert(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToASNTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToCertTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToCidrTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToDomainTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToEmailTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToIpTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToMXTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToNSTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToProject(ENGINE, RESULT_TYPE);
-
-        /* sending results using right-click */
-        void sendResultsToOsint(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToRaw(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToBrute(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToActive(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToDns(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToIp(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToCert(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToASNTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToCertTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToCidrTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToDomainTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToEmailTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToIpTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToMXTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToNSTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void sendResultsToProject(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        /* sending results to an engine */
+        void sendResultsToOsint(QString, RESULT_TYPE);
+        void sendResultsToRaw(QString, RESULT_TYPE);
+        void sendResultsToBrute(QString, RESULT_TYPE);
+        void sendResultsToActive(QString, RESULT_TYPE);
+        void sendResultsToDns(QString, RESULT_TYPE);
+        void sendResultsToIp(QString, RESULT_TYPE);
+        void sendResultsToCert(QString, RESULT_TYPE);
 };
 
 #endif // ABSTRACTCLASS_H

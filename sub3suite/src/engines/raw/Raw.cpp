@@ -7,8 +7,8 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-Raw::Raw(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, resultsModel, project, status),
+Raw::Raw(QWidget *parent, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, project, status),
     ui(new Ui::Raw),
     m_model(new QStandardItemModel),
     m_targetListModelHostname(new QStringListModel),
@@ -22,6 +22,7 @@ Raw::Raw(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project,
 
     /* ... */
     ui->buttonStop->setDisabled(true);
+    ui->progressBar->hide();
 
     /* placeholder texts */
     ui->lineEditTarget->setPlaceholderText("Enter target...");

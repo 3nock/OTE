@@ -6,29 +6,33 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 
 
-Active::Active(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, resultsModel, project, status),
+Active::Active(QWidget *parent, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, project, status),
     ui(new Ui::Active),
     m_scanConfig(new active::ScanConfig),
     m_scanArgs(new active::ScanArgs),
-    m_targetListModel(new QStringListModel)
+    m_targetListModel(new QStringListModel),
+    m_resultModel(new QStandardItemModel),
+    m_resultProxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
 
-    /* target-list */
+    /* targets */
     ui->targets->setListName("Targets");
     ui->targets->setListModel(m_targetListModel);
+
+    /* result model */
+    m_resultModel->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    m_resultProxyModel->setSourceModel(m_resultModel);
+    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_resultProxyModel->setRecursiveFilteringEnabled(true);
+    m_resultProxyModel->setFilterKeyColumn(0);
+    ui->tableViewResults->setModel(m_resultProxyModel);
 
     /* hiding widgets */
     ui->frameCustom->hide();
     ui->progressBar->hide();
     ui->buttonStop->setDisabled(true);
-
-    /* result model */
-    result->active->subdomainIp->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-    ui->tableViewResults->setModel(result->active->subdomainIpProxy);
-    result->active->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    result->active->subdomainIpProxy->setRecursiveFilteringEnabled(true);
 
     /* equsubdomainIpy seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -52,6 +56,8 @@ Active::~Active(){
     delete m_scanConfig;
     delete m_scanArgs;
     delete m_targetListModel;
+    delete m_resultModel;
+    delete m_resultProxyModel;
     delete ui;
 }
 

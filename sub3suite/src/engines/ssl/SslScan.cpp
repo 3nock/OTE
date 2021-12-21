@@ -1,10 +1,10 @@
-#include "Cert.h"
-#include "ui_Cert.h"
+#include "Ssl.h"
+#include "ui_Ssl.h"
 
-#include "src/modules/scan/CertScanner.h"
+#include "src/modules/scan/SSLScanner.h"
 
 
-void Cert::m_startScan(){
+void Ssl::m_startScan(){
 
     certificate::ScanArgs *args = new certificate::ScanArgs;
     args->singleTarget = false;
@@ -13,10 +13,10 @@ void Cert::m_startScan(){
         args->targetList.push(target);
 
     switch (ui->comboBoxOutput->currentIndex()) {
-        case OUTPUT_SUBDOMAIN:
+        case ssl::OUTPUT::SUBDOMAIN:
             args->subdomain = true;
             break;
-        case OUTPUT_SSLCERT:
+        case ssl::OUTPUT::CERT_ID:
             switch (ui->comboBoxOption->currentIndex()) {
                 case 0: // SHA1
                     args->sha1 = true;
@@ -26,7 +26,7 @@ void Cert::m_startScan(){
                     break;
             }
             break;
-        case OUTPUT_CERTINFO:
+        case ssl::OUTPUT::CERT_INFO:
             args->raw = true;
             break;
     }
@@ -52,30 +52,30 @@ void Cert::m_startScan(){
 
         /* results signals & slots... */
         switch (ui->comboBoxOutput->currentIndex()) {
-        case OUTPUT_SUBDOMAIN:
-            connect(scanner, &certificate::Scanner::resultSubdomain, this, &Cert::onScanResultSubdomain);
+        case ssl::OUTPUT::SUBDOMAIN:
+            connect(scanner, &certificate::Scanner::resultSubdomain, this, &Ssl::onScanResultSubdomain);
             break;
-        case OUTPUT_SSLCERT:
+        case ssl::OUTPUT::CERT_ID:
             switch (ui->comboBoxOption->currentIndex()) {
             case 0: // SHA1
-                connect(scanner, &certificate::Scanner::resultSHA1, this, &Cert::onScanResultSHA1);
+                connect(scanner, &certificate::Scanner::resultSHA1, this, &Ssl::onScanResultSHA1);
                 break;
             case 1: // SHA256
-                connect(scanner, &certificate::Scanner::resultSHA256, this, &Cert::onScanResultSHA256);
+                connect(scanner, &certificate::Scanner::resultSHA256, this, &Ssl::onScanResultSHA256);
                 break;
             }
             break;
-        case OUTPUT_CERTINFO:
-            connect(scanner, &certificate::Scanner::resultRaw, this, &Cert::onScanResultCertInfo);
+        case ssl::OUTPUT::CERT_INFO:
+            connect(scanner, &certificate::Scanner::resultRaw, this, &Ssl::onScanResultCertInfo);
             break;
         }
         connect(scanner, &certificate::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &certificate::Scanner::infoLog, this, &Cert::onInfoLog);
-        connect(scanner, &certificate::Scanner::errorLog, this, &Cert::onErrorLog);
-        connect(cThread, &QThread::finished, this, &Cert::onScanThreadEnded);
+        connect(scanner, &certificate::Scanner::infoLog, this, &Ssl::onInfoLog);
+        connect(scanner, &certificate::Scanner::errorLog, this, &Ssl::onErrorLog);
+        connect(cThread, &QThread::finished, this, &Ssl::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &certificate::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &Cert::stopScanThread, scanner, &certificate::Scanner::onStopScan);
+        connect(this, &Ssl::stopScanThread, scanner, &certificate::Scanner::onStopScan);
         cThread->start();
     }
     status->active->isRunning = true;

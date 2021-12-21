@@ -32,7 +32,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
-      <widget class="QComboBox" name="comboBoxBruteType">
+      <widget class="QComboBox" name="comboBoxOutput">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -507,6 +507,28 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="tabNotes">
+          <attribute name="title">
+           <string>Notes</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPlainTextEdit" name="plainTextEditNotes"/>
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="tabLogs">
           <attribute name="title">
            <string>Logs</string>
@@ -533,28 +555,6 @@
               <bool>true</bool>
              </property>
             </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tabNotes">
-          <attribute name="title">
-           <string>Notes</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>2</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QPlainTextEdit" name="plainTextEditNotes"/>
            </item>
           </layout>
          </widget>

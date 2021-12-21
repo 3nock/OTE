@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Cert</class>
- <widget class="QWidget" name="Cert">
+ <class>Ssl</class>
+ <widget class="QWidget" name="Ssl">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -436,6 +436,28 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="tabNotes">
+          <attribute name="title">
+           <string>Notes</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPlainTextEdit" name="plainTextEditNotes"/>
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="tabLogs">
           <attribute name="title">
            <string>Logs</string>
@@ -459,28 +481,6 @@
               <bool>true</bool>
              </property>
             </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tabNotes">
-          <attribute name="title">
-           <string>Notes</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>2</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QPlainTextEdit" name="plainTextEditNotes"/>
            </item>
           </layout>
          </widget>

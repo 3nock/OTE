@@ -35,23 +35,24 @@ SOURCES += \
     src/engines/active/ActiveScan.cpp \
     src/engines/brute/BruteContextMenu.cpp \
     src/engines/brute/BruteScan.cpp \
-    src/engines/cert/Cert.cpp \
-    src/engines/cert/CertContextMenu.cpp \
-    src/engines/cert/CertResults.cpp \
-    src/engines/cert/CertScan.cpp \
+    src/engines/ssl/Ssl.cpp \
+    src/engines/ssl/SslContextMenu.cpp \
+    src/engines/ssl/SslResults.cpp \
+    src/engines/ssl/SslScan.cpp \
     src/engines/ip/IpScan.cpp \
     src/engines/osint/OsintResults.cpp \
     src/engines/osint/OsintScan.cpp \
     src/engines/raw/RawResults.cpp \
     src/engines/raw/RawScan.cpp \
-    src/engines/records/DnsRecordsContextMenu.cpp \
+    src/engines/dns/Dns.cpp \
     src/engines/ip/IpContextMenu.cpp \
     src/engines/osint/OsintContextMenu.cpp \
     src/engines/osint/OsintModules.cpp \
     src/engines/osint/OsintProfiles.cpp \
     src/engines/raw/RawContextMenu.cpp \
     src/engines/raw/RawModules.cpp \
-    src/engines/records/DnsRecordsScan.cpp \
+    src/engines/dns/DnsContextMenu.cpp \
+    src/engines/dns/DnsScan.cpp \
     src/modules/osint/api/HaveIBeenPawned.cpp \
     src/modules/osint/api/Host.cpp \
     src/modules/osint/api/JsonWhois.cpp \
@@ -107,10 +108,9 @@ SOURCES += \
     src/modules/osint/mal/IpQualityScore.cpp \
     src/modules/osint/mal/LeakLookup.cpp \
     src/modules/scan/BannerScanner.cpp \
-    src/modules/scan/CertScanner.cpp \
+    src/modules/scan/SSLScanner.cpp \
     src/tools/ASNTool.cpp \
     src/tools/BannerTool.cpp \
-    src/tools/CertTool.cpp \
     src/tools/CidrTool.cpp \
     src/tools/DomainTool.cpp \
     src/tools/EmailTool.cpp \
@@ -172,7 +172,6 @@ SOURCES += \
     src/engines/raw/Raw.cpp \
     src/engines/ip/Ip.cpp \
     src/engines/active/Active.cpp \
-    src/engines/records/DnsRecords.cpp \
     src/engines/brute/Brute.cpp \
     src/engines/osint/Osint.cpp \
     src/project/general/GeneralAnalysis.cpp \
@@ -180,6 +179,7 @@ SOURCES += \
     src/project/ProjectDataModel.cpp \
     src/project/Project.cpp \
     src/tools/NSTool.cpp \
+    src/tools/SSLTool.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/utils/NotesSyntaxHighlighter.cpp \
     src/utils/config/GeneralConfigDialog.cpp \
@@ -200,14 +200,15 @@ HEADERS += \
     src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
-    src/engines/cert/Cert.h \
-    src/models/AsnModel.h \
+    src/engines/ssl/Ssl.h \
+    src/engines/dns/Dns.h \
+    src/models/ASNModel.h \
     src/models/BannerModel.h \
-    src/models/CertModel.h \
-    src/models/CidrModel.h \
+    src/models/IPModel.h \
+    src/models/SSLModel.h \
+    src/models/CIDRModel.h \
     src/models/DomainModel.h \
     src/models/EmailModel.h \
-    src/models/IpModel.h \
     src/models/MXModel.h \
     src/models/NSmodel.h \
     src/modules/osint/OsintDefinitions.h \
@@ -268,10 +269,9 @@ HEADERS += \
     src/modules/osint/mal/IpQualityScore.h \
     src/modules/osint/mal/LeakLookup.h \
     src/modules/scan/BannerScanner.h \
-    src/modules/scan/CertScanner.h \
+    src/modules/scan/SSLScanner.h \
     src/tools/ASNTool.h \
     src/tools/BannerTool.h \
-    src/tools/CertTool.h \
     src/tools/CidrTool.h \
     src/tools/DomainTool.h \
     src/tools/EmailTool.h \
@@ -334,7 +334,6 @@ HEADERS += \
     src/engines/raw/Raw.h \
     src/engines/ip/Ip.h \
     src/engines/active/Active.h \
-    src/engines/records/DnsRecords.h \
     src/engines/brute/Brute.h \
     src/engines/osint/Osint.h \
     src/engines/AbstractEngine.h \
@@ -344,9 +343,9 @@ HEADERS += \
     src/project/Project.h \
     src/tools/MXTool.h \
     src/tools/NSTool.h \
+    src/tools/SSLTool.h \
     src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
-    src/models/ResultsModels.h \
     src/utils/NotesSyntaxHighlighter.h \
     src/utils/config/GeneralConfigDialog.h \
     src/utils/logs/LogViewerDialog.h \
@@ -367,10 +366,9 @@ FORMS += \
     src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \
-    src/engines/cert/Cert.ui \
+    src/engines/ssl/Ssl.ui \
     src/tools/ASNTool.ui \
     src/tools/BannerTool.ui \
-    src/tools/CertTool.ui \
     src/tools/CidrTool.ui \
     src/tools/DomainTool.ui \
     src/tools/EmailTool.ui \
@@ -381,11 +379,12 @@ FORMS += \
     src/project/specific/SpecificAnalysis.ui \
     src/engines/raw/Raw.ui \
     src/engines/ip/Ip.ui \
-    src/engines/records/DnsRecords.ui \
+    src/engines/dns/Dns.ui \
     src/engines/brute/Brute.ui \
     src/engines/osint/Osint.ui \
     src/engines/active/Active.ui \
     src/tools/NSTool.ui \
+    src/tools/SSLTool.ui \
     src/utils/config/GeneralConfigDialog.ui \
     src/utils/logs/LogViewerDialog.ui \
     src/widgets/InputWidget.ui \

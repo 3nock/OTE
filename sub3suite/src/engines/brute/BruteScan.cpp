@@ -66,8 +66,8 @@ void Brute::onScanResult(QString subdomain, QString ipAddress, QString target){
     m_subdomainsSet.insert(subdomain);
 
     /* save to brute model... */
-    result->brute->subdomainIp->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ipAddress));
-    ui->labelResultsCount->setNum(result->brute->subdomainIp->rowCount());
+    m_resultModelSubdomain->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ipAddress));
+    ui->labelResultsCount->setNum(m_resultModelSubdomain->rowCount());
 
     /* save to Project model... */
     if(m_scanArgs->tldBrute)

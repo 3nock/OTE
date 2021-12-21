@@ -1,21 +1,21 @@
-#include "Cert.h"
-#include "ui_Cert.h"
+#include "Ssl.h"
+#include "ui_Ssl.h"
 
 #include <QSslKey>
-#include "src/models/CertModel.h"
+#include "src/models/SSLModel.h"
 
 
-void Cert::onScanResultSHA1(QString sha1){
-    result->cert->sslCert->appendRow(new QStandardItem(sha1));
-    ui->labelResultsCount->setNum(result->cert->sslCert->rowCount());
+void Ssl::onScanResultSHA1(QString sha1){
+    m_resultModelCertId->appendRow(new QStandardItem(sha1));
+    ui->labelResultsCount->setNum(m_resultModelCertId->rowCount());
 }
 
-void Cert::onScanResultSHA256(QString sha256){
-    result->cert->sslCert->appendRow(new QStandardItem(sha256));
-    ui->labelResultsCount->setNum(result->cert->sslCert->rowCount());
+void Ssl::onScanResultSHA256(QString sha256){
+    m_resultModelCertId->appendRow(new QStandardItem(sha256));
+    ui->labelResultsCount->setNum(m_resultModelCertId->rowCount());
 }
 
-void Cert::onScanResultCertInfo(QByteArray rawCert){
+void Ssl::onScanResultCertInfo(QByteArray rawCert){
 
     foreach(const QSslCertificate &cert, QSslCertificate::fromData(rawCert, QSsl::Pem))
     {
@@ -84,12 +84,12 @@ void Cert::onScanResultCertInfo(QByteArray rawCert){
             alternativeName++;
         }
 
-        result->cert->certInfo->invisibleRootItem()->appendRow(certModel->mainItem);
+        m_resultModelCertInfo->invisibleRootItem()->appendRow(certModel->mainItem);
     }
-    ui->labelResultsCount->setNum(result->cert->certInfo->rowCount());
+    ui->labelResultsCount->setNum(m_resultModelCertInfo->rowCount());
 }
 
-void Cert::onScanResultSubdomain(QString subdomain){
-    result->cert->subdomain->appendRow(new QStandardItem(subdomain));
-    ui->labelResultsCount->setNum(result->cert->subdomain->rowCount());
+void Ssl::onScanResultSubdomain(QString subdomain){
+    m_resultModelSubdomain->appendRow(new QStandardItem(subdomain));
+    ui->labelResultsCount->setNum(m_resultModelSubdomain->rowCount());
 }

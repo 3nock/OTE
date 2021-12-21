@@ -16,53 +16,53 @@ void Osint::m_startScan(){
 
     /* getting input type as specified by user... */
     switch(ui->comboBoxInput->currentIndex()){
-    case INPUT_DOMAIN:
+    case INPUT::HOSTNAME:
         scanArgs.inputDomain = true;
         break;
-    case INPUT_IP:
+    case INPUT::IP:
         scanArgs.inputIp = true;
         break;
-    case INPUT_EMAIL:
+    case INPUT::EMAIL:
         scanArgs.inputEmail = true;
         break;
-    case INPUT_URL:
+    case INPUT::URL:
         scanArgs.inputUrl = true;
         break;
-    case INPUT_ASN:
+    case INPUT::ASN:
         scanArgs.inputAsn = true;
         break;
-    case INPUT_SSLCERT:
+    case INPUT::CERT:
         scanArgs.inputSSLCert = true;
         break;
-    case INPUT_CIDR:
+    case INPUT::CIDR:
         scanArgs.inputCidr = true;
         break;
     }
 
     /* getting output type as specified by user... */
     switch(ui->comboBoxOutput->currentIndex()){
-    case OUTPUT_SUBDOMAINIP:
+    case osint::OUTPUT::SUBDOMAINIP:
         scanArgs.outputSubdomainIp = true;
         break;
-    case OUTPUT_SUBDOMAIN:
+    case osint::OUTPUT::SUBDOMAIN:
         scanArgs.outputSubdomain = true;
         break;
-    case OUTPUT_IP:
+    case osint::OUTPUT::IP:
         scanArgs.outputIp = true;
         break;
-    case OUTPUT_EMAIL:
+    case osint::OUTPUT::EMAIL:
         scanArgs.outputEmail = true;
         break;
-    case OUTPUT_URL:
+    case osint::OUTPUT::URL:
         scanArgs.outputUrl = true;
         break;
-    case OUTPUT_ASN:
+    case osint::OUTPUT::ASN:
         scanArgs.outputAsn = true;
         break;
-    case OUTPUT_SSLCERT:
+    case osint::OUTPUT::CERT:
         scanArgs.outputSSLCert = true;
         break;
-    case OUTPUT_CIDR:
+    case osint::OUTPUT::CIDR:
         scanArgs.outputCidr = true;
         break;
     }
@@ -317,33 +317,33 @@ void Osint::m_startScanThread(AbstractOsintModule *module){
     module->moveToThread(cThread);
 
     switch (ui->comboBoxOutput->currentIndex()) {
-    case OUTPUT_SUBDOMAIN:
+    case osint::OUTPUT::SUBDOMAIN:
         connect(module, &AbstractOsintModule::subdomain, this, &Osint::onResultSubdomain);
         connect(module, &AbstractOsintModule::CNAME, this, &Osint::onResultCNAME);
         connect(module, &AbstractOsintModule::NS, this, &Osint::onResultNS);
         connect(module, &AbstractOsintModule::MX, this, &Osint::onResultMX);
         break;
-    case OUTPUT_IP:
+    case osint::OUTPUT::IP:
         connect(module, &AbstractOsintModule::ip, this, &Osint::onResultIp);
         connect(module, &AbstractOsintModule::ipA, this, &Osint::onResultA);
         connect(module, &AbstractOsintModule::ipAAAA, this, &Osint::onResultAAAA);
         break;
-    case OUTPUT_SUBDOMAINIP:
+    case osint::OUTPUT::SUBDOMAINIP:
         connect(module, &AbstractOsintModule::subdomainIp, this, &Osint::onResultSubdomainIp);
         break;
-    case OUTPUT_EMAIL:
+    case osint::OUTPUT::EMAIL:
         connect(module, &AbstractOsintModule::email, this, &Osint::onResultEmail);
         break;
     case OUT_URL:
         connect(module, &AbstractOsintModule::url, this, &Osint::onResultUrl);
         break;
-    case OUTPUT_ASN:
+    case osint::OUTPUT::ASN:
         connect(module, &AbstractOsintModule::asn, this, &Osint::onResultAsn);
         break;
-    case OUTPUT_CIDR:
+    case osint::OUTPUT::CIDR:
         connect(module, &AbstractOsintModule::cidr, this, &Osint::onResultCidr);
         break;
-    case OUTPUT_SSLCERT:
+    case osint::OUTPUT::CERT:
         connect(module, &AbstractOsintModule::sslCert, this, &Osint::onResultSSLCert);
         break;
     }

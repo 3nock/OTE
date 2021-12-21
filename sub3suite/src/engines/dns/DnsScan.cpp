@@ -1,12 +1,12 @@
-#include "DnsRecords.h"
-#include "ui_DnsRecords.h"
+#include "Dns.h"
+#include "ui_Dns.h"
 
 
-void DnsRecords::m_stopScan(){
+void Dns::m_stopScan(){
 
 }
 
-void DnsRecords::m_pauseScan(){
+void Dns::m_pauseScan(){
     /*
      if the scan was already paused, then this current click is to
      Resume the scan, just csubdomainIp the startScan, with the same arguments and
@@ -22,11 +22,11 @@ void DnsRecords::m_pauseScan(){
     }
 }
 
-void DnsRecords::m_resumeScan(){
+void Dns::m_resumeScan(){
 
 }
 
-void DnsRecords::m_startScan(){
+void Dns::m_startScan(){
     /*
      if the numner of threads is greater than the number of wordlists, set the
      number of threads to use to the number of wordlists available to avoid
@@ -36,10 +36,10 @@ void DnsRecords::m_startScan(){
     int srvWordlistCount = m_srvWordlitsModel->rowCount();
     int threadsCount = m_scanArgs->config->threadsCount;
 
-    if((ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS) && (threadsCount > wordlistCount))
+    if((!ui->checkBoxSRV->isChecked()) && (threadsCount > wordlistCount))
         threadsCount = wordlistCount;
 
-    if((ui->comboBoxOption->currentIndex() == OPTION::SRV) && (threadsCount > srvWordlistCount))
+    if((ui->checkBoxSRV->isChecked()) && (threadsCount > srvWordlistCount*wordlistCount))
         threadsCount = wordlistCount;
 
     status->dns->activeScanThreads = threadsCount;
@@ -49,32 +49,22 @@ void DnsRecords::m_startScan(){
     {
         records::Scanner *scanner = new records::Scanner(m_scanArgs);
         QThread *cThread = new QThread(this);
-
-        if(ui->comboBoxOption->currentIndex() == OPTION::ALLRECORDS)
-            scanner->startScan(cThread);
-        if(ui->comboBoxOption->currentIndex() == OPTION::SRV)
-            scanner->startScan_srv(cThread);
-
+        scanner->startScan(cThread);
         scanner->moveToThread(cThread);
-
-        if(m_scanArgs->RecordType_srv)
-            connect(scanner, &records::Scanner::scanProgress, ui->progressBarSRV, &QProgressBar::setValue);
-        else
-            connect(scanner, &records::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-
-        connect(scanner, &records::Scanner::infoLog, this, &DnsRecords::onInfoLog);
-        connect(scanner, &records::Scanner::errorLog, this, &DnsRecords::onErrorLog);
-        connect(scanner, &records::Scanner::scanResult, this, &DnsRecords::onScanResult);
-        connect(cThread, &QThread::finished, this, &DnsRecords::onScanThreadEnded);
+        connect(scanner, &records::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &records::Scanner::infoLog, this, &Dns::onInfoLog);
+        connect(scanner, &records::Scanner::errorLog, this, &Dns::onErrorLog);
+        connect(scanner, &records::Scanner::scanResult, this, &Dns::onScanResult);
+        connect(cThread, &QThread::finished, this, &Dns::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &QThread::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &DnsRecords::stopScanThread, scanner, &records::Scanner::onStopScan);
+        connect(this, &Dns::stopScanThread, scanner, &records::Scanner::onStopScan);
         cThread->start();
     }
     status->dns->isRunning = true;
 }
 
-void DnsRecords::onScanThreadEnded(){
+void Dns::onScanThreadEnded(){
     status->dns->activeScanThreads--;
 
     /* if subdomainIp Scan Threads have finished... */
@@ -102,12 +92,14 @@ void DnsRecords::onScanThreadEnded(){
     }
 }
 
-void DnsRecords::onScanResult(records::Results results){
+void Dns::onScanResult(records::Results results){
     if(m_scanArgs->RecordType_srv)
     {
+        /*
         result->records->srv->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
         project->addActiveSRV(QStringList() <<results.srvName <<results.srvTarget <<results.domain);
         ui->labelResultsCountSRV->setNum(result->records->srv->rowCount());
+        */
         return;
     }
 
@@ -115,8 +107,8 @@ void DnsRecords::onScanResult(records::Results results){
     QStandardItem *domainItem = new QStandardItem(results.domain);
     domainItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
     domainItem->setForeground(Qt::white);
-    result->records->dns->invisibleRootItem()->appendRow(domainItem);
-    ui->labelResultsCount->setNum(result->records->dns->invisibleRootItem()->rowCount());
+    m_resultModel->invisibleRootItem()->appendRow(domainItem);
+    ui->labelResultsCount->setNum(m_resultModel->invisibleRootItem()->rowCount());
 
     if(m_scanArgs->RecordType_a && !results.A.isEmpty()){
         QStandardItem *recordItem = new QStandardItem("A");

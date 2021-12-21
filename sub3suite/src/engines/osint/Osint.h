@@ -9,25 +9,30 @@
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 
-/* output option */
-#define OUTPUT_SUBDOMAIN 0
-#define OUTPUT_SUBDOMAINIP 1
-#define OUTPUT_IP 2
-#define OUTPUT_EMAIL 3
-#define OUTPUT_URL 4
-#define OUTPUT_ASN 5
-#define OUTPUT_SSLCERT 6
-#define OUTPUT_CIDR 7
+enum INPUT{
+    HOSTNAME = 0,
+    IP = 1,
+    EMAIL = 2,
+    URL = 3,
+    ASN = 4,
+    CERT = 5,
+    CIDR = 6
+};
 
-/* input option */
-#define INPUT_DOMAIN 0
-#define INPUT_IP 1
-#define INPUT_EMAIL 2
-#define INPUT_URL 3
-#define INPUT_ASN 4
-#define INPUT_SSLCERT 5
-#define INPUT_CIDR 6
+namespace osint{
 
+enum OUTPUT{
+    SUBDOMAIN = 0,
+    SUBDOMAINIP = 1,
+    IP = 2,
+    EMAIL = 3,
+    URL = 4,
+    ASN = 5,
+    CERT = 6,
+    CIDR = 7
+};
+
+}
 
 namespace Ui {
     class Osint;
@@ -38,7 +43,6 @@ class Osint : public AbstractEngine{
 
     public:
         Osint(QWidget *parent = nullptr,
-              ResultsModel *resultsModel = nullptr,
               ProjectDataModel *project = nullptr,
               Status *status = nullptr);
         ~Osint();
@@ -64,19 +68,11 @@ class Osint : public AbstractEngine{
         void onResultNS(QString NS);
         void onResultTXT(QString TXT);
         void onResultSSLCert(QString sha1_or_sha256);
+
         /* receiving targets from other engines */
-        void onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onReceiveTargets(QString, RESULT_TYPE);
 
     private slots:
-        void onOpenInBrowser(QItemSelectionModel*);
-        void onClearResults();
-        void onRemoveResults(QItemSelectionModel*);
-        void onSaveResults(RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSaveResults(QItemSelectionModel*);
-        void onCopyResults(RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onCopyResults(QItemSelectionModel*);
-        /* ... */
         void on_buttonStart_clicked();
         void on_buttonAction_clicked();
         void on_buttonStop_clicked();
@@ -84,11 +80,11 @@ class Osint : public AbstractEngine{
         void on_buttonKeys_clicked();
         void on_lineEditTarget_returnPressed();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
-        void on_checkBoxMultipleTargets_clicked(bool checked);
+        void on_checkBoxMultipleTargets_stateChanged(int arg1);
         void on_comboBoxOutput_currentIndexChanged(int index);
         void on_comboBoxInput_currentIndexChanged(int index);
         void on_lineEditFilter_textChanged(const QString &arg1);
-        /* ... */
+        /* for profile */
         void on_useProfiles_clicked(bool checked);
         void on_buttonLoadProfile_clicked();
         void on_buttonCreateProfile_clicked();
@@ -102,6 +98,16 @@ class Osint : public AbstractEngine{
         QStringListModel *m_targetListModelCidr;
         QStringListModel *m_targetListModelCert;
         QStringListModel *m_targetListModelEmail;
+        /* ... */
+        QStandardItemModel *m_resultModelSubdomainIp;
+        QStandardItemModel *m_resultModelSubdomain;
+        QStandardItemModel *m_resultModelIp;
+        QStandardItemModel *m_resultModelEmail;
+        QStandardItemModel *m_resultModelUrl;
+        QStandardItemModel *m_resultModelAsn;
+        QStandardItemModel *m_resultModelCert;
+        QStandardItemModel *m_resultModelCidr;
+        QSortFilterProxyModel *m_resultProxyModel;
         NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
         /* ... */
         QString m_currentPath;
@@ -113,19 +119,44 @@ class Osint : public AbstractEngine{
         QSet<QString> m_asnSet;
         QSet<QString> m_sslCertSet;
         QSet<QString> m_cidrSet;
-        /* ... */
+        /* for scan */
         void m_stopScan();
         void m_startScan();
         void m_pauseScan();
         void m_resumeScan();
         void m_startScanThread(AbstractOsintModule *);
         /* ... */
-        void m_initActions();
         void m_initProfiles();
         void m_initModules();
         /* ... */
         void m_infoLog(QString log);
         void m_errorLog(QString log);
+
+    /* for context menu */
+    private:
+        void m_initActions();
+        /* ... */
+        void m_openInBrowser(QItemSelectionModel*);
+        void m_clearResults();
+        void m_removeResults(QItemSelectionModel*);
+        void m_saveResults(RESULT_TYPE);
+        void m_saveResults(QItemSelectionModel*);
+        void m_copyResults(RESULT_TYPE);
+        void m_copyResults(QItemSelectionModel*);
+        /* sending results to other parts */
+        void m_sendToEngine(ENGINE); // for asn, cidr, email, cert
+        void m_sendSubdomainToEngine(ENGINE);
+        void m_sendIpToEngine(ENGINE);
+        void m_sendSubdomainToTool(TOOL);
+        void m_sendIpToTool(TOOL);
+        void m_sendToTool(TOOL);
+
+        void m_sendToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
+        void m_sendIpToTool(TOOL, QItemSelectionModel*);
+        void m_sendToTool(TOOL, QItemSelectionModel*);
 
     protected:
         /* general actions */
@@ -133,70 +164,54 @@ class Osint : public AbstractEngine{
         QAction a_ClearResults{"Clear Results"};
         QAction a_OpenInBrowser{"Open in Browser"};
 
-        /* action button */
-        QAction a_SendIpToIpFromIp{"Send Addresses To Ip"};
-        QAction a_SendIpToIpFromSubdomainIp{"Send Addresses To Ip"};
-        QAction a_SendIpToOsintFromIp{"Send Addresses To Osint"};
-        QAction a_SendIpToOsintFromSubdomainIp{"Send Addresses To Osint"};
-        QAction a_SendIpToRawFromIp{"Send Address To Raw"};
-        QAction a_SendIpToRawFromSubdomainIp{"Send Address To Raw"};
-        QAction a_SendHostToOsintFromSubdomain{"Send Hostnames To Osint"};
-        QAction a_SendHostToOsintFromSubdomainIp{"Send Hostnames To Osint"};
-        QAction a_SendHostToRawFromSubdomain{"Send Hostnames To Raw"};
-        QAction a_SendHostToRawFromSubdomainIp{"Send Hostnames To Raw"};
-        QAction a_SendHostToBruteFromSubdomain{"Send Hostnames To Brute"};
-        QAction a_SendHostToBruteFromSubdomainIp{"Send Hostnames To Brute"};
-        QAction a_SendHostToActiveFromSubdomain{"Send Hostnames To Active"};
-        QAction a_SendHostToActiveFromSubdomainIp{"Send Hostnames To Active"};
-        QAction a_SendHostToDnsFromSubdomain{"Send Hostnames To Records"};
-        QAction a_SendHostToDnsFromSubdomainIp{"Send Hostnames To Records"};
-        QAction a_SendHostToCertFromSubdomain{"Send Hostnames To Cert"};
-        QAction a_SendHostToCertFromSubdomainIp{"Send Hostnames To Cert"};
-        QAction a_SendEmailToRaw{"Send Emails To Raw"};
-        QAction a_SendUrlToRaw{"Send Urls To Raw"};
-        QAction a_SendAsnToRaw{"Send ASNs To Raw"};
-        QAction a_SendCertToRaw{"Send Cert To Raw"};
-        QAction a_SendCidrToRaw{"Send Cidr To Raw"};
-        QAction a_SendIpToIpToolFromIp{"Send Addresses To IpTool"};
-        QAction a_SendIpToIpToolFromSubdomainIp{"Send Addresses To IpTool"};
-        QAction a_SendHostToCertToolFromSubdomain{"Send Hostnames To CertTool"};
-        QAction a_SendHostToCertToolFromSubdomainIp{"Send Hostnames To CertTool"};
-        QAction a_SendHostToDomainToolFromSubdomain{"Send Hostnames To DomainTool"};
-        QAction a_SendHostToDomainToolFromSubdomainIp{"Send Hostnames To DomainTool"};
-        QAction a_SendAsnToAsnTool{"Send ASN to ASNTool"};
-        QAction a_SendCertToCertTool{"Send Cert To CertTool"};
-        QAction a_SendCidrToCidrTool{"Send Cidr To CidrTool"};
-        QAction a_SendEmailToEmailTool{"Send Emails To EmailTool"};
-        /* right-click */
-        QAction a_SendSelectedIpToIpFromIp{"Send Addresses To Ip"};
-        QAction a_SendSelectedIpToIpFromSubdomainIp{"Send Addresses To Ip"};
-        QAction a_SendSelectedIpToOsintFromIp{"Send Addresses To Osint"};
-        QAction a_SendSelectedIpToOsintFromSubdomainIp{"Send Addresses To Osint"};
-        QAction a_SendSelectedIpToRawFromIp{"Send Address To Raw"};
-        QAction a_SendSelectedIpToRawFromSubdomainIp{"Send Address To Raw"};
-        QAction a_SendSelectedHostToOsintFromSubdomain{"Send Hostnames To Osint"};
-        QAction a_SendSelectedHostToOsintFromSubdomainIp{"Send Hostnames To Osint"};
-        QAction a_SendSelectedHostToRawFromSubdomain{"Send Hostnames To Raw"};
-        QAction a_SendSelectedHostToRawFromSubdomainIp{"Send Hostnames To Raw"};
-        QAction a_SendSelectedHostToBruteFromSubdomain{"Send Hostnames To Brute"};
-        QAction a_SendSelectedHostToBruteFromSubdomainIp{"Send Hostnames To Brute"};
-        QAction a_SendSelectedHostToActiveFromSubdomain{"Send Hostnames To Active"};
-        QAction a_SendSelectedHostToActiveFromSubdomainIp{"Send Hostnames To Active"};
-        QAction a_SendSelectedHostToDnsFromSubdomain{"Send Hostnames To Records"};
-        QAction a_SendSelectedHostToDnsFromSubdomainIp{"Send Hostnames To Records"};
-        QAction a_SendSelectedHostToCertFromSubdomain{"Send Hostnames To Cert"};
-        QAction a_SendSelectedHostToCertFromSubdomainIp{"Send Hostnames To Cert"};
+        /* for all */
+        QAction a_SendAllIpToIp{"Send Addresses To Ip"};
+        QAction a_SendAllIpToOsint{"Send Addresses To Osint"};
+        QAction a_SendAllIpToRaw{"Send Address To Raw"};
+        QAction a_SendAllHostToOsint{"Send Hostnames To Osint"};
+        QAction a_SendAllHostToRaw{"Send Hostnames To Raw"};
+        QAction a_SendAllHostToBrute{"Send Hostnames To Brute"};
+        QAction a_SendAllHostToActive{"Send Hostnames To Active"};
+        QAction a_SendAllHostToDns{"Send Hostnames To Records"};
+        QAction a_SendAllHostToCert{"Send Hostnames To Cert"};
+        QAction a_SendAllEmailToRaw{"Send Emails To Raw"};
+        QAction a_SendAllUrlToRaw{"Send Urls To Raw"};
+        QAction a_SendAllAsnToRaw{"Send ASNs To Raw"};
+        QAction a_SendAllCertToRaw{"Send Cert To Raw"};
+        QAction a_SendAllCidrToRaw{"Send Cidr To Raw"};
+        QAction a_SendAllEmailToOsint{"Send Emails To Osint"};
+        QAction a_SendAllAsnToOsint{"Send ASNs To Osint"};
+        QAction a_SendAllCertToOsint{"Send Cert To Osint"};
+        QAction a_SendAllCidrToOsint{"Send Cidr To Osint"};
+        QAction a_SendAllIpToIpTool{"Send Addresses To IpTool"};
+        QAction a_SendAllHostToCertTool{"Send Hostnames To CertTool"};
+        QAction a_SendAllHostToDomainTool{"Send Hostnames To DomainTool"};
+        QAction a_SendAllAsnToAsnTool{"Send ASN to ASNTool"};
+        QAction a_SendAllCertToCertTool{"Send Cert To CertTool"};
+        QAction a_SendAllCidrToCidrTool{"Send Cidr To CidrTool"};
+        QAction a_SendAllEmailToEmailTool{"Send Emails To EmailTool"};
+        /* for selected */
+        QAction a_SendSelectedIpToIp{"Send Addresses To Ip"};
+        QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
+        QAction a_SendSelectedIpToRaw{"Send Address To Raw"};
+        QAction a_SendSelectedHostToOsint{"Send Hostnames To Osint"};
+        QAction a_SendSelectedHostToRaw{"Send Hostnames To Raw"};
+        QAction a_SendSelectedHostToBrute{"Send Hostnames To Brute"};
+        QAction a_SendSelectedHostToActive{"Send Hostnames To Active"};
+        QAction a_SendSelectedHostToDns{"Send Hostnames To Records"};
+        QAction a_SendSelectedHostToCert{"Send Hostnames To Cert"};
         QAction a_SendSelectedEmailToRaw{"Send Emails To Raw"};
         QAction a_SendSelectedUrlToRaw{"Send Urls To Raw"};
         QAction a_SendSelectedAsnToRaw{"Send ASNs To Raw"};
         QAction a_SendSelectedCertToRaw{"Send Cert To Raw"};
         QAction a_SendSelectedCidrToRaw{"Send Cidr To Raw"};
-        QAction a_SendSelectedIpToIpToolFromIp{"Send Addresses To IpTool"};
-        QAction a_SendSelectedIpToIpToolFromSubdomainIp{"Send Addresses To IpTool"};
-        QAction a_SendSelectedHostToCertToolFromSubdomain{"Send Hostnames To CertTool"};
-        QAction a_SendSelectedHostToCertToolFromSubdomainIp{"Send Hostnames To CertTool"};
-        QAction a_SendSelectedHostToDomainToolFromSubdomain{"Send Hostnames To DomainTool"};
-        QAction a_SendSelectedHostToDomainToolFromSubdomainIp{"Send Hostnames To DomainTool"};
+        QAction a_SendSelectedEmailToOsint{"Send Emails To Osint"};
+        QAction a_SendSelectedAsnToOsint{"Send ASNs To Osint"};
+        QAction a_SendSelectedCertToOsint{"Send Cert To Osint"};
+        QAction a_SendSelectedCidrToOsint{"Send Cidr To Osint"};
+        QAction a_SendSelectedIpToIpTool{"Send Addresses To IpTool"};
+        QAction a_SendSelectedHostToCertTool{"Send Hostnames To CertTool"};
+        QAction a_SendSelectedHostToDomainTool{"Send Hostnames To DomainTool"};
         QAction a_SendSelectedAsnToAsnTool{"Send ASN to ASNTool"};
         QAction a_SendSelectedCertToCertTool{"Send Cert To CertTool"};
         QAction a_SendSelectedCidrToCidrTool{"Send Cidr To CidrTool"};
@@ -205,27 +220,13 @@ class Osint : public AbstractEngine{
         /* save */
         QAction a_Save{"Save"};
         QAction a_SaveSubdomainIp{"subdomain | ip"};
-        QAction a_SaveSubdomainFromSubdomain{"subdomains"};
-        QAction a_SaveSubdomainFromSubdomainIp{"subdomains"};
-        QAction a_SaveIpFromIp{"ip-addresses"};
-        QAction a_SaveIpFromSubdomainIp{"ip-addresses"};
-        QAction a_SaveEmail{"Emails"};
-        QAction a_SaveUrl{"Urls"};
-        QAction a_SaveAsn{"ASNs"};
-        QAction a_SaveCert{"Certs"};
-        QAction a_SaveCidr{"Cidr"};
+        QAction a_SaveSubdomain{"subdomains"};
+        QAction a_SaveIp{"ip-addresses"};
         /* copy */
         QAction a_Copy{"Copy"};
         QAction a_CopySubdomainIp{"subdomain | ip"};
-        QAction a_CopySubdomainFromSubdomain{"subdomains"};
-        QAction a_CopySubdomainFromSubdomainIp{"subdomains"};
-        QAction a_CopyIpFromIp{"ip-addresses"};
-        QAction a_CopyIpFromSubdomainIp{"ip-addresses"};
-        QAction a_CopyEmail{"Emails"};
-        QAction a_CopyUrl{"Urls"};
-        QAction a_CopyAsn{"ASNs"};
-        QAction a_CopyCert{"Certs"};
-        QAction a_CopyCidr{"Cidr"};
+        QAction a_CopySubdomain{"subdomains"};
+        QAction a_CopyIp{"ip-addresses"};
 };
 
 #endif // OSINT_H

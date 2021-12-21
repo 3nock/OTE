@@ -1,5 +1,5 @@
-#ifndef CERTSCANNER_H
-#define CERTSCANNER_H
+#ifndef SSLSCANNER_H
+#define SSLSCANNER_H
 
 #include <QStack>
 #include <QSslCertificate>

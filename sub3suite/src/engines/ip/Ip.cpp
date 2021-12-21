@@ -6,12 +6,14 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 
 
-Ip::Ip(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, resultsModel, project, status),
+Ip::Ip(QWidget *parent, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, project, status),
     ui(new Ui::Ip),
     m_scanConfig(new ip::ScanConfig),
     m_scanArgs(new ip::ScanArgs),
-    m_targetListModel(new QStringListModel)
+    m_targetListModel(new QStringListModel),
+    m_resultModel(new QStandardItemModel),
+    m_resultProxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
 
@@ -19,18 +21,20 @@ Ip::Ip(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, S
     ui->targets->setListName("Target Ip");
     ui->targets->setListModel(m_targetListModel);
 
+    /* result model */
+    m_resultModel->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    m_resultProxyModel->setSourceModel(m_resultModel);
+    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_resultProxyModel->setRecursiveFilteringEnabled(true);
+    m_resultProxyModel->setFilterKeyColumn(0);
+    ui->tableViewResults->setModel(m_resultProxyModel);
+
     /* ... */
     ui->progressBar->hide();
     ui->buttonStop->setDisabled(true);
 
     /* placeholder texts */
     ui->lineEditFilter->setPlaceholderText("Enter filter...");
-
-    /* results model */
-    result->ip->subdomainIp->setHorizontalHeaderLabels({"IpAddress:", "HostName:"});
-    ui->tableViewResults->setModel(result->ip->subdomainIp);
-    result->ip->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    result->ip->subdomainIpProxy->setRecursiveFilteringEnabled(true);
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -49,6 +53,8 @@ Ip::~Ip(){
     delete m_scanArgs;
     delete m_scanConfig;
     delete m_targetListModel;
+    delete m_resultModel;
+    delete m_resultProxyModel;
     delete ui;
 }
 
@@ -101,18 +107,6 @@ void Ip::on_buttonConfig_clicked(){
     ActiveConfigDialog *configDialog = new ActiveConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
-}
-
-void Ip::onClearResults(){
-    /* clear the results... */
-    result->ip->subdomainIp->clear();
-    ui->labelResultsCount->clear();
-    result->ip->subdomainIp->setHorizontalHeaderLabels({"IpAddress", "HostName"});
-
-    /* clear the progressbar... */
-    ui->progressBar->clearMask();
-    ui->progressBar->reset();
-    ui->progressBar->hide();
 }
 
 void Ip::on_comboBoxOption_currentIndexChanged(int index){

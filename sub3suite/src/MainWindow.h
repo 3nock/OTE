@@ -3,16 +3,16 @@
 
 #include <QMainWindow>
 #include <QSettings>
-/* ... */
+
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
 #include "src/engines/ip/Ip.h"
-#include "src/engines/records/DnsRecords.h"
+#include "src/engines/dns/Dns.h"
 #include "src/engines/brute/Brute.h"
 #include "src/engines/osint/Osint.h"
 #include "src/engines/active/Active.h"
 #include "src/engines/raw/Raw.h"
-#include "src/engines/cert/Cert.h"
+#include "src/engines/ssl/Ssl.h"
 
 
 namespace Ui {
@@ -30,7 +30,6 @@ class MainWindow : public QMainWindow{
         ~MainWindow();
         /* ... */
         Status *status;
-        ResultsModel *resultsModel;
         ProjectDataModel *projectDataModel;
 
     public slots:
@@ -44,24 +43,6 @@ class MainWindow : public QMainWindow{
         void onChangeTabToDns();
         void onChangeTabToRaw();
         void onChangeTabToCert();
-        /* ... */
-        void onSendResultsToDomainTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToNSTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToMXTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToCertTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToIpTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToASNTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToCidrTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToEmailTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        /* ... */
-        void onSendResultsToDomainTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToNSTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToMXTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToCertTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToIpTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToASNTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToCidrTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onSendResultsToEmailTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
 
     private slots:
         void on_actionAbout_triggered();
@@ -87,10 +68,10 @@ class MainWindow : public QMainWindow{
         Osint *osint = nullptr;
         Brute *brute = nullptr;
         Active *active = nullptr;
-        DnsRecords *records = nullptr;
+        Dns *dns = nullptr;
         Project *project = nullptr;
         Raw *raw = nullptr;
-        Cert *cert = nullptr;
+        Ssl *ssl = nullptr;
         //...
         void m_connectSignals(AbstractEngine *engine);
 };

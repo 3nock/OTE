@@ -17,7 +17,6 @@ class Ip : public AbstractEngine{
 
     public:
         Ip(QWidget *parent = nullptr,
-           ResultsModel *resultsModel = nullptr,
            ProjectDataModel *project = nullptr,
            Status *status = nullptr);
         ~Ip();
@@ -27,19 +26,11 @@ class Ip : public AbstractEngine{
         void onInfoLog(QString log);
         void onErrorLog(QString log);
         void onScanResult(QString subdomain, QString ipAddress);
+
         /* receiving targets from other engines */
-        void onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onReceiveTargets(QString, RESULT_TYPE);
 
     private slots:
-        void onOpenInBrowser(QItemSelectionModel*);
-        void onClearResults();
-        void onRemoveResults(QItemSelectionModel*);
-        void onSaveResults(RESULT_TYPE);
-        void onSaveResults(QItemSelectionModel*);
-        void onCopyResults(RESULT_TYPE);
-        void onCopyResults(QItemSelectionModel*);
-        /* ... */
         void on_buttonStart_clicked();
         void on_buttonStop_clicked();
         void on_buttonAction_clicked();
@@ -52,13 +43,35 @@ class Ip : public AbstractEngine{
         ip::ScanConfig *m_scanConfig;
         ip::ScanArgs *m_scanArgs;
         QStringListModel *m_targetListModel;
+        QStandardItemModel *m_resultModel;
+        QSortFilterProxyModel *m_resultProxyModel;
         NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
         /* ... */
         void m_stopScan();
         void m_startScan();
         void m_pauseScan();
         void m_resumeScan();
+
+    /* for context menu */
+    private:
         void m_initActions();
+        /* ... */
+        void m_openInBrowser(QItemSelectionModel*);
+        void m_clearResults();
+        void m_removeResults(QItemSelectionModel*);
+        void m_saveResults(RESULT_TYPE);
+        void m_saveResults(QItemSelectionModel*);
+        void m_copyResults(RESULT_TYPE);
+        void m_copyResults(QItemSelectionModel*);
+        /* sending results to other parts */
+        void m_sendSubdomainToEngine(ENGINE);
+        void m_sendIpToEngine(ENGINE);
+        void m_sendSubdomainToTool(TOOL);
+        void m_sendIpToTool(TOOL);
+        void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
+        void m_sendIpToTool(TOOL, QItemSelectionModel*);
 
     protected:
         /* general actions */
@@ -66,20 +79,20 @@ class Ip : public AbstractEngine{
         QAction a_ClearResults{"Clear Results"};
         QAction a_OpenInBrowser{"Open in Browser"};
 
-        /* for action button... */
-        QAction a_SendIpToIp{"Send Addresses To Ip"};
-        QAction a_SendIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendIpToRaw{"Send Address To Raw"};
-        QAction a_SendHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendHostToActive{"Send Hostnames To Active"};
-        QAction a_SendHostToDns{"Send Hostnames To Records"};
-        QAction a_SendHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendHostToDomainTool{"Send Hostnames To DomainTool"};
-        /* for right-click... */
+        /* for all */
+        QAction a_SendAllIpToIp{"Send Addresses To Ip"};
+        QAction a_SendAllIpToOsint{"Send Addresses To Osint"};
+        QAction a_SendAllIpToRaw{"Send Address To Raw"};
+        QAction a_SendAllHostToOsint{"Send Hostnames To Osint"};
+        QAction a_SendAllHostToRaw{"Send Hostnames To Raw"};
+        QAction a_SendAllHostToBrute{"Send Hostnames To Brute"};
+        QAction a_SendAllHostToActive{"Send Hostnames To Active"};
+        QAction a_SendAllHostToDns{"Send Hostnames To Records"};
+        QAction a_SendAllHostToCert{"Send Hostnames To Cert"};
+        QAction a_SendAllIpToIpTool{"Send Addresses To IpTool"};
+        QAction a_SendAllHostToCertTool{"Send Hostnames To CertTool"};
+        QAction a_SendAllHostToDomainTool{"Send Hostnames To DomainTool"};
+        /* for selected */
         QAction a_SendSelectedIpToIp{"Send Addresses To Ip"};
         QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
         QAction a_SendSelectedIpToRaw{"Send Address To Raw"};

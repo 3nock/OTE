@@ -9,7 +9,7 @@
 /* Tools */
 #include "src/tools/IpTool.h"
 #include "src/tools/ASNTool.h"
-#include "src/tools/CertTool.h"
+#include "src/tools/SSLTool.h"
 #include "src/tools/EmailTool.h"
 #include "src/tools/CidrTool.h"
 #include "src/tools/BannerTool.h"
@@ -20,18 +20,17 @@
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow),
     status(new Status),
-    resultsModel(new ResultsModel),
     projectDataModel(new ProjectDataModel)
 {
     ui->setupUi(this);
 
     /* creating and initiating the classes for the modules... */
-    ip = new Ip(this, resultsModel, projectDataModel, status);
-    osint = new Osint(this, resultsModel, projectDataModel, status);
-    brute = new Brute(this, resultsModel, projectDataModel, status);
-    active = new Active(this, resultsModel, projectDataModel, status);
-    records = new DnsRecords(this, resultsModel, projectDataModel, status);
-    cert = new Cert(this, resultsModel, projectDataModel, status);
+    ip = new Ip(this, projectDataModel, status);
+    osint = new Osint(this, projectDataModel, status);
+    brute = new Brute(this, projectDataModel, status);
+    active = new Active(this, projectDataModel, status);
+    dns = new Dns(this, projectDataModel, status);
+    ssl = new Ssl(this, projectDataModel, status);
     raw = new Raw(this);
     project = new Project(this, projectDataModel);
 
@@ -40,8 +39,8 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     this->m_connectSignals(osint);
     this->m_connectSignals(brute);
     this->m_connectSignals(active);
-    this->m_connectSignals(records);
-    this->m_connectSignals(cert);
+    this->m_connectSignals(dns);
+    this->m_connectSignals(ssl);
     this->m_connectSignals(raw);
 
     /* passive tabwidget */
@@ -51,9 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     /* active tabwidget */
     ui->tabWidgetActive->insertTab(0, brute, "Brute");
     ui->tabWidgetActive->insertTab(1, active, "Active");
-    ui->tabWidgetActive->insertTab(2, records, "DNS");
-    ui->tabWidgetActive->insertTab(3, cert, "Cert");
-    ui->tabWidgetActive->insertTab(4, ip, "Ip");
+    ui->tabWidgetActive->insertTab(2, dns, "DNS");
+    ui->tabWidgetActive->insertTab(3, ssl, "SSL");
+    ui->tabWidgetActive->insertTab(4, ip, "IP");
     ui->tabWidgetActive->setCurrentIndex(0);
     /* main tabwidget */
     ui->tabWidgetMain->insertTab(2, project, "Project");
@@ -67,49 +66,25 @@ MainWindow::~MainWindow(){
     delete osint;
     delete brute;
     delete active;
-    delete records;
+    delete dns;
     delete raw;
+    delete ssl;
     delete project;
     //...
     delete status;
-    delete resultsModel;
     delete projectDataModel;
     delete ui;
 }
 
 void MainWindow::m_connectSignals(AbstractEngine *engine){
     /* for all */
-    connect(engine, SIGNAL(sendResultsToOsint(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), osint, SLOT(onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToActive(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), active, SLOT(onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToBrute(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), brute, SLOT(onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToIp(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), ip, SLOT(onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToDns(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), records, SLOT(onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToCert(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), cert, SLOT(onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToRaw(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), raw, SLOT(onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToDomainTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToDomainTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToNSTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToNSTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToMXTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToMXTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToASNTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToASNTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToCidrTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToCidrTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToIpTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToIpTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToCertTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToCertTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToEmailTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToEmailTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    /* for selection */
-    connect(engine, SIGNAL(sendResultsToOsint(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), osint, SLOT(onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToActive(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), active, SLOT(onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToBrute(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), brute, SLOT(onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToIp(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), ip, SLOT(onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToDns(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), records, SLOT(onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToCert(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), cert, SLOT(onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToRaw(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), raw, SLOT(onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToDomainTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToDomainTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToNSTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToNSTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToMXTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToMXTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToASNTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToASNTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToCidrTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToCidrTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToIpTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToIpTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToCertTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToCertTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
-    connect(engine, SIGNAL(sendResultsToEmailTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)), this, SLOT(onSendResultsToEmailTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE)));
+    connect(engine, SIGNAL(sendResultsToOsint(QString, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), active, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToIp(QString, RESULT_TYPE)), ip, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     /* for change of tab */
     connect(engine, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
     connect(engine, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
@@ -166,70 +141,6 @@ void MainWindow::onChangeTabToIp(){
     ui->tabWidgetActive->setCurrentIndex(4);
 }
 
-void MainWindow::onSendResultsToDomainTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToNSTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToMXTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToCertTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToIpTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToASNTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToCidrTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToEmailTool(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToDomainTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToNSTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToMXTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToCertTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToIpTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToASNTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToCidrTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
-void MainWindow::onSendResultsToEmailTool(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE){
-
-}
-
 ///
 /// Actions...
 ///
@@ -263,7 +174,7 @@ void MainWindow::on_actionASNTool_triggered(){
 }
 
 void MainWindow::on_actionCertTool_triggered(){
-    CertTool *certTool = new CertTool(this);
+    SSLTool *certTool = new SSLTool(this);
     certTool->setAttribute(Qt::WA_DeleteOnClose, true);
     certTool->show();
 }

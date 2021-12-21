@@ -7,9 +7,6 @@
 #include <QStandardItemModel>
 #include <QSortFilterProxyModel>
 
-/***************************************************
-                    MACROS
-****************************************************/
 
 /* common macros.... */
 #define NEWLINE "\n"
@@ -56,20 +53,6 @@
 #define OSINT_PASSIVEDNS "passivedns"
 #define OSINT_YAHOO "yahoo"
 
-/****************************************
-                ENUMS
-*****************************************/
-
-enum class TARGET_TYPE{
-    HOSTNAME = 0,
-    IP,
-    ASN,
-    CIDR,
-    CERT,
-    URL,
-    EMAIL,
-};
-
 enum class RESULT_TYPE{
     SUBDOMAINIP,
     SUBDOMAIN,
@@ -90,21 +73,6 @@ enum class RESULT_TYPE{
     EMAIL
 };
 
-enum class RESULT_MODEL_TYPE{
-    SUBDOMAINIP,
-    SUBDOMAIN,
-    TLD,
-    IP,
-    DNS,
-    ASN,
-    CIDR,
-    CERT_ID,
-    CERT_INFO,
-    URL,
-    EMAIL,
-    RAW
-};
-
 enum class ENGINE{
     BRUTE,
     SUBBRUTE,
@@ -118,9 +86,17 @@ enum class ENGINE{
     CERT
 };
 
-/***************************************************
-                    STRUCTURES
-****************************************************/
+enum class TOOL{
+    DOMAINTOOL,
+    MX,
+    NS,
+    CIDR,
+    ASN,
+    IP,
+    EMAIL,
+    CERT,
+    BANNER
+};
 
 
 /***************************************************

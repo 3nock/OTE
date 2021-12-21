@@ -1,5 +1,5 @@
-#ifndef DNSRECORDS_H
-#define DNSRECORDS_H
+#ifndef DNS_H
+#define DNS_H
 
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
@@ -8,63 +8,80 @@
 
 
 namespace Ui {
-    class DnsRecords;
+    class Dns;
 }
 
-class DnsRecords : public AbstractEngine{
+class Dns : public AbstractEngine{
     Q_OBJECT
 
     public:
-        DnsRecords(QWidget *parent = nullptr,
-                   ResultsModel *resultsModel = nullptr,
+        Dns(QWidget *parent = nullptr,
                    ProjectDataModel *project = nullptr,
                    Status *status = nullptr);
-        ~DnsRecords();
+        ~Dns();
 
     public slots:
         void onScanThreadEnded();
         void onInfoLog(QString log);
         void onErrorLog(QString log);
         void onScanResult(records::Results);
+
         /* receiving targets from other engines */
-        void onReceiveTargets(ENGINE, RESULT_TYPE, RESULT_MODEL_TYPE);
-        void onReceiveTargets(QItemSelectionModel*, RESULT_TYPE, RESULT_MODEL_TYPE);
+        void onReceiveTargets(QString, RESULT_TYPE);
 
     private slots:
-        void onOpenInBrowser(QItemSelectionModel*);
-        void onClearResults();
-        void onExpandResults();
-        void onCollapseResults();
-        void onRemoveResults(QItemSelectionModel*);
-        void onSaveResultsAll();
-        void onSaveResults(RESULT_TYPE);
-        void onSaveResults(QItemSelectionModel*);
-        void onCopyResultsAll();
-        void onCopyResults(RESULT_TYPE);
-        void onCopyResults(QItemSelectionModel*);
-        /* ... */
         void on_buttonAction_clicked();
         void on_buttonStart_clicked();
         void on_buttonStop_clicked();
         void on_buttonConfig_clicked();
-        void on_comboBoxOption_currentIndexChanged(int index);
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
-        void on_tableViewSRV_customContextMenuRequested(const QPoint &pos);
+        void on_checkBoxSRV_clicked(bool checked);
 
-    private:
-        Ui::DnsRecords *ui;
+private:
+        Ui::Dns *ui;
         records::ScanConfig *m_scanConfig;
         records::ScanArgs *m_scanArgs;
         QStringListModel *m_targetListModel;
         QStringListModel *m_srvWordlitsModel;
+        QStandardItemModel *m_resultModel;
+        QSortFilterProxyModel *m_resultProxyModel;
         NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
-        //...
+        void m_loadSrvWordlist();
+        /* for scan */
         void m_stopScan();
         void m_startScan();
         void m_pauseScan();
         void m_resumeScan();
-        void m_loadSrvWordlist();
+
+    /* for context menu */
+    private:
         void m_initActions();
+        /* ... */
+        void m_openInBrowser(QItemSelectionModel*);
+        void m_clearResults();
+        void m_expandResults();
+        void m_collapseResults();
+        void m_removeResults(QItemSelectionModel*);
+        void m_saveResultsAll();
+        void m_saveResults(RESULT_TYPE);
+        void m_saveResults(QItemSelectionModel*);
+        void m_copyResultsAll();
+        void m_copyResults(RESULT_TYPE);
+        void m_copyResults(QItemSelectionModel*);
+        /* sending results to other parts */
+        void m_sendSubdomainToEngine(ENGINE);
+        void m_sendIpToEngine(ENGINE);
+        void m_sendSubdomainToTool(TOOL);
+        void m_sendIpToTool(TOOL);
+        void m_sendNSToTool(TOOL);
+        void m_sendMXToTool(TOOL);
+        /* ... */
+        void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
+        void m_sendIpToTool(TOOL, QItemSelectionModel*);
+        void m_sendNSToTool(TOOL, QItemSelectionModel*);
+        void m_sendMXToTool(TOOL, QItemSelectionModel*);
 
     protected:
         /* general actions */
@@ -129,4 +146,4 @@ class DnsRecords : public AbstractEngine{
         QAction a_CopyTXT{"TXT"};
 };
 
-#endif // DNSRECORDS_H
+#endif // DNS_H

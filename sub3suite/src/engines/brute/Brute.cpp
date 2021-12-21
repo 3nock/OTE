@@ -7,21 +7,32 @@
 #include "src/dialogs/wordlist/WordlistDialog.h"
 
 
-Brute::Brute(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, resultsModel, project, status),
+Brute::Brute(QWidget *parent, ProjectDataModel *project, Status *status) :
+    AbstractEngine(parent, project, status),
     ui(new Ui::Brute),
     m_scanConfig(new brute::ScanConfig),
     m_scanArgs(new brute::ScanArgs),
     m_wordlistModel(new QStringListModel),
-    m_targetListModel(new QStringListModel)
+    m_targetListModel(new QStringListModel),
+    m_resultModelSubdomain(new QStandardItemModel),
+    m_resultModelTld(new QStandardItemModel),
+    m_resultProxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
 
-    /* init... */
+    /* wordlist & target models */
     ui->targets->setListName("Targets");
     ui->wordlist->setListName("Wordlist");
     ui->targets->setListModel(m_targetListModel);
     ui->wordlist->setListModel(m_wordlistModel);
+
+    /* results models */
+    m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
+    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_resultProxyModel->setRecursiveFilteringEnabled(true);
+    m_resultProxyModel->setFilterKeyColumn(0);
+    ui->tableViewResults->setModel(m_resultProxyModel);
 
     /* placeholder texts */
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
@@ -35,12 +46,6 @@ Brute::Brute(QWidget *parent, ResultsModel *resultsModel, ProjectDataModel *proj
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-
-    /* results models */
-    result->brute->subdomainIp->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-    ui->tableViewResults->setModel(result->brute->subdomainIpProxy);
-    result->brute->subdomainIpProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    result->brute->subdomainIpProxy->setRecursiveFilteringEnabled(true);
 
     /* initiate all actions for the context menus */
     this->m_initActions();
@@ -56,6 +61,9 @@ Brute::~Brute(){
     delete m_scanArgs;
     delete m_targetListModel;
     delete m_wordlistModel;
+    delete m_resultModelSubdomain;
+    delete m_resultModelTld;
+    delete m_resultProxyModel;
     delete ui;
 }
 
@@ -102,43 +110,41 @@ void Brute::on_buttonStart_clicked(){
     ui->progressBar->reset();
     m_scanArgs->progress = 0;
 
-    /* Processing targets if user chooses subdomain bruteForcing */
-    if(ui->comboBoxBruteType->currentIndex() == 0)
+    switch (ui->comboBoxOutput->currentIndex())
     {
+    /* Processing targets if user chooses subdomain bruteForcing */
+    case brute::OUTPUT::SUBDOMAIN:
         m_scanArgs->subBrute = true;
         m_scanArgs->tldBrute = false;
 
-        if(!ui->checkBoxMultipleTargets->isChecked())
-        {
+        if(!ui->checkBoxMultipleTargets->isChecked()){
             m_scanArgs->targetList.append(ui->lineEditTarget->text());
 
             /* for a single target, progress equals to the total number of wordlist... */
             ui->progressBar->setMaximum(m_wordlistModel->rowCount());
         }
-        if(ui->checkBoxMultipleTargets->isChecked())
-        {
+
+        if(ui->checkBoxMultipleTargets->isChecked()){
             m_scanArgs->targetList = m_targetListModel->stringList();
 
             /* for multiple targets, progress equals to the total number of wordlist times the total number of targets... */
             ui->progressBar->setMaximum(m_wordlistModel->rowCount()*m_scanArgs->targetList.count());
         }
-    }
+        break;
 
     /* Processing targets if user chooses TLD bruteForcing */
-    if(ui->comboBoxBruteType->currentIndex() == 1)
-    {
+    case brute::OUTPUT::TLD:
         m_scanArgs->tldBrute = true;
         m_scanArgs->subBrute = false;
 
-        if(!ui->checkBoxMultipleTargets->isChecked())
-        {
+        if(!ui->checkBoxMultipleTargets->isChecked()){
             m_scanArgs->targetList.append(ui->lineEditTarget->text());
 
             /* for a single target, progress equals to the total number of wordlist... */
             ui->progressBar->setMaximum(m_wordlistModel->rowCount());
         }
-        if(ui->checkBoxMultipleTargets->isChecked())
-        {
+
+        if(ui->checkBoxMultipleTargets->isChecked()){
             m_scanArgs->targetList = m_targetListModel->stringList();
 
             /* for multiple targets, progress equals to the total number of wordlist times the total number of targets... */
@@ -175,25 +181,14 @@ void Brute::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Brute::onClearResults(){
-    /* clear the results...*/
-    m_subdomainsSet.clear();
-    result->brute->subdomainIp->clear();
-    ui->labelResultsCount->clear();
-    result->brute->subdomainIp->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
-
-    /* clear the progressbar... */
-    ui->progressBar->clearMask();
-    ui->progressBar->reset();
-    ui->progressBar->hide();
-}
-
 void Brute::on_buttonWordlist_clicked(){
     WordListDialog *wordlistDialog = nullptr;
-    if(ui->comboBoxBruteType->currentIndex() == 0){
+
+    switch (ui->comboBoxOutput->currentIndex()) {
+    case brute::OUTPUT::SUBDOMAIN:
         wordlistDialog = new WordListDialog(this, ENGINE::SUBBRUTE);
-    }
-    if(ui->comboBoxBruteType->currentIndex() == 1){
+        break;
+    case brute::OUTPUT::TLD:
         wordlistDialog = new WordListDialog(this, ENGINE::TLDBRUTE);
     }
 
@@ -207,8 +202,8 @@ void Brute::onChoosenWordlist(QString wordlistFilename){
     ui->wordlist->add(file);
 }
 
-void Brute::on_checkBoxMultipleTargets_clicked(bool checked){
-    if(checked)
+void Brute::on_checkBoxMultipleTargets_stateChanged(int newState){
+    if(newState == Qt::Checked)
         ui->targets->show();
     else
         ui->targets->hide();
