@@ -63,7 +63,7 @@ void Dnsdumpster::replyFinishedSubdomainIp(QNetworkReply *reply){
                     {
                         GumboNode *tdChild = static_cast<GumboNode*>(node->v.element.children.data[i]);
                         if(tdChild->type == GUMBO_NODE_TEXT)
-                            emit subdomain(QString::fromUtf8(tdChild->v.text.text));
+                            emit resultSubdomain(QString::fromUtf8(tdChild->v.text.text));
                     }
                 }
                 continue;
@@ -110,7 +110,7 @@ void Dnsdumpster::replyFinishedSubdomain(QNetworkReply *reply){
                     {
                         GumboNode *tdChild = static_cast<GumboNode*>(node->v.element.children.data[i]);
                         if(tdChild->type == GUMBO_NODE_TEXT){
-                            emit subdomain(QString::fromUtf8(tdChild->v.text.text));
+                            emit resultSubdomain(QString::fromUtf8(tdChild->v.text.text));
                             log.resultsCount++;
                         }
                     }
@@ -158,7 +158,7 @@ void Dnsdumpster::replyFinishedIp(QNetworkReply *reply){
                     {
                         GumboNode *td = static_cast<GumboNode*>(node->v.element.children.data[0]);
                         if(td->type == GUMBO_NODE_TEXT){
-                            emit ip(QString::fromUtf8(td->v.text.text));
+                            emit resultIp(QString::fromUtf8(td->v.text.text));
                             log.resultsCount++;
                         }
                     }

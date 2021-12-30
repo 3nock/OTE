@@ -119,7 +119,7 @@ void CensysFree::replyFinishedSSLCert(QNetworkReply *reply){
                     sha1 = sha1.simplified();
 
                     /* emiting the sha1 */
-                    emit sslCert(sha1);
+                    emit resultSSL(sha1);
                     log.resultsCount++;
                 }
             }
@@ -222,7 +222,7 @@ void CensysFree::replyFinishedSubdomain(QNetworkReply *reply){
                     QStringList domainList = domainNames.split(",");
 
                     foreach(const QString &domain, domainList){
-                        emit subdomain(domain);
+                        emit resultSubdomain(domain);
                         log.resultsCount++;
                     }
                 }

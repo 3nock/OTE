@@ -3,16 +3,18 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
 struct Dnsbufferoverun{
-    QString name = "Dnsbufferoverun";
+    QString name = OSINT_MODULE_DNSBUFFEROVERRUN;
     QString url = "https://dns.bufferover.run/";
-    QString url_apiDoc = "";
+    QString url_apiDoc = "https://dns.bufferover.run/";
     QString summary = "Subdomain enumeration from rapid7 sonar project";
     QMap<QString, QStringList> flags = {{"subdomains",
                                          {PLACEHOLDERTEXT_DOMAIN, "Quickly Extract Ip addresses and subdomains from TLS certificates"}}};
 
-    QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
 };
 }
 

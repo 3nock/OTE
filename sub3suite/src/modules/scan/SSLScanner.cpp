@@ -4,14 +4,14 @@
 /*
  * implement use of different protocals that use TLS...
  */
-certificate::Scanner::Scanner(certificate::ScanArgs *args): AbstractScanner (nullptr),
+ssl::Scanner::Scanner(ssl::ScanArgs *args): AbstractScanner (nullptr),
     m_args(args)
 {
 }
-certificate::Scanner::~Scanner(){
+ssl::Scanner::~Scanner(){
 }
 
-void certificate::Scanner::lookup(){
+void ssl::Scanner::lookup(){
     QSslSocket socket;
 
     /* for single target... */

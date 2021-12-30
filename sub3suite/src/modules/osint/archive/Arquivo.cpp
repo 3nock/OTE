@@ -67,7 +67,7 @@ void Arquivo::replyFinishedUrl(QNetworkReply *reply){
 
     foreach(const QJsonValue &response_item, response_items){
         QString urlValue = response_item.toObject()["originalURL"].toString();
-        emit url(urlValue);
+        emit resultUrl(urlValue);
         log.resultsCount++;
     }
 
@@ -94,7 +94,7 @@ void Arquivo::replyFinishedSubdomain(QNetworkReply *reply){
         domainUrl = domainUrl.split("/").at(0);
 
         /*  emiting subdomain... */
-        emit subdomain(domainUrl);
+        emit resultSubdomain(domainUrl);
         log.resultsCount++;
     }
 

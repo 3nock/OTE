@@ -8,11 +8,9 @@
 #include "src/modules/scan/SSLScanner.h"
 
 
-Ssl::Ssl(QWidget *parent, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, project, status),
-    ui(new Ui::Ssl),
-    m_scanConfig(new certificate::ScanConfig),
-    m_scanArgs(new certificate::ScanArgs),
+Ssl::Ssl(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, project), ui(new Ui::Ssl),
+    m_scanConfig(new ssl::ScanConfig),
+    m_scanArgs(new ssl::ScanArgs),
     m_targetListModel(new QStringListModel),
     m_resultModelSubdomain(new QStandardItemModel),
     m_resultModelCertId(new QStandardItemModel),
@@ -90,9 +88,9 @@ void Ssl::on_buttonStop_clicked(){
 }
 
 void Ssl::onScanThreadEnded(){
-    status->cert->activeScanThreads--;
+    status->activeScanThreads--;
 
-    if(status->cert->activeScanThreads == 0){
+    if(status->activeScanThreads == 0){
         ui->progressBar->setValue(ui->progressBar->maximum());
         ui->buttonStop->setDisabled(true);
         ui->buttonStart->setEnabled(true);

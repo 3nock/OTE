@@ -24,21 +24,6 @@
          <height>0</height>
         </size>
        </property>
-       <item>
-        <property name="text">
-         <string>All</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>IpInfo</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>IpApi</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>
@@ -114,18 +99,13 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox_2">
+       <widget class="QComboBox" name="comboBoxOption">
         <property name="minimumSize">
          <size>
           <width>110</width>
           <height>0</height>
          </size>
         </property>
-        <item>
-         <property name="text">
-          <string>All</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>

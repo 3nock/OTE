@@ -29,7 +29,6 @@ class MainWindow : public QMainWindow{
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         /* ... */
-        Status *status;
         ProjectDataModel *projectDataModel;
 
     public slots:
@@ -45,10 +44,19 @@ class MainWindow : public QMainWindow{
         void onChangeTabToCert();
 
     private slots:
+        /* file menu */
+        void on_actionExit_triggered();
+        /* options menu */
+        void on_actionApiKeys_triggered();
+        void on_actionPreferences_triggered();
+        /* help menu */
+        void on_actionBlog_triggered();
         void on_actionAbout_triggered();
         void on_actionAboutQt_triggered();
-        void on_actionExit_triggered();
-        /* tools actions */
+        void on_actionlogViewer_triggered();
+        /* tools menu */
+        void on_actionNSTool_triggered();
+        void on_actionMXTool_triggered();
         void on_actionIpTool_triggered();
         void on_actionASNTool_triggered();
         void on_actionCertTool_triggered();
@@ -56,12 +64,6 @@ class MainWindow : public QMainWindow{
         void on_actionCIDRTool_triggered();
         void on_actionBannerTool_triggered();
         void on_actionDomainTool_triggered();
-        void on_actionNSTool_triggered();
-        void on_actionMXTool_triggered();
-        void on_actionBlog_triggered();
-        void on_actionApiKeys_triggered();
-        void on_actionlogViewer_triggered();
-        void on_actionGeneralConfig_triggered();
 
     private:
         Ip *ip = nullptr;

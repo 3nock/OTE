@@ -112,7 +112,7 @@ void SpyOnWeb::replyFinishedSubdomainIp(QNetworkReply *reply){
 
         foreach(const QString &domain, dnsServers){
             QString address = dns_servers[domain].toString();
-            emit subdomainIp(domain, address);
+            emit resultSubdomainIp(domain, address);
             log.resultsCount++;
         }
     }
@@ -136,7 +136,7 @@ void SpyOnWeb::replyFinishedSubdomain(QNetworkReply *reply){
         QJsonObject dns_servers = result["domain"].toObject()[domainName].toObject()["items"].toObject()["dns_servers"].toObject();
         QStringList dnsServers = dns_servers.keys();
         foreach(const QString &domain, dnsServers){
-            emit subdomain(domain);
+            emit resultSubdomain(domain);
             log.resultsCount++;
         }
 
@@ -144,7 +144,7 @@ void SpyOnWeb::replyFinishedSubdomain(QNetworkReply *reply){
         QString ip = result["ip"].toObject().keys()[0];
         QStringList domains = result["ip"].toObject()[ip].toObject()["items"].toObject().keys();
         foreach(const QString &domain, domains){
-            emit subdomain(domain);
+            emit resultSubdomain(domain);
             log.resultsCount++;
         }
     }
@@ -153,7 +153,7 @@ void SpyOnWeb::replyFinishedSubdomain(QNetworkReply *reply){
         QString ip = result["ip"].toObject().keys()[0];
         QStringList domains = result["ip"].toObject()[ip].toObject()["items"].toObject().keys();
         foreach(const QString &domain, domains){
-            emit subdomain(domain);
+            emit resultSubdomain(domain);
             log.resultsCount++;
         }
     }
@@ -174,7 +174,7 @@ void SpyOnWeb::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_API){
         QStringList addresses = result["ip_dns"].toObject().keys();
         foreach(const QString &address, addresses){
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }

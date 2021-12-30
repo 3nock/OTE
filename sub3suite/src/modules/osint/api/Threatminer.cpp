@@ -166,7 +166,7 @@ void Threatminer::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
         foreach(const QJsonValue &result, results){
             QString hostname = result.toString();
-            emit subdomain(hostname);
+            emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
@@ -174,7 +174,7 @@ void Threatminer::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == IP_PASSIVE_DNS){
         foreach(const QJsonValue &result, results){
             QString hostname = result.toObject()["domain"].toString();
-            emit subdomain(hostname);
+            emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
@@ -194,7 +194,7 @@ void Threatminer::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_PASSIVE_DNS){
         foreach(const QJsonValue &result, results){
             QString address = result.toObject()["ip"].toString();
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }
@@ -202,7 +202,7 @@ void Threatminer::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == SSL_HOSTS){
         foreach(const QJsonValue &result, results){
             QString address = result.toString();
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }
@@ -247,7 +247,7 @@ void Threatminer::replyFinishedAsn(QNetworkReply *reply){
         foreach(const QJsonValue &result, results){
             QString asnValue = result.toObject()["asn"].toString();
             QString asnName = result.toObject()["asn_name"].toString();
-            emit asn(asnValue, asnName);
+            emit resultASN(asnValue, asnName);
             log.resultsCount++;
         }
     }
@@ -267,7 +267,7 @@ void Threatminer::replyFinishedUrl(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_QUERY_URI || QUERY_TYPE == IP_QUERY_URI){
         foreach(const QJsonValue &result, results){
             QString uri = result.toObject()["uri"].toString();
-            emit url(uri);
+            emit resultUrl(uri);
             log.resultsCount++;
         }
     }
@@ -287,7 +287,7 @@ void Threatminer::replyFinishedSSLCert(QNetworkReply *reply){
     if(QUERY_TYPE == IP_SSL_CERTS){
         foreach(const QJsonValue &result, results){
             QString hash = result.toString();
-            emit sslCert(hash);
+            emit resultSSL(hash);
             log.resultsCount++;
         }
     }

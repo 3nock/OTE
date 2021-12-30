@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct C99{
-    QString name = "C99";
+    QString name = OSINT_MODULE_C99;
     QString url = "https://api.c99.nl/";
     QString url_apiDoc = "https://api.c99.nl/";
     QString summary = "Quality APIs for Osint";

@@ -88,7 +88,7 @@ void Maltiverse::replyFinishedAsn(QNetworkReply *reply){
             QString asnValue = asn_name.split(" ").at(0);
             QString asnName = asn_name.remove(asnValue+" ");
             //...
-            emit asn(asnValue, asnName);
+            emit resultASN(asnValue, asnName);
             log.resultsCount++;
         }
     }
@@ -110,7 +110,7 @@ void Maltiverse::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == HOSTNAME){
         foreach(const QJsonValue &value, mainObj["resolved_ip"].toArray()){
             QString address = value.toObject()["ip_addr"].toString();
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }
@@ -130,7 +130,7 @@ void Maltiverse::replyFinishedEmail(QNetworkReply *reply){
 
     if(QUERY_TYPE == IPV4){
         foreach(const QJsonValue &value, emails){
-            emit email(value.toString());
+            emit resultEmail(value.toString());
             log.resultsCount++;
         }
     }

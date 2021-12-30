@@ -79,7 +79,7 @@ void Ask::replyFinishedSubdomain(QNetworkReply *reply){
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 QString domain = QString::fromUtf8(child->v.text.text);
                 domain = domain.split("/")[0];
-                emit subdomain(domain);
+                emit resultSubdomain(domain);
                 log.resultsCount++;
             }
         }
@@ -147,7 +147,7 @@ void Ask::replyFinishedUrl(QNetworkReply *reply){
             if(QString::fromUtf8(classAttribute->value) == "PartialSearchResults-item-url PartialSearchResults-item-top-url")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                emit url(QString::fromUtf8(child->v.text.text));
+                emit resultUrl(QString::fromUtf8(child->v.text.text));
                 log.resultsCount++;
             }
         }

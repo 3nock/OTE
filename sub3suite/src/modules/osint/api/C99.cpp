@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+
 #define ALEXA_RANK 0
 #define DISPOSABLE_MAIL_CHECK 1
 #define DOMAIN_CHECKER 2
@@ -33,21 +34,23 @@
 #define WHOIS_CHECKER 26
 
 
+/*
+ * Others not yet implemented...
+ */
 C99::C99(ScanArgs args):
     AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
-    log.moduleName = "C99";
+    log.moduleName = OSINT_MODULE_C99;
 
     if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &C99::replyFinishedRawJson);
     if(args.outputSubdomain)
         connect(manager, &NetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
-    ///
-    /// getting api key...
-    ///
+
+    /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("c99").toString();
+    m_key = Config::generalConfig().value(OSINT_MODULE_C99).toString();
     Config::generalConfig().endGroup();
 }
 C99::~C99(){
@@ -155,9 +158,6 @@ void C99::start(){
             activeRequests++;
         }
     }
-    /*
-     * Others not yet implemented...
-     */
 }
 
 void C99::replyFinishedSubdomain(QNetworkReply *reply){
@@ -171,12 +171,14 @@ void C99::replyFinishedSubdomain(QNetworkReply *reply){
     QJsonObject jsonObject = document.object();
 
     if(QUERY_TYPE == SUBDOMAIN_FINDER){
-        bool success = jsonObject["success"].toBool();
-        if(success){
-            QJsonArray subdomainList = jsonObject["subdomains"].toArray();
-            foreach(const QJsonValue &value, subdomainList)
-                emit subdomain(value.toString());
+        if(jsonObject["success"].toBool())
+        {
+            foreach(const QJsonValue &value, jsonObject["subdomains"].toArray()){
+                emit resultSubdomain(value.toString());
+                log.resultsCount++;
+            }
         }
     }
+
     end(reply);
 }

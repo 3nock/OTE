@@ -4,8 +4,8 @@
 #include <QDesktopServices>
 #include "src/dialogs/AboutDialog.h"
 #include "src/dialogs/ApiKeysDialog.h"
-#include "src/utils/logs/LogViewerDialog.h"
-#include "src/utils/config/GeneralConfigDialog.h"
+#include "src/dialogs/LogViewerDialog.h"
+#include "src/dialogs/preference/PreferenceDialog.h"
 /* Tools */
 #include "src/tools/IpTool.h"
 #include "src/tools/ASNTool.h"
@@ -19,19 +19,18 @@
 
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow),
-    status(new Status),
     projectDataModel(new ProjectDataModel)
 {
     ui->setupUi(this);
 
     /* creating and initiating the classes for the modules... */
-    ip = new Ip(this, projectDataModel, status);
-    osint = new Osint(this, projectDataModel, status);
-    brute = new Brute(this, projectDataModel, status);
-    active = new Active(this, projectDataModel, status);
-    dns = new Dns(this, projectDataModel, status);
-    ssl = new Ssl(this, projectDataModel, status);
-    raw = new Raw(this);
+    ip = new Ip(this, projectDataModel);
+    osint = new Osint(this, projectDataModel);
+    brute = new Brute(this, projectDataModel);
+    active = new Active(this, projectDataModel);
+    dns = new Dns(this, projectDataModel);
+    ssl = new Ssl(this, projectDataModel);
+    raw = new Raw(this, projectDataModel);
     project = new Project(this, projectDataModel);
 
     /* connecting signals and slots */
@@ -71,7 +70,6 @@ MainWindow::~MainWindow(){
     delete ssl;
     delete project;
     //...
-    delete status;
     delete projectDataModel;
     delete ui;
 }
@@ -233,8 +231,8 @@ void MainWindow::on_actionlogViewer_triggered(){
     logViewerDialog->show();
 }
 
-void MainWindow::on_actionGeneralConfig_triggered(){
-    GeneralConfigDialog *generalConfigDialog = new GeneralConfigDialog(this);
-    generalConfigDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-    generalConfigDialog->show();
+void MainWindow::on_actionPreferences_triggered(){
+    PreferenceDialog *preferenceDialog = new PreferenceDialog(this);
+    preferenceDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    preferenceDialog->show();
 }

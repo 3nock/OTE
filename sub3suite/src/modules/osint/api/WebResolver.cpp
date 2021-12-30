@@ -109,7 +109,7 @@ void WebResolver::replyFinishedSubdomainIp(QNetworkReply *reply){
             if(type == "MX" || type == "NS" || type == "CNAME"){
                 QString hostname = record.toObject()["server"].toString();
                 QString address = record.toObject()["ip"].toString();
-                emit subdomainIp(hostname, address);
+                emit resultSubdomainIp(hostname, address);
                 log.resultsCount++;
             }
         }
@@ -130,7 +130,7 @@ void WebResolver::replyFinishedIp(QNetworkReply *reply){
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString address = record.toObject()["ip"].toString();
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }
@@ -153,22 +153,22 @@ void WebResolver::replyFinishedSubdomain(QNetworkReply *reply){
 
             if(type == "MX"){
                 QString hostname = record.toObject()["server"].toString();
-                emit MX(hostname);
+                emit resultMX(hostname);
                 log.resultsCount++;
             }
             if(type == "NS"){
                 QString hostname = record.toObject()["server"].toString();
-                emit NS(hostname);
+                emit resultNS(hostname);
                 log.resultsCount++;
             }
             if(type == "CNAME"){
                 QString hostname = record.toObject()["server"].toString();
-                emit CNAME(hostname);
+                emit resultCNAME(hostname);
                 log.resultsCount++;
             }
             if(type == "TXT"){
                 QString text = record.toObject()["text"].toString();
-                emit TXT(text);
+                emit resultTXT(text);
                 log.resultsCount++;
             }
         }

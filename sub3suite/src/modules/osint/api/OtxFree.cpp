@@ -191,7 +191,7 @@ void OtxFree::replyFinishedSubdomainIp(QNetworkReply *reply){
             QString hostname = value.toObject()["hostname"].toString();
             QString address = value.toObject()["address"].toString();
             if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
-                emit subdomainIp(hostname, address);
+                emit resultSubdomainIp(hostname, address);
                 log.resultsCount++;
             }
         }
@@ -212,24 +212,24 @@ void OtxFree::replyFinishedSubdomain(QNetworkReply *reply){
         QString record_type = value.toObject()["record_type"].toString();
         if(record_type == "A" || record_type == "AAAA"){
             QString hostname = value.toObject()["hostname"].toString();
-            emit subdomain(hostname);
+            emit resultSubdomain(hostname);
             log.resultsCount++;
         }
         if(record_type == "CNAME"){
             QString hostname = value.toObject()["address"].toString();
-            emit CNAME(hostname);
+            emit resultCNAME(hostname);
             log.resultsCount++;
         }
         if(record_type == "NS"){
             QString hostname = value.toObject()["address"].toString();
             if(hostname != "NXDOMAIN"){
-                emit NS(hostname);
+                emit resultNS(hostname);
                 log.resultsCount++;
             }
         }
         if(record_type == "MX"){
             QString hostname = value.toObject()["address"].toString();
-            emit MX(hostname);
+            emit resultMX(hostname);
             log.resultsCount++;
         }
     }
@@ -250,14 +250,14 @@ void OtxFree::replyFinishedIp(QNetworkReply *reply){
         if(record_type == "A"){
             QString address = value.toObject()["address"].toString();
             if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
-                emit ipA(address);
+                emit resultA(address);
                 log.resultsCount++;
             }
         }
         if(record_type == "AAAA"){
             QString address = value.toObject()["address"].toString();
             if(!address.startsWith("N")){ // avoid NXDOMAIN addresses...
-                emit ipAAAA(address);
+                emit resultAAAA(address);
                 log.resultsCount++;
             }
         }
@@ -282,11 +282,11 @@ void OtxFree::replyFinishedAsn(QNetworkReply *reply){
         QString ASN = value.toObject()["asn"].toString();
         QStringList ASN_VALUE_NAME = ASN.split(" ");
         if(ASN_VALUE_NAME.size() == 2){
-            emit asn(ASN_VALUE_NAME[0], ASN_VALUE_NAME[1]);
+            emit resultASN(ASN_VALUE_NAME[0], ASN_VALUE_NAME[1]);
             log.resultsCount++;
         }
         if(ASN_VALUE_NAME.size() == 1){
-            emit asn(ASN_VALUE_NAME[0], "");
+            emit resultASN(ASN_VALUE_NAME[0], "");
             log.resultsCount++;
         }
     }

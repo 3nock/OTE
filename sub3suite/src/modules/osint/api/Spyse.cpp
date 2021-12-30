@@ -143,7 +143,7 @@ void Spyse::replyFinishedEmail(QNetworkReply *reply){
         foreach(const QJsonValue &item, items){
             QJsonArray emails = item.toObject()["http_extract"].toObject()["emails"].toArray();
             foreach(const QJsonValue &value, emails){
-                emit email(value.toString());
+                emit resultEmail(value.toString());
                 log.resultsCount++;
             }
         }
@@ -153,7 +153,7 @@ void Spyse::replyFinishedEmail(QNetworkReply *reply){
         foreach(const QJsonValue &item, items){
             QJsonArray email_address = item.toObject()["issuer"].toObject()["email_address"].toArray();
             foreach(const QJsonValue &value, email_address){
-                emit email(value.toString());
+                emit resultEmail(value.toString());
                 log.resultsCount++;
             }
         }
@@ -162,7 +162,7 @@ void Spyse::replyFinishedEmail(QNetworkReply *reply){
     if(QUERY_TYPE == EMAILS){
         foreach(const QJsonValue &item, items){
             QString email_address = item.toObject()["email"].toString();
-            emit email(email_address);
+            emit resultEmail(email_address);
             log.resultsCount++;
         }
     }
@@ -184,19 +184,19 @@ void Spyse::replyFinishedIp(QNetworkReply *reply){
             /* from hosts_enrichment */
             QJsonArray hosts_enrichment = item.toObject()["hosts_enrichment"].toArray();
             foreach(const QJsonValue &value, hosts_enrichment){
-                emit ip(value.toObject()["ip"].toString());
+                emit resultIp(value.toObject()["ip"].toString());
                 log.resultsCount++;
             }
             /* from dns_records */
             QJsonObject dns_records = item.toObject()["dns_records"].toObject();
             QJsonArray A = dns_records["A"].toArray();
             foreach(const QJsonValue &value, A){
-                emit ipA(value.toString());
+                emit resultA(value.toString());
                 log.resultsCount++;
             }
             QJsonArray AAAA = dns_records["A"].toArray();
             foreach(const QJsonValue &value, AAAA){
-                emit ipAAAA(value.toString());
+                emit resultAAAA(value.toString());
                 log.resultsCount++;
             }
         }
@@ -206,12 +206,12 @@ void Spyse::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &item, items){
             QJsonArray ipv4_prefixes = item["ipv4_prefixes"].toArray();
             foreach(const QJsonValue &value, ipv4_prefixes){
-                emit ipA(value.toObject()["cidr"].toString());
+                emit resultA(value.toObject()["cidr"].toString());
                 log.resultsCount++;
             }
             QJsonArray ipv6_prefixes = item["ipv6_prefixes"].toArray();
             foreach(const QJsonValue &value, ipv6_prefixes){
-                emit ipAAAA(value.toObject()["cidr"].toString());
+                emit resultAAAA(value.toObject()["cidr"].toString());
                 log.resultsCount++;
             }
         }
@@ -234,7 +234,7 @@ void Spyse::replyFinishedSSLCert(QNetworkReply *reply){
         foreach(const QJsonValue &item, items){
             QJsonObject cert_summary = item.toObject()["cert_summary"].toObject();
             QString fingerprint = cert_summary["fingerprint_sha256"].toString();
-            emit sslCert(fingerprint);
+            emit resultSSL(fingerprint);
             log.resultsCount++;
         }
     }
@@ -257,7 +257,7 @@ void Spyse::replyFinishedAsn(QNetworkReply *reply){
             foreach(const QJsonValue &value, hosts_enrichment){
                 QString as_num = QString::number(value.toObject()["as_num"].toInt());
                 QString as_org = value.toObject()["as_org"].toString();
-                emit asn(as_num, as_org);
+                emit resultASN(as_num, as_org);
                 log.resultsCount++;
             }
         }
@@ -268,7 +268,7 @@ void Spyse::replyFinishedAsn(QNetworkReply *reply){
             QString as_num = QString::number(item.toObject()["as_num"].toInt());
             QString as_org = item.toObject()["as_org"].toString();
 
-            emit asn(as_num, as_org);
+            emit resultASN(as_num, as_org);
             log.resultsCount++;
         }
     }
@@ -280,7 +280,7 @@ void Spyse::replyFinishedAsn(QNetworkReply *reply){
             QString as_num = QString::number(isp_info["as_num"].toInt());
             QString as_org = isp_info["as_org"].toString();
 
-            emit asn(as_num, as_org);
+            emit resultASN(as_num, as_org);
             log.resultsCount++;
         }
     }
@@ -301,7 +301,7 @@ void Spyse::replyFinishedUrl(QNetworkReply *reply){
         foreach(const QJsonValue &item, items){
             QJsonArray urls = item.toObject()["http_extract"].toObject()["links"].toArray();
             foreach(const QJsonValue &value, urls){
-                emit url(value.toObject()["url"].toString());
+                emit resultUrl(value.toObject()["url"].toString());
                 log.resultsCount++;
             }
         }
@@ -322,29 +322,29 @@ void Spyse::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAINS){
         foreach(const QJsonValue &item, items)
         {
-            emit subdomain(item["name"].toString());
+            emit resultSubdomain(item["name"].toString());
             log.resultsCount++;
 
             /* from dns_records */
             QJsonObject dns_records = item.toObject()["dns_records"].toObject();
             QJsonArray ns = dns_records["NS"].toArray();
             foreach(const QJsonValue &value, ns){
-                emit NS(value.toString());
+                emit resultNS(value.toString());
                 log.resultsCount++;
             }
             QJsonArray mx = dns_records["MX"].toArray();
             foreach(const QJsonValue &value, mx){
-                emit MX(value.toString());
+                emit resultMX(value.toString());
                 log.resultsCount++;
             }
             QJsonArray cname = dns_records["CNAME"].toArray();
             foreach(const QJsonValue &value, cname){
-                emit CNAME(value.toString());
+                emit resultCNAME(value.toString());
                 log.resultsCount++;
             }
             QJsonArray txt = dns_records["TXT"].toArray();
             foreach(const QJsonValue &value, txt){
-                emit TXT(value.toString());
+                emit resultTXT(value.toString());
                 log.resultsCount++;
             }
         }

@@ -3,6 +3,7 @@
 
 #include "../AbstractOsintModule.h"
 
+
 namespace ModuleInfo {
 struct Bgpview{
     QString name = OSINT_MODULE_BGPVIEW;
@@ -33,11 +34,11 @@ struct Bgpview{
     QMap<int, QList<int>> input_output = {{IN_IP,
                                             {OUT_ASN, OUT_IP, OUT_EMAIL}},
                                           {IN_ASN,
-                                            {OUT_ASN, OUT_IP, OUT_EMAIL, OUT_SUBDOMAIN}},
+                                            {OUT_ASN, OUT_IP, OUT_EMAIL, OUT_SUBDOMAIN, OUT_CIDR}},
                                           {IN_QUERYTERM,
                                             {OUT_ASN, OUT_IP, OUT_EMAIL}},
                                           {IN_CIDR,
-                                            {}}}; // cidr not done...
+                                            {OUT_ASN, OUT_EMAIL}}};
 };
 }
 

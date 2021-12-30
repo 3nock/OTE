@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QtGlobal>
 #include <QDnsLookup>
 #include <QListWidget>
 #include <QHostAddress>
@@ -53,6 +54,7 @@
 #define OSINT_PASSIVEDNS "passivedns"
 #define OSINT_YAHOO "yahoo"
 
+
 enum class RESULT_TYPE{
     SUBDOMAINIP,
     SUBDOMAIN,
@@ -75,9 +77,8 @@ enum class RESULT_TYPE{
 
 enum class ENGINE{
     BRUTE,
-    SUBBRUTE,
     TLDBRUTE,
-    RECORDS,
+    SUBBRUTE,
     DNS,
     ACTIVE,
     OSINT,
@@ -98,16 +99,11 @@ enum class TOOL{
     BANNER
 };
 
-
-/***************************************************
-                    FUNCTIONS
-****************************************************/
-QHostAddress RandomNameserver(bool useCustomNameservers);
-//...
-QString TargetNameFilter(QString domainName, ENGINE engineName);
-//...
-QString wordlistFilter(QString word);
-//...
-QString filter(QString word);
+namespace brute{
+enum OUTPUT{
+    SUBDOMAIN = 0,
+    TLD = 1
+};
+}
 
 #endif // UTILS_H

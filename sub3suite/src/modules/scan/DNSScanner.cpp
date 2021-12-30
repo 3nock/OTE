@@ -1,8 +1,8 @@
-#include "DnsRecordsScanner.h"
+#include "DNSScanner.h"
 #include <QDnsLookup>
 
 
-records::Scanner::Scanner(records::ScanArgs *args)
+dns::Scanner::Scanner(dns::ScanArgs *args)
     : m_args(args),
       m_dns_srv(new QDnsLookup(this)),
       m_dns_a(new QDnsLookup(this)),
@@ -23,6 +23,7 @@ records::Scanner::Scanner(records::ScanArgs *args)
     m_dns_txt->setType(QDnsLookup::TXT);
     m_dns_cname->setType(QDnsLookup::CNAME);
 
+    /*
     m_dns_srv->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
     m_dns_a->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
     m_dns_a->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
@@ -30,6 +31,7 @@ records::Scanner::Scanner(records::ScanArgs *args)
     m_dns_ns->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
     m_dns_txt->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
     m_dns_cname->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+    */
 
     connect(m_dns_srv, SIGNAL(finished()), this, SLOT(srvLookupFinished()));
     connect(m_dns_a, SIGNAL(finished()), this, SLOT(aLookupFinished()));
@@ -39,7 +41,7 @@ records::Scanner::Scanner(records::ScanArgs *args)
     connect(m_dns_txt, SIGNAL(finished()), this, SLOT(txtLookupFinished()));
     connect(m_dns_cname, SIGNAL(finished()), this, SLOT(cnameLookupFinished()));
 }
-records::Scanner::~Scanner(){
+dns::Scanner::~Scanner(){
     delete m_dns_srv;
     delete m_dns_a;
     delete m_dns_aaaa;
@@ -49,12 +51,12 @@ records::Scanner::~Scanner(){
     delete m_dns_cname;
 }
 
-void records::Scanner::startScan_srv(QThread *cThread){
+void dns::Scanner::startScan_srv(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup_srv()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void records::Scanner::lookup(){
+void dns::Scanner::lookup(){
     /* ... */
     m_currentTargetToEnumerate = m_args->currentTargetToEnumerate;
     m_args->currentTargetToEnumerate++;
@@ -120,7 +122,7 @@ void records::Scanner::lookup(){
         emit quitThread();
 }
 
-void records::Scanner::lookup_srv(){
+void dns::Scanner::lookup_srv(){
     /* ... */
     m_currentSrvToEnumerate = m_args->currentSrvToEnumerate;
     m_currentTargetToEnumerate = m_args->currentTargetToEnumerate;
@@ -148,7 +150,7 @@ void records::Scanner::lookup_srv(){
     }
 }
 
-void records::Scanner::srvLookupFinished(){
+void dns::Scanner::srvLookupFinished(){
     if(m_dns_srv->error() == QDnsLookup::NoError)
     {
         const QList<QDnsServiceRecord> records = m_dns_srv->serviceRecords();
@@ -168,7 +170,7 @@ void records::Scanner::srvLookupFinished(){
     emit doLookup_srv();
 }
 
-void records::Scanner::finish(){
+void dns::Scanner::finish(){
     m_activeLookups--;
     if(m_activeLookups == 0)
     {
@@ -181,7 +183,7 @@ void records::Scanner::finish(){
     }
 }
 
-void records::Scanner::aLookupFinished(){
+void dns::Scanner::aLookupFinished(){
     if(m_dns_a->error() == QDnsLookup::NoError)
     {
         const auto records = m_dns_a->hostAddressRecords();
@@ -195,7 +197,7 @@ void records::Scanner::aLookupFinished(){
     finish();
 }
 
-void records::Scanner::aaaaLookupFinished(){
+void dns::Scanner::aaaaLookupFinished(){
     if(m_dns_aaaa->error() == QDnsLookup::NoError)
     {
         const QList<QDnsHostAddressRecord> records = m_dns_aaaa->hostAddressRecords();
@@ -209,7 +211,7 @@ void records::Scanner::aaaaLookupFinished(){
     finish();
 }
 
-void records::Scanner::mxLookupFinished(){
+void dns::Scanner::mxLookupFinished(){
     if(m_dns_mx->error() == QDnsLookup::NoError)
     {
         const QList<QDnsMailExchangeRecord> records = m_dns_mx->mailExchangeRecords();
@@ -223,7 +225,7 @@ void records::Scanner::mxLookupFinished(){
     finish();
 }
 
-void records::Scanner::cnameLookupFinished(){
+void dns::Scanner::cnameLookupFinished(){
     if(m_dns_cname->error() == QDnsLookup::NoError)
     {
         const QList<QDnsDomainNameRecord> records = m_dns_cname->canonicalNameRecords();
@@ -237,7 +239,7 @@ void records::Scanner::cnameLookupFinished(){
     finish();
 }
 
-void records::Scanner::nsLookupFinished(){
+void dns::Scanner::nsLookupFinished(){
     if(m_dns_ns->error() == QDnsLookup::NoError)
     {
         const QList<QDnsDomainNameRecord> records = m_dns_ns->nameServerRecords();
@@ -251,7 +253,7 @@ void records::Scanner::nsLookupFinished(){
     finish();
 }
 
-void records::Scanner::txtLookupFinished(){
+void dns::Scanner::txtLookupFinished(){
     if(m_dns_txt->error() == QDnsLookup::NoError)
     {
         const QList<QDnsTextRecord> records = m_dns_txt->textRecords();

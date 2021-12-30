@@ -56,7 +56,7 @@ void Netcraft::replyFinishedSubdomain(QNetworkReply *reply){
                     QString item = QString::fromUtf8(href_attribute->value);
                     item.remove("http://");
                     item.remove("/");
-                    emit subdomain(item);
+                    emit resultSubdomain(item);
                     log.resultsCount++;
                 }
             }

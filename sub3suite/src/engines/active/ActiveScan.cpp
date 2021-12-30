@@ -9,12 +9,12 @@ void Active::m_pauseScan(){
       Resume the scan, just csubdomainIp the startScan, with the same arguments and
       it will continue at where it ended...
     */
-    if(status->active->isPaused){
-        status->active->isPaused = false;
+    if(status->isPaused){
+        status->isPaused = false;
         this->m_startScan();
     }
     else{
-        status->active->isPaused = true;
+        status->isPaused = true;
         emit stopScanThread();
     }
 }
@@ -38,7 +38,7 @@ void Active::m_startScan(){
     if(threadsCount > wordlistCount)
         threadsCount = wordlistCount;
 
-    status->active->activeScanThreads = threadsCount;
+    status->activeScanThreads = threadsCount;
 
     /* loop to create threads for enumeration... */
     for(int i = 0; i < threadsCount; i++)
@@ -57,7 +57,7 @@ void Active::m_startScan(){
         connect(this, &Active::stopScanThread, scanner, &active::Scanner::onStopScan);
         cThread->start();
     }
-    status->active->isRunning = true;
+    status->isRunning = true;
 }
 
 void Active::onScanResult(QString subdomain, QString ipAddress){
@@ -70,23 +70,23 @@ void Active::onScanResult(QString subdomain, QString ipAddress){
 }
 
 void Active::onScanThreadEnded(){
-    status->active->activeScanThreads--;
+    status->activeScanThreads--;
 
     /* if subdomainIp Scan Threads have finished... */
-    if(status->active->activeScanThreads == 0)
+    if(status->activeScanThreads == 0)
     {
-        if(status->active->isPaused){
-            status->active->isRunning = false;
+        if(status->isPaused){
+            status->isRunning = false;
             return;
         }
         else{
             /* set the progress bar to 100% just in case...*/
-            if(!status->active->isStopped)
+            if(!status->isStopped)
                 ui->progressBar->setValue(ui->progressBar->maximum());
 
-            status->active->isPaused = false;
-            status->active->isStopped = false;
-            status->active->isRunning = false;
+            status->isPaused = false;
+            status->isStopped = false;
+            status->isRunning = false;
 
             /* enabling and disabling widgets */
             ui->buttonStart->setEnabled(true);

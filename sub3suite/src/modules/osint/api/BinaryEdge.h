@@ -6,11 +6,11 @@
 
 namespace ModuleInfo {
 struct BinaryEdge{
-    QString name = "BinaryEdge";
+    QString name = OSINT_MODULE_BGPVIEW;
     QString url = "https://binaryedge.io/";
     QString url_apiDoc = "https://docs.binaryedge.io/";
-    QString summary = "We scan the entire public internet, create real-time threat intelligence streams,"\
-                      "and reports that show the exposure of what is connected to the Internet";
+    QString summary = "BinaryEdge is Cybersecurity/Data Science company that focuses its effort on acquiring, "
+                      "analyzing and classifying internet wide data.";
 
     QMap <QString, QStringList> flags = {{"host ip",
                                           {PLACEHOLDERTEXT_IP_OR_CIDR, "Details about an Host. List of recent events for the specified host, including details of exposed ports and services."}},
@@ -37,16 +37,14 @@ struct BinaryEdge{
                                                                    "The validate flag can be used to have all subdomains resolved on the fly and only those with DNS entries behind them returned."}},
                                          {"domains homoglyphs",
                                           {PLACEHOLDERTEXT_DOMAIN, "This endpoint generates a list of homoglyphs for a base domain. The validate flag can be used to have all homoglyphs "
-                                                                   "resolved on the fly and only those with DNS entries behind them returned."}}};
+                                                                   "resolved on the fly and only those with DNS entries behind them returned."}},
+                                         {"subscription",
+                                          {PLACEHOLDERTEXT_NONE, "Return details about your current subscription package."}}};
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
                                           {IN_IP,
-                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
-                                          {IN_CIDR,  // cidr not yet done...
-                                           {}},
-                                          {IN_QUERYTERM, // query term not yet done...
-                                           {}}};
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
 };
 }
 

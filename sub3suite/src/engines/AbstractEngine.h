@@ -17,63 +17,21 @@ struct ScanStatus{
     int activeScanThreads = 0;
 };
 
-class Status{
-    public:
-        Status()
-            : osint(new ScanStatus),
-              raw(new ScanStatus),
-              brute(new ScanStatus),
-              active(new ScanStatus),
-              ip(new ScanStatus),
-              cert(new ScanStatus),
-              dns(new ScanStatus)
-        {
-        }
-        ~Status(){
-            delete osint;
-            delete raw;
-            delete brute;
-            delete active;
-            delete ip;
-            delete cert;
-            delete dns;
-        }
-        ScanStatus *osint;
-        ScanStatus *raw;
-        ScanStatus *brute;
-        ScanStatus *active;
-        ScanStatus *ip;
-        ScanStatus *cert;
-        ScanStatus *dns;
-        /* ... */
-        int totalThreadsInUse(){
-            return osint->activeScanThreads+
-                    raw->activeScanThreads+
-                    brute->activeScanThreads+
-                    active->activeScanThreads+
-                    ip->activeScanThreads+
-                    cert->activeScanThreads+
-                    dns->activeScanThreads;
-        }
-};
-
-
 class AbstractEngine : public QWidget{
         Q_OBJECT
 
     public:
-        AbstractEngine(QWidget *parent = nullptr,
-                       ProjectDataModel *project = nullptr,
-                       Status *status = nullptr)
-            : QWidget(parent),
-              status(status),
+        AbstractEngine(QWidget *parent = nullptr, ProjectDataModel *project = nullptr): QWidget(parent),
+              status(new ScanStatus),
               project(project)
         {
         }
-        ~AbstractEngine(){}
+        ~AbstractEngine(){
+            delete status;
+        }
 
     protected:
-        Status *status;
+        ScanStatus *status;
         ProjectDataModel *project;
         QItemSelectionModel *selectionModel;
         /* ... */

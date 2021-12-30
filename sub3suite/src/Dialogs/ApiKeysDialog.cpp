@@ -2,6 +2,7 @@
 #include "ui_ApiKeysDialog.h"
 
 #include "src/utils/Config.h"
+#include "src/modules/osint/OsintDefinitions.h"
 #include <QUrl>
 #include <QDesktopServices>
 
@@ -42,8 +43,8 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("shodan", ui->lineEditShodan->text());
     Config::generalConfig().setValue("spyse", ui->lineEditSpyse->text());
     Config::generalConfig().setValue("virustotal", ui->lineEditVirusTotal->text());
-    Config::generalConfig().setValue("binaryedge", ui->lineEditBinaryEdge->text());
-    Config::generalConfig().setValue("c99", ui->lineEditC99->text());
+    Config::generalConfig().setValue(OSINT_MODULE_BINARYEDGE, ui->lineEditBinaryEdge->text());
+    Config::generalConfig().setValue(OSINT_MODULE_C99, ui->lineEditC99->text());
     Config::generalConfig().setValue("ipapi", ui->lineEditIpApi->text());
     Config::generalConfig().setValue("ipinfo", ui->lineEditIpInfo->text());
     Config::generalConfig().setValue("threatbook", ui->lineEditThreatBook->text());
@@ -57,8 +58,8 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("mnemonic", ui->lineEditMnemonic->text());
     Config::generalConfig().setValue("robtex", ui->lineEditRobtex->text());
     Config::generalConfig().setValue("otx", ui->lineEditRobtex->text());
-    Config::generalConfig().setValue("builtwith", ui->lineEditBuiltWith->text());
-    Config::generalConfig().setValue("dnslytics", ui->lineEditDnslytics->text());
+    Config::generalConfig().setValue(OSINT_MODULE_BUILTWITH, ui->lineEditBuiltWith->text());
+    Config::generalConfig().setValue(OSINT_MODULE_DNSLYTICS, ui->lineEditDnslytics->text());
     Config::generalConfig().setValue("domaintools_username", ui->lineEditDomainToolsUsername->text());
     Config::generalConfig().setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
     Config::generalConfig().setValue("onyphe", ui->lineEditOnyphe->text());
@@ -189,12 +190,12 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditVirusTotal->setText(key);
         ui->buttonGetVirusTotal->hide();
     }
-    key = Config::generalConfig().value("binaryedge").toString();
+    key = Config::generalConfig().value(OSINT_MODULE_BINARYEDGE).toString();
     if(!key.isEmpty()){
         ui->lineEditBinaryEdge->setText(key);
         ui->buttonGetBinaryEdge->hide();
     }
-    key = Config::generalConfig().value("c99").toString();
+    key = Config::generalConfig().value(OSINT_MODULE_C99).toString();
     if(!key.isEmpty()){
         ui->lineEditC99->setText(key);
         ui->buttonGetC99->hide();
@@ -270,12 +271,12 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditOtx->setText(key);
         ui->buttonGetOtx->hide();
     }
-    key = Config::generalConfig().value("builtwith").toString();
+    key = Config::generalConfig().value(OSINT_MODULE_BUILTWITH).toString();
     if(!key.isEmpty()){
         ui->lineEditBuiltWith->setText(key);
         ui->buttonGetBuiltWith->hide();
     }
-    key = Config::generalConfig().value("dnslytics").toString();
+    key = Config::generalConfig().value(OSINT_MODULE_DNSLYTICS).toString();
     if(!key.isEmpty()){
         ui->lineEditDnslytics->setText(key);
         ui->buttonGetDnslytics->hide();

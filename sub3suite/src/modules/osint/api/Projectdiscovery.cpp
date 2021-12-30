@@ -65,7 +65,7 @@ void Projectdiscovery::replyFinishedSubdomain(QNetworkReply *reply){
     if(error.isNull() || error.isEmpty()){
         QJsonArray subdomainList = mainObject["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomainList){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }

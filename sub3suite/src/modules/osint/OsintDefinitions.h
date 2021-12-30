@@ -3,5 +3,12 @@
 
 #define OSINT_MODULE_ANUBIS "Anubis"
 #define OSINT_MODULE_BGPVIEW "Bgpview"
+#define OSINT_MODULE_BINARYEDGE "BinaryEdge"
+#define OSINT_MODULE_BUILTWITH "BuiltWith"
+#define OSINT_MODULE_C99 "C99"
+#define OSINT_MODULE_CIRCL "Circl"
+#define OSINT_MODULE_DNSBUFFEROVERRUN "DnsBufferoverRun"
+#define OSINT_MODULE_DNSLYTICS "DNSlytics"
+#define OSINT_MODULE_DOMAINTOOLS "DomainTools"
 
 #endif // OSINTDEFINITIONS_H

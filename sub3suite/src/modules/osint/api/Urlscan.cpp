@@ -57,7 +57,7 @@ void Urlscan::replyFinishedSubdomain(QNetworkReply *reply){
 
     foreach(const QJsonValue &value, resultsArray){
         QJsonObject page = value["page"].toObject();
-        emit subdomain(page["domain"].toString());
+        emit resultSubdomain(page["domain"].toString());
         log.resultsCount++;
     }
     end(reply);
@@ -74,7 +74,7 @@ void Urlscan::replyFinishedIp(QNetworkReply *reply){
 
     foreach(const QJsonValue &value, resultsArray){
         QJsonObject page = value["page"].toObject();
-        emit ip(page["ptr"].toString());
+        emit resultIp(page["ptr"].toString());
         log.resultsCount++;
     }
     end(reply);
@@ -91,7 +91,7 @@ void Urlscan::replyFinishedUrl(QNetworkReply *reply){
 
     foreach(const QJsonValue &value, resultsArray){
         QJsonObject page = value["page"].toObject();
-        emit url(page["url"].toString());
+        emit resultUrl(page["url"].toString());
         log.resultsCount++;
     }
     end(reply);
@@ -108,7 +108,7 @@ void Urlscan::replyFinishedAsn(QNetworkReply *reply){
 
     foreach(const QJsonValue &value, resultsArray){
         QJsonObject page = value["page"].toObject();
-        emit asn(page["asn"].toString(), "");
+        emit resultASN(page["asn"].toString(), "");
         log.resultsCount++;
     }
     end(reply);

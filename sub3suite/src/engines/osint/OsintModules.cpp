@@ -421,4 +421,78 @@ void Osint::m_initModules(){
         ui->moduleBing->show();
     else
         ui->moduleBing->hide();
+
+    /* uncheck all modules */
+    this->m_uncheckAllModules();
+}
+
+void Osint::m_uncheckAllModules(){
+    ui->moduleAnubis->setChecked(false);
+    ui->moduleBgpview->setChecked(false);
+    ui->moduleBinaryEdge->setChecked(false);
+    ui->moduleC99->setChecked(false);
+    ui->moduleCircl->setChecked(false);
+    ui->moduleGithub->setChecked(false);
+    ui->moduleHackerTargetFree->setChecked(false);
+    ui->moduleHackerTargetPaid->setChecked(false);
+    ui->moduleMnemonicFree->setChecked(false);
+    ui->moduleMnemonicPaid->setChecked(false);
+    ui->moduleOmnisint->setChecked(false);
+    ui->moduleOtxFree->setChecked(false);
+    ui->moduleOtxPaid->setChecked(false);
+    ui->moduleProjectdiscovery->setChecked(false);
+    ui->moduleRiskIq->setChecked(false);
+    ui->moduleRobtexFree->setChecked(false);
+    ui->moduleRobtexPaid->setChecked(false);
+    ui->moduleSecuritytrails->setChecked(false);
+    ui->moduleShodan->setChecked(false);
+    ui->moduleSpyse->setChecked(false);
+    ui->moduleSublist3r->setChecked(false);
+    ui->moduleThreatBook->setChecked(false);
+    ui->moduleThreatcrowd->setChecked(false);
+    ui->moduleThreatminer->setChecked(false);
+    ui->moduleUrlscan->setChecked(false);
+    ui->moduleViewDns->setChecked(false);
+    ui->moduleVirusTotal->setChecked(false);
+    ui->moduleWebResolver->setChecked(false);
+    ui->moduleWhoisXmlApi->setChecked(false);
+    ui->moduleZetalytics->setChecked(false);
+    ui->moduleZoomeye->setChecked(false);
+    ui->moduleIpInfo->setChecked(false);
+    ui->moduleDnslytics->setChecked(false);
+    ui->moduleDomainTools->setChecked(false);
+    ui->moduleMaltiverseFree->setChecked(false);
+    ui->moduleN45HT->setChecked(false);
+    ui->moduleOnyphe->setChecked(false);
+    ui->moduleRipe->setChecked(false);
+    ui->moduleFullHunt->setChecked(false);
+    ui->moduleNetworksDB->setChecked(false);
+    ui->moduleSpyOnWeb->setChecked(false);
+    ui->moduleArchiveit->setChecked(false);
+    ui->moduleArchiveToday->setChecked(false);
+    ui->moduleArquivo->setChecked(false);
+    ui->moduleCommonCrawl->setChecked(false);
+    ui->moduleUKWebArchive->setChecked(false);
+    ui->moduleWaybackmachine->setChecked(false);
+    ui->moduleCensysFree->setChecked(false);
+    ui->moduleCensys->setChecked(false);
+    ui->moduleCertspotterFree->setChecked(false);
+    ui->moduleCertspotter->setChecked(false);
+    ui->moduleCrtsh->setChecked(false);
+    ui->moduleGoogleCert->setChecked(false);
+    ui->moduleHunter->setChecked(false);
+    ui->moduleEmailCrawlr->setChecked(false);
+    ui->moduleDnsdumpster->setChecked(false);
+    ui->moduleNetcraft->setChecked(false);
+    ui->modulePagesInventory->setChecked(false);
+    ui->modulePkey->setChecked(false);
+    ui->moduleRapiddns->setChecked(false);
+    ui->moduleSitedossier->setChecked(false);
+    ui->moduleAsk->setChecked(false);
+    ui->moduleBaidu->setChecked(false);
+    ui->moduleDogpile->setChecked(false);
+    ui->moduleDuckduckgo->setChecked(false);
+    ui->moduleExalead->setChecked(false);
+    ui->moduleYahoo->setChecked(false);
+    ui->moduleBing->setChecked(false);
 }

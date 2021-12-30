@@ -74,14 +74,14 @@ void Omnisint::replyFinishedSubdomain(QNetworkReply *reply){
 
     if(QUERY_TYPE == ALL){
         foreach(const QJsonValue &value, subdomains){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }
 
     if(QUERY_TYPE == REVERSE_IP){
         foreach(const QJsonValue &value, subdomains){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }

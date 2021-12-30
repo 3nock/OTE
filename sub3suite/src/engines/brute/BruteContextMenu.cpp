@@ -140,7 +140,7 @@ void Brute::m_clearResults(){
     /* clear the results...*/
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
-        m_subdomainsSet.clear();
+        m_subdomainSet.clear();
         m_resultModelSubdomain->clear();
         m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
         break;

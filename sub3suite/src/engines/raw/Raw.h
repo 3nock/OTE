@@ -19,9 +19,7 @@ class Raw : public AbstractEngine{
         Q_OBJECT
 
     public:
-        explicit Raw(QWidget *parent = nullptr,
-                     ProjectDataModel *project = nullptr,
-                     Status *status = nullptr);
+        explicit Raw(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
         ~Raw();
 
     signals:
@@ -139,6 +137,7 @@ class Raw : public AbstractEngine{
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         //...
+        QStringListModel *m_targetListModel;
         QStringListModel *m_targetListModelHostname;
         QStringListModel *m_targetListModelIp;
         QStringListModel *m_targetListModelAsn;

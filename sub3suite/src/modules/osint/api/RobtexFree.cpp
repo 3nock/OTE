@@ -109,19 +109,19 @@ void RobtexFree::replyFinishedSubdomain(QNetworkReply *reply){
             QString rrname = document.object()["rrname"].toString();
             QString rrdata = document.object()["rrdata"].toString();
             if(rrtype == "A" || rrtype == "AAAA"){
-                emit subdomain(rrname);
+                emit resultSubdomain(rrname);
                 log.resultsCount++;
             }
             if(rrtype == "NS"){
-                emit NS(rrdata);
+                emit resultNS(rrdata);
                 log.resultsCount++;
             }
             if(rrtype == "MX"){
-                emit MX(rrdata);
+                emit resultMX(rrdata);
                 log.resultsCount++;
             }
             if(rrtype == "CNAME"){
-                emit CNAME(rrdata);
+                emit resultCNAME(rrdata);
                 log.resultsCount++;
             }
         }
@@ -133,14 +133,14 @@ void RobtexFree::replyFinishedSubdomain(QNetworkReply *reply){
         QJsonArray act = document.object()["act"].toArray();
         foreach(const QJsonValue &value, act){
             QString host = value.toObject()["o"].toString();
-            emit subdomain(host);
+            emit resultSubdomain(host);
             log.resultsCount++;
         }
 
         QJsonArray pas = document.object()["pas"].toArray();
         foreach(const QJsonValue &value, pas){
             QString host = value.toObject()["o"].toString();
-            emit subdomain(host);
+            emit resultSubdomain(host);
             log.resultsCount++;
         }
     }
@@ -165,11 +165,11 @@ void RobtexFree::replyFinishedIp(QNetworkReply *reply){
             QString rrname = document.object()["rrname"].toString();
             QString rrdata = document.object()["rrdata"].toString();
             if(rrtype == "A"){
-                emit ipA(rrdata);
+                emit resultA(rrdata);
                 log.resultsCount++;
             }
             if(rrtype == "A"){
-                emit ipAAAA(rrdata);
+                emit resultAAAA(rrdata);
                 log.resultsCount++;
             }
         }
@@ -180,8 +180,8 @@ void RobtexFree::replyFinishedIp(QNetworkReply *reply){
         QJsonArray nets = document.object()["nets"].toArray();
         foreach(const QJsonValue &value, nets){
             QString address = value.toObject()["n"].toString();
-            emit ip(address);
-            //emit cidr(address); since the return address is a ip/cdir..
+            emit resultIp(address);
+            //emit resultCidr(address); since the return address is a ip/cdir..
             log.resultsCount++;
         }
     }
@@ -202,7 +202,7 @@ void RobtexFree::replyFinishedAsn(QNetworkReply *reply){
         QString asnValue = mainObj["as"].toString();
         QString asnName = mainObj["asname"].toString();
 
-        emit asn(asnValue, asnName);
+        emit resultASN(asnValue, asnName);
         log.resultsCount++;
     }
     end(reply);
@@ -226,7 +226,7 @@ void RobtexFree::replyFinishedSubdomainIp(QNetworkReply *reply){
             QString rrname = document.object()["rrname"].toString();
             QString rrdata = document.object()["rrdata"].toString();
             if(rrtype == "A" || rrtype == "AAAA"){
-                emit subdomainIp(rrname, rrdata);
+                emit resultSubdomainIp(rrname, rrdata);
                 log.resultsCount++;
             }
         }

@@ -72,7 +72,7 @@ void Rapiddns::replyFinishedSubdomain(QNetworkReply *reply){
                 {
                     GumboNode *td = static_cast<GumboNode*>(tr->v.element.children.data[3]);
                     GumboNode *hostname = static_cast<GumboNode*>(td->v.element.children.data[0]);
-                    emit subdomain(hostname->v.text.text);
+                    emit resultSubdomain(hostname->v.text.text);
                     log.resultsCount++;
                 }
             }
@@ -122,7 +122,7 @@ void Rapiddns::replyFinishedSubdomainIp(QNetworkReply *reply){
                         GumboNode *a = static_cast<GumboNode*>(td_address->v.element.children.data[0]);
                         GumboNode *address = static_cast<GumboNode*>(a->v.element.children.data[0]);
 
-                        emit subdomainIp(domain->v.text.text, address->v.text.text);
+                        emit resultSubdomainIp(domain->v.text.text, address->v.text.text);
                         log.resultsCount++;
                     }
                 }
@@ -171,7 +171,7 @@ void Rapiddns::replyFinishedIp(QNetworkReply *reply){
                         GumboNode *a = static_cast<GumboNode*>(td_address->v.element.children.data[0]);
                         GumboNode *address = static_cast<GumboNode*>(a->v.element.children.data[0]);
 
-                        emit ip(address->v.text.text);
+                        emit resultIp(address->v.text.text);
                         log.resultsCount++;
                     }
                 }

@@ -147,7 +147,7 @@ void NetworksDB::replyFinishedSubdomainIp(QNetworkReply *reply){
             QJsonArray domains = value.toObject()["domains"].toArray();
             QString address = value.toObject()["ip"].toString();
             foreach(const QJsonValue &domain, domains){
-                emit subdomainIp(domain.toString(), address);
+                emit resultSubdomainIp(domain.toString(), address);
                 log.resultsCount++;
             }
         }
@@ -170,7 +170,7 @@ void NetworksDB::replyFinishedSubdomain(QNetworkReply *reply){
         foreach(const QJsonValue &value, results){
             QJsonArray domains = value.toObject()["domains"].toArray();
             foreach(const QJsonValue &domain, domains){
-                emit subdomain(domain.toString());
+                emit resultSubdomain(domain.toString());
                 log.resultsCount++;
             }
         }
@@ -178,7 +178,7 @@ void NetworksDB::replyFinishedSubdomain(QNetworkReply *reply){
 
     if(QUERY_TYPE == DOMAINS_ON_IP){
         foreach(const QJsonValue &value, results){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }
@@ -199,14 +199,14 @@ void NetworksDB::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAINS_IN_NETWORK){
         foreach(const QJsonValue &value, results){
             QString address = value.toObject()["ip"].toString();
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }
 
     if(QUERY_TYPE == IPS_FOR_DOMAIN){
         foreach(const QJsonValue &value, results){
-            emit ip(value.toString());
+            emit resultIp(value.toString());
             log.resultsCount++;
         }
     }
@@ -227,7 +227,7 @@ void NetworksDB::replyFinishedCidr(QNetworkReply *reply){
     if(QUERY_TYPE == IPS_FOR_DOMAIN){
         foreach(const QJsonValue &value, results){
             QString prefix = value.toObject()["cidr"].toString();
-            emit cidr(prefix);
+            emit resultCidr(prefix);
             log.resultsCount++;
         }
     }

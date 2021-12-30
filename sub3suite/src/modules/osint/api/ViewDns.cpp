@@ -168,22 +168,22 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
 
             if(type == "NS"){
                 QString data = record.toObject()["data"].toString();
-                emit NS(data);
+                emit resultNS(data);
                 log.resultsCount++;
             }
             if(type == "MX"){
                 QString data = record.toObject()["data"].toString();
-                emit MX(data);
+                emit resultMX(data);
                 log.resultsCount++;
             }
             if(type == "CNAME"){
                 QString data = record.toObject()["data"].toString();
-                emit CNAME(data);
+                emit resultCNAME(data);
                 log.resultsCount++;
             }
             if(type == "TXT"){
                 QString data = record.toObject()["data"].toString();
-                emit TXT(data);
+                emit resultTXT(data);
                 log.resultsCount++;
             }
         }
@@ -193,7 +193,7 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
         QJsonArray domains = response["domains"].toArray();
         foreach(const QJsonValue &domain, domains){
             QString hostname = domain.toObject()["name"].toString();
-            emit subdomain(hostname);
+            emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
@@ -202,7 +202,7 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
         QJsonArray matches = response["matches"].toArray();
         foreach(const QJsonValue &match, matches){
             QString hostname = match.toObject()["domain"].toString();
-            emit subdomain(hostname);
+            emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
@@ -221,7 +221,7 @@ void ViewDns::replyFinishedEmail(QNetworkReply *reply){
 
     if(QUERY_TYPE == ABUSE_CONTACT_LOOKUP){
         QString emailAddress = response["abusecontact"].toString();
-        emit email(emailAddress);
+        emit resultEmail(emailAddress);
         log.resultsCount++;
     }
 
@@ -245,12 +245,12 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
 
             if(type == "A"){
                 QString data = record.toObject()["data"].toString();
-                emit ipA(data);
+                emit resultA(data);
                 log.resultsCount++;
             }
             if(type == "AAAA"){
                 QString data = record.toObject()["data"].toString();
-                emit ipAAAA(data);
+                emit resultAAAA(data);
                 log.resultsCount++;
             }
         }
@@ -260,7 +260,7 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
         QJsonArray records = response["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString address = record.toObject()["ip"].toString();
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }

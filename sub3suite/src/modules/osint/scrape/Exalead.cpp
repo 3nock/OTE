@@ -64,7 +64,7 @@ void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
             if(QString::fromUtf8(classAttribute->value) == "ellipsis")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                emit subdomain(QString::fromUtf8(child->v.text.text));
+                emit resultSubdomain(QString::fromUtf8(child->v.text.text));
                 log.resultsCount++;
             }
         }
@@ -115,7 +115,7 @@ void Exalead::replyFinishedUrl(QNetworkReply *reply){
             if(QString::fromUtf8(classAttribute->value) == "ellipsis")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                emit url(QString::fromUtf8(child->v.text.text));
+                emit resultUrl(QString::fromUtf8(child->v.text.text));
                 log.resultsCount++;
             }
         }

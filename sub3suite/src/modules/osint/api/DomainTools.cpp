@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+
 #define ACCOUNT_INFO 0
 #define BRAND_MONITOR 1
 #define DOMAIN_PROFILE 2
@@ -29,13 +30,11 @@
 #define WHOIS_HISTORY 22
 #define WHOIS_LOOKUP 23
 
-/*
- * has reverse ip, and reverse ns
- */
+
 DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
-    log.moduleName = "DomainTools";
+    log.moduleName = OSINT_MODULE_DOMAINTOOLS;
 
     if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
@@ -43,9 +42,8 @@ DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
     if(args.outputSubdomainIp)
         connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
-    ///
-    /// getting api key...
-    ///
+
+    /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");
     m_key = Config::generalConfig().value("domaintools_key").toString();
     m_username = Config::generalConfig().value("domaintools_username").toString();
@@ -177,7 +175,7 @@ void DomainTools::replyFinishedSubdomainIp(QNetworkReply *reply){
         foreach(const QJsonValue &ip_address, response["ip_addresses"].toArray()){
             QString ip = ip_address.toObject()["ip_address"].toString();
             foreach(const QJsonValue &domain, ip_address.toObject()["domain_names"].toArray()){
-                emit subdomainIp(domain.toString(), ip);
+                emit resultSubdomainIp(domain.toString(), ip);
                 log.resultsCount++;
             }
         }
@@ -202,12 +200,12 @@ void DomainTools::replyFinishedSubdomain(QNetworkReply *reply){
             QJsonObject ip_history = value.toObject();
             if(!ip_history["post_ip"].isNull() || !ip_history["post_ip"].toString().isEmpty()){
                 QString post_ip = value.toObject()["post_ip"].toString();
-                emit ip(post_ip);
+                emit resultIp(post_ip);
                 log.resultsCount++;
             }
             if(!ip_history["pre_ip"].isNull() || !ip_history["pre_ip"].toString().isEmpty()){
                 QString pre_ip = value.toObject()["pre_ip"].toString();
-                emit ip(pre_ip);
+                emit resultIp(pre_ip);
                 log.resultsCount++;
             }
         }
@@ -216,7 +214,7 @@ void DomainTools::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == REVERSE_IP){
         foreach(const QJsonValue &ip_address, response["ip_addresses"].toArray()){
             foreach(const QJsonValue &domain, ip_address.toObject()["domain_names"].toArray()){
-                emit subdomain(domain.toString());
+                emit resultSubdomain(domain.toString());
                 log.resultsCount++;
             }
         }

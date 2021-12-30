@@ -128,7 +128,7 @@ void Shodan::replyFinishedSubdomainIp(QNetworkReply *reply){
             if(type == "A" || type == "AAAA"){
                 QString subdomain = value.toObject()["subdomain"].toString();
                 QString address = value.toObject()["value"].toString();
-                emit subdomainIp(subdomain, address);
+                emit resultSubdomainIp(subdomain, address);
                 log.resultsCount++;
             }
         }
@@ -149,7 +149,7 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
         /* direct subdomains */
         QJsonArray subdomains = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
         /* dns records */
@@ -158,19 +158,19 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
             QString type = value.toObject()["type"].toString();
             QString hostname = value.toObject()["value"].toString();
             if(type == "MX"){
-                emit MX(hostname);
+                emit resultMX(hostname);
                 log.resultsCount++;
             }
             if(type == "NS"){
-                emit NS(hostname);
+                emit resultNS(hostname);
                 log.resultsCount++;
             }
             if(type == "CNAME"){
-                emit CNAME(hostname);
+                emit resultCNAME(hostname);
                 log.resultsCount++;
             }
             if(type == "TXT"){
-                emit TXT(hostname);
+                emit resultTXT(hostname);
                 log.resultsCount++;
             }
         }
@@ -180,7 +180,7 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
         QJsonArray data = document.object()["data"].toArray();
         foreach(const QJsonValue &dataValue, data){
             foreach(const QJsonValue &value, dataValue.toObject()["hostnames"].toArray()){
-                emit subdomain(value.toString());
+                emit resultSubdomain(value.toString());
                 log.resultsCount++;
             }
         }
@@ -204,12 +204,12 @@ void Shodan::replyFinishedIp(QNetworkReply *reply){
             QString type = value.toObject()["type"].toString();
             if(type == "A"){
                 QString address = value.toObject()["value"].toString();
-                emit ipA(address);
+                emit resultA(address);
                 log.resultsCount++;
             }
             if(type == "AAAA"){
                 QString address = value.toObject()["value"].toString();
-                emit ipAAAA(address);
+                emit resultAAAA(address);
                 log.resultsCount++;
             }
         }
@@ -229,7 +229,7 @@ void Shodan::replyFinishedAsn(QNetworkReply *reply){
     if(QUERY_TYPE == HOST_IP){
         QJsonArray data = document.object()["data"].toArray();
         foreach(const QJsonValue &value, data){
-            emit asn(value.toObject()["asn"].toString(), "");
+            emit resultASN(value.toObject()["asn"].toString(), "");
             log.resultsCount++;
         }
     }

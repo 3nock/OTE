@@ -643,30 +643,10 @@
          </widget>
         </widget>
        </item>
-       <item>
-        <widget class="Line" name="line_17">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <layout class="QHBoxLayout" name="horizontalLayout_6">
-       <item>
-        <widget class="Line" name="line_7">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="InputWidget" name="targets" native="true">
          <property name="minimumSize">

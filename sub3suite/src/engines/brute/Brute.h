@@ -7,17 +7,6 @@
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 
-namespace brute{
-    enum class INPUT{
-        HOST
-    };
-
-    enum OUTPUT{
-        SUBDOMAIN = 0,
-        TLD = 1
-    };
-}
-
 namespace Ui {
     class Brute;
 }
@@ -26,18 +15,15 @@ class Brute : public AbstractEngine{
     Q_OBJECT
 
     public:
-        Brute(QWidget *parent = nullptr,
-              ProjectDataModel *project = nullptr,
-              Status *status = nullptr);
+        Brute(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
         ~Brute();
 
     public slots:
         void onScanThreadEnded();
         void onInfoLog(QString log);
         void onErrorLog(QString log);
-        void onScanResult(QString subdomain, QString ipAddress, QString target);
-        /* ... */
-        void onChoosenWordlist(QString);
+        void onResultSubdomain(QString subdomain, QString ip);
+        void onResultTLD(QString tld, QString ip);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -51,24 +37,34 @@ class Brute : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
         void on_checkBoxMultipleTargets_stateChanged(int arg1);
+        void on_comboBoxOutput_currentIndexChanged(int index);
 
     private:
         Ui::Brute *ui;
-        QSet<QString> m_subdomainsSet;
+
+        QSet<QString> m_subdomainSet;
         QSet<QString> m_tldSet;
+
         brute::ScanConfig *m_scanConfig;
         brute::ScanArgs *m_scanArgs;
+
         QStringListModel *m_wordlistModel;
         QStringListModel *m_targetListModel;
+
         QStandardItemModel *m_resultModelSubdomain;
         QStandardItemModel *m_resultModelTld;
         QSortFilterProxyModel *m_resultProxyModel;
+
         NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
         /* for scan */
         void m_stopScan();
         void m_startScan();
         void m_pauseScan();
         void m_resumeScan();
+
+        /* ... */
+        QString targetFilterSubdomain(QString target);
+        QString targetFilterTLD(QString target);
 
         /* for context menu */
     private:

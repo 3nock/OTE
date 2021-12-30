@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Dnslytics{
-    QString name = "Dnslytics";
+    QString name = OSINT_MODULE_DNSLYTICS;
     QString url = "https://dnslytics.com/";
     QString url_apiDoc = "https://dnslytics.com/api";
     QString summary = "This service is provided by a Dutch ICT consultant. My goal is to provide webmasters, system administrators, forensic specialist or "
@@ -39,11 +39,15 @@ struct Dnslytics{
                                          {PLACEHOLDERTEXT_NS, "The ReverseNS API call returns domains hosted on the same name server (NS record)."}},
                                         {"SubnetInfo",
                                          {PLACEHOLDERTEXT_CIDR, "The SubnetInfo API call retrieves information about a subnet. It is based on the IP subnet report displayed on the website."
-                                          "We calculate statistics of all subnets allocated by the RIRs (ARIN, RIPE etc.) and subnets part of the global routing table. In total about 700K IPv4 subnets."}}};
+                                                                "We calculate statistics of all subnets allocated by the RIRs (ARIN, RIPE etc.) and subnets part of the global routing table. In total about 700K IPv4 subnets."}}};
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                           {OUT_SUBDOMAIN, OUT_IP}},
                                           {IN_IP,
+                                           {OUT_SUBDOMAIN, OUT_ASN, OUT_CIDR}},
+                                          {IN_ASN,
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN, OUT_CIDR}},
+                                          {IN_CIDR,
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN, OUT_CIDR}}};
 };
 }
@@ -61,6 +65,10 @@ class Dnslytics: public AbstractOsintModule{
         void replyFinishedAsn(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedCidr(QNetworkReply *reply) override;
+        /* ... */
+        void replyFinishedInfoMX(QNetworkReply *reply) override;
+        void replyFinishedInfoNS(QNetworkReply *reply) override;
+        void replyFinishedInfoIp(QNetworkReply *reply) override;
 
     private:
         QString m_key;

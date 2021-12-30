@@ -68,7 +68,7 @@ void CertspotterFree::replyFinishedSubdomain(QNetworkReply *reply){
     {
         QJsonArray dns_names = value.toObject()["dns_names"].toArray();
         foreach(const QJsonValue &domain, dns_names){
-            emit subdomain(domain.toString());
+            emit resultSubdomain(domain.toString());
             log.resultsCount++;
         }
     }
@@ -89,7 +89,7 @@ void CertspotterFree::replyFinishedSSLCert(QNetworkReply *reply){
         QJsonObject cert = value.toObject()["cert"].toObject();
         QString sha256 = cert["sha256"].toString();
         /* ... */
-        emit sslCert(sha256);
+        emit resultSSL(sha256);
         log.resultsCount++;
     }
 

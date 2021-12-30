@@ -153,7 +153,7 @@ void SecurityTrails::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_SUBDOMAIN){
         QJsonArray subdomainList = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomainList){
-            emit subdomain(value.toString().append(".").append(target));
+            emit resultSubdomain(value.toString().append(".").append(target));
             log.resultsCount++;
         }
     }
@@ -166,19 +166,19 @@ void SecurityTrails::replyFinishedSubdomain(QNetworkReply *reply){
 
         if(!txt.isEmpty()){
             foreach(const QJsonValue &value, txt["values"].toArray()){
-                emit TXT(value.toObject()["value"].toString());
+                emit resultTXT(value.toObject()["value"].toString());
                 log.resultsCount++;
             }
         }
         if(!ns.isEmpty()){
             foreach(const QJsonValue &value, ns["values"].toArray()){
-                emit NS(value.toObject()["nameserver"].toString());
+                emit resultNS(value.toObject()["nameserver"].toString());
                 log.resultsCount++;
             }
         }
         if(!mx.isEmpty()){
             foreach(const QJsonValue &value, mx["values"].toArray()){
-                emit MX(value.toObject()["hostname"].toString());
+                emit resultMX(value.toObject()["hostname"].toString());
                 log.resultsCount++;
             }
         }
@@ -191,7 +191,7 @@ void SecurityTrails::replyFinishedSubdomain(QNetworkReply *reply){
             QJsonArray hostnames = value.toObject()["hostnames"].toArray();
 
             foreach(const QJsonValue &value, hostnames){
-                emit subdomain(value.toString());
+                emit resultSubdomain(value.toString());
                 log.resultsCount++;
             }
         }
@@ -211,7 +211,7 @@ void SecurityTrails::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == COMPANY_ASSOCIATED_IP){
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &value, records){
-            emit ip(value.toObject()["cidr"].toString());
+            emit resultIp(value.toObject()["cidr"].toString());
             //emit ipCDIR(value.toObject()["cidr"].toString());
             log.resultsCount++;
         }
@@ -223,13 +223,13 @@ void SecurityTrails::replyFinishedIp(QNetworkReply *reply){
 
         if(!a.isEmpty()){
             foreach(const QJsonValue &value, a["values"].toArray()){
-                emit ipA(value.toObject()["ip"].toString());
+                emit resultA(value.toObject()["ip"].toString());
                 log.resultsCount++;
             }
         }
         if(!aaaa.isEmpty()){
             foreach(const QJsonValue &value, aaaa["values"].toArray()){
-                emit ipAAAA(value.toObject()["ip"].toString());
+                emit resultAAAA(value.toObject()["ip"].toString());
                 log.resultsCount++;
             }
         }

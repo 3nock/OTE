@@ -6,9 +6,7 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 
 
-Active::Active(QWidget *parent, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, project, status),
-    ui(new Ui::Active),
+Active::Active(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Active),
     m_scanConfig(new active::ScanConfig),
     m_scanArgs(new active::ScanArgs),
     m_targetListModel(new QStringListModel),
@@ -121,7 +119,7 @@ void Active::on_buttonStart_clicked(){
 
 void Active::on_buttonStop_clicked(){
     emit stopScanThread();
-    status->active->isStopped = true;
+    status->isStopped = true;
 }
 
 void Active::on_comboBoxOption_currentIndexChanged(int index){
@@ -143,7 +141,7 @@ void Active::on_comboBoxOption_currentIndexChanged(int index){
 }
 
 void Active::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this);
+    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }

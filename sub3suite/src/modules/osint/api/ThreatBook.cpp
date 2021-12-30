@@ -116,7 +116,7 @@ void ThreatBook::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == SUBDOMAINS){
         QJsonArray subdomainList = document.object()["data"].toObject()["sub_domains"].toObject()["data"].toArray();
         foreach(const QJsonValue &value, subdomainList){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }
@@ -129,7 +129,7 @@ void ThreatBook::replyFinishedSubdomain(QNetworkReply *reply){
         foreach(const QString &historyDomain, historyDomainsList){
             QJsonArray domains = history_domains[historyDomain].toArray();
             foreach(const QJsonValue &value, domains){
-                emit subdomain(value.toString());
+                emit resultSubdomain(value.toString());
                 log.resultsCount++;
             }
         }
@@ -150,7 +150,7 @@ void ThreatBook::replyFinishedAsn(QNetworkReply *reply){
     if(QUERY_TYPE == IP_QUERY){
         QString asnValue = QString::number(data["asn"].toObject()["number"].toInt());
         QString asnName = data["asn"].toObject()["info"].toString();
-        emit asn(asnValue, asnName);
+        emit resultASN(asnValue, asnName);
         log.resultsCount++;
     }
     end(reply);
@@ -169,7 +169,7 @@ void ThreatBook::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_QUERY){
         QJsonArray cur_ips = data["cur_ips"].toArray();
         foreach(const QJsonValue &value, cur_ips){
-            emit ip(value.toObject()["ip"].toString());
+            emit resultIp(value.toObject()["ip"].toString());
             log.resultsCount++;
         }
     }
@@ -179,7 +179,7 @@ void ThreatBook::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &history_ip, history_ips){
             QJsonArray ips = history_ip.toObject()["ips"].toArray();
             foreach(const QJsonValue &value, ips){
-                emit ip(value.toString());
+                emit resultIp(value.toString());
                 log.resultsCount++;
             }
         }

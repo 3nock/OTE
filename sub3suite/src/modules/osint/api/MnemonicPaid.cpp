@@ -127,11 +127,11 @@ void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "a"){
-                emit ipA(dataObj["answer"].toString());
+                emit resultA(dataObj["answer"].toString());
                 log.resultsCount++;
             }
             if(dataObj["rrtype"].toString() == "aaaa"){
-                emit ipAAAA(dataObj["answer"].toString());
+                emit resultAAAA(dataObj["answer"].toString());
                 log.resultsCount++;
             }
         }
@@ -141,7 +141,7 @@ void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "a"){
-                emit ipA(dataObj["answer"].toString());
+                emit resultA(dataObj["answer"].toString());
                 log.resultsCount++;
             }
         }
@@ -151,7 +151,7 @@ void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "aaaa"){
-                emit ipAAAA(dataObj["answer"].toString());
+                emit resultAAAA(dataObj["answer"].toString());
                 log.resultsCount++;
             }
         }
@@ -175,15 +175,15 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "cname"){
-                emit CNAME(dataObj["answer"].toString());
+                emit resultCNAME(dataObj["answer"].toString());
                 log.resultsCount++;
             }
             if(dataObj["rrtype"].toString() == "mx"){
-                emit MX(dataObj["answer"].toString());
+                emit resultMX(dataObj["answer"].toString());
                 log.resultsCount++;
             }
             if(dataObj["rrtype"].toString() == "ns"){
-                emit NS(dataObj["answer"].toString());
+                emit resultNS(dataObj["answer"].toString());
                 log.resultsCount++;
             }
         }
@@ -193,7 +193,7 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "cname"){
-                emit CNAME(dataObj["answer"].toString());
+                emit resultCNAME(dataObj["answer"].toString());
                 log.resultsCount++;
             }
         }
@@ -203,7 +203,7 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "mx"){
-                emit MX(dataObj["answer"].toString());
+                emit resultMX(dataObj["answer"].toString());
                 log.resultsCount++;
             }
         }
@@ -213,7 +213,7 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "ns"){
-                emit NS(dataObj["answer"].toString());
+                emit resultNS(dataObj["answer"].toString());
                 log.resultsCount++;
             }
         }

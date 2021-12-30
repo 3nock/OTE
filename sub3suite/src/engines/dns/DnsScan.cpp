@@ -12,12 +12,12 @@ void Dns::m_pauseScan(){
      Resume the scan, just csubdomainIp the startScan, with the same arguments and
      it will continue at where it ended...
     */
-    if(status->dns->isPaused){
-        status->dns->isPaused = false;
+    if(status->isPaused){
+        status->isPaused = false;
         this->m_startScan();
     }
     else{
-        status->dns->isPaused = true;
+        status->isPaused = true;
         emit stopScanThread();
     }
 }
@@ -42,48 +42,48 @@ void Dns::m_startScan(){
     if((ui->checkBoxSRV->isChecked()) && (threadsCount > srvWordlistCount*wordlistCount))
         threadsCount = wordlistCount;
 
-    status->dns->activeScanThreads = threadsCount;
+    status->activeScanThreads = threadsCount;
 
     /* loop to create threads for scan... */
     for(int i = 0; i < threadsCount; i++)
     {
-        records::Scanner *scanner = new records::Scanner(m_scanArgs);
+        dns::Scanner *scanner = new dns::Scanner(m_scanArgs);
         QThread *cThread = new QThread(this);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
-        connect(scanner, &records::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &records::Scanner::infoLog, this, &Dns::onInfoLog);
-        connect(scanner, &records::Scanner::errorLog, this, &Dns::onErrorLog);
-        connect(scanner, &records::Scanner::scanResult, this, &Dns::onScanResult);
+        connect(scanner, &dns::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &dns::Scanner::infoLog, this, &Dns::onInfoLog);
+        connect(scanner, &dns::Scanner::errorLog, this, &Dns::onErrorLog);
+        connect(scanner, &dns::Scanner::scanResult, this, &Dns::onScanResult);
         connect(cThread, &QThread::finished, this, &Dns::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &QThread::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &Dns::stopScanThread, scanner, &records::Scanner::onStopScan);
+        connect(this, &Dns::stopScanThread, scanner, &dns::Scanner::onStopScan);
         cThread->start();
     }
-    status->dns->isRunning = true;
+    status->isRunning = true;
 }
 
 void Dns::onScanThreadEnded(){
-    status->dns->activeScanThreads--;
+    status->activeScanThreads--;
 
     /* if subdomainIp Scan Threads have finished... */
-    if(status->dns->activeScanThreads == 0)
+    if(status->activeScanThreads == 0)
     {
-        if(status->dns->isPaused)
+        if(status->isPaused)
         {
-            status->dns->isRunning = false;
+            status->isRunning = false;
             return;
         }
         else
         {
             /* set the progress bar to 100% just in case... */
-            if(!status->dns->isStopped)
+            if(!status->isStopped)
                 ui->progressBar->setValue(ui->progressBar->maximum());
 
-            status->dns->isPaused = false;
-            status->dns->isStopped = false;
-            status->dns->isRunning = false;
+            status->isPaused = false;
+            status->isStopped = false;
+            status->isRunning = false;
 
             /* ... */
             ui->buttonStart->setEnabled(true);
@@ -92,7 +92,7 @@ void Dns::onScanThreadEnded(){
     }
 }
 
-void Dns::onScanResult(records::Results results){
+void Dns::onScanResult(dns::Results results){
     if(m_scanArgs->RecordType_srv)
     {
         /*

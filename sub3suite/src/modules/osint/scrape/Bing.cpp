@@ -82,7 +82,7 @@ void Bing::replyFinishedSubdomain(QNetworkReply *reply){
             GumboNode *url = static_cast<GumboNode*>(node->v.element.children.data[0]);
             QString domain = QString::fromUtf8(url->v.text.text);
             domain = domain.remove("https://").remove("http://").split("/")[0];
-            emit subdomain(domain);
+            emit resultSubdomain(domain);
             log.resultsCount++;
         }
 
@@ -146,7 +146,7 @@ void Bing::replyFinishedUrl(QNetworkReply *reply){
         if(node->v.element.tag == GUMBO_TAG_CITE)
         {
             GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-            emit url(QString::fromUtf8(child->v.text.text));
+            emit resultUrl(QString::fromUtf8(child->v.text.text));
             log.resultsCount++;
         }
 

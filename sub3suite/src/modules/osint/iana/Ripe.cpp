@@ -219,7 +219,7 @@ void Ripe::replyFinishedAsn(QNetworkReply *reply){
     if(QUERY_TYPE == NETWORK_INFO){
         QJsonArray asns = document.object()["data"].toObject()["asns"].toArray();
         foreach(const QJsonValue &value, asns){
-            emit asn(value.toString(), "");
+            emit resultASN(value.toString(), "");
             log.resultsCount++;
         }
     }
@@ -242,23 +242,23 @@ void Ripe::replyFinishedCidr(QNetworkReply *reply){
         /* for ipv4 */
         QJsonArray v4_originating = prefixes["v4"].toObject()["originating"].toArray();
         foreach(const QJsonValue &value, v4_originating){
-            emit cidr(value.toString());
+            emit resultCidr(value.toString());
             log.resultsCount++;
         }
         QJsonArray v4_transiting = prefixes["v4"].toObject()["transiting"].toArray();
         foreach(const QJsonValue &value, v4_transiting){
-            emit cidr(value.toString());
+            emit resultCidr(value.toString());
             log.resultsCount++;
         }
         /* for ipv6 */
         QJsonArray v6_originating = prefixes["v6"].toObject()["originating"].toArray();
         foreach(const QJsonValue &value, v4_originating){
-            emit cidr(value.toString());
+            emit resultCidr(value.toString());
             log.resultsCount++;
         }
         QJsonArray v6_transiting = prefixes["v6"].toObject()["transiting"].toArray();
         foreach(const QJsonValue &value, v4_transiting){
-            emit cidr(value.toString());
+            emit resultCidr(value.toString());
             log.resultsCount++;
         }
     }

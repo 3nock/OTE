@@ -12,6 +12,10 @@ InputWidget::~InputWidget(){
     delete ui;
 }
 
+QStringListModel *InputWidget::getlistModel(){
+    return m_listModel;
+}
+
 void InputWidget::setListModel(QStringListModel *listModel){
     ui->listView->setModel(listModel);
     m_listModel = listModel;

@@ -3,12 +3,14 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+
 #define SUBOMAINS 0
+
 
 Dnsbufferoverun::Dnsbufferoverun(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
-    log.moduleName = "DnsBufferoverRun";
+    log.moduleName = OSINT_MODULE_DNSBUFFEROVERRUN;
 
     if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRawJson);
@@ -28,15 +30,25 @@ void Dnsbufferoverun::start(){
 
     QUrl url;
     if(args.outputRaw){
-        url.setUrl("https://dns.bufferover.run/dns?q="+target);
-    }
-    if(args.inputDomain){
-        url.setUrl("https://dns.bufferover.run/dns?q="+target);
+        switch (args.rawOption) {
+        case SUBOMAINS:
+            url.setUrl("https://dns.bufferover.run/dns?q="+target);
+            break;
+        }
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 
-    request.setUrl(url);
-    manager->get(request);
-    activeRequests++;
+    if(args.inputDomain){
+        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
+            url.setUrl("https://dns.bufferover.run/dns?q="+target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
 void Dnsbufferoverun::replyFinishedSubdomain(QNetworkReply *reply){
@@ -46,18 +58,19 @@ void Dnsbufferoverun::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonObject mainObject = document.object();
+    QJsonObject mainObj = document.object();
 
-    QJsonArray FDNS_A = mainObject["FDNS_A"].toArray();
-    foreach(const QJsonValue &value, FDNS_A){
-        emit subdomain(value.toString().split(",")[1]); // subdomain
+    /* for forward dns */
+    foreach(const QJsonValue &value, mainObj["FDNS_A"].toArray()){
+        emit resultSubdomain(value.toString().split(",")[1]);
         log.resultsCount++;
     }
-    QJsonArray RDNS = mainObject["RDNS"].toArray();
-    foreach(const QJsonValue &value, RDNS){
-        emit subdomain(value.toString().split(",")[1]); // subdomain
+    /* for reverse dns */
+    foreach(const QJsonValue &value, mainObj["RDNS"].toArray()){
+        emit resultSubdomain(value.toString().split(",")[1]);
         log.resultsCount++;
     }
+
     end(reply);
 }
 
@@ -68,18 +81,19 @@ void Dnsbufferoverun::replyFinishedIp(QNetworkReply *reply){
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonObject mainObject = document.object();
+    QJsonObject mainObj = document.object();
 
-    QJsonArray FDNS_A = mainObject["FDNS_A"].toArray();
-    foreach(const QJsonValue &value, FDNS_A){
-        emit ip(value.toString().split(",")[0]); // ip-address
+    /* for forward dns */
+    foreach(const QJsonValue &value, mainObj["FDNS_A"].toArray()){
+        emit resultIp(value.toString().split(",")[0]);
         log.resultsCount++;
     }
-    QJsonArray RDNS = mainObject["RDNS"].toArray();
-    foreach(const QJsonValue &value, RDNS){
-        emit ip(value.toString().split(",")[0]); // ip-address
+    /* for reverse dns */
+    foreach(const QJsonValue &value, mainObj["RDNS"].toArray()){
+        emit resultIp(value.toString().split(",")[0]);
         log.resultsCount++;
     }
+
     end(reply);
 }
 
@@ -90,19 +104,20 @@ void Dnsbufferoverun::replyFinishedSubdomainIp(QNetworkReply *reply){
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonObject mainObject = document.object();
+    QJsonObject mainObj = document.object();
 
-    QJsonArray FDNS_A = mainObject["FDNS_A"].toArray();
-    foreach(const QJsonValue &value, FDNS_A){
+    /* for forward dns */
+    foreach(const QJsonValue &value, mainObj["FDNS_A"].toArray()){
         QStringList subdomainAndIp = value.toString().split(","); // ip-address,subdomain
-        emit subdomainIp(subdomainAndIp[1], subdomainAndIp[0]);
+        emit resultSubdomainIp(subdomainAndIp[1], subdomainAndIp[0]);
         log.resultsCount++;
     }
-    QJsonArray RDNS = mainObject["RDNS"].toArray();
-    foreach(const QJsonValue &value, RDNS){
+    /* for reverse dns */
+    foreach(const QJsonValue &value, mainObj["RDNS"].toArray()){
         QStringList subdomainAndIp = value.toString().split(","); // ip-address,subdomain
-        emit subdomainIp(subdomainAndIp[1], subdomainAndIp[0]);
+        emit resultSubdomainIp(subdomainAndIp[1], subdomainAndIp[0]);
         log.resultsCount++;
     }
+
     end(reply);
 }

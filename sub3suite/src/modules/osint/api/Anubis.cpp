@@ -2,6 +2,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 
+
 #define SUBDOMAIN 0
 
 /*
@@ -53,15 +54,11 @@ void Anubis::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonArray subdomains = document.array();
 
-    foreach(const QJsonValue &value, subdomains){
-        emit subdomain(value.toString());
+    foreach(const QJsonValue &value, document.array()){
+        emit resultSubdomain(value.toString());
         log.resultsCount++;
     }
+
     end(reply);
-}
-
-void Anubis::m_checkRateLimit(){
-
 }

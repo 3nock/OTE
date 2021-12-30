@@ -42,9 +42,7 @@ class Osint : public AbstractEngine{
     Q_OBJECT
 
     public:
-        Osint(QWidget *parent = nullptr,
-              ProjectDataModel *project = nullptr,
-              Status *status = nullptr);
+        Osint(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
         ~Osint();
 
     public slots:
@@ -128,6 +126,7 @@ class Osint : public AbstractEngine{
         /* ... */
         void m_initProfiles();
         void m_initModules();
+        void m_uncheckAllModules();
         /* ... */
         void m_infoLog(QString log);
         void m_errorLog(QString log);

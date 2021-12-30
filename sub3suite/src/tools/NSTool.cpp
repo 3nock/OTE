@@ -4,10 +4,17 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
+#define DNSLYTICS 0
+
+
 NSTool::NSTool(QWidget *parent) : QDialog(parent), ui(new Ui::NSTool),
     m_model(new NSModel)
 {
     ui->setupUi(this);
+
+    /* enter used modules */
+    ui->comboBoxEngine->addItem("DNSLytics");
+    ui->comboBoxOption->addItem("Domains");
 
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText("Filter...");
@@ -79,31 +86,36 @@ void NSTool::on_checkBoxExpand_clicked(bool checked){
 }
 
 void NSTool::on_buttonStart_clicked(){
-    /*
-    m_args->target = ui->lineEditTarget->text();
-    m_args->outputInfoCidr = true;
+    /* scan argumemts */
+    ScanArgs scanArgs;
+
+    /* getting the targets */
+    if(ui->checkBoxMultipleTargets->isChecked()){
+
+    }else
+        scanArgs.targets.push(ui->lineEditTarget->text());
+
+    scanArgs.outputInfoNS = true;
 
     ui->buttonStop->setEnabled(true);
     ui->buttonStart->setDisabled(true);
 
+    /* starting appropriate engine enumeration thread */
     QThread *cThread = new QThread;
-    int engineToUse = ui->comboBoxEngine->currentIndex();
-
-    if(engineToUse == 0)
-    {
-        Bgpview *bgpview = new Bgpview(m_scanArgs);
-        bgpview->Enumerator(cThread);
-        bgpview->moveToThread(cThread);
-        connect(bgpview, &IpInfo::infoCidr, this, &NSTool::onResultsCidr);
-        connect(bgpview, &IpInfo::infoLog, this, &NSTool::onInfoLog);
-        connect(bgpview, &IpInfo::errorLog, this, &NSTool::onErrorLog);
-        connect(bgpview, &IpInfo::rateLimitLog, this, &NSTool::onRateLimitLog);
+    switch (ui->comboBoxEngine->currentIndex()) {
+    case DNSLYTICS:
+        Dnslytics *dnslytics = new Dnslytics(scanArgs);
+        dnslytics->startScan(cThread);
+        dnslytics->moveToThread(cThread);
+        connect(dnslytics, &IpInfo::infoNS, this, &NSTool::onResultsNS);
+        connect(dnslytics, &IpInfo::infoLog, this, &NSTool::onInfoLog);
+        connect(dnslytics, &IpInfo::errorLog, this, &NSTool::onErrorLog);
+        connect(dnslytics, &IpInfo::rateLimitLog, this, &NSTool::onRateLimitLog);
         connect(cThread, &QThread::finished, this, &NSTool::onEnumerationComplete);
-        connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
+        connect(cThread, &QThread::finished, dnslytics, &Bgpview::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         cThread->start();
     }
-    */
 }
 
 void NSTool::on_buttonConfig_clicked(){

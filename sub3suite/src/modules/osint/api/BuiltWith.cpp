@@ -4,7 +4,18 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#define LOOKUP 0
+
+#define COMPANY_API 0
+#define DOMAIN_API 1
+#define FREE_API 2
+#define KEYWORD_API 3
+#define LIST_API 4
+#define LIVE_API 5
+#define REDIRECTS_API 6
+#define RELATIONSHIP_API 7
+#define TRENDS_API 8
+#define TRUST_API 9
+
 
 /*
  * for now only raw results...
@@ -13,15 +24,14 @@
 BuiltWith::BuiltWith(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
-    log.moduleName = "BuiltWith";
+    log.moduleName = OSINT_MODULE_BUILTWITH;
 
     if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
-    ///
-    /// getting api key...
-    ///
+
+    /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("builtwith").toString();
+    m_key = Config::generalConfig().value(OSINT_MODULE_BUILTWITH).toString();
     Config::generalConfig().endGroup();
 }
 BuiltWith::~BuiltWith(){
@@ -34,17 +44,38 @@ void BuiltWith::start(){
     QUrl url;
     if(args.outputRaw){
         switch (args.rawOption) {
-        case LOOKUP:
+        case FREE_API:
             url.setUrl("https://api.builtwith.com/free1/api.json?KEY="+m_key+"&LOOKUP="+target);
             break;
+        case DOMAIN_API:
+            url.setUrl("https://api.builtwith.com/v19/api.json?KEY="+m_key+"&LOOKUP="+target);
+            break;
+        case LIST_API:
+            url.setUrl("https://api.builtwith.com/lists8/api.json?KEY="+m_key+"&TECH="+target);
+            break;
+        case RELATIONSHIP_API:
+            url.setUrl("https://api.builtwith.com/rv1/api.json?KEY="+m_key+"&LOOKUP="+target);
+            break;
+        case REDIRECTS_API:
+            url.setUrl("https://api.builtwith.com/redirect1/api.json?KEY="+m_key+"&LOOKUP="+target);
+            break;
+        case KEYWORD_API:
+            url.setUrl("https://api.builtwith.com/kw2/api.json?KEY="+m_key+"&LOOKUP="+target);
+            break;
+        case TRENDS_API:
+            url.setUrl("https://api.builtwith.com/trends/v6/api.json?KEY="+m_key+"&TECH="+target);
+            break;
+        case COMPANY_API:
+            url.setUrl("https://ctu.builtwith.com/ctu1/api.json?KEY="+m_key+"&COMPANY="+target);
+            break;
+        case LIVE_API:
+            url.setUrl("https://api.builtwith.com/dlv2/api.json?KEY="+m_key+"&LOOKUP="+target);
+            break;
+        case TRUST_API:
+            url.setUrl("https://api.builtwith.com/trustv1/api.json?KEY="+m_key+"&LOOKUP="+target);
         }
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
-        return;
     }
-
-    /*
-     * Others not implemented yet...
-     */
 }

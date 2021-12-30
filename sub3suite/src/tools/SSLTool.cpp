@@ -102,7 +102,7 @@ void SSLTool::on_buttonStart_clicked(){
     case TARGET_HOSTNAME:
     {
         /* getting target, and determining target type */
-        certificate::ScanArgs *args = new certificate::ScanArgs;
+        ssl::ScanArgs *args = new ssl::ScanArgs;
         args->target = ui->lineEditTarget->text();
         args->singleTarget = true;
         args->raw = true;
@@ -121,14 +121,14 @@ void SSLTool::on_buttonStart_clicked(){
         }
 
         /* enumerating */
-        certificate::Scanner *scanner = new certificate::Scanner(args);
+        ssl::Scanner *scanner = new ssl::Scanner(args);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
-        connect(scanner, &certificate::Scanner::resultRaw, this, &SSLTool::onResult);
-        connect(scanner, &certificate::Scanner::errorLog, this, &SSLTool::onErrorLogTxt);
-        connect(scanner, &certificate::Scanner::infoLog, this, &SSLTool::onInfoLogTxt);
+        connect(scanner, &ssl::Scanner::resultRaw, this, &SSLTool::onResult);
+        connect(scanner, &ssl::Scanner::errorLog, this, &SSLTool::onErrorLogTxt);
+        connect(scanner, &ssl::Scanner::infoLog, this, &SSLTool::onInfoLogTxt);
         connect(cThread, &QThread::finished, this, &SSLTool::onEnumerationComplete);
-        connect(cThread, &QThread::finished, scanner, &certificate::Scanner::deleteLater);
+        connect(cThread, &QThread::finished, scanner, &ssl::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         connect(cThread, &QThread::finished, this, [=](){delete args;});
         cThread->start();

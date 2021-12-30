@@ -65,7 +65,7 @@ void DuckDuckGo::replyFinishedSubdomain(QNetworkReply *reply){
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 QString domain = QString::fromUtf8(child->v.text.text);
-                emit subdomain(domain.split("/")[0].trimmed());
+                emit resultSubdomain(domain.split("/")[0].trimmed());
                 log.resultsCount++;
             }
         }
@@ -116,7 +116,7 @@ void DuckDuckGo::replyFinishedUrl(QNetworkReply *reply){
             if(QString::fromUtf8(classAttribute->value) == "result__url")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                emit url(QString::fromUtf8(child->v.text.text).trimmed());
+                emit resultUrl(QString::fromUtf8(child->v.text.text).trimmed());
                 log.resultsCount++;
             }
         }

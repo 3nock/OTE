@@ -55,7 +55,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
                       GumboNode *td = static_cast<GumboNode*>(tdChildren.data[i]);
                       if(td->type == GUMBO_NODE_TEXT){
                           QString domain = QString::fromUtf8(td->v.text.text);
-                          emit subdomain(domain);
+                          emit resultSubdomain(domain);
                           log.resultsCount++;
                       }
                   }
@@ -80,7 +80,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
             QList<QSslCertificate> certList = QSslCertificate::fromData(reply->readAll(), QSsl::Pem);
             foreach(const QSslCertificate &cert, certList){
                 foreach(const QString &altName, cert.subjectAlternativeNames()){
-                    emit subdomain(altName);
+                    emit resultSubdomain(altName);
                     log.resultsCount++;
                 }
             }

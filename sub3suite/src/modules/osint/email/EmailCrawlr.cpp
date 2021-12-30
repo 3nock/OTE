@@ -77,7 +77,7 @@ void EmailCrawlr::replyFinishedEmail(QNetworkReply *reply){
 
     foreach(const QJsonValue &value, emails){
         QString mail = value.toObject()["email"].toString();
-        emit email(mail);
+        emit resultEmail(mail);
         log.resultsCount++;
     }
 

@@ -6,7 +6,7 @@
 
 void Ssl::m_startScan(){
 
-    certificate::ScanArgs *args = new certificate::ScanArgs;
+    ssl::ScanArgs *args = new ssl::ScanArgs;
     args->singleTarget = false;
 
     foreach(const QString &target, m_targetListModel->stringList())
@@ -40,12 +40,12 @@ void Ssl::m_startScan(){
     if(threadsCount > wordlistCount)
         threadsCount = wordlistCount;
 
-    status->cert->activeScanThreads = threadsCount;
+    status->activeScanThreads = threadsCount;
 
     /* loop to create threads for enumeration... */
     for(int i = 0; i < threadsCount; i++)
     {
-        certificate::Scanner *scanner = new certificate::Scanner(args);
+        ssl::Scanner *scanner = new ssl::Scanner(args);
         QThread *cThread = new QThread;
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
@@ -53,30 +53,30 @@ void Ssl::m_startScan(){
         /* results signals & slots... */
         switch (ui->comboBoxOutput->currentIndex()) {
         case ssl::OUTPUT::SUBDOMAIN:
-            connect(scanner, &certificate::Scanner::resultSubdomain, this, &Ssl::onScanResultSubdomain);
+            connect(scanner, &ssl::Scanner::resultSubdomain, this, &Ssl::onScanResultSubdomain);
             break;
         case ssl::OUTPUT::CERT_ID:
             switch (ui->comboBoxOption->currentIndex()) {
             case 0: // SHA1
-                connect(scanner, &certificate::Scanner::resultSHA1, this, &Ssl::onScanResultSHA1);
+                connect(scanner, &ssl::Scanner::resultSHA1, this, &Ssl::onScanResultSHA1);
                 break;
             case 1: // SHA256
-                connect(scanner, &certificate::Scanner::resultSHA256, this, &Ssl::onScanResultSHA256);
+                connect(scanner, &ssl::Scanner::resultSHA256, this, &Ssl::onScanResultSHA256);
                 break;
             }
             break;
         case ssl::OUTPUT::CERT_INFO:
-            connect(scanner, &certificate::Scanner::resultRaw, this, &Ssl::onScanResultCertInfo);
+            connect(scanner, &ssl::Scanner::resultRaw, this, &Ssl::onScanResultCertInfo);
             break;
         }
-        connect(scanner, &certificate::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &certificate::Scanner::infoLog, this, &Ssl::onInfoLog);
-        connect(scanner, &certificate::Scanner::errorLog, this, &Ssl::onErrorLog);
+        connect(scanner, &ssl::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &ssl::Scanner::infoLog, this, &Ssl::onInfoLog);
+        connect(scanner, &ssl::Scanner::errorLog, this, &Ssl::onErrorLog);
         connect(cThread, &QThread::finished, this, &Ssl::onScanThreadEnded);
-        connect(cThread, &QThread::finished, scanner, &certificate::Scanner::deleteLater);
+        connect(cThread, &QThread::finished, scanner, &ssl::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &Ssl::stopScanThread, scanner, &certificate::Scanner::onStopScan);
+        connect(this, &Ssl::stopScanThread, scanner, &ssl::Scanner::onStopScan);
         cThread->start();
     }
-    status->active->isRunning = true;
+    status->isRunning = true;
 }

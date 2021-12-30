@@ -83,7 +83,7 @@ void Waybackmachine::replyFinishedUrl(QNetworkReply *reply){
     foreach(const QJsonValue &value, urls)
     {
         QString urlValue = value.toArray()[0].toString();
-        emit url(urlValue);
+        emit resultUrl(urlValue);
         log.resultsCount++;
     }
 
@@ -116,7 +116,7 @@ void Waybackmachine::replyFinishedSubdomain(QNetworkReply *reply){
         }
 
         /*  emiting subdomain... */
-        emit subdomain(domainUrl);
+        emit resultSubdomain(domainUrl);
         log.resultsCount++;
     }
 

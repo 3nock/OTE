@@ -12,6 +12,7 @@ struct Anubis{
     QString summary = "Subdomain enumeration and information gathering tool";
     QMap<QString, QStringList> flags = {{"subdomain",
                                          {PLACEHOLDERTEXT_DOMAIN, "Returns Subdomains of a particular domain"}}};
+
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_SUBDOMAIN}}};
 };
@@ -26,9 +27,6 @@ class Anubis: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-
-    private:
-        void m_checkRateLimit();
 };
 
 #endif // ANUBIS_H

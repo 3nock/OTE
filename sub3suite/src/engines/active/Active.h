@@ -21,9 +21,7 @@ class Active : public AbstractEngine{
         Q_OBJECT
 
     public:
-        Active(QWidget *parent = nullptr,
-               ProjectDataModel *project = nullptr,
-               Status *status = nullptr);
+        Active(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
         ~Active();
 
     public slots:

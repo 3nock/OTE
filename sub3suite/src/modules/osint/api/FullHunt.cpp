@@ -78,7 +78,7 @@ void FullHunt::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
         QJsonArray subdomains = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }

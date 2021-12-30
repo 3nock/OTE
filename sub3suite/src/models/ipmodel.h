@@ -3,6 +3,12 @@
 
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include <QSet>
+
+
+struct IpModelStruct{
+    QSet<QString> domains;
+};
 
 class IpModel{
 public:

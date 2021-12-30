@@ -82,7 +82,7 @@ void Yahoo::replyFinishedSubdomain(QNetworkReply *reply){
                 GumboNode *span = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 GumboNode *child = static_cast<GumboNode*>(span->v.element.children.data[0]);
 
-                emit subdomain(child->v.text.text);
+                emit resultSubdomain(child->v.text.text);
                 log.resultsCount++;
             }
         }
@@ -151,7 +151,7 @@ void Yahoo::replyFinishedUrl(QNetworkReply *reply){
                 GumboNode *span = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 GumboNode *child = static_cast<GumboNode*>(span->v.element.children.data[0]);
 
-                emit url(child->v.text.text);
+                emit resultUrl(child->v.text.text);
                 log.resultsCount++;
             }
         }

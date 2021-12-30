@@ -8,9 +8,7 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-Osint::Osint(QWidget *parent, ProjectDataModel *project, Status *status):
-    AbstractEngine(parent, project, status),
-    ui(new Ui::Osint),
+Osint::Osint(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, project), ui(new Ui::Osint),
     m_targetListModelHostname(new QStringListModel),
     m_targetListModelIp(new QStringListModel),
     m_targetListModelAsn(new QStringListModel),
@@ -110,8 +108,12 @@ void Osint::m_errorLog(QString log){
 }
 
 void Osint::on_buttonStart_clicked(){
-    if(ui->lineEditTarget->text().isEmpty()){
-        QMessageBox::warning(this, "Error!", "Please Target Domain For Enumerations!");
+    if(ui->checkBoxMultipleTargets->isChecked() && ui->targets->getlistModel()->rowCount() == 0){
+        QMessageBox::warning(this, "Error!", "Please Target For Enumerations!");
+        return;
+    }
+    if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
+        QMessageBox::warning(this, "Error!", "Please Target For Enumerations!");
         return;
     }
 
@@ -136,8 +138,8 @@ void Osint::m_resumeScan(){
 
 void Osint::onScanThreadEnded(){
     /* check if no active thread... */
-    status->osint->activeScanThreads--;
-    if(status->osint->activeScanThreads)
+    status->activeScanThreads--;
+    if(status->activeScanThreads)
         return;
 
     /* reanabling the widgets... */
@@ -179,7 +181,7 @@ void Osint::m_clearResults(){
         break;
     case osint::OUTPUT::CIDR:
         m_resultModelCert->clear();
-        m_resultModelCert->setHorizontalHeaderLabels({" Cidr"});
+        m_resultModelCert->setHorizontalHeaderLabels({"Cidr"});
         break;
     }
     ui->labelResultsCount->clear();

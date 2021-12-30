@@ -12,12 +12,12 @@ void Ip::m_pauseScan(){
      Resume the scan, just csubdomainIp the startScan, with the same arguments and
      it will continue at where it ended...
     */
-    if(status->ip->isPaused){
-        status->ip->isPaused = false;
+    if(status->isPaused){
+        status->isPaused = false;
         this->m_startScan();
     }
     else{
-        status->ip->isPaused = true;
+        status->isPaused = true;
         emit stopScanThread();
     }
 }
@@ -37,7 +37,7 @@ void Ip::m_startScan(){
     if(threadsCount > wordlistCount)
         threadsCount = wordlistCount;
 
-    status->ip->activeScanThreads = threadsCount;
+    status->activeScanThreads = threadsCount;
 
     /* loop to create threads for enumeration... */
     for(int i = 0; i < threadsCount; i++)
@@ -56,29 +56,29 @@ void Ip::m_startScan(){
         connect(this, &Ip::stopScanThread, scanner, &ip::Scanner::onStopScan);
         cThread->start();
     }
-    status->ip->isRunning = true;
+    status->isRunning = true;
 }
 
 void Ip::onScanThreadEnded(){
-    status->ip->activeScanThreads--;
+    status->activeScanThreads--;
 
     /* if all Scan Threads have finished... */
-    if(status->ip->activeScanThreads == 0)
+    if(status->activeScanThreads == 0)
     {
-        if(status->ip->isPaused)
+        if(status->isPaused)
         {
-            status->ip->isRunning = false;
+            status->isRunning = false;
             return;
         }
         else
         {
             /* set the progress bar to 100% just in case... */
-            if(!status->ip->isStopped)
+            if(!status->isStopped)
                 ui->progressBar->setValue(ui->progressBar->maximum());
 
-            status->ip->isPaused = false;
-            status->ip->isStopped = false;
-            status->ip->isRunning = false;
+            status->isPaused = false;
+            status->isStopped = false;
+            status->isRunning = false;
 
             /* enabling and diabling widgets */
             ui->buttonStart->setEnabled(true);

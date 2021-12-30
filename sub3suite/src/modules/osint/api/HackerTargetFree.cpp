@@ -134,7 +134,7 @@ void HackerTargetFree::replyFinishedSubdomainIp(QNetworkReply *reply){
                hence only those with both are accepted
              */
             if(domainAndIp.size() == 2){
-                emit subdomainIp(domainAndIp.at(0), domainAndIp.at(1));
+                emit resultSubdomainIp(domainAndIp.at(0), domainAndIp.at(1));
                 log.resultsCount++;
             }
         }
@@ -153,7 +153,7 @@ void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == HOSTSEARCH){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
-            emit subdomain(item.split(",").at(0));
+            emit resultSubdomain(item.split(",").at(0));
             log.resultsCount++;
         }
     }
@@ -167,17 +167,17 @@ void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
             type = type.remove(" ");
             if(type == "NS"){
                 QString ns = value.remove(" ");
-                emit NS(ns);
+                emit resultNS(ns);
                 log.resultsCount++;
             }
             if(type == "MX"){
                 QString mx = value.split(" ").at(1);
-                emit MX(mx);
+                emit resultMX(mx);
                 log.resultsCount++;
             }
             if(type == "CNAME"){
                 QString cname = value.remove(" ");
-                emit CNAME(cname);
+                emit resultCNAME(cname);
                 log.resultsCount++;
             }
         }
@@ -186,7 +186,7 @@ void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == REVERSE_IPLOOKUP){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
-            emit subdomain(item);
+            emit resultSubdomain(item);
             log.resultsCount++;
         }
     }
@@ -205,7 +205,7 @@ void HackerTargetFree::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == HOSTSEARCH){
         QString results = reply->readAll();
         foreach(const QString &item, results.split("\n")){
-            emit ip(item.split(",").at(1));
+            emit resultIp(item.split(",").at(1));
             log.resultsCount++;
         }
     }
@@ -219,13 +219,13 @@ void HackerTargetFree::replyFinishedIp(QNetworkReply *reply){
             if(type == "A"){
                 QString value = item.split(":").at(0);
                 value = value.remove(" ");
-                emit ipA(value);
+                emit resultA(value);
                 log.resultsCount++;
             }
             if(type == "AAA"){
                 QString value = item;
                 value = value.remove(0, 7);
-                emit ipAAAA(value);
+                emit resultAAAA(value);
                 log.resultsCount++;
             }
         }
@@ -246,7 +246,7 @@ void HackerTargetFree::replyFinishedAsn(QNetworkReply *reply){
         result = result.remove("\"");
         QStringList resultList = result.split(",");
 
-        emit asn(resultList.at(1), resultList.at(3));
+        emit resultASN(resultList.at(1), resultList.at(3));
         log.resultsCount++;
     }
     end(reply);

@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Circl{
-    QString name = "Circl";
+    QString name = OSINT_MODULE_CIRCL;
     QString url = "https://www.circl.lu/";
     QString url_apiDoc = "https://www.circl.lu/services/";
     QString summary = "The Computer Incident Response Center Luxembourg (CIRCL) is a government-driven initiative "
@@ -45,6 +45,9 @@ class Circl: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
+
+    private:
+        QString m_key;
 };
 
 #endif // CIRCL_H

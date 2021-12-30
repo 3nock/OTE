@@ -3,7 +3,7 @@
 
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/modules/scan/DnsRecordsScanner.h"
+#include "src/modules/scan/DNSScanner.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 
@@ -15,16 +15,14 @@ class Dns : public AbstractEngine{
     Q_OBJECT
 
     public:
-        Dns(QWidget *parent = nullptr,
-                   ProjectDataModel *project = nullptr,
-                   Status *status = nullptr);
+        Dns(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
         ~Dns();
 
     public slots:
         void onScanThreadEnded();
         void onInfoLog(QString log);
         void onErrorLog(QString log);
-        void onScanResult(records::Results);
+        void onScanResult(dns::Results);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -39,8 +37,8 @@ class Dns : public AbstractEngine{
 
 private:
         Ui::Dns *ui;
-        records::ScanConfig *m_scanConfig;
-        records::ScanArgs *m_scanArgs;
+        dns::ScanConfig *m_scanConfig;
+        dns::ScanArgs *m_scanArgs;
         QStringListModel *m_targetListModel;
         QStringListModel *m_srvWordlitsModel;
         QStandardItemModel *m_resultModel;

@@ -9,9 +9,9 @@ void Osint::m_startScan(){
 
     /* get the targets... */
     if(ui->checkBoxMultipleTargets->isChecked()){
-        // get all the targets...
-    }
-    else
+        foreach(const QString &target, ui->targets->getlistModel()->stringList())
+            scanArgs.targets.push(target);
+    }else
         scanArgs.targets.push(ui->lineEditTarget->text());
 
     /* getting input type as specified by user... */
@@ -299,7 +299,7 @@ void Osint::m_startScan(){
         this->m_startScanThread(new Bing(scanArgs));
 
     /* after starting all choosen enumerations... */
-    if(status->osint->activeScanThreads)
+    if(status->activeScanThreads)
     {
         ui->buttonStart->setDisabled(true);
         ui->buttonStop->setEnabled(true);
@@ -318,33 +318,33 @@ void Osint::m_startScanThread(AbstractOsintModule *module){
 
     switch (ui->comboBoxOutput->currentIndex()) {
     case osint::OUTPUT::SUBDOMAIN:
-        connect(module, &AbstractOsintModule::subdomain, this, &Osint::onResultSubdomain);
-        connect(module, &AbstractOsintModule::CNAME, this, &Osint::onResultCNAME);
-        connect(module, &AbstractOsintModule::NS, this, &Osint::onResultNS);
-        connect(module, &AbstractOsintModule::MX, this, &Osint::onResultMX);
+        connect(module, &AbstractOsintModule::resultSubdomain, this, &Osint::onResultSubdomain);
+        connect(module, &AbstractOsintModule::resultCNAME, this, &Osint::onResultCNAME);
+        connect(module, &AbstractOsintModule::resultNS, this, &Osint::onResultNS);
+        connect(module, &AbstractOsintModule::resultMX, this, &Osint::onResultMX);
         break;
     case osint::OUTPUT::IP:
-        connect(module, &AbstractOsintModule::ip, this, &Osint::onResultIp);
-        connect(module, &AbstractOsintModule::ipA, this, &Osint::onResultA);
-        connect(module, &AbstractOsintModule::ipAAAA, this, &Osint::onResultAAAA);
+        connect(module, &AbstractOsintModule::resultIp, this, &Osint::onResultIp);
+        connect(module, &AbstractOsintModule::resultA, this, &Osint::onResultA);
+        connect(module, &AbstractOsintModule::resultAAAA, this, &Osint::onResultAAAA);
         break;
     case osint::OUTPUT::SUBDOMAINIP:
-        connect(module, &AbstractOsintModule::subdomainIp, this, &Osint::onResultSubdomainIp);
+        connect(module, &AbstractOsintModule::resultSubdomainIp, this, &Osint::onResultSubdomainIp);
         break;
     case osint::OUTPUT::EMAIL:
-        connect(module, &AbstractOsintModule::email, this, &Osint::onResultEmail);
+        connect(module, &AbstractOsintModule::resultEmail, this, &Osint::onResultEmail);
         break;
     case OUT_URL:
-        connect(module, &AbstractOsintModule::url, this, &Osint::onResultUrl);
+        connect(module, &AbstractOsintModule::resultUrl, this, &Osint::onResultUrl);
         break;
     case osint::OUTPUT::ASN:
-        connect(module, &AbstractOsintModule::asn, this, &Osint::onResultAsn);
+        connect(module, &AbstractOsintModule::resultASN, this, &Osint::onResultAsn);
         break;
     case osint::OUTPUT::CIDR:
-        connect(module, &AbstractOsintModule::cidr, this, &Osint::onResultCidr);
+        connect(module, &AbstractOsintModule::resultCidr, this, &Osint::onResultCidr);
         break;
     case osint::OUTPUT::CERT:
-        connect(module, &AbstractOsintModule::sslCert, this, &Osint::onResultSSLCert);
+        connect(module, &AbstractOsintModule::resultSSL, this, &Osint::onResultSSLCert);
         break;
     }
     connect(module, &AbstractOsintModule::rateLimitLog, this, &Osint::onRateLimitLog);
@@ -359,5 +359,5 @@ void Osint::m_startScanThread(AbstractOsintModule *module){
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
 
     cThread->start();
-    status->osint->activeScanThreads++;
+    status->activeScanThreads++;
 }

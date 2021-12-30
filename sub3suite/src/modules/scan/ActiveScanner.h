@@ -3,7 +3,6 @@
 
 #include <QTcpSocket>
 #include "AbstractScanner.h"
-#include "src/dialogs/ActiveConfigDialog.h"
 
 
 enum ACTIVE{
@@ -63,4 +62,5 @@ class Scanner : public AbstractScanner{
         QTcpSocket *m_socket;
 };
 }
+
 #endif // ACTIVESCANNER_H

@@ -31,9 +31,11 @@ SOURCES += \
     src/dialogs/ActiveConfigDialog.cpp \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
+    src/dialogs/preference/PreferenceDialog.cpp \
     src/engines/active/ActiveContextMenu.cpp \
     src/engines/active/ActiveScan.cpp \
     src/engines/brute/BruteContextMenu.cpp \
+    src/engines/brute/BruteResults.cpp \
     src/engines/brute/BruteScan.cpp \
     src/engines/ssl/Ssl.cpp \
     src/engines/ssl/SslContextMenu.cpp \
@@ -78,7 +80,6 @@ SOURCES += \
     src/modules/osint/iana/Apnic.cpp \
     src/modules/osint/iana/Arin.cpp \
     src/modules/osint/api/BuiltWith.cpp \
-    src/modules/osint/api/Detectify.cpp \
     src/modules/osint/api/Dnslytics.cpp \
     src/modules/osint/api/DomainTools.cpp \
     src/modules/osint/api/HackerTargetFree.cpp \
@@ -108,16 +109,17 @@ SOURCES += \
     src/modules/osint/mal/IpQualityScore.cpp \
     src/modules/osint/mal/LeakLookup.cpp \
     src/modules/scan/BannerScanner.cpp \
+    src/modules/scan/DNSScanner.cpp \
     src/modules/scan/SSLScanner.cpp \
     src/tools/ASNTool.cpp \
     src/tools/BannerTool.cpp \
     src/tools/CidrTool.cpp \
     src/tools/DomainTool.cpp \
     src/tools/EmailTool.cpp \
+    src/tools/ExtractorTool.cpp \
     src/tools/IpTool.cpp \
     src/tools/MXTool.cpp \
     src/modules/scan/BruteScanner.cpp \
-    src/modules/scan/DnsRecordsScanner.cpp \
     src/modules/scan/ActiveScanner.cpp \
     src/modules/scan/IpScanner.cpp \
     src/modules/check/HostActiveCheck.cpp \
@@ -181,17 +183,15 @@ SOURCES += \
     src/tools/NSTool.cpp \
     src/tools/SSLTool.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
+    src/utils/LogsSyntaxHighlighter.cpp \
     src/utils/NotesSyntaxHighlighter.cpp \
-    src/utils/config/GeneralConfigDialog.cpp \
-    src/utils/logs/LogViewerDialog.cpp \
     src/widgets/InputWidget.cpp \
     src/widgets/Notes.cpp \
     src/dialogs/wordlist/WordlistGeneratorWidget.cpp \
+    src/dialogs/LogViewerDialog.cpp \
     src/dialogs/AboutDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
     src/dialogs/wordlist/WordlistDialog.cpp \
-    src/utils/utils.cpp \
-    src/utils/Logger.cpp \
     src/SplashScreen.cpp \
     src/MainWindow.cpp \
     src/main.cpp
@@ -200,6 +200,7 @@ HEADERS += \
     src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
+    src/dialogs/preference/PreferenceDialog.h \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
     src/models/ASNModel.h \
@@ -238,7 +239,6 @@ HEADERS += \
     src/modules/osint/iana/Apnic.h \
     src/modules/osint/iana/Arin.h \
     src/modules/osint/api/BuiltWith.h \
-    src/modules/osint/api/Detectify.h \
     src/modules/osint/api/Dnslytics.h \
     src/modules/osint/api/DomainTools.h \
     src/modules/osint/api/HackerTargetFree.h \
@@ -269,15 +269,16 @@ HEADERS += \
     src/modules/osint/mal/IpQualityScore.h \
     src/modules/osint/mal/LeakLookup.h \
     src/modules/scan/BannerScanner.h \
+    src/modules/scan/DNSScanner.h \
     src/modules/scan/SSLScanner.h \
     src/tools/ASNTool.h \
     src/tools/BannerTool.h \
     src/tools/CidrTool.h \
     src/tools/DomainTool.h \
     src/tools/EmailTool.h \
+    src/tools/ExtractorTool.h \
     src/tools/IpTool.h \
     src/modules/scan/BruteScanner.h \
-    src/modules/scan/DnsRecordsScanner.h \
     src/modules/scan/ActiveScanner.h \
     src/modules/scan/IpScanner.h \
     src/modules/scan/AbstractScanner.h \
@@ -346,19 +347,18 @@ HEADERS += \
     src/tools/SSLTool.h \
     src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
+    src/utils/LogsSyntaxHighlighter.h \
     src/utils/NotesSyntaxHighlighter.h \
-    src/utils/config/GeneralConfigDialog.h \
-    src/utils/logs/LogViewerDialog.h \
     src/utils/models.h \
     src/widgets/InputWidget.h \
     src/widgets/Notes.h \
     src/dialogs/wordlist/WordlistGeneratorWidget.h \
+    src/dialogs/LogViewerDialog.h \
     src/dialogs/AboutDialog.h \
     src/dialogs/ApiKeysDialog.h \
     src/dialogs/wordlist/WordlistDialog.h \
     src/utils/utils.h \
     src/utils/Config.h \
-    src/utils/Logger.h \
     src/SplashScreen.h \
     src/MainWindow.h
 
@@ -366,12 +366,14 @@ FORMS += \
     src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \
+    src/dialogs/preference/PreferenceDialog.ui \
     src/engines/ssl/Ssl.ui \
     src/tools/ASNTool.ui \
     src/tools/BannerTool.ui \
     src/tools/CidrTool.ui \
     src/tools/DomainTool.ui \
     src/tools/EmailTool.ui \
+    src/tools/ExtractorTool.ui \
     src/tools/IpTool.ui \
     src/tools/MXTool.ui \
     src/project/Project.ui \
@@ -385,11 +387,10 @@ FORMS += \
     src/engines/active/Active.ui \
     src/tools/NSTool.ui \
     src/tools/SSLTool.ui \
-    src/utils/config/GeneralConfigDialog.ui \
-    src/utils/logs/LogViewerDialog.ui \
     src/widgets/InputWidget.ui \
     src/widgets/Notes.ui \
     src/dialogs/wordlist/WordlistGeneratorWidget.ui \
+    src/dialogs/LogViewerDialog.ui \
     src/dialogs/AboutDialog.ui \
     src/dialogs/wordlist/WordlistDialog.ui \
     src/dialogs/ApiKeysDialog.ui \
@@ -406,5 +407,4 @@ RESOURCES += \
 # setting the icon...
 RC_ICONS = res/icons/logo.ico
 
-DISTFILES += \
-    res/files/Ideas
+DISTFILES +=

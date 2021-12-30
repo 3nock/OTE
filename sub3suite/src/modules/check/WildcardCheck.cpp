@@ -4,8 +4,8 @@ WildcardCheck::WildcardCheck(brute::ScanArgs *args)
     : m_args(args),
       m_dns(new QDnsLookup(this))
 {
-    m_dns->setType(m_args->config->dnsRecordType);
-    m_dns->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
+    m_dns->setType(m_args->config->recordType);
+    m_dns->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
 
     connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
 }
@@ -22,12 +22,12 @@ void WildcardCheck::onLookupFinished(){
     switch(m_dns->error()){
 
     case QDnsLookup::NoError:
-        m_args->config->hasWildcard = true;
-        m_args->config->wildcardIp = m_dns->hostAddressRecords()[0].value().toString();
+        //m_args->config->hasWildcard = true;
+        //m_args->config->wildcardIp = m_dns->hostAddressRecords()[0].value().toString();
         break;
 
     case QDnsLookup::NotFoundError:
-        m_args->config->hasWildcard = false;
+        //m_args->config->hasWildcard = false;
         break;
 
     default:
@@ -42,6 +42,6 @@ void WildcardCheck::lookup(){
      check for random non-existent subdomains name
      TODO: make it more advanced...
     */
-    m_dns->setName("3nocknicolas."+m_args->targetList[m_args->currentTargetToEnumerate]);
+
     m_dns->lookup();
 }

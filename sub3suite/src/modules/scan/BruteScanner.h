@@ -1,36 +1,34 @@
 #ifndef BRUTESCANNER_H
 #define BRUTESCANNER_H
 
+#include <QMutex>
+#include <QQueue>
 #include "AbstractScanner.h"
 
 
 namespace brute {
 
 struct ScanConfig{
-    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
-    bool useCustomNameServers = false;
-    QStringList customNameServers;
-    int threadsCount = 50;
+    QDnsLookup::Type recordType = QDnsLookup::A;
+    QStringList nameservers;
+    int levels = 0;
+    int threads = 50;
     int timeout = 3000;
 
+    bool noDuplicates = false;
+    bool autoSaveToProject = false;
+    bool multiLevelScan = false;
     bool checkWildcard = false;
-    bool hasWildcard = false;
-    QString wildcardIp;
 };
 
-struct ScanArgs{
+struct ScanArgs {
     brute::ScanConfig *config;
-    QStringList targetList;
+    QQueue<QString> targets;
     QStringList wordlist;
-
-    bool tldBrute;
-    bool subBrute;
-
-    int currentWordlistToEnumerate;
-    int currentTargetToEnumerate;
+    QString currentTarget;
+    int currentWordlist;
     int progress;
 };
-
 
 class Scanner : public AbstractScanner{
     Q_OBJECT
@@ -39,20 +37,41 @@ class Scanner : public AbstractScanner{
         Scanner(brute::ScanArgs *args);
         ~Scanner() override;
 
+        void startScanSubdomain(QThread *cThread){
+            qDebug() << "startScanSubdomain....";
+
+            connect(cThread, &QThread::started, this, &brute::Scanner::lookupSubdomain);
+            connect(this, &brute::Scanner::quitThread, cThread, &QThread::quit);
+            connect(this, &brute::Scanner::next, this, &brute::Scanner::lookupSubdomain);
+        }
+        void startScanTLD(QThread *cThread){
+            connect(cThread, &QThread::started, this, &brute::Scanner::lookupTLD);
+            connect(this, &brute::Scanner::quitThread, cThread, &QThread::quit);
+            connect(this, &brute::Scanner::next, this, &brute::Scanner::lookupTLD);
+        }
+
     private slots:
-        void lookup() override;
+        void lookupSubdomain();
+        void lookupTLD();
         void lookupFinished();
 
     signals:
-        void anotherLookup();
-        void scanResult(QString subdomain, QString ipAddress, QString target);
+        void next(); // next lookup
+        void result(QString subdomain, QString ip); // lookup results
 
     private:
-        int m_currentWordlistToEnumerate = 0;
-        int m_currentTargetToEnumerate = 0;
         brute::ScanArgs *m_args;
         QDnsLookup *m_dns;
+        QMutex mutex;
 };
 
+struct ReturnVal{
+    bool lookup = false;
+    bool next = false;
+    bool quit = false;
+};
+
+ReturnVal lookupSubdomain(QDnsLookup*, ScanArgs*);
+ReturnVal lookupTLD(QDnsLookup*, ScanArgs*);
 }
 #endif //BRUTE_H

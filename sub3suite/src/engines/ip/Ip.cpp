@@ -6,9 +6,7 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 
 
-Ip::Ip(QWidget *parent, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, project, status),
-    ui(new Ui::Ip),
+Ip::Ip(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Ip),
     m_scanConfig(new ip::ScanConfig),
     m_scanArgs(new ip::ScanArgs),
     m_targetListModel(new QStringListModel),
@@ -100,11 +98,11 @@ void Ip::on_buttonStart_clicked(){
 
 void Ip::on_buttonStop_clicked(){
     emit stopScanThread();
-    status->ip->isStopped = true;
+    status->isStopped = true;
 }
 
 void Ip::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this);
+    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }

@@ -45,7 +45,7 @@ void Sublist3r::replyFinishedSubdomain(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray passive_dns = document.array();
     foreach(const QJsonValue &value, passive_dns){
-        emit subdomain(value.toString());
+        emit resultSubdomain(value.toString());
         log.resultsCount++;
     }
     end(reply);

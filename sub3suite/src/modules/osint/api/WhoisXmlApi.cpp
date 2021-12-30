@@ -182,7 +182,7 @@ void WhoisXmlApi::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == SUBDOMAIN_LOOKUP){
         QJsonArray records = result["records"].toArray();
         foreach(const QJsonValue &value, records){
-            emit subdomain(value.toObject()["domain"].toString());
+            emit resultSubdomain(value.toObject()["domain"].toString());
             log.resultsCount++;
         }
     }
@@ -190,7 +190,7 @@ void WhoisXmlApi::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == REVERSE_IP){
         foreach(const QJsonValue &value, document.array()){
             QString hostname = value.toObject()["name"].toString();
-            emit subdomain(hostname);
+            emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
@@ -202,23 +202,23 @@ void WhoisXmlApi::replyFinishedSubdomain(QNetworkReply *reply){
 
             if(dnsType == "MX"){
                 QString hostname = record.toObject()["target"].toString();
-                emit MX(hostname);
+                emit resultMX(hostname);
                 log.resultsCount++;
             }
             if(dnsType == "NS"){
                 QString hostname = record.toObject()["target"].toString();
-                emit NS(hostname);
+                emit resultNS(hostname);
                 log.resultsCount++;
             }
             if(dnsType == "CNAME"){
                 QString hostname = record.toObject()["target"].toString();
-                emit CNAME(hostname);
+                emit resultCNAME(hostname);
                 log.resultsCount++;
             }
             if(dnsType == "TXT"){
                 QJsonArray strings = record.toObject()["strings"].toArray();
                 foreach(const QJsonValue &value, strings){
-                    emit TXT(value.toString());
+                    emit resultTXT(value.toString());
                 }
             }
         }
@@ -241,7 +241,7 @@ void WhoisXmlApi::replyFinishedAsn(QNetworkReply *reply){
         foreach(const QJsonValue &value, inetnums){
             QString asnValue = QString::number(value.toObject()["as"].toObject()["asn"].toInt());
             QString asnName  = value.toObject()["as"].toObject()["name"].toString();
-            emit asn(asnValue, asnName);
+            emit resultASN(asnValue, asnName);
             log.resultsCount++;
         }
     }
@@ -269,15 +269,15 @@ void WhoisXmlApi::replyFinishedEmail(QNetworkReply *reply){
             QString zoneContact = value.toObject()["zoneContact"].toObject()["email"].toString();
 
             if(!registrantContact.isEmpty()){
-                emit email(registrantContact);
+                emit resultEmail(registrantContact);
                 log.resultsCount++;
             }
             if(!administrativeContact.isEmpty()){
-                emit email(administrativeContact);
+                emit resultEmail(administrativeContact);
                 log.resultsCount++;
             }
             if(!technicalContact.isEmpty()){
-                emit email(technicalContact);
+                emit resultEmail(technicalContact);
                 log.resultsCount++;
             }
         }
@@ -286,7 +286,7 @@ void WhoisXmlApi::replyFinishedEmail(QNetworkReply *reply){
     if(QUERY_TYPE == WEBSITE_CONTACTS){
         QJsonArray emails = document.object()["emails"].toArray();
         foreach(const QJsonValue &value, emails){
-            emit email(value.toObject()["email"].toString());
+            emit resultEmail(value.toObject()["email"].toString());
             log.resultsCount++;
         }
     }

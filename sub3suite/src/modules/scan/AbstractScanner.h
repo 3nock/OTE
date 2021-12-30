@@ -5,9 +5,6 @@
 #include <QThread>
 #include "src/utils/utils.h"
 
-/*
- * count and keep log of subdomainIp the Error lookups...
- */
 
 struct ScanStats{
     unsigned int successfulLookups;
@@ -22,9 +19,7 @@ class AbstractScanner : public QObject{
             : QObject(parent)
         {
         }
-        ///
-        /// start the scan Object...
-        ///
+        /* start the scan Object... */
         void startScan(QThread *cThread)
         {
             connect(cThread, &QThread::started, this, &AbstractScanner::lookup);
@@ -35,13 +30,10 @@ class AbstractScanner : public QObject{
         ScanStats *scanStats;
 
     public slots:
-        ///
-        /// the main method that performs the lookup...
-        ///
-        virtual void lookup() = 0;
-        ///
-        /// quiting subdomainIp running threads upon receiving stop signal...
-        ///
+        /* the main method that performs the lookup... */
+        virtual void lookup(){}
+
+        /* quiting all running threads upon receiving stop signal... */
         void onStopScan(){
             emit quitThread();
         }
@@ -51,16 +43,14 @@ class AbstractScanner : public QObject{
         void infoLog(QString log);
         void errorLog(QString log);
         void scanProgress(int value);
-        ///
-        /// for certScanner...
-        ///
+
+        /* for certScanner... */
         void resultSHA1(QString);
         void resultSHA256(QString);
         void resultRaw(QByteArray);
         void resultSubdomain(QString);
-        ///
-        /// for banner...
-        ///
+
+        /* for banner... */
         void scanResultBanner(QString banner);
 };
 

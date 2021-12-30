@@ -52,7 +52,7 @@ void GoogleCert::replyFinishedSubdomain(QNetworkReply *reply){
     QJsonArray subdomainsArray = subArray.toArray()[1].toArray();
     foreach(const QJsonValue &value, subdomainsArray){
         QString hostname = value.toArray()[1].toString();
-        emit subdomain(hostname);
+        emit resultSubdomain(hostname);
         log.resultsCount++;
     }
 
@@ -81,7 +81,7 @@ void GoogleCert::replyFinishedSSLCert(QNetworkReply *reply){
     foreach(const QJsonValue &value, subdomainsArray){
         QString shaValue = value.toArray()[5].toString();
         shaValue.remove("=");
-        emit sslCert(shaValue);
+        emit resultSSL(shaValue);
         log.resultsCount++;
     }
 

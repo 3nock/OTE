@@ -102,12 +102,12 @@ void Osint::onResultUrl(QString url){
     }
 }
 
-void Osint::onResultAsn(QString asnValue, QString asnName){
+void Osint::onResultAsn(QString asn, QString name){
     int prevSize = m_asnSet.count();
-    m_asnSet.insert(asnValue);
-    if(m_asnSet.count() > prevSize && !asnValue.isEmpty()){
-        m_resultModelAsn->appendRow({new QStandardItem(asnValue), new QStandardItem(asnName)});
-        project->addPassiveAsn({asnValue, asnName});
+    m_asnSet.insert(asn);
+    if(m_asnSet.count() > prevSize && !asn.isEmpty()){
+        m_resultModelAsn->appendRow({new QStandardItem(asn), new QStandardItem(name)});
+        project->addPassiveAsn({asn, name});
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }

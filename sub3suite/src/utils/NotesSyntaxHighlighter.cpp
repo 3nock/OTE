@@ -5,30 +5,22 @@ NotesSyntaxHighlighter::NotesSyntaxHighlighter(QTextDocument *document) : QSynta
 {
    HighlightingRule rule;
 
-   ///
-   /// heading ends with :
-   ///
+   /* heading ends with : */
    rule.pattern = QRegExp("([^\"]*:)");
    rule.format.setForeground(Qt::cyan);
    rules.append(rule);
 
-   ///
-   /// numbers
-   ///
+   /* numbers */
    rule.pattern = QRegExp("([-0-9.]+)(?!([^\"]*\"[\\s]*\\:))");
    rule.format.setForeground(Qt::green);
    rules.append(rule);
 
-   ///
-   /// special strings
-   ///
+   /* special strings */
    rule.pattern = QRegExp("(true|false|null)(?!\"[^\"]*\")");
    rule.format.setForeground(Qt::magenta);
    rules.append(rule);
 
-   ///
-   /// color codes
-   ///
+   /* color codes*/
 
    // red
    rule.pattern = QRegExp ("(r;[^\"]*)");
@@ -55,9 +47,7 @@ NotesSyntaxHighlighter::NotesSyntaxHighlighter(QTextDocument *document) : QSynta
    rule.format.setForeground(Qt::yellow);
    rules.append(rule);
 
-   ///
-   /// comments starts with #
-   ///
+   /* comments starts with # */
    rule.pattern = QRegExp ("(#[^\"]*)");
    rule.format.setForeground(Qt::gray);
    rules.append(rule);

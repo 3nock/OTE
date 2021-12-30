@@ -7,10 +7,9 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-Raw::Raw(QWidget *parent, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, project, status),
-    ui(new Ui::Raw),
+Raw::Raw(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, project), ui(new Ui::Raw),
     m_model(new QStandardItemModel),
+    m_targetListModel(new QStringListModel),
     m_targetListModelHostname(new QStringListModel),
     m_targetListModelIp(new QStringListModel),
     m_targetListModelAsn(new QStringListModel),
@@ -19,6 +18,9 @@ Raw::Raw(QWidget *parent, ProjectDataModel *project, Status *status) :
     m_targetListModelEmail(new QStringListModel)
 {
     ui->setupUi(this);
+    /* init... */
+    ui->targets->setListName("Targets");
+    ui->targets->setListModel(m_targetListModel);
 
     /* ... */
     ui->buttonStop->setDisabled(true);
@@ -55,6 +57,7 @@ Raw::Raw(QWidget *parent, ProjectDataModel *project, Status *status) :
 }
 Raw::~Raw(){
     delete m_model;
+    delete m_targetListModel;
     delete m_targetListModelIp;
     delete m_targetListModelAsn;
     delete m_targetListModelCert;

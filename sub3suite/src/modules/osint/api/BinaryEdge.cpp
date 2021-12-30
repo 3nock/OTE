@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+
 #define DOMAIN_DNS 0
 #define DOMAIN_ENUMERATION 1
 #define DOMAIN_HYMOGLYPHS 2
@@ -14,12 +15,13 @@
 #define HOST_IP 7
 #define HOST_SEARCH 8
 #define HOST_SEARCHSTAT 9
+#define SUBSCRIPTION 10
 
 
 BinaryEdge::BinaryEdge(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
-    log.moduleName = "BinaryEdge";
+    log.moduleName = OSINT_MODULE_BINARYEDGE;
 
     if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedRawJson);
@@ -29,11 +31,10 @@ BinaryEdge::BinaryEdge(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomain);
     if(args.outputIp)
         connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedIp);
-    ///
-    /// getting api key...
-    ///
+
+    /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("binaryedge").toString();
+    m_key = Config::generalConfig().value(OSINT_MODULE_BINARYEDGE).toString();
     Config::generalConfig().endGroup();
 }
 BinaryEdge::~BinaryEdge(){
@@ -78,6 +79,8 @@ void BinaryEdge::start(){
         case HOST_SEARCHSTAT:
             url.setUrl("https://api.binaryedge.io/v2/query/search/stats?query="+target);
             break;
+        case SUBSCRIPTION:
+            url.setUrl("https://api.binaryedge.io/v2/user/subscription");
         }
         request.setUrl(url);
         manager->get(request);
@@ -86,12 +89,14 @@ void BinaryEdge::start(){
     }
 
     if(args.inputIp){
-        url.setUrl("https://api.binaryedge.io/v2/query/ip/"+target);
-        request.setAttribute(QNetworkRequest::User, DOMAIN_IP);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
-        return;
+        if(args.outputIp || args.outputSubdomainIp || args.outputSubdomain){
+            url.setUrl("https://api.binaryedge.io/v2/query/ip/"+target);
+            request.setAttribute(QNetworkRequest::User, DOMAIN_IP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+            return;
+        }
     }
 
     if(args.inputDomain){
@@ -101,15 +106,9 @@ void BinaryEdge::start(){
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
-
-            url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+target);
-            request.setAttribute(QNetworkRequest::User, DOMAIN_DNS);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
         }
 
-        if(args.outputSubdomainIp || args.outputIp){
+        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
             url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_DNS);
             request.setUrl(url);
@@ -131,7 +130,7 @@ void BinaryEdge::replyFinishedSubdomain(QNetworkReply *reply){
 
     if(QUERY_TYPE == DOMAIN_SUBDOMAIN){
         foreach(const QJsonValue &value, events){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }
@@ -140,20 +139,21 @@ void BinaryEdge::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_DNS || QUERY_TYPE == DOMAIN_IP){
         foreach(const QJsonValue &value, events){
             QString domain = value.toObject()["domain"].toString();
-            emit subdomain(domain);
+            emit resultSubdomain(domain);
             log.resultsCount++;
 
             foreach(const QJsonValue &value, value.toObject()["NS"].toArray()){
-                emit NS(value.toString());
+                emit resultNS(value.toString());
                 log.resultsCount++;
             }
 
             foreach(const QJsonValue &value, value.toObject()["MX"].toArray()){
-                emit MX(value.toString());
+                emit resultMX(value.toString());
                 log.resultsCount++;
             }
         }
     }
+
     end(reply);
 }
 
@@ -172,16 +172,18 @@ void BinaryEdge::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &value, events){
             QString A = value.toObject()["A"].toArray().at(0).toString();
             QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
+
             if(!A.isEmpty()){
-                emit ipA(A);
+                emit resultA(A);
                 log.resultsCount++;
             }
             if(!AAAA.isEmpty()){
-                emit ipAAAA(AAAA);
+                emit resultAAAA(AAAA);
                 log.resultsCount++;
             }
         }
     }
+
     end(reply);
 }
 
@@ -201,15 +203,17 @@ void BinaryEdge::replyFinishedSubdomainIp(QNetworkReply *reply){
             QString domain = value.toObject()["domain"].toString();
             QString A = value.toObject()["A"].toArray().at(0).toString();
             QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
+
             if(!A.isEmpty()){
-                emit subdomainIp(domain, A);
+                emit resultSubdomainIp(domain, A);
                 log.resultsCount++;
             }
             if(!AAAA.isEmpty()){
-                emit subdomainIp(domain, AAAA);
+                emit resultSubdomainIp(domain, AAAA);
                 log.resultsCount++;
             }
         }
     }
+
     end(reply);
 }

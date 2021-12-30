@@ -45,7 +45,6 @@
 /* ... */
 #define REQUEST_TYPE "type"
 
-
 /* stores the scan configurations */
 struct PassiveScanConfig{
     bool useProxy = false;
@@ -84,6 +83,8 @@ struct ScanArgs{
     bool outputInfoIp = false;
     bool outputInfoCidr = false;
     bool outputInfoSSLCert = false;
+    bool outputInfoMX = false;
+    bool outputInfoNS = false;
     /* ... */
     bool outputInfoAsn = false;
     bool outputInfoAsnPeers = false;
@@ -157,20 +158,20 @@ class AbstractOsintModule : public QObject {
         void rateLimitLog(ScanLog log);
         void errorLog(ScanLog error);
         /* ... */
-        void subdomain(QString subdomain);
-        void subdomainIp(QString subdomain, QString ip);
-        void ip(QString ip);
-        void ipA(QString ip);
-        void ipAAAA(QString ip);
-        void NS(QString NS);
-        void MX(QString MX);
-        void CNAME(QString CNAME);
-        void TXT(QString TXT);
-        void sslCert(QString certId);
-        void email(QString email);
-        void cidr(QString cidr);
-        void url(QString url);
-        void asn(QString asn, QString name);
+        void resultSubdomain(QString subdomain);
+        void resultSubdomainIp(QString subdomain, QString ip);
+        void resultIp(QString ip);
+        void resultA(QString ip);
+        void resultAAAA(QString ip);
+        void resultNS(QString NS);
+        void resultMX(QString MX);
+        void resultCNAME(QString CNAME);
+        void resultTXT(QString TXT);
+        void resultSSL(QString certId);
+        void resultEmail(QString email);
+        void resultCidr(QString cidr);
+        void resultUrl(QString url);
+        void resultASN(QString asn, QString name);
         /* ... */
         void rawCert(QByteArray cert_in_perm_format);
         void rawResults(QByteArray reply);
@@ -178,6 +179,9 @@ class AbstractOsintModule : public QObject {
         /* ... */
         void infoASN(AsModelStruct);
         void infoCidr(CidrModelStruct);
+        void infoMX(MXModelStruct);
+        void infoNS(NSModelStruct);
+        void infoIp(IpModelStruct);
 
     public slots:
         void onStop(){
@@ -213,6 +217,9 @@ class AbstractOsintModule : public QObject {
         virtual void replyFinishedInfoIp(QNetworkReply*){} // returns multiple info on ip
         virtual void replyFinishedInfoCidr(QNetworkReply*){} // returns multiple info on cidr
         virtual void replyFinishedInfoSSLCert(QNetworkReply*){} // returns multiple info on ssl cert
+        /* ... */
+        virtual void replyFinishedInfoMX(QNetworkReply*){} // returns MX records info
+        virtual void replyFinishedInfoNS(QNetworkReply*){} // returns NS records info
         /* ... */
         virtual void replyFinishedRawNdjson(QNetworkReply *reply) // returns raw json results from ndjson
         {

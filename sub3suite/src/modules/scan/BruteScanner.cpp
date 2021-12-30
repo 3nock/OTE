@@ -1,98 +1,171 @@
 #include "BruteScanner.h"
 
 
-brute::Scanner::Scanner(brute::ScanArgs *args)
-    : m_args(args),
-      m_dns(new QDnsLookup)
+brute::Scanner::Scanner(brute::ScanArgs *args):
+    m_args(args)
 {
-    m_dns->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
-    m_dns->setType(m_args->config->dnsRecordType);
+    m_dns = new QDnsLookup(this);
+    qDebug() << "QDnsLookup object created...";
+
+    m_dns->setNameserver(QHostAddress("1.1.1.1"));
+    qDebug() << "Nameserver added...";
+
+    m_dns->setType(QDnsLookup::A);
+    qDebug() << "Type added...";
 
     connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
-    connect(this, SIGNAL(anotherLookup()), this, SLOT(lookup()));
+    qDebug() << "Connected finish lookup";
+
+    /* get the first target */
+    m_args->currentTarget = m_args->targets.dequeue();
+    qDebug() << "current target added";
+
+    m_args->currentWordlist = 0;
+    qDebug() << "wordlist set to zero";
 }
 brute::Scanner::~Scanner(){
     delete m_dns;
 }
 
 void brute::Scanner::lookupFinished(){
-    /*
-     check the results of the lookup if no error occurred emit the results
-     if error occurred emit appropriate response...
-    */
-    switch(m_dns->error())
-    {
-        case QDnsLookup::NotFoundError:
-            break;
+    qDebug() << "lookup finished";
 
-        case QDnsLookup::NoError:
-            if(m_args->subBrute && m_args->config->checkWildcard && m_args->config->hasWildcard)
-            {
-                /*
-                 check if the Ip adress of the subdomain is similar to the wildcard Ip found
-                 if not similar we emit the results if similar discard the results...
-                */
-                if(!(m_dns->hostAddressRecords()[0].value().toString() == m_args->config->wildcardIp))
-                    emit scanResult(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString(), m_args->targetList[m_currentTargetToEnumerate]);
-            }
-            else
-                emit scanResult(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString(), m_args->targetList[m_currentTargetToEnumerate]);
-            break;
+    switch(m_dns->error()){
+    case QDnsLookup::NotFoundError:
+        break;
 
-        case QDnsLookup::InvalidReplyError:
-            emit errorLog("[ERROR] InvalidReplyError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
-            break;
+    case QDnsLookup::NoError:
+        emit result(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
+        break;
 
-        case QDnsLookup::InvalidRequestError:
-            emit errorLog("[ERROR] InvalidRequestError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
-            break;
-
-        case QDnsLookup::ResolverError:
-            emit errorLog("[ERROR] ResolverError! SUBDOMAIN: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
-            break;
-
-        default:
-            break;
+    default:
+        //emit errorLog(m_dns->errorString()+" HOSTNAME: "+m_dns->name()+"  NAMESERVER: "+m_dns->nameserver().toString());
+        break;
     }
 
     /* scan progress */
     m_args->progress++;
 
+    qDebug() << "next lookup";
+
     /* send results and continue scan */
     emit scanProgress(m_args->progress);
-    emit anotherLookup();
+    emit next();
 }
 
-void brute::Scanner::lookup(){
-    m_currentWordlistToEnumerate = m_args->currentWordlistToEnumerate;
-    m_currentTargetToEnumerate = m_args->currentTargetToEnumerate;
-    m_args->currentWordlistToEnumerate++;
+void brute::Scanner::lookupSubdomain(){
+    try {
+        qDebug() << "lookupSubdomain...";
 
-    if(m_currentWordlistToEnumerate < m_args->wordlist.count())
-    {
-        if(m_args->subBrute)
-            m_dns->setName(m_args->wordlist.at(m_currentWordlistToEnumerate)+"."+m_args->targetList.at(m_currentTargetToEnumerate));
+        brute::ReturnVal retVal = brute::lookupSubdomain(m_dns, m_args);
 
-        if(m_args->tldBrute)
-            m_dns->setName(m_args->targetList.at(m_currentTargetToEnumerate)+"."+m_args->wordlist.at(m_currentWordlistToEnumerate));
-
-        m_dns->lookup();
+        if(retVal.lookup){
+            qDebug() << "lookup...";
+            m_dns->lookup();
+        }
+        if(retVal.next){
+            qDebug() << "Next...";
+            emit next();
+        }
+        if(retVal.quit){
+            qDebug() << "quitThread...";
+            emit quitThread();
+        }
     }
+    catch (std::exception &e) {
+        qDebug() << e.what();
+    }
+    catch(...){
+        qDebug() << "Crashed";
+    }
+}
+
+void brute::Scanner::lookupTLD(){
+    brute::ReturnVal retVal = brute::lookupTLD(m_dns, m_args);
+
+    if(retVal.lookup)
+        m_dns->lookup();
+    if(retVal.next)
+        emit next();
+    if(retVal.quit)
+        emit quitThread();
+}
+
+brute::ReturnVal brute::lookupSubdomain(QDnsLookup *dns, brute::ScanArgs *args){
+    brute::ReturnVal retVal;
+
+    /* lock */
+    QMutex mutex;
+    mutex.lock();
+
+    if(args->currentWordlist < args->wordlist.length())
+    {
+        /* append to target then set the name */
+        dns->setName(args->wordlist.at(args->currentWordlist)+"."+args->currentTarget);
+
+        /* lookup */
+        retVal.lookup = true;
+
+        /* next wordlist */
+        args->currentWordlist++;
+
+        qDebug() << "appending new wordlist";
+    }
+    /* Reached end of the wordlist */
     else
     {
-        /*
-         Reached end of the wordlist.
-         If there are multiple targets, choose another target and start afresh
-        */
-        if(m_args->currentTargetToEnumerate < m_args->targetList.count()-1)
-        {
-            m_args->currentTargetToEnumerate++;
-            m_args->currentWordlistToEnumerate = 0;
-            emit anotherLookup();
+         /* next target */
+        if(args->targets.isEmpty()){
+            retVal.quit = true;
+
+            qDebug() << "target empty so quit";
         }
         else{
-            emit quitThread();
-            return;
+            args->currentWordlist = 0;
+            args->currentTarget = args->targets.dequeue();
+            retVal.next = true;
+
+            qDebug() << "next target and wordlist = 0";
         }
     }
+
+    /* unlock */
+    mutex.unlock();
+    return retVal;
+}
+
+brute::ReturnVal brute::lookupTLD(QDnsLookup *dns, brute::ScanArgs *args){
+    brute::ReturnVal retVal;
+
+    /* lock */
+    QMutex mutex;
+    mutex.lock();
+
+    if(args->currentWordlist < args->wordlist.length())
+    {
+        /* append to target then set the name */
+        dns->setName(args->currentTarget+"."+args->wordlist.at(args->currentWordlist));
+
+        /* lookup */
+        retVal.lookup = true;
+
+        /* next wordlist */
+        args->currentWordlist++;
+    }
+    /* Reached end of the wordlist */
+    else
+    {
+         /* next target */
+        if(args->targets.isEmpty())
+            retVal.quit = true;
+        else{
+            args->currentWordlist = 0;
+            args->currentTarget = args->targets.dequeue();
+            retVal.next = true;
+        }
+    }
+
+    /* unlock */
+    mutex.unlock();
+    return retVal;
 }

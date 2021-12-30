@@ -76,7 +76,7 @@ void ArchiveToday::replyFinishedSubdomain(QNetworkReply *reply){
                 GumboNode *domain = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 if(domain->type == GUMBO_NODE_TEXT)
                 {
-                    emit subdomain(QString::fromUtf8(domain->v.text.text));
+                    emit resultSubdomain(QString::fromUtf8(domain->v.text.text));
                     log.resultsCount++;
                 }
             }
@@ -130,7 +130,7 @@ void ArchiveToday::replyFinishedUrl(QNetworkReply *reply){
                 GumboNode *domain = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 if(domain->type == GUMBO_NODE_TEXT)
                 {
-                    emit url(QString::fromUtf8(domain->v.text.text));
+                    emit resultUrl(QString::fromUtf8(domain->v.text.text));
                     log.resultsCount++;
                 }
             }

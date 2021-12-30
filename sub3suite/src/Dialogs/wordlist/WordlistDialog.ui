@@ -327,6 +327,9 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
+       <item>
+        <widget class="WordlistGeneratorWidget" name="generate" native="true"/>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -338,6 +341,12 @@
    <class>InputWidget</class>
    <extends>QWidget</extends>
    <header>src/widgets/InputWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>WordlistGeneratorWidget</class>
+   <extends>QWidget</extends>
+   <header>src/dialogs/wordlist/WordlistGeneratorWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

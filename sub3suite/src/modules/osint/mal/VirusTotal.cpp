@@ -206,7 +206,7 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
         QJsonArray subdomains = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
             QString hostname = value.toString();
-            emit subdomain(hostname);
+            emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
@@ -217,7 +217,7 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
             QJsonArray subject_alternative_name = value.toObject()["attributes"].toObject()["extensions"].toObject()["subject_alternative_name"].toArray();
             foreach(const QJsonValue &alt_name, subject_alternative_name){
                 QString hostname = alt_name.toString();
-                emit subdomain(hostname);
+                emit resultSubdomain(hostname);
                 log.resultsCount++;
             }
         }
@@ -227,7 +227,7 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
         foreach(const QJsonValue &value, data){
            /* from id */
            QString hostname = value.toObject()["id"].toString();
-           emit subdomain(hostname);
+           emit resultSubdomain(hostname);
            log.resultsCount++;
 
            /* from last dns records */
@@ -237,17 +237,17 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
 
                if(type == "NS"){
                    QString hostname = dnsRecord.toObject()["value"].toString();
-                   emit NS(hostname);
+                   emit resultNS(hostname);
                    log.resultsCount++;
                }
                if(type == "MX"){
                    QString hostname = dnsRecord.toObject()["value"].toString();
-                   emit MX(hostname);
+                   emit resultMX(hostname);
                    log.resultsCount++;
                }
                if(type == "CNAME"){
                    QString hostname = dnsRecord.toObject()["value"].toString();
-                   emit CNAME(hostname);
+                   emit resultCNAME(hostname);
                    log.resultsCount++;
                }
            }
@@ -257,7 +257,7 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
            QJsonArray subject_alternative_name = last_https_certificate["extensions"].toObject()["subject_alternative_name"].toArray();
            foreach(const QJsonValue &altName, subject_alternative_name){
                QString hostname = altName.toString();
-               emit subdomain(hostname);
+               emit resultSubdomain(hostname);
                log.resultsCount++;
            }
         }
@@ -266,7 +266,7 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == IP_RESOLUTIONS){
         foreach(const QJsonValue &value, data){
             QString hostname = value.toObject()["attributes"].toObject()["host_name"].toString();
-            emit subdomain(hostname);
+            emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
@@ -288,7 +288,7 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
         QJsonArray resolutions = document.object()["resolutions"].toArray();
         foreach(const QJsonValue &value, resolutions){
             QString address = value.toObject()["ip_address"].toString();
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }
@@ -297,7 +297,7 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_RESOLUTIONS){
         foreach(const QJsonValue &value, data){
             QString address = value.toObject()["attributes"].toObject()["ip_address"].toString();
-            emit ip(address);
+            emit resultIp(address);
             log.resultsCount++;
         }
     }
@@ -311,12 +311,12 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
 
                if(type == "A"){
                    QString address = dnsRecord.toObject()["value"].toString();
-                   emit ipA(address);
+                   emit resultA(address);
                    log.resultsCount++;
                }
                if(type == "AAAA"){
                    QString address = dnsRecord.toObject()["value"].toString();
-                   emit ipAAAA(address);
+                   emit resultAAAA(address);
                    log.resultsCount++;
                }
            }
@@ -340,14 +340,14 @@ void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
         QJsonArray detected_urls = document.object()["detected_urls"].toArray();
         foreach(const QJsonValue &value, detected_urls){
             QString detected_url = value.toArray().at(0).toString();
-            emit url(detected_url);
+            emit resultUrl(detected_url);
             log.resultsCount++;
         }
 
         QJsonArray undetected_urls = document.object()["undetected_urls"].toArray();
         foreach(const QJsonValue &value, undetected_urls){
             QString undetected_url = value.toArray().at(0).toString();
-            emit url(undetected_url);
+            emit resultUrl(undetected_url);
             log.resultsCount++;
         }
     }
@@ -368,7 +368,7 @@ void VirusTotal::replyFinishedSSLCert(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_HISTORICAL_SSL_CERTS || QUERY_TYPE == IP_HISTORICAL_SSL_CERTS){
         foreach(const QJsonValue &value, data){
             QString cert_id = value.toObject()["id"].toString();
-            emit sslCert(cert_id);
+            emit resultSSL(cert_id);
             log.resultsCount++;
         }
     }
@@ -378,7 +378,7 @@ void VirusTotal::replyFinishedSSLCert(QNetworkReply *reply){
            /* from ssl cert alternative name */
            QJsonObject last_https_certificate = value.toObject()["attributes"].toObject()["last_https_certificate"].toObject();
            QString thumbprint = last_https_certificate["thumbprint"].toString();
-           emit sslCert(thumbprint);
+           emit resultSSL(thumbprint);
            log.resultsCount++;
         }
     }

@@ -96,7 +96,7 @@ void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAINS){
         QJsonArray subdomains = mainObj["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }
@@ -105,7 +105,7 @@ void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
         if(mainObj["response_code"].toString() == "1"){
             QJsonArray domains = mainObj["domains"].toArray();
             foreach(const QJsonValue &value, domains){
-                emit subdomain(value.toString());
+                emit resultSubdomain(value.toString());
                 log.resultsCount++;
             }
         }
@@ -115,7 +115,7 @@ void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
         if(mainObj["response_code"].toString() == "1"){
             QJsonArray resolutions = mainObj["resolutions"].toArray();
             foreach(const QJsonValue &value, resolutions){
-                emit subdomain(value.toObject()["domain"].toString());
+                emit resultSubdomain(value.toObject()["domain"].toString());
                 log.resultsCount++;
             }
         }
@@ -137,7 +137,7 @@ void Threatcrowd::replyFinishedIp(QNetworkReply *reply){
         if(mainObj["response_code"].toString() == "1"){
             QJsonArray resolutions = mainObj["resolutions"].toArray();
             foreach(const QJsonValue &value, resolutions){
-                emit ip(value["ip_address"].toString());
+                emit resultIp(value["ip_address"].toString());
                 log.resultsCount++;
             }
         }
@@ -160,7 +160,7 @@ void Threatcrowd::replyFinishedEmail(QNetworkReply *reply){
             QJsonArray emails = mainObj["emails"].toArray();
             foreach(const QJsonValue &value, emails){
                 QString EmailAddress = value.toString();
-                emit email(EmailAddress);
+                emit resultEmail(EmailAddress);
                 log.resultsCount++;
             }
         }

@@ -109,7 +109,7 @@ void ZoomEye::replyFinishedSubdomainIp(QNetworkReply *reply){
         foreach(const QJsonValue &value, matches){
             QString hostname = value.toObject()["rdns"].toString();
             QString address = value.toObject()["ip"].toString();
-            emit subdomainIp(hostname, address);
+            emit resultSubdomainIp(hostname, address);
             log.resultsCount++;
         }
     }
@@ -129,7 +129,7 @@ void ZoomEye::replyFinishedIp(QNetworkReply *reply){
 
     if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_ASN || QUERY_TYPE == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
-            emit ip(value.toObject()["ip"].toString());
+            emit resultIp(value.toObject()["ip"].toString());
             log.resultsCount++;
         }
     }
@@ -151,7 +151,7 @@ void ZoomEye::replyFinishedAsn(QNetworkReply *reply){
         foreach(const QJsonValue &value, matches){
             QString ASN = value.toObject()["geoinfo"].toObject()["asn"].toString();
             QString org = value.toObject()["geoinfo"].toObject()["organization"].toString();
-            emit asn(ASN, org);
+            emit resultASN(ASN, org);
             log.resultsCount++;
         }
     }
@@ -171,7 +171,7 @@ void ZoomEye::replyFinishedSubdomain(QNetworkReply *reply){
 
     if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
-            emit subdomain(value.toObject()["rdns"].toString());
+            emit resultSubdomain(value.toObject()["rdns"].toString());
             log.resultsCount++;
         }
     }

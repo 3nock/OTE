@@ -82,7 +82,7 @@ void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
                 QString domain = QString::fromUtf8(child->v.text.text);
                 domain = domain.remove("http://").remove("https://");
                 domain.append(target);
-                emit subdomain(domain);
+                emit resultSubdomain(domain);
                 log.resultsCount++;
             }
         }
@@ -147,7 +147,7 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 QString domain = QString::fromUtf8(child->v.text.text);
                 domain.append(target);
-                emit url(domain);
+                emit resultUrl(domain);
                 log.resultsCount++;
             }
         }

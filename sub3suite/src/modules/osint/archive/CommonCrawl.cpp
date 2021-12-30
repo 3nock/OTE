@@ -74,7 +74,7 @@ void CommonCrawl::replyFinishedUrl(QNetworkReply *reply){
     {
         QString urlValue = value;
         urlValue.chop(2);
-        emit url(urlValue.remove(0, 9));
+        emit resultUrl(urlValue.remove(0, 9));
         log.resultsCount++;
     }
 
@@ -103,7 +103,7 @@ void CommonCrawl::replyFinishedSubdomain(QNetworkReply *reply){
         domainUrl = domainUrl.split("/").at(0);
 
         /*  emiting subdomain... */
-        emit subdomain(domainUrl);
+        emit resultSubdomain(domainUrl);
         log.resultsCount++;
 
     }

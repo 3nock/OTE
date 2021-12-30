@@ -7,9 +7,7 @@
 #include "src/dialogs/wordlist/WordlistDialog.h"
 
 
-Brute::Brute(QWidget *parent, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, project, status),
-    ui(new Ui::Brute),
+Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Brute),
     m_scanConfig(new brute::ScanConfig),
     m_scanArgs(new brute::ScanArgs),
     m_wordlistModel(new QStringListModel),
@@ -28,6 +26,8 @@ Brute::Brute(QWidget *parent, ProjectDataModel *project, Status *status) :
 
     /* results models */
     m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    m_resultModelTld->setHorizontalHeaderLabels({"TLD", "Ip"});
+    /* default is subdomain result model */
     m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
@@ -68,22 +68,16 @@ Brute::~Brute(){
 }
 
 void Brute::onInfoLog(QString log){
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
+    ui->plainTextEditLogs->appendPlainText(log);
 }
 
 void Brute::onErrorLog(QString log){
-    QString fontedLog;
-    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
+    QString fontedLog("<font color=\"red\">"+log+"</font>");
+    ui->plainTextEditLogs->appendHtml(fontedLog);
 }
 
 void Brute::on_buttonStart_clicked(){
-    /*
-     checking if subdomainIp requirements are satisfied before scan if not prompt error
-     then exit function...
-    */
+    /* checks */
     if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
         QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
         return;
@@ -97,91 +91,75 @@ void Brute::on_buttonStart_clicked(){
         return;
     }
 
-    /* disabling & Enabling widgets... */
+    /* disabling, enabling & resseting widgets... */
     ui->buttonStart->setDisabled(true);
     ui->buttonStop->setEnabled(true);
     ui->progressBar->show();
-
-    /* Resetting the scan arguments values...*/
-    m_scanArgs->wordlist = m_wordlistModel->stringList();
-    m_scanArgs->currentWordlistToEnumerate = 0;
-    m_scanArgs->currentTargetToEnumerate = 0;
-    m_scanArgs->targetList.clear();
     ui->progressBar->reset();
-    m_scanArgs->progress = 0;
 
-    switch (ui->comboBoxOutput->currentIndex())
-    {
-    /* Processing targets if user chooses subdomain bruteForcing */
+    /* Resetting the scan arguments values */
+    m_scanArgs->wordlist = m_wordlistModel->stringList();
+
+    switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
-        m_scanArgs->subBrute = true;
-        m_scanArgs->tldBrute = false;
-
-        if(!ui->checkBoxMultipleTargets->isChecked()){
-            m_scanArgs->targetList.append(ui->lineEditTarget->text());
-
-            /* for a single target, progress equals to the total number of wordlist... */
-            ui->progressBar->setMaximum(m_wordlistModel->rowCount());
-        }
-
         if(ui->checkBoxMultipleTargets->isChecked()){
-            m_scanArgs->targetList = m_targetListModel->stringList();
-
-            /* for multiple targets, progress equals to the total number of wordlist times the total number of targets... */
-            ui->progressBar->setMaximum(m_wordlistModel->rowCount()*m_scanArgs->targetList.count());
+            foreach(const QString &target, m_wordlistModel->stringList())
+                m_scanArgs->targets.enqueue(this->targetFilterSubdomain(target));
         }
+        else
+            m_scanArgs->targets.enqueue(this->targetFilterSubdomain(ui->lineEditTarget->text()));
+
         break;
-
-    /* Processing targets if user chooses TLD bruteForcing */
     case brute::OUTPUT::TLD:
-        m_scanArgs->tldBrute = true;
-        m_scanArgs->subBrute = false;
-
-        if(!ui->checkBoxMultipleTargets->isChecked()){
-            m_scanArgs->targetList.append(ui->lineEditTarget->text());
-
-            /* for a single target, progress equals to the total number of wordlist... */
-            ui->progressBar->setMaximum(m_wordlistModel->rowCount());
-        }
-
         if(ui->checkBoxMultipleTargets->isChecked()){
-            m_scanArgs->targetList = m_targetListModel->stringList();
-
-            /* for multiple targets, progress equals to the total number of wordlist times the total number of targets... */
-            ui->progressBar->setMaximum(m_wordlistModel->rowCount()*m_scanArgs->targetList.count());
+            foreach(const QString &target, m_wordlistModel->stringList())
+                m_scanArgs->targets.enqueue(this->targetFilterTLD(target));
         }
+        else
+            m_scanArgs->targets.enqueue(this->targetFilterTLD(ui->lineEditTarget->text()));
     }
 
-    /* Starting the scan...*/
+    ui->progressBar->setMaximum(m_scanArgs->wordlist.length() * m_scanArgs->targets.length());
+
+    /* debug info */
+    qDebug() << "Threads: " << m_scanConfig->threads;
+    qDebug() << "Timeout: " << m_scanConfig->timeout;
+    qDebug() << "Nameserver:" << m_scanConfig->nameservers.at(0);
+    qDebug() << "Record Type: " << m_scanConfig->recordType;
+    qDebug() << "**************************************";
+
+    /* start scan */
     this->m_startScan();
 }
+
 void Brute::on_lineEditTarget_returnPressed(){
-    on_buttonStart_clicked();
+    this->on_buttonStart_clicked();
 }
 
 void Brute::on_buttonStop_clicked(){
     emit stopScanThread();
-    if(status->brute->isPaused)
+    if(status->isPaused)
     {
-        m_scanArgs->targetList.clear();
-        status->brute->isPaused = false;
-        status->brute->isStopped = false;
-        status->brute->isRunning = false;
+        m_scanArgs->targets.clear();
+        status->isPaused = false;
+        status->isStopped = false;
+        status->isRunning = false;
 
         /* enabling and disabling widgets */
         ui->buttonStart->setEnabled(true);
         ui->buttonStop->setDisabled(true);
     }
-    status->brute->isStopped = true;
+    status->isStopped = true;
 }
 
 void Brute::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this);
+    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }
 
 void Brute::on_buttonWordlist_clicked(){
+    /*
     WordListDialog *wordlistDialog = nullptr;
 
     switch (ui->comboBoxOutput->currentIndex()) {
@@ -195,11 +173,7 @@ void Brute::on_buttonWordlist_clicked(){
     wordlistDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     connect(wordlistDialog, &WordListDialog::choosenWordlist, this, &Brute::onChoosenWordlist);
     wordlistDialog->show();
-}
-
-void Brute::onChoosenWordlist(QString wordlistFilename){
-    QFile file(wordlistFilename);
-    ui->wordlist->add(file);
+    */
 }
 
 void Brute::on_checkBoxMultipleTargets_stateChanged(int newState){
@@ -207,4 +181,16 @@ void Brute::on_checkBoxMultipleTargets_stateChanged(int newState){
         ui->targets->show();
     else
         ui->targets->hide();
+}
+
+void Brute::on_comboBoxOutput_currentIndexChanged(int index){
+    switch (index) {
+    case brute::OUTPUT::SUBDOMAIN:
+        m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
+        break;
+    case brute::OUTPUT::TLD:
+        m_resultProxyModel->setSourceModel(m_resultModelTld);
+    }
+
+    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
 }

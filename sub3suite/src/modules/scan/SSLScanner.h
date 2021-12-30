@@ -4,10 +4,9 @@
 #include <QStack>
 #include <QSslCertificate>
 #include "AbstractScanner.h"
-#include "src/dialogs/ActiveConfigDialog.h"
 
 
-namespace certificate {
+namespace ssl {
 
 struct ScanConfig{
     int threadsCount = 50;
@@ -15,7 +14,7 @@ struct ScanConfig{
 };
 
 struct ScanArgs{
-    certificate::ScanConfig *config;
+    ssl::ScanConfig *config;
     QString target;
     QStack<QString> targetList;
     bool singleTarget = false;
@@ -38,14 +37,14 @@ struct ScanArgs{
 class Scanner : public AbstractScanner{
 
     public:
-        Scanner(certificate::ScanArgs *args);
+        Scanner(ssl::ScanArgs *args);
         ~Scanner() override;
 
     private slots:
         void lookup() override;
 
     private:
-        certificate::ScanArgs *m_args;
+        ssl::ScanArgs *m_args;
 };
 
 }

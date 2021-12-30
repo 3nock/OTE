@@ -3,16 +3,20 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+
 #define IP_2_ASN 0
 #define PASSIVE_DNS 1
 #define PASSIVE_SSL 2
 #define PASSIVE_SSL_FETCH 3
 #define PASSIVE_SSL_QUERY 4
 
+/*
+ * login not yet implemented
+ */
 Circl::Circl(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new NetworkAccessManager(this);
-    log.moduleName = "Circl";
+    log.moduleName = OSINT_MODULE_CIRCL;
 
     if(args.outputRaw)
         connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedRawJson);
@@ -24,9 +28,8 @@ Circl::Circl(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedSSLCert);
     if(args.outputAsn)
         connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
-    ///
-    /// get login credentials...
-    ///
+
+    /* get login credentials... */
 }
 Circl::~Circl(){
     delete manager;
@@ -40,10 +43,7 @@ void Circl::start(){
         switch(args.rawOption){
         case IP_2_ASN:
             url.setUrl("https://bgpranking-ng.circl.lu/ipasn_history/asn_meta");
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
-            return;
+            break;
         case PASSIVE_DNS:
             url.setUrl("https://www.circl.lu/pdns/query/"+target);
             break;
@@ -102,16 +102,6 @@ void Circl::start(){
     }
 
     if(args.inputSSLCert){
-        /* returns the certificate
-        if(args.outputSSLCert){
-            url.setUrl("https://www.circl.lu/pdns/query/"+target);
-            request.setAttribute(QNetworkRequest::User, PASSIVE_SSL_FETCH);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
-            return;
-        }
-        */
         if(args.outputIp){
             url.setUrl("https://www.circl.lu/v2pssl/cquery/"+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL_QUERY);
@@ -133,11 +123,11 @@ void Circl::replyFinishedSSLCert(QNetworkReply *reply){
     QJsonObject jsonObject = document.object();
 
     if(QUERY_TYPE == PASSIVE_SSL){
-        QStringList keys = jsonObject.keys();
-        foreach(const QString &key, keys){
+        foreach(const QString &key, jsonObject.keys()){
             QJsonArray certificates = jsonObject[key].toObject()["certificates"].toArray();
-            foreach(const QJsonValue &value, certificates){
-                emit sslCert(value.toString());
+            foreach(const QJsonValue &value, certificates)
+            {
+                emit resultSSL(value.toString());
                 log.resultsCount++;
             }
         }
@@ -159,16 +149,17 @@ void Circl::replyFinishedSubdomain(QNetworkReply *reply){
         foreach(const QJsonValue &value, jsonArray){
             QString rrtype = value.toObject()["rrtype"].toString();
             QString rdata = value.toObject()["rdata"].toString();
+
             if(rrtype == "NS"){
-                emit NS(rdata);
+                emit resultNS(rdata);
                 log.resultsCount++;
             }
             if(rrtype == "MX"){
-                emit MX(rdata);
+                emit resultMX(rdata);
                 log.resultsCount++;
             }
             if(rrtype == "CNAME"){
-                emit CNAME(rdata);
+                emit resultCNAME(rdata);
                 log.resultsCount++;
             }
         }
@@ -190,12 +181,13 @@ void Circl::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &value, jsonArray){
             QString rrtype = value.toObject()["rrtype"].toString();
             QString rdata = value.toObject()["rdata"].toString();
+
             if(rrtype == "A"){
-                emit ipA(rdata);
+                emit resultA(rdata);
                 log.resultsCount++;
             }
             if(rrtype == "AAAA"){
-                emit ipAAAA(rdata);
+                emit resultAAAA(rdata);
                 log.resultsCount++;
             }
         }
@@ -215,7 +207,7 @@ void Circl::replyFinishedAsn(QNetworkReply *reply){
 
     if(QUERY_TYPE == IP_2_ASN){
         QString value = QString::number(jsonObject["asn"].toInt());
-        emit asn(value, "");
+        emit resultASN(value, "");
         log.resultsCount++;
     }
     end(reply);

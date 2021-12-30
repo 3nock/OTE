@@ -88,7 +88,7 @@ void Hunter::replyFinishedEmail(QNetworkReply *reply){
         QJsonArray emailList = data["emails"].toArray();
         foreach(const QJsonValue &value, emailList){
             QString Email = value["value"].toString();
-            emit email(Email);
+            emit resultEmail(Email);
             log.resultsCount++;
             /*
              * getting where the email was extracted from

@@ -73,7 +73,7 @@ void PagesInventory::replyFinishedSubdomainIp(QNetworkReply *reply){
                         if(ipv4->type == GUMBO_NODE_TEXT)
                         {
                             QString address = QString::fromUtf8(ipv4->v.text.text);
-                            emit subdomainIp(domainName, address);
+                            emit resultSubdomainIp(domainName, address);
                             log.resultsCount++;
                         }
 
@@ -88,7 +88,7 @@ void PagesInventory::replyFinishedSubdomainIp(QNetworkReply *reply){
                         if(ipv6->type == GUMBO_NODE_TEXT)
                         {
                             QString address = QString::fromUtf8(ipv6->v.text.text);
-                            emit subdomainIp(domainName, address);
+                            emit resultSubdomainIp(domainName, address);
                             log.resultsCount++;
                         }
                     }
@@ -137,7 +137,7 @@ void PagesInventory::replyFinishedIp(QNetworkReply *reply){
                         if(ipv4->type == GUMBO_NODE_TEXT)
                         {
                             QString address = QString::fromUtf8(ipv4->v.text.text);
-                            emit ipA(address);
+                            emit resultA(address);
                             log.resultsCount++;
                         }
 
@@ -153,7 +153,7 @@ void PagesInventory::replyFinishedIp(QNetworkReply *reply){
                         if(ipv6->type == GUMBO_NODE_TEXT)
                         {
                             QString address = QString::fromUtf8(ipv6->v.text.text);
-                            emit ipAAAA(address);
+                            emit resultAAAA(address);
                             log.resultsCount++;
                         }
                     }
@@ -201,7 +201,7 @@ void PagesInventory::replyFinishedSubdomain(QNetworkReply *reply){
                         if(domain->type == GUMBO_NODE_TEXT)
                         {
                             QString domainName = QString::fromUtf8(domain->v.text.text);
-                            emit subdomain(domainName);
+                            emit resultSubdomain(domainName);
                             log.resultsCount++;
                         }
                     }

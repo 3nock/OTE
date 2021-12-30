@@ -5,61 +5,107 @@
 #include <QSplashScreen>
 #include <QTimer>
 
-///
-/// perform some checkups when initializing eg. missing files...
-///
-void initializationCheckUp();
-void initializationCheckUp(){
-    return;
+
+/* a custom messagehandler for logging messages to log file */
+void s3sMessageHandler(QtMsgType type, const QMessageLogContext &, const QString & msg)
+{
+    QString log;
+    QString time(QDateTime::currentDateTime().toString("hh:mm:ss"));
+
+    switch (type) {
+    case QtInfoMsg:
+        log = QString("[%1] INFO: %2").arg(time).arg(msg);
+        break;
+    case QtDebugMsg:
+        log = QString("[%1] DEBUG: %2").arg(time).arg(msg);
+        break;
+    case QtWarningMsg:
+        log = QString("[%1] WARNING: %2").arg(time).arg(msg);
+        break;
+    case QtCriticalMsg:
+        log = QString("[%1] CRITICAL: %2").arg(time).arg(msg);
+        break;
+    case QtFatalMsg:
+        log = QString("[%1] FATAL: %2").arg(time).arg(msg);
+        break;
+    }
+
+    /*
+     * since the messagehandler isn't thread safe
+     * introducing mutex lock
+     */
+    QMutex mutex;
+    mutex.lock();
+
+    QString date = QDateTime::currentDateTime().toString("dd-MM-yyyy");
+    QFile logfile(QDir::currentPath()+"/logs/"+date+".log");
+    logfile.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream ts(&logfile);
+    ts << log << endl;
+    logfile.flush();
+
+    mutex.unlock();
 }
 
-int main(int argc, char *argv[]){
-    ///
-    /// initialization...
-    ///
-    initializationCheckUp();
-    QApplication app(argc, argv);
-    ///
-    /// splash screen...
-    ///
+/* a custom QApplication with exceptions handling */
+class s3sApplication final: public QApplication
+{
+public:
+    s3sApplication(int &argc, char **argv) : QApplication(argc, argv) {}
+
+    bool notify(QObject* receiver, QEvent* event) override
+    {
+        try {
+            return QApplication::notify(receiver, event);
+        }
+        catch (std::exception &e) {
+            qFatal("Error %s sending event %s to object %s (%s)",
+                e.what(), typeid(*event).name(), qPrintable(receiver->objectName()),
+                typeid(*receiver).name());
+        }
+        catch (...) {
+           qFatal("Error <unknown> sending event %s to object %s (%s)",
+               typeid(*event).name(), qPrintable(receiver->objectName()),
+               typeid(*receiver).name());
+        }
+         return false;
+    }
+};
+
+
+int main(int argc, char *argv[])
+{
+    /* installing the message handler */
+    qInstallMessageHandler(s3sMessageHandler);
+
+    /* QApplication */
+    s3sApplication app(argc, argv);
+
+    /* splash screen */
     QPixmap splashImage = QPixmap(":/img/res/icons/splash.png");
     splashImage.scaledToWidth(600);
     QSplashScreen splash(splashImage);
     splash.show();
-    ///
-    /// removing all the question mark buttons on dialogs...
-    ///
+
+    /* removing context help button from all on dialogs... */
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
-    ///
-    /// starting the application...
-    ///
+
+    /* starting the application */
     MainWindow w;
-    ///
-    /// setting the app to the center of Screen on start...
-    ///
+
+    /* setting the app to the center of Screen on start */
     int x = (app.desktop()->width()-w.width()) / 2;
     int y = (app.desktop()->height()-w.height()) / 2;
     w.move(x, y-35);
     w.show();
-    ///
-    /// splashscreen timer...
-    ///
+
+    /* splashscreen timing */
     splash.finish(&w);
-    ///
-    /// set styleSheet...
-    ///
-    /*
-    QFile file(":/themes/res/themes/native.qss");
-    file.open(QFile::ReadOnly);
-    QString styleSheet = QLatin1String(file.readAll());
-    app.setStyleSheet(styleSheet);
-    */
-    ///
-    /// setting configurations...
-    ///
+
+    /* setting configurations...*/
     Config::generalConfig();
-    ///
-    /// starting the app...
-    ///
+
+    /* starting the app... */
+    qInfo() << "starting sub3suite...";
     return app.exec();
 }

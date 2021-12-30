@@ -91,7 +91,7 @@ void IpInfo::replyFinishedSubdomain(QNetworkReply *reply){
 
     if(QUERY_TYPE == HOSTED_DOMAINS){
         foreach(const QJsonValue &value, domains){
-            emit subdomain(value.toString());
+            emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }

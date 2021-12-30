@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct DomainTools{
-    QString name = "DomainTools";
+    QString name = OSINT_MODULE_DOMAINTOOLS;
     QString url = "https://www.domaintools.com/";
     QString url_apiDoc = "https://www.domaintools.com/resources/api-documentation";
     QString summary = "Connect indicators from your network with nearly every active domain and IP address on the Internet. "
@@ -62,6 +62,7 @@ struct DomainTools{
                                         {"Whois Lookup",
                                          {PLACEHOLDERTEXT_NONE, "Whois records for domain names and IP addresses"}},
                                        };
+
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_SUBDOMAIN}}};
 };

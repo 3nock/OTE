@@ -10,7 +10,7 @@ enum OPTION{
 };
 
 
-namespace records{
+namespace dns{
 
 struct ScanConfig{
     QDnsLookup::Type dnsRecordType = QDnsLookup::A;
@@ -24,7 +24,7 @@ struct ScanConfig{
 };
 
 struct ScanArgs{
-    records::ScanConfig *config;
+    dns::ScanConfig *config;
     QStringList srvWordlist;
     QStringList targetList;
 
@@ -62,7 +62,7 @@ class Scanner: public AbstractScanner{
     Q_OBJECT
 
     public:
-        Scanner(records::ScanArgs *args);
+        Scanner(dns::ScanArgs *args);
         ~Scanner() override;
         //...
         void startScan_srv(QThread *cThread);
@@ -81,15 +81,15 @@ class Scanner: public AbstractScanner{
         void txtLookupFinished();
 
     signals:
-        void scanResult(records::Results);
+        void scanResult(dns::Results);
         void done();
         //...
         void doLookup();
         void doLookup_srv();
 
     private:
-        records::ScanArgs *m_args;
-        records::Results m_results;
+        dns::ScanArgs *m_args;
+        dns::Results m_results;
         //...
         QStandardItem *m_dnsNameItem;
         QStandardItem *m_recordItem;

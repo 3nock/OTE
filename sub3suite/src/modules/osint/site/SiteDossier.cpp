@@ -50,7 +50,7 @@ void SiteDossier::replyFinishedSubdomain(QNetworkReply *reply){
                 if(link->type == GUMBO_NODE_TEXT){
                     QString item = QString::fromUtf8(link->v.text.text);
                     item = item.remove(0, 7).remove("/");
-                    emit subdomain(item);
+                    emit resultSubdomain(item);
                     log.resultsCount++;
                 }
             }

@@ -27,6 +27,7 @@ class InputWidget : public QWidget{
         explicit InputWidget(QWidget *parent = nullptr);
         ~InputWidget();
         /* ... */
+        QStringListModel* getlistModel();
         void setListModel(QStringListModel *listModel);
         void setListName(const QString& listName);
         void add(const QString& item);

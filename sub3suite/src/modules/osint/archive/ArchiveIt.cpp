@@ -55,7 +55,7 @@ void ArchiveIt::replyFinishedUrl(QNetworkReply *reply){
     QStringList urlList = document.remove(" ").split("\n");
 
     foreach(const QString &urlValue, urlList){
-        emit url(urlValue);
+        emit resultUrl(urlValue);
         log.resultsCount++;
     }
 
@@ -81,7 +81,7 @@ void ArchiveIt::replyFinishedSubdomain(QNetworkReply *reply){
         domainUrl = domainUrl.split("/").at(0);
 
         /*  emiting subdomain... */
-        emit subdomain(domainUrl);
+        emit resultSubdomain(domainUrl);
         log.resultsCount++;
     }
 

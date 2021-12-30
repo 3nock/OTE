@@ -61,7 +61,7 @@ void Pkey::replyFinishedSubdomain(QNetworkReply *reply){
                 if(hostname.endsWith("."))
                     hostname.chop(1);
                 if(hostname.contains(".")){
-                    emit subdomain(hostname);
+                    emit resultSubdomain(hostname);
                     log.resultsCount++;
                 }
             }
@@ -117,7 +117,7 @@ void Pkey::replyFinishedSubdomainIp(QNetworkReply *reply){
                             if(td_type->v.element.tag == GUMBO_TAG_TD && td_value->v.element.attributes.length == 1 && td_value->v.element.children.length == 1){
                                 GumboNode *value = static_cast<GumboNode*>(td_value->v.element.children.data[0]);
                                 QString address = value->v.text.text;
-                                emit subdomainIp(hostname, address);
+                                emit resultSubdomainIp(hostname, address);
                                 log.resultsCount++;
                             }
                         }
@@ -168,7 +168,7 @@ void Pkey::replyFinishedIp(QNetworkReply *reply){
                         if(td_type->v.element.tag == GUMBO_TAG_TD && td_value->v.element.attributes.length == 1 && td_value->v.element.children.length == 1){
                             GumboNode *value = static_cast<GumboNode*>(td_value->v.element.children.data[0]);
                             QString address = value->v.text.text;
-                            emit ip(address);
+                            emit resultIp(address);
                             log.resultsCount++;
                         }
                     }

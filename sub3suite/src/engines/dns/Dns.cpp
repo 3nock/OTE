@@ -7,11 +7,9 @@
 #include "src/utils/Definitions.h"
 
 
-Dns::Dns(QWidget *parent, ProjectDataModel *project, Status *status) :
-    AbstractEngine(parent, project, status),
-    ui(new Ui::Dns),
-    m_scanConfig(new records::ScanConfig),
-    m_scanArgs(new records::ScanArgs),
+Dns::Dns(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Dns),
+    m_scanConfig(new dns::ScanConfig),
+    m_scanArgs(new dns::ScanArgs),
     m_targetListModel(new QStringListModel),
     m_srvWordlitsModel(new QStringListModel),
     m_resultModel(new QStandardItemModel),
@@ -43,7 +41,7 @@ Dns::Dns(QWidget *parent, ProjectDataModel *project, Status *status) :
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
 
     /* registering meta-objects */
-    qRegisterMetaType<records::Results>("records::Results");
+    qRegisterMetaType<dns::Results>("dns::Results");
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -129,7 +127,7 @@ void Dns::on_buttonStart_clicked(){
 
 void Dns::on_buttonStop_clicked(){
     emit stopScanThread();
-    status->dns->isStopped = true;
+    status->isStopped = true;
 }
 
 void Dns::m_loadSrvWordlist(){
@@ -138,11 +136,9 @@ void Dns::m_loadSrvWordlist(){
 }
 
 void Dns::on_buttonConfig_clicked(){
-    /*
-    ScanConfig *bruteconfig = new ScanConfig(this, m_scanConfig, ENGINE::RECORDS);
-    bruteconfig->setAttribute( Qt::WA_DeleteOnClose, true );
-    bruteconfig->show();
-    */
+    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
+    configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
+    configDialog->show();
 }
 
 void Dns::on_checkBoxSRV_clicked(bool checked){

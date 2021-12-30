@@ -23,9 +23,7 @@ class Ssl : public AbstractEngine{
         Q_OBJECT
 
     public:
-        Ssl(QWidget *parent = nullptr,
-               ProjectDataModel *project = nullptr,
-               Status *status = nullptr);
+        Ssl(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
         ~Ssl();
 
     public slots:
@@ -51,8 +49,8 @@ class Ssl : public AbstractEngine{
 
     private:
         Ui::Ssl *ui;
-        certificate::ScanConfig *m_scanConfig;
-        certificate::ScanArgs *m_scanArgs;
+        ssl::ScanConfig *m_scanConfig;
+        ssl::ScanArgs *m_scanArgs;
         QStringListModel *m_targetListModel;
         QStandardItemModel *m_resultModelSubdomain;
         QStandardItemModel *m_resultModelCertId;
