@@ -57,10 +57,7 @@ Osint::Osint(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent,
     ui->targets->hide();
     ui->comboBoxFilter->hide();
 
-    /* profiles */
-    ui->lineEditNewProfile->setPlaceholderText("Enter New Profile's Name...");
-    ui->frameProfiles->hide();
-    this->m_initProfiles();
+    /* modules */
     this->m_initModules();
 
     /* registering meta-objects */

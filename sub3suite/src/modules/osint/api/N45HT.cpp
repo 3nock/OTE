@@ -10,13 +10,13 @@
  */
 N45HT::N45HT(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "N45HT";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &N45HT::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &N45HT::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &N45HT::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &N45HT::replyFinishedSubdomain);
 }
 N45HT::~N45HT(){
     delete manager;

@@ -17,29 +17,29 @@
 
 Bgpview::Bgpview(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_BGPVIEW;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedIp);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedAsn);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedEmail);
     if(args.outputCidr)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedCidr);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedCidr);
     if(args.outputInfoCidr)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoCidr);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoCidr);
     if(args.outputInfoAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsn);
     if(args.outputInfoAsnPeers)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsnPeers);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsnPeers);
     if(args.outputInfoAsnPrefixes)
-        connect(manager, &NetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsnPrefixes);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bgpview::replyFinishedInfoAsnPrefixes);
 }
 Bgpview::~Bgpview(){
     delete manager;

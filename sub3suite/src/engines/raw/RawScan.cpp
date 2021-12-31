@@ -516,6 +516,12 @@ void Raw::m_startScan(){
         this->m_startScanThread(new LeakLookup(scanArgs));
         return;
     }
+    if(ui->moduleWappalyzer->isChecked())
+    {
+        m_currentModule = "Wappalyzer";
+        this->m_startScanThread(new Wappalyzer(scanArgs));
+        return;
+    }
 
     /* if control reaches here means no module was selected... */
     ui->buttonStart->setEnabled(true);

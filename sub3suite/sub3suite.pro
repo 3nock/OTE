@@ -32,6 +32,8 @@ SOURCES += \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
     src/dialogs/preference/PreferenceDialog.cpp \
+    src/dialogs/wordlist/ChooseWordlist.cpp \
+    src/dialogs/wordlist/GenerateWordlist.cpp \
     src/engines/active/ActiveContextMenu.cpp \
     src/engines/active/ActiveScan.cpp \
     src/engines/brute/BruteContextMenu.cpp \
@@ -50,7 +52,6 @@ SOURCES += \
     src/engines/ip/IpContextMenu.cpp \
     src/engines/osint/OsintContextMenu.cpp \
     src/engines/osint/OsintModules.cpp \
-    src/engines/osint/OsintProfiles.cpp \
     src/engines/raw/RawContextMenu.cpp \
     src/engines/raw/RawModules.cpp \
     src/engines/dns/DnsContextMenu.cpp \
@@ -63,6 +64,7 @@ SOURCES += \
     src/modules/osint/api/NeutrinoApi.cpp \
     src/modules/osint/api/Seon.cpp \
     src/modules/osint/api/SpyOnWeb.cpp \
+    src/modules/osint/api/Wappalyzer.cpp \
     src/modules/osint/api/Whatcms.cpp \
     src/modules/osint/api/Whoxy.cpp \
     src/modules/osint/archive/UKWebArchive.cpp \
@@ -186,8 +188,6 @@ SOURCES += \
     src/utils/LogsSyntaxHighlighter.cpp \
     src/utils/NotesSyntaxHighlighter.cpp \
     src/widgets/InputWidget.cpp \
-    src/widgets/Notes.cpp \
-    src/dialogs/wordlist/WordlistGeneratorWidget.cpp \
     src/dialogs/LogViewerDialog.cpp \
     src/dialogs/AboutDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
@@ -221,6 +221,7 @@ HEADERS += \
     src/modules/osint/api/NeutrinoApi.h \
     src/modules/osint/api/Seon.h \
     src/modules/osint/api/SpyOnWeb.h \
+    src/modules/osint/api/Wappalyzer.h \
     src/modules/osint/api/Whatcms.h \
     src/modules/osint/api/Whoxy.h \
     src/modules/osint/archive/UKWebArchive.h \
@@ -351,8 +352,6 @@ HEADERS += \
     src/utils/NotesSyntaxHighlighter.h \
     src/utils/models.h \
     src/widgets/InputWidget.h \
-    src/widgets/Notes.h \
-    src/dialogs/wordlist/WordlistGeneratorWidget.h \
     src/dialogs/LogViewerDialog.h \
     src/dialogs/AboutDialog.h \
     src/dialogs/ApiKeysDialog.h \
@@ -388,8 +387,6 @@ FORMS += \
     src/tools/NSTool.ui \
     src/tools/SSLTool.ui \
     src/widgets/InputWidget.ui \
-    src/widgets/Notes.ui \
-    src/dialogs/wordlist/WordlistGeneratorWidget.ui \
     src/dialogs/LogViewerDialog.ui \
     src/dialogs/AboutDialog.ui \
     src/dialogs/wordlist/WordlistDialog.ui \

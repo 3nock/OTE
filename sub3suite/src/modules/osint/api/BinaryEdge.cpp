@@ -20,17 +20,17 @@
 
 BinaryEdge::BinaryEdge(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_BINARYEDGE;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedRawJson);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomainIp);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &BinaryEdge::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedIp);
 
     /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");

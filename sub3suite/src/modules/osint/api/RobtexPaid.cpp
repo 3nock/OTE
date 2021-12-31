@@ -12,19 +12,19 @@
 
 RobtexPaid::RobtexPaid(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "RobtexPaid";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedRawJson);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedIp);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomain);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomainIp);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &RobtexPaid::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedAsn);
     ///
     /// getting api key...
     ///

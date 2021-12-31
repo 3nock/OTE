@@ -40,13 +40,13 @@
 C99::C99(ScanArgs args):
     AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_C99;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &C99::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &C99::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
 
     /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");

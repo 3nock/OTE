@@ -36,19 +36,19 @@
 /* 1k per hour unauthenticated, and 10k authed*/
 OtxPaid::OtxPaid(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "otx";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedRawJson);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomainIp);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedIp);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &OtxPaid::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedAsn);
     ///
     /// getting api key...
     ///

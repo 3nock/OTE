@@ -59,6 +59,10 @@ void InputWidget::add(QFile& file){
     file.close();
 }
 
+void InputWidget::updateSize(){
+    ui->labelCount->setNum(m_listModel->rowCount());
+}
+
 void InputWidget::on_buttonLoad_clicked(){
     /* get file to load wordlist from */
     QString filename = QFileDialog::getOpenFileName(this, "Load From File...", "./");

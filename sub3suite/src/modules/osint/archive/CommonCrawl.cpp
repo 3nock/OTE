@@ -8,7 +8,7 @@
  */
 CommonCrawl::CommonCrawl(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "CommonCrawl";
 }
 CommonCrawl::~CommonCrawl(){
@@ -17,7 +17,7 @@ CommonCrawl::~CommonCrawl(){
 
 void CommonCrawl::start(){
     /* first temporary connection to index */
-    connect(manager, &NetworkAccessManager::finished, this, &CommonCrawl::replyFinishedIndex);
+    connect(manager, &s3sNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedIndex);
 
     /* request to obtain the index url */
     QNetworkRequest request;
@@ -43,13 +43,13 @@ void CommonCrawl::replyFinishedIndex(QNetworkReply *reply){
     }
 
     /* disconnect the first manager connection */
-    disconnect(manager, &NetworkAccessManager::finished, this, &CommonCrawl::replyFinishedIndex);
+    disconnect(manager, &s3sNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedIndex);
 
     /* make new manager connection depending on user output */
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &CommonCrawl::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedUrl);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &CommonCrawl::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedSubdomain);
 
     /* send request to get the subdomains/urls */
     QUrl url(urlList.at(0)+"?url=*."+target+"&output=json&fl=url");

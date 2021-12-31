@@ -13,11 +13,11 @@
  */
 Afrinic::Afrinic(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Afrinic";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Afrinic::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Afrinic::replyFinishedRawJson);
 }
 Afrinic::~Afrinic(){
     delete manager;

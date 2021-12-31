@@ -23,11 +23,11 @@
  */
 BuiltWith::BuiltWith(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_BUILTWITH;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
 
     /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");

@@ -82,11 +82,6 @@ class Osint : public AbstractEngine{
         void on_comboBoxOutput_currentIndexChanged(int index);
         void on_comboBoxInput_currentIndexChanged(int index);
         void on_lineEditFilter_textChanged(const QString &arg1);
-        /* for profile */
-        void on_useProfiles_clicked(bool checked);
-        void on_buttonLoadProfile_clicked();
-        void on_buttonCreateProfile_clicked();
-        void on_buttonDeleteProfile_clicked();
 
     private:
         Ui::Osint *ui;

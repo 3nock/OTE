@@ -33,15 +33,15 @@
 
 DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_DOMAINTOOLS;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
 
     /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");

@@ -8,11 +8,11 @@
 
 Host::Host(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Host";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Host::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Host::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

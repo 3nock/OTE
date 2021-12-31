@@ -32,6 +32,7 @@ class InputWidget : public QWidget{
         void setListName(const QString& listName);
         void add(const QString& item);
         void add(QFile& file);
+        void updateSize();
 
     private slots:
         void on_buttonClear_clicked();

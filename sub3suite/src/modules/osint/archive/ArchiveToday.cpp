@@ -7,13 +7,13 @@
  */
 ArchiveToday::ArchiveToday(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Archive";
 
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &ArchiveToday::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveToday::replyFinishedUrl);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &ArchiveToday::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveToday::replyFinishedSubdomain);
 }
 ArchiveToday::~ArchiveToday(){
     delete manager;

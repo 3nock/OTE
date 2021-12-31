@@ -14,15 +14,15 @@
  */
 IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "IpInfo";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &IpInfo::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedRawJson);
     if(args.outputInfo)
-        connect(manager, &NetworkAccessManager::finished, this, &IpInfo::replyFinishedInfo);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedInfo);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
     ///
     /// getting the api key...
     ///

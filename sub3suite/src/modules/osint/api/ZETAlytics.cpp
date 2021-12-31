@@ -7,13 +7,13 @@
 
 ZETAlytics::ZETAlytics(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "ZETAlytics";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &ZETAlytics::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedSubdomain);
     ///
     /// get api key...
     ///

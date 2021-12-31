@@ -13,13 +13,13 @@
 
 Hunter::Hunter(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Hunter";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Hunter::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Hunter::replyFinishedRawJson);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
     ///
     /// getting api-key...
     ///

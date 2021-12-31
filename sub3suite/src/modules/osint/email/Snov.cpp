@@ -15,11 +15,11 @@
  */
 Snov::Snov(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Snov";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Snov::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Snov::replyFinishedRawJson);
     ///
     /// getting api-key...
     ///

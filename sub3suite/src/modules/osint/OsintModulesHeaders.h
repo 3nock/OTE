@@ -4,6 +4,7 @@
 ///
 /// api...
 ///
+#include "src/modules/osint/api/Wappalyzer.h"
 #include "src/modules/osint/api/ViewDns.h"
 #include "src/modules/osint/api/ZoomEye.h"
 #include "src/modules/osint/api/ZETAlytics.h"

@@ -18,17 +18,17 @@
 
 WebResolver::WebResolver(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "WebResolver";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &WebResolver::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &WebResolver::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedIp);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomainIp);
     ///
     /// getting api key...
     ///

@@ -7,15 +7,15 @@
  */
 Exalead::Exalead(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Exalead";
 
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Exalead::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedSubdomain);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &Exalead::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedEmail);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &Exalead::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedUrl);
 }
 Exalead::~Exalead(){
     delete manager;

@@ -11,15 +11,15 @@
  */
 GoogleCert::GoogleCert(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "GoogleCert";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &GoogleCert::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedRawJson);
     if(args.outputSSLCert)
-        connect(manager, &NetworkAccessManager::finished, this, &GoogleCert::replyFinishedSSLCert);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedSSLCert);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &GoogleCert::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedSubdomain);
 }
 GoogleCert::~GoogleCert(){
     delete manager;

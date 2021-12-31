@@ -15,11 +15,11 @@
  */
 NeutrinoApi::NeutrinoApi(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "NeutrinoApi";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &NeutrinoApi::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &NeutrinoApi::replyFinishedRawJson);
     ///
     /// getting api key...
     ///

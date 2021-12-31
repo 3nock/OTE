@@ -17,15 +17,15 @@
  */
 MnemonicPaid::MnemonicPaid(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Mnemonic";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedRawJson);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedIp);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedSubdomain);
     ///
     /// getting api key...
     ///

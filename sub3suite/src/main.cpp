@@ -39,10 +39,13 @@ void s3sMessageHandler(QtMsgType type, const QMessageLogContext &, const QString
 
     QString date = QDateTime::currentDateTime().toString("dd-MM-yyyy");
     QFile logfile(QDir::currentPath()+"/logs/"+date+".log");
-    logfile.open(QIODevice::WriteOnly | QIODevice::Append);
-    QTextStream ts(&logfile);
-    ts << log << endl;
-    logfile.flush();
+
+    if(logfile.open(QIODevice::WriteOnly | QIODevice::Append)){
+        QTextStream ts(&logfile);
+        ts << log << endl;
+        logfile.flush();
+        logfile.close();
+    }
 
     mutex.unlock();
 }

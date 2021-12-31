@@ -12,11 +12,11 @@
  */
 IpQualityScore::IpQualityScore(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "IpQualityScore";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRawJson);
     ///
     /// get api key...
     ///

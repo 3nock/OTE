@@ -14,26 +14,36 @@ class WordListDialog : public QDialog{
         Q_OBJECT
 
     public:
-        WordListDialog(QWidget *parent, ENGINE engine);
+        WordListDialog(QWidget *parent, QStringListModel *wordlistModel);
         ~WordListDialog();
 
-    private slots:
-        void on_buttonCancel_clicked();
-        void on_buttonCreate_clicked();
-        void on_buttonOk_clicked();
-        void on_checkBoxCreateNew_clicked(bool checked);
+        void initTLDWordlist();
+        void initSubdomainWordlist();
 
     signals:
-        void choosenWordlist(QString);
+        void wordlistLoaded();
+
+    private slots:
+        void on_tabWidget_currentChanged(int index);
+        /* for choose */
+        void on_buttonLoadChoosen_clicked();
+        void on_buttonCreate_clicked();
+        void on_checkBoxCreateNew_clicked(bool checked);
+        /* for generate */
+        void on_buttonGenerate_clicked();
 
     private:
         Ui::WordListDialog *ui;
-        const ENGINE m_engine;
+        QStringListModel *m_wordlistModel;
+        /* for choose */
+        void m_initChoose();
         QStringListModel *m_customWordlistModel;
-        void loadWordlists();
-        /* ... */
         QString m_defaultWordlist;
         QString m_specialWordlist;
+        bool TLD = false;
+        bool Subdomain = false;
+        /* for generate */
+        void m_initGenerate();
 };
 
 #endif // WORDLISTDIALOG_H

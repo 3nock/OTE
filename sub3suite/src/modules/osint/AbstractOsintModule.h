@@ -113,9 +113,9 @@ struct ScanLog{
 };
 
 
-class NetworkAccessManager: public QNetworkAccessManager {
+class s3sNetworkAccessManager: public QNetworkAccessManager {
     public:
-        NetworkAccessManager(QObject *parent = nullptr): QNetworkAccessManager(parent)
+        s3sNetworkAccessManager(QObject *parent = nullptr): QNetworkAccessManager(parent)
         {
         }
 
@@ -266,7 +266,7 @@ class AbstractOsintModule : public QObject {
         QString target;
         int activeRequests = 0;
         int QUERY_TYPE;
-        NetworkAccessManager *manager = nullptr;
+        s3sNetworkAccessManager *manager = nullptr;
 
         void  onRateLimit(QNetworkReply *reply){
             log.message = "API rate limit reached";

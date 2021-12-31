@@ -8,15 +8,15 @@
  */
 Bing::Bing(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Bing";
 
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Bing::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bing::replyFinishedSubdomain);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &Bing::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bing::replyFinishedEmail);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &Bing::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Bing::replyFinishedUrl);
 }
 Bing::~Bing(){
     delete manager;

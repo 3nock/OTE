@@ -9,13 +9,13 @@
 
 Omnisint::Omnisint(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Omnisint";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Omnisint::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Omnisint::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Omnisint::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Omnisint::replyFinishedSubdomain);
 }
 Omnisint::~Omnisint(){
     delete manager;

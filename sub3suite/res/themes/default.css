@@ -284,14 +284,7 @@ QSplitter::handle:vertical:hover {
     margin-bottom: 3px;
 }
 
-QTextEdit{
-    background-color:transparent;
-    color: rgba(218, 218, 163, 200);
-    border-style: solid;
-    border-color: rgb(25,25,25);
-    border-width: 1px;
-}
-
+QTextEdit,
 QListWidget,
 QTableView,
 QTreeView,

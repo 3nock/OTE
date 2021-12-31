@@ -13,15 +13,15 @@
  */
 Arquivo::Arquivo(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Arquivo";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Arquivo::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Arquivo::replyFinishedRawJson);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &Arquivo::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Arquivo::replyFinishedUrl);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Arquivo::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Arquivo::replyFinishedSubdomain);
 }
 Arquivo::~Arquivo(){
     delete manager;

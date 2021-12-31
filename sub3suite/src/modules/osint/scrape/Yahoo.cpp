@@ -8,15 +8,15 @@
  */
 Yahoo::Yahoo(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Yahoo";
 
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Yahoo::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Yahoo::replyFinishedSubdomain);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &Yahoo::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Yahoo::replyFinishedEmail);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &Yahoo::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Yahoo::replyFinishedUrl);
 }
 Yahoo::~Yahoo(){
     delete manager;

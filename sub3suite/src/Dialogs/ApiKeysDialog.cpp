@@ -17,7 +17,7 @@
 ApiKeysDialog::ApiKeysDialog(QWidget *parent): QDialog(parent),ui(new Ui::ApiKeysDialog)
 {
     ui->setupUi(this);
-    loadApiKeys();
+    this->m_loadApiKeys();
 }
 ApiKeysDialog::~ApiKeysDialog(){
     delete ui;
@@ -91,6 +91,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     Config::generalConfig().setValue("hybridanalysis", ui->lineEditHybridAnalysis->text());
     Config::generalConfig().setValue("ipqualityscore", ui->lineEditIpQualityScore->text());
     Config::generalConfig().setValue("leaklookup", ui->lineEditLeakLookup->text());
+    Config::generalConfig().setValue("wappalyzer", ui->lineEditWappalyzer->text());
     //...
     Config::generalConfig().endGroup();
     accept();
@@ -100,7 +101,7 @@ void ApiKeysDialog::on_buttonCancel_clicked(){
     accept();
 }
 
-void ApiKeysDialog::loadApiKeys(){
+void ApiKeysDialog::m_loadApiKeys(){
     QString key;
     Config::generalConfig().beginGroup("api-keys");
     ///
@@ -434,6 +435,11 @@ void ApiKeysDialog::loadApiKeys(){
         ui->lineEditLeakLookup->setText(key);
         ui->buttonGetLeakLookup->hide();
     }
+    key = Config::generalConfig().value("wappalyzer").toString();
+    if(!key.isEmpty()){
+        ui->lineEditWappalyzer->setText(key);
+        ui->buttonGetWappalyzer->hide();
+    }
     Config::generalConfig().endGroup();
 }
 
@@ -679,4 +685,8 @@ void ApiKeysDialog::on_buttonGetIpQualityScore_clicked(){
 
 void ApiKeysDialog::on_buttonGetLeakLookup_clicked(){
     QDesktopServices::openUrl(QUrl("https://leak-lookup.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetWappalyzer_clicked(){
+    QDesktopServices::openUrl(QUrl("https://www.wappalyzer.com/pricing/", QUrl::TolerantMode));
 }

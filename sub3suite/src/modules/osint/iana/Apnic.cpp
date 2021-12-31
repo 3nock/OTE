@@ -10,11 +10,11 @@
  */
 Apnic::Apnic(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Apnic";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Apnic::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Apnic::replyFinishedRawJson);
 }
 Apnic::~Apnic(){
     delete manager;

@@ -11,13 +11,13 @@
  */
 Anubis::Anubis(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_ANUBIS;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Anubis::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Anubis::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
 }
 Anubis::~Anubis(){
     delete manager;

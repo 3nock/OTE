@@ -22,27 +22,27 @@
 
 Dnslytics::Dnslytics(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_DNSLYTICS;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedIp);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedAsn);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomainIp);
     if(args.outputCidr)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedCidr);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedCidr);
     if(args.outputInfoIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoIp);
     if(args.outputInfoMX)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoMX);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoMX);
     if(args.outputInfoNS)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoNS);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoNS);
 
     /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");

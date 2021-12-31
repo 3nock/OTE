@@ -133,7 +133,9 @@ class Raw : public AbstractEngine{
         void on_moduleIpQualityScore_clicked();
         void on_moduleLeakLookup_clicked();
 
-    private:
+        void on_moduleWappalyzer_clicked();
+
+private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         //...

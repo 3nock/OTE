@@ -28,19 +28,19 @@
 /* has api v2 and v3 */
 VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "VirusTotal";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &VirusTotal::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedRawJson);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &VirusTotal::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedIp);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &VirusTotal::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedUrl);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &VirusTotal::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSubdomain);
     if(args.outputSSLCert)
-        connect(manager, &NetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSLCert);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSLCert);
     ///
     /// obtain apikey...
     ///

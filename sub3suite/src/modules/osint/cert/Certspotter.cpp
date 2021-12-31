@@ -9,15 +9,15 @@
 
 Certspotter::Certspotter(ScanArgs args) : AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "CertSpotter";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Certspotter::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Certspotter::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedSubdomain);
     if(args.outputSSLCert)
-        connect(manager, &NetworkAccessManager::finished, this, &Certspotter::replyFinishedSSLCert);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedSSLCert);
     ///
     /// getting api key...
     ///

@@ -121,13 +121,6 @@ void Brute::on_buttonStart_clicked(){
 
     ui->progressBar->setMaximum(m_scanArgs->wordlist.length() * m_scanArgs->targets.length());
 
-    /* debug info */
-    qDebug() << "Threads: " << m_scanConfig->threads;
-    qDebug() << "Timeout: " << m_scanConfig->timeout;
-    qDebug() << "Nameserver:" << m_scanConfig->nameservers.at(0);
-    qDebug() << "Record Type: " << m_scanConfig->recordType;
-    qDebug() << "**************************************";
-
     /* start scan */
     this->m_startScan();
 }
@@ -159,21 +152,19 @@ void Brute::on_buttonConfig_clicked(){
 }
 
 void Brute::on_buttonWordlist_clicked(){
-    /*
-    WordListDialog *wordlistDialog = nullptr;
+    WordListDialog *wordlistDialog = new WordListDialog(this, m_wordlistModel);
 
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
-        wordlistDialog = new WordListDialog(this, ENGINE::SUBBRUTE);
+        wordlistDialog->initSubdomainWordlist();
         break;
     case brute::OUTPUT::TLD:
-        wordlistDialog = new WordListDialog(this, ENGINE::TLDBRUTE);
+        wordlistDialog->initTLDWordlist();
     }
 
+    connect(wordlistDialog, &WordListDialog::wordlistLoaded, this, [=](){ui->wordlist->updateSize();});
     wordlistDialog->setAttribute( Qt::WA_DeleteOnClose, true );
-    connect(wordlistDialog, &WordListDialog::choosenWordlist, this, &Brute::onChoosenWordlist);
     wordlistDialog->show();
-    */
 }
 
 void Brute::on_checkBoxMultipleTargets_stateChanged(int newState){

@@ -7,13 +7,13 @@
  */
 CensysFree::CensysFree(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "CensysFree";
 
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &CensysFree::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &CensysFree::replyFinishedSubdomain);
     if(args.outputSSLCert)
-        connect(manager, &NetworkAccessManager::finished, this, &CensysFree::replyFinishedSSLCert);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &CensysFree::replyFinishedSSLCert);
 }
 CensysFree::~CensysFree(){
     delete manager;

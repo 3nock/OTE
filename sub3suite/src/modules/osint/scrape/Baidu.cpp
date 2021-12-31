@@ -7,15 +7,15 @@
  */
 Baidu::Baidu(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Baidu";
 
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Baidu::replyFinishedSubdomain);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Baidu::replyFinishedEmail);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &Baidu::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Baidu::replyFinishedUrl);
 }
 Baidu::~Baidu(){
     delete manager;

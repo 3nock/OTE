@@ -18,9 +18,8 @@ class ApiKeysDialog : public QDialog{
     private slots:
         void on_buttonSave_clicked();
         void on_buttonCancel_clicked();
-        ///
-        /// the button to visit site for acquiring api keys...
-        ///
+
+        /* the button to visit site for acquiring api keys... */
         void on_buttonGetCensys_clicked();
         void on_buttonGetVirusTotal_clicked();
         void on_buttonGetGithub_clicked();
@@ -37,7 +36,6 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetPentestTools_clicked();
         void on_buttonGetProjectDiscovery_clicked();
         void on_buttonGetBinaryEdge_clicked();
-        /* new */
         void on_buttonGetC99_clicked();
         void on_buttonGetIpInfo_clicked();
         void on_buttonGetThreatBook_clicked();
@@ -56,62 +54,38 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetDnslytics_clicked();
         void on_buttonGetDomainTools_clicked();
         void on_buttonGetOnyphe_clicked();
-
         void on_buttonGetFullHunt_clicked();
-
         void on_buttonGetSpamHaus_clicked();
-
         void on_buttonGetDebounce_clicked();
-
         void on_buttonGetHaveIBeenPawned_clicked();
-
         void on_buttonGetHost_clicked();
-
         void on_buttonGetJsonWhois_clicked();
-
         void on_buttonGetLeakIX_clicked();
-
         void on_buttonGetNetworksDB_clicked();
-
         void on_buttonGetNeutrinoApi_clicked();
-
         void on_buttonGetSeon_clicked();
-
         void on_buttonGetSpyOnWeb_clicked();
-
         void on_buttonGetWhatcms_clicked();
-
         void on_buttonGetWhoxy_clicked();
-
         void on_buttonGetEmailCrawlr_clicked();
-
         void on_buttonGetEmailFormat_clicked();
-
         void on_buttonGetEmailRep_clicked();
-
         void on_buttonGetSnov_clicked();
-
         void on_buttonGetIpData_clicked();
-
         void on_buttonGetIpGeoLocation_clicked();
-
         void on_buttonGetIpRegistry_clicked();
-
         void on_buttonGetIpStack_clicked();
-
         void on_buttonGetAbuseIPDB_clicked();
-
         void on_buttonGetFraudGuard_clicked();
-
         void on_buttonGetHybridAnalysis_clicked();
-
         void on_buttonGetIpQualityScore_clicked();
-
         void on_buttonGetLeakLookup_clicked();
+
+        void on_buttonGetWappalyzer_clicked();
 
 private:
         Ui::ApiKeysDialog *ui;
-        void loadApiKeys();
+        void m_loadApiKeys();
 };
 
 #endif // OSINTAPIKEYS_H

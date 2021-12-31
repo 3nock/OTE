@@ -13,13 +13,13 @@
  */
 IpApi::IpApi(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "IpApi";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &IpApi::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedRawJson);
     if(args.outputInfo)
-        connect(manager, &NetworkAccessManager::finished, this, &IpApi::replyFinishedInfo);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedInfo);
     ///
     /// get api key...
     ///

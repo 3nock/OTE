@@ -37,19 +37,19 @@
  */
 Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Onyphe";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedRawJson);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomainIp);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedIp);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &Onyphe::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedAsn);
     ///
     /// getting api key...
     ///

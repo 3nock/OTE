@@ -8,16 +8,16 @@
 #define TECHNOLOGY_LIST 4
 #define WP_THEME_DETECTION 5
 
+
 Whatcms::Whatcms(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Whatcms";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Whatcms::replyFinishedRawJson);
-    ///
-    /// getting api key...
-    ///
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Whatcms::replyFinishedRawJson);
+
+    /* getting api key... */
     Config::generalConfig().beginGroup("api-keys");
     m_key = Config::generalConfig().value("whatcms").toString();
     Config::generalConfig().endGroup();

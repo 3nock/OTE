@@ -15,15 +15,15 @@
 
 Waybackmachine::Waybackmachine(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "WaybackMachine";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Waybackmachine::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedRawJson);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &Waybackmachine::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedUrl);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Waybackmachine::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedSubdomain);
 }
 Waybackmachine::~Waybackmachine(){
     delete manager;

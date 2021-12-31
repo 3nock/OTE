@@ -6,15 +6,15 @@
  */
 Crtsh::Crtsh(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Crtsh";
 
     if(args.outputInfo)
-        connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedInfo);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedInfo);
     if(args.outputSSLCert)
-        connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedSSLCert);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedSSLCert);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Crtsh::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedSubdomain);
 }
 Crtsh::~Crtsh(){
     delete manager;

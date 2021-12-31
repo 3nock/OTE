@@ -14,13 +14,13 @@
  */
 EmailCrawlr::EmailCrawlr(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "EmailCrawlr";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedRawJson);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedEmail);
     ///
     /// getting api-key...
     ///

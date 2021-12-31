@@ -16,19 +16,19 @@
 
 HackerTargetFree::HackerTargetFree(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "HackerTarget";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedRawTxt);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedRawTxt);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomainIp);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedIp);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedAsn);
 }
 HackerTargetFree::~HackerTargetFree(){
     delete manager;

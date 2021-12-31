@@ -9,17 +9,17 @@
 
 Dnsbufferoverun::Dnsbufferoverun(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_DNSBUFFEROVERRUN;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomain);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomainIp);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedIp);
 }
 Dnsbufferoverun::~Dnsbufferoverun(){
     delete manager;

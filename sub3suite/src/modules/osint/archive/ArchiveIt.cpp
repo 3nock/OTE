@@ -5,15 +5,15 @@
 
 ArchiveIt::ArchiveIt(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "ArchiveIt";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &ArchiveIt::replyFinishedRawNdjson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedRawNdjson);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &ArchiveIt::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedUrl);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &ArchiveIt::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedSubdomain);
 }
 ArchiveIt::~ArchiveIt(){
     delete manager;

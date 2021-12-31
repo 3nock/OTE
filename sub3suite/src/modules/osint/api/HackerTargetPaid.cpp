@@ -20,19 +20,19 @@
 
 HackerTargetPaid::HackerTargetPaid(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "HackerTarget";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedRawTxt);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedRawTxt);
     if(args.outputSubdomainIp)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomainIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomainIp);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedIp);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedAsn);
     ///
     /// getting api key...
     ///

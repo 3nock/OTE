@@ -51,15 +51,15 @@
  */
 Ripe::Ripe(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "Ripe";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Ripe::replyFinishedRawJson);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
     if(args.outputCidr)
-        connect(manager, &NetworkAccessManager::finished, this, &Ripe::replyFinishedCidr);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Ripe::replyFinishedCidr);
 }
 Ripe::~Ripe(){
     delete manager;

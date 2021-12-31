@@ -17,23 +17,23 @@
 /* email reverse-whois */
 Threatminer::Threatminer(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "ThreatMiner";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedSubdomain);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedEmail);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedIp);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedAsn);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedUrl);
     if(args.outputSSLCert)
-        connect(manager, &NetworkAccessManager::finished, this, &Threatminer::replyFinishedSSLCert);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedSSLCert);
 }
 Threatminer::~Threatminer(){
     delete manager;

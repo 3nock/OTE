@@ -8,11 +8,11 @@
  */
 SiteDossier::SiteDossier(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.resultsCount++;
 
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &SiteDossier::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &SiteDossier::replyFinishedSubdomain);
 }
 SiteDossier::~SiteDossier(){
     delete manager;

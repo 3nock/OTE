@@ -15,19 +15,19 @@
  */
 Circl::Circl(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = OSINT_MODULE_CIRCL;
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedRawJson);
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSubdomain);
     if(args.outputIp)
-        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedIp);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedIp);
     if(args.outputSSLCert)
-        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedSSLCert);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSSLCert);
     if(args.outputAsn)
-        connect(manager, &NetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
 
     /* get login credentials... */
 }

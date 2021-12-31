@@ -5,11 +5,11 @@
 
 TruMail::TruMail(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "TruMail";
 
     if(args.outputRaw)
-        connect(manager, &NetworkAccessManager::finished, this, &TruMail::replyFinishedRawJson);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &TruMail::replyFinishedRawJson);
 }
 TruMail::~TruMail(){
     delete manager;

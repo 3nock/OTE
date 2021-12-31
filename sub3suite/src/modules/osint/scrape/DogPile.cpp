@@ -8,15 +8,15 @@
  */
 DogPile::DogPile(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new NetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this);
     log.moduleName = "DogPile";
 
     if(args.outputSubdomain)
-        connect(manager, &NetworkAccessManager::finished, this, &DogPile::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &DogPile::replyFinishedSubdomain);
     if(args.outputEmail)
-        connect(manager, &NetworkAccessManager::finished, this, &DogPile::replyFinishedEmail);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &DogPile::replyFinishedEmail);
     if(args.outputUrl)
-        connect(manager, &NetworkAccessManager::finished, this, &DogPile::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &DogPile::replyFinishedUrl);
 }
 DogPile::~DogPile(){
     delete manager;
