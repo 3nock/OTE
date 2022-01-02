@@ -6,11 +6,9 @@
 
 void WordListDialog::m_initChoose(){
     ui->customWordlist->setListName("Custom Wordlist");
-    ui->customWordlist->setListModel(m_customWordlistModel);
+    //ui->customWordlist->setListModel(m_customWordlistModel);
 
     ui->lineEditName->setPlaceholderText("Enter custom wordlist Name...");
-
-    ui->groupBoxSpecialWordlist->hide();
 }
 
 void WordListDialog::initTLDWordlist(){
@@ -110,16 +108,4 @@ void WordListDialog::on_buttonCreate_clicked(){
     Config::generalConfig().endGroup();
     ui->comboBoxSpecialWordlist->addItem(name);
     ui->lineEditName->clear();
-}
-
-void WordListDialog::on_checkBoxCreateNew_clicked(bool checked){
-    if(checked)
-        ui->groupBoxSpecialWordlist->show();
-    else
-        ui->groupBoxSpecialWordlist->hide();
-
-    ui->groupBoxSpecialWordlist->adjustSize();
-    ui->tabChoose->adjustSize();
-    ui->tabWidget->adjustSize();
-    this->adjustSize();
 }

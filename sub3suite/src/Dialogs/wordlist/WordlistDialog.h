@@ -28,7 +28,6 @@ class WordListDialog : public QDialog{
         /* for choose */
         void on_buttonLoadChoosen_clicked();
         void on_buttonCreate_clicked();
-        void on_checkBoxCreateNew_clicked(bool checked);
         /* for generate */
         void on_buttonGenerate_clicked();
 
@@ -44,6 +43,7 @@ class WordListDialog : public QDialog{
         bool Subdomain = false;
         /* for generate */
         void m_initGenerate();
+        QStringListModel *m_generateWordlistModel;
 };
 
 #endif // WORDLISTDIALOG_H
