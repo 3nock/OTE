@@ -3,11 +3,10 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QSplashScreen>
-#include <QTimer>
 
 
 /* a custom messagehandler for logging messages to log file */
-void s3sMessageHandler(QtMsgType type, const QMessageLogContext &, const QString & msg)
+void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QString & msg)
 {
     QString log;
     QString time(QDateTime::currentDateTime().toString("hh:mm:ss"));
@@ -51,10 +50,10 @@ void s3sMessageHandler(QtMsgType type, const QMessageLogContext &, const QString
 }
 
 /* a custom QApplication with exceptions handling */
-class s3sApplication final: public QApplication
+class s3s_Application final: public QApplication
 {
 public:
-    s3sApplication(int &argc, char **argv) : QApplication(argc, argv) {}
+    s3s_Application(int &argc, char **argv) : QApplication(argc, argv) {}
 
     bool notify(QObject* receiver, QEvent* event) override
     {
@@ -67,9 +66,9 @@ public:
                 typeid(*receiver).name());
         }
         catch (...) {
-           qFatal("Error <unknown> sending event %s to object %s (%s)",
-               typeid(*event).name(), qPrintable(receiver->objectName()),
-               typeid(*receiver).name());
+            qFatal("Error <unknown> sending event %s to object %s (%s)",
+                typeid(*event).name(), qPrintable(receiver->objectName()),
+                typeid(*receiver).name());
         }
          return false;
     }
@@ -79,10 +78,15 @@ public:
 int main(int argc, char *argv[])
 {
     /* installing the message handler */
-    qInstallMessageHandler(s3sMessageHandler);
+    qInstallMessageHandler(s3s_MessageHandler);
 
-    /* QApplication */
-    s3sApplication app(argc, argv);
+    /* Handle DPI scaling on Windows */
+#if defined(Q_OS_WIN)
+    s3s_Application::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
+    /* create the sub3suite app */
+    s3s_Application s3s_app(argc, argv);
 
     /* splash screen */
     QPixmap splashImage = QPixmap(":/img/res/icons/splash.png");
@@ -97,8 +101,8 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     /* setting the app to the center of Screen on start */
-    int x = (app.desktop()->width()-w.width()) / 2;
-    int y = (app.desktop()->height()-w.height()) / 2;
+    int x = (s3s_app.desktop()->width()-w.width()) / 2;
+    int y = (s3s_app.desktop()->height()-w.height()) / 2;
     w.move(x, y-35);
     w.show();
 
@@ -110,5 +114,5 @@ int main(int argc, char *argv[])
 
     /* starting the app... */
     qInfo() << "starting sub3suite...";
-    return app.exec();
+    return s3s_app.exec();
 }

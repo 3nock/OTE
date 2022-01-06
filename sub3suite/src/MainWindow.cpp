@@ -219,6 +219,10 @@ void MainWindow::on_actionBlog_triggered(){
     QDesktopServices::openUrl(QUrl("https://3nock.github.io", QUrl::TolerantMode));
 }
 
+void MainWindow::on_actionTwitter_triggered(){
+    QDesktopServices::openUrl(QUrl("https://twitter.com/sub3suite", QUrl::TolerantMode));
+}
+
 void MainWindow::on_actionApiKeys_triggered(){
     ApiKeysDialog *apiKeys = new ApiKeysDialog(this);
     apiKeys->setAttribute(Qt::WA_DeleteOnClose, true);

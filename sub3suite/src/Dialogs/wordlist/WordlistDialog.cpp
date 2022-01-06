@@ -11,6 +11,10 @@ WordListDialog::WordListDialog(QWidget *parent, QStringListModel *wordlistModel)
 
     this->m_initChoose();
     this->m_initGenerate();
+
+    /* adjust the dialog size accordingly */
+    ui->toolBox->hide();
+    this->adjustSize();
 }
 WordListDialog::~WordListDialog(){
     delete ui;
@@ -21,4 +25,18 @@ void WordListDialog::on_tabWidget_currentChanged(int index){
     Q_UNUSED(index);
 
     /* adjust the dialog size accordingly */
+    switch (index) {
+    case 0: // Choose Tab
+        ui->toolBox->hide();
+        ui->groupBoxChoose->show();
+        break;
+    case 1: // Generate Tab
+        ui->toolBox->show();
+        ui->groupBoxChoose->hide();
+    }
+
+    ui->tabGenerate->adjustSize();
+    ui->tabChoose->adjustSize();
+    ui->tabWidget->adjustSize();
+    this->adjustSize();
 }

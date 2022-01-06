@@ -25,6 +25,7 @@ class WordListDialog : public QDialog{
 
     private slots:
         void on_tabWidget_currentChanged(int index);
+        void on_checkBoxNewCustomWordlist_clicked(bool checked);
         /* for choose */
         void on_buttonLoadChoosen_clicked();
         void on_buttonCreate_clicked();
@@ -34,6 +35,7 @@ class WordListDialog : public QDialog{
     private:
         Ui::WordListDialog *ui;
         QStringListModel *m_wordlistModel;
+
         /* for choose */
         void m_initChoose();
         QStringListModel *m_customWordlistModel;
@@ -41,8 +43,14 @@ class WordListDialog : public QDialog{
         QString m_specialWordlist;
         bool TLD = false;
         bool Subdomain = false;
+
         /* for generate */
         void m_initGenerate();
+        void m_generateAZ();
+        void m_generateNumbers();
+        void m_generateDate();
+        void m_generatePermutations();
+        void m_generateSubstitutions();
         QStringListModel *m_generateWordlistModel;
 };
 

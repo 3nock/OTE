@@ -2,6 +2,7 @@
 #include "ui_Brute.h"
 
 #include <QDateTime>
+#include <QDesktopWidget>
 #include "src/utils/Definitions.h"
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/dialogs/wordlist/WordlistDialog.h"
@@ -164,6 +165,12 @@ void Brute::on_buttonWordlist_clicked(){
 
     connect(wordlistDialog, &WordListDialog::wordlistLoaded, this, [=](){ui->wordlist->updateSize();});
     wordlistDialog->setAttribute( Qt::WA_DeleteOnClose, true );
+
+    /* adjust dialog to appear abit up */
+    int x = (qApp->desktop()->width()-wordlistDialog->width()) / 2;
+    int y = (qApp->desktop()->height()-wordlistDialog->height()) / 2;
+    wordlistDialog->move(x, y-100);
+
     wordlistDialog->show();
 }
 

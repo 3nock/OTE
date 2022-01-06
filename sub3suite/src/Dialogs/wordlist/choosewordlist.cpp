@@ -2,11 +2,13 @@
 #include "ui_WordlistDialog.h"
 
 #include "src/utils/Config.h"
+#include <QSpacerItem>
 
 
 void WordListDialog::m_initChoose(){
     ui->customWordlist->setListName("Custom Wordlist");
-    //ui->customWordlist->setListModel(m_customWordlistModel);
+    ui->customWordlist->setListModel(m_customWordlistModel);
+    ui->groupBoxCustomWordlist->hide();
 
     ui->lineEditName->setPlaceholderText("Enter custom wordlist Name...");
 }
@@ -53,6 +55,18 @@ void WordListDialog::initSubdomainWordlist(){
     Subdomain = true;
 }
 
+void WordListDialog::on_checkBoxNewCustomWordlist_clicked(bool checked){
+    if(checked)
+        ui->groupBoxCustomWordlist->show();
+    else
+        ui->groupBoxCustomWordlist->hide();
+
+    /* adjust the dialog size accordingly */
+    ui->tabChoose->adjustSize();
+    ui->tabWidget->adjustSize();
+    this->adjustSize();
+}
+
 void WordListDialog::on_buttonLoadChoosen_clicked(){
     QString choosenWordlistfFile;
 
@@ -78,6 +92,7 @@ void WordListDialog::on_buttonLoadChoosen_clicked(){
         }
         file.close();
     }
+
     emit wordlistLoaded();
     accept();
 }

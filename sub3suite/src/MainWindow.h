@@ -65,7 +65,9 @@ class MainWindow : public QMainWindow{
         void on_actionBannerTool_triggered();
         void on_actionDomainTool_triggered();
 
-    private:
+        void on_actionTwitter_triggered();
+
+private:
         Ip *ip = nullptr;
         Osint *osint = nullptr;
         Brute *brute = nullptr;
