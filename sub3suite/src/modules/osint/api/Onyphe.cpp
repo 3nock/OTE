@@ -53,9 +53,9 @@ Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("onyphe").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("onyphe").toString();
+    
 }
 Onyphe::~Onyphe(){
     delete manager;

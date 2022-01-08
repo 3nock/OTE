@@ -40,6 +40,7 @@ class InputWidget : public QWidget{
         void on_buttonLoad_clicked();
         void on_buttonAdd_clicked();
         void on_lineEdit_returnPressed();
+        void on_buttonPaste_clicked();
 };
 
 #endif // WORDLIST_H

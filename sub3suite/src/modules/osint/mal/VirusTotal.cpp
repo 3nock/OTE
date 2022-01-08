@@ -44,9 +44,9 @@ VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
     ///
     /// obtain apikey...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("virustotal").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("virustotal").toString();
+    
 }
 VirusTotal::~VirusTotal(){
     delete manager;

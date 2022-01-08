@@ -24,9 +24,9 @@ EmailCrawlr::EmailCrawlr(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api-key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("emailcrawlr").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("emailcrawlr").toString();
+    
 }
 EmailCrawlr::~EmailCrawlr(){
     delete manager;

@@ -18,9 +18,9 @@ Github::Github(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting the api-key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("github").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("github").toString();
+    
 }
 Github::~Github(){
     delete manager;

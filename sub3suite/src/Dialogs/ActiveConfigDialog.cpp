@@ -1,6 +1,8 @@
 #include "ActiveConfigDialog.h"
 #include "ui_ActiveConfigDialog.h"
 
+#include "src/utils/Config.h"
+
 
 /* for brute... */
 ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, brute::ScanConfig *config) :
@@ -11,13 +13,9 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, brute::ScanConfig *confi
 {
     ui->setupUi(this);
 
-    m_settings = new QSettings(QDir::currentPath()+"/config/brute.ini", QSettings::IniFormat);
     brute = true;
-
     this->m_initWidgets();
-    this->m_loadConfigValues();
-    this->m_loadCustomNameservers();
-    this->m_loadDefaultNameservers();
+    this->m_loadConfigBrute();
 }
 
 /* for active... */
@@ -29,13 +27,8 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, active::ScanConfig *conf
 {
     ui->setupUi(this);
 
-    m_settings = new QSettings(QDir::currentPath()+"/config/active.ini", QSettings::IniFormat);
     active = true;
-
     this->m_initWidgets();
-    this->m_loadConfigValues();
-    this->m_loadCustomNameservers();
-    this->m_loadDefaultNameservers();
 }
 
 /* for records... */
@@ -47,14 +40,8 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config)
 {
     ui->setupUi(this);
 
-    m_settings = new QSettings(QDir::currentPath()+"/config/dns.ini", QSettings::IniFormat);
     dns = true;
-
-    /* ... */
     this->m_initWidgets();
-    this->m_loadConfigValues();
-    this->m_loadCustomNameservers();
-    this->m_loadDefaultNameservers();
 }
 
 /* for SSL... */
@@ -66,13 +53,8 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
 {
     ui->setupUi(this);
 
-    m_settings = new QSettings(QDir::currentPath()+"/config/ssl.ini", QSettings::IniFormat);
     ssl = true;
-
     this->m_initWidgets();
-    this->m_loadConfigValues();
-    this->m_loadCustomNameservers();
-    this->m_loadDefaultNameservers();
 }
 
 /* for IP */
@@ -84,19 +66,13 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ip::ScanConfig *config) 
 {
     ui->setupUi(this);
 
-    m_settings = new QSettings(QDir::currentPath()+"/config/ip.ini", QSettings::IniFormat);
     ip = true;
-
     this->m_initWidgets();
-    this->m_loadConfigValues();
-    this->m_loadCustomNameservers();
-    this->m_loadDefaultNameservers();
 }
 
 ActiveConfigDialog::~ActiveConfigDialog(){
     delete ui;
     delete m_customNameserverListModel;
-    delete m_settings;
 }
 
 void ActiveConfigDialog::on_buttonCancel_clicked(){
@@ -135,25 +111,29 @@ void ActiveConfigDialog::m_initWidgets(){
     ui->customNameservers->setListModel(m_customNameserverListModel);
 }
 
-void ActiveConfigDialog::m_loadConfigValues(){
-    /* get config settings from config file... */
-    m_settings->beginGroup("Scan");
-    int timeout = m_settings->value("timeout").toInt();
-    int threads = m_settings->value("threads").toInt();
-    int maxLevel = m_settings->value("maxLevel").toInt();
-    bool wildcard = m_settings->value("wildcard").toBool();
-    bool useLevel = m_settings->value("useLevel").toInt();
-    QString record = m_settings->value("record").toString();
-    m_settings->endGroup();
+/* get config settings from config file... */
+void ActiveConfigDialog::m_loadConfigBrute(){
+    int timeout = CONFIG_BRUTE.value("timeout").toInt();
+    int threads = CONFIG_BRUTE.value("threads").toInt();
+    int maxLevel = CONFIG_BRUTE.value("maxLevel").toInt();
+    bool wildcard = CONFIG_BRUTE.value("wildcard").toBool();
+    bool useLevel = CONFIG_BRUTE.value("useLevel").toInt();
+    bool noDuplicates = CONFIG_BRUTE.value("noDuplicates").toBool();
+    bool autosaveToProject = CONFIG_BRUTE.value("autosaveToProject").toBool();
+    QString record = CONFIG_BRUTE.value("record").toString();
+    QString nsType = CONFIG_BRUTE.value("nameserverType").toString();
+    QString currentNameserver = CONFIG_BRUTE.value("nameserver").toString();
 
-    m_settings->beginGroup("Result");
-    bool noDuplicates = m_settings->value("noDuplicates").toBool();
-    bool autosaveToProject = m_settings->value("autosaveToProject").toBool();
-    m_settings->endGroup();
+    CONFIG_BRUTE.beginGroup("Default-Nameservers");
+    QStringList nameservers = CONFIG_BRUTE.allKeys();
+    CONFIG_BRUTE.endGroup();
 
-    m_settings->beginGroup("Current");
-    QString nsType = m_settings->value("nameserverType").toString();
-    m_settings->endGroup();
+    int size = CONFIG_BRUTE.beginReadArray("Custom-Nameservers");
+    for (int i = 0; i < size; ++i) {
+        CONFIG_BRUTE.setArrayIndex(i);
+        ui->customNameservers->add(CONFIG_BRUTE.value("value").toString());
+    }
+    CONFIG_BRUTE.endArray();
 
     /* set config to the widgets... */
     ui->lineEditTimeout->setText(QString::number(timeout));
@@ -178,35 +158,13 @@ void ActiveConfigDialog::m_loadConfigValues(){
     if(nsType == "custom")
         ui->radioButtonCustomNameservers->setChecked(true);
 
-}
-
-void ActiveConfigDialog::m_loadDefaultNameservers(){
-    m_settings->beginGroup("Default-Nameservers");
-    QStringList nameservers = m_settings->allKeys();
-    m_settings->endGroup();
-
-    m_settings->beginGroup("Current");
-    QString currentNameserver = m_settings->value("nameserver").toString();
-    m_settings->endGroup();
-
     ui->comboBoxSingleNameserver->addItems(nameservers);
     ui->comboBoxSingleNameserver->setCurrentText(currentNameserver);
 
 }
 
-void ActiveConfigDialog::m_loadCustomNameservers(){
-    int size = m_settings->beginReadArray("Custom-Nameservers");
-    for (int i = 0; i < size; ++i) {
-        m_settings->setArrayIndex(i);
-        ui->customNameservers->add(m_settings->value("value").toString());
-    }
-    m_settings->endArray();
-}
+/* saving configurations... */
 
-
-///
-/// saving configurations...
-///
 void ActiveConfigDialog::m_saveBrute(){
     /* get values... */
 
@@ -230,42 +188,36 @@ void ActiveConfigDialog::m_saveBrute(){
 
     /* saving values to config file... */
 
-    m_settings->beginGroup("Scan");
-    m_settings->setValue("threads", thread);
-    m_settings->setValue("timeout", timeout);
-    m_settings->setValue("maxlevel", maxlevel);
-    m_settings->setValue("useLevel", useLevel);
-    m_settings->setValue("wildcard", wildcard);
+    CONFIG_BRUTE.setValue("threads", thread);
+    CONFIG_BRUTE.setValue("timeout", timeout);
+    CONFIG_BRUTE.setValue("maxlevel", maxlevel);
+    CONFIG_BRUTE.setValue("useLevel", useLevel);
+    CONFIG_BRUTE.setValue("wildcard", wildcard);
+    CONFIG_BRUTE.setValue("noDuplicates", noDuplicates);
+    CONFIG_BRUTE.setValue("autosaveToProject", autosaveToProject);
+    CONFIG_BRUTE.setValue("nameserver", ui->comboBoxSingleNameserver->currentText());
+
+    if(nsSingle)
+        CONFIG_BRUTE.setValue("nameserverType", "single");
+    if(nsRandom)
+        CONFIG_BRUTE.setValue("nameserverType", "random");
+    if(nsCustom)
+        CONFIG_BRUTE.setValue("nameserverType", "custom");
+
     if(recordA)
-        m_settings->setValue("record", "A");
+        CONFIG_BRUTE.setValue("record", "A");
     if(recordAAAA)
-        m_settings->setValue("record", "AAAA");
+        CONFIG_BRUTE.setValue("record", "AAAA");
     if(recordCNAME)
-        m_settings->setValue("record", "CNAME");
-    m_settings->endGroup();
+        CONFIG_BRUTE.setValue("record", "CNAME");
 
-    m_settings->beginGroup("Result");
-    m_settings->setValue("noDuplicates", noDuplicates);
-    m_settings->setValue("autosaveToProject", autosaveToProject);
-    m_settings->endGroup();
-
-    m_settings->beginWriteArray("Custom-Nameservers");
+    CONFIG_BRUTE.beginWriteArray("Custom-Nameservers");
     QStringList customNameservers = m_customNameserverListModel->stringList();
     for (int i = 0; i < customNameservers.length(); ++i) {
-        m_settings->setArrayIndex(i);
-        m_settings->setValue("value", customNameservers.at(i));
+        CONFIG_BRUTE.setArrayIndex(i);
+        CONFIG_BRUTE.setValue("value", customNameservers.at(i));
     }
-    m_settings->endArray();
-
-    m_settings->beginGroup("Current");
-    m_settings->setValue("nameserver", ui->comboBoxSingleNameserver->currentText());
-    if(nsSingle)
-        m_settings->setValue("nameserverType", "single");
-    if(nsRandom)
-        m_settings->setValue("nameserverType", "random");
-    if(nsCustom)
-        m_settings->setValue("nameserverType", "custom");
-    m_settings->endGroup();
+    CONFIG_BRUTE.endArray();
 
     /* saving to brute::ScanConfig structure... */
 
@@ -287,26 +239,34 @@ void ActiveConfigDialog::m_saveBrute(){
 
     if(nsSingle){
         m_configBrute->nameservers.clear();
-        m_settings->beginGroup("Default-Nameservers");
-        QString nameserver = m_settings->value(ui->comboBoxSingleNameserver->currentText()).toString();
+        CONFIG_BRUTE.beginGroup("Default-Nameservers");
+        QString nameserver = CONFIG_BRUTE.value(ui->comboBoxSingleNameserver->currentText()).toString();
         m_configBrute->nameservers.append(nameserver);
-        m_settings->endGroup();
+        CONFIG_BRUTE.endGroup();
     }
     if(nsRandom){
         m_configBrute->nameservers.clear();
-        m_settings->beginGroup("Default-Nameservers");
-        QStringList nameservers = m_settings->allKeys();
+        CONFIG_BRUTE.beginGroup("Default-Nameservers");
+        QStringList nameservers = CONFIG_BRUTE.allKeys();
         foreach(const QString &key, nameservers){
-            QString nameserver = m_settings->value(key).toString();
+            QString nameserver = CONFIG_BRUTE.value(key).toString();
             m_configBrute->nameservers.append(nameserver);
         }
-        m_settings->endGroup();
+        CONFIG_BRUTE.endGroup();
     }
     if(nsCustom){
         m_configBrute->nameservers.clear();
         QStringList nameservers = m_customNameserverListModel->stringList();
         m_configBrute->nameservers = nameservers;
     }
+
+    /* save used nameservers to config file */
+    CONFIG_BRUTE.beginWriteArray("Nameservers");
+    for (int i = 0; i < m_configBrute->nameservers.length(); ++i) {
+        CONFIG_BRUTE.setArrayIndex(i);
+        CONFIG_BRUTE.setValue("value", m_configBrute->nameservers.at(i));
+    }
+    CONFIG_BRUTE.endArray();
 }
 
 void ActiveConfigDialog::m_saveActive(){

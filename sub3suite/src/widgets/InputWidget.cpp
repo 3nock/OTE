@@ -1,6 +1,8 @@
 #include "InputWidget.h"
 #include "ui_InputWidget.h"
 
+#include <QClipboard>
+
 
 InputWidget::InputWidget(QWidget *parent) : QWidget(parent), ui(new Ui::InputWidget)
 {
@@ -38,25 +40,25 @@ void InputWidget::add(const QString& item){
 }
 
 void InputWidget::add(QFile& file){
-    /* checks */
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+    /* get the stringList from model */
+    QStringList list(m_listModel->stringList());
+
+    /* loading wordlist from file to wordlist stringlistmodel */
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream in(&file);
+        while (!in.atEnd())
+            list.push_back(in.readLine());
+
+        file.close();
+    }
+    else
         QMessageBox::warning(this, "Error Ocurred!", "Failed To Open the File!");
-        return;
-    }
 
-    /* loading the file contents */
-    QString item;
-    QTextStream in(&file);
-    while (!in.atEnd())
-    {
-        item = in.readLine();
+    /* set the stringList to the model */
+    m_listModel->setStringList(list);
 
-        /* appending the item to the list */
-        if(m_listModel->insertRow(m_listModel->rowCount()))
-            m_listModel->setData(m_listModel->index(m_listModel->rowCount()-1, 0), item);
-    }
+    /* update count status */
     ui->labelCount->setNum(m_listModel->rowCount());
-    file.close();
 }
 
 void InputWidget::updateSize(){
@@ -70,26 +72,26 @@ void InputWidget::on_buttonLoad_clicked(){
         return;
     }
 
-    /* load file contents */
+    /* get the stringList from model */
+    QStringList list(m_listModel->stringList());
+
+    /* loading wordlist from file to wordlist stringlistmodel */
     QFile file(filename);
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream in(&file);
+        while (!in.atEnd())
+            list.push_back(in.readLine());
+
+        file.close();
+    }
+    else
         QMessageBox::warning(this, "Error Ocurred!", "Failed To Open the File!");
-        return;
-    }
 
-    /* loading the file contents */
-    QString item;
-    QTextStream in(&file);
-    while (!in.atEnd())
-    {
-        item = in.readLine();
+    /* set the stringList to the model */
+    m_listModel->setStringList(list);
 
-        /* appending the item to the list */
-        if(m_listModel->insertRow(m_listModel->rowCount()))
-            m_listModel->setData(m_listModel->index(m_listModel->rowCount()-1, 0), item);
-    }
+    /* update count status */
     ui->labelCount->setNum(m_listModel->rowCount());
-    file.close();
 }
 
 void InputWidget::on_buttonAdd_clicked(){
@@ -113,5 +115,22 @@ void InputWidget::on_buttonRemove_clicked(){
     for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
         m_listModel->removeRow(i->row());
 
+    ui->labelCount->setNum(m_listModel->rowCount());
+}
+
+void InputWidget::on_buttonPaste_clicked(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QStringList wordlist = clipboard->text().split("\n");
+
+    /* get the stringList from model */
+    QStringList list(m_listModel->stringList());
+
+    /* append clipboard data */
+    list.append(wordlist);
+
+    /* set the stringList to the model */
+    m_listModel->setStringList(list);
+
+    /* update count status */
     ui->labelCount->setNum(m_listModel->rowCount());
 }

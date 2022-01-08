@@ -16,9 +16,9 @@ EmailFormat::EmailFormat(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api-key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("emailformat").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("emailformat").toString();
+    
 }
 EmailFormat::~EmailFormat(){
     delete manager;

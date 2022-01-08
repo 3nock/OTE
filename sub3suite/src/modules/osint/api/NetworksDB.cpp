@@ -36,9 +36,9 @@ NetworksDB::NetworksDB(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("networksdb").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("networksdb").toString();
+    
 }
 NetworksDB::~NetworksDB(){
     delete manager;

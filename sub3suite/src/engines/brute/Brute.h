@@ -20,8 +20,7 @@ class Brute : public AbstractEngine{
 
     public slots:
         void onScanThreadEnded();
-        void onInfoLog(QString log);
-        void onErrorLog(QString log);
+        void onScanLog(brute::ScanLog log);
         void onResultSubdomain(QString subdomain, QString ip);
         void onResultTLD(QString tld, QString ip);
 
@@ -56,11 +55,15 @@ class Brute : public AbstractEngine{
         QSortFilterProxyModel *m_resultProxyModel;
 
         NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
+        /* ... */
+        void m_log(QString log);
+        void m_getConfigValues();
         /* for scan */
         void m_stopScan();
         void m_startScan();
         void m_pauseScan();
         void m_resumeScan();
+
 
         /* ... */
         QString targetFilterSubdomain(QString target);

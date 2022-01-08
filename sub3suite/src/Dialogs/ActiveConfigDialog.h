@@ -44,12 +44,9 @@ class ActiveConfigDialog : public QDialog{
         ip::ScanConfig *m_configIp = nullptr;
         /* ... */
         QStringListModel *m_customNameserverListModel;
-        QSettings *m_settings = nullptr;
         /* ... */
         void m_initWidgets();
-        void m_loadConfigValues();
-        void m_loadDefaultNameservers();
-        void m_loadCustomNameservers();
+        void m_loadConfigBrute();
         /* ... */
         void m_saveBrute();
         void m_saveActive();

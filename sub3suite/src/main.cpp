@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
     splash.finish(&w);
 
     /* setting configurations...*/
-    Config::generalConfig();
+    CONFIG;
 
     /* starting the app... */
     qInfo() << "starting sub3suite...";

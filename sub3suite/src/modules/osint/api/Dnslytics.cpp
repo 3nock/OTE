@@ -45,9 +45,9 @@ Dnslytics::Dnslytics(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoNS);
 
     /* getting api key... */
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value(OSINT_MODULE_DNSLYTICS).toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value(OSINT_MODULE_DNSLYTICS).toString();
+    
 }
 Dnslytics::~Dnslytics(){
     delete manager;

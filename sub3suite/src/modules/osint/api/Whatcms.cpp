@@ -18,9 +18,9 @@ Whatcms::Whatcms(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Whatcms::replyFinishedRawJson);
 
     /* getting api key... */
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("whatcms").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("whatcms").toString();
+    
 }
 Whatcms::~Whatcms(){
     delete manager;

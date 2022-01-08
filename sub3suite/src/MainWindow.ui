@@ -431,13 +431,16 @@ QProgressBar {
     text-align: center;
     color: black;
     border-width: 1px;
-    border-color: rgb(25,25,25);
+    border-color: rgb(20,20,20);
     border-style: inset;
-    background-color: rgb(50,50,50);
+    background-color: rgb(40,40,40);
+    height: 23px;
+    max-width: 200px;
+    min-width: 200px;
 }
 
 QProgressBar::chunk {
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(67, 67, 67, 255), stop:0.6 rgba(143, 143, 107, 160));
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(50, 50, 50, 255), stop:1 rgba(150, 150, 112, 200));
 }
 
 QMenuBar {
@@ -624,7 +627,7 @@ QRadioButton:hover {
       </property>
       <widget class="QWidget" name="tabPassive">
        <attribute name="title">
-        <string>Passive</string>
+        <string>PASSIVE</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="leftMargin">
@@ -654,7 +657,7 @@ QRadioButton:hover {
       </widget>
       <widget class="QWidget" name="tabActive">
        <attribute name="title">
-        <string>Active</string>
+        <string>ACTIVE</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <property name="leftMargin">
@@ -756,7 +759,14 @@ QRadioButton:hover {
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>20</height>
+    </size>
+   </property>
+  </widget>
   <action name="actionopen_project">
    <property name="text">
     <string>open</string>

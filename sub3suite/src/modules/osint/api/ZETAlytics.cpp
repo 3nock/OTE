@@ -17,9 +17,9 @@ ZETAlytics::ZETAlytics(ScanArgs args): AbstractOsintModule(args)
     ///
     /// get api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("zetalytics").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("zetalytics").toString();
+    
 }
 ZETAlytics::~ZETAlytics(){
     delete manager;

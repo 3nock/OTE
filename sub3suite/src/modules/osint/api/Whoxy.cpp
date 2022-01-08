@@ -19,9 +19,9 @@ Whoxy::Whoxy(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("whoxy").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("whoxy").toString();
+    
 }
 Whoxy::~Whoxy(){
     delete manager;

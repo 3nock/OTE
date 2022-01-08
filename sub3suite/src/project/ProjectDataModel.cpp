@@ -189,7 +189,7 @@ void ProjectDataModel::addActiveSubdomain(QStringList items){
     int prevSize = m_activeSubdomainSet.count();
     m_activeSubdomainSet.insert(items[0]);
     if(m_activeSubdomainSet.count() > prevSize)
-        m_activeSubdomains->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
+        m_activeSubdomains->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1])});
 }
 void ProjectDataModel::addPassiveSubdomain(QStringList items){
     int prevSize = m_passiveSubdomainSet.count();
@@ -202,7 +202,7 @@ void ProjectDataModel::addActiveTLD(QStringList items){
     int prevSize = m_activeTldSet.count();
     m_activeTldSet.insert(items[0]);
     if(m_activeTldSet.count() > prevSize)
-        m_activeTlds->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1]), new QStandardItem(items[2])});
+        m_activeTlds->appendRow({new QStandardItem(items[0]), new QStandardItem(items[1])});
 }
 
 void ProjectDataModel::addActiveWildcard(QStringList items){

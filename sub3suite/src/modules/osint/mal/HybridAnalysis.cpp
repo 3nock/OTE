@@ -14,9 +14,9 @@ HybridAnalysis::HybridAnalysis(ScanArgs args): AbstractOsintModule(args)
     ///
     /// get api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("hybridanalysis").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("hybridanalysis").toString();
+    
 }
 HybridAnalysis::~HybridAnalysis(){
     delete manager;

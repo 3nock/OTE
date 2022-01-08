@@ -44,10 +44,10 @@ DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
 
     /* getting api key... */
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("domaintools_key").toString();
-    m_username = Config::generalConfig().value("domaintools_username").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("domaintools_key").toString();
+    m_username = APIKEY.value("domaintools_username").toString();
+    
 }
 DomainTools::~DomainTools(){
     delete manager;

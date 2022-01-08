@@ -42,10 +42,10 @@ RiskIq::RiskIq(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api-key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_name = Config::generalConfig().value("riskiq_username").toString();
-    m_key = Config::generalConfig().value("riskiq_key").toString();
-    Config::generalConfig().endGroup();
+    
+    m_name = APIKEY.value("riskiq_username").toString();
+    m_key = APIKEY.value("riskiq_key").toString();
+    
 }
 RiskIq::~RiskIq(){
     delete manager;

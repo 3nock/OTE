@@ -14,9 +14,9 @@ EmailRep::EmailRep(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api-key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("emailrep").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("emailrep").toString();
+    
 }
 EmailRep::~EmailRep(){
     delete manager;

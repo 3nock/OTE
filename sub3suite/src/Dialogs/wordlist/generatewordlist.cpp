@@ -1,6 +1,9 @@
 #include "WordlistDialog.h"
 #include "ui_WordlistDialog.h"
 
+#include <QMap>
+#include <algorithm>
+
 
 void WordListDialog::m_initGenerate(){
     ui->generateWordlist->setListName("Wordlist");
@@ -12,7 +15,7 @@ void WordListDialog::m_initGenerate(){
     ui->lineEditPermutes->setPlaceholderText("No# of permutations e.g. 2");
 
     /* Range A-Z */
-    ui->lineEditAZPermutes->setPlaceholderText("No# of permutations e.g. 2");
+    ui->lineEditAZCombination->setPlaceholderText("No# of combinations e.g. 2");
     /* Range date */
     ui->lineEditDateFromDay->setPlaceholderText("dd");
     ui->lineEditDateFromMonth->setPlaceholderText("mm");
@@ -30,7 +33,7 @@ void WordListDialog::m_initGenerate(){
     ///
     ui->lineEditPermutes->setValidator(new QIntValidator(1, 10, this));
     /* Range A-Z */
-    ui->lineEditAZPermutes->setValidator(new QIntValidator(1, 10, this));
+    ui->lineEditAZCombination->setValidator(new QIntValidator(1, 10, this));
     /* Range date */
     ui->lineEditDateFromDay->setValidator(new QIntValidator(1, 31, this));
     ui->lineEditDateFromMonth->setValidator(new QIntValidator(1, 12, this));
@@ -38,6 +41,11 @@ void WordListDialog::m_initGenerate(){
     ui->lineEditDateToDay->setValidator(new QIntValidator(1, 31, this));
     ui->lineEditDateToMonth->setValidator(new QIntValidator(1, 12, this));
     ui->lineEditDateToYear->setValidator(new QIntValidator(0, 3000, this));
+
+    ///
+    /// setting default values...
+    ///
+    ui->lineEditAZCombination->setText("1");
 }
 
 void WordListDialog::on_buttonGenerate_clicked(){
@@ -59,23 +67,38 @@ void WordListDialog::on_buttonGenerate_clicked(){
 }
 
 void WordListDialog::m_generateAZ(){
+    int numberOfCombinations = ui->lineEditAZCombination->text().toInt();
     QStringList alphabet{"a","b","c","d","e","f","g","h","i","j","k","l","m",
-                         "n","o","p","q","r","s","t","u","v","w","x","y","z"};
+                        "n","o","p","q","r","s","t","u","v","w","x","y","z"};
 
-    if(ui->checkBoxAZPermute->isChecked())
-    {
-        //int permutes = ui->lineEditAZPermutes->text().toInt();
+    /* get the stringList from model */
+    QStringList list(m_wordlistModel->stringList());
 
-    }
-    else
-    {
-        foreach(const QString &item, alphabet)
+    QStringList combinedList;
+    for(int i = 0; i < numberOfCombinations; i++){
+        if(i == 0)
+            combinedList = alphabet;
+        else
         {
-            if(m_wordlistModel->insertRow(m_wordlistModel->rowCount()))
-                m_wordlistModel->setData(m_wordlistModel->index(m_wordlistModel->rowCount()-1, 0), item);
+            QStringList _combinedList;
+            for(int j = 0; j < combinedList.length(); j++){
+                foreach(const QString &letter, alphabet)
+                    _combinedList.push_back(combinedList.at(j)+letter);
+            }
+
+            /* if not exact combine count needed append the already generated combination */
+            if(!ui->checkBoxExactCombination->isChecked())
+                list.append(combinedList);
+
+            combinedList = _combinedList;
         }
     }
 
+    /* append the created string to the list */
+    list.append(combinedList);
+
+    /* set the stringList to the model */
+    m_wordlistModel->setStringList(list);
 }
 
 void WordListDialog::m_generateNumbers(){
@@ -83,11 +106,14 @@ void WordListDialog::m_generateNumbers(){
     int to = ui->lineEditNumbersTo->text().toInt();
     int skip = ui->lineEditNumbersSkip->text().toInt();
 
+    /* get the stringList from model */
+    QStringList list(m_wordlistModel->stringList());
+
     for(int i = from; i <= to; i += skip)
-    {
-        if(m_wordlistModel->insertRow(m_wordlistModel->rowCount()))
-            m_wordlistModel->setData(m_wordlistModel->index(m_wordlistModel->rowCount()-1, 0), QString::number(i));
-    }
+        list.push_back(QString::number(i));
+
+    /* set the stringList to the model */
+    m_wordlistModel->setStringList(list);
 }
 
 /*
@@ -119,6 +145,9 @@ void WordListDialog::m_generateDate(){
     case 3:
         join = "";
     }
+
+    /* get the stringList from model */
+    QStringList list(m_wordlistModel->stringList());
 
     /* iterating through the date */
     for(int year = fromYear; year <= toYear; year++)
@@ -174,20 +203,89 @@ void WordListDialog::m_generateDate(){
             }
 
             for(int day = _fromDay; day <= _toDay; day++)
-            {
-                if(m_wordlistModel->insertRow(m_wordlistModel->rowCount()))
-                    m_wordlistModel->setData(m_wordlistModel->index(m_wordlistModel->rowCount()-1, 0),
-                                             QString::number(day)+join+QString::number(month)+join+QString::number(year));
-            }
-
+                list.push_back(QString::number(day)+join+
+                               QString::number(month)+join+
+                               QString::number(year));
         }
     }
+
+    /* set the stringList to the model */
+    m_wordlistModel->setStringList(list);
 }
 
 void WordListDialog::m_generatePermutations(){
+    int numberOfPermuations = ui->lineEditPermutes->text().toInt();
+    QStringList targets(m_generateWordlistModel->stringList());
 
+    /* get the stringList from model */
+    QStringList list(m_wordlistModel->stringList());
+
+    do{
+        /* creating the permutated string by appending */
+        QString item("");
+        for(int i = 0; i < numberOfPermuations; i++)
+            item += targets.at(i);
+
+        /* append the created string to the list */
+        list.push_back(item);
+    } while (std::next_permutation(targets.begin(), targets.end()));
+
+    /* set the stringList to the model */
+    m_wordlistModel->setStringList(list);
 }
 
 void WordListDialog::m_generateSubstitutions(){
+    QMap<QString, QStringList> Homoglyphs{{"a",{"@","à","á","â","ã","ä","å"}},
+                                          {"b",{"8","ß","ʙ","β","В","Ь","Ᏼ","ᛒ","Ｂ","ｂ"}},
+                                          {"c",{"("}},
+                                          {"d",{"Ď","ď","Đ","đ","ԁ","ժ"}},
+                                          {"e",{"3","È","É" ,"Ê","Ë","é","ê","ë","Ē","ē","Ĕ","ĕ","Ė","ė","Ę","Ě","ě"}},
+                                          {"f",{"7"}},
+                                          {"g",{"q"}},
+                                          {"h",{}},
+                                          {"i",{"1","l","1"}},
+                                          {"j",{}},
+                                          {"k",{}},
+                                          {"l",{}},
+                                          {"m",{}},
+                                          {"n",{}},
+                                          {"o",{}},
+                                          {"p",{}},
+                                          {"q",{}},
+                                          {"r",{}},
+                                          {"s",{}},
+                                          {"t",{}},
+                                          {"u",{}},
+                                          {"v",{}},
+                                          {"w",{}},
+                                          {"x",{}},
+                                          {"y",{}},
+                                          {"z",{}}};
 
+    QMap<QString, QStringList> Substitutions{{"a",{"@"}},
+                                          {"b",{"8"}},
+                                          {"c",{"("}},
+                                          {"d",{}},
+                                          {"e",{"3"}},
+                                          {"f",{"7"}},
+                                          {"g",{"q"}},
+                                          {"h",{}},
+                                          {"i",{"1","l","1"}},
+                                          {"j",{}},
+                                          {"k",{}},
+                                          {"l",{}},
+                                          {"m",{}},
+                                          {"n",{}},
+                                          {"o",{}},
+                                          {"p",{}},
+                                          {"q",{}},
+                                          {"r",{}},
+                                          {"s",{}},
+                                          {"t",{}},
+                                          {"u",{}},
+                                          {"v",{}},
+                                          {"w",{}},
+                                          {"x",{}},
+                                          {"y",{}},
+                                          {"z",{}}};
 }

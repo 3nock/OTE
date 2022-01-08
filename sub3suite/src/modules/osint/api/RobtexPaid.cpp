@@ -28,9 +28,9 @@ RobtexPaid::RobtexPaid(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("robtex").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("robtex").toString();
+    
 }
 RobtexPaid::~RobtexPaid(){
     delete manager;

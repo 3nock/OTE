@@ -6,6 +6,7 @@
 #include <QUrl>
 #include <QDesktopServices>
 
+
 /*
  * TODO: fix hunter..
  *       add more api keys..
@@ -24,76 +25,72 @@ ApiKeysDialog::~ApiKeysDialog(){
 }
 
 void ApiKeysDialog::on_buttonSave_clicked(){
-    Config::generalConfig().beginGroup("api-keys");
-    //....
-    Config::generalConfig().setValue("bing", ui->lineEditBing->text());
-    Config::generalConfig().setValue("censys_id", ui->lineEditCensysId->text());
-    Config::generalConfig().setValue("censys_secret", ui->lineEditCensysSecret->text());
-    Config::generalConfig().setValue("certspotter", ui->lineEditCertspotter->text());
-    Config::generalConfig().setValue("cloudflare", ui->lineEditCloudflare->text());
-    Config::generalConfig().setValue("github", ui->lineEditGithub->text());
-    Config::generalConfig().setValue("google", ui->lineEditGoogle->text());
-    Config::generalConfig().setValue("hunter", ui->lineEditHunter->text());
-    Config::generalConfig().setValue("intelx", ui->lineEditIntelX->text());
-    Config::generalConfig().setValue("pentesttools", ui->lineEditPentestTools->text());
-    Config::generalConfig().setValue("projectdiscovery", ui->lineEditProjectDiscovery->text());
-    Config::generalConfig().setValue("riskiq_key", ui->lineEditRiskIqKey->text());
-    Config::generalConfig().setValue("riskiq_username", ui->lineEditRiskIqUsername->text());
-    Config::generalConfig().setValue("securitytrails", ui->lineEditSecurityTrails->text());
-    Config::generalConfig().setValue("shodan", ui->lineEditShodan->text());
-    Config::generalConfig().setValue("spyse", ui->lineEditSpyse->text());
-    Config::generalConfig().setValue("virustotal", ui->lineEditVirusTotal->text());
-    Config::generalConfig().setValue(OSINT_MODULE_BINARYEDGE, ui->lineEditBinaryEdge->text());
-    Config::generalConfig().setValue(OSINT_MODULE_C99, ui->lineEditC99->text());
-    Config::generalConfig().setValue("ipapi", ui->lineEditIpApi->text());
-    Config::generalConfig().setValue("ipinfo", ui->lineEditIpInfo->text());
-    Config::generalConfig().setValue("threatbook", ui->lineEditThreatBook->text());
-    Config::generalConfig().setValue("whoisxmlapi", ui->lineEditWhoisXmlApi->text());
-    Config::generalConfig().setValue("zoomeye", ui->lineEditZoomEye->text());
-    Config::generalConfig().setValue("viewdns", ui->lineEditViewDns->text());
-    Config::generalConfig().setValue("hackertarget", ui->lineEditHackerTarget->text());
-    Config::generalConfig().setValue("webresolver", ui->lineEditWebResolver->text());
-    Config::generalConfig().setValue("circlUser", ui->lineEditCirclUser->text());
-    Config::generalConfig().setValue("circlPwd", ui->lineEditCirclPwd->text());
-    Config::generalConfig().setValue("mnemonic", ui->lineEditMnemonic->text());
-    Config::generalConfig().setValue("robtex", ui->lineEditRobtex->text());
-    Config::generalConfig().setValue("otx", ui->lineEditRobtex->text());
-    Config::generalConfig().setValue(OSINT_MODULE_BUILTWITH, ui->lineEditBuiltWith->text());
-    Config::generalConfig().setValue(OSINT_MODULE_DNSLYTICS, ui->lineEditDnslytics->text());
-    Config::generalConfig().setValue("domaintools_username", ui->lineEditDomainToolsUsername->text());
-    Config::generalConfig().setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
-    Config::generalConfig().setValue("onyphe", ui->lineEditOnyphe->text());
-    Config::generalConfig().setValue("fullhunt", ui->lineEditFullHunt->text());
-    Config::generalConfig().setValue("spamhaus", ui->lineEditSpamHaus->text());
-    Config::generalConfig().setValue("debounce", ui->lineEditDebounce->text());
-    Config::generalConfig().setValue("haveibeenpwned", ui->lineEditHaveIBeenPawned->text());
-    Config::generalConfig().setValue("host", ui->lineEditHost->text());
-    Config::generalConfig().setValue("jsonwhois", ui->lineEditJsonWhois->text());
-    Config::generalConfig().setValue("leakix", ui->lineEditLeakIX->text());
-    Config::generalConfig().setValue("networksdb", ui->lineEditNetworksDB->text());
-    Config::generalConfig().setValue("neutrinoapi_key", ui->lineEditNeutrinoApiKey->text());
-    Config::generalConfig().setValue("neutrinoapi_uid", ui->lineEditNeutrinoApiUID->text());
-    Config::generalConfig().setValue("seon", ui->lineEditSeon->text());
-    Config::generalConfig().setValue("spyonweb", ui->lineEditSpyOnWeb->text());
-    Config::generalConfig().setValue("whatcms", ui->lineEditWhatcms->text());
-    Config::generalConfig().setValue("whoxy", ui->lineEditWhoxy->text());
-    Config::generalConfig().setValue("emailcrawlr", ui->lineEditEmailCrawlr->text());
-    Config::generalConfig().setValue("emailformat", ui->lineEditEmailFormat->text());
-    Config::generalConfig().setValue("emailrep", ui->lineEditEmailRep->text());
-    Config::generalConfig().setValue("snov", ui->lineEditSnov->text());
-    Config::generalConfig().setValue("ipdata", ui->lineEditIpData->text());
-    Config::generalConfig().setValue("ipgeolocation", ui->lineEditIpGeoLocation->text());
-    Config::generalConfig().setValue("ipregistry", ui->lineEditIpRegistry->text());
-    Config::generalConfig().setValue("ipstack", ui->lineEditIpStack->text());
-    Config::generalConfig().setValue("abuseipdb", ui->lineEditAbuseIPDB->text());
-    Config::generalConfig().setValue("fraudguard_user", ui->lineEditFraudGuardUser->text());
-    Config::generalConfig().setValue("fraudguard_pass", ui->lineEditFraudGuardPass->text());
-    Config::generalConfig().setValue("hybridanalysis", ui->lineEditHybridAnalysis->text());
-    Config::generalConfig().setValue("ipqualityscore", ui->lineEditIpQualityScore->text());
-    Config::generalConfig().setValue("leaklookup", ui->lineEditLeakLookup->text());
-    Config::generalConfig().setValue("wappalyzer", ui->lineEditWappalyzer->text());
-    //...
-    Config::generalConfig().endGroup();
+    APIKEY.setValue("bing", ui->lineEditBing->text());
+    APIKEY.setValue("censys_id", ui->lineEditCensysId->text());
+    APIKEY.setValue("censys_secret", ui->lineEditCensysSecret->text());
+    APIKEY.setValue("certspotter", ui->lineEditCertspotter->text());
+    APIKEY.setValue("cloudflare", ui->lineEditCloudflare->text());
+    APIKEY.setValue("github", ui->lineEditGithub->text());
+    APIKEY.setValue("google", ui->lineEditGoogle->text());
+    APIKEY.setValue("hunter", ui->lineEditHunter->text());
+    APIKEY.setValue("intelx", ui->lineEditIntelX->text());
+    APIKEY.setValue("pentesttools", ui->lineEditPentestTools->text());
+    APIKEY.setValue("projectdiscovery", ui->lineEditProjectDiscovery->text());
+    APIKEY.setValue("riskiq_key", ui->lineEditRiskIqKey->text());
+    APIKEY.setValue("riskiq_username", ui->lineEditRiskIqUsername->text());
+    APIKEY.setValue("securitytrails", ui->lineEditSecurityTrails->text());
+    APIKEY.setValue("shodan", ui->lineEditShodan->text());
+    APIKEY.setValue("spyse", ui->lineEditSpyse->text());
+    APIKEY.setValue("virustotal", ui->lineEditVirusTotal->text());
+    APIKEY.setValue(OSINT_MODULE_BINARYEDGE, ui->lineEditBinaryEdge->text());
+    APIKEY.setValue(OSINT_MODULE_C99, ui->lineEditC99->text());
+    APIKEY.setValue("ipapi", ui->lineEditIpApi->text());
+    APIKEY.setValue("ipinfo", ui->lineEditIpInfo->text());
+    APIKEY.setValue("threatbook", ui->lineEditThreatBook->text());
+    APIKEY.setValue("whoisxmlapi", ui->lineEditWhoisXmlApi->text());
+    APIKEY.setValue("zoomeye", ui->lineEditZoomEye->text());
+    APIKEY.setValue("viewdns", ui->lineEditViewDns->text());
+    APIKEY.setValue("hackertarget", ui->lineEditHackerTarget->text());
+    APIKEY.setValue("webresolver", ui->lineEditWebResolver->text());
+    APIKEY.setValue("circlUser", ui->lineEditCirclUser->text());
+    APIKEY.setValue("circlPwd", ui->lineEditCirclPwd->text());
+    APIKEY.setValue("mnemonic", ui->lineEditMnemonic->text());
+    APIKEY.setValue("robtex", ui->lineEditRobtex->text());
+    APIKEY.setValue("otx", ui->lineEditRobtex->text());
+    APIKEY.setValue(OSINT_MODULE_BUILTWITH, ui->lineEditBuiltWith->text());
+    APIKEY.setValue(OSINT_MODULE_DNSLYTICS, ui->lineEditDnslytics->text());
+    APIKEY.setValue("domaintools_username", ui->lineEditDomainToolsUsername->text());
+    APIKEY.setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
+    APIKEY.setValue("onyphe", ui->lineEditOnyphe->text());
+    APIKEY.setValue("fullhunt", ui->lineEditFullHunt->text());
+    APIKEY.setValue("spamhaus", ui->lineEditSpamHaus->text());
+    APIKEY.setValue("debounce", ui->lineEditDebounce->text());
+    APIKEY.setValue("haveibeenpwned", ui->lineEditHaveIBeenPawned->text());
+    APIKEY.setValue("host", ui->lineEditHost->text());
+    APIKEY.setValue("jsonwhois", ui->lineEditJsonWhois->text());
+    APIKEY.setValue("leakix", ui->lineEditLeakIX->text());
+    APIKEY.setValue("networksdb", ui->lineEditNetworksDB->text());
+    APIKEY.setValue("neutrinoapi_key", ui->lineEditNeutrinoApiKey->text());
+    APIKEY.setValue("neutrinoapi_uid", ui->lineEditNeutrinoApiUID->text());
+    APIKEY.setValue("seon", ui->lineEditSeon->text());
+    APIKEY.setValue("spyonweb", ui->lineEditSpyOnWeb->text());
+    APIKEY.setValue("whatcms", ui->lineEditWhatcms->text());
+    APIKEY.setValue("whoxy", ui->lineEditWhoxy->text());
+    APIKEY.setValue("emailcrawlr", ui->lineEditEmailCrawlr->text());
+    APIKEY.setValue("emailformat", ui->lineEditEmailFormat->text());
+    APIKEY.setValue("emailrep", ui->lineEditEmailRep->text());
+    APIKEY.setValue("snov", ui->lineEditSnov->text());
+    APIKEY.setValue("ipdata", ui->lineEditIpData->text());
+    APIKEY.setValue("ipgeolocation", ui->lineEditIpGeoLocation->text());
+    APIKEY.setValue("ipregistry", ui->lineEditIpRegistry->text());
+    APIKEY.setValue("ipstack", ui->lineEditIpStack->text());
+    APIKEY.setValue("abuseipdb", ui->lineEditAbuseIPDB->text());
+    APIKEY.setValue("fraudguard_user", ui->lineEditFraudGuardUser->text());
+    APIKEY.setValue("fraudguard_pass", ui->lineEditFraudGuardPass->text());
+    APIKEY.setValue("hybridanalysis", ui->lineEditHybridAnalysis->text());
+    APIKEY.setValue("ipqualityscore", ui->lineEditIpQualityScore->text());
+    APIKEY.setValue("leaklookup", ui->lineEditLeakLookup->text());
+    APIKEY.setValue("wappalyzer", ui->lineEditWappalyzer->text());
     accept();
 }
 
@@ -103,344 +100,341 @@ void ApiKeysDialog::on_buttonCancel_clicked(){
 
 void ApiKeysDialog::m_loadApiKeys(){
     QString key;
-    Config::generalConfig().beginGroup("api-keys");
-    ///
-    /// loading the keys....
-    ///
-    key= Config::generalConfig().value("bing").toString();
+
+    /* loading the keys.... */
+    key = APIKEY.value("bing").toString();
     if(!key.isEmpty()){
         ui->lineEditBing->setText(key);
         ui->buttonGetBing->hide();
     }
-    key = Config::generalConfig().value("censys_id").toString();
+    key = APIKEY.value("censys_id").toString();
     if(!key.isEmpty()){
         ui->lineEditCensysId->setText(key);
         ui->buttonGetCensys->hide();
     }
-    key = Config::generalConfig().value("censys_secret").toString();
+    key = APIKEY.value("censys_secret").toString();
     if(!key.isEmpty()){
         ui->lineEditCensysSecret->setText(key);
         ui->buttonGetCensys->hide();
     }
-    key = Config::generalConfig().value("certspotter").toString();
+    key = APIKEY.value("certspotter").toString();
     if(!key.isEmpty()){
         ui->lineEditCertspotter->setText(key);
         ui->buttonGetCertspotter->hide();
     }
-    key = Config::generalConfig().value("cloudflare").toString();
+    key = APIKEY.value("cloudflare").toString();
     if(!key.isEmpty()){
         ui->lineEditCloudflare->setText(key);
         ui->buttonGetCloudflare->hide();
     }
-    key = Config::generalConfig().value("github").toString();
+    key = APIKEY.value("github").toString();
     if(!key.isEmpty()){
         ui->lineEditGithub->setText(key);
         ui->buttonGetGithub->hide();
     }
-    key = Config::generalConfig().value("google").toString();
+    key = APIKEY.value("google").toString();
     if(!key.isEmpty()){
         ui->lineEditGoogle->setText(key);
         ui->buttonGetGoogle->hide();
     }
-    key = Config::generalConfig().value("hunter").toString();
+    key = APIKEY.value("hunter").toString();
     if(!key.isEmpty()){
         ui->lineEditHunter->setText(key);
         ui->buttonGetHunter->hide();
     }
-    key = Config::generalConfig().value("intelx").toString();
+    key = APIKEY.value("intelx").toString();
     if(!key.isEmpty()){
         ui->lineEditIntelX->setText(key);
         ui->buttonGetIntelX->hide();
     }
-    key = Config::generalConfig().value("pentesttools").toString();
+    key = APIKEY.value("pentesttools").toString();
     if(!key.isEmpty()){
         ui->lineEditPentestTools->setText(key);
         ui->buttonGetPentestTools->hide();
     }
-    key = Config::generalConfig().value("projectdiscovery").toString();
+    key = APIKEY.value("projectdiscovery").toString();
     if(!key.isEmpty()){
         ui->lineEditProjectDiscovery->setText(key);
         ui->buttonGetProjectDiscovery->hide();
     }
-    key = Config::generalConfig().value("riskiq_key").toString();
+    key = APIKEY.value("riskiq_key").toString();
     if(!key.isEmpty()){
         ui->lineEditRiskIqKey->setText(key);
     }
-    key = Config::generalConfig().value("riskiq_username").toString();
+    key = APIKEY.value("riskiq_username").toString();
     if(!key.isEmpty()){
         ui->lineEditRiskIqUsername->setText(key);
         ui->buttonGetRiskIq->hide();
     }
-    key = Config::generalConfig().value("securitytrails").toString();
+    key = APIKEY.value("securitytrails").toString();
     if(!key.isEmpty()){
         ui->lineEditSecurityTrails->setText(key);
         ui->buttonGetSecurityTrails->hide();
     }
-    key = Config::generalConfig().value("shodan").toString();
+    key = APIKEY.value("shodan").toString();
     if(!key.isEmpty()){
         ui->lineEditShodan->setText(key);
         ui->buttonGetShodan->hide();
     }
-    key = Config::generalConfig().value("spyse").toString();
+    key = APIKEY.value("spyse").toString();
     if(!key.isEmpty()){
         ui->lineEditSpyse->setText(key);
         ui->buttonGetSpyse->hide();
     }
-    key = Config::generalConfig().value("virustotal").toString();
+    key = APIKEY.value("virustotal").toString();
     if(!key.isEmpty()){
         ui->lineEditVirusTotal->setText(key);
         ui->buttonGetVirusTotal->hide();
     }
-    key = Config::generalConfig().value(OSINT_MODULE_BINARYEDGE).toString();
+    key = APIKEY.value(OSINT_MODULE_BINARYEDGE).toString();
     if(!key.isEmpty()){
         ui->lineEditBinaryEdge->setText(key);
         ui->buttonGetBinaryEdge->hide();
     }
-    key = Config::generalConfig().value(OSINT_MODULE_C99).toString();
+    key = APIKEY.value(OSINT_MODULE_C99).toString();
     if(!key.isEmpty()){
         ui->lineEditC99->setText(key);
         ui->buttonGetC99->hide();
     }
-    key = Config::generalConfig().value("ipinfo").toString();
+    key = APIKEY.value("ipinfo").toString();
     if(!key.isEmpty()){
         ui->lineEditIpInfo->setText(key);
         ui->buttonGetIpInfo->hide();
     }
-    key = Config::generalConfig().value("threatbook").toString();
+    key = APIKEY.value("threatbook").toString();
     if(!key.isEmpty()){
         ui->lineEditThreatBook->setText(key);
         ui->buttonGetThreatBook->hide();
     }
-    key = Config::generalConfig().value("whoisxmlapi").toString();
+    key = APIKEY.value("whoisxmlapi").toString();
     if(!key.isEmpty()){
         ui->lineEditWhoisXmlApi->setText(key);
         ui->buttonGetWhoisXmlApi->hide();
     }
-    key = Config::generalConfig().value("zetalytics").toString();
+    key = APIKEY.value("zetalytics").toString();
     if(!key.isEmpty()){
         ui->lineEditZETAlytics->setText(key);
         ui->buttonGetZETAlytics->hide();
     }
-    key = Config::generalConfig().value("zoomeye").toString();
+    key = APIKEY.value("zoomeye").toString();
     if(!key.isEmpty()){
         ui->lineEditZoomEye->setText(key);
         ui->buttonGetZoomEye->hide();
     }
-    key = Config::generalConfig().value("ipapi").toString();
+    key = APIKEY.value("ipapi").toString();
     if(!key.isEmpty()){
         ui->lineEditIpApi->setText(key);
         ui->buttonGetIpApi->hide();
     }
-    key = Config::generalConfig().value("viewdns").toString();
+    key = APIKEY.value("viewdns").toString();
     if(!key.isEmpty()){
         ui->lineEditViewDns->setText(key);
         ui->buttonGetViewDns->hide();
     }
-    key = Config::generalConfig().value("hackertarget").toString();
+    key = APIKEY.value("hackertarget").toString();
     if(!key.isEmpty()){
         ui->lineEditHackerTarget->setText(key);
         ui->buttonGetHackerTarget->hide();
     }
-    key = Config::generalConfig().value("webresolver").toString();
+    key = APIKEY.value("webresolver").toString();
     if(!key.isEmpty()){
         ui->lineEditWebResolver->setText(key);
         ui->buttonGetWebResolver->hide();
     }
-    key = Config::generalConfig().value("circlUser").toString();
+    key = APIKEY.value("circlUser").toString();
     if(!key.isEmpty()){
         ui->lineEditCirclUser->setText(key);
         /*
          */
     }
-    key = Config::generalConfig().value("circlPwd").toString();
+    key = APIKEY.value("circlPwd").toString();
     if(!key.isEmpty()){
         ui->lineEditCirclPwd->setText(key);
         ui->buttonGetCircl->hide();
     }
-    key = Config::generalConfig().value("mnemonic").toString();
+    key = APIKEY.value("mnemonic").toString();
     if(!key.isEmpty()){
         ui->lineEditMnemonic->setText(key);
         ui->buttonGetMnemonic->hide();
     }
-    key = Config::generalConfig().value("robtex").toString();
+    key = APIKEY.value("robtex").toString();
     if(!key.isEmpty()){
         ui->lineEditRobtex->setText(key);
         ui->buttonGetRobtex->hide();
     }
-    key = Config::generalConfig().value("otx").toString();
+    key = APIKEY.value("otx").toString();
     if(!key.isEmpty()){
         ui->lineEditOtx->setText(key);
         ui->buttonGetOtx->hide();
     }
-    key = Config::generalConfig().value(OSINT_MODULE_BUILTWITH).toString();
+    key = APIKEY.value(OSINT_MODULE_BUILTWITH).toString();
     if(!key.isEmpty()){
         ui->lineEditBuiltWith->setText(key);
         ui->buttonGetBuiltWith->hide();
     }
-    key = Config::generalConfig().value(OSINT_MODULE_DNSLYTICS).toString();
+    key = APIKEY.value(OSINT_MODULE_DNSLYTICS).toString();
     if(!key.isEmpty()){
         ui->lineEditDnslytics->setText(key);
         ui->buttonGetDnslytics->hide();
     }
-    key = Config::generalConfig().value("domaintools_username").toString();
+    key = APIKEY.value("domaintools_username").toString();
     if(!key.isEmpty()){
         ui->lineEditDomainToolsUsername->setText(key);
         ui->buttonGetDomainTools->hide();
     }
-    key = Config::generalConfig().value("domaintools_key").toString();
+    key = APIKEY.value("domaintools_key").toString();
     if(!key.isEmpty()){
         ui->lineEditDomainToolsKey->setText(key);
         ui->buttonGetDomainTools->hide();
     }
-    key = Config::generalConfig().value("onyphe").toString();
+    key = APIKEY.value("onyphe").toString();
     if(!key.isEmpty()){
         ui->lineEditOnyphe->setText(key);
         ui->buttonGetOnyphe->hide();
     }
-    key = Config::generalConfig().value("fullhunt").toString();
+    key = APIKEY.value("fullhunt").toString();
     if(!key.isEmpty()){
         ui->lineEditFullHunt->setText(key);
         ui->buttonGetFullHunt->hide();
     }
-    key = Config::generalConfig().value("spamhaus").toString();
+    key = APIKEY.value("spamhaus").toString();
     if(!key.isEmpty()){
         ui->lineEditSpamHaus->setText(key);
         ui->buttonGetSpamHaus->hide();
     }
-    key = Config::generalConfig().value("debounce").toString();
+    key = APIKEY.value("debounce").toString();
     if(!key.isEmpty()){
         ui->lineEditDebounce->setText(key);
         ui->buttonGetDebounce->hide();
     }
-    key = Config::generalConfig().value("haveibeenpwned").toString();
+    key = APIKEY.value("haveibeenpwned").toString();
     if(!key.isEmpty()){
         ui->lineEditHaveIBeenPawned->setText(key);
         ui->buttonGetHaveIBeenPawned->hide();
     }
-    key = Config::generalConfig().value("host").toString();
+    key = APIKEY.value("host").toString();
     if(!key.isEmpty()){
         ui->lineEditHost->setText(key);
         ui->buttonGetHost->hide();
     }
-    key = Config::generalConfig().value("jsonwhois").toString();
+    key = APIKEY.value("jsonwhois").toString();
     if(!key.isEmpty()){
         ui->lineEditJsonWhois->setText(key);
         ui->buttonGetJsonWhois->hide();
     }
-    key = Config::generalConfig().value("leakix").toString();
+    key = APIKEY.value("leakix").toString();
     if(!key.isEmpty()){
         ui->lineEditLeakIX->setText(key);
         ui->buttonGetLeakIX->hide();
     }
-    key = Config::generalConfig().value("networksdb").toString();
+    key = APIKEY.value("networksdb").toString();
     if(!key.isEmpty()){
         ui->lineEditNetworksDB->setText(key);
         ui->buttonGetNetworksDB->hide();
     }
     //...
-    key = Config::generalConfig().value("neutrinoapi_key").toString();
-    QString uid = Config::generalConfig().value("neutrinoapi_uid").toString();
+    key = APIKEY.value("neutrinoapi_key").toString();
+    QString uid = APIKEY.value("neutrinoapi_uid").toString();
     if(!key.isEmpty() && !uid.isEmpty()){
         ui->lineEditNeutrinoApiKey->setText(key);
         ui->lineEditNeutrinoApiUID->setText(uid);
         ui->buttonGetNeutrinoApi->hide();
     }
     //...
-    key = Config::generalConfig().value("seon").toString();
+    key = APIKEY.value("seon").toString();
     if(!key.isEmpty()){
         ui->lineEditSeon->setText(key);
         ui->buttonGetSeon->hide();
     }
-    key = Config::generalConfig().value("spyonweb").toString();
+    key = APIKEY.value("spyonweb").toString();
     if(!key.isEmpty()){
         ui->lineEditSpyOnWeb->setText(key);
         ui->buttonGetSpyOnWeb->hide();
     }
-    key = Config::generalConfig().value("whatcms").toString();
+    key = APIKEY.value("whatcms").toString();
     if(!key.isEmpty()){
         ui->lineEditWhatcms->setText(key);
         ui->buttonGetWhatcms->hide();
     }
-    key = Config::generalConfig().value("whoxy").toString();
+    key = APIKEY.value("whoxy").toString();
     if(!key.isEmpty()){
         ui->lineEditWhoxy->setText(key);
         ui->buttonGetWhoxy->hide();
     }
-    key = Config::generalConfig().value("emailcrawlr").toString();
+    key = APIKEY.value("emailcrawlr").toString();
     if(!key.isEmpty()){
         ui->lineEditEmailCrawlr->setText(key);
         ui->buttonGetEmailCrawlr->hide();
     }
-    key = Config::generalConfig().value("emailformat").toString();
+    key = APIKEY.value("emailformat").toString();
     if(!key.isEmpty()){
         ui->lineEditEmailFormat->setText(key);
         ui->buttonGetEmailFormat->hide();
     }
-    key = Config::generalConfig().value("emailrep").toString();
+    key = APIKEY.value("emailrep").toString();
     if(!key.isEmpty()){
         ui->lineEditEmailRep->setText(key);
         ui->buttonGetEmailRep->hide();
     }
-    key = Config::generalConfig().value("snov").toString();
+    key = APIKEY.value("snov").toString();
     if(!key.isEmpty()){
         ui->lineEditSnov->setText(key);
         ui->buttonGetSnov->hide();
     }
-    key = Config::generalConfig().value("ipdata").toString();
+    key = APIKEY.value("ipdata").toString();
     if(!key.isEmpty()){
         ui->lineEditIpData->setText(key);
         ui->buttonGetIpData->hide();
     }
-    key = Config::generalConfig().value("ipgeolocation").toString();
+    key = APIKEY.value("ipgeolocation").toString();
     if(!key.isEmpty()){
         ui->lineEditIpGeoLocation->setText(key);
         ui->buttonGetIpGeoLocation->hide();
     }
-    key = Config::generalConfig().value("ipregistry").toString();
+    key = APIKEY.value("ipregistry").toString();
     if(!key.isEmpty()){
         ui->lineEditIpRegistry->setText(key);
         ui->buttonGetIpRegistry->hide();
     }
-    key = Config::generalConfig().value("ipstack").toString();
+    key = APIKEY.value("ipstack").toString();
     if(!key.isEmpty()){
         ui->lineEditIpStack->setText(key);
         ui->buttonGetIpStack->hide();
     }
-    key = Config::generalConfig().value("abuseipdb").toString();
+    key = APIKEY.value("abuseipdb").toString();
     if(!key.isEmpty()){
         ui->lineEditAbuseIPDB->setText(key);
         ui->buttonGetAbuseIPDB->hide();
     }
     //...
-    QString user = Config::generalConfig().value("fraudguard_user").toString();
-    QString pass = Config::generalConfig().value("fraudguard_pass").toString();
+    QString user = APIKEY.value("fraudguard_user").toString();
+    QString pass = APIKEY.value("fraudguard_pass").toString();
     if(!key.isEmpty() && !uid.isEmpty()){
         ui->lineEditFraudGuardUser->setText(user);
         ui->lineEditFraudGuardPass->setText(pass);
         ui->buttonGetFraudGuard->hide();
     }
     //...
-    key = Config::generalConfig().value("hybridanalysis").toString();
+    key = APIKEY.value("hybridanalysis").toString();
     if(!key.isEmpty()){
         ui->lineEditHybridAnalysis->setText(key);
         ui->buttonGetHybridAnalysis->hide();
     }
-    key = Config::generalConfig().value("ipqualityscore").toString();
+    key = APIKEY.value("ipqualityscore").toString();
     if(!key.isEmpty()){
         ui->lineEditIpQualityScore->setText(key);
         ui->buttonGetIpQualityScore->hide();
     }
-    key = Config::generalConfig().value("leaklookup").toString();
+    key = APIKEY.value("leaklookup").toString();
     if(!key.isEmpty()){
         ui->lineEditLeakLookup->setText(key);
         ui->buttonGetLeakLookup->hide();
     }
-    key = Config::generalConfig().value("wappalyzer").toString();
+    key = APIKEY.value("wappalyzer").toString();
     if(!key.isEmpty()){
         ui->lineEditWappalyzer->setText(key);
         ui->buttonGetWappalyzer->hide();
     }
-    Config::generalConfig().endGroup();
 }
 
 

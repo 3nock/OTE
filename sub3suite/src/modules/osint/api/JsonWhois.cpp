@@ -16,9 +16,9 @@ JsonWhois::JsonWhois(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("JsonWhois").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("JsonWhois").toString();
+    
 }
 JsonWhois::~JsonWhois(){
     delete manager;

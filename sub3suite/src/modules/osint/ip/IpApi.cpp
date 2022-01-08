@@ -23,9 +23,9 @@ IpApi::IpApi(ScanArgs args): AbstractOsintModule(args)
     ///
     /// get api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("ipapi").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("ipapi").toString();
+    
 }
 IpApi::~IpApi(){
     delete manager;

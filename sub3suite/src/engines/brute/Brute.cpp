@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 #include <QDesktopWidget>
+#include "src/utils/Config.h"
 #include "src/utils/Definitions.h"
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/dialogs/wordlist/WordlistDialog.h"
@@ -54,8 +55,14 @@ Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent
     /* syntax higlighting... */
     m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 
+    /* registering meta-objects */
+    qRegisterMetaType<brute::ScanLog>("brute::ScanLog");
+
     /* ... */
     m_scanArgs->config = m_scanConfig;
+
+    /* config values */
+    this->m_getConfigValues();
 }
 Brute::~Brute(){
     delete m_scanConfig;
@@ -66,15 +73,6 @@ Brute::~Brute(){
     delete m_resultModelTld;
     delete m_resultProxyModel;
     delete ui;
-}
-
-void Brute::onInfoLog(QString log){
-    ui->plainTextEditLogs->appendPlainText(log);
-}
-
-void Brute::onErrorLog(QString log){
-    QString fontedLog("<font color=\"red\">"+log+"</font>");
-    ui->plainTextEditLogs->appendHtml(fontedLog);
 }
 
 void Brute::on_buttonStart_clicked(){
@@ -104,7 +102,7 @@ void Brute::on_buttonStart_clicked(){
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
         if(ui->checkBoxMultipleTargets->isChecked()){
-            foreach(const QString &target, m_wordlistModel->stringList())
+            foreach(const QString &target, m_targetListModel->stringList())
                 m_scanArgs->targets.enqueue(this->targetFilterSubdomain(target));
         }
         else
@@ -113,14 +111,12 @@ void Brute::on_buttonStart_clicked(){
         break;
     case brute::OUTPUT::TLD:
         if(ui->checkBoxMultipleTargets->isChecked()){
-            foreach(const QString &target, m_wordlistModel->stringList())
+            foreach(const QString &target, m_targetListModel->stringList())
                 m_scanArgs->targets.enqueue(this->targetFilterTLD(target));
         }
         else
             m_scanArgs->targets.enqueue(this->targetFilterTLD(ui->lineEditTarget->text()));
     }
-
-    ui->progressBar->setMaximum(m_scanArgs->wordlist.length() * m_scanArgs->targets.length());
 
     /* start scan */
     this->m_startScan();
@@ -191,4 +187,32 @@ void Brute::on_comboBoxOutput_currentIndexChanged(int index){
     }
 
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+}
+
+void Brute::m_log(QString log){
+    ui->plainTextEditLogs->appendPlainText(log);
+}
+
+/* get config settings from config file & saving to brute::ScanConfig structure*/
+void Brute::m_getConfigValues(){
+    m_scanArgs->config->timeout = CONFIG_BRUTE.value("timeout").toInt();
+    m_scanArgs->config->threads = CONFIG_BRUTE.value("threads").toInt();
+    m_scanArgs->config->levels = CONFIG_BRUTE.value("maxLevel").toInt();
+    m_scanArgs->config->checkWildcard = CONFIG_BRUTE.value("wildcard").toBool();
+    m_scanArgs->config->multiLevelScan = CONFIG_BRUTE.value("useLevel").toInt();
+    m_scanArgs->config->noDuplicates = CONFIG_BRUTE.value("noDuplicates").toBool();
+    m_scanArgs->config->autoSaveToProject = CONFIG_BRUTE.value("autosaveToProject").toBool();
+
+    QString record = CONFIG_BRUTE.value("record").toString();
+    if(record == "A")
+        m_scanArgs->config->recordType = QDnsLookup::A;
+    if(record == "AAAA")
+        m_scanArgs->config->recordType = QDnsLookup::AAAA;
+
+    int size = CONFIG_BRUTE.beginReadArray("Nameservers");
+    for (int i = 0; i < size; ++i) {
+        CONFIG_BRUTE.setArrayIndex(i);
+        m_scanArgs->config->nameservers.append(CONFIG_BRUTE.value("value").toString());
+    }
+    CONFIG_BRUTE.endArray();
 }

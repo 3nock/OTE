@@ -137,6 +137,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="buttonPaste">
+         <property name="text">
+          <string>Paste</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="buttonLoad">
          <property name="minimumSize">
           <size>

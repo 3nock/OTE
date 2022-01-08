@@ -26,9 +26,9 @@ IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting the api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("ipinfo").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("ipinfo").toString();
+    
 }
 IpInfo::~IpInfo(){
     delete manager;

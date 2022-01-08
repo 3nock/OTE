@@ -43,18 +43,18 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     this->m_connectSignals(raw);
 
     /* passive tabwidget */
-    ui->tabWidgetPassive->insertTab(0, osint, "Osint");
-    ui->tabWidgetPassive->insertTab(1, raw, "Raw");
+    ui->tabWidgetPassive->insertTab(0, osint, "OSINT");
+    ui->tabWidgetPassive->insertTab(1, raw, "RAW");
     ui->tabWidgetPassive->setCurrentIndex(0);
     /* active tabwidget */
-    ui->tabWidgetActive->insertTab(0, brute, "Brute");
-    ui->tabWidgetActive->insertTab(1, active, "Active");
+    ui->tabWidgetActive->insertTab(0, brute, "BRUTE");
+    ui->tabWidgetActive->insertTab(1, active, "ACTIVE");
     ui->tabWidgetActive->insertTab(2, dns, "DNS");
     ui->tabWidgetActive->insertTab(3, ssl, "SSL");
     ui->tabWidgetActive->insertTab(4, ip, "IP");
     ui->tabWidgetActive->setCurrentIndex(0);
     /* main tabwidget */
-    ui->tabWidgetMain->insertTab(2, project, "Project");
+    ui->tabWidgetMain->insertTab(2, project, "PROJECT");
     ui->tabWidgetMain->setCurrentIndex(0);
 
     /* Welcome... */
@@ -93,55 +93,50 @@ void MainWindow::m_connectSignals(AbstractEngine *engine){
     connect(engine, SIGNAL(changeTabToCert()), this, SLOT(onChangeTabToCert()));
 }
 
-///
-/// showing the status to the status label and logging to the log file...
-///
 void MainWindow::onReceiveStatus(QString status){
     ui->statusbar->showMessage(status, 5000);
 }
 
-///
-/// logging the logs to the logfile...
-///
-void MainWindow::onReceiveLog(QString log){
-    Q_UNUSED(log);
-}
 
-///
-/// changing tabs...
-///
+/* changing tabs */
+
 void MainWindow::onChangeTabToOsint(){
     ui->tabWidgetMain->setCurrentIndex(0);
     ui->tabWidgetPassive->setCurrentIndex(0);
 }
+
 void MainWindow::onChangeTabToRaw(){
     ui->tabWidgetMain->setCurrentIndex(0);
     ui->tabWidgetPassive->setCurrentIndex(1);
 }
+
 void MainWindow::onChangeTabToBrute(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(0);
 }
+
 void MainWindow::onChangeTabToActive(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(1);
 }
+
 void MainWindow::onChangeTabToDns(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(2);
 }
+
 void MainWindow::onChangeTabToCert(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(3);
 }
+
 void MainWindow::onChangeTabToIp(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(4);
 }
 
-///
-/// Actions...
-///
+/* Actions... */
+
 void MainWindow::on_actionAbout_triggered(){
     AboutDialog *aboutDialog = new AboutDialog(this);
     aboutDialog->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -156,9 +151,6 @@ void MainWindow::on_actionExit_triggered(){
     QApplication::exit();
 }
 
-/*****************************************************************
-                            TOOLS
-******************************************************************/
 void MainWindow::on_actionIpTool_triggered(){
     IpTool *ipChecker = new IpTool(this);
     ipChecker->setAttribute(Qt::WA_DeleteOnClose, true);

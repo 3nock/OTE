@@ -23,10 +23,10 @@ NeutrinoApi::NeutrinoApi(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("neutrinoapi_key").toString();
-    m_userId = Config::generalConfig().value("neutrinoapi_uid").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("neutrinoapi_key").toString();
+    m_userId = APIKEY.value("neutrinoapi_uid").toString();
+    
 }
 NeutrinoApi::~NeutrinoApi(){
     delete manager;

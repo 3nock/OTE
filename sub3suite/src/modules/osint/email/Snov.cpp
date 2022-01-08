@@ -23,9 +23,9 @@ Snov::Snov(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api-key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("snov").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("snov").toString();
+    
 }
 Snov::~Snov(){
     delete manager;

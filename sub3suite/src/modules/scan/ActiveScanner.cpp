@@ -8,7 +8,7 @@ active::Scanner::Scanner(active::ScanArgs *args)
       m_socket(new QTcpSocket(this))
 {
     m_dns->setType(m_args->config->dnsRecordType);
-    //m_dns->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+    m_dns->setNameserver(QHostAddress("8.8.8.8"));
 
     connect(m_dns, SIGNAL(finished()), this, SLOT(lookupFinished()));
     connect(this, SIGNAL(anotherLookup()), this, SLOT(lookup()));

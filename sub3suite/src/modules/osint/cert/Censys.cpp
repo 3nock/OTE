@@ -24,10 +24,10 @@ Censys::Censys(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_uid = Config::generalConfig().value("censys_id").toString();
-    m_key = Config::generalConfig().value("censys_secret").toString();
-    Config::generalConfig().endGroup();
+    
+    m_uid = APIKEY.value("censys_id").toString();
+    m_key = APIKEY.value("censys_secret").toString();
+    
 }
 Censys::~Censys(){
     delete manager;

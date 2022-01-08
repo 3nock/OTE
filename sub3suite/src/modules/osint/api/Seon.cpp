@@ -16,9 +16,9 @@ Seon::Seon(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("seon").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("seon").toString();
+    
 }
 Seon::~Seon(){
     delete manager;

@@ -40,9 +40,9 @@ ViewDns::ViewDns(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("viewdns").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("viewdns").toString();
+    
 }
 ViewDns::~ViewDns(){
     delete manager;

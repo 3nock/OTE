@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>482</height>
+    <height>492</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -397,7 +397,7 @@
             <x>0</x>
             <y>0</y>
             <width>376</width>
-            <height>356</height>
+            <height>357</height>
            </rect>
           </property>
           <attribute name="label">
@@ -429,9 +429,12 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
               <item>
-               <widget class="QCheckBox" name="checkBoxAZPermute">
+               <widget class="QCheckBox" name="checkBoxExactCombination">
                 <property name="text">
-                 <string>Permute</string>
+                 <string>Exact Combination Count</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -446,12 +449,12 @@
                    </sizepolicy>
                   </property>
                   <property name="text">
-                   <string>No# of Permutations</string>
+                   <string>No# of Combinations</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEditAZPermutes">
+                 <widget class="QLineEdit" name="lineEditAZCombination">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -758,28 +761,13 @@
             <x>0</x>
             <y>0</y>
             <width>376</width>
-            <height>356</height>
+            <height>357</height>
            </rect>
           </property>
           <attribute name="label">
            <string>Permutation</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_13">
-           <property name="spacing">
-            <number>9</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>6</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <widget class="InputWidget" name="generateWordlist" native="true"/>
            </item>
@@ -828,14 +816,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QRadioButton" name="radioButtonSubstituteAll">
-                <property name="text">
-                 <string>Substitute all</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="radioButtonSubstituteOne">
+               <widget class="QCheckBox" name="checkBoxSubstituteOne">
                 <property name="text">
                  <string>Substitute one at a Time</string>
                 </property>
@@ -894,6 +875,20 @@
                </widget>
               </item>
              </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="title">
+              <string>Alterations</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox">
+             <property name="title">
+              <string>Homoglyphs</string>
+             </property>
             </widget>
            </item>
           </layout>

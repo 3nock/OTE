@@ -3,10 +3,21 @@
 
 #include <QMutex>
 #include <QQueue>
+#include <QDnsLookup>
+#include <QHostAddress>
 #include "AbstractScanner.h"
 
 
 namespace brute {
+
+struct ScanLog{
+    bool error = false;
+    bool info = false;
+
+    QString target;
+    QString message;
+    QString nameserver;
+};
 
 struct ScanConfig{
     QDnsLookup::Type recordType = QDnsLookup::A;
@@ -28,6 +39,8 @@ struct ScanArgs {
     QString currentTarget;
     int currentWordlist;
     int progress;
+    bool subdomain;
+    bool tld;
 };
 
 class Scanner : public AbstractScanner{
@@ -37,41 +50,22 @@ class Scanner : public AbstractScanner{
         Scanner(brute::ScanArgs *args);
         ~Scanner() override;
 
-        void startScanSubdomain(QThread *cThread){
-            qDebug() << "startScanSubdomain....";
-
-            connect(cThread, &QThread::started, this, &brute::Scanner::lookupSubdomain);
-            connect(this, &brute::Scanner::quitThread, cThread, &QThread::quit);
-            connect(this, &brute::Scanner::next, this, &brute::Scanner::lookupSubdomain);
-        }
-        void startScanTLD(QThread *cThread){
-            connect(cThread, &QThread::started, this, &brute::Scanner::lookupTLD);
-            connect(this, &brute::Scanner::quitThread, cThread, &QThread::quit);
-            connect(this, &brute::Scanner::next, this, &brute::Scanner::lookupTLD);
-        }
-
     private slots:
-        void lookupSubdomain();
-        void lookupTLD();
+        void lookup() override;
         void lookupFinished();
 
     signals:
         void next(); // next lookup
-        void result(QString subdomain, QString ip); // lookup results
+        void scanLog(brute::ScanLog log); // scan error log
+        void scanResult(QString subdomain, QString ip); // lookup results
 
     private:
         brute::ScanArgs *m_args;
         QDnsLookup *m_dns;
-        QMutex mutex;
 };
 
-struct ReturnVal{
-    bool lookup = false;
-    bool next = false;
-    bool quit = false;
-};
+RetVal lookupSubdomain(QDnsLookup*, ScanArgs*);
+RetVal lookupTLD(QDnsLookup*, ScanArgs*);
 
-ReturnVal lookupSubdomain(QDnsLookup*, ScanArgs*);
-ReturnVal lookupTLD(QDnsLookup*, ScanArgs*);
 }
 #endif //BRUTE_H

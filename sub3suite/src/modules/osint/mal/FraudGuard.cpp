@@ -23,10 +23,10 @@ FraudGuard::FraudGuard(ScanArgs args): AbstractOsintModule(args)
     ///
     /// get api key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_user = Config::generalConfig().value("fraudguard_user").toString();
-    m_pass = Config::generalConfig().value("fraudguard_pass").toString();
-    Config::generalConfig().endGroup();
+    
+    m_user = APIKEY.value("fraudguard_user").toString();
+    m_pass = APIKEY.value("fraudguard_pass").toString();
+    
 }
 FraudGuard::~FraudGuard(){
     delete manager;

@@ -6,9 +6,10 @@
 #include "src/utils/utils.h"
 
 
-struct ScanStats{
-    unsigned int successfulLookups;
-    unsigned int errorLookups;
+struct RetVal{
+    bool lookup = false;
+    bool next = false;
+    bool quit = false;
 };
 
 class AbstractScanner : public QObject{
@@ -26,12 +27,9 @@ class AbstractScanner : public QObject{
             connect(this, &AbstractScanner::quitThread, cThread, &QThread::quit);
         }
 
-    protected:
-        ScanStats *scanStats;
-
     public slots:
         /* the main method that performs the lookup... */
-        virtual void lookup(){}
+        virtual void lookup()=0;
 
         /* quiting all running threads upon receiving stop signal... */
         void onStopScan(){

@@ -39,9 +39,9 @@ Spyse::Spyse(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api-key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("spyse").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("spyse").toString();
+    
 }
 Spyse::~Spyse(){
     delete manager;

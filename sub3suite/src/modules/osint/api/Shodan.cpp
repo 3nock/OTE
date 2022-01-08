@@ -40,9 +40,9 @@ Shodan::Shodan(ScanArgs args): AbstractOsintModule(args)
     ///
     /// getting api-key...
     ///
-    Config::generalConfig().beginGroup("api-keys");
-    m_key = Config::generalConfig().value("shodan").toString();
-    Config::generalConfig().endGroup();
+    
+    m_key = APIKEY.value("shodan").toString();
+    
 }
 Shodan::~Shodan(){
     delete manager;

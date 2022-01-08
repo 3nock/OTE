@@ -32,7 +32,6 @@ class MainWindow : public QMainWindow{
         ProjectDataModel *projectDataModel;
 
     public slots:
-        void onReceiveLog(QString log);
         void onReceiveStatus(QString status);
         /* ... */
         void onChangeTabToOsint();
