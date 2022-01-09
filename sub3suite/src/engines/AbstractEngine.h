@@ -11,6 +11,7 @@
 
 
 struct ScanStatus{
+    bool isNotActive = true;
     bool isRunning = false;
     bool isStopped = false;
     bool isPaused = false;

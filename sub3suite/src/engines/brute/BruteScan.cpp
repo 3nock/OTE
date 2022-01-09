@@ -50,39 +50,48 @@ void Brute::m_resumeScan(){
 }
 
 void Brute::m_startScan(){
+    /* ressetting and setting new values */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    m_scanArgs->targets.clear();
+    m_scanArgs->wordlist = m_wordlistModel->stringList();
 
-    this->m_log("------------------ start --------------\n");
+    switch (ui->comboBoxOutput->currentIndex())
+    {
+    case brute::OUTPUT::SUBDOMAIN:
+        if(ui->checkBoxMultipleTargets->isChecked()){
+            foreach(const QString &target, m_targetListModel->stringList())
+                m_scanArgs->targets.enqueue(this->targetFilterSubdomain(target));
+        }
+        else
+            m_scanArgs->targets.enqueue(this->targetFilterSubdomain(ui->lineEditTarget->text()));
+        m_scanArgs->output = brute::OUTPUT::SUBDOMAIN;
+        break;
+
+    case brute::OUTPUT::TLD:
+        if(ui->checkBoxMultipleTargets->isChecked()){
+            foreach(const QString &target, m_targetListModel->stringList())
+                m_scanArgs->targets.enqueue(this->targetFilterTLD(target));
+        }
+        else
+            m_scanArgs->targets.enqueue(this->targetFilterTLD(ui->lineEditTarget->text()));
+        m_scanArgs->output = brute::OUTPUT::TLD;
+    }
+
+    /* set progressbar maximum value then set the first target & wordlist */
+    ui->progressBar->setMaximum(m_scanArgs->wordlist.length()*m_scanArgs->targets.length());
+    m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
+    m_scanArgs->currentWordlist = 0;
 
     /*
      if the numner of threads is greater than the number of wordlists, set the
      number of threads to use to the number of wordlists available to avoid
      creating more threads than needed...
     */
-
     if(m_scanArgs->config->threads > m_scanArgs->wordlist.length())
         status->activeScanThreads = m_scanArgs->wordlist.length();
     else
         status->activeScanThreads = m_scanArgs->config->threads;
-
-    /* ... */
-    ui->progressBar->setMaximum(m_scanArgs->wordlist.length()*m_scanArgs->targets.length());
-
-    /* set scan type */
-    switch (ui->comboBoxOutput->currentIndex()){
-    case brute::OUTPUT::SUBDOMAIN:
-        m_scanArgs->subdomain = true;
-        m_scanArgs->tld = false;
-        break;
-    case brute::OUTPUT::TLD:
-        m_scanArgs->tld = true;
-        m_scanArgs->subdomain = false;
-        break;
-    }
-
-    /* set the first target & wordlist */
-    m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
-    m_scanArgs->currentWordlist = 0;
-
 
     /* loop to create threads for scan... */
     for(int i = 0; i < status->activeScanThreads; i++)
@@ -90,7 +99,6 @@ void Brute::m_startScan(){
         /*  TODO:
          *      set each scanner object & thread with specific nameserver
          */
-
         brute::Scanner *scanner = new brute::Scanner(m_scanArgs);
         QThread *cThread = new QThread;
         scanner->startScan(cThread);

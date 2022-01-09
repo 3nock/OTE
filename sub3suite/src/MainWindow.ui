@@ -434,7 +434,7 @@ QProgressBar {
     border-color: rgb(20,20,20);
     border-style: inset;
     background-color: rgb(40,40,40);
-    height: 23px;
+    height: 22px;
     max-width: 200px;
     min-width: 200px;
 }
@@ -740,7 +740,6 @@ QRadioButton:hover {
     <addaction name="separator"/>
     <addaction name="actionBlog"/>
     <addaction name="actionTwitter"/>
-    <addaction name="actionissues"/>
     <addaction name="actioncheck_for_updates"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>

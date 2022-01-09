@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>BruteForce WordList</string>
+   <string>Bruteforce Wordlist</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
@@ -760,8 +760,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>376</width>
-            <height>357</height>
+            <width>282</width>
+            <height>223</height>
            </rect>
           </property>
           <attribute name="label">

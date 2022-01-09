@@ -7,6 +7,17 @@
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 
+namespace brute {
+struct ScanStat{
+    int nameservers = 0;
+    int wordlist = 0;
+    int targets = 0;
+    int time = 0;
+    int resolved = 0;
+    int failed = 0;
+};
+}
+
 namespace Ui {
     class Brute;
 }
@@ -20,7 +31,7 @@ class Brute : public AbstractEngine{
 
     public slots:
         void onScanThreadEnded();
-        void onScanLog(brute::ScanLog log);
+        void onScanLog(scan::Log log);
         void onResultSubdomain(QString subdomain, QString ip);
         void onResultTLD(QString tld, QString ip);
 
@@ -97,42 +108,42 @@ class Brute : public AbstractEngine{
         QAction a_OpenInBrowser{"Open in Browser"};
 
         /* for all */
-        QAction a_SendAllIpToIp{"Send Addresses To Ip"};
-        QAction a_SendAllIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendAllIpToRaw{"Send Address To Raw"};
-        QAction a_SendAllHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendAllHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendAllHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendAllHostToActive{"Send Hostnames To Active"};
-        QAction a_SendAllHostToDns{"Send Hostnames To Records"};
-        QAction a_SendAllHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendAllIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendAllHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendAllHostToDomainTool{"Send Hostnames To DomainTool"};
+        QAction a_SendAllIpToIp{"Send IpAddress To IP"};
+        QAction a_SendAllIpToOsint{"Send IpAddress To OSINT"};
+        QAction a_SendAllIpToRaw{"Send IpAddress To RAW"};
+        QAction a_SendAllHostToOsint{"Send Hostname To OSINT"};
+        QAction a_SendAllHostToRaw{"Send Hostname To RAW"};
+        QAction a_SendAllHostToBrute{"Send Hostname To BRUTE"};
+        QAction a_SendAllHostToActive{"Send Hostname To ACTIVE"};
+        QAction a_SendAllHostToDNS{"Send Hostname To DNS"};
+        QAction a_SendAllHostToSSL{"Send Hostname To SSL"};
+        QAction a_SendAllIpToIPTool{"Send IpAddress To IPTool"};
+        QAction a_SendAllHostToSSLTool{"Send Hostname To SSLTool"};
+        QAction a_SendAllHostToDomainTool{"Send Hostname To DomainTool"};
         /* for selected */
-        QAction a_SendSelectedIpToIp{"Send Addresses To Ip"};
-        QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendSelectedIpToRaw{"Send Address To Raw"};
-        QAction a_SendSelectedHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendSelectedHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendSelectedHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendSelectedHostToActive{"Send Hostnames To Active"};
-        QAction a_SendSelectedHostToDns{"Send Hostnames To Records"};
-        QAction a_SendSelectedHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendSelectedIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendSelectedHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendSelectedHostToDomainTool{"Send Hostnames To DomainTool"};
+        QAction a_SendSelectedIpToIp{"Send IpAddress To IP"};
+        QAction a_SendSelectedIpToOsint{"Send IpAddress To OSINT"};
+        QAction a_SendSelectedIpToRaw{"Send IpAddress To RAW"};
+        QAction a_SendSelectedHostToOsint{"Send Hostname To OSINT"};
+        QAction a_SendSelectedHostToRaw{"Send Hostname To RAW"};
+        QAction a_SendSelectedHostToBrute{"Send Hostname To BRUTE"};
+        QAction a_SendSelectedHostToActive{"Send Hostname To ACTIVE"};
+        QAction a_SendSelectedHostToDNS{"Send Hostname To DNS"};
+        QAction a_SendSelectedHostToSSL{"Send Hostname To SSL"};
+        QAction a_SendSelectedIpToIPTool{"Send IpAddress To IPTool"};
+        QAction a_SendSelectedHostToSSLTool{"Send Hostname To SSLTool"};
+        QAction a_SendSelectedHostToDomainTool{"Send Hostname To DomainTool"};
 
         /* save */
         QAction a_Save{"Save"};
-        QAction a_SaveSubdomainIp{"subdomain | ip"};
-        QAction a_SaveSubdomain{"subdomains"};
-        QAction a_SaveIp{"ip-addresses"};
+        QAction a_SaveSubdomainIp{"Subdomain | IP"};
+        QAction a_SaveSubdomain{"Subdomain"};
+        QAction a_SaveIp{"IpAddress"};
         /* copy */
         QAction a_Copy{"Copy"};
-        QAction a_CopySubdomainIp{"subdomain | ip"};
-        QAction a_CopySubdomain{"subdomains"};
-        QAction a_CopyIp{"ip-addresses"};
+        QAction a_CopySubdomainIp{"Subdomain | IP"};
+        QAction a_CopySubdomain{"Subdomain"};
+        QAction a_CopyIp{"IpAddress"};
 };
 
 #endif // BRUTE_H

@@ -16,26 +16,34 @@ brute::Scanner::~Scanner(){
 }
 
 void brute::Scanner::lookup(){
-    if(m_args->subdomain){
-        RetVal retVal = brute::lookupSubdomain(m_dns, m_args);
-
-        if(retVal.lookup)
+    switch(m_args->output)
+    {
+    case OUTPUT::SUBDOMAIN:
+        switch(brute::lookupSubdomain(m_dns, m_args)){
+        case RETVAL::LOOKUP:
             m_dns->lookup();
-        if(retVal.next)
+            break;
+        case RETVAL::NEXT:
             emit next();
-        if(retVal.quit)
+            break;
+        case RETVAL::QUIT:
             emit quitThread();
-    }
+            break;
+        }
+        break;
 
-    if(m_args->tld){
-        RetVal retVal = brute::lookupTLD(m_dns, m_args);
-
-        if(retVal.lookup)
+    case OUTPUT::TLD:
+        switch(brute::lookupTLD(m_dns, m_args)){
+        case RETVAL::LOOKUP:
             m_dns->lookup();
-        if(retVal.next)
+            break;
+        case RETVAL::NEXT:
             emit next();
-        if(retVal.quit)
+            break;
+        case RETVAL::QUIT:
             emit quitThread();
+            break;
+        }
     }
 }
 
@@ -51,7 +59,7 @@ void brute::Scanner::lookupFinished(){
         break;
 
     default:
-        brute::ScanLog log;
+        scan::Log log;
         log.message = m_dns->errorString();
         log.target = m_dns->name();
         log.nameserver = m_dns->nameserver().toString();
@@ -67,75 +75,56 @@ void brute::Scanner::lookupFinished(){
     emit next();
 }
 
-RetVal brute::lookupSubdomain(QDnsLookup *dns, brute::ScanArgs *args){
-    RetVal retVal;
-
+RETVAL brute::lookupSubdomain(QDnsLookup *dns, brute::ScanArgs *args){
     /* lock */
-    QMutex mutex;
-    mutex.lock();
+    QMutexLocker(&args->mutex);
 
+    /* check if Reached end of the wordlist */
     if(args->currentWordlist < args->wordlist.length())
     {
         /* append to target then set the name */
         dns->setName(args->wordlist.at(args->currentWordlist)+"."+args->currentTarget);
 
-        /* lookup */
-        retVal.lookup = true;
-
         /* next wordlist */
         args->currentWordlist++;
+
+        return RETVAL::LOOKUP;
     }
-    /* Reached end of the wordlist */
-    else
-    {
-         /* next target */
-        if(args->targets.isEmpty()){
-            retVal.quit = true;
-        }
+    else{
+        if(args->targets.isEmpty())
+            return RETVAL::QUIT;
         else{
+            /* next target */
             args->currentWordlist = 0;
             args->currentTarget = args->targets.dequeue();
-            retVal.next = true;
+            return RETVAL::NEXT;
         }
     }
-
-    /* unlock */
-    mutex.unlock();
-    return retVal;
 }
 
-RetVal brute::lookupTLD(QDnsLookup *dns, brute::ScanArgs *args){
-    RetVal retVal;
-
+RETVAL brute::lookupTLD(QDnsLookup *dns, brute::ScanArgs *args){
     /* lock */
-    QMutex mutex;
-    mutex.lock();
+    QMutexLocker(&args->mutex);
 
+    /* check if Reached end of the wordlist */
     if(args->currentWordlist < args->wordlist.length())
     {
         /* append to target then set the name */
         dns->setName(args->currentTarget+"."+args->wordlist.at(args->currentWordlist));
 
-        /* lookup */
-        retVal.lookup = true;
-
         /* next wordlist */
         args->currentWordlist++;
+
+        return RETVAL::LOOKUP;
     }
-    /* Reached end of the wordlist */
-    else
-    {
-         /* next target */
+    else{
         if(args->targets.isEmpty())
-            retVal.quit = true;
+            return RETVAL::QUIT;
         else{
+            /* next target */
             args->currentWordlist = 0;
             args->currentTarget = args->targets.dequeue();
-            retVal.next = true;
+            return RETVAL::NEXT;
         }
     }
-
-    /* unlock */
-    mutex.unlock();
-    return retVal;
 }

@@ -99,11 +99,4 @@ enum class TOOL{
     BANNER
 };
 
-namespace brute{
-enum OUTPUT{
-    SUBDOMAIN = 0,
-    TLD = 1
-};
-}
-
 #endif // UTILS_H

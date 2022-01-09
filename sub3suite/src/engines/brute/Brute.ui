@@ -199,7 +199,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>*Scan Config</string>
+         <string>*Scan Configuration</string>
         </property>
        </widget>
       </item>
@@ -233,18 +233,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label_11">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
+       <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>*Choose Wordlist</string>
+         <string>*Bruteforce Wordlist</string>
         </property>
        </widget>
       </item>

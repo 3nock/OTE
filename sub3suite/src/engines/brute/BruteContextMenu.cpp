@@ -18,10 +18,10 @@ void Brute::m_initActions(){
     connect(&a_SendAllHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW);});
     connect(&a_SendAllHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE);});
     connect(&a_SendAllHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE);});
-    connect(&a_SendAllHostToDns, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS);});
-    connect(&a_SendAllHostToCert, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT);});
-    connect(&a_SendAllIpToIpTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP);});
-    connect(&a_SendAllHostToCertTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT);});
+    connect(&a_SendAllHostToDNS, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS);});
+    connect(&a_SendAllHostToSSL, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT);});
+    connect(&a_SendAllIpToIPTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP);});
+    connect(&a_SendAllHostToSSLTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT);});
     connect(&a_SendAllHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::DOMAINTOOL);});
     /* ... */
     connect(&a_SendSelectedIpToIp, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::IP, selectionModel);});
@@ -31,10 +31,10 @@ void Brute::m_initActions(){
     connect(&a_SendSelectedHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW, selectionModel);});
     connect(&a_SendSelectedHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE, selectionModel);});
     connect(&a_SendSelectedHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE, selectionModel);});
-    connect(&a_SendSelectedHostToDns, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS, selectionModel);});
-    connect(&a_SendSelectedHostToCert, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT, selectionModel);});
-    connect(&a_SendSelectedIpToIpTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP, selectionModel);});
-    connect(&a_SendSelectedHostToCertTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT, selectionModel);});
+    connect(&a_SendSelectedHostToDNS, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS, selectionModel);});
+    connect(&a_SendSelectedHostToSSL, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT, selectionModel);});
+    connect(&a_SendSelectedIpToIPTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP, selectionModel);});
+    connect(&a_SendSelectedHostToSSLTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT, selectionModel);});
     connect(&a_SendSelectedHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::DOMAINTOOL, selectionModel);});
     /* ... */
     connect(&a_Save, &QAction::triggered, this, [=](){this->m_saveResults(selectionModel);});
@@ -86,11 +86,11 @@ void Brute::on_buttonAction_clicked(){
     mainMenu->addAction(&a_SendAllHostToRaw);
     mainMenu->addAction(&a_SendAllHostToBrute);
     mainMenu->addAction(&a_SendAllHostToActive);
-    mainMenu->addAction(&a_SendAllHostToDns);
-    mainMenu->addAction(&a_SendAllHostToCert);
+    mainMenu->addAction(&a_SendAllHostToDNS);
+    mainMenu->addAction(&a_SendAllHostToSSL);
     mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendAllIpToIpTool);
-    mainMenu->addAction(&a_SendAllHostToCertTool);
+    mainMenu->addAction(&a_SendAllIpToIPTool);
+    mainMenu->addAction(&a_SendAllHostToSSLTool);
     mainMenu->addAction(&a_SendAllHostToDomainTool);
 
     /* showing the context menu... */
@@ -126,10 +126,11 @@ void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     mainMenu->addAction(&a_SendSelectedHostToRaw);
     mainMenu->addAction(&a_SendSelectedHostToBrute);
     mainMenu->addAction(&a_SendSelectedHostToActive);
-    mainMenu->addAction(&a_SendSelectedHostToDns);
-    mainMenu->addAction(&a_SendSelectedHostToCert);
-    mainMenu->addAction(&a_SendSelectedIpToIpTool);
-    mainMenu->addAction(&a_SendSelectedHostToCertTool);
+    mainMenu->addAction(&a_SendSelectedHostToDNS);
+    mainMenu->addAction(&a_SendSelectedHostToSSL);
+    mainMenu->addSeparator();
+    mainMenu->addAction(&a_SendSelectedIpToIPTool);
+    mainMenu->addAction(&a_SendSelectedHostToSSLTool);
     mainMenu->addAction(&a_SendSelectedHostToDomainTool);
 
     /* showing the context menu... */
@@ -137,7 +138,7 @@ void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
 }
 
 void Brute::m_clearResults(){
-    /* clear the results...*/
+    /* clear all containers containing results */
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
         m_subdomainSet.clear();
@@ -148,7 +149,7 @@ void Brute::m_clearResults(){
     case brute::OUTPUT::TLD:
         m_tldSet.clear();
         m_resultModelTld->clear();
-        m_resultModelTld->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+        m_resultModelTld->setHorizontalHeaderLabels({"TLD", "IpAddress"});
     }
     ui->labelResultsCount->clear();
 

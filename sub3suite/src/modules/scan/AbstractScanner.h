@@ -6,11 +6,22 @@
 #include "src/utils/utils.h"
 
 
-struct RetVal{
-    bool lookup = false;
-    bool next = false;
-    bool quit = false;
+enum class RETVAL{
+    LOOKUP,
+    NEXT,
+    QUIT
 };
+
+namespace scan {
+struct Log{
+    bool error = false;
+    bool info = false;
+
+    QString target;
+    QString message;
+    QString nameserver;
+};
+}
 
 class AbstractScanner : public QObject{
     Q_OBJECT
@@ -40,6 +51,7 @@ class AbstractScanner : public QObject{
         void quitThread();
         void infoLog(QString log);
         void errorLog(QString log);
+        void scanLog(scan::Log log); // scan error & info log
         void scanProgress(int value);
 
         /* for certScanner... */

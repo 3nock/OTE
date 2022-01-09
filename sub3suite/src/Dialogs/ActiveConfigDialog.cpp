@@ -112,38 +112,17 @@ void ActiveConfigDialog::m_initWidgets(){
 }
 
 /* get config settings from config file... */
+
 void ActiveConfigDialog::m_loadConfigBrute(){
-    int timeout = CONFIG_BRUTE.value("timeout").toInt();
-    int threads = CONFIG_BRUTE.value("threads").toInt();
-    int maxLevel = CONFIG_BRUTE.value("maxLevel").toInt();
-    bool wildcard = CONFIG_BRUTE.value("wildcard").toBool();
-    bool useLevel = CONFIG_BRUTE.value("useLevel").toInt();
-    bool noDuplicates = CONFIG_BRUTE.value("noDuplicates").toBool();
-    bool autosaveToProject = CONFIG_BRUTE.value("autosaveToProject").toBool();
+    ui->lineEditTimeout->setText(CONFIG_BRUTE.value("timeout").toString());
+    ui->lineEditThreads->setText(CONFIG_BRUTE.value("threads").toString());
+    ui->lineEditLevels->setText(CONFIG_BRUTE.value("maxLevel").toString());
+    ui->checkBoxWildcards->setChecked(CONFIG_BRUTE.value("wildcard").toBool());
+    ui->checkBoxLevel->setChecked(CONFIG_BRUTE.value("useLevel").toInt());
+    ui->checkBoxAutosave->setChecked(CONFIG_BRUTE.value("autosaveToProject").toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG_BRUTE.value("noDuplicates").toBool());
+
     QString record = CONFIG_BRUTE.value("record").toString();
-    QString nsType = CONFIG_BRUTE.value("nameserverType").toString();
-    QString currentNameserver = CONFIG_BRUTE.value("nameserver").toString();
-
-    CONFIG_BRUTE.beginGroup("Default-Nameservers");
-    QStringList nameservers = CONFIG_BRUTE.allKeys();
-    CONFIG_BRUTE.endGroup();
-
-    int size = CONFIG_BRUTE.beginReadArray("Custom-Nameservers");
-    for (int i = 0; i < size; ++i) {
-        CONFIG_BRUTE.setArrayIndex(i);
-        ui->customNameservers->add(CONFIG_BRUTE.value("value").toString());
-    }
-    CONFIG_BRUTE.endArray();
-
-    /* set config to the widgets... */
-    ui->lineEditTimeout->setText(QString::number(timeout));
-    ui->lineEditThreads->setText(QString::number(threads));
-    ui->lineEditLevels->setText(QString::number(maxLevel));
-    ui->checkBoxWildcards->setChecked(wildcard);
-    ui->checkBoxLevel->setChecked(useLevel);
-    ui->checkBoxAutosave->setChecked(autosaveToProject);
-    ui->checkBoxNoDuplicates->setChecked(noDuplicates);
-
     if(record == "A")
         ui->radioButtonA->setChecked(true);
     if(record == "AAAA")
@@ -151,6 +130,7 @@ void ActiveConfigDialog::m_loadConfigBrute(){
     if(record == "CNAME")
         ui->radioButtonCNAME->setChecked(true);
 
+    QString nsType = CONFIG_BRUTE.value("nameserverType").toString();
     if(nsType == "single")
         ui->radioButtonSingleNameserver->setChecked(true);
     if(nsType == "random")
@@ -158,9 +138,17 @@ void ActiveConfigDialog::m_loadConfigBrute(){
     if(nsType == "custom")
         ui->radioButtonCustomNameservers->setChecked(true);
 
-    ui->comboBoxSingleNameserver->addItems(nameservers);
-    ui->comboBoxSingleNameserver->setCurrentText(currentNameserver);
+    CONFIG_BRUTE.beginGroup("Default-Nameservers");
+    ui->comboBoxSingleNameserver->addItems(CONFIG_BRUTE.allKeys());
+    CONFIG_BRUTE.endGroup();
+    ui->comboBoxSingleNameserver->setCurrentText(CONFIG_BRUTE.value("nameserver").toString());
 
+    int size = CONFIG_BRUTE.beginReadArray("Custom-Nameservers");
+    for (int i = 0; i < size; ++i) {
+        CONFIG_BRUTE.setArrayIndex(i);
+        ui->customNameservers->add(CONFIG_BRUTE.value("value").toString());
+    }
+    CONFIG_BRUTE.endArray();
 }
 
 /* saving configurations... */

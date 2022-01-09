@@ -10,13 +10,9 @@
 
 namespace brute {
 
-struct ScanLog{
-    bool error = false;
-    bool info = false;
-
-    QString target;
-    QString message;
-    QString nameserver;
+enum OUTPUT{
+    SUBDOMAIN,
+    TLD
 };
 
 struct ScanConfig{
@@ -33,14 +29,15 @@ struct ScanConfig{
 };
 
 struct ScanArgs {
+    QMutex mutex;
+    brute::OUTPUT output;
     brute::ScanConfig *config;
     QQueue<QString> targets;
     QStringList wordlist;
     QString currentTarget;
     int currentWordlist;
     int progress;
-    bool subdomain;
-    bool tld;
+
 };
 
 class Scanner : public AbstractScanner{
@@ -56,7 +53,6 @@ class Scanner : public AbstractScanner{
 
     signals:
         void next(); // next lookup
-        void scanLog(brute::ScanLog log); // scan error log
         void scanResult(QString subdomain, QString ip); // lookup results
 
     private:
@@ -64,8 +60,8 @@ class Scanner : public AbstractScanner{
         QDnsLookup *m_dns;
 };
 
-RetVal lookupSubdomain(QDnsLookup*, ScanArgs*);
-RetVal lookupTLD(QDnsLookup*, ScanArgs*);
+RETVAL lookupSubdomain(QDnsLookup*, ScanArgs*);
+RETVAL lookupTLD(QDnsLookup*, ScanArgs*);
 
 }
 #endif //BRUTE_H
