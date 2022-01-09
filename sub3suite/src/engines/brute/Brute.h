@@ -1,6 +1,8 @@
 #ifndef BRUTE_H
 #define BRUTE_H
 
+#include <QTime>
+#include <QElapsedTimer>
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/scan/BruteScanner.h"
@@ -12,7 +14,7 @@ struct ScanStat{
     int nameservers = 0;
     int wordlist = 0;
     int targets = 0;
-    int time = 0;
+    int threads = 0;
     int resolved = 0;
     int failed = 0;
 };
@@ -48,6 +50,7 @@ class Brute : public AbstractEngine{
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
         void on_checkBoxMultipleTargets_stateChanged(int arg1);
         void on_comboBoxOutput_currentIndexChanged(int index);
+        void on_lineEditFilter_textChanged(const QString &arg1);
 
     private:
         Ui::Brute *ui;
@@ -57,6 +60,8 @@ class Brute : public AbstractEngine{
 
         brute::ScanConfig *m_scanConfig;
         brute::ScanArgs *m_scanArgs;
+        brute::ScanStat *m_scanStats;
+        QElapsedTimer m_timer;
 
         QStringListModel *m_wordlistModel;
         QStringListModel *m_targetListModel;
@@ -69,11 +74,9 @@ class Brute : public AbstractEngine{
         /* ... */
         void m_log(QString log);
         void m_getConfigValues();
-        /* for scan */
-        void m_stopScan();
+        /* ... */
         void m_startScan();
-        void m_pauseScan();
-        void m_resumeScan();
+        void m_scanSummary();
 
 
         /* ... */

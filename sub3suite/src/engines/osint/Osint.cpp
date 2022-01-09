@@ -229,7 +229,12 @@ void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
         m_resultProxyModel->setFilterKeyColumn(0);
         break;
     }
-    m_resultProxyModel->setFilterRegExp(filterKeyword);
+
+    if(ui->checkBoxRegex->isChecked())
+        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+    else
+        m_resultProxyModel->setFilterFixedString(filterKeyword);
+
     ui->tableViewResults->setModel(m_resultProxyModel);
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
 }

@@ -8,6 +8,7 @@ void Brute::onScanLog(scan::Log log){
     ui->plainTextEditLogs->appendHtml("[Nameserver] : <font color=\"red\">"+log.nameserver+"</font>");
     /* add a new line... */
     ui->plainTextEditLogs->appendPlainText("");
+    m_scanStats->failed++;
 }
 
 void Brute::onResultSubdomain(QString subdomain, QString ip){
@@ -22,6 +23,7 @@ void Brute::onResultSubdomain(QString subdomain, QString ip){
     /* save to subdomain result model */
     m_resultModelSubdomain->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ip));
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    m_scanStats->resolved++;
 
     /* save to Project model... */
     if(m_scanConfig->autoSaveToProject)
@@ -40,6 +42,7 @@ void Brute::onResultTLD(QString tld, QString ip){
     /* save to model */
     m_resultModelTld->appendRow(QList<QStandardItem*>() <<new QStandardItem(tld) <<new QStandardItem(ip));
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    m_scanStats->resolved++;
 
     /* save to Project model... */
     if(m_scanConfig->autoSaveToProject)

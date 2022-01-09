@@ -103,6 +103,9 @@
          <pointsize>8</pointsize>
         </font>
        </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
       </widget>
      </item>
      <item>

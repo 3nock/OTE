@@ -494,6 +494,13 @@
              <item>
               <widget class="QLineEdit" name="lineEditFilter"/>
              </item>
+             <item>
+              <widget class="QCheckBox" name="checkBoxRegex">
+               <property name="text">
+                <string>Regex</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>

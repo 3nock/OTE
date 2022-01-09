@@ -25,34 +25,12 @@ QString Brute::targetFilterTLD(QString target){
     return target;
 }
 
-void Brute::m_stopScan(){
-
-}
-
-void Brute::m_pauseScan(){
-    /*
-     if the scan was already paused, then this current click is to
-     Resume the scan, just csubdomainIp the startScan, with the same arguments and
-     it will continue at where it ended...
-    */
-    if(status->isPaused){
-        status->isPaused = false;
-        this->m_startScan();
-    }
-    else{
-        status->isPaused = true;
-        emit stopScanThread();
-    }
-}
-
-void Brute::m_resumeScan(){
-
-}
-
 void Brute::m_startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
+    ui->progressBar->clearMask();
+
     m_scanArgs->targets.clear();
     m_scanArgs->wordlist = m_wordlistModel->stringList();
 
@@ -78,11 +56,6 @@ void Brute::m_startScan(){
         m_scanArgs->output = brute::OUTPUT::TLD;
     }
 
-    /* set progressbar maximum value then set the first target & wordlist */
-    ui->progressBar->setMaximum(m_scanArgs->wordlist.length()*m_scanArgs->targets.length());
-    m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
-    m_scanArgs->currentWordlist = 0;
-
     /*
      if the numner of threads is greater than the number of wordlists, set the
      number of threads to use to the number of wordlists available to avoid
@@ -92,6 +65,23 @@ void Brute::m_startScan(){
         status->activeScanThreads = m_scanArgs->wordlist.length();
     else
         status->activeScanThreads = m_scanArgs->config->threads;
+
+    /* renewing scan statistics */
+    m_scanStats->failed = 0;
+    m_scanStats->resolved = 0;
+    m_scanStats->threads = status->activeScanThreads;
+    m_scanStats->wordlist = m_scanArgs->wordlist.size();
+    m_scanStats->targets = m_scanArgs->targets.length();
+    m_scanStats->nameservers = m_scanArgs->config->nameservers.length();
+
+    /* set progressbar maximum value then set the first target & wordlist */
+    ui->progressBar->setMaximum(m_scanArgs->wordlist.length()*m_scanArgs->targets.length());
+    m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
+    m_scanArgs->currentWordlist = 0;
+    m_scanArgs->progress = 0;
+
+    /* start timer */
+    m_timer.start();
 
     /* loop to create threads for scan... */
     for(int i = 0; i < status->activeScanThreads; i++)
@@ -117,6 +107,8 @@ void Brute::m_startScan(){
         connect(cThread, &QThread::finished, scanner, &brute::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         connect(this, &Brute::stopScanThread, scanner, &brute::Scanner::onStopScan);
+        connect(this, &Brute::pauseScanThread, scanner, &brute::Scanner::onPauseScan);
+        connect(this, &Brute::resumeScanThread, scanner, &brute::Scanner::onResumeScan, Qt::DirectConnection);
 
         cThread->start();
     }
@@ -126,29 +118,47 @@ void Brute::m_startScan(){
 void Brute::onScanThreadEnded(){
     status->activeScanThreads--;
 
-    /* if subdomainIp Scan Threads have finished... */
+    /* if all Scan Threads have finished... */
     if(status->activeScanThreads == 0)
     {
-        if(status->isPaused){
-            status->isRunning = false;
-            return;
-        }
+        /* display the scan summary */
+        m_scanSummary();
+
+        if(status->isStopped)
+            m_log("---------------- Stopped ------------\n");
         else
-        {
-            /* set the progress bar to 100% just in case... */
-            if(!status->isStopped)
-                ui->progressBar->setValue(ui->progressBar->maximum());
+            m_log("------------------ End --------------\n");
 
-            m_scanArgs->targets.clear();
-            status->isPaused = false;
-            status->isStopped = false;
-            status->isRunning = false;
+        /* set the progress bar to 100% just in case... */
+        if(!status->isStopped)
+            ui->progressBar->setValue(ui->progressBar->maximum());
 
-            /* enabling and disabling widgets */
-            ui->buttonStart->setEnabled(true);
-            ui->buttonStop->setDisabled(true);
+        m_scanArgs->targets.clear();
+        m_scanArgs->wordlist.clear();
+        m_scanArgs->currentTarget.clear();
+        m_scanArgs->currentWordlist = 0;
 
-            this->m_log("------------------ End --------------\n");
-        }
+        status->isNotActive = true;
+        status->isPaused = false;
+        status->isStopped = false;
+        status->isRunning = false;
+
+        ui->buttonStart->setText("Start");
+        ui->buttonStop->setDisabled(true);
     }
+}
+
+void Brute::m_scanSummary(){
+    /* elapsed time */
+    QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
+
+    /* write to log file */
+    ui->plainTextEditLogs->appendHtml("<font color=\"white\">  [Scan Summary]</font>");
+    ui->plainTextEditLogs->appendHtml("[ Resolved ]    : <font color=\"green\">"+QString::number(m_scanStats->resolved)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Failed ]      : <font color=\"red\">"+QString::number(m_scanStats->failed)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Threads ]     : <font color=\"green\">"+QString::number(m_scanStats->threads)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Targets ]     : <font color=\"green\">"+QString::number(m_scanStats->targets)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Wordlist ]    : <font color=\"green\">"+QString::number(m_scanStats->wordlist)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Nameservers ] : <font color=\"green\">"+QString::number(m_scanStats->nameservers)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Time (hh:mm:ss:zzz) ]        : <font color=\"green\">"+time.toString("hh:mm:ss:zzz")+"</font>");
 }

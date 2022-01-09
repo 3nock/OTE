@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QSemaphore>
 #include "src/utils/utils.h"
 
 
@@ -47,6 +48,14 @@ class AbstractScanner : public QObject{
             emit quitThread();
         }
 
+        void onPauseScan(){
+            semaphore.acquire();
+        }
+
+        void onResumeScan(){
+            semaphore.release();
+        }
+
     signals:
         void quitThread();
         void infoLog(QString log);
@@ -62,6 +71,9 @@ class AbstractScanner : public QObject{
 
         /* for banner... */
         void scanResultBanner(QString banner);
+
+    private:
+        QSemaphore semaphore;
 };
 
 #endif // ABSTRACTSCANNER_H

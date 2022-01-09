@@ -1,6 +1,7 @@
 #include "Brute.h"
 #include "ui_Brute.h"
 
+#include <QRegExp>
 #include <QDateTime>
 #include <QDesktopWidget>
 #include "src/utils/Config.h"
@@ -12,6 +13,7 @@
 Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Brute),
     m_scanConfig(new brute::ScanConfig),
     m_scanArgs(new brute::ScanArgs),
+    m_scanStats(new brute::ScanStat),
     m_wordlistModel(new QStringListModel),
     m_targetListModel(new QStringListModel),
     m_resultModelSubdomain(new QStandardItemModel),
@@ -68,6 +70,7 @@ Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent
 Brute::~Brute(){
     delete m_scanConfig;
     delete m_scanArgs;
+    delete m_scanStats;
     delete m_targetListModel;
     delete m_wordlistModel;
     delete m_resultModelSubdomain;
@@ -76,12 +79,15 @@ Brute::~Brute(){
     delete ui;
 }
 
+void Brute::on_lineEditTarget_returnPressed(){
+    this->on_buttonStart_clicked();
+}
+
 void Brute::on_buttonStart_clicked(){
     ///
     /// Start scan...
     ///
     if(status->isNotActive){
-        /* checks */
         if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
             QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
             return;
@@ -95,11 +101,9 @@ void Brute::on_buttonStart_clicked(){
             return;
         }
 
-        /* enable the stop button then the start button becomes a pause button */
         ui->buttonStop->setEnabled(true);
         ui->buttonStart->setText("Pause");
 
-        /* set status accordingly */
         status->isRunning = true;
         status->isNotActive = false;
         status->isStopped = false;
@@ -107,70 +111,75 @@ void Brute::on_buttonStart_clicked(){
 
         /* start scan */
         this->m_startScan();
-        this->m_log("------------------ start ----------------\n");
+
+        /* logs */
+        m_log("------------------ start ----------------\n");
         qInfo() << "Scan Started";
         return;
     }
     ///
     /// Pause scan...
     ///
-    if(status->isRunning){ // Pause scan
-        /* enable the stop button then the pause button becomes a resume  button */
+    if(status->isRunning){
         ui->buttonStop->setEnabled(true);
         ui->buttonStart->setText("Resume");
 
-        /* set status accordingly */
         status->isPaused = true;
         status->isRunning = false;
-        status->isNotActive = false;
         status->isStopped = false;
+        status->isNotActive = false;
 
-        /* start scan */
-        this->m_pauseScan();
-        this->m_log("------------------ Paused ----------------\n");
+        /* pause scan */
+        emit pauseScanThread();
+
+        /* logs */
+        m_log("------------------ Paused ----------------\n");
         qInfo() << "Scan Paused";
         return;
     }
     ///
     /// Resume scan...
     ///
-    if(status->isPaused){ // Resume scan
-        /* enable the stop button then the resume button becomes a resume button */
+    if(status->isPaused){
         ui->buttonStop->setEnabled(true);
         ui->buttonStart->setText("Pause");
 
-        /* set status accordingly */
         status->isRunning = true;
         status->isPaused = false;
-        status->isNotActive = false;
         status->isStopped = false;
+        status->isNotActive = false;
 
-        /* start scan */
-        this->m_resumeScan();
-        this->m_log("------------------ Resumed ----------------\n");
+        /* resume scan */
+        emit resumeScanThread();
+
+        /* logs */
+        m_log("------------------ Resumed ----------------\n");
         qInfo() << "Scan Resumed";
-        return;
     }
-}
-
-void Brute::on_lineEditTarget_returnPressed(){
-    this->on_buttonStart_clicked();
 }
 
 void Brute::on_buttonStop_clicked(){
-    emit stopScanThread();
     if(status->isPaused)
-    {
-        m_scanArgs->targets.clear();
-        status->isPaused = false;
-        status->isStopped = false;
-        status->isRunning = false;
+        emit resumeScanThread();
 
-        /* enabling and disabling widgets */
-        ui->buttonStart->setEnabled(true);
-        ui->buttonStop->setDisabled(true);
-    }
+    emit stopScanThread();
+
     status->isStopped = true;
+    status->isPaused = false;
+    status->isRunning = false;
+    status->isNotActive = false;
+}
+
+void Brute::on_lineEditFilter_textChanged(const QString &filterKeyword){
+    m_resultProxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+
+    if(ui->checkBoxRegex->isChecked())
+        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+    else
+        m_resultProxyModel->setFilterFixedString(filterKeyword);
+
+    ui->tableViewResults->setModel(m_resultProxyModel);
+    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
 }
 
 void Brute::on_buttonConfig_clicked(){
@@ -221,7 +230,8 @@ void Brute::on_comboBoxOutput_currentIndexChanged(int index){
 }
 
 void Brute::m_log(QString log){
-    ui->plainTextEditLogs->appendPlainText(log);
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
 
 /* get config settings from config file & saving to brute::ScanConfig structure*/
