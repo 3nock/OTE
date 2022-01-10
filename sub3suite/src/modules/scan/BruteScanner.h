@@ -10,12 +10,21 @@
 
 namespace brute {
 
-enum OUTPUT{
+enum OUTPUT{ // output type
     SUBDOMAIN,
     TLD
 };
 
-struct ScanConfig{
+struct ScanStat{  // scan statistics
+    int nameservers = 0;
+    int wordlist = 0;
+    int targets = 0;
+    int threads = 0;
+    int resolved = 0;
+    int failed = 0;
+};
+
+struct ScanConfig{ // scan configurations
     QDnsLookup::Type recordType = QDnsLookup::A;
     QStringList nameservers;
     int levels = 0;
@@ -28,14 +37,16 @@ struct ScanConfig{
     bool checkWildcard = false;
 };
 
-struct ScanArgs {
+struct ScanArgs { // scan arguments
     QMutex mutex;
     brute::OUTPUT output;
     brute::ScanConfig *config;
+    QQueue<QString> nextLevelTargets;
     QQueue<QString> targets;
     QStringList wordlist;
     QString currentTarget;
     int currentWordlist;
+    int currentLevel;
     int progress;
 
 };
@@ -53,6 +64,8 @@ class Scanner : public AbstractScanner{
 
     signals:
         void next(); // next lookup
+        void nextLevel(); // send signal, going to the next level
+        void newProgress(int); // send new progressBar max value
         void scanResult(QString subdomain, QString ip); // lookup results
 
     private:

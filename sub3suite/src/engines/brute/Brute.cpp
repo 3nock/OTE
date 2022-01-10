@@ -40,7 +40,7 @@ Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent
 
     /* placeholder texts */
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
-    ui->lineEditFilter->setPlaceholderText("Enter filter...");
+    ui->lineEditFilter->setPlaceholderText("filter...");
 
     /* ...*/
     ui->buttonStop->setDisabled(true);
@@ -56,10 +56,6 @@ Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent
 
     /* syntax higlighting... */
     m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
-
-    /* registering meta-objects */
-    qRegisterMetaType<scan::Log>("scan::Log");
-    qDebug() << "Registering scan::Log for brute";
 
     /* ... */
     m_scanArgs->config = m_scanConfig;

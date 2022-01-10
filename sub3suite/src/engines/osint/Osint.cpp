@@ -60,9 +60,6 @@ Osint::Osint(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent,
     /* modules */
     this->m_initModules();
 
-    /* registering meta-objects */
-    qRegisterMetaType<ScanLog>("ScanLog");
-
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));

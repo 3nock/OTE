@@ -2,12 +2,9 @@
     <qresource prefix="/img">
         <file>res/icons/folder2.png</file>
         <file>res/icons/checkBox.png</file>
-        <file>res/icons/logo.ico</file>
         <file>res/icons/downArrow.png</file>
         <file>res/icons/array.png</file>
         <file>res/icons/obj.png</file>
-        <file>res/icons/s3s.png</file>
-        <file>res/icons/sub3suite.png</file>
         <file>res/icons/down.png</file>
         <file>res/icons/left.png</file>
         <file>res/icons/right.png</file>
@@ -17,6 +14,8 @@
         <file>res/icons/right_on.png</file>
         <file>res/icons/up_on.png</file>
         <file>res/icons/splash.png</file>
+        <file>res/icons/sub3suite.png</file>
+        <file>res/icons/s3s.ico</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>

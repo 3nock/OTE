@@ -23,7 +23,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
     ui->labelLogo->setScaledContents(true);
 
     /* setting up version info */
-    ui->labelVersion->setText("Version 1.0");
+    ui->labelVersion->setText("Version 0.1 (BETA)");
 
     /* setting up description */
     ui->plainTextEditDescription->appendHtml("Copyright 2020-2022 © Enock Nicholaus <font color=\"green\">3nock@protonmail.com</font> and contributors.");

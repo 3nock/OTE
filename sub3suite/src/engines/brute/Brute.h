@@ -9,17 +9,6 @@
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 
-namespace brute {
-struct ScanStat{
-    int nameservers = 0;
-    int wordlist = 0;
-    int targets = 0;
-    int threads = 0;
-    int resolved = 0;
-    int failed = 0;
-};
-}
-
 namespace Ui {
     class Brute;
 }
@@ -32,6 +21,7 @@ class Brute : public AbstractEngine{
         ~Brute();
 
     public slots:
+        void onNextLevel();
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
         void onResultSubdomain(QString subdomain, QString ip);

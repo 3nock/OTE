@@ -8,6 +8,7 @@
 
 
 enum class RETVAL{
+    NEXT_LEVEL,
     LOOKUP,
     NEXT,
     QUIT
@@ -74,6 +75,9 @@ class AbstractScanner : public QObject{
 
     private:
         QSemaphore semaphore;
+
+    protected:
+        scan::Log log;
 };
 
 #endif // ABSTRACTSCANNER_H

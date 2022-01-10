@@ -3,8 +3,8 @@
 
 
 void Brute::onScanLog(scan::Log log){
-    ui->plainTextEditLogs->appendHtml("[Error]        : <font color=\"red\">"+log.message+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Target]   : <font color=\"red\">"+log.target+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Error]      : <font color=\"red\">"+log.message+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Target]     : <font color=\"red\">"+log.target+"</font>");
     ui->plainTextEditLogs->appendHtml("[Nameserver] : <font color=\"red\">"+log.nameserver+"</font>");
     /* add a new line... */
     ui->plainTextEditLogs->appendPlainText("");
@@ -18,6 +18,12 @@ void Brute::onResultSubdomain(QString subdomain, QString ip){
         m_subdomainSet.insert(subdomain+ip);
         if(prevSize == m_subdomainSet.size())
             return;
+    }
+
+    /* if multilevel scan add results to the nextleveltargets queue */
+    if(m_scanConfig->multiLevelScan){
+        if(m_scanArgs->currentLevel < m_scanConfig->levels)
+            m_scanArgs->nextLevelTargets.enqueue(subdomain);
     }
 
     /* save to subdomain result model */
@@ -37,6 +43,12 @@ void Brute::onResultTLD(QString tld, QString ip){
         m_tldSet.insert(tld+ip);
         if(prevSize == m_tldSet.size())
             return;
+    }
+
+    /* if multilevel scan add results to the nextleveltargets queue */
+    if(m_scanConfig->multiLevelScan){
+        if(m_scanArgs->currentLevel < m_scanConfig->levels)
+            m_scanArgs->nextLevelTargets.enqueue(tld);
     }
 
     /* save to model */

@@ -54,8 +54,14 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->tabWidgetActive->insertTab(4, ip, "IP");
     ui->tabWidgetActive->setCurrentIndex(0);
     /* main tabwidget */
-    ui->tabWidgetMain->insertTab(2, project, "PROJECT");
+    ui->tabWidgetMain->insertTab(2, project, "Project");
     ui->tabWidgetMain->setCurrentIndex(0);
+
+    /* registering meta-types */
+    qDebug() << "Registering meta types...";
+    qRegisterMetaType<scan::Log>("scan::Log");
+    qRegisterMetaType<dns::Results>("dns::Results");
+    qRegisterMetaType<ScanLog>("ScanLog");
 
     /* Welcome... */
     ui->statusbar->showMessage("Welcome!", 5000);

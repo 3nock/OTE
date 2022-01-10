@@ -102,7 +102,7 @@
                </size>
               </property>
               <property name="text">
-               <string>Record Type:</string>
+               <string>Dns Record Type:</string>
               </property>
              </widget>
             </item>
@@ -120,13 +120,6 @@
              <widget class="QRadioButton" name="radioButtonAAAA">
               <property name="text">
                <string>AAAA</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonCNAME">
-              <property name="text">
-               <string>CNAME</string>
               </property>
              </widget>
             </item>
@@ -166,7 +159,7 @@
                </size>
               </property>
               <property name="text">
-               <string>Levels (max 5):</string>
+               <string>Level (max 5):</string>
               </property>
              </widget>
             </item>

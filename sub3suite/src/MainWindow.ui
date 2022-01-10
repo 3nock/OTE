@@ -627,7 +627,7 @@ QRadioButton:hover {
       </property>
       <widget class="QWidget" name="tabPassive">
        <attribute name="title">
-        <string>PASSIVE</string>
+        <string>Passive</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="leftMargin">
@@ -657,7 +657,7 @@ QRadioButton:hover {
       </widget>
       <widget class="QWidget" name="tabActive">
        <attribute name="title">
-        <string>ACTIVE</string>
+        <string>Active</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <property name="leftMargin">

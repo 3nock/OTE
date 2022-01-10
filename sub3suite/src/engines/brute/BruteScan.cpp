@@ -32,6 +32,7 @@ void Brute::m_startScan(){
     ui->progressBar->clearMask();
 
     m_scanArgs->targets.clear();
+    m_scanArgs->nextLevelTargets.clear();
     m_scanArgs->wordlist = m_wordlistModel->stringList();
 
     switch (ui->comboBoxOutput->currentIndex())
@@ -78,6 +79,7 @@ void Brute::m_startScan(){
     ui->progressBar->setMaximum(m_scanArgs->wordlist.length()*m_scanArgs->targets.length());
     m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
     m_scanArgs->currentWordlist = 0;
+    m_scanArgs->currentLevel = 0;
     m_scanArgs->progress = 0;
 
     /* start timer */
@@ -102,7 +104,9 @@ void Brute::m_startScan(){
             connect(scanner, &brute::Scanner::scanResult, this, &Brute::onResultTLD);
         }
         connect(scanner, &brute::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &brute::Scanner::newProgress, ui->progressBar, &QProgressBar::setMaximum);
         connect(scanner, &brute::Scanner::scanLog, this, &Brute::onScanLog);
+        connect(scanner, &brute::Scanner::nextLevel, this, &Brute::onNextLevel);
         connect(cThread, &QThread::finished, this, &Brute::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &brute::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -115,13 +119,30 @@ void Brute::m_startScan(){
     status->isRunning = true;
 }
 
+void Brute::onNextLevel(){
+    QStringList newTargets;
+
+    while(!m_scanArgs->nextLevelTargets.isEmpty())
+        newTargets.push_back(m_scanArgs->nextLevelTargets.dequeue());
+
+    m_targetListModel->setStringList(newTargets);
+    ui->targets->updateSize();
+    m_scanStats->targets += newTargets.size();
+
+    /* log */
+    ui->plainTextEditLogs->appendHtml("<font color=\"white\">  [ Next Level ]</font>");
+    ui->plainTextEditLogs->appendHtml("[ Level ]    : <font color=\"green\">"+QString::number(m_scanArgs->currentLevel)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Targets ]      : <font color=\"green\">"+QString::number(m_targetListModel->rowCount())+"</font>");
+    ui->plainTextEditLogs->appendPlainText("");
+}
+
 void Brute::onScanThreadEnded(){
     status->activeScanThreads--;
 
     /* if all Scan Threads have finished... */
     if(status->activeScanThreads == 0)
     {
-        /* display the scan summary */
+        /* display the scan summary on logs */
         m_scanSummary();
 
         if(status->isStopped)
@@ -153,7 +174,7 @@ void Brute::m_scanSummary(){
     QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
 
     /* write to log file */
-    ui->plainTextEditLogs->appendHtml("<font color=\"white\">  [Scan Summary]</font>");
+    ui->plainTextEditLogs->appendHtml("<font color=\"white\">  [ Scan Summary ]</font>");
     ui->plainTextEditLogs->appendHtml("[ Resolved ]    : <font color=\"green\">"+QString::number(m_scanStats->resolved)+"</font>");
     ui->plainTextEditLogs->appendHtml("[ Failed ]      : <font color=\"red\">"+QString::number(m_scanStats->failed)+"</font>");
     ui->plainTextEditLogs->appendHtml("[ Threads ]     : <font color=\"green\">"+QString::number(m_scanStats->threads)+"</font>");

@@ -40,9 +40,6 @@ Dns::Dns(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, pr
     ui->lineEditFilter->setPlaceholderText("Enter filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
 
-    /* registering meta-objects */
-    qRegisterMetaType<dns::Results>("dns::Results");
-
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));

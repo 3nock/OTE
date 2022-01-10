@@ -402,6 +402,6 @@ RESOURCES += \
     res.qrc
 
 # setting the icon...
-RC_ICONS = res/icons/logo.ico
+RC_ICONS = res/icons/s3s.ico
 
 DISTFILES +=

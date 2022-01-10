@@ -15,6 +15,33 @@ brute::Scanner::~Scanner(){
     delete m_dns;
 }
 
+void brute::Scanner::lookupFinished(){
+    switch(m_dns->error()){
+    case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::NoError:
+        if(m_dns->hostAddressRecords().isEmpty())
+            break;
+        emit scanResult(m_dns->name(), m_dns->hostAddressRecords().at(0).value().toString());
+        break;
+
+    default:
+        log.message = m_dns->errorString();
+        log.target = m_dns->name();
+        log.nameserver = m_dns->nameserver().toString();
+        emit scanLog(log);
+        break;
+    }
+
+    /* scan progress */
+    m_args->progress++;
+
+    /* send results and continue scan */
+    emit scanProgress(m_args->progress);
+    emit next();
+}
+
 void brute::Scanner::lookup(){
     switch(m_args->output)
     {
@@ -22,6 +49,11 @@ void brute::Scanner::lookup(){
         switch(brute::lookupSubdomain(m_dns, m_args)){
         case RETVAL::LOOKUP:
             m_dns->lookup();
+            break;
+        case RETVAL::NEXT_LEVEL:
+            emit nextLevel();
+            emit newProgress(m_args->targets.size() * m_args->wordlist.size());
+            emit next();
             break;
         case RETVAL::NEXT:
             emit next();
@@ -37,6 +69,11 @@ void brute::Scanner::lookup(){
         case RETVAL::LOOKUP:
             m_dns->lookup();
             break;
+        case RETVAL::NEXT_LEVEL:
+            emit nextLevel();
+            emit newProgress(m_args->targets.size() * m_args->wordlist.size());
+            emit next();
+            break;
         case RETVAL::NEXT:
             emit next();
             break;
@@ -45,34 +82,6 @@ void brute::Scanner::lookup(){
             break;
         }
     }
-}
-
-void brute::Scanner::lookupFinished(){
-    switch(m_dns->error()){
-    case QDnsLookup::NotFoundError:
-        break;
-
-    case QDnsLookup::NoError:
-        if(m_dns->hostAddressRecords().isEmpty())
-            break;
-        emit scanResult(m_dns->name(), m_dns->hostAddressRecords().at(0).value().toString());
-        break;
-
-    default:
-        scan::Log log;
-        log.message = m_dns->errorString();
-        log.target = m_dns->name();
-        log.nameserver = m_dns->nameserver().toString();
-        emit scanLog(log);
-        break;
-    }
-
-    /* scan progress */
-    m_args->progress++;
-
-    /* send results and continue scan */
-    emit scanProgress(m_args->progress);
-    emit next();
 }
 
 RETVAL brute::lookupSubdomain(QDnsLookup *dns, brute::ScanArgs *args){
@@ -92,7 +101,23 @@ RETVAL brute::lookupSubdomain(QDnsLookup *dns, brute::ScanArgs *args){
     }
     else{
         if(args->targets.isEmpty())
-            return RETVAL::QUIT;
+        {
+            if(args->config->multiLevelScan && // if it is a multi-level scan and
+              !args->nextLevelTargets.isEmpty() && // the targets for next level aren't empty and
+              (args->currentLevel < args->config->levels)) // it is not the last level
+            {
+                /* TODO:
+                 *      Make sure all threads are done before continuing...
+                 */
+                args->currentLevel++;
+                args->targets = args->nextLevelTargets;
+                args->currentTarget = args->targets.dequeue();
+                args->currentWordlist = 0;
+                return RETVAL::NEXT_LEVEL;
+            }
+            else
+                return RETVAL::QUIT;
+        }
         else{
             /* next target */
             args->currentWordlist = 0;
@@ -118,8 +143,23 @@ RETVAL brute::lookupTLD(QDnsLookup *dns, brute::ScanArgs *args){
         return RETVAL::LOOKUP;
     }
     else{
-        if(args->targets.isEmpty())
-            return RETVAL::QUIT;
+        if(args->targets.isEmpty()){
+            if(args->config->multiLevelScan && // if it is a multi-level scan and
+              !args->nextLevelTargets.isEmpty() && // the targets for next level aren't empty and
+              (args->currentLevel < args->config->levels)) // it is not the last level
+            {
+                /* TODO:
+                 *      Make sure all threads are done before continuing...
+                 */
+                args->currentLevel++;
+                args->targets = args->nextLevelTargets;
+                args->currentTarget = args->targets.dequeue();
+                args->currentWordlist = 0;
+                return RETVAL::NEXT_LEVEL;
+            }
+            else
+                return RETVAL::QUIT;
+        }
         else{
             /* next target */
             args->currentWordlist = 0;
