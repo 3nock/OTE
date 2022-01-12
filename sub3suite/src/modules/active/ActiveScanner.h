@@ -52,7 +52,6 @@ struct ScanArgs { // scan arguments
     QQueue<QString> targets;
     QHostAddress nameserver;
     int progress;
-    bool reScan;
 
     quint16 service;
     bool checkActiveService;

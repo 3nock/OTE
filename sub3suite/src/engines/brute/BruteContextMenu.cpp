@@ -330,10 +330,6 @@ void Brute::m_extract(){
     clipboard->setText(data.trimmed());
 }
 
-/*
- * TODO:
- *      Fix. selection can be host, ip or both
- */
 void Brute::m_extract(QItemSelectionModel *selectionModel){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString data;
@@ -351,7 +347,6 @@ void Brute::m_extract(QItemSelectionModel *selectionModel){
 /* TODO:
  *      obtain as items and send them to project
  */
-
 void Brute::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::SUBDOMAIN){
         ui->targets->add(target);

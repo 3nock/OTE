@@ -8,6 +8,7 @@
 #ifndef ACTIVE_H
 #define ACTIVE_H
 
+#include <QElapsedTimer>
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/active/ActiveScanner.h"
@@ -28,6 +29,7 @@ class Active : public AbstractEngine{
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
         void onScanResult(QString host, QString ip);
+        void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -38,9 +40,13 @@ class Active : public AbstractEngine{
         void on_buttonAction_clicked();
         void on_buttonConfig_clicked();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
+        void on_lineEditTarget_returnPressed();
 
-    private:
+        void on_lineEditFilter_textChanged(const QString &arg1);
+
+private:
         Ui::Active *ui;
+        QElapsedTimer m_timer;
         QSet<QString> m_activeDns;
         QMap<QString,QString> m_failedScans;
         active::ScanConfig *m_scanConfig;
@@ -51,8 +57,9 @@ class Active : public AbstractEngine{
         QSortFilterProxyModel *m_resultProxyModel;
         NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
         void m_getConfigValues();
-        void m_stopScan();
         void m_startScan();
+        void m_log(QString log);
+        void m_scanSummary();
 
     /* for context menu */
     private:
@@ -65,11 +72,16 @@ class Active : public AbstractEngine{
         void m_saveResults(QItemSelectionModel*);
         void m_copyResults(RESULT_TYPE);
         void m_copyResults(QItemSelectionModel*);
+        /* extracting subdomain names */
+        void m_extract();
+        void m_extract(QItemSelectionModel*);
         /* sending results to other parts */
+        void m_sendToProject();
         void m_sendSubdomainToEngine(ENGINE);
         void m_sendIpToEngine(ENGINE);
         void m_sendSubdomainToTool(TOOL);
         void m_sendIpToTool(TOOL);
+        void m_sendToProject(QItemSelectionModel*);
         void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
         void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
         void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
@@ -81,32 +93,38 @@ class Active : public AbstractEngine{
         QAction a_ClearResults{"Clear Results"};
         QAction a_OpenInBrowser{"Open in Browser"};
 
+        /* subdomain name extraction */
+        QAction a_ExtractAll{"Extract Subdomain Name"};
+        QAction a_ExtractSelected{"Extract Subdomain Name"};
+
         /* for all */
-        QAction a_SendAllIpToIp{"Send Addresses To Ip"};
-        QAction a_SendAllIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendAllIpToRaw{"Send Address To Raw"};
-        QAction a_SendAllHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendAllHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendAllHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendAllHostToActive{"Send Hostnames To Active"};
-        QAction a_SendAllHostToDns{"Send Hostnames To Records"};
-        QAction a_SendAllHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendAllIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendAllHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendAllHostToDomainTool{"Send Hostnames To DomainTool"};
+        QAction a_SendAllToProject{"Send To Project"};
+        QAction a_SendAllIpToIp{"Send IpAddress To IP"};
+        QAction a_SendAllIpToOsint{"Send IpAddress To OSINT"};
+        QAction a_SendAllIpToRaw{"Send Address To RAW"};
+        QAction a_SendAllHostToOsint{"Send Hostname To OSINT"};
+        QAction a_SendAllHostToRaw{"Send Hostname To RAW"};
+        QAction a_SendAllHostToBrute{"Send Hostname To BRUTE"};
+        QAction a_SendAllHostToActive{"Send Hostname To ACTIVE"};
+        QAction a_SendAllHostToDNS{"Send Hostname To DNS"};
+        QAction a_SendAllHostToSSL{"Send Hostname To SSL"};
+        QAction a_SendAllIpToIPTool{"Send IpAddress To IPTool"};
+        QAction a_SendAllHostToSSLTool{"Send Hostname To SSLTool"};
+        QAction a_SendAllHostToDomainTool{"Send Hostname To DomainTool"};
         /* for selected */
-        QAction a_SendSelectedIpToIp{"Send Addresses To Ip"};
-        QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendSelectedIpToRaw{"Send Address To Raw"};
-        QAction a_SendSelectedHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendSelectedHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendSelectedHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendSelectedHostToActive{"Send Hostnames To Active"};
-        QAction a_SendSelectedHostToDns{"Send Hostnames To Records"};
-        QAction a_SendSelectedHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendSelectedIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendSelectedHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendSelectedHostToDomainTool{"Send Hostnames To DomainTool"};
+        QAction a_SendSelectedToProject{"Send To Project"};
+        QAction a_SendSelectedIpToIp{"Send IpAddress To IP"};
+        QAction a_SendSelectedIpToOsint{"Send IpAddress To OSINT"};
+        QAction a_SendSelectedIpToRaw{"Send Address To RAW"};
+        QAction a_SendSelectedHostToOsint{"Send Hostname To OSINT"};
+        QAction a_SendSelectedHostToRaw{"Send Hostname To RAW"};
+        QAction a_SendSelectedHostToBrute{"Send Hostname To BRUTE"};
+        QAction a_SendSelectedHostToActive{"Send Hostname To ACTIVE"};
+        QAction a_SendSelectedHostToDNS{"Send Hostname To DNS"};
+        QAction a_SendSelectedHostToSSL{"Send Hostname To SSL"};
+        QAction a_SendSelectedIpToIPTool{"Send IpAddress To IPTool"};
+        QAction a_SendSelectedHostToSSLTool{"Send Hostname To SSLTool"};
+        QAction a_SendSelectedHostToDomainTool{"Send Hostname To DomainTool"};
 
         /* save */
         QAction a_Save{"Save"};

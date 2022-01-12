@@ -143,7 +143,7 @@ void Brute::onReScan(QQueue<QString> targets){
     status->isPaused = false;
 
     /* logs */
-    m_log("------------------ start ----------------\n");
+    m_log("----------------- Re-Scan ---------------\n");
     qInfo() << "Scan Started";
 
     /* ressetting and setting new values */

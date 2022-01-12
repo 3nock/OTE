@@ -68,53 +68,91 @@ Active::~Active(){
     delete ui;
 }
 
+void Active::on_lineEditTarget_returnPressed(){
+    this->on_buttonStart_clicked();
+}
+
 void Active::on_buttonStart_clicked(){
-    /* checking if subdomainIp requirements are satisfied before scan if not prompt error
-       then exit function... */
-    if(!(m_targetListModel->rowCount() > 0)){
-        QMessageBox::warning(this, "Error!", "Please Enter the subdomains Wordlist for Enumeration!");
+    ///
+    /// Start scan...
+    ///
+    if(status->isNotActive){
+        if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
+            QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+            return;
+        }
+        if(ui->checkBoxMultipleTargets->isChecked() && m_targetListModel->rowCount() < 1){
+            QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+            return;
+        }
+
+        ui->buttonStop->setEnabled(true);
+        ui->buttonStart->setText("Pause");
+
+        status->isRunning = true;
+        status->isNotActive = false;
+        status->isStopped = false;
+        status->isPaused = false;
+
+        /* start scan */
+        this->m_startScan();
+
+        /* logs */
+        m_log("------------------ start ----------------\n");
+        qInfo() << "Scan Started";
         return;
     }
+    ///
+    /// Pause scan...
+    ///
+    if(status->isRunning){
+        ui->buttonStop->setEnabled(true);
+        ui->buttonStart->setText("Resume");
 
-    /* disabling and Enabling widgets... */
-    ui->buttonStart->setDisabled(true);
-    ui->buttonStop->setEnabled(true);
-    ui->progressBar->show();
+        status->isPaused = true;
+        status->isRunning = false;
+        status->isStopped = false;
+        status->isNotActive = false;
 
-    /* Resetting the scan arguments values... */
-    m_scanArgs->progress = 0;
-    ui->progressBar->reset();
+        /* pause scan */
+        emit pauseScanThread();
 
-    /* Getting scan arguments....
-    if(ui->comboBoxOption->currentIndex() == ACTIVE::DNS){
-        m_scanArgs->checkActiveService = false;
+        /* logs */
+        m_log("------------------ Paused ----------------\n");
+        qInfo() << "Scan Paused";
+        return;
     }
-    if(ui->comboBoxOption->currentIndex() == ACTIVE::HTTP){
-        m_scanArgs->checkActiveService = true;
-        m_scanArgs->service = 80;
-    }
-    if(ui->comboBoxOption->currentIndex() == ACTIVE::HTTPS){
-        m_scanArgs->checkActiveService = true;
-        m_scanArgs->service = 443;
-    }
-    if(ui->comboBoxOption->currentIndex() == ACTIVE::FTP){
-        m_scanArgs->checkActiveService = true;
-        m_scanArgs->service = 21;
-    }
-    if(ui->comboBoxOption->currentIndex() == ACTIVE::SMTP){
-        m_scanArgs->checkActiveService = true;
-        m_scanArgs->service = 587;
-    }
-    ui->progressBar->setMaximum(m_targetListModel->rowCount());
+    ///
+    /// Resume scan...
+    ///
+    if(status->isPaused){
+        ui->buttonStop->setEnabled(true);
+        ui->buttonStart->setText("Pause");
 
-     start active subdomain enumeration... */
-    this->m_startScan();
-    sendStatus("[*] Testing For Active Subdomains...");
+        status->isRunning = true;
+        status->isPaused = false;
+        status->isStopped = false;
+        status->isNotActive = false;
+
+        /* resume scan */
+        emit resumeScanThread();
+
+        /* logs */
+        m_log("------------------ Resumed ----------------\n");
+        qInfo() << "Scan Resumed";
+    }
 }
 
 void Active::on_buttonStop_clicked(){
+    if(status->isPaused)
+        emit resumeScanThread();
+
     emit stopScanThread();
+
     status->isStopped = true;
+    status->isPaused = false;
+    status->isRunning = false;
+    status->isNotActive = false;
 }
 
 void Active::on_buttonConfig_clicked(){
@@ -142,4 +180,21 @@ void Active::m_getConfigValues(){
         m_scanArgs->config->nameservers.append(CONFIG_ACTIVE.value("value").toString());
     }
     CONFIG_ACTIVE.endArray();
+}
+
+void Active::m_log(QString log){
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
+}
+
+void Active::on_lineEditFilter_textChanged(const QString &filterKeyword){
+    m_resultProxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+
+    if(ui->checkBoxRegex->isChecked())
+        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+    else
+        m_resultProxyModel->setFilterFixedString(filterKeyword);
+
+    ui->tableViewResults->setModel(m_resultProxyModel);
+    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
 }

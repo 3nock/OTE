@@ -29,7 +29,7 @@ void Brute::onResultSubdomain(QString subdomain, QString ip){
             return;
     }
 
-    /* if multilevel scan add results to the nextleveltargets queue */
+    /* if multilevel scan add results to the nextlevel targets queue */
     if(m_scanConfig->multiLevelScan){
         if(m_scanArgs->currentLevel < m_scanConfig->levels)
             m_scanArgs->nextLevelTargets.enqueue(subdomain);

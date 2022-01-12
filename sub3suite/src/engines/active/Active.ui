@@ -372,7 +372,7 @@
               <enum>QAbstractItemView::ScrollPerPixel</enum>
              </property>
              <property name="showGrid">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="sortingEnabled">
               <bool>true</bool>
@@ -384,7 +384,7 @@
               <bool>true</bool>
              </attribute>
              <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>100</number>
+              <number>220</number>
              </attribute>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>220</number>
@@ -399,13 +399,13 @@
               <bool>false</bool>
              </attribute>
              <attribute name="verticalHeaderMinimumSectionSize">
-              <number>15</number>
+              <number>18</number>
              </attribute>
              <attribute name="verticalHeaderDefaultSectionSize">
-              <number>15</number>
+              <number>18</number>
              </attribute>
              <attribute name="verticalHeaderHighlightSections">
-              <bool>false</bool>
+              <bool>true</bool>
              </attribute>
             </widget>
            </item>

@@ -32,6 +32,7 @@ void Active::onScanResult(QString host, QString ip){
     /* save to active dns model */
     m_resultModel->appendRow(QList<QStandardItem*>() << new QStandardItem(host) << new QStandardItem(ip));
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    m_scanStats->resolved++;
 
     /* save to Project model */
     if(m_scanConfig->autoSaveToProject)
