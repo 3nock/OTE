@@ -231,10 +231,13 @@ QStatusBar {
 
 QToolButton:!pressed {
     min-height: 13px;
+    max-height: 14px;
+    min-width: 50px;
     border-style: outset;
     border-color: rgb(15,15,15);
     border-width: 1px;
     border-style: solid;
+    border-radius: 5px;
     padding: 2px;
     color: rgb(185, 185, 145);
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(60, 60, 60, 255),stop: 0.4 rgba(35, 35, 35, 255), stop: 0.5 rgba(35, 35, 35, 255) stop:1 rgba(60, 60, 60, 255));
@@ -245,6 +248,7 @@ QToolButton:hover {
     border-color: rgb(15,15,15);
     border-width: 1px;
     border-style: solid;
+    border-radius: 5px;
     padding: 2px;
     color: rgb(190, 190, 150);
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(65, 65, 65, 255),stop: 0.4 rgba(40, 40, 40, 255), stop: 0.5 rgba(40, 40, 40, 255) stop:1 rgba(65, 65, 65, 255));
@@ -255,6 +259,7 @@ QToolButton:pressed {
     border-color: rgb(15,15,15);
     border-width: 1px;
     border-style: solid;
+    border-radius: 5px;
     padding: 2px;
     color: rgb(190, 190, 150);
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(70, 70, 70, 255),stop: 0.4 rgba(45, 45, 45, 255), stop: 0.5 rgba(45, 45, 45, 255) stop:1 rgba(70, 70, 70, 255));
@@ -415,8 +420,10 @@ QPushButton:disabled {
 }
 
 QLineEdit:disabled {
+    min-height: 18px;
+    max-height: 18px;
     border-width: 1px;
-    border-radius: 4px;
+    border-radius: 5px;
     border-color: rgb(20,20,20);
     border-style: inset;
     padding: 0 8px;
@@ -425,8 +432,10 @@ QLineEdit:disabled {
 }
 
 QLineEdit:!disabled {
+    min-height: 18px;
+    max-height: 18px;
     border-width: 1px;
-    border-radius: 4px;
+    border-radius: 5px;
     border-color: rgb(20,20,20);
     border-style: inset;
     padding: 0 8px;
@@ -440,6 +449,7 @@ QProgressBar {
     border-width: 1px;
     border-color: rgb(20,20,20);
     border-style: inset;
+    /*border-radius: 10px;*/
     background-color: rgb(40,40,40);
     height: 22px;
     max-width: 200px;
@@ -447,6 +457,7 @@ QProgressBar {
 }
 
 QProgressBar::chunk {
+    /*border-radius: 10px;*/
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(50, 50, 50, 255), stop:1 rgba(150, 150, 112, 200));
 }
 

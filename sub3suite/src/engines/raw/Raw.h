@@ -13,7 +13,7 @@
 #include <QStandardItemModel>
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/modules/osint/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintModulesHeaders.h"
 #include "src/utils/JsonSyntaxHighlighter.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 

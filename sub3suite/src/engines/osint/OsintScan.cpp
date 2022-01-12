@@ -8,7 +8,7 @@
 #include "Osint.h"
 #include "ui_Osint.h"
 
-#include "src/modules/osint/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintModulesHeaders.h"
 
 
 void Osint::m_startScan(){

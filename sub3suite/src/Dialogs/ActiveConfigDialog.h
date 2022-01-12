@@ -11,11 +11,11 @@
 #include <QDialog>
 #include <QSettings>
 #include <QStringListModel>
-#include "src/modules/scan/BruteScanner.h"
-#include "src/modules/scan/ActiveScanner.h"
-#include "src/modules/scan/DNSScanner.h"
-#include "src/modules/scan/SSLScanner.h"
-#include "src/modules/scan/IpScanner.h"
+#include "src/modules/active/BruteScanner.h"
+#include "src/modules/active/ActiveScanner.h"
+#include "src/modules/active/DNSScanner.h"
+#include "src/modules/active/SSLScanner.h"
+#include "src/modules/active/IpScanner.h"
 
 
 namespace Ui {

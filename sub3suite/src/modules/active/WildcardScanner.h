@@ -10,7 +10,7 @@
 
 #include <QObject>
 #include "src/utils/utils.h"
-#include "src/modules/scan/BruteScanner.h"
+#include "src/modules/active/BruteScanner.h"
 
 class WildcardScanner: public QObject {
     Q_OBJECT

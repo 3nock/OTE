@@ -10,7 +10,7 @@
 
 #include <QWidget>
 #include "../AbstractEngine.h"
-#include "src/modules/scan/SSLScanner.h"
+#include "src/modules/active/SSLScanner.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 

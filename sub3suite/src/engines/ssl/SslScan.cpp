@@ -8,7 +8,7 @@
 #include "Ssl.h"
 #include "ui_Ssl.h"
 
-#include "src/modules/scan/SSLScanner.h"
+#include "src/modules/active/SSLScanner.h"
 
 
 void Ssl::m_startScan(){

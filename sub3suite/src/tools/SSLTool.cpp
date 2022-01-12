@@ -12,7 +12,7 @@
 #include <QStandardItem>
 #include <QSslKey>
 #include "src/utils/Definitions.h"
-#include "src/modules/scan/SSLScanner.h"
+#include "src/modules/active/SSLScanner.h"
 #include "src/dialogs/PassiveConfigDialog.h"
 
 #define TARGET_SSLCERT 0

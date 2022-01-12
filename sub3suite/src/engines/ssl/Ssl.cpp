@@ -12,7 +12,7 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Definitions.h"
 #include "src/models/SSLModel.h"
-#include "src/modules/scan/SSLScanner.h"
+#include "src/modules/active/SSLScanner.h"
 
 
 Ssl::Ssl(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, project), ui(new Ui::Ssl),

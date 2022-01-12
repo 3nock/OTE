@@ -11,7 +11,7 @@
 #include <QDialog>
 #include <QSortFilterProxyModel>
 #include "src/models/SSLModel.h"
-#include "src/modules/osint/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintModulesHeaders.h"
 
 
 namespace Ui {

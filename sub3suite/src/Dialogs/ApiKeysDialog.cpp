@@ -9,7 +9,7 @@
 #include "ui_ApiKeysDialog.h"
 
 #include "src/utils/Config.h"
-#include "src/modules/osint/OsintDefinitions.h"
+#include "src/modules/passive/OsintDefinitions.h"
 #include <QUrl>
 #include <QDesktopServices>
 

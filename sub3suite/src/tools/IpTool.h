@@ -9,7 +9,7 @@
 #define IPTOOL_H
 
 #include <QDialog>
-#include "src/modules/osint/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintModulesHeaders.h"
 
 namespace Ui {
     class IpTool;

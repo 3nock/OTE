@@ -12,7 +12,7 @@
 #include <QElapsedTimer>
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/modules/scan/BruteScanner.h"
+#include "src/modules/active/BruteScanner.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 

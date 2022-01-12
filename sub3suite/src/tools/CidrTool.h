@@ -10,7 +10,7 @@
 
 #include <QDialog>
 #include "src/models/CidrModel.h"
-#include "src/modules/osint/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintModulesHeaders.h"
 
 
 namespace Ui {

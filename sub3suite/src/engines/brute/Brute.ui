@@ -154,7 +154,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QFrame" name="">
+    <widget class="QFrame" name="frame">
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>
@@ -193,7 +193,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>19</height>
+          <height>0</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -229,7 +229,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>19</height>
+          <height>0</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -352,8 +352,8 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
-                 <height>20</height>
+                 <width>0</width>
+                 <height>0</height>
                 </size>
                </property>
                <property name="font">

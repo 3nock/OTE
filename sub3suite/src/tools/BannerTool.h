@@ -9,7 +9,7 @@
 #define BANNERTOOL_H
 
 #include <QDialog>
-#include "src/modules/scan/BannerScanner.h"
+#include "src/modules/active/BannerScanner.h"
 
 
 namespace Ui {

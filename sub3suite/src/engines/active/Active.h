@@ -10,7 +10,7 @@
 
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/modules/scan/ActiveScanner.h"
+#include "src/modules/active/ActiveScanner.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 namespace Ui {

@@ -12,7 +12,7 @@
 #include "src/utils/utils.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/ActiveConfigDialog.h"
-#include "src/modules/osint/AbstractOsintModule.h"
+#include "src/modules/passive/AbstractOsintModule.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 
 
