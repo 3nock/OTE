@@ -1,0 +1,88 @@
+QTabWidget::pane {
+    border-style: inset;
+    border-color: rgb(170, 170, 127);
+    background-color:transparent;
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+    border-bottom-width: 0px;
+}
+
+QTabWidget::tab-bar {
+    left: 10px;
+}
+
+QTabBar::tab,
+QToolBox::tab {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 3.5px;
+    padding-bottom: 3.5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(170, 170, 127);
+    border-bottom-width: 0px;
+    margin-left: 2px;
+    margin-right: 1px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(245,245,245), stop: 0.4 rgb(215,215,215));
+}
+
+QTabBar::tab:hover,
+QToolBox::tab:hover {
+    color: rgb(140, 140, 87);
+}
+
+QTabBar::tab:selected,
+QToolBox::tab:selected {
+    color: rgb(140, 140, 87);
+    background: white;
+}
+
+QTextEdit,
+QListWidget,
+QTableView,
+QTreeView,
+QListView,
+QColumnView,
+QPlainTextEdit {
+    alternate-background-color: rgba(170, 170, 127, 110);
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
+}
+
+QPushButton {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
+}
+
+QToolButton {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(210,210,210));
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 15px;
+    border-color: black;
+}
+
+QLabel#labelResultsCount,
+QLabel#label_level,
+QLabel#labelResultsCountTree,
+QLabel#labelResultsCountJson,
+QLabel#labelCount,
+QLabel#labelResultsCountSRV {
+    background: rgb(210,210,210);
+}
+
+QProgressBar {
+    text-align: center;
+    color: black;
+    border-width: 1px;
+    border-color: black;
+    border-style: inset;
+    background-color: white;
+    height: 22px;
+    max-width: 200px;
+    min-width: 200px;
+}
+
+QProgressBar::chunk {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
+}

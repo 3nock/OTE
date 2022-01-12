@@ -35,6 +35,7 @@ SOURCES += \
     src/dialogs/wordlist/ChooseWordlist.cpp \
     src/dialogs/wordlist/GenerateWordlist.cpp \
     src/engines/active/ActiveContextMenu.cpp \
+    src/engines/active/ActiveResults.cpp \
     src/engines/active/ActiveScan.cpp \
     src/engines/brute/BruteContextMenu.cpp \
     src/engines/brute/BruteResults.cpp \
@@ -113,6 +114,7 @@ SOURCES += \
     src/modules/scan/BannerScanner.cpp \
     src/modules/scan/DNSScanner.cpp \
     src/modules/scan/SSLScanner.cpp \
+    src/modules/scan/WildcardScanner.cpp \
     src/tools/ASNTool.cpp \
     src/tools/BannerTool.cpp \
     src/tools/CidrTool.cpp \
@@ -124,10 +126,6 @@ SOURCES += \
     src/modules/scan/BruteScanner.cpp \
     src/modules/scan/ActiveScanner.cpp \
     src/modules/scan/IpScanner.cpp \
-    src/modules/check/HostActiveCheck.cpp \
-    src/modules/check/InternetCheck.cpp \
-    src/modules/check/NameserverCheck.cpp \
-    src/modules/check/WildcardCheck.cpp \
     src/modules/osint/api/Bgpview.cpp \
     src/modules/osint/api/BinaryEdge.cpp \
     src/modules/osint/api/C99.cpp \
@@ -272,6 +270,7 @@ HEADERS += \
     src/modules/scan/BannerScanner.h \
     src/modules/scan/DNSScanner.h \
     src/modules/scan/SSLScanner.h \
+    src/modules/scan/WildcardScanner.h \
     src/tools/ASNTool.h \
     src/tools/BannerTool.h \
     src/tools/CidrTool.h \
@@ -283,10 +282,6 @@ HEADERS += \
     src/modules/scan/ActiveScanner.h \
     src/modules/scan/IpScanner.h \
     src/modules/scan/AbstractScanner.h \
-    src/modules/check/HostActiveCheck.h \
-    src/modules/check/InternetCheck.h \
-    src/modules/check/NameserverCheck.h \
-    src/modules/check/WildcardCheck.h \
     src/modules/osint/api/Bgpview.h \
     src/modules/osint/api/BinaryEdge.h \
     src/modules/osint/api/C99.h \

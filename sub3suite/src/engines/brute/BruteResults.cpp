@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "Brute.h"
 #include "ui_Brute.h"
 
@@ -8,6 +15,8 @@ void Brute::onScanLog(scan::Log log){
     ui->plainTextEditLogs->appendHtml("[Nameserver] : <font color=\"red\">"+log.nameserver+"</font>");
     /* add a new line... */
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
     m_scanStats->failed++;
 }
 

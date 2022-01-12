@@ -136,18 +136,17 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="groupBoxLevel">
          <property name="title">
-          <string>Level</string>
+          <string>Multi-Level Scan</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QCheckBox" name="checkBoxLevel">
-            <property name="text">
-             <string>Multi-Level Scan</string>
-            </property>
-           </widget>
-          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
@@ -172,7 +171,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox">
+        <widget class="QGroupBox" name="groupBoxResult">
          <property name="title">
           <string>Results</string>
          </property>
@@ -227,7 +226,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_4">
+        <widget class="QGroupBox" name="groupBoxDefaultNS">
          <property name="title">
           <string>Default</string>
          </property>
@@ -262,7 +261,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
+        <widget class="QGroupBox" name="groupBoxCustomNS">
          <property name="title">
           <string>Custom</string>
          </property>

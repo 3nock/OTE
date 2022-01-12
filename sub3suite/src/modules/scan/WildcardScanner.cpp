@@ -1,6 +1,13 @@
-#include "WildcardCheck.h"
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
-WildcardCheck::WildcardCheck(brute::ScanArgs *args)
+ @brief :
+*/
+
+#include "WildcardScanner.h"
+
+WildcardScanner::WildcardScanner(brute::ScanArgs *args)
     : m_args(args),
       m_dns(new QDnsLookup(this))
 {
@@ -9,16 +16,16 @@ WildcardCheck::WildcardCheck(brute::ScanArgs *args)
 
     connect(m_dns, SIGNAL(finished()), this, SLOT(onLookupFinished()));
 }
-WildcardCheck::~WildcardCheck(){
+WildcardScanner::~WildcardScanner(){
     delete m_dns;
 }
 
-void WildcardCheck::enumerate(QThread *cThread){
+void WildcardScanner::enumerate(QThread *cThread){
     connect(cThread, SIGNAL(started()), this, SLOT(lookup()));
     connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
 }
 
-void WildcardCheck::onLookupFinished(){
+void WildcardScanner::onLookupFinished(){
     switch(m_dns->error()){
 
     case QDnsLookup::NoError:
@@ -37,7 +44,7 @@ void WildcardCheck::onLookupFinished(){
     emit quitThread();
 }
 
-void WildcardCheck::lookup(){
+void WildcardScanner::lookup(){
     /*
      check for random non-existent subdomains name
      TODO: make it more advanced...

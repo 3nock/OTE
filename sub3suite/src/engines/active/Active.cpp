@@ -1,14 +1,24 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "Active.h"
 #include "ui_Active.h"
 
 #include <QThread>
 #include <QDateTime>
+#include "src/utils/Config.h"
+#include "src/utils/Definitions.h"
 #include "src/dialogs/ActiveConfigDialog.h"
 
 
 Active::Active(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Active),
     m_scanConfig(new active::ScanConfig),
     m_scanArgs(new active::ScanArgs),
+    m_scanStats(new active::ScanStat),
     m_targetListModel(new QStringListModel),
     m_resultModel(new QStandardItemModel),
     m_resultProxyModel(new QSortFilterProxyModel)
@@ -20,7 +30,7 @@ Active::Active(QWidget *parent, ProjectDataModel *project) : AbstractEngine(pare
     ui->targets->setListModel(m_targetListModel);
 
     /* result model */
-    m_resultModel->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    m_resultModel->setHorizontalHeaderLabels({"Host", "IpAddress"});
     m_resultProxyModel->setSourceModel(m_resultModel);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
@@ -28,7 +38,6 @@ Active::Active(QWidget *parent, ProjectDataModel *project) : AbstractEngine(pare
     ui->tableViewResults->setModel(m_resultProxyModel);
 
     /* hiding widgets */
-    ui->frameCustom->hide();
     ui->progressBar->hide();
     ui->buttonStop->setDisabled(true);
 
@@ -37,38 +46,26 @@ Active::Active(QWidget *parent, ProjectDataModel *project) : AbstractEngine(pare
                                         << static_cast<int>((this->width() * 0.50)));
 
     /* placeholdertext */
-    ui->lineEditServiceName->setPlaceholderText("e.g SMTP");
-    ui->lineEditServicePort->setPlaceholderText("e.g 889");
-    ui->lineEditFilter->setPlaceholderText("Enter filter...");
+    ui->lineEditFilter->setPlaceholderText("filter...");
+    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
 
     /* ... */
     this->m_initActions();
 
-    /* syntax higlighting... */
-    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
-
     /* config... */
     m_scanArgs->config = m_scanConfig;
+
+    /* get prev config values */
+    this->m_getConfigValues();
 }
 Active::~Active(){
     delete m_scanConfig;
     delete m_scanArgs;
+    delete m_scanStats;
     delete m_targetListModel;
     delete m_resultModel;
     delete m_resultProxyModel;
     delete ui;
-}
-
-void Active::onInfoLog(QString log){
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
-}
-
-void Active::onErrorLog(QString log){
-    QString fontedLog;
-    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
 }
 
 void Active::on_buttonStart_clicked(){
@@ -85,12 +82,10 @@ void Active::on_buttonStart_clicked(){
     ui->progressBar->show();
 
     /* Resetting the scan arguments values... */
-    m_scanArgs->targetList = m_targetListModel->stringList();
-    m_scanArgs->currentTargetToEnumerate = 0;
     m_scanArgs->progress = 0;
     ui->progressBar->reset();
 
-    /* Getting scan arguments.... */
+    /* Getting scan arguments....
     if(ui->comboBoxOption->currentIndex() == ACTIVE::DNS){
         m_scanArgs->checkActiveService = false;
     }
@@ -112,7 +107,7 @@ void Active::on_buttonStart_clicked(){
     }
     ui->progressBar->setMaximum(m_targetListModel->rowCount());
 
-    /* start active subdomain enumeration... */
+     start active subdomain enumeration... */
     this->m_startScan();
     sendStatus("[*] Testing For Active Subdomains...");
 }
@@ -122,36 +117,29 @@ void Active::on_buttonStop_clicked(){
     status->isStopped = true;
 }
 
-void Active::on_comboBoxOption_currentIndexChanged(int index){
-    if(index == ACTIVE::DNS){
-        ui->label_details->setText("Resolves the target hostname To it's IpAddress");
-    }
-    if(index == ACTIVE::HTTP){
-        ui->label_details->setText("Resolves the target, if Resolved, Then tests for connection To port 80");
-    }
-    if(index == ACTIVE::HTTPS){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 443");
-    }
-    if(index == ACTIVE::FTP){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 20");
-    }
-    if(index == ACTIVE::SMTP){
-        ui->label_details->setText("Resolves the target, if Resolved Then tests for connection To port 587");
-    }
-}
-
 void Active::on_buttonConfig_clicked(){
     ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }
 
-void Active::on_checkBoxCustomActive_clicked(bool checked){
-    if(checked){
-        ui->frameDefault->hide();
-        ui->frameCustom->show();
-    }else{
-        ui->frameCustom->hide();
-        ui->frameDefault->show();
+void Active::m_getConfigValues(){
+    m_scanArgs->config->timeout = CONFIG_ACTIVE.value("timeout").toInt();
+    m_scanArgs->config->threads = CONFIG_ACTIVE.value("threads").toInt();
+    m_scanArgs->config->checkWildcard = CONFIG_ACTIVE.value("wildcard").toBool();
+    m_scanArgs->config->noDuplicates = CONFIG_ACTIVE.value("noDuplicates").toBool();
+    m_scanArgs->config->autoSaveToProject = CONFIG_ACTIVE.value("autosaveToProject").toBool();
+
+    QString record = CONFIG_ACTIVE.value("record").toString();
+    if(record == "A")
+        m_scanArgs->config->recordType = QDnsLookup::A;
+    if(record == "AAAA")
+        m_scanArgs->config->recordType = QDnsLookup::AAAA;
+
+    int size = CONFIG_ACTIVE.beginReadArray("Nameservers");
+    for (int i = 0; i < size; ++i) {
+        CONFIG_ACTIVE.setArrayIndex(i);
+        m_scanArgs->config->nameservers.append(CONFIG_ACTIVE.value("value").toString());
     }
+    CONFIG_ACTIVE.endArray();
 }

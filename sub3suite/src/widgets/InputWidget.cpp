@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "InputWidget.h"
 #include "ui_InputWidget.h"
 
@@ -24,7 +31,7 @@ void InputWidget::setListModel(QStringListModel *listModel){
 }
 
 void InputWidget::setListName(const QString& listName){
-    ui->labelName->setText(listName+" Count: ");
+    ui->labelName->setText(listName);
 }
 
 void InputWidget::add(const QString& item){

@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "BruteScanner.h"
 
 
@@ -43,6 +50,20 @@ void brute::Scanner::lookupFinished(){
 }
 
 void brute::Scanner::lookup(){
+    if(m_args->reScan){
+        switch(brute::lookupReScan(m_dns, m_args)){
+        case RETVAL::LOOKUP:
+            m_dns->lookup();
+            break;
+        case RETVAL::QUIT:
+            emit quitThread();
+            break;
+        default:
+            break;
+        }
+        return;
+    }
+
     switch(m_args->output)
     {
     case OUTPUT::SUBDOMAIN:
@@ -167,4 +188,16 @@ RETVAL brute::lookupTLD(QDnsLookup *dns, brute::ScanArgs *args){
             return RETVAL::NEXT;
         }
     }
+}
+
+RETVAL brute::lookupReScan(QDnsLookup *dns, brute::ScanArgs *args){
+    /* lock */
+    QMutexLocker(&args->mutex);
+
+    if(!args->targets.isEmpty()){
+        dns->setName(args->targets.dequeue());
+        return RETVAL::LOOKUP;
+    }
+    else
+        return RETVAL::QUIT;
 }

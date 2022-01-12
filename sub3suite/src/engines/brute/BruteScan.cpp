@@ -1,6 +1,14 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "Brute.h"
 #include "ui_Brute.h"
 
+#include "src/dialogs/FailedScansDialog.h"
 
 QString Brute::targetFilterSubdomain(QString target){
     target = target.trimmed();
@@ -31,6 +39,7 @@ void Brute::m_startScan(){
     ui->progressBar->reset();
     ui->progressBar->clearMask();
 
+    m_failedScans.clear();
     m_scanArgs->targets.clear();
     m_scanArgs->nextLevelTargets.clear();
     m_scanArgs->wordlist = m_wordlistModel->stringList();
@@ -80,6 +89,100 @@ void Brute::m_startScan(){
     m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
     m_scanArgs->currentWordlist = 0;
     m_scanArgs->currentLevel = 0;
+    m_scanArgs->progress = 0;
+    m_scanArgs->reScan = false;
+
+    /* start timer */
+    m_timer.start();
+
+    /* loop to create threads for scan... */
+    for(int i = 0; i < status->activeScanThreads; i++)
+    {
+        /*  TODO:
+         *      set each scanner object & thread with specific nameserver
+         */
+        brute::Scanner *scanner = new brute::Scanner(m_scanArgs);
+        QThread *cThread = new QThread;
+        scanner->startScan(cThread);
+        scanner->moveToThread(cThread);
+
+        switch (ui->comboBoxOutput->currentIndex()){
+        case brute::OUTPUT::SUBDOMAIN:
+            connect(scanner, &brute::Scanner::scanResult, this, &Brute::onResultSubdomain);
+            break;
+        case brute::OUTPUT::TLD:
+            connect(scanner, &brute::Scanner::scanResult, this, &Brute::onResultTLD);
+        }
+        connect(scanner, &brute::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &brute::Scanner::newProgress, ui->progressBar, &QProgressBar::setMaximum);
+        connect(scanner, &brute::Scanner::scanLog, this, &Brute::onScanLog);
+        connect(scanner, &brute::Scanner::nextLevel, this, &Brute::onNextLevel);
+        connect(cThread, &QThread::finished, this, &Brute::onScanThreadEnded);
+        connect(cThread, &QThread::finished, scanner, &brute::Scanner::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        connect(this, &Brute::stopScanThread, scanner, &brute::Scanner::onStopScan);
+        connect(this, &Brute::pauseScanThread, scanner, &brute::Scanner::onPauseScan);
+        connect(this, &Brute::resumeScanThread, scanner, &brute::Scanner::onResumeScan, Qt::DirectConnection);
+
+        cThread->start();
+    }
+    status->isRunning = true;
+}
+
+void Brute::onReScan(QQueue<QString> targets){
+    /* checks */
+    if(targets.isEmpty())
+        return;
+
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setText("Pause");
+
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
+
+    /* logs */
+    m_log("------------------ start ----------------\n");
+    qInfo() << "Scan Started";
+
+    /* ressetting and setting new values */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    ui->progressBar->clearMask();
+
+    m_failedScans.clear();
+    m_scanArgs->targets.clear();
+    m_scanArgs->nextLevelTargets.clear();
+    m_scanArgs->wordlist.clear();
+
+    switch (ui->comboBoxOutput->currentIndex()){
+    case brute::OUTPUT::SUBDOMAIN:
+        m_scanArgs->output = brute::OUTPUT::SUBDOMAIN;
+        break;
+    case brute::OUTPUT::TLD:
+        m_scanArgs->output = brute::OUTPUT::TLD;
+    }
+
+    m_scanArgs->reScan = true;
+    m_scanArgs->targets = targets;
+
+    /* number of threads */
+    if(m_scanArgs->config->threads > m_scanArgs->targets.length())
+        status->activeScanThreads = m_scanArgs->targets.length();
+    else
+        status->activeScanThreads = m_scanArgs->config->threads;
+
+    /* renewing scan statistics */
+    m_scanStats->failed = 0;
+    m_scanStats->resolved = 0;
+    m_scanStats->wordlist = 0;
+    m_scanStats->threads = status->activeScanThreads;
+    m_scanStats->targets = m_scanArgs->targets.length();
+    m_scanStats->nameservers = m_scanArgs->config->nameservers.length();
+
+    /* set progressbar maximum value then set the first target & wordlist */
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
     m_scanArgs->progress = 0;
 
     /* start timer */
@@ -166,6 +269,15 @@ void Brute::onScanThreadEnded(){
 
         ui->buttonStart->setText("Start");
         ui->buttonStop->setDisabled(true);
+
+        // launching the failed scans dialog if there were failed scans
+        if(!m_failedScans.isEmpty()){
+            FailedScansDialog *failedScansDialog = new FailedScansDialog(this, m_failedScans);
+            failedScansDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+
+            connect(failedScansDialog, &FailedScansDialog::reScan, this, &Brute::onReScan);
+            failedScansDialog->show();
+        }
     }
 }
 

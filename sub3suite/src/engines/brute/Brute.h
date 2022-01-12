@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #ifndef BRUTE_H
 #define BRUTE_H
 
@@ -26,6 +33,7 @@ class Brute : public AbstractEngine{
         void onScanLog(scan::Log log);
         void onResultSubdomain(QString subdomain, QString ip);
         void onResultTLD(QString tld, QString ip);
+        void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -44,6 +52,8 @@ class Brute : public AbstractEngine{
 
     private:
         Ui::Brute *ui;
+
+        QMap<QString,QString> m_failedScans;
 
         QSet<QString> m_subdomainSet;
         QSet<QString> m_tldSet;
@@ -84,11 +94,16 @@ class Brute : public AbstractEngine{
         void m_saveResults(QItemSelectionModel*);
         void m_copyResults(RESULT_TYPE);
         void m_copyResults(QItemSelectionModel*);
+        /* extracting subdomain names */
+        void m_extract();
+        void m_extract(QItemSelectionModel*);
         /* sending results to other parts */
+        void m_sendToProject();
         void m_sendSubdomainToEngine(ENGINE);
         void m_sendIpToEngine(ENGINE);
         void m_sendSubdomainToTool(TOOL);
         void m_sendIpToTool(TOOL);
+        void m_sendToProject(QItemSelectionModel*);
         void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
         void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
         void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
@@ -100,7 +115,12 @@ class Brute : public AbstractEngine{
         QAction a_ClearResults{"Clear Results"};
         QAction a_OpenInBrowser{"Open in Browser"};
 
+        /* subdomain name extraction */
+        QAction a_ExtractAll{"Extract Subdomain Name"};
+        QAction a_ExtractSelected{"Extract Subdomain Name"};
+
         /* for all */
+        QAction a_SendAllToProject{"Send To Project"};
         QAction a_SendAllIpToIp{"Send IpAddress To IP"};
         QAction a_SendAllIpToOsint{"Send IpAddress To OSINT"};
         QAction a_SendAllIpToRaw{"Send IpAddress To RAW"};
@@ -114,6 +134,7 @@ class Brute : public AbstractEngine{
         QAction a_SendAllHostToSSLTool{"Send Hostname To SSLTool"};
         QAction a_SendAllHostToDomainTool{"Send Hostname To DomainTool"};
         /* for selected */
+        QAction a_SendSelectedToProject{"Send To Project"};
         QAction a_SendSelectedIpToIp{"Send IpAddress To IP"};
         QAction a_SendSelectedIpToOsint{"Send IpAddress To OSINT"};
         QAction a_SendSelectedIpToRaw{"Send IpAddress To RAW"};

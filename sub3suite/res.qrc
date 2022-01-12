@@ -24,5 +24,6 @@
     </qresource>
     <qresource prefix="/themes">
         <file>res/themes/default.css</file>
+        <file>res/themes/light.css</file>
     </qresource>
 </RCC>

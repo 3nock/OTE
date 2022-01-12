@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>1000</width>
-    <height>691</height>
+    <height>693</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>sub3 suite</string>
+   <string>Sub3 Suite</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
@@ -271,6 +271,9 @@ QFrame[frameShape=&quot;5&quot;] {
 }
 
 QFrame#frame {
+    height: 45px;
+    max-height: 45px;
+    min-height: 45px;
     background-color: rgb(40, 40, 40);
 }
 
@@ -289,6 +292,10 @@ QLabel#labelResultsCountSRV {
 
 QLabel {
     color: black;
+}
+
+QLabel:disabled {
+    color: grey;
 }
 
 QMainWindow {
@@ -543,6 +550,11 @@ QCheckBox {
     padding: 2px;
 }
 
+QCheckBox:disabled {
+    color: grey;
+    padding: 2px;
+}
+
 QCheckBox:hover {
     border-style:solid;
     border-width:1px;
@@ -566,6 +578,10 @@ QGroupBox::indicator:unchecked
     border-width:1px;
     border-color: rgb(37,37,37);
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(75, 75, 75, 255), stop:1 rgb(143, 143, 107));
+}
+
+QCheckBox::indicator:disabled {
+    background-color: grey;
 }
 
 QRadioButton {

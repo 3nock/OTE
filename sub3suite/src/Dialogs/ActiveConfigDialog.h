@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #ifndef ACTIVECONFIGDIALOG_H
 #define ACTIVECONFIGDIALOG_H
 
@@ -47,6 +54,7 @@ class ActiveConfigDialog : public QDialog{
         /* ... */
         void m_initWidgets();
         void m_loadConfigBrute();
+        void m_loadConfigActive();
         /* ... */
         void m_saveBrute();
         void m_saveActive();

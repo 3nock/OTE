@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "Osint.h"
 #include "ui_Osint.h"
 
@@ -66,10 +73,6 @@ Osint::Osint(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent,
 
     /* initiate all actions for the context menus */
     this->m_initActions();
-
-    /* syntax higlighting... */
-    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
-
 }
 Osint::~Osint(){
     delete m_targetListModelIp;

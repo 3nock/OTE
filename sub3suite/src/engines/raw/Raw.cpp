@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "Raw.h"
 #include "ui_Raw.h"
 
@@ -53,7 +60,6 @@ Raw::Raw(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, pro
 
     /* syntax higlighting... */
     m_jsonSyntaxHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditResults->document());
-    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 }
 Raw::~Raw(){
     delete m_model;

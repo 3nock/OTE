@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #ifndef ACTIVE_H
 #define ACTIVE_H
 
@@ -5,13 +12,6 @@
 #include "src/utils/utils.h"
 #include "src/modules/scan/ActiveScanner.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
-
-
-namespace active{
-    enum OUTPUT{
-        SUBOMAIN
-    };
-}
 
 namespace Ui {
     class Active;
@@ -26,9 +26,8 @@ class Active : public AbstractEngine{
 
     public slots:
         void onScanThreadEnded();
-        void onInfoLog(QString log);
-        void onErrorLog(QString log);
-        void onScanResult(QString subdomain, QString ip);
+        void onScanLog(scan::Log log);
+        void onScanResult(QString host, QString ip);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -38,22 +37,22 @@ class Active : public AbstractEngine{
         void on_buttonStop_clicked();
         void on_buttonAction_clicked();
         void on_buttonConfig_clicked();
-        void on_comboBoxOption_currentIndexChanged(int index);
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
-        void on_checkBoxCustomActive_clicked(bool checked);
 
     private:
         Ui::Active *ui;
+        QSet<QString> m_activeDns;
+        QMap<QString,QString> m_failedScans;
         active::ScanConfig *m_scanConfig;
         active::ScanArgs *m_scanArgs;
+        active::ScanStat *m_scanStats;
         QStringListModel *m_targetListModel;
         QStandardItemModel *m_resultModel;
         QSortFilterProxyModel *m_resultProxyModel;
         NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
+        void m_getConfigValues();
         void m_stopScan();
         void m_startScan();
-        void m_pauseScan();
-        void m_resumeScan();
 
     /* for context menu */
     private:

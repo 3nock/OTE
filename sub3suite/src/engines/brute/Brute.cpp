@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "Brute.h"
 #include "ui_Brute.h"
 
@@ -53,9 +60,6 @@ Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent
 
     /* initiate all actions for the context menus */
     this->m_initActions();
-
-    /* syntax higlighting... */
-    m_notesSyntaxHighlighter = new NotesSyntaxHighlighter(ui->plainTextEditNotes->document());
 
     /* ... */
     m_scanArgs->config = m_scanConfig;

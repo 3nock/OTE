@@ -212,40 +212,25 @@
     </layout>
    </item>
    <item>
-    <widget class="QFrame" name="frame">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>42</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>42</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
+    <widget class="QFrame" name="">
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
       <property name="leftMargin">
-       <number>5</number>
+       <number>9</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
       </property>
       <property name="rightMargin">
-       <number>5</number>
+       <number>9</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
       </property>
       <item>
        <widget class="QCheckBox" name="checkBoxMultipleTargets">
@@ -471,28 +456,6 @@
               <widget class="QLineEdit" name="lineEditFilter"/>
              </item>
             </layout>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tabNotes">
-          <attribute name="title">
-           <string>Notes</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>2</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QPlainTextEdit" name="plainTextEditNotes"/>
            </item>
           </layout>
          </widget>

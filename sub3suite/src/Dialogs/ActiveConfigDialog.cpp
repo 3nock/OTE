@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "ActiveConfigDialog.h"
 #include "ui_ActiveConfigDialog.h"
 
@@ -29,6 +36,10 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, active::ScanConfig *conf
 
     active = true;
     this->m_initWidgets();
+    this->m_loadConfigActive();
+
+    /* hiding unused widgets */
+    ui->groupBoxLevel->hide();
 }
 
 /* for records... */
@@ -118,7 +129,7 @@ void ActiveConfigDialog::m_loadConfigBrute(){
     ui->lineEditThreads->setText(CONFIG_BRUTE.value("threads").toString());
     ui->lineEditLevels->setText(CONFIG_BRUTE.value("maxLevel").toString());
     ui->checkBoxWildcards->setChecked(CONFIG_BRUTE.value("wildcard").toBool());
-    ui->checkBoxLevel->setChecked(CONFIG_BRUTE.value("useLevel").toInt());
+    ui->groupBoxLevel->setChecked(CONFIG_BRUTE.value("useLevel").toInt());
     ui->checkBoxAutosave->setChecked(CONFIG_BRUTE.value("autosaveToProject").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG_BRUTE.value("noDuplicates").toBool());
 
@@ -149,6 +160,40 @@ void ActiveConfigDialog::m_loadConfigBrute(){
     CONFIG_BRUTE.endArray();
 }
 
+void ActiveConfigDialog::m_loadConfigActive(){
+    ui->lineEditTimeout->setText(CONFIG_ACTIVE.value("timeout").toString());
+    ui->lineEditThreads->setText(CONFIG_ACTIVE.value("threads").toString());
+    ui->checkBoxWildcards->setChecked(CONFIG_ACTIVE.value("wildcard").toBool());
+    ui->checkBoxAutosave->setChecked(CONFIG_ACTIVE.value("autosaveToProject").toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG_ACTIVE.value("noDuplicates").toBool());
+
+    QString record = CONFIG_ACTIVE.value("record").toString();
+    if(record == "A")
+        ui->radioButtonA->setChecked(true);
+    if(record == "AAAA")
+        ui->radioButtonAAAA->setChecked(true);
+
+    QString nsType = CONFIG_ACTIVE.value("nameserverType").toString();
+    if(nsType == "single")
+        ui->radioButtonSingleNameserver->setChecked(true);
+    if(nsType == "random")
+        ui->radioButtonRandomNameservers->setChecked(true);
+    if(nsType == "custom")
+        ui->radioButtonCustomNameservers->setChecked(true);
+
+    CONFIG_ACTIVE.beginGroup("Default-Nameservers");
+    ui->comboBoxSingleNameserver->addItems(CONFIG_ACTIVE.allKeys());
+    CONFIG_ACTIVE.endGroup();
+    ui->comboBoxSingleNameserver->setCurrentText(CONFIG_ACTIVE.value("nameserver").toString());
+
+    int size = CONFIG_ACTIVE.beginReadArray("Custom-Nameservers");
+    for (int i = 0; i < size; ++i) {
+        CONFIG_ACTIVE.setArrayIndex(i);
+        ui->customNameservers->add(CONFIG_ACTIVE.value("value").toString());
+    }
+    CONFIG_ACTIVE.endArray();
+}
+
 /* saving configurations... */
 
 void ActiveConfigDialog::m_saveBrute(){
@@ -159,7 +204,7 @@ void ActiveConfigDialog::m_saveBrute(){
     QString maxlevel = ui->lineEditLevels->text();
 
     bool wildcard = ui->checkBoxWildcards->isChecked();
-    bool useLevel = ui->checkBoxLevel->isChecked();
+    bool useLevel = ui->groupBoxLevel->isChecked();
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
 
@@ -251,7 +296,95 @@ void ActiveConfigDialog::m_saveBrute(){
 }
 
 void ActiveConfigDialog::m_saveActive(){
+    /* get values... */
 
+    QString thread = ui->lineEditThreads->text();
+    QString timeout = ui->lineEditTimeout->text();
+
+    bool wildcard = ui->checkBoxWildcards->isChecked();
+    bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+
+    bool recordA = ui->radioButtonA->isChecked();
+    bool recordAAAA = ui->radioButtonAAAA->isChecked();
+
+    bool nsSingle = ui->radioButtonSingleNameserver->isChecked();
+    bool nsRandom = ui->radioButtonRandomNameservers->isChecked();
+    bool nsCustom = ui->radioButtonCustomNameservers->isChecked();
+
+
+    /* saving values to config file... */
+
+    CONFIG_ACTIVE.setValue("threads", thread);
+    CONFIG_ACTIVE.setValue("timeout", timeout);
+    CONFIG_ACTIVE.setValue("wildcard", wildcard);
+    CONFIG_ACTIVE.setValue("noDuplicates", noDuplicates);
+    CONFIG_ACTIVE.setValue("autosaveToProject", autosaveToProject);
+    CONFIG_ACTIVE.setValue("nameserver", ui->comboBoxSingleNameserver->currentText());
+
+    if(nsSingle)
+        CONFIG_ACTIVE.setValue("nameserverType", "single");
+    if(nsRandom)
+        CONFIG_ACTIVE.setValue("nameserverType", "random");
+    if(nsCustom)
+        CONFIG_ACTIVE.setValue("nameserverType", "custom");
+
+    if(recordA)
+        CONFIG_ACTIVE.setValue("record", "A");
+    if(recordAAAA)
+        CONFIG_ACTIVE.setValue("record", "AAAA");
+
+    CONFIG_ACTIVE.beginWriteArray("Custom-Nameservers");
+    QStringList customNameservers = m_customNameserverListModel->stringList();
+    for (int i = 0; i < customNameservers.length(); ++i) {
+        CONFIG_ACTIVE.setArrayIndex(i);
+        CONFIG_ACTIVE.setValue("value", customNameservers.at(i));
+    }
+    CONFIG_ACTIVE.endArray();
+
+    /* saving to brute::ScanConfig structure... */
+
+    m_configActive->timeout = timeout.toInt();
+    m_configActive->threads = thread.toInt();
+    m_configActive->checkWildcard =  wildcard;
+    m_configActive->noDuplicates = noDuplicates;
+    m_configActive->autoSaveToProject = autosaveToProject;
+
+    if(recordA)
+        m_configActive->recordType = QDnsLookup::A;
+    if(recordAAAA)
+        m_configActive->recordType = QDnsLookup::AAAA;
+
+    if(nsSingle){
+        m_configActive->nameservers.clear();
+        CONFIG_ACTIVE.beginGroup("Default-Nameservers");
+        QString nameserver = CONFIG_ACTIVE.value(ui->comboBoxSingleNameserver->currentText()).toString();
+        m_configActive->nameservers.append(nameserver);
+        CONFIG_ACTIVE.endGroup();
+    }
+    if(nsRandom){
+        m_configActive->nameservers.clear();
+        CONFIG_ACTIVE.beginGroup("Default-Nameservers");
+        QStringList nameservers = CONFIG_ACTIVE.allKeys();
+        foreach(const QString &key, nameservers){
+            QString nameserver = CONFIG_ACTIVE.value(key).toString();
+            m_configActive->nameservers.append(nameserver);
+        }
+        CONFIG_ACTIVE.endGroup();
+    }
+    if(nsCustom){
+        m_configActive->nameservers.clear();
+        QStringList nameservers = m_customNameserverListModel->stringList();
+        m_configActive->nameservers = nameservers;
+    }
+
+    /* save used nameservers to config file */
+    CONFIG_ACTIVE.beginWriteArray("Nameservers");
+    for (int i = 0; i < m_configActive->nameservers.length(); ++i) {
+        CONFIG_ACTIVE.setArrayIndex(i);
+        CONFIG_ACTIVE.setValue("value", m_configActive->nameservers.at(i));
+    }
+    CONFIG_ACTIVE.endArray();
 }
 
 void ActiveConfigDialog::m_saveDns(){

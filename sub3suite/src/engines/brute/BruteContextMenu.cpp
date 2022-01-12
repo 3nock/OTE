@@ -1,3 +1,10 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "Brute.h"
 #include "ui_Brute.h"
 
@@ -11,6 +18,11 @@ void Brute::m_initActions(){
     connect(&a_RemoveResults, &QAction::triggered, this, [=](){this->m_removeResults(selectionModel);});
     connect(&a_OpenInBrowser, &QAction::triggered, this, [=](){this->m_openInBrowser(selectionModel);});
     /* ... */
+    connect(&a_ExtractAll, &QAction::triggered, this, [=](){this->m_extract();});
+    connect(&a_ExtractSelected, &QAction::triggered, this, [=](){this->m_extract(selectionModel);});
+    /* ... */
+    connect(&a_SendAllToProject, &QAction::triggered, this, [=](){this->m_sendToProject();});
+    connect(&a_SendAllIpToIp, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::IP);});
     connect(&a_SendAllIpToIp, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::IP);});
     connect(&a_SendAllIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT);});
     connect(&a_SendAllIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW);});
@@ -24,6 +36,7 @@ void Brute::m_initActions(){
     connect(&a_SendAllHostToSSLTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT);});
     connect(&a_SendAllHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::DOMAINTOOL);});
     /* ... */
+    connect(&a_SendSelectedToProject, &QAction::triggered, this, [=](){this->m_sendToProject(selectionModel);});
     connect(&a_SendSelectedIpToIp, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::IP, selectionModel);});
     connect(&a_SendSelectedIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT, selectionModel);});
     connect(&a_SendSelectedIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW, selectionModel);});
@@ -77,6 +90,9 @@ void Brute::on_buttonAction_clicked(){
     mainMenu->addSeparator();
     mainMenu->addMenu(saveMenu);
     mainMenu->addMenu(copyMenu);
+    mainMenu->addAction(&a_ExtractAll);
+    mainMenu->addSeparator();
+    mainMenu->addAction(&a_SendAllToProject);
     mainMenu->addSeparator();
     mainMenu->addAction(&a_SendAllIpToIp);
     mainMenu->addAction(&a_SendAllIpToOsint);
@@ -117,6 +133,9 @@ void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     mainMenu->addSeparator();
     mainMenu->addAction(&a_Save);
     mainMenu->addAction(&a_Copy);
+    mainMenu->addAction(&a_ExtractSelected);
+    mainMenu->addSeparator();
+    mainMenu->addAction(&a_SendSelectedToProject);
     mainMenu->addSeparator();
     mainMenu->addAction(&a_SendSelectedIpToIp);
     mainMenu->addAction(&a_SendSelectedIpToOsint);
@@ -290,14 +309,48 @@ void Brute::m_copyResults(QItemSelectionModel *selectionModel){
     QString data;
     QString item;
 
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-    {
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
         item = index.data().toString();
         data.append(item.append(NEWLINE));
     }
 
     clipboard->setText(data.trimmed());
 }
+
+void Brute::m_extract(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString data;
+    QString item;
+
+    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
+        item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().split(".").at(0);
+        data.append(item.append(NEWLINE));
+    }
+
+    clipboard->setText(data.trimmed());
+}
+
+/*
+ * TODO:
+ *      Fix. selection can be host, ip or both
+ */
+void Brute::m_extract(QItemSelectionModel *selectionModel){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString data;
+    QString item;
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column())
+            continue;
+        item = index.data().toString().split(".").at(0);
+        data.append(item.append(NEWLINE));
+    }
+
+    clipboard->setText(data.trimmed());
+}
+
+/* TODO:
+ *      obtain as items and send them to project
+ */
 
 void Brute::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::SUBDOMAIN){
@@ -311,6 +364,63 @@ void Brute::onReceiveTargets(QString target, RESULT_TYPE resultType){
 /*****************************************************************************
                             SENDING RESULTS
 ******************************************************************************/
+
+void Brute::m_sendToProject(){
+    QString host, ip;
+    switch (ui->comboBoxOutput->currentIndex()) {
+    case brute::OUTPUT::SUBDOMAIN:
+        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
+            host = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
+            ip = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
+            project->addActiveSubdomain({host, ip});
+        }
+        break;
+    case brute::OUTPUT::TLD:
+        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
+            host = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
+            ip = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
+            project->addActiveTLD({host, ip});
+        }
+    }
+}
+
+/*
+ * TODO:
+ *      current way still crude.
+ *      Fix. selection can be host, ip or both
+ */
+void Brute::m_sendToProject(QItemSelectionModel *selection){
+    int row;
+    QString host(""), ip("");
+    QModelIndexList indexList(selection->selectedIndexes());
+
+    switch (ui->comboBoxOutput->currentIndex()) {
+    case brute::OUTPUT::SUBDOMAIN:
+        for(int i = 0; i < indexList.size();){
+            host = indexList.at(i).data().toString();
+            row = indexList.at(i).row();
+            i++;
+            if((i < indexList.size()) && (row == indexList.at(i).row())){
+                ip = indexList.at(i).data().toString();
+                project->addActiveSubdomain({host, ip});
+                i++;
+            }
+        }
+        break;
+    case brute::OUTPUT::TLD:
+        for(int i = 0; i < indexList.size();){
+            host = indexList.at(i).data().toString();
+            row = indexList.at(i).row();
+            i++;
+            if((i < indexList.size()) && (row == indexList.at(i).row())){
+                ip = indexList.at(i).data().toString();
+                project->addActiveTLD({host, ip});
+                i++;
+            }
+        }
+    }
+}
+
 void Brute::m_sendSubdomainToEngine(ENGINE engine){
     QString item;
     switch (engine) {
@@ -397,6 +507,8 @@ void Brute::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selectio
     switch (engine) {
     case ENGINE::OSINT:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
+            if(index.column())
+                continue;
             item = index.data().toString();
             emit sendResultsToOsint(item, RESULT_TYPE::SUBDOMAIN);
         }
@@ -404,6 +516,8 @@ void Brute::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selectio
         break;
     case ENGINE::RAW:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
+            if(index.column())
+                continue;
             item = index.data().toString();
             emit sendResultsToRaw(item, RESULT_TYPE::SUBDOMAIN);
         }
@@ -411,6 +525,8 @@ void Brute::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selectio
         break;
     case ENGINE::BRUTE:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
+            if(index.column())
+                continue;
             item = index.data().toString();
             emit sendResultsToBrute(item, RESULT_TYPE::SUBDOMAIN);
         }
@@ -418,6 +534,8 @@ void Brute::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selectio
         break;
     case ENGINE::ACTIVE:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
+            if(index.column())
+                continue;
             item = index.data().toString();
             emit sendResultsToActive(item, RESULT_TYPE::SUBDOMAIN);
         }
@@ -425,6 +543,8 @@ void Brute::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selectio
         break;
     case ENGINE::DNS:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
+            if(index.column())
+                continue;
             item = index.data().toString();
             emit sendResultsToDns(item, RESULT_TYPE::SUBDOMAIN);
         }
@@ -432,6 +552,8 @@ void Brute::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selectio
         break;
     case ENGINE::CERT:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
+            if(index.column())
+                continue;
             item = index.data().toString();
             emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
         }
@@ -447,24 +569,30 @@ void Brute::m_sendIpToEngine(ENGINE engine, QItemSelectionModel *selection){
     switch (engine) {
     case ENGINE::OSINT:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToOsint(item, RESULT_TYPE::IP);
+            if(index.column()){
+                item = index.data().toString();
+                emit sendResultsToOsint(item, RESULT_TYPE::IP);
+            }
         }
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::IP);
+            if(index.column()){
+                item = index.data().toString();
+                emit sendResultsToRaw(item, RESULT_TYPE::IP);
+            }
         }
         emit changeTabToRaw();
         break;
     case ENGINE::IP:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::IP);
+            if(index.column()){
+                item = index.data().toString();
+                emit sendResultsToIp(item, RESULT_TYPE::IP);
+            }
         }
-        emit changeTabToRaw();
+        emit changeTabToIp();
         break;
 
     default:

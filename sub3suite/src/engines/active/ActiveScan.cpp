@@ -1,27 +1,14 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
 #include "Active.h"
 #include "ui_Active.h"
 #include <QThread>
 
-
-void Active::m_pauseScan(){
-    /*
-      if the scan was already paused, then this current click is to
-      Resume the scan, just csubdomainIp the startScan, with the same arguments and
-      it will continue at where it ended...
-    */
-    if(status->isPaused){
-        status->isPaused = false;
-        this->m_startScan();
-    }
-    else{
-        status->isPaused = true;
-        emit stopScanThread();
-    }
-}
-
-void Active::m_resumeScan(){
-
-}
 
 void Active::m_stopScan(){
 
@@ -34,7 +21,7 @@ void Active::m_startScan(){
       creating more threads than needed...
     */
     int wordlistCount = m_targetListModel->rowCount();
-    int threadsCount = m_scanConfig->threadsCount;
+    int threadsCount = 0;
     if(threadsCount > wordlistCount)
         threadsCount = wordlistCount;
 
@@ -49,8 +36,7 @@ void Active::m_startScan(){
         scanner->moveToThread(cThread);
         connect(scanner, &active::Scanner::scanResult, this, &Active::onScanResult);
         connect(scanner, &active::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &active::Scanner::infoLog, this, &Active::onInfoLog);
-        connect(scanner, &active::Scanner::errorLog, this, &Active::onErrorLog);
+        connect(scanner, &active::Scanner::scanLog, this, &Active::onScanLog);
         connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &active::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -58,15 +44,6 @@ void Active::m_startScan(){
         cThread->start();
     }
     status->isRunning = true;
-}
-
-void Active::onScanResult(QString subdomain, QString ipAddress){
-    /* save to active model... */
-    m_resultModel->appendRow(QList<QStandardItem*>() << new QStandardItem(subdomain) << new QStandardItem(ipAddress));
-    ui->labelResultsCount->setNum(m_resultModel->rowCount());
-
-    /* save to project model... */
-    project->addActiveSubdomain(QStringList()<<subdomain<<ipAddress<<subdomain);
 }
 
 void Active::onScanThreadEnded(){
