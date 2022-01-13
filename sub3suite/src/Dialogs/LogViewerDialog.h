@@ -25,7 +25,6 @@ class LogViewerDialog : public QDialog{
 
     private slots:
         void on_comboBoxLogFile_currentIndexChanged(int index);
-        void on_comboBoxLogType_currentIndexChanged(int index);
 
     private:
         Ui::LogViewerDialog *ui;

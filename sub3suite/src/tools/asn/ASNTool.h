@@ -39,7 +39,6 @@ class ASNTool : public QWidget{
         void onRateLimitLog(ScanLog log);
 
     private slots:
-        void on_checkBoxExpand_clicked(bool checked);
         void on_buttonStart_clicked();
         void on_buttonConfig_clicked();
 

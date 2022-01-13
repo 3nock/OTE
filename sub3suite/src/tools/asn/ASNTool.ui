@@ -49,6 +49,31 @@
       </widget>
      </item>
      <item>
+      <widget class="QComboBox" name="comboBoxOption">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>ASN</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ASN PEERS</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ASN PREFIXES</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="lineEditTarget"/>
      </item>
      <item>
@@ -93,38 +118,6 @@
         <property name="text">
          <string>Multiple Targets</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>*Option</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBoxOption">
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>0</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>ASN</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ASN PEERS</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ASN PREFIXES</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>
@@ -247,10 +240,10 @@
            <bool>true</bool>
           </attribute>
           <attribute name="headerMinimumSectionSize">
-           <number>200</number>
+           <number>220</number>
           </attribute>
           <attribute name="headerDefaultSectionSize">
-           <number>300</number>
+           <number>220</number>
           </attribute>
           <attribute name="headerHighlightSections">
            <bool>true</bool>

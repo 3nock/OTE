@@ -5,276 +5,268 @@
  @brief :
 */
 
-#include "DNSScanner.h"
 #include <QDnsLookup>
+#include "DNSScanner.h"
 
 
-dns::Scanner::Scanner(dns::ScanArgs *args)
-    : m_args(args),
-      m_dns_srv(new QDnsLookup(this)),
+/* TODO:
+ *      not well implemented yet
+ */
+dns::Scanner::Scanner(dns::ScanArgs *args): AbstractScanner (nullptr),
+      m_args(args),
       m_dns_a(new QDnsLookup(this)),
       m_dns_aaaa(new QDnsLookup(this)),
       m_dns_mx(new QDnsLookup(this)),
       m_dns_ns(new QDnsLookup(this)),
       m_dns_txt(new QDnsLookup(this)),
-      m_dns_cname(new QDnsLookup(this))
+      m_dns_cname(new QDnsLookup(this)),
+      m_dns_srv(new QDnsLookup(this))
 {
-    connect(this, SIGNAL(doLookup()), this, SLOT(lookup()));
-    connect(this, SIGNAL(doLookup_srv()), this, SLOT(lookup_srv()));
+    connect(this, &dns::Scanner::next, this, &dns::Scanner::lookup);
 
-    m_dns_srv->setType(QDnsLookup::SRV);
     m_dns_a->setType(QDnsLookup::A);
     m_dns_aaaa->setType(QDnsLookup::AAAA);
     m_dns_mx->setType(QDnsLookup::MX);
     m_dns_ns->setType(QDnsLookup::NS);
     m_dns_txt->setType(QDnsLookup::TXT);
     m_dns_cname->setType(QDnsLookup::CNAME);
+    m_dns_srv->setType(QDnsLookup::SRV);
 
-    /*
-    m_dns_srv->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
-    m_dns_a->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
-    m_dns_a->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
-    m_dns_mx->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
-    m_dns_ns->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
-    m_dns_txt->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
-    m_dns_cname->setNameserver(RandomNameserver(m_args->config->useCustomNameServers));
-    */
+    m_dns_a->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+    m_dns_a->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+    m_dns_mx->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+    m_dns_ns->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+    m_dns_txt->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+    m_dns_cname->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+    m_dns_srv->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
 
-    connect(m_dns_srv, SIGNAL(finished()), this, SLOT(srvLookupFinished()));
-    connect(m_dns_a, SIGNAL(finished()), this, SLOT(aLookupFinished()));
-    connect(m_dns_aaaa, SIGNAL(finished()), this, SLOT(aaaaLookupFinished()));
-    connect(m_dns_mx, SIGNAL(finished()), this, SLOT(mxLookupFinished()));
-    connect(m_dns_ns, SIGNAL(finished()), this, SLOT(nsLookupFinished()));
-    connect(m_dns_txt, SIGNAL(finished()), this, SLOT(txtLookupFinished()));
-    connect(m_dns_cname, SIGNAL(finished()), this, SLOT(cnameLookupFinished()));
+    connect(m_dns_srv, &QDnsLookup::finished, this, &dns::Scanner::srvLookupFinished);
+    connect(m_dns_a, &QDnsLookup::finished, this, &dns::Scanner::aLookupFinished);
+    connect(m_dns_aaaa, &QDnsLookup::finished, this, &dns::Scanner::aaaaLookupFinished);
+    connect(m_dns_mx, &QDnsLookup::finished, this, &dns::Scanner::mxLookupFinished);
+    connect(m_dns_ns, &QDnsLookup::finished, this, &dns::Scanner::nsLookupFinished);
+    connect(m_dns_txt, &QDnsLookup::finished, this, &dns::Scanner::txtLookupFinished);
+    connect(m_dns_cname, &QDnsLookup::finished, this, &dns::Scanner::cnameLookupFinished);
 }
 dns::Scanner::~Scanner(){
-    delete m_dns_srv;
     delete m_dns_a;
     delete m_dns_aaaa;
     delete m_dns_mx;
     delete m_dns_ns;
     delete m_dns_txt;
     delete m_dns_cname;
-}
-
-void dns::Scanner::startScan_srv(QThread *cThread){
-    connect(cThread, SIGNAL(started()), this, SLOT(lookup_srv()));
-    connect(this, SIGNAL(quitThread()), cThread, SLOT(quit()));
-}
-
-void dns::Scanner::lookup(){
-    /* ... */
-    m_currentTargetToEnumerate = m_args->currentTargetToEnumerate;
-    m_args->currentTargetToEnumerate++;
-
-    /* ... */
-    if(m_currentTargetToEnumerate < m_args->targetList.count())
-    {
-        m_currentTarget = m_args->targetList.at(m_currentTargetToEnumerate);
-        m_results.domain = m_currentTarget;
-        hasAtleastOneRecord = false;
-
-        if(m_args->RecordType_a)
-        {
-            m_results.A.clear();
-
-            m_dns_a->setName(m_currentTarget);
-            m_dns_a->lookup();
-            m_activeLookups++;
-        }
-        if(m_args->RecordType_aaaa)
-        {
-            m_results.AAAA.clear();
-
-            m_dns_aaaa->setName(m_currentTarget);
-            m_dns_aaaa->lookup();
-            m_activeLookups++;
-        }
-        if(m_args->RecordType_mx)
-        {
-            m_results.MX.clear();
-
-            m_dns_mx->setName(m_currentTarget);
-            m_dns_mx->lookup();
-            m_activeLookups++;
-        }
-        if(m_args->RecordType_ns)
-        {
-            m_results.NS.clear();
-
-            m_dns_ns->setName(m_currentTarget);
-            m_dns_ns->lookup();
-            m_activeLookups++;
-        }
-        if(m_args->RecordType_txt)
-        {
-            m_results.TXT.clear();
-
-            m_dns_txt->setName(m_currentTarget);
-            m_dns_txt->lookup();
-            m_activeLookups++;
-        }
-        if(m_args->RecordType_cname)
-        {
-            m_results.CNAME.clear();
-
-            m_dns_cname->setName(m_currentTarget);
-            m_dns_cname->lookup();
-            m_activeLookups++;
-        }
-    }
-    else
-        /* No More wordlist to enumerate, enumeration Complete... */
-        emit quitThread();
-}
-
-void dns::Scanner::lookup_srv(){
-    /* ... */
-    m_currentSrvToEnumerate = m_args->currentSrvToEnumerate;
-    m_currentTargetToEnumerate = m_args->currentTargetToEnumerate;
-    m_args->currentSrvToEnumerate++;
-
-    /* ... */
-    if(m_currentSrvToEnumerate < m_args->srvWordlist.count())
-    {
-        m_currentTarget = m_args->srvWordlist.at(m_currentSrvToEnumerate)+"."+m_args->targetList.at(m_currentTargetToEnumerate);
-        m_results.domain = m_args->targetList.at(m_currentTargetToEnumerate);
-        m_dns_srv->setName(m_currentTarget);
-        m_dns_srv->lookup();
-    }
-    /* reached end of the wordlist... */
-    else
-    {
-        if(m_args->currentTargetToEnumerate < m_args->targetList.count()-1)
-        {
-            m_args->currentTargetToEnumerate++;
-            m_args->currentSrvToEnumerate = 0;
-            emit doLookup_srv();
-        }
-        else
-            emit quitThread();
-    }
+    delete m_dns_srv;
 }
 
 void dns::Scanner::srvLookupFinished(){
-    if(m_dns_srv->error() == QDnsLookup::NoError)
-    {
-        const QList<QDnsServiceRecord> records = m_dns_srv->serviceRecords();
-        if(records.count())
-        {
-            for(const QDnsServiceRecord &record : records){
-                m_results.srvName = record.name();
-                m_results.srvTarget = record.target();
-                m_results.srvPort = record.port();
-                emit scanResult(m_results);
-            }
-        }
+    switch(m_dns_srv->error()){
+    case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::NoError:
+        foreach(const QDnsServiceRecord &record, m_dns_srv->serviceRecords())
+            m_results.SRV.insert(record.target(), record.port());
+        break;
+
+    default:
+        log.message = m_dns_srv->errorString();
+        log.target = m_dns_srv->name();
+        log.nameserver = m_dns_srv->nameserver().toString();
+        log.recordType = "SRV";
+        emit scanLog(log);
+        break;
     }
 
-    m_args->progress++;
-    emit scanProgress(m_args->progress);
-    emit doLookup_srv();
-}
-
-void dns::Scanner::finish(){
-    m_activeLookups--;
-    if(m_activeLookups == 0)
-    {
-        if(hasAtleastOneRecord)
-            emit scanResult(m_results);
-
-        m_args->progress++;
-        emit scanProgress(m_args->progress);
-        emit doLookup();
-    }
+    emit finish();
 }
 
 void dns::Scanner::aLookupFinished(){
-    if(m_dns_a->error() == QDnsLookup::NoError)
-    {
-        const auto records = m_dns_a->hostAddressRecords();
-        if(records.count())
-        {
-            for(const QDnsHostAddressRecord &record : records)
-                m_results.A.append(record.value().toString());
-            hasAtleastOneRecord = true;
-        }
+    switch(m_dns_a->error()){
+    case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::NoError:
+        foreach(const QDnsHostAddressRecord &record, m_dns_a->hostAddressRecords())
+            m_results.A.append(record.value().toString());
+        break;
+
+    default:
+        log.message = m_dns_a->errorString();
+        log.target = m_dns_a->name();
+        log.nameserver = m_dns_a->nameserver().toString();
+        log.recordType = "A";
+        emit scanLog(log);
+        break;
     }
-    finish();
+
+    emit finish();
 }
 
 void dns::Scanner::aaaaLookupFinished(){
-    if(m_dns_aaaa->error() == QDnsLookup::NoError)
-    {
-        const QList<QDnsHostAddressRecord> records = m_dns_aaaa->hostAddressRecords();
-        if(records.count())
-        {
-            for(const QDnsHostAddressRecord &record : records)
-                m_results.AAAA.append(record.value().toString());
-            hasAtleastOneRecord = true;
-        }
+    switch(m_dns_aaaa->error()){
+    case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::NoError:
+        foreach(const QDnsHostAddressRecord &record, m_dns_aaaa->hostAddressRecords())
+            m_results.AAAA.append(record.value().toString());
+        break;
+
+    default:
+        log.message = m_dns_aaaa->errorString();
+        log.target = m_dns_aaaa->name();
+        log.nameserver = m_dns_aaaa->nameserver().toString();
+        log.recordType = "AAAA";
+        emit scanLog(log);
+        break;
     }
-    finish();
+
+    emit finish();
 }
 
 void dns::Scanner::mxLookupFinished(){
-    if(m_dns_mx->error() == QDnsLookup::NoError)
-    {
-        const QList<QDnsMailExchangeRecord> records = m_dns_mx->mailExchangeRecords();
-        if(records.count())
-        {
-            for(const QDnsMailExchangeRecord &record : records)
-                m_results.MX.append(record.exchange());
-            hasAtleastOneRecord = true;
-        }
+    switch(m_dns_mx->error()){
+    case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::NoError:
+        foreach(const QDnsMailExchangeRecord &record, m_dns_mx->mailExchangeRecords())
+            m_results.MX.append(record.exchange());
+        break;
+
+    default:
+        log.message = m_dns_mx->errorString();
+        log.target = m_dns_mx->name();
+        log.nameserver = m_dns_mx->nameserver().toString();
+        log.recordType = "MX";
+        emit scanLog(log);
+        break;
     }
-    finish();
+
+    emit finish();
 }
 
 void dns::Scanner::cnameLookupFinished(){
-    if(m_dns_cname->error() == QDnsLookup::NoError)
-    {
-        const QList<QDnsDomainNameRecord> records = m_dns_cname->canonicalNameRecords();
-        if(records.count())
-        {
-            for(const QDnsDomainNameRecord &record : records)
-                m_results.CNAME.append(record.value());
-            hasAtleastOneRecord = true;
-        }
+    switch(m_dns_cname->error()){
+    case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::NoError:
+        foreach(const QDnsDomainNameRecord &record, m_dns_cname->canonicalNameRecords())
+            m_results.CNAME.append(record.value());
+        break;
+
+    default:
+        log.message = m_dns_cname->errorString();
+        log.target = m_dns_cname->name();
+        log.nameserver = m_dns_cname->nameserver().toString();
+        log.recordType = "CNAME";
+        emit scanLog(log);
+        break;
     }
-    finish();
+
+    emit finish();
 }
 
 void dns::Scanner::nsLookupFinished(){
-    if(m_dns_ns->error() == QDnsLookup::NoError)
-    {
-        const QList<QDnsDomainNameRecord> records = m_dns_ns->nameServerRecords();
-        if(records.count())
-        {
-            for(const QDnsDomainNameRecord &record : records)
-                m_results.NS.append(record.value());
-            hasAtleastOneRecord = true;
-        }
+    switch(m_dns_ns->error()){
+    case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::NoError:
+        foreach(const QDnsDomainNameRecord &record, m_dns_ns->nameServerRecords())
+            m_results.NS.append(record.value());
+        break;
+
+    default:
+        log.message = m_dns_ns->errorString();
+        log.target = m_dns_ns->name();
+        log.nameserver = m_dns_ns->nameserver().toString();
+        log.recordType = "NS";
+        emit scanLog(log);
+        break;
     }
-    finish();
+
+    emit finish();
 }
 
 void dns::Scanner::txtLookupFinished(){
-    if(m_dns_txt->error() == QDnsLookup::NoError)
-    {
-        const QList<QDnsTextRecord> records = m_dns_txt->textRecords();
-        if(records.count())
-        {
-            for(const QDnsTextRecord &record : records)
-            {
-                for(int i = 0; i != record.values().size(); i++){
-                    QString value(record.values()[i]);
-                    m_results.TXT.append(value);
-                }
-            }
-            hasAtleastOneRecord = true;
+    switch(m_dns_txt->error()){
+    case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::NoError:
+        foreach(const QDnsTextRecord &record, m_dns_txt->textRecords()){
+            foreach(const QByteArray &txt, record.values())
+                m_results.TXT.append(txt);
         }
+        break;
+
+    default:
+        log.message = m_dns_txt->errorString();
+        log.target = m_dns_txt->name();
+        log.nameserver = m_dns_txt->nameserver().toString();
+        log.recordType = "TXT";
+        emit scanLog(log);
+        break;
     }
-    finish();
+
+    emit finish();
+}
+
+void dns::Scanner::lookup(){
+    m_activeLookups = 0;
+    m_currentTarget = dns::getTarget(m_args);
+
+    /* quit if target is null */
+    if(m_currentTarget.isNull()){
+        emit quitThread();
+        return;
+    }
+
+    if(m_args->RecordType_a){
+        m_dns_a->setName(m_currentTarget);
+        m_dns_a->lookup();
+        m_activeLookups++;
+    }
+    if(m_args->RecordType_aaaa){
+        m_dns_aaaa->setName(m_currentTarget);
+        m_dns_aaaa->lookup();
+        m_activeLookups++;
+    }
+    if(m_args->RecordType_ns){
+        m_dns_ns->setName(m_currentTarget);
+        m_dns_ns->lookup();
+        m_activeLookups++;
+    }
+    if(m_args->RecordType_mx){
+        m_dns_mx->setName(m_currentTarget);
+        m_dns_mx->lookup();
+        m_activeLookups++;
+    }
+    if(m_args->RecordType_cname){
+        m_dns_cname->setName(m_currentTarget);
+        m_dns_cname->lookup();
+        m_activeLookups++;
+    }
+    if(m_args->RecordType_txt){
+        m_dns_txt->setName(m_currentTarget);
+        m_dns_txt->lookup();
+        m_activeLookups++;
+    }
+    if(m_args->RecordType_srv){
+        m_dns_srv->setName(m_currentTarget);
+        m_dns_srv->lookup();
+        m_activeLookups++;
+    }
+}
+
+QString dns::getTarget(dns::ScanArgs *args){
+    /* lock */
+    QMutexLocker(&args->mutex);
+
+    if(!args->targets.isEmpty())
+        return args->targets.dequeue();
+    else
+        return nullptr;
 }

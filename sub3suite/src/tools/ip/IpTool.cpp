@@ -72,13 +72,6 @@ void IpTool::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
-void IpTool::on_checkBoxExpand_clicked(bool checked){
-    if(checked)
-        ui->treeResults->expandAll();
-    else
-        ui->treeResults->collapseAll();
-}
-
 void IpTool::on_buttonStart_clicked(){
     ScanArgs scanArgs;
 

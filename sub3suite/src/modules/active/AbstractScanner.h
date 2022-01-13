@@ -23,13 +23,12 @@ enum class RETVAL{
 
 namespace scan {
 struct Log{
-    bool error = false;
-    bool info = false;
-
     QString target;
     QString message;
     QString nameserver;
+    QString recordType;
 };
+
 }
 
 class AbstractScanner : public QObject{

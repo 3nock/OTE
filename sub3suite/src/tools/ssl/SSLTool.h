@@ -34,7 +34,6 @@ class SSLTool : public QWidget{
 
     private slots:
         void on_buttonStart_clicked();
-        void on_checkBoxExpand_clicked(bool checked);
         void on_comboBoxTargetType_currentIndexChanged(int index);
         void on_buttonConfig_clicked();
 

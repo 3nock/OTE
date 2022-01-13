@@ -49,6 +49,33 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="labelOption">
+       <property name="text">
+        <string>*Option</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxOption">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>Crstsh</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Certspotter</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="lineEditTarget"/>
      </item>
      <item>
@@ -105,39 +132,6 @@
         <property name="text">
          <string>Multiple Targets</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="labelOption">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>*Osint Module</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBoxOption">
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>0</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>Crstsh</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Certspotter</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>
@@ -254,10 +248,10 @@
            <bool>true</bool>
           </attribute>
           <attribute name="headerMinimumSectionSize">
-           <number>200</number>
+           <number>220</number>
           </attribute>
           <attribute name="headerDefaultSectionSize">
-           <number>200</number>
+           <number>220</number>
           </attribute>
           <attribute name="headerHighlightSections">
            <bool>true</bool>

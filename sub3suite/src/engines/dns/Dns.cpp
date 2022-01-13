@@ -102,10 +102,9 @@ void Dns::on_buttonStart_clicked(){
     ui->buttonStop->setEnabled(true);
 
     /* Resetting the scan arguments values... */
-    m_scanArgs->targetList = m_targetListModel->stringList();
+    foreach(const QString &target, m_targetListModel->stringList())
+        m_scanArgs->targets.enqueue(target);
     m_scanArgs->srvWordlist = m_srvWordlitsModel->stringList();
-    m_scanArgs->currentSrvToEnumerate = 0;
-    m_scanArgs->currentTargetToEnumerate = 0;
 
     /* getting the arguments for Dns Records Scan... */
     ui->progressBar->show();

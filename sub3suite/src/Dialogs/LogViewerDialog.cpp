@@ -59,7 +59,3 @@ void LogViewerDialog::on_comboBoxLogFile_currentIndexChanged(int index){
         logfile.close();
     }
 }
-
-void LogViewerDialog::on_comboBoxLogType_currentIndexChanged(int index){
-
-}

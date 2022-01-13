@@ -232,10 +232,10 @@
            <bool>true</bool>
           </attribute>
           <attribute name="headerMinimumSectionSize">
-           <number>200</number>
+           <number>220</number>
           </attribute>
           <attribute name="headerDefaultSectionSize">
-           <number>300</number>
+           <number>220</number>
           </attribute>
           <attribute name="headerHighlightSections">
            <bool>true</bool>

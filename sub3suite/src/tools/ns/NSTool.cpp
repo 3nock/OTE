@@ -86,13 +86,6 @@ void NSTool::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
-void NSTool::on_checkBoxExpand_clicked(bool checked){
-    if(checked)
-        ui->treeResults->expandAll();
-    else
-        ui->treeResults->collapseAll();
-}
-
 void NSTool::on_buttonStart_clicked(){
     /* scan argumemts */
     ScanArgs scanArgs;

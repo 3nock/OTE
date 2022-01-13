@@ -110,13 +110,6 @@ void ASNTool::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
-void ASNTool::on_checkBoxExpand_clicked(bool checked){
-    if(checked)
-        ui->treeResults->expandAll();
-    else
-        ui->treeResults->collapseAll();
-}
-
 void ASNTool::on_buttonStart_clicked(){
     ScanArgs scanArgs;
 

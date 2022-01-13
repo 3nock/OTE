@@ -148,13 +148,6 @@ void SSLTool::on_buttonStart_clicked(){
     }
 }
 
-void SSLTool::on_checkBoxExpand_clicked(bool checked){
-    if(checked)
-        ui->treeResults->expandAll();
-    else
-        ui->treeResults->collapseAll();
-}
-
 void SSLTool::on_comboBoxTargetType_currentIndexChanged(int index){
     ui->lineEditTarget->clear();
 

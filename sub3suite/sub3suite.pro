@@ -31,6 +31,7 @@ SOURCES += \
     src/dialogs/ActiveConfigDialog.cpp \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
+    src/dialogs/ToolsConfigDialog.cpp \
     src/dialogs/preference/PreferenceDialog.cpp \
     src/dialogs/wordlist/ChooseWordlist.cpp \
     src/dialogs/wordlist/GenerateWordlist.cpp \
@@ -194,6 +195,7 @@ HEADERS += \
     src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
+    src/dialogs/ToolsConfigDialog.h \
     src/dialogs/preference/PreferenceDialog.h \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
@@ -353,6 +355,7 @@ FORMS += \
     src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \
+    src/dialogs/ToolsConfigDialog.ui \
     src/dialogs/preference/PreferenceDialog.ui \
     src/engines/ssl/Ssl.ui \
     src/tools/asn/ASNTool.ui \

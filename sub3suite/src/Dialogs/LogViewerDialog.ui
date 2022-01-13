@@ -39,48 +39,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Log Type:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBoxLogType">
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>0</height>
-        </size>
-       </property>
-       <item>
-        <property name="text">
-         <string>ALL</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>DEBUG</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>INFO</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>WARNING</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>ERROR</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

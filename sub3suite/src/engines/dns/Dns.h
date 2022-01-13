@@ -29,7 +29,7 @@ class Dns : public AbstractEngine{
         void onScanThreadEnded();
         void onInfoLog(QString log);
         void onErrorLog(QString log);
-        void onScanResult(dns::Results);
+        void onScanResult(dns::ScanResult);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -42,7 +42,7 @@ class Dns : public AbstractEngine{
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_checkBoxSRV_clicked(bool checked);
 
-private:
+    private:
         Ui::Dns *ui;
         dns::ScanConfig *m_scanConfig;
         dns::ScanArgs *m_scanArgs;

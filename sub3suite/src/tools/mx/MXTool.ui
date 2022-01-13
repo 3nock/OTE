@@ -39,6 +39,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QComboBox" name="comboBoxOption">
+       <property name="minimumSize">
+        <size>
+         <width>110</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="lineEditTarget"/>
      </item>
      <item>
@@ -100,23 +110,6 @@
        <widget class="QCheckBox" name="checkBoxMultipleTargets">
         <property name="text">
          <string>Multiple Targets</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>*Data Type</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBoxOption">
-        <property name="minimumSize">
-         <size>
-          <width>110</width>
-          <height>0</height>
-         </size>
         </property>
        </widget>
       </item>
@@ -234,10 +227,10 @@
            <bool>true</bool>
           </attribute>
           <attribute name="headerMinimumSectionSize">
-           <number>200</number>
+           <number>220</number>
           </attribute>
           <attribute name="headerDefaultSectionSize">
-           <number>300</number>
+           <number>220</number>
           </attribute>
           <attribute name="headerHighlightSections">
            <bool>true</bool>

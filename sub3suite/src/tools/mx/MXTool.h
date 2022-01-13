@@ -37,7 +37,6 @@ class MXTool : public QWidget{
         void pauseScanThread();
 
     private slots:
-        void on_checkBoxExpand_clicked(bool checked);
         void on_buttonStart_clicked();
         void on_buttonConfig_clicked();
 

@@ -41,7 +41,7 @@ void Dns::m_startScan(){
     */
     int wordlistCount = m_targetListModel->rowCount();
     int srvWordlistCount = m_srvWordlitsModel->rowCount();
-    int threadsCount = m_scanArgs->config->threadsCount;
+    int threadsCount = 0;
 
     if((!ui->checkBoxSRV->isChecked()) && (threadsCount > wordlistCount))
         threadsCount = wordlistCount;
@@ -99,7 +99,7 @@ void Dns::onScanThreadEnded(){
     }
 }
 
-void Dns::onScanResult(dns::Results results){
+void Dns::onScanResult(dns::ScanResult results){
     if(m_scanArgs->RecordType_srv)
     {
         /*
@@ -111,7 +111,7 @@ void Dns::onScanResult(dns::Results results){
     }
 
     /* for other record types...*/
-    QStandardItem *domainItem = new QStandardItem(results.domain);
+    QStandardItem *domainItem = new QStandardItem(results.target);
     domainItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
     domainItem->setForeground(Qt::white);
     m_resultModel->invisibleRootItem()->appendRow(domainItem);
@@ -124,7 +124,7 @@ void Dns::onScanResult(dns::Results results){
         for(const QString &item: results.A)
         {
             recordItem->appendRow(new QStandardItem(item));
-            project->addActiveA(QStringList()<<item<<results.domain);
+            project->addActiveA(QStringList()<<item<<results.target);
         }
         domainItem->appendRow(recordItem);
     }
@@ -136,7 +136,7 @@ void Dns::onScanResult(dns::Results results){
         for(QString item: results.AAAA)
         {
             recordItem->appendRow(new QStandardItem(item));
-            project->addActiveAAAA(QStringList()<<item<<results.domain);
+            project->addActiveAAAA(QStringList()<<item<<results.target);
         }
         domainItem->appendRow(recordItem);
     }
@@ -148,7 +148,7 @@ void Dns::onScanResult(dns::Results results){
         for(QString item: results.NS)
         {
             recordItem->appendRow(new QStandardItem(item));
-            project->addActiveNS(QStringList()<<item<<results.domain);
+            project->addActiveNS(QStringList()<<item<<results.target);
         }
         domainItem->appendRow(recordItem);
     }
@@ -160,7 +160,7 @@ void Dns::onScanResult(dns::Results results){
         for(QString item: results.MX)
         {
             recordItem->appendRow(new QStandardItem(item));
-            project->addActiveMX(QStringList()<<item<<results.domain);
+            project->addActiveMX(QStringList()<<item<<results.target);
         }
         domainItem->appendRow(recordItem);
     }
@@ -172,7 +172,7 @@ void Dns::onScanResult(dns::Results results){
         for(QString item: results.TXT)
         {
             recordItem->appendRow(new QStandardItem(item));
-            project->addActiveTXT(QStringList()<<item<<results.domain);
+            project->addActiveTXT(QStringList()<<item<<results.target);
         }
         domainItem->appendRow(recordItem);
     }
@@ -184,7 +184,7 @@ void Dns::onScanResult(dns::Results results){
         for(QString item: results.CNAME)
         {
             recordItem->appendRow(new QStandardItem(item));
-            project->addActiveCNAME(QStringList()<<item<<results.domain);
+            project->addActiveCNAME(QStringList()<<item<<results.target);
         }
         domainItem->appendRow(recordItem);
     }

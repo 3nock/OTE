@@ -8,50 +8,58 @@
 #ifndef DNSRECORDSSCANNER_H
 #define DNSRECORDSSCANNER_H
 
+#include <QMutex>
+#include <QQueue>
 #include "AbstractScanner.h"
 
 
-enum OPTION{
-    ALLRECORDS = 0,
-    SRV = 1
+namespace dns {
+
+enum OUTPUT { // scan type
+    A,
+    AAAA,
+    MX,
+    NS,
+    CNAME,
+    TXT,
+    SRV
 };
 
+struct ScanStat {  // scan statistics
+    int nameservers = 0;
+    int targets = 0;
+    int threads = 0;
+    int resolved = 0;
+    int failed = 0;
+};
 
-namespace dns{
-
-struct ScanConfig{
-    QDnsLookup::Type dnsRecordType = QDnsLookup::A;
-    bool useCustomNameServers = false;
-    QStringList customNameServers;
-    int threadsCount = 50;
+struct ScanConfig { // scan configurations
+    QStringList nameservers;
+    int threads = 50;
     int timeout = 3000;
 
-    bool checkWildcard = false;
-    bool hasWildcard = false;
+    bool noDuplicates = false;
+    bool autoSaveToProject = false;
 };
 
-struct ScanArgs{
+struct ScanArgs {   // scan arguments
+    QMutex mutex;
+    QQueue<QString> targets;
     dns::ScanConfig *config;
     QStringList srvWordlist;
-    QStringList targetList;
-
-    int currentTargetToEnumerate;
-    int currentSrvToEnumerate;
     int progress;
 
-    bool RecordType_srv;
     bool RecordType_a;
     bool RecordType_aaaa;
     bool RecordType_mx;
     bool RecordType_ns;
     bool RecordType_txt;
     bool RecordType_cname;
-
-    int count;
+    bool RecordType_srv;
 };
 
-struct Results{
-    QString domain;
+struct ScanResult { // scan results
+    QString target;
 
     QStringList A;
     QStringList AAAA;
@@ -59,26 +67,20 @@ struct Results{
     QStringList NS;
     QStringList TXT;
     QStringList CNAME;
-
-    int srvPort = NULL;
-    QString srvName = nullptr;
-    QString srvTarget = nullptr;
+    QMap<QString, int> SRV; // srv, port
 };
 
-class Scanner: public AbstractScanner{
+
+class Scanner: public AbstractScanner {
     Q_OBJECT
 
     public:
         Scanner(dns::ScanArgs *args);
         ~Scanner() override;
-        //...
-        void startScan_srv(QThread *cThread);
 
     private slots:
         void lookup() override;
-        void lookup_srv();
-        void finish();
-        //...
+
         void srvLookupFinished();
         void aLookupFinished();
         void aaaaLookupFinished();
@@ -88,33 +90,28 @@ class Scanner: public AbstractScanner{
         void txtLookupFinished();
 
     signals:
-        void scanResult(dns::Results);
-        void done();
-        //...
-        void doLookup();
-        void doLookup_srv();
+        void scanResult(dns::ScanResult);
+        void finish();
+        void next();
 
     private:
+        int m_activeLookups = 0;
+        QString m_currentTarget;
+        int m_currentSrvWordlist = 0;
+
         dns::ScanArgs *m_args;
-        dns::Results m_results;
-        //...
-        QStandardItem *m_dnsNameItem;
-        QStandardItem *m_recordItem;
-        //...
-        QDnsLookup *m_dns_srv;
+        dns::ScanResult m_results;
+
         QDnsLookup *m_dns_a;
         QDnsLookup *m_dns_aaaa;
         QDnsLookup *m_dns_mx;
         QDnsLookup *m_dns_ns;
         QDnsLookup *m_dns_txt;
         QDnsLookup *m_dns_cname;
-        //...
-        int m_currentTargetToEnumerate = 0;
-        int m_currentSrvToEnumerate = 0;
-        QString m_currentTarget;
-        //...
-        int m_activeLookups = 0;
-        bool hasAtleastOneRecord = false;
+        QDnsLookup *m_dns_srv;
 };
+
+QString getTarget(dns::ScanArgs *args);
+
 }
 #endif // DNSRECORDSSCANNER_H

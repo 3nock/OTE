@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     /* registering meta-types */
     qDebug() << "Registering meta types...";
     qRegisterMetaType<scan::Log>("scan::Log");
-    qRegisterMetaType<dns::Results>("dns::Results");
+    qRegisterMetaType<dns::ScanResult>("dns::ScanResult");
     qRegisterMetaType<ScanLog>("ScanLog");
     qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
     qRegisterMetaType<MXModelStruct>("MXModelStruct");
