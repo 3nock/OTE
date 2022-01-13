@@ -11,8 +11,6 @@
 #include <QSortFilterProxyModel>
 #include "ProjectDataModel.h"
 #include "src/utils/utils.h"
-#include "general/GeneralAnalysis.h"
-#include "specific/SpecificAnalysis.h"
 
 namespace Ui {
     class Project;
@@ -24,12 +22,8 @@ class Project : public QWidget{
     public:
         Project(QWidget *parent = nullptr, ProjectDataModel *projectDataModel = nullptr);
         ~Project();
-        ///
-        /// ...
-        ///
+
         void updateFilter();
-        GeneralAnalysis *general = nullptr;
-        SpecificAnalysis *specific = nullptr;
 
     private slots:
         void on_pushButton_clearInScope_clicked();

@@ -42,10 +42,6 @@ class AbstractEngine : public QWidget{
         ScanStatus *status;
         ProjectDataModel *project;
         QItemSelectionModel *selectionModel;
-        /* ... */
-        bool autoSaveResultsToProject = false;
-        bool noDuplicateResults = false;
-        bool noDuplicateTargets = false;
 
     signals:
         /* signals to scanning threads */

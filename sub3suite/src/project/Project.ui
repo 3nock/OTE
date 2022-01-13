@@ -491,7 +491,7 @@
      </property>
      <widget class="QWidget" name="tabDashboard">
       <attribute name="title">
-       <string>Board</string>
+       <string>DashBoard</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5"/>
      </widget>

@@ -20,7 +20,7 @@
 #include "src/models/DomainModel.h"
 #include "src/models/EmailModel.h"
 #include "src/models/MXModel.h"
-#include "src/models/NSmodel.h"
+#include "src/models/NSModel.h"
 
 
 /* input option */

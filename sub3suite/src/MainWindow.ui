@@ -343,7 +343,7 @@ QListView,
 QColumnView,
 QPlainTextEdit {
     background-color: rgb(25, 25, 25);
-    alternate-background-color: rgb(40, 40, 40);
+    alternate-background-color: rgb(30, 30, 30);
     color: rgb(180, 180, 140);
     border-style: solid;
     border-color: rgb(20,20,20);
@@ -471,7 +471,7 @@ QMenu {
     border-style: solid;
     border-width: 1px;
     border-color: rgb(30,30,30);
-    background-color: rgb(42,42,42);
+    background-color: rgb(37,37,37);
 }
 
 QMenuBar::item {
@@ -488,6 +488,9 @@ QMenuBar::item {
 QMenuBar::item:selected,
 QMenuBar::item:hover,
 QMenu::item:selected {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0,0,0,80);
     background-color: rgba(0,0,0,50);
 }
 
@@ -673,9 +676,9 @@ QRadioButton:hover {
          <widget class="QTabWidget" name="tabWidgetPassive">
           <property name="font">
            <font>
-            <weight>75</weight>
+            <weight>50</weight>
             <italic>false</italic>
-            <bold>true</bold>
+            <bold>false</bold>
            </font>
           </property>
          </widget>
@@ -703,12 +706,34 @@ QRadioButton:hover {
          <widget class="QTabWidget" name="tabWidgetActive">
           <property name="font">
            <font>
-            <weight>75</weight>
+            <weight>50</weight>
             <italic>false</italic>
-            <bold>true</bold>
+            <bold>false</bold>
            </font>
           </property>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabTools">
+       <attribute name="title">
+        <string>Tools</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>4</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTabWidget" name="tabWidgetTools"/>
         </item>
        </layout>
       </widget>
@@ -742,22 +767,6 @@ QRadioButton:hover {
     <addaction name="actionsettings"/>
     <addaction name="actionrename"/>
    </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>Tools</string>
-    </property>
-    <addaction name="actionDomainTool"/>
-    <addaction name="actionMXTool"/>
-    <addaction name="actionNSTool"/>
-    <addaction name="separator"/>
-    <addaction name="actionASNTool"/>
-    <addaction name="actionCIDRTool"/>
-    <addaction name="actionIpTool"/>
-    <addaction name="separator"/>
-    <addaction name="actionCertTool"/>
-    <addaction name="actionEmailTool"/>
-    <addaction name="actionBannerTool"/>
-   </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
@@ -782,7 +791,6 @@ QRadioButton:hover {
    <addaction name="menuFile"/>
    <addaction name="menuConfig"/>
    <addaction name="menuProject"/>
-   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">

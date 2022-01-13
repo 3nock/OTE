@@ -13,16 +13,6 @@
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/LogViewerDialog.h"
 #include "src/dialogs/preference/PreferenceDialog.h"
-/* Tools */
-#include "src/tools/IpTool.h"
-#include "src/tools/ASNTool.h"
-#include "src/tools/SSLTool.h"
-#include "src/tools/EmailTool.h"
-#include "src/tools/CidrTool.h"
-#include "src/tools/BannerTool.h"
-#include "src/tools/DomainTool.h"
-#include "src/tools/NSTool.h"
-#include "src/tools/MXTool.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow),
@@ -31,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
 
     /* creating and initiating the classes for the modules... */
+    project = new Project(this, projectDataModel);
+    /* engines */
     ip = new Ip(this, projectDataModel);
     osint = new Osint(this, projectDataModel);
     brute = new Brute(this, projectDataModel);
@@ -38,7 +30,15 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     dns = new Dns(this, projectDataModel);
     ssl = new Ssl(this, projectDataModel);
     raw = new Raw(this, projectDataModel);
-    project = new Project(this, projectDataModel);
+    /* tools */
+    domainTool = new DomainTool(this);
+    ipTool = new IpTool(this);
+    asnTool = new ASNTool(this);
+    cidrTool = new CidrTool(this);
+    nsTool = new NSTool(this);
+    mxTool = new MXTool(this);
+    sslTool = new SSLTool(this);
+    emailTool = new EmailTool(this);
 
     /* connecting signals and slots */
     this->m_connectSignals(ip);
@@ -60,8 +60,17 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->tabWidgetActive->insertTab(3, ssl, "SSL");
     ui->tabWidgetActive->insertTab(4, ip, "IP");
     ui->tabWidgetActive->setCurrentIndex(0);
+    /* tools tabwidget */
+    ui->tabWidgetTools->insertTab(0, ipTool, "IP");
+    ui->tabWidgetTools->insertTab(1, domainTool, "Domain");
+    ui->tabWidgetTools->insertTab(2, asnTool, "ASN");
+    ui->tabWidgetTools->insertTab(3, cidrTool, "CIDR");
+    ui->tabWidgetTools->insertTab(4, nsTool, "NS");
+    ui->tabWidgetTools->insertTab(5, mxTool, "MX");
+    ui->tabWidgetTools->insertTab(6, sslTool, "SSL");
+    ui->tabWidgetTools->insertTab(7, emailTool, "EMAIL");
     /* main tabwidget */
-    ui->tabWidgetMain->insertTab(2, project, "Project");
+    ui->tabWidgetMain->insertTab(3, project, "Project");
     ui->tabWidgetMain->setCurrentIndex(0);
 
     /* registering meta-types */
@@ -69,11 +78,16 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     qRegisterMetaType<scan::Log>("scan::Log");
     qRegisterMetaType<dns::Results>("dns::Results");
     qRegisterMetaType<ScanLog>("ScanLog");
+    qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
+    qRegisterMetaType<MXModelStruct>("MXModelStruct");
+    qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
+    qRegisterMetaType<AsModelStruct>("AsModelStruct");
 
     /* Welcome... */
     ui->statusbar->showMessage("Welcome!", 5000);
 }
 MainWindow::~MainWindow(){
+    /* engines */
     delete ip;
     delete osint;
     delete brute;
@@ -81,8 +95,17 @@ MainWindow::~MainWindow(){
     delete dns;
     delete raw;
     delete ssl;
+    /* tools */
+    delete domainTool;
+    delete ipTool;
+    delete asnTool;
+    delete cidrTool;
+    delete nsTool;
+    delete mxTool;
+    delete sslTool;
+    delete emailTool;
+    /* ... */
     delete project;
-    //...
     delete projectDataModel;
     delete ui;
 }
@@ -162,62 +185,6 @@ void MainWindow::on_actionAboutQt_triggered(){
 
 void MainWindow::on_actionExit_triggered(){
     QApplication::exit();
-}
-
-void MainWindow::on_actionIpTool_triggered(){
-    IpTool *ipChecker = new IpTool(this);
-    ipChecker->setAttribute(Qt::WA_DeleteOnClose, true);
-    ipChecker->show();
-}
-
-void MainWindow::on_actionASNTool_triggered(){
-    ASNTool *asnTool = new ASNTool(this);
-    asnTool->setAttribute(Qt::WA_DeleteOnClose, true);
-    asnTool->show();
-}
-
-void MainWindow::on_actionCertTool_triggered(){
-    SSLTool *certTool = new SSLTool(this);
-    certTool->setAttribute(Qt::WA_DeleteOnClose, true);
-    certTool->show();
-}
-
-void MainWindow::on_actionEmailTool_triggered(){
-    EmailTool *emailTool = new EmailTool(this);
-    emailTool->setAttribute(Qt::WA_DeleteOnClose, true);
-    emailTool->show();
-}
-
-void MainWindow::on_actionCIDRTool_triggered(){
-    CidrTool *cidrTool = new CidrTool(this);
-    cidrTool->setAttribute(Qt::WA_DeleteOnClose, true);
-    cidrTool->show();
-}
-
-void MainWindow::on_actionBannerTool_triggered(){
-    /*
-    BannerTool *bannerTool = new BannerTool(this);
-    bannerTool->setAttribute(Qt::WA_DeleteOnClose, true);
-    bannerTool->show();
-    */
-}
-
-void MainWindow::on_actionDomainTool_triggered(){
-    DomainTool *domainTool = new DomainTool(this);
-    domainTool->setAttribute(Qt::WA_DeleteOnClose, true);
-    domainTool->show();
-}
-
-void MainWindow::on_actionNSTool_triggered(){
-    NSTool *nsTool = new NSTool(this);
-    nsTool->setAttribute(Qt::WA_DeleteOnClose, true);
-    nsTool->show();
-}
-
-void MainWindow::on_actionMXTool_triggered(){
-    MXTool *mxTool = new MXTool(this);
-    mxTool->setAttribute(Qt::WA_DeleteOnClose, true);
-    mxTool->show();
 }
 
 void MainWindow::on_actionBlog_triggered(){

@@ -41,7 +41,6 @@ class Active : public AbstractEngine{
         void on_buttonConfig_clicked();
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditTarget_returnPressed();
-
         void on_lineEditFilter_textChanged(const QString &arg1);
 
 private:
@@ -101,7 +100,7 @@ private:
         QAction a_SendAllToProject{"Send To Project"};
         QAction a_SendAllIpToIp{"Send IpAddress To IP"};
         QAction a_SendAllIpToOsint{"Send IpAddress To OSINT"};
-        QAction a_SendAllIpToRaw{"Send Address To RAW"};
+        QAction a_SendAllIpToRaw{"Send IpAddress To RAW"};
         QAction a_SendAllHostToOsint{"Send Hostname To OSINT"};
         QAction a_SendAllHostToRaw{"Send Hostname To RAW"};
         QAction a_SendAllHostToBrute{"Send Hostname To BRUTE"};

@@ -115,14 +115,14 @@ SOURCES += \
     src/modules/active/DNSScanner.cpp \
     src/modules/active/SSLScanner.cpp \
     src/modules/active/WildcardScanner.cpp \
-    src/tools/ASNTool.cpp \
-    src/tools/BannerTool.cpp \
-    src/tools/CidrTool.cpp \
-    src/tools/DomainTool.cpp \
-    src/tools/EmailTool.cpp \
-    src/tools/ExtractorTool.cpp \
-    src/tools/IpTool.cpp \
-    src/tools/MXTool.cpp \
+    src/tools/asn/ASNTool.cpp \
+    src/tools/cidr/CidrTool.cpp \
+    src/tools/domain/DomainTool.cpp \
+    src/tools/email/EmailTool.cpp \
+    src/tools/ip/IpTool.cpp \
+    src/tools/mx/MXTool.cpp \
+    src/tools/ns/NSTool.cpp \
+    src/tools/ssl/SSLTool.cpp \
     src/modules/active/BruteScanner.cpp \
     src/modules/active/ActiveScanner.cpp \
     src/modules/active/IpScanner.cpp \
@@ -176,12 +176,8 @@ SOURCES += \
     src/engines/active/Active.cpp \
     src/engines/brute/Brute.cpp \
     src/engines/osint/Osint.cpp \
-    src/project/general/GeneralAnalysis.cpp \
-    src/project/specific/SpecificAnalysis.cpp \
     src/project/ProjectDataModel.cpp \
     src/project/Project.cpp \
-    src/tools/NSTool.cpp \
-    src/tools/SSLTool.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/utils/LogsSyntaxHighlighter.cpp \
     src/utils/NotesSyntaxHighlighter.cpp \
@@ -204,12 +200,12 @@ HEADERS += \
     src/models/ASNModel.h \
     src/models/BannerModel.h \
     src/models/IPModel.h \
+    src/models/NSModel.h \
     src/models/SSLModel.h \
     src/models/CIDRModel.h \
     src/models/DomainModel.h \
     src/models/EmailModel.h \
     src/models/MXModel.h \
-    src/models/NSmodel.h \
     src/modules/passive/OsintDefinitions.h \
     src/modules/passive/api/HaveIBeenPawned.h \
     src/modules/passive/api/Host.h \
@@ -271,13 +267,15 @@ HEADERS += \
     src/modules/active/DNSScanner.h \
     src/modules/active/SSLScanner.h \
     src/modules/active/WildcardScanner.h \
-    src/tools/ASNTool.h \
-    src/tools/BannerTool.h \
-    src/tools/CidrTool.h \
-    src/tools/DomainTool.h \
-    src/tools/EmailTool.h \
-    src/tools/ExtractorTool.h \
-    src/tools/IpTool.h \
+    src/tools/AbstractTool.h \
+    src/tools/asn/ASNTool.h \
+    src/tools/cidr/CidrTool.h \
+    src/tools/domain/DomainTool.h \
+    src/tools/email/EmailTool.h \
+    src/tools/ip/IpTool.h \
+    src/tools/mx/MXTool.h \
+    src/tools/ns/NSTool.h \
+    src/tools/ssl/SSLTool.h \
     src/modules/active/BruteScanner.h \
     src/modules/active/ActiveScanner.h \
     src/modules/active/IpScanner.h \
@@ -334,13 +332,8 @@ HEADERS += \
     src/engines/brute/Brute.h \
     src/engines/osint/Osint.h \
     src/engines/AbstractEngine.h \
-    src/project/general/GeneralAnalysis.h \
-    src/project/specific/SpecificAnalysis.h \
     src/project/ProjectDataModel.h \
     src/project/Project.h \
-    src/tools/MXTool.h \
-    src/tools/NSTool.h \
-    src/tools/SSLTool.h \
     src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \
@@ -362,25 +355,21 @@ FORMS += \
     src/dialogs/PassiveConfigDialog.ui \
     src/dialogs/preference/PreferenceDialog.ui \
     src/engines/ssl/Ssl.ui \
-    src/tools/ASNTool.ui \
-    src/tools/BannerTool.ui \
-    src/tools/CidrTool.ui \
-    src/tools/DomainTool.ui \
-    src/tools/EmailTool.ui \
-    src/tools/ExtractorTool.ui \
-    src/tools/IpTool.ui \
-    src/tools/MXTool.ui \
+    src/tools/asn/ASNTool.ui \
+    src/tools/cidr/CidrTool.ui \
+    src/tools/domain/DomainTool.ui \
+    src/tools/email/EmailTool.ui \
+    src/tools/ip/IpTool.ui \
+    src/tools/mx/MXTool.ui \
+    src/tools/ns/NSTool.ui \
+    src/tools/ssl/SSLTool.ui \
     src/project/Project.ui \
-    src/project/general/GeneralAnalysis.ui \
-    src/project/specific/SpecificAnalysis.ui \
     src/engines/raw/Raw.ui \
     src/engines/ip/Ip.ui \
     src/engines/dns/Dns.ui \
     src/engines/brute/Brute.ui \
     src/engines/osint/Osint.ui \
     src/engines/active/Active.ui \
-    src/tools/NSTool.ui \
-    src/tools/SSLTool.ui \
     src/widgets/InputWidget.ui \
     src/dialogs/LogViewerDialog.ui \
     src/dialogs/AboutDialog.ui \

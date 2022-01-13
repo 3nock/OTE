@@ -327,7 +327,7 @@ QListView,
 QColumnView,
 QPlainTextEdit {
     background-color: rgb(25, 25, 25);
-    alternate-background-color: rgb(40, 40, 40);
+    alternate-background-color: rgb(30, 30, 30);
     color: rgb(180, 180, 140);
     border-style: solid;
     border-color: rgb(20,20,20);
@@ -455,7 +455,7 @@ QMenu {
     border-style: solid;
     border-width: 1px;
     border-color: rgb(30,30,30);
-    background-color: rgb(42,42,42);
+    background-color: rgb(37,37,37);
 }
 
 QMenuBar::item {
@@ -472,6 +472,9 @@ QMenuBar::item {
 QMenuBar::item:selected,
 QMenuBar::item:hover,
 QMenu::item:selected {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0,0,0,80);
     background-color: rgba(0,0,0,50);
 }
 

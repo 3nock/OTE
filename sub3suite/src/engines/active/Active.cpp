@@ -41,7 +41,7 @@ Active::Active(QWidget *parent, ProjectDataModel *project) : AbstractEngine(pare
     ui->progressBar->hide();
     ui->buttonStop->setDisabled(true);
 
-    /* equsubdomainIpy seperate the widgets... */
+    /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
 
@@ -98,7 +98,7 @@ void Active::on_buttonStart_clicked(){
         this->m_startScan();
 
         /* logs */
-        m_log("------------------ start ----------------\n");
+        m_log("------------------ start ----------------");
         qInfo() << "Scan Started";
         return;
     }
@@ -118,7 +118,7 @@ void Active::on_buttonStart_clicked(){
         emit pauseScanThread();
 
         /* logs */
-        m_log("------------------ Paused ----------------\n");
+        m_log("------------------ Paused ----------------");
         qInfo() << "Scan Paused";
         return;
     }
@@ -138,7 +138,7 @@ void Active::on_buttonStart_clicked(){
         emit resumeScanThread();
 
         /* logs */
-        m_log("------------------ Resumed ----------------\n");
+        m_log("------------------ Resumed ----------------");
         qInfo() << "Scan Resumed";
     }
 }
