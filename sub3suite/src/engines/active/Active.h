@@ -43,7 +43,7 @@ class Active : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_lineEditFilter_textChanged(const QString &arg1);
 
-private:
+    private:
         Ui::Active *ui;
         QElapsedTimer m_timer;
         QSet<QString> m_activeDns;
@@ -54,7 +54,6 @@ private:
         QStringListModel *m_targetListModel;
         QStandardItemModel *m_resultModel;
         QSortFilterProxyModel *m_resultProxyModel;
-        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
         void m_getConfigValues();
         void m_startScan();
         void m_log(QString log);

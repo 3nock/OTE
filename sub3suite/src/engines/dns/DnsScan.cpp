@@ -8,64 +8,170 @@
 #include "Dns.h"
 #include "ui_Dns.h"
 
+#include <QTime>
+#include "src/dialogs/FailedScansDialog.h"
 
-void Dns::m_stopScan(){
-
-}
-
-void Dns::m_pauseScan(){
-    /*
-     if the scan was already paused, then this current click is to
-     Resume the scan, just csubdomainIp the startScan, with the same arguments and
-     it will continue at where it ended...
-    */
-    if(status->isPaused){
-        status->isPaused = false;
-        this->m_startScan();
-    }
-    else{
-        status->isPaused = true;
-        emit stopScanThread();
-    }
-}
-
-void Dns::m_resumeScan(){
-
-}
 
 void Dns::m_startScan(){
+    /* ressetting and setting new values */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    ui->progressBar->clearMask();
+
+    m_failedScans.clear();
+    m_scanArgs->targets.clear();
+    m_scanArgs->srvWordlist.clear();
+
+    /* get targets */
+    if(ui->checkBoxMultipleTargets->isChecked()){
+        foreach(const QString &target, m_targetListModel->stringList())
+            m_scanArgs->targets.enqueue(target);
+    }else {
+        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
+    }
+
+    /* getting srv wordlist if checked */
+    if(ui->checkBoxSRV->isChecked())
+        m_scanArgs->srvWordlist = m_srvWordlitsModel->stringList();
+
     /*
      if the numner of threads is greater than the number of wordlists, set the
      number of threads to use to the number of wordlists available to avoid
      creating more threads than needed...
     */
-    int wordlistCount = m_targetListModel->rowCount();
-    int srvWordlistCount = m_srvWordlitsModel->rowCount();
-    int threadsCount = 0;
+    if(m_scanArgs->config->threads > m_scanArgs->targets.length())
+        status->activeScanThreads = m_scanArgs->targets.length();
+    else
+        status->activeScanThreads = m_scanArgs->config->threads;
 
-    if((!ui->checkBoxSRV->isChecked()) && (threadsCount > wordlistCount))
-        threadsCount = wordlistCount;
+    /* renewing scan statistics */
+    m_scanStats->failed = 0;
+    m_scanStats->resolved = 0;
+    m_scanStats->threads = status->activeScanThreads;
+    m_scanStats->targets = m_scanArgs->targets.length();
+    m_scanStats->nameservers = m_scanArgs->config->nameservers.length();
 
-    if((ui->checkBoxSRV->isChecked()) && (threadsCount > srvWordlistCount*wordlistCount))
-        threadsCount = wordlistCount;
+    /* set progressbar maximum value */
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
 
-    status->activeScanThreads = threadsCount;
+    /* getting the arguments for Dns Records Scan... */
+    m_scanArgs->progress = 0;
+    m_scanArgs->RecordType_a = ui->checkBoxA->isChecked();
+    m_scanArgs->RecordType_aaaa = ui->checkBoxAAAA->isChecked();
+    m_scanArgs->RecordType_mx = ui->checkBoxMX->isChecked();
+    m_scanArgs->RecordType_ns = ui->checkBoxNS->isChecked();
+    m_scanArgs->RecordType_txt = ui->checkBoxTXT->isChecked();
+    m_scanArgs->RecordType_cname = ui->checkBoxCNAME->isChecked();
+    m_scanArgs->RecordType_srv = ui->checkBoxSRV->isChecked();
+
+    /* start timer */
+    m_timer.start();
 
     /* loop to create threads for scan... */
-    for(int i = 0; i < threadsCount; i++)
+    for(int i = 0; i < status->activeScanThreads; i++)
     {
         dns::Scanner *scanner = new dns::Scanner(m_scanArgs);
         QThread *cThread = new QThread(this);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
+
         connect(scanner, &dns::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &dns::Scanner::infoLog, this, &Dns::onInfoLog);
-        connect(scanner, &dns::Scanner::errorLog, this, &Dns::onErrorLog);
+        connect(scanner, &dns::Scanner::scanLog, this, &Dns::onScanLog);
         connect(scanner, &dns::Scanner::scanResult, this, &Dns::onScanResult);
         connect(cThread, &QThread::finished, this, &Dns::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &QThread::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
         connect(this, &Dns::stopScanThread, scanner, &dns::Scanner::onStopScan);
+        connect(this, &Dns::pauseScanThread, scanner, &dns::Scanner::onPauseScan);
+        connect(this, &Dns::resumeScanThread, scanner, &dns::Scanner::onResumeScan, Qt::DirectConnection);
+
+        cThread->start();
+    }
+    status->isRunning = true;
+}
+
+void Dns::onReScan(QQueue<QString> targets){
+    /* checks */
+    if(targets.isEmpty())
+        return;
+
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setText("Pause");
+
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
+
+    /* logs */
+    m_log("----------------- Re-Scan ---------------\n");
+    qInfo() << "Scan Started";
+
+    /* ressetting and setting new values */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    ui->progressBar->clearMask();
+
+    m_failedScans.clear();
+    m_scanArgs->targets.clear();
+
+    m_scanArgs->targets = targets;
+
+    /* getting srv wordlist if checked */
+    if(ui->checkBoxSRV->isChecked())
+        m_scanArgs->srvWordlist = m_srvWordlitsModel->stringList();
+
+    /*
+     if the numner of threads is greater than the number of wordlists, set the
+     number of threads to use to the number of wordlists available to avoid
+     creating more threads than needed...
+    */
+    if(m_scanArgs->config->threads > m_scanArgs->targets.length())
+        status->activeScanThreads = m_scanArgs->targets.length();
+    else
+        status->activeScanThreads = m_scanArgs->config->threads;
+
+    /* renewing scan statistics */
+    m_scanStats->failed = 0;
+    m_scanStats->resolved = 0;
+    m_scanStats->threads = status->activeScanThreads;
+    m_scanStats->targets = m_scanArgs->targets.length();
+    m_scanStats->nameservers = m_scanArgs->config->nameservers.length();
+
+    /* set progressbar maximum value */
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
+
+    /* getting the arguments for Dns Records Scan... */
+    m_scanArgs->progress = 0;
+    m_scanArgs->RecordType_a = ui->checkBoxA->isChecked();
+    m_scanArgs->RecordType_aaaa = ui->checkBoxAAAA->isChecked();
+    m_scanArgs->RecordType_mx = ui->checkBoxMX->isChecked();
+    m_scanArgs->RecordType_ns = ui->checkBoxNS->isChecked();
+    m_scanArgs->RecordType_txt = ui->checkBoxTXT->isChecked();
+    m_scanArgs->RecordType_cname = ui->checkBoxCNAME->isChecked();
+    m_scanArgs->RecordType_srv = ui->checkBoxSRV->isChecked();
+
+    /* start timer */
+    m_timer.start();
+
+    /* loop to create threads for scan... */
+    for(int i = 0; i < status->activeScanThreads; i++)
+    {
+        dns::Scanner *scanner = new dns::Scanner(m_scanArgs);
+        QThread *cThread = new QThread(this);
+        scanner->startScan(cThread);
+        scanner->moveToThread(cThread);
+
+        connect(scanner, &dns::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+        connect(scanner, &dns::Scanner::scanLog, this, &Dns::onScanLog);
+        connect(scanner, &dns::Scanner::scanResult, this, &Dns::onScanResult);
+        connect(cThread, &QThread::finished, this, &Dns::onScanThreadEnded);
+        connect(cThread, &QThread::finished, scanner, &QThread::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        connect(this, &Dns::stopScanThread, scanner, &dns::Scanner::onStopScan);
+        connect(this, &Dns::pauseScanThread, scanner, &dns::Scanner::onPauseScan);
+        connect(this, &Dns::resumeScanThread, scanner, &dns::Scanner::onResumeScan, Qt::DirectConnection);
+
         cThread->start();
     }
     status->isRunning = true;
@@ -74,118 +180,52 @@ void Dns::m_startScan(){
 void Dns::onScanThreadEnded(){
     status->activeScanThreads--;
 
-    /* if subdomainIp Scan Threads have finished... */
+    /* if all Scan Threads have finished... */
     if(status->activeScanThreads == 0)
     {
-        if(status->isPaused)
-        {
-            status->isRunning = false;
-            return;
-        }
+        /* display the scan summary on logs */
+        m_scanSummary();
+
+        if(status->isStopped)
+            m_log("---------------- Stopped ------------\n");
         else
-        {
-            /* set the progress bar to 100% just in case... */
-            if(!status->isStopped)
-                ui->progressBar->setValue(ui->progressBar->maximum());
+            m_log("------------------ End --------------\n");
 
-            status->isPaused = false;
-            status->isStopped = false;
-            status->isRunning = false;
+        /* set the progress bar to 100% just in case... */
+        if(!status->isStopped)
+            ui->progressBar->setValue(ui->progressBar->maximum());
 
-            /* ... */
-            ui->buttonStart->setEnabled(true);
-            ui->buttonStop->setDisabled(true);
+        m_scanArgs->targets.clear();
+
+        status->isNotActive = true;
+        status->isPaused = false;
+        status->isStopped = false;
+        status->isRunning = false;
+
+        ui->buttonStart->setText("Start");
+        ui->buttonStop->setDisabled(true);
+
+        // launching the failed scans dialog if there were failed scans
+        if(!m_failedScans.isEmpty()){
+            FailedScansDialog *failedScansDialog = new FailedScansDialog(this, m_failedScans);
+            failedScansDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+
+            connect(failedScansDialog, &FailedScansDialog::reScan, this, &Dns::onReScan);
+            failedScansDialog->show();
         }
     }
 }
 
-void Dns::onScanResult(dns::ScanResult results){
-    if(m_scanArgs->RecordType_srv)
-    {
-        /*
-        result->records->srv->appendRow(QList<QStandardItem*>() <<new QStandardItem(results.srvName) <<new QStandardItem(results.srvTarget) <<new QStandardItem(QString::number(results.srvPort)));
-        project->addActiveSRV(QStringList() <<results.srvName <<results.srvTarget <<results.domain);
-        ui->labelResultsCountSRV->setNum(result->records->srv->rowCount());
-        */
-        return;
-    }
+void Dns::m_scanSummary(){
+    /* elapsed time */
+    QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
 
-    /* for other record types...*/
-    QStandardItem *domainItem = new QStandardItem(results.target);
-    domainItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    domainItem->setForeground(Qt::white);
-    m_resultModel->invisibleRootItem()->appendRow(domainItem);
-    ui->labelResultsCount->setNum(m_resultModel->invisibleRootItem()->rowCount());
-
-    if(m_scanArgs->RecordType_a && !results.A.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("A");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-        for(const QString &item: results.A)
-        {
-            recordItem->appendRow(new QStandardItem(item));
-            project->addActiveA(QStringList()<<item<<results.target);
-        }
-        domainItem->appendRow(recordItem);
-    }
-
-    if(m_scanArgs->RecordType_aaaa && !results.AAAA.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("AAAA");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-        for(QString item: results.AAAA)
-        {
-            recordItem->appendRow(new QStandardItem(item));
-            project->addActiveAAAA(QStringList()<<item<<results.target);
-        }
-        domainItem->appendRow(recordItem);
-    }
-
-    if(m_scanArgs->RecordType_ns  && !results.NS.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("NS");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-        for(QString item: results.NS)
-        {
-            recordItem->appendRow(new QStandardItem(item));
-            project->addActiveNS(QStringList()<<item<<results.target);
-        }
-        domainItem->appendRow(recordItem);
-    }
-
-    if(m_scanArgs->RecordType_mx && !results.MX.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("MX");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-        for(QString item: results.MX)
-        {
-            recordItem->appendRow(new QStandardItem(item));
-            project->addActiveMX(QStringList()<<item<<results.target);
-        }
-        domainItem->appendRow(recordItem);
-    }
-
-    if(m_scanArgs->RecordType_txt && !results.TXT.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("TXT");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-        for(QString item: results.TXT)
-        {
-            recordItem->appendRow(new QStandardItem(item));
-            project->addActiveTXT(QStringList()<<item<<results.target);
-        }
-        domainItem->appendRow(recordItem);
-    }
-
-    if(m_scanArgs->RecordType_cname  && !results.CNAME.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("CNAME");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-        for(QString item: results.CNAME)
-        {
-            recordItem->appendRow(new QStandardItem(item));
-            project->addActiveCNAME(QStringList()<<item<<results.target);
-        }
-        domainItem->appendRow(recordItem);
-    }
+    /* write to log file */
+    ui->plainTextEditLogs->appendHtml("<font color=\"white\">  [ Scan Summary ]</font>");
+    ui->plainTextEditLogs->appendHtml("[ Resolved ]    : <font color=\"green\">"+QString::number(m_scanStats->resolved)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Failed ]      : <font color=\"red\">"+QString::number(m_scanStats->failed)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Threads ]     : <font color=\"green\">"+QString::number(m_scanStats->threads)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Targets ]     : <font color=\"green\">"+QString::number(m_scanStats->targets)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Nameservers ] : <font color=\"green\">"+QString::number(m_scanStats->nameservers)+"</font>");
+    ui->plainTextEditLogs->appendHtml("[ Time (hh:mm:ss:zzz) ]        : <font color=\"green\">"+time.toString("hh:mm:ss:zzz")+"</font>");
 }

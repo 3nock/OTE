@@ -149,34 +149,42 @@ void Osint::onScanThreadEnded(){
 void Osint::m_clearResults(){
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
+        m_subdomainIpSet.clear();
         m_resultModelSubdomainIp->clear();
         m_resultModelSubdomainIp->setHorizontalHeaderLabels({"Subdomains", "IpAddresses"});
         break;
     case osint::OUTPUT::SUBDOMAIN:
+        m_subdomainSet.clear();
         m_resultModelSubdomain->clear();
         m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomains"});
         break;
     case osint::OUTPUT::IP:
+        m_ipSet.clear();
         m_resultModelIp->clear();
         m_resultModelIp->setHorizontalHeaderLabels({"IpAddresses"});
         break;
     case osint::OUTPUT::EMAIL:
+        m_emailSet.clear();
         m_resultModelEmail->clear();
         m_resultModelEmail->setHorizontalHeaderLabels({"Emails"});
         break;
     case osint::OUTPUT::URL:
+        m_urlSet.clear();
         m_resultModelUrl->clear();
         m_resultModelUrl->setHorizontalHeaderLabels({"Urls"});
         break;
     case osint::OUTPUT::ASN:
+        m_asnSet.clear();
         m_resultModelAsn->clear();
         m_resultModelAsn->setHorizontalHeaderLabels({"Asn", "Name"});
         break;
     case osint::OUTPUT::CERT:
+        m_sslCertSet.clear();
         m_resultModelCert->clear();
         m_resultModelCert->setHorizontalHeaderLabels({"Asn", "Name"});
         break;
     case osint::OUTPUT::CIDR:
+        m_cidrSet.clear();
         m_resultModelCert->clear();
         m_resultModelCert->setHorizontalHeaderLabels({"Cidr"});
         break;

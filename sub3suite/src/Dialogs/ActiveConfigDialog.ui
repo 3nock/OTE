@@ -92,9 +92,9 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <layout class="QHBoxLayout" name="horizontalLayoutRecordType">
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="labelRecordType">
               <property name="minimumSize">
                <size>
                 <width>100</width>

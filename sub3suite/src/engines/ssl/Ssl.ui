@@ -162,7 +162,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QFrame" name="">
+    <widget class="QFrame" name="frame">
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>
@@ -258,7 +258,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout">
            <property name="leftMargin">
-            <number>2</number>
+            <number>0</number>
            </property>
            <property name="topMargin">
             <number>6</number>
@@ -439,7 +439,7 @@
             <number>0</number>
            </property>
            <property name="topMargin">
-            <number>2</number>
+            <number>0</number>
            </property>
            <property name="rightMargin">
             <number>0</number>

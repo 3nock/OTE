@@ -54,9 +54,6 @@ void Active::m_startScan(){
     /* start timer */
     m_timer.start();
 
-    /* nameservers */
-    int ns_per_threads = status->activeScanThreads / m_scanArgs->config->nameservers.length();
-
     /* loop to create threads for enumeration... */
     for(int i = 0; i < status->activeScanThreads; i++)
     {

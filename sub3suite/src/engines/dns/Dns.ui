@@ -191,14 +191,14 @@
       <widget class="QProgressBar" name="progressBar">
        <property name="minimumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>16777215</width>
+         <height>16777215</height>
         </size>
        </property>
        <property name="styleSheet">
@@ -212,7 +212,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QFrame" name="">
+    <widget class="QFrame" name="frame">
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>
@@ -245,7 +245,7 @@
       <item>
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>*Scan Config</string>
+         <string>*Scan Configuration</string>
         </property>
        </widget>
       </item>
@@ -455,6 +455,13 @@
              <item>
               <widget class="QLineEdit" name="lineEditFilter"/>
              </item>
+             <item>
+              <widget class="QCheckBox" name="checkBoxRegex">
+               <property name="text">
+                <string>Regex</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>
@@ -468,7 +475,7 @@
             <number>0</number>
            </property>
            <property name="topMargin">
-            <number>6</number>
+            <number>0</number>
            </property>
            <property name="rightMargin">
             <number>0</number>

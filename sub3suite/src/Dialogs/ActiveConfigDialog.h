@@ -55,6 +55,7 @@ class ActiveConfigDialog : public QDialog{
         void m_initWidgets();
         void m_loadConfigBrute();
         void m_loadConfigActive();
+        void m_loadConfigDns();
         /* ... */
         void m_saveBrute();
         void m_saveActive();

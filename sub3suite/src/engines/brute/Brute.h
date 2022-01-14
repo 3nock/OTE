@@ -69,8 +69,6 @@ class Brute : public AbstractEngine{
         QStandardItemModel *m_resultModelSubdomain;
         QStandardItemModel *m_resultModelTld;
         QSortFilterProxyModel *m_resultProxyModel;
-
-        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
         /* ... */
         void m_log(QString log);
         void m_getConfigValues();

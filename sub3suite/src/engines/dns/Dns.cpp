@@ -10,6 +10,7 @@
 
 #include <QDateTime>
 #include <QClipboard>
+#include "src/utils/Config.h"
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Definitions.h"
 
@@ -17,6 +18,7 @@
 Dns::Dns(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Dns),
     m_scanConfig(new dns::ScanConfig),
     m_scanArgs(new dns::ScanArgs),
+    m_scanStats(new dns::ScanStat),
     m_targetListModel(new QStringListModel),
     m_srvWordlitsModel(new QStringListModel),
     m_resultModel(new QStandardItemModel),
@@ -44,22 +46,24 @@ Dns::Dns(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, pr
     ui->progressBar->hide();
 
     /* placeholder texts */
-    ui->lineEditFilter->setPlaceholderText("Enter filter...");
+    ui->lineEditFilter->setPlaceholderText("filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
 
-    /* initiate all actions for the context menus */
+    m_scanArgs->config = m_scanConfig;
+
+    /* init */
     this->m_initActions();
     this->m_loadSrvWordlist();
-
-    /* ... */
-    m_scanArgs->config = m_scanConfig;
+    this->m_getConfigValues();
 }
 Dns::~Dns(){
+    delete m_scanConfig;
     delete m_scanArgs;
+    delete m_scanStats;
     delete m_targetListModel;
     delete m_srvWordlitsModel;
     delete m_resultModel;
@@ -67,67 +71,99 @@ Dns::~Dns(){
     delete ui;
 }
 
-void Dns::onInfoLog(QString log){
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendPlainText(logTime.append(log));
-}
-
-void Dns::onErrorLog(QString log){
-    QString fontedLog;
-    fontedLog.append("<font color=\"red\">").append(log).append("</font>");
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendHtml(logTime.append(fontedLog));
+void Dns::on_lineEditTarget_returnPressed(){
+    this->on_buttonStart_clicked();
 }
 
 void Dns::on_buttonStart_clicked(){
-    /*
-     checking if subdomainIp requirements are satisfied before scan if not prompt error
-     then exit function...
-    */
-    if(m_targetListModel->rowCount() < 1){
-        QMessageBox::warning(this, "Error!", "Please Enter Target Subdomains For Enumeration!");
+    ///
+    /// Start scan...
+    ///
+    if(status->isNotActive){
+        if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
+            QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+            return;
+        }
+        if(ui->checkBoxMultipleTargets->isChecked() && m_targetListModel->rowCount() < 1){
+            QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+            return;
+        }
+        if((!ui->checkBoxSRV->isChecked()) && (!ui->checkBoxA->isChecked() && !ui->checkBoxAAAA->isChecked() && !ui->checkBoxMX->isChecked() && !ui->checkBoxNS->isChecked() && !ui->checkBoxTXT->isChecked() && !ui->checkBoxCNAME->isChecked())){
+            QMessageBox::warning(this, "Error!", "Please Choose DNS Record To Enumerate!");
+            return;
+        }
+        if((ui->checkBoxSRV->isChecked())&& (m_srvWordlitsModel->rowCount() < 1)){
+            QMessageBox::warning(this, "Error!", "Please Enter SRV Wordlist For Enumeration!");
+            return;
+        }
+
+        ui->buttonStop->setEnabled(true);
+        ui->buttonStart->setText("Pause");
+
+        status->isRunning = true;
+        status->isNotActive = false;
+        status->isStopped = false;
+        status->isPaused = false;
+
+        /* start scan */
+        this->m_startScan();
+
+        /* logs */
+        m_log("------------------ start ----------------");
+        qInfo() << "Scan Started";
         return;
     }
-    if((!ui->checkBoxSRV->isChecked()) && (!ui->checkBoxA->isChecked() && !ui->checkBoxAAAA->isChecked() && !ui->checkBoxMX->isChecked() && !ui->checkBoxNS->isChecked() && !ui->checkBoxTXT->isChecked() && !ui->checkBoxCNAME->isChecked())){
-        QMessageBox::warning(this, "Error!", "Please Choose DNS Record To Enumerate!");
+    ///
+    /// Pause scan...
+    ///
+    if(status->isRunning){
+        ui->buttonStop->setEnabled(true);
+        ui->buttonStart->setText("Resume");
+
+        status->isPaused = true;
+        status->isRunning = false;
+        status->isStopped = false;
+        status->isNotActive = false;
+
+        /* pause scan */
+        emit pauseScanThread();
+
+        /* logs */
+        m_log("------------------ Paused ----------------");
+        qInfo() << "Scan Paused";
         return;
     }
-    if((ui->checkBoxSRV->isChecked())&& (m_srvWordlitsModel->rowCount() < 1)){
-        QMessageBox::warning(this, "Error!", "Please Enter SRV Wordlist For Enumeration!");
-        return;
+    ///
+    /// Resume scan...
+    ///
+    if(status->isPaused){
+        ui->buttonStop->setEnabled(true);
+        ui->buttonStart->setText("Pause");
+
+        status->isRunning = true;
+        status->isPaused = false;
+        status->isStopped = false;
+        status->isNotActive = false;
+
+        /* resume scan */
+        emit resumeScanThread();
+
+        /* logs */
+        m_log("------------------ Resumed ----------------");
+        qInfo() << "Scan Resumed";
     }
-
-    /* disabling & Enabling widgets... */
-    ui->buttonStart->setDisabled(true);
-    ui->buttonStop->setEnabled(true);
-
-    /* Resetting the scan arguments values... */
-    foreach(const QString &target, m_targetListModel->stringList())
-        m_scanArgs->targets.enqueue(target);
-    m_scanArgs->srvWordlist = m_srvWordlitsModel->stringList();
-
-    /* getting the arguments for Dns Records Scan... */
-    ui->progressBar->show();
-    ui->progressBar->reset();
-    m_scanArgs->progress = 0;
-
-    m_scanArgs->RecordType_srv = false; // for now
-    m_scanArgs->RecordType_a = ui->checkBoxA->isChecked();
-    m_scanArgs->RecordType_aaaa = ui->checkBoxAAAA->isChecked();
-    m_scanArgs->RecordType_mx = ui->checkBoxMX->isChecked();
-    m_scanArgs->RecordType_ns = ui->checkBoxNS->isChecked();
-    m_scanArgs->RecordType_txt = ui->checkBoxTXT->isChecked();
-    m_scanArgs->RecordType_cname = ui->checkBoxCNAME->isChecked();
-
-    ui->progressBar->setMaximum(m_targetListModel->rowCount());
-
-    /* start Enumeration... */
-    this->m_startScan();
 }
 
 void Dns::on_buttonStop_clicked(){
+    if(status->isPaused)
+        emit resumeScanThread();
+
     emit stopScanThread();
+
     status->isStopped = true;
+    status->isPaused = false;
+    status->isRunning = false;
+    status->isNotActive = false;
 }
 
 void Dns::m_loadSrvWordlist(){
@@ -146,4 +182,33 @@ void Dns::on_checkBoxSRV_clicked(bool checked){
         ui->srvWordlist->show();
     else
         ui->srvWordlist->hide();
+}
+
+void Dns::m_getConfigValues(){
+    m_scanArgs->config->timeout = CONFIG_DNS.value("timeout").toInt();
+    m_scanArgs->config->threads = CONFIG_DNS.value("threads").toInt();
+    m_scanArgs->config->noDuplicates = CONFIG_DNS.value("noDuplicates").toBool();
+    m_scanArgs->config->autoSaveToProject = CONFIG_DNS.value("autosaveToProject").toBool();
+
+    int size = CONFIG_DNS.beginReadArray("Nameservers");
+    for (int i = 0; i < size; ++i) {
+        CONFIG_DNS.setArrayIndex(i);
+        m_scanArgs->config->nameservers.append(CONFIG_DNS.value("value").toString());
+    }
+    CONFIG_DNS.endArray();
+}
+
+void Dns::m_log(QString log){
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
+}
+
+void Dns::on_lineEditFilter_textChanged(const QString &filterKeyword){
+    if(ui->checkBoxRegex->isChecked())
+        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+    else
+        m_resultProxyModel->setFilterFixedString(filterKeyword);
+
+    ui->treeViewResults->setModel(m_resultProxyModel);
+    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
 }

@@ -186,6 +186,7 @@ void Dns::m_clearResults(){
     /* clear the results... */
     m_resultModel->clear();
     ui->labelResultsCount->clear();
+    m_resultSet.clear();
 
     /* clear the progressbar... */
     ui->progressBar->clearMask();

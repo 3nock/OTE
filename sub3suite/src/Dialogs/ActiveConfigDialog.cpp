@@ -53,6 +53,14 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config)
 
     dns = true;
     this->m_initWidgets();
+    this->m_loadConfigDns();
+
+    /* hiding unused widgets */
+    ui->groupBoxLevel->hide();
+    ui->checkBoxWildcards->hide();
+    ui->radioButtonA->hide();
+    ui->radioButtonAAAA->hide();
+    ui->labelRecordType->hide();
 }
 
 /* for SSL... */
@@ -192,6 +200,33 @@ void ActiveConfigDialog::m_loadConfigActive(){
         ui->customNameservers->add(CONFIG_ACTIVE.value("value").toString());
     }
     CONFIG_ACTIVE.endArray();
+}
+
+void ActiveConfigDialog::m_loadConfigDns(){
+    ui->lineEditTimeout->setText(CONFIG_DNS.value("timeout").toString());
+    ui->lineEditThreads->setText(CONFIG_DNS.value("threads").toString());
+    ui->checkBoxAutosave->setChecked(CONFIG_DNS.value("autosaveToProject").toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG_DNS.value("noDuplicates").toBool());
+
+    QString nsType = CONFIG_DNS.value("nameserverType").toString();
+    if(nsType == "single")
+        ui->radioButtonSingleNameserver->setChecked(true);
+    if(nsType == "random")
+        ui->radioButtonRandomNameservers->setChecked(true);
+    if(nsType == "custom")
+        ui->radioButtonCustomNameservers->setChecked(true);
+
+    CONFIG_DNS.beginGroup("Default-Nameservers");
+    ui->comboBoxSingleNameserver->addItems(CONFIG_DNS.allKeys());
+    CONFIG_DNS.endGroup();
+    ui->comboBoxSingleNameserver->setCurrentText(CONFIG_DNS.value("nameserver").toString());
+
+    int size = CONFIG_DNS.beginReadArray("Custom-Nameservers");
+    for (int i = 0; i < size; ++i) {
+        CONFIG_DNS.setArrayIndex(i);
+        ui->customNameservers->add(CONFIG_DNS.value("value").toString());
+    }
+    CONFIG_DNS.endArray();
 }
 
 /* saving configurations... */
@@ -388,7 +423,79 @@ void ActiveConfigDialog::m_saveActive(){
 }
 
 void ActiveConfigDialog::m_saveDns(){
+    /* get values... */
 
+    QString thread = ui->lineEditThreads->text();
+    QString timeout = ui->lineEditTimeout->text();
+
+    bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+
+    bool nsSingle = ui->radioButtonSingleNameserver->isChecked();
+    bool nsRandom = ui->radioButtonRandomNameservers->isChecked();
+    bool nsCustom = ui->radioButtonCustomNameservers->isChecked();
+
+
+    /* saving values to config file... */
+
+    CONFIG_DNS.setValue("threads", thread);
+    CONFIG_DNS.setValue("timeout", timeout);
+    CONFIG_DNS.setValue("noDuplicates", noDuplicates);
+    CONFIG_DNS.setValue("autosaveToProject", autosaveToProject);
+    CONFIG_DNS.setValue("nameserver", ui->comboBoxSingleNameserver->currentText());
+
+    if(nsSingle)
+        CONFIG_DNS.setValue("nameserverType", "single");
+    if(nsRandom)
+        CONFIG_DNS.setValue("nameserverType", "random");
+    if(nsCustom)
+        CONFIG_DNS.setValue("nameserverType", "custom");
+
+    CONFIG_DNS.beginWriteArray("Custom-Nameservers");
+    QStringList customNameservers = m_customNameserverListModel->stringList();
+    for (int i = 0; i < customNameservers.length(); ++i) {
+        CONFIG_DNS.setArrayIndex(i);
+        CONFIG_DNS.setValue("value", customNameservers.at(i));
+    }
+    CONFIG_DNS.endArray();
+
+    /* saving to brute::ScanConfig structure... */
+
+    m_configDns->timeout = timeout.toInt();
+    m_configDns->threads = thread.toInt();
+    m_configDns->noDuplicates = noDuplicates;
+    m_configDns->autoSaveToProject = autosaveToProject;
+
+    if(nsSingle){
+        m_configDns->nameservers.clear();
+        CONFIG_DNS.beginGroup("Default-Nameservers");
+        QString nameserver = CONFIG_DNS.value(ui->comboBoxSingleNameserver->currentText()).toString();
+        m_configDns->nameservers.append(nameserver);
+        CONFIG_DNS.endGroup();
+    }
+    if(nsRandom){
+        m_configDns->nameservers.clear();
+        CONFIG_DNS.beginGroup("Default-Nameservers");
+        QStringList nameservers = CONFIG_DNS.allKeys();
+        foreach(const QString &key, nameservers){
+            QString nameserver = CONFIG_DNS.value(key).toString();
+            m_configDns->nameservers.append(nameserver);
+        }
+        CONFIG_DNS.endGroup();
+    }
+    if(nsCustom){
+        m_configDns->nameservers.clear();
+        QStringList nameservers = m_customNameserverListModel->stringList();
+        m_configDns->nameservers = nameservers;
+    }
+
+    /* save used nameservers to config file */
+    CONFIG_DNS.beginWriteArray("Nameservers");
+    for (int i = 0; i < m_configDns->nameservers.length(); ++i) {
+        CONFIG_DNS.setArrayIndex(i);
+        CONFIG_DNS.setValue("value", m_configDns->nameservers.at(i));
+    }
+    CONFIG_DNS.endArray();
 }
 
 void ActiveConfigDialog::m_saveSSL(){

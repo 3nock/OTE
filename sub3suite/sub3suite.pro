@@ -41,6 +41,7 @@ SOURCES += \
     src/engines/brute/BruteContextMenu.cpp \
     src/engines/brute/BruteResults.cpp \
     src/engines/brute/BruteScan.cpp \
+    src/engines/dns/DnsResults.cpp \
     src/engines/ssl/Ssl.cpp \
     src/engines/ssl/SslContextMenu.cpp \
     src/engines/ssl/SslResults.cpp \

@@ -59,6 +59,7 @@ dns::Scanner::~Scanner(){
 }
 
 void dns::Scanner::srvLookupFinished(){
+    /* get records results */
     switch(m_dns_srv->error()){
     case QDnsLookup::NotFoundError:
         break;
@@ -77,10 +78,20 @@ void dns::Scanner::srvLookupFinished(){
         break;
     }
 
-    emit finish();
+    /* if this is the last lookup, save send results then go to next lookup */
+    if(m_currentSrvWordlist == m_args->srvWordlist.count()){
+        m_activeLookups--;
+        if(!m_activeLookups){
+            m_args->progress++;
+            emit scanProgress(m_args->progress);
+            emit scanResult(m_results);
+            emit next();
+        }
+    }
 }
 
 void dns::Scanner::aLookupFinished(){
+    /* get records results */
     switch(m_dns_a->error()){
     case QDnsLookup::NotFoundError:
         break;
@@ -99,10 +110,18 @@ void dns::Scanner::aLookupFinished(){
         break;
     }
 
-    emit finish();
+    /* if this is the last lookup, save send results then go to next lookup */
+    m_activeLookups--;
+    if(!m_activeLookups){
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
+        emit scanResult(m_results);
+        emit next();
+    }
 }
 
 void dns::Scanner::aaaaLookupFinished(){
+    /* get records results */
     switch(m_dns_aaaa->error()){
     case QDnsLookup::NotFoundError:
         break;
@@ -121,10 +140,18 @@ void dns::Scanner::aaaaLookupFinished(){
         break;
     }
 
-    emit finish();
+    /* if this is the last lookup, save send results then go to next lookup */
+    m_activeLookups--;
+    if(!m_activeLookups){
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
+        emit scanResult(m_results);
+        emit next();
+    }
 }
 
 void dns::Scanner::mxLookupFinished(){
+    /* get records results */
     switch(m_dns_mx->error()){
     case QDnsLookup::NotFoundError:
         break;
@@ -143,10 +170,18 @@ void dns::Scanner::mxLookupFinished(){
         break;
     }
 
-    emit finish();
+    /* if this is the last lookup, save send results then go to next lookup */
+    m_activeLookups--;
+    if(!m_activeLookups){
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
+        emit scanResult(m_results);
+        emit next();
+    }
 }
 
 void dns::Scanner::cnameLookupFinished(){
+    /* get records results */
     switch(m_dns_cname->error()){
     case QDnsLookup::NotFoundError:
         break;
@@ -165,10 +200,18 @@ void dns::Scanner::cnameLookupFinished(){
         break;
     }
 
-    emit finish();
+    /* if this is the last lookup, save send results then go to next lookup */
+    m_activeLookups--;
+    if(!m_activeLookups){
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
+        emit scanResult(m_results);
+        emit next();
+    }
 }
 
 void dns::Scanner::nsLookupFinished(){
+    /* get records results */
     switch(m_dns_ns->error()){
     case QDnsLookup::NotFoundError:
         break;
@@ -187,10 +230,18 @@ void dns::Scanner::nsLookupFinished(){
         break;
     }
 
-    emit finish();
+    /* if this is the last lookup, save send results then go to next lookup */
+    m_activeLookups--;
+    if(!m_activeLookups){
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
+        emit scanResult(m_results);
+        emit next();
+    }
 }
 
 void dns::Scanner::txtLookupFinished(){
+    /* get records results */
     switch(m_dns_txt->error()){
     case QDnsLookup::NotFoundError:
         break;
@@ -211,7 +262,14 @@ void dns::Scanner::txtLookupFinished(){
         break;
     }
 
-    emit finish();
+    /* if this is the last lookup, save send results then go to next lookup */
+    m_activeLookups--;
+    if(!m_activeLookups){
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
+        emit scanResult(m_results);
+        emit next();
+    }
 }
 
 void dns::Scanner::lookup(){
@@ -224,40 +282,42 @@ void dns::Scanner::lookup(){
         return;
     }
 
+    m_results.target = m_currentTarget;
+
     if(m_args->RecordType_a){
+        m_activeLookups++;
         m_dns_a->setName(m_currentTarget);
         m_dns_a->lookup();
-        m_activeLookups++;
     }
     if(m_args->RecordType_aaaa){
+        m_activeLookups++;
         m_dns_aaaa->setName(m_currentTarget);
         m_dns_aaaa->lookup();
-        m_activeLookups++;
     }
     if(m_args->RecordType_ns){
+        m_activeLookups++;
         m_dns_ns->setName(m_currentTarget);
         m_dns_ns->lookup();
-        m_activeLookups++;
     }
     if(m_args->RecordType_mx){
+        m_activeLookups++;
         m_dns_mx->setName(m_currentTarget);
         m_dns_mx->lookup();
-        m_activeLookups++;
     }
     if(m_args->RecordType_cname){
+        m_activeLookups++;
         m_dns_cname->setName(m_currentTarget);
         m_dns_cname->lookup();
-        m_activeLookups++;
     }
     if(m_args->RecordType_txt){
+        m_activeLookups++;
         m_dns_txt->setName(m_currentTarget);
         m_dns_txt->lookup();
-        m_activeLookups++;
     }
     if(m_args->RecordType_srv){
+        m_activeLookups++;
         m_dns_srv->setName(m_currentTarget);
         m_dns_srv->lookup();
-        m_activeLookups++;
     }
 }
 
