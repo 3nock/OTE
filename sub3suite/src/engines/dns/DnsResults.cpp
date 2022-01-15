@@ -31,7 +31,7 @@ void Dns::onScanResult(dns::ScanResult results){
 
     /* for other record types...*/
     QStandardItem *targetItem = new QStandardItem(results.target);
-    targetItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    targetItem->setIcon(QIcon(":/img/res/icons/folder.png"));
     targetItem->setForeground(Qt::white);
     m_resultModel->invisibleRootItem()->appendRow(targetItem);
     ui->labelResultsCount->setNum(m_resultModel->invisibleRootItem()->rowCount());
