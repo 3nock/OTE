@@ -58,41 +58,40 @@ void Ssl::on_buttonAction_clicked(){
     pos = QPoint(pos.x()+65, pos.y());
 
     /* creating the context menu... */
-    QMenu *mainMenu = new QMenu(this);
-    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
 
     /* adding actions */
-    mainMenu->addAction(&a_ClearResults);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_Save);
-    mainMenu->addAction(&a_Copy);
-    mainMenu->addSeparator();
+    menu.addAction(&a_ClearResults);
+    menu.addSeparator();
+    menu.addAction(&a_Save);
+    menu.addAction(&a_Copy);
+    menu.addSeparator();
 
     switch (ui->comboBoxOutput->currentIndex()) {
     case 0: // subdomain
-        mainMenu->addAction(&a_SendAllHostToOsint);
-        mainMenu->addAction(&a_SendAllHostToRaw);
-        mainMenu->addAction(&a_SendAllHostToBrute);
-        mainMenu->addAction(&a_SendAllHostToActive);
-        mainMenu->addAction(&a_SendAllHostToDns);
-        mainMenu->addAction(&a_SendAllHostToCert);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllHostToCertTool);
-        mainMenu->addAction(&a_SendAllHostToDomainTool);
+        menu.addAction(&a_SendAllHostToOsint);
+        menu.addAction(&a_SendAllHostToRaw);
+        menu.addAction(&a_SendAllHostToBrute);
+        menu.addAction(&a_SendAllHostToActive);
+        menu.addAction(&a_SendAllHostToDns);
+        menu.addAction(&a_SendAllHostToCert);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllHostToCertTool);
+        menu.addAction(&a_SendAllHostToDomainTool);
         break;
     case 1: // cert id
-        mainMenu->addAction(&a_SendAllCertToOsint);
-        mainMenu->addAction(&a_SendAllCertToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllCertToCertTool);
+        menu.addAction(&a_SendAllCertToOsint);
+        menu.addAction(&a_SendAllCertToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllCertToCertTool);
         break;
     case 2: // raw cert
-        mainMenu->addAction(&a_ExpandResults);
-        mainMenu->addAction(&a_CollapseResults);
+        menu.addAction(&a_ExpandResults);
+        menu.addAction(&a_CollapseResults);
     }
 
     /* showing the context menu... */
-    mainMenu->exec(pos);
+    menu.exec(pos);
 }
 
 void Ssl::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
@@ -106,34 +105,33 @@ void Ssl::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     selectionModel = ui->treeViewResults->selectionModel();
 
     /* creating the context menu... */
-    QMenu *mainMenu = new QMenu(this);
-    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
 
     /* adding actions */
-    mainMenu->addAction(&a_RemoveResults);
-    mainMenu->addAction(&a_OpenInBrowser);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_Save);
-    mainMenu->addAction(&a_Copy);
-    mainMenu->addSeparator();
+    menu.addAction(&a_RemoveResults);
+    menu.addAction(&a_OpenInBrowser);
+    menu.addSeparator();
+    menu.addAction(&a_Save);
+    menu.addAction(&a_Copy);
+    menu.addSeparator();
 
     switch (ui->comboBoxOutput->currentIndex()) {
     case 0: // subdomain
-        mainMenu->addAction(&a_SendSelectedHostToOsint);
-        mainMenu->addAction(&a_SendSelectedHostToRaw);
-        mainMenu->addAction(&a_SendSelectedHostToBrute);
-        mainMenu->addAction(&a_SendSelectedHostToActive);
-        mainMenu->addAction(&a_SendSelectedHostToDns);
-        mainMenu->addAction(&a_SendSelectedHostToCert);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedHostToCertTool);
-        mainMenu->addAction(&a_SendSelectedHostToDomainTool);
+        menu.addAction(&a_SendSelectedHostToOsint);
+        menu.addAction(&a_SendSelectedHostToRaw);
+        menu.addAction(&a_SendSelectedHostToBrute);
+        menu.addAction(&a_SendSelectedHostToActive);
+        menu.addAction(&a_SendSelectedHostToDns);
+        menu.addAction(&a_SendSelectedHostToCert);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedHostToCertTool);
+        menu.addAction(&a_SendSelectedHostToDomainTool);
         break;
     case 1: // cert id
-        mainMenu->addAction(&a_SendSelectedCertToOsint);
-        mainMenu->addAction(&a_SendSelectedCertToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedCertToCertTool);
+        menu.addAction(&a_SendSelectedCertToOsint);
+        menu.addAction(&a_SendSelectedCertToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedCertToCertTool);
         break;
     case 2: // raw cert
         /* nothing */
@@ -141,7 +139,7 @@ void Ssl::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     }
 
     /* showing the context menu... */
-    mainMenu->exec(QCursor::pos());
+    menu.exec(QCursor::pos());
 }
 
 void Ssl::m_clearResults(){

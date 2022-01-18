@@ -14,7 +14,7 @@
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/LogViewerDialog.h"
 #include "src/dialogs/preference/PreferenceDialog.h"
-#include "src/dialogs/AboutEngineDialog.h"
+#include "src/dialogs/DocumentationDialog.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow),
@@ -96,15 +96,15 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     QHBoxLayout *hbox_active = new QHBoxLayout(cornerWidget_active);
     QHBoxLayout *hbox_passive = new QHBoxLayout(cornerWidget_passive);
     QHBoxLayout *hbox_tools = new QHBoxLayout(cornerWidget_tools);
-    help_active = new s3s_ClickableLabel("", this);
-    help_passive = new s3s_ClickableLabel("", this);
-    help_tools = new s3s_ClickableLabel("", this);
-    help_active->setPixmap(QPixmap(":/img/res/icons/help.png"));
-    help_passive->setPixmap(QPixmap(":/img/res/icons/help.png"));
-    help_tools->setPixmap(QPixmap(":/img/res/icons/help.png"));
-    hbox_active->addWidget(help_active);
-    hbox_passive->addWidget(help_passive);
-    hbox_tools->addWidget(help_tools);
+    s3s_ClickableLabel *documentation_active = new s3s_ClickableLabel("", this);
+    s3s_ClickableLabel *documentation_passive = new s3s_ClickableLabel("", this);
+    s3s_ClickableLabel *documentation_tools = new s3s_ClickableLabel("", this);
+    documentation_active->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    documentation_passive->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    documentation_tools->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    hbox_active->addWidget(documentation_active);
+    hbox_passive->addWidget(documentation_passive);
+    hbox_tools->addWidget(documentation_tools);
     hbox_active->setContentsMargins(0, 0, 10, 2);
     hbox_passive->setContentsMargins(0, 0, 10, 2);
     hbox_tools->setContentsMargins(0, 0, 10, 2);
@@ -113,9 +113,9 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->tabWidgetTools->setCornerWidget(cornerWidget_tools);
 
     /* ... */
-    connect(help_passive, &s3s_ClickableLabel::clicked, this, &MainWindow::onAbout_passive);
-    connect(help_active, &s3s_ClickableLabel::clicked, this, &MainWindow::onAbout_active);
-    connect(help_tools, &s3s_ClickableLabel::clicked, this, &MainWindow::onAbout_tools);
+    connect(documentation_passive, &s3s_ClickableLabel::clicked, this, &MainWindow::on_documentation_passive);
+    connect(documentation_active, &s3s_ClickableLabel::clicked, this, &MainWindow::on_documentation_active);
+    connect(documentation_tools, &s3s_ClickableLabel::clicked, this, &MainWindow::on_documentation_tools);
 
     /* build info */
     QAction* buildInfo = new QAction(tr("%1 (%2)").arg("Feb 01 2022").arg("BETA"), this);
@@ -140,10 +140,6 @@ MainWindow::~MainWindow(){
     delete mxTool;
     delete sslTool;
     delete emailTool;
-    /* ... */
-    delete help_active;
-    delete help_passive;
-    delete help_tools;
     /* ... */
     delete project;
     delete projectDataModel;
@@ -235,46 +231,46 @@ void MainWindow::on_actionTwitter_triggered(){
     QDesktopServices::openUrl(QUrl("https://twitter.com/sub3suite", QUrl::TolerantMode));
 }
 
-void MainWindow::onAbout_active(){
-    AboutEngineDialog *aboutEngineDialog = nullptr;
+void MainWindow::on_documentation_active(){
+    DocumentationDialog *documentationDialog = nullptr;
 
     switch (ui->tabWidgetActive->currentIndex()) {
     case 0:
-        aboutEngineDialog = new AboutEngineDialog(ENGINE::BRUTE, this);
+        documentationDialog = new DocumentationDialog(ENGINE::BRUTE, this);
         break;
     case 1:
-        aboutEngineDialog = new AboutEngineDialog(ENGINE::ACTIVE, this);
+        documentationDialog = new DocumentationDialog(ENGINE::ACTIVE, this);
         break;
     case 2:
-        aboutEngineDialog = new AboutEngineDialog(ENGINE::DNS, this);
+        documentationDialog = new DocumentationDialog(ENGINE::DNS, this);
         break;
     case 3:
-        aboutEngineDialog = new AboutEngineDialog(ENGINE::CERT, this);
+        documentationDialog = new DocumentationDialog(ENGINE::CERT, this);
         break;
     case 4:
-        aboutEngineDialog = new AboutEngineDialog(ENGINE::IP, this);
+        documentationDialog = new DocumentationDialog(ENGINE::IP, this);
         break;
     }
-    aboutEngineDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-    aboutEngineDialog->show();
+    documentationDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    documentationDialog->show();
 }
 
-void MainWindow::onAbout_passive(){
-    AboutEngineDialog *aboutEngineDialog = nullptr;
+void MainWindow::on_documentation_passive(){
+    DocumentationDialog *documentationDialog = nullptr;
     switch (ui->tabWidgetPassive->currentIndex()) {
     case 0:
-        aboutEngineDialog = new AboutEngineDialog(ENGINE::OSINT, this);
+        documentationDialog = new DocumentationDialog(ENGINE::OSINT, this);
         break;
     case 1:
-        aboutEngineDialog = new AboutEngineDialog(ENGINE::RAW, this);
+        documentationDialog = new DocumentationDialog(ENGINE::RAW, this);
         break;
     }
 
-    aboutEngineDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-    aboutEngineDialog->show();
+    documentationDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    documentationDialog->show();
 }
 
-void MainWindow::onAbout_tools(){
+void MainWindow::on_documentation_tools(){
     /*
      * nothing yet...
      */
@@ -296,4 +292,11 @@ void MainWindow::on_actionPreferences_triggered(){
     PreferenceDialog *preferenceDialog = new PreferenceDialog(this);
     preferenceDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     preferenceDialog->show();
+}
+
+void MainWindow::on_actionDocumentation_triggered(){
+    DocumentationDialog *documentationDialog = nullptr;
+    documentationDialog = new DocumentationDialog(this);
+    documentationDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    documentationDialog->show();
 }

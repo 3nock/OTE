@@ -12,42 +12,24 @@
 #include <QMessageBox>
 #include <QFile>
 
-/*
- * option to remove all passives that are in active...
- *
- * produce transforms-like graphs
- * that can fetch more data/info by clicking on the node..
- *
- */
+
 Project::Project(QWidget *parent, ProjectDataModel *projectDataModel) :QWidget(parent), ui(new Ui::Project),
     m_projectDataModel(projectDataModel),
     m_proxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
-    ///
-    /// for analysis tabs...
-    ///
-    /*
-    general = new GeneralAnalysis(this);
-    specific = new SpecificAnalysis(this);
-    ui->tabWidgetProject->insertTab(1, general, "General");
-    ui->tabWidgetProject->insertTab(2, specific, "Specific");
-    */
-    ///
-    /// setting up signals and slots...
-    ///
-    //...
-    //...
+
+    /* setting up signals and slots... */
     m_proxyModel->setSourceModel(m_projectDataModel->projectModel);
     m_proxyModel->setRecursiveFilteringEnabled(true);
-    //...
+
     ui->treeView->setModel(m_proxyModel);
     ui->treeView->expandAll();
     ui->treeView->setColumnHidden(1, true);
-    //...
+
     ui->lineEdit_inScope->setPlaceholderText("e.g google ...");
     ui->lineEdit_filter->setPlaceholderText("Enter filter...");
-    //...
+
     ui->frame_filter->hide();
     ui->treeView->setColumnHidden(1, true);
     ui->treeView->setColumnHidden(2, true);

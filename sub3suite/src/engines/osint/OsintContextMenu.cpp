@@ -90,112 +90,111 @@ void Osint::on_buttonAction_clicked(){
     pos = QPoint(pos.x()+65, pos.y());
 
     /* creating the context menu... */
-    QMenu *mainMenu = new QMenu(this);
-    QMenu *saveMenu = new QMenu(this);
-    QMenu *copyMenu = new QMenu(this);
-    saveMenu->setTitle("Save");
-    copyMenu->setTitle("Copy");
-    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
+    QMenu saveMenu(this);
+    QMenu copyMenu(this);
+    saveMenu.setTitle("Save");
+    copyMenu.setTitle("Copy");
 
     /* adding actions */
-    mainMenu->addAction(&a_ClearResults);
-    mainMenu->addSeparator();
+    menu.addAction(&a_ClearResults);
+    menu.addSeparator();
 
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
-        saveMenu->addAction(&a_SaveSubdomainIp);
-        saveMenu->addAction(&a_SaveSubdomain);
-        saveMenu->addAction(&a_SaveIp);
-        copyMenu->addAction(&a_CopySubdomainIp);
-        copyMenu->addAction(&a_CopySubdomain);
-        copyMenu->addAction(&a_CopyIp);
-        mainMenu->addMenu(saveMenu);
-        mainMenu->addMenu(copyMenu);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllIpToIp);
-        mainMenu->addAction(&a_SendAllIpToOsint);
-        mainMenu->addAction(&a_SendAllIpToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllHostToOsint);
-        mainMenu->addAction(&a_SendAllHostToRaw);
-        mainMenu->addAction(&a_SendAllHostToBrute);
-        mainMenu->addAction(&a_SendAllHostToActive);
-        mainMenu->addAction(&a_SendAllHostToDns);
-        mainMenu->addAction(&a_SendAllHostToCert);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllIpToIpTool);
-        mainMenu->addAction(&a_SendAllHostToCertTool);
-        mainMenu->addAction(&a_SendAllHostToDomainTool);
+        saveMenu.addAction(&a_SaveSubdomainIp);
+        saveMenu.addAction(&a_SaveSubdomain);
+        saveMenu.addAction(&a_SaveIp);
+        copyMenu.addAction(&a_CopySubdomainIp);
+        copyMenu.addAction(&a_CopySubdomain);
+        copyMenu.addAction(&a_CopyIp);
+        menu.addMenu(&saveMenu);
+        menu.addMenu(&copyMenu);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllIpToIp);
+        menu.addAction(&a_SendAllIpToOsint);
+        menu.addAction(&a_SendAllIpToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllHostToOsint);
+        menu.addAction(&a_SendAllHostToRaw);
+        menu.addAction(&a_SendAllHostToBrute);
+        menu.addAction(&a_SendAllHostToActive);
+        menu.addAction(&a_SendAllHostToDns);
+        menu.addAction(&a_SendAllHostToCert);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllIpToIpTool);
+        menu.addAction(&a_SendAllHostToCertTool);
+        menu.addAction(&a_SendAllHostToDomainTool);
         break;
     case osint::OUTPUT::SUBDOMAIN:
-        mainMenu->addAction(&a_Save);
-        mainMenu->addAction(&a_Copy);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllHostToOsint);
-        mainMenu->addAction(&a_SendAllHostToRaw);
-        mainMenu->addAction(&a_SendAllHostToBrute);
-        mainMenu->addAction(&a_SendAllHostToActive);
-        mainMenu->addAction(&a_SendAllHostToDns);
-        mainMenu->addAction(&a_SendAllHostToCert);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllHostToCertTool);
-        mainMenu->addAction(&a_SendAllHostToDomainTool);
+        menu.addAction(&a_Save);
+        menu.addAction(&a_Copy);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllHostToOsint);
+        menu.addAction(&a_SendAllHostToRaw);
+        menu.addAction(&a_SendAllHostToBrute);
+        menu.addAction(&a_SendAllHostToActive);
+        menu.addAction(&a_SendAllHostToDns);
+        menu.addAction(&a_SendAllHostToCert);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllHostToCertTool);
+        menu.addAction(&a_SendAllHostToDomainTool);
         break;
     case osint::OUTPUT::IP:
-        mainMenu->addAction(&a_Save);
-        mainMenu->addAction(&a_Copy);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllIpToIp);
-        mainMenu->addAction(&a_SendAllIpToOsint);
-        mainMenu->addAction(&a_SendAllIpToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllIpToIpTool);
+        menu.addAction(&a_Save);
+        menu.addAction(&a_Copy);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllIpToIp);
+        menu.addAction(&a_SendAllIpToOsint);
+        menu.addAction(&a_SendAllIpToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllIpToIpTool);
         break;
     case osint::OUTPUT::EMAIL:
-        mainMenu->addAction(&a_Save);
-        mainMenu->addAction(&a_Copy);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllEmailToOsint);
-        mainMenu->addAction(&a_SendAllEmailToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllEmailToEmailTool);
+        menu.addAction(&a_Save);
+        menu.addAction(&a_Copy);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllEmailToOsint);
+        menu.addAction(&a_SendAllEmailToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllEmailToEmailTool);
         break;
     case osint::OUTPUT::URL:
-        mainMenu->addAction(&a_Save);
-        mainMenu->addAction(&a_Copy);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllUrlToRaw);
+        menu.addAction(&a_Save);
+        menu.addAction(&a_Copy);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllUrlToRaw);
         break;
     case osint::OUTPUT::ASN:
-        mainMenu->addAction(&a_Save);
-        mainMenu->addAction(&a_Copy);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllAsnToOsint);
-        mainMenu->addAction(&a_SendAllAsnToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllAsnToAsnTool);
+        menu.addAction(&a_Save);
+        menu.addAction(&a_Copy);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllAsnToOsint);
+        menu.addAction(&a_SendAllAsnToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllAsnToAsnTool);
         break;
     case osint::OUTPUT::CERT:
-        mainMenu->addAction(&a_Save);
-        mainMenu->addAction(&a_Copy);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllCertToOsint);
-        mainMenu->addAction(&a_SendAllCertToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllCertToCertTool);
+        menu.addAction(&a_Save);
+        menu.addAction(&a_Copy);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllCertToOsint);
+        menu.addAction(&a_SendAllCertToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllCertToCertTool);
         break;
     case osint::OUTPUT::CIDR:
-        mainMenu->addAction(&a_Save);
-        mainMenu->addAction(&a_Copy);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllCidrToOsint);
-        mainMenu->addAction(&a_SendAllCidrToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendAllCidrToCidrTool);
+        menu.addAction(&a_Save);
+        menu.addAction(&a_Copy);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllCidrToOsint);
+        menu.addAction(&a_SendAllCidrToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendAllCidrToCidrTool);
     }
 
     /* showing the context menu... */
-    mainMenu->exec(pos);
+    menu.exec(pos);
 }
 
 void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
@@ -210,86 +209,81 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     selectionModel = ui->tableViewResults->selectionModel();
 
     /* creating the context menu... */
-    QMenu *mainMenu = new QMenu(this);
-    QMenu *saveMenu = new QMenu(this);
-    QMenu *copyMenu = new QMenu(this);
-    saveMenu->setTitle("Save");
-    copyMenu->setTitle("Copy");
-    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
 
     /* adding actions */
-    mainMenu->addAction(&a_Save);
-    mainMenu->addAction(&a_Copy);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_RemoveResults);
-    mainMenu->addAction(&a_OpenInBrowser);
-    mainMenu->addSeparator();
+    menu.addAction(&a_Save);
+    menu.addAction(&a_Copy);
+    menu.addSeparator();
+    menu.addAction(&a_RemoveResults);
+    menu.addAction(&a_OpenInBrowser);
+    menu.addSeparator();
 
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
-        mainMenu->addAction(&a_SendSelectedIpToIp);
-        mainMenu->addAction(&a_SendSelectedIpToOsint);
-        mainMenu->addAction(&a_SendSelectedIpToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedHostToOsint);
-        mainMenu->addAction(&a_SendSelectedHostToRaw);
-        mainMenu->addAction(&a_SendSelectedHostToBrute);
-        mainMenu->addAction(&a_SendSelectedHostToActive);
-        mainMenu->addAction(&a_SendSelectedHostToDns);
-        mainMenu->addAction(&a_SendSelectedHostToCert);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedIpToIpTool);
-        mainMenu->addAction(&a_SendSelectedHostToCertTool);
-        mainMenu->addAction(&a_SendSelectedHostToDomainTool);
+        menu.addAction(&a_SendSelectedIpToIp);
+        menu.addAction(&a_SendSelectedIpToOsint);
+        menu.addAction(&a_SendSelectedIpToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedHostToOsint);
+        menu.addAction(&a_SendSelectedHostToRaw);
+        menu.addAction(&a_SendSelectedHostToBrute);
+        menu.addAction(&a_SendSelectedHostToActive);
+        menu.addAction(&a_SendSelectedHostToDns);
+        menu.addAction(&a_SendSelectedHostToCert);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedIpToIpTool);
+        menu.addAction(&a_SendSelectedHostToCertTool);
+        menu.addAction(&a_SendSelectedHostToDomainTool);
         break;
     case osint::OUTPUT::SUBDOMAIN:
-        mainMenu->addAction(&a_SendSelectedHostToOsint);
-        mainMenu->addAction(&a_SendSelectedHostToRaw);
-        mainMenu->addAction(&a_SendSelectedHostToBrute);
-        mainMenu->addAction(&a_SendSelectedHostToActive);
-        mainMenu->addAction(&a_SendSelectedHostToDns);
-        mainMenu->addAction(&a_SendSelectedHostToCert);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedHostToCertTool);
-        mainMenu->addAction(&a_SendSelectedHostToDomainTool);
+        menu.addAction(&a_SendSelectedHostToOsint);
+        menu.addAction(&a_SendSelectedHostToRaw);
+        menu.addAction(&a_SendSelectedHostToBrute);
+        menu.addAction(&a_SendSelectedHostToActive);
+        menu.addAction(&a_SendSelectedHostToDns);
+        menu.addAction(&a_SendSelectedHostToCert);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedHostToCertTool);
+        menu.addAction(&a_SendSelectedHostToDomainTool);
         break;
     case osint::OUTPUT::IP:
-        mainMenu->addAction(&a_SendSelectedIpToIp);
-        mainMenu->addAction(&a_SendSelectedIpToOsint);
-        mainMenu->addAction(&a_SendSelectedIpToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedIpToIpTool);
+        menu.addAction(&a_SendSelectedIpToIp);
+        menu.addAction(&a_SendSelectedIpToOsint);
+        menu.addAction(&a_SendSelectedIpToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedIpToIpTool);
         break;
     case osint::OUTPUT::EMAIL:
-        mainMenu->addAction(&a_SendSelectedEmailToOsint);
-        mainMenu->addAction(&a_SendSelectedEmailToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedEmailToEmailTool);
+        menu.addAction(&a_SendSelectedEmailToOsint);
+        menu.addAction(&a_SendSelectedEmailToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedEmailToEmailTool);
         break;
     case osint::OUTPUT::URL:
-        mainMenu->addAction(&a_SendSelectedUrlToRaw);
+        menu.addAction(&a_SendSelectedUrlToRaw);
         break;
     case osint::OUTPUT::ASN:
-        mainMenu->addAction(&a_SendSelectedAsnToOsint);
-        mainMenu->addAction(&a_SendSelectedAsnToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedAsnToAsnTool);
+        menu.addAction(&a_SendSelectedAsnToOsint);
+        menu.addAction(&a_SendSelectedAsnToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedAsnToAsnTool);
         break;
     case osint::OUTPUT::CERT:
-        mainMenu->addAction(&a_SendSelectedCertToOsint);
-        mainMenu->addAction(&a_SendSelectedCertToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedCertToCertTool);
+        menu.addAction(&a_SendSelectedCertToOsint);
+        menu.addAction(&a_SendSelectedCertToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedCertToCertTool);
         break;
     case osint::OUTPUT::CIDR:
-        mainMenu->addAction(&a_SendSelectedCidrToOsint);
-        mainMenu->addAction(&a_SendSelectedCidrToRaw);
-        mainMenu->addSeparator();
-        mainMenu->addAction(&a_SendSelectedCidrToCidrTool);
+        menu.addAction(&a_SendSelectedCidrToOsint);
+        menu.addAction(&a_SendSelectedCidrToRaw);
+        menu.addSeparator();
+        menu.addAction(&a_SendSelectedCidrToCidrTool);
     }
 
     /* showing the context menu... */
-    mainMenu->exec(QCursor::pos());
+    menu.exec(QCursor::pos());
 }
 
 void Osint::m_openInBrowser(QItemSelectionModel *selectionModel){

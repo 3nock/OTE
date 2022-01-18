@@ -79,12 +79,12 @@ void WordListDialog::on_buttonLoadChoosen_clicked(){
 
     if(ui->radioButtonDefaultWordlist->isChecked()){
         CONFIG_BRUTE.beginGroup(m_defaultWordlist);
-        choosenWordlistfFile = QDir::currentPath()+CONFIG_BRUTE.value(ui->comboBoxDefaultWordlist->currentText()).toString();
+        choosenWordlistfFile = QApplication::applicationDirPath()+CONFIG_BRUTE.value(ui->comboBoxDefaultWordlist->currentText()).toString();
         CONFIG_BRUTE.endGroup();
     }
     if(ui->radioButtonSpecialWordlist->isChecked()){
         CONFIG_BRUTE.beginGroup(m_specialWordlist);
-        choosenWordlistfFile = QDir::currentPath()+CONFIG_BRUTE.value(ui->comboBoxSpecialWordlist->currentText()).toString();
+        choosenWordlistfFile = QApplication::applicationDirPath()+CONFIG_BRUTE.value(ui->comboBoxSpecialWordlist->currentText()).toString();
         CONFIG_BRUTE.endGroup();
     }
 
@@ -120,7 +120,7 @@ void WordListDialog::on_buttonCreate_clicked(){
     if(TLD)
         filePath = "/wordlists/tld/"+name+".txt";
 
-    QFile file(QDir::currentPath()+filePath);
+    QFile file(QApplication::applicationDirPath()+filePath);
     if(file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         for(int i = 0; i != m_customWordlistModel->rowCount(); ++i)

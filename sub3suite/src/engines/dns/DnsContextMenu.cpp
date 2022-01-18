@@ -82,62 +82,61 @@ void Dns::on_buttonAction_clicked(){
     pos = QPoint(pos.x()+65, pos.y());
 
     /* creating the context menu... */
-    QMenu *mainMenu = new QMenu(this);
-    QMenu *saveMenu = new QMenu(this);
-    QMenu *copyMenu = new QMenu(this);
-    saveMenu->setTitle("Save");
-    copyMenu->setTitle("Copy");
-    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
+    QMenu saveMenu(this);
+    QMenu copyMenu(this);
+    saveMenu.setTitle("Save");
+    copyMenu.setTitle("Copy");
 
     /* adding actions */
-    saveMenu->addAction(&a_SaveAll);
-    saveMenu->addAction(&a_SaveHostnames);
-    saveMenu->addAction(&a_SaveIp);
-    saveMenu->addSeparator();
-    saveMenu->addAction(&a_SaveA);
-    saveMenu->addAction(&a_SaveAAAA);
-    saveMenu->addAction(&a_SaveCNAME);
-    saveMenu->addAction(&a_SaveMX);
-    saveMenu->addAction(&a_SaveNS);
-    saveMenu->addAction(&a_SaveTXT);
-    copyMenu->addAction(&a_CopyAll);
-    copyMenu->addAction(&a_CopyHostnames);
-    copyMenu->addAction(&a_CopyIp);
-    copyMenu->addSeparator();
-    copyMenu->addAction(&a_CopyA);
-    copyMenu->addAction(&a_CopyAAAA);
-    copyMenu->addAction(&a_CopyCNAME);
-    copyMenu->addAction(&a_CopyMX);
-    copyMenu->addAction(&a_CopyNS);
-    copyMenu->addAction(&a_CopyTXT);
+    saveMenu.addAction(&a_SaveAll);
+    saveMenu.addAction(&a_SaveHostnames);
+    saveMenu.addAction(&a_SaveIp);
+    saveMenu.addSeparator();
+    saveMenu.addAction(&a_SaveA);
+    saveMenu.addAction(&a_SaveAAAA);
+    saveMenu.addAction(&a_SaveCNAME);
+    saveMenu.addAction(&a_SaveMX);
+    saveMenu.addAction(&a_SaveNS);
+    saveMenu.addAction(&a_SaveTXT);
+    copyMenu.addAction(&a_CopyAll);
+    copyMenu.addAction(&a_CopyHostnames);
+    copyMenu.addAction(&a_CopyIp);
+    copyMenu.addSeparator();
+    copyMenu.addAction(&a_CopyA);
+    copyMenu.addAction(&a_CopyAAAA);
+    copyMenu.addAction(&a_CopyCNAME);
+    copyMenu.addAction(&a_CopyMX);
+    copyMenu.addAction(&a_CopyNS);
+    copyMenu.addAction(&a_CopyTXT);
 
     /* adding to mainMenu */
-    mainMenu->addAction(&a_ClearResults);
-    mainMenu->addAction(&a_ExpandResults);
-    mainMenu->addAction(&a_CollapseResults);
-    mainMenu->addSeparator();
-    mainMenu->addMenu(saveMenu);
-    mainMenu->addMenu(copyMenu);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendIpToIp);
-    mainMenu->addAction(&a_SendIpToOsint);
-    mainMenu->addAction(&a_SendIpToRaw);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendHostToOsint);
-    mainMenu->addAction(&a_SendHostToRaw);
-    mainMenu->addAction(&a_SendHostToBrute);
-    mainMenu->addAction(&a_SendHostToActive);
-    mainMenu->addAction(&a_SendHostToDns);
-    mainMenu->addAction(&a_SendHostToCert);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendNSToNSTool);
-    mainMenu->addAction(&a_SendMXToMXTool);
-    mainMenu->addAction(&a_SendIpToIpTool);
-    mainMenu->addAction(&a_SendHostToCertTool);
-    mainMenu->addAction(&a_SendHostToDomainTool);
+    menu.addAction(&a_ClearResults);
+    menu.addAction(&a_ExpandResults);
+    menu.addAction(&a_CollapseResults);
+    menu.addSeparator();
+    menu.addMenu(&saveMenu);
+    menu.addMenu(&copyMenu);
+    menu.addSeparator();
+    menu.addAction(&a_SendIpToIp);
+    menu.addAction(&a_SendIpToOsint);
+    menu.addAction(&a_SendIpToRaw);
+    menu.addSeparator();
+    menu.addAction(&a_SendHostToOsint);
+    menu.addAction(&a_SendHostToRaw);
+    menu.addAction(&a_SendHostToBrute);
+    menu.addAction(&a_SendHostToActive);
+    menu.addAction(&a_SendHostToDns);
+    menu.addAction(&a_SendHostToCert);
+    menu.addSeparator();
+    menu.addAction(&a_SendNSToNSTool);
+    menu.addAction(&a_SendMXToMXTool);
+    menu.addAction(&a_SendIpToIpTool);
+    menu.addAction(&a_SendHostToCertTool);
+    menu.addAction(&a_SendHostToDomainTool);
 
     /* showing the context menu... */
-    mainMenu->exec(pos);
+    menu.exec(pos);
 }
 
 void Dns::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
@@ -151,35 +150,34 @@ void Dns::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     selectionModel = ui->treeViewResults->selectionModel();
 
     /* creating the context menu... */
-    QMenu *mainMenu = new QMenu(this);
-    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
 
     /* adding to mainMenu */
-    mainMenu->addAction(&a_RemoveResults);
-    mainMenu->addAction(&a_OpenInBrowser);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_Save);
-    mainMenu->addAction(&a_Copy);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendSelectedIpToIp);
-    mainMenu->addAction(&a_SendSelectedIpToOsint);
-    mainMenu->addAction(&a_SendSelectedIpToRaw);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendSelectedHostToOsint);
-    mainMenu->addAction(&a_SendSelectedHostToRaw);
-    mainMenu->addAction(&a_SendSelectedHostToBrute);
-    mainMenu->addAction(&a_SendSelectedHostToActive);
-    mainMenu->addAction(&a_SendSelectedHostToDns);
-    mainMenu->addAction(&a_SendSelectedHostToCert);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendSelectedNSToNSTool);
-    mainMenu->addAction(&a_SendSelectedMXToMXTool);
-    mainMenu->addAction(&a_SendSelectedIpToIpTool);
-    mainMenu->addAction(&a_SendSelectedHostToCertTool);
-    mainMenu->addAction(&a_SendSelectedHostToDomainTool);
+    menu.addAction(&a_RemoveResults);
+    menu.addAction(&a_OpenInBrowser);
+    menu.addSeparator();
+    menu.addAction(&a_Save);
+    menu.addAction(&a_Copy);
+    menu.addSeparator();
+    menu.addAction(&a_SendSelectedIpToIp);
+    menu.addAction(&a_SendSelectedIpToOsint);
+    menu.addAction(&a_SendSelectedIpToRaw);
+    menu.addSeparator();
+    menu.addAction(&a_SendSelectedHostToOsint);
+    menu.addAction(&a_SendSelectedHostToRaw);
+    menu.addAction(&a_SendSelectedHostToBrute);
+    menu.addAction(&a_SendSelectedHostToActive);
+    menu.addAction(&a_SendSelectedHostToDns);
+    menu.addAction(&a_SendSelectedHostToCert);
+    menu.addSeparator();
+    menu.addAction(&a_SendSelectedNSToNSTool);
+    menu.addAction(&a_SendSelectedMXToMXTool);
+    menu.addAction(&a_SendSelectedIpToIpTool);
+    menu.addAction(&a_SendSelectedHostToCertTool);
+    menu.addAction(&a_SendSelectedHostToDomainTool);
 
     /* showing the context menu... */
-    mainMenu->exec(QCursor::pos());
+    menu.exec(QCursor::pos());
 }
 
 void Dns::m_clearResults(){

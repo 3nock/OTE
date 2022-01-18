@@ -7,6 +7,7 @@
 
 #include "MainWindow.h"
 #include "src/utils/Config.h"
+
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QSplashScreen>
@@ -44,7 +45,7 @@ void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
     mutex.lock();
 
     QString date = QDateTime::currentDateTime().toString("dd-MM-yyyy");
-    QFile logfile(QDir::currentPath()+"/logs/"+date+".log");
+    QFile logfile(QApplication::applicationDirPath()+"/logs/"+date+".log");
 
     if(logfile.open(QIODevice::WriteOnly | QIODevice::Append)){
         QTextStream ts(&logfile);

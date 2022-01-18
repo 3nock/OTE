@@ -1,12 +1,24 @@
-#include "AboutEngineDialog.h"
-#include "ui_AboutEngineDialog.h"
+#include "DocumentationDialog.h"
+#include "ui_DocumentationDialog.h"
 
 #include <QFile>
 
 
-AboutEngineDialog::AboutEngineDialog(ENGINE engine, QWidget *parent) :
+DocumentationDialog::DocumentationDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::AboutEngineDialog)
+    ui(new Ui::DocumentationDialog)
+{
+    ui->setupUi(this);
+
+    this->general_documentation();
+
+    /* text broswer */
+    ui->textBrowser->setOpenExternalLinks(true);
+}
+
+DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::DocumentationDialog)
 {
     ui->setupUi(this);
 
@@ -39,80 +51,90 @@ AboutEngineDialog::AboutEngineDialog(ENGINE engine, QWidget *parent) :
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
 }
-AboutEngineDialog::~AboutEngineDialog(){
+DocumentationDialog::~DocumentationDialog(){
     delete ui;
 }
 
-void AboutEngineDialog::about_osint(){
+void DocumentationDialog::general_documentation(){
+    this->setWindowTitle("Documentation");
+
+    QFile file(":/documentation/res/documentation/index.html");
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        ui->textBrowser->append(file.readAll());
+        file.close();
+    }
+}
+
+void DocumentationDialog::about_osint(){
     this->setWindowTitle("About OSINT");
 
-    QFile file(":/files/res/files/about/osint.html");
+    QFile file(":/documentation/res/documentation/osint.html");
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
         ui->textBrowser->append(file.readAll());
         file.close();
     }
 }
 
-void AboutEngineDialog::about_raw(){
+void DocumentationDialog::about_raw(){
     this->setWindowTitle("About RAW");
 
-    QFile file(":/files/res/files/about/raw.html");
+    QFile file(":/documentation/res/documentation/raw.html");
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
         ui->textBrowser->append(file.readAll());
         file.close();
     }
 }
 
-void AboutEngineDialog::about_brute(){
+void DocumentationDialog::about_brute(){
     this->setWindowTitle("About BRUTE");
 
-    QFile file(":/files/res/files/about/brute.html");
+    QFile file(":/documentation/res/documentation/brute.html");
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
         ui->textBrowser->append(file.readAll());
         file.close();
     }
 }
 
-void AboutEngineDialog::about_active(){
+void DocumentationDialog::about_active(){
     this->setWindowTitle("About ACTIVE");
 
-    QFile file(":/files/res/files/about/active.html");
+    QFile file(":/documentation/res/documentation/active.html");
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
         ui->textBrowser->append(file.readAll());
         file.close();
     }
 }
 
-void AboutEngineDialog::about_dns(){
+void DocumentationDialog::about_dns(){
     this->setWindowTitle("About DNS");
 
-    QFile file(":/files/res/files/about/dns.html");
+    QFile file(":/documentation/res/documentation/dns.html");
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
         ui->textBrowser->append(file.readAll());
         file.close();
     }
 }
 
-void AboutEngineDialog::about_ssl(){
+void DocumentationDialog::about_ssl(){
     this->setWindowTitle("About SSL");
 
-    QFile file(":/files/res/files/about/ssl.html");
+    QFile file(":/documentation/res/documentation/ssl.html");
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
         ui->textBrowser->append(file.readAll());
         file.close();
     }
 }
 
-void AboutEngineDialog::about_ip(){
+void DocumentationDialog::about_ip(){
     this->setWindowTitle("About IP");
 
-    QFile file(":/files/res/files/about/ip.html");
+    QFile file(":/documentation/res/documentation/ip.html");
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
         ui->textBrowser->append(file.readAll());
         file.close();
     }
 }
 
-void AboutEngineDialog::on_buttonOk_clicked(){
+void DocumentationDialog::on_buttonOk_clicked(){
     accept();
 }

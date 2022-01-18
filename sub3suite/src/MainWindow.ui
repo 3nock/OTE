@@ -768,15 +768,13 @@ QRadioButton:hover {
     <property name="title">
      <string>Project</string>
     </property>
-    <addaction name="actionsettings"/>
-    <addaction name="actionrename"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
     <addaction name="actionlogViewer"/>
-    <addaction name="actiondocumentation"/>
+    <addaction name="actionDocumentation"/>
     <addaction name="separator"/>
     <addaction name="actionBlog"/>
     <addaction name="actionTwitter"/>
@@ -820,44 +818,9 @@ QRadioButton:hover {
     <string>exit</string>
    </property>
   </action>
-  <action name="actionsettings">
+  <action name="actionDocumentation">
    <property name="text">
-    <string>settings</string>
-   </property>
-  </action>
-  <action name="actionrename">
-   <property name="text">
-    <string>rename</string>
-   </property>
-  </action>
-  <action name="actiondocumentation">
-   <property name="text">
-    <string>user manual</string>
-   </property>
-  </action>
-  <action name="actionupdates">
-   <property name="text">
-    <string>api documentation</string>
-   </property>
-  </action>
-  <action name="actionissues">
-   <property name="text">
-    <string>chat on telegram</string>
-   </property>
-  </action>
-  <action name="actionfavourites">
-   <property name="text">
-    <string>favourites</string>
-   </property>
-  </action>
-  <action name="actionmass_scan">
-   <property name="text">
-    <string>mass scan</string>
-   </property>
-  </action>
-  <action name="actionamass">
-   <property name="text">
-    <string>amass</string>
+    <string>Documentation</string>
    </property>
   </action>
   <action name="actionApi_Keys">
@@ -865,99 +828,29 @@ QRadioButton:hover {
     <string>Api Keys</string>
    </property>
   </action>
-  <action name="actionOsint_Engines">
-   <property name="text">
-    <string>Osint Engines</string>
-   </property>
-  </action>
-  <action name="actionConfig">
-   <property name="text">
-    <string>Config</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="text">
-    <string>about</string>
+    <string>About</string>
    </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
-    <string>about Qt</string>
-   </property>
-  </action>
-  <action name="actionDorker">
-   <property name="text">
-    <string>dorker</string>
+    <string>About Qt</string>
    </property>
   </action>
   <action name="actioncheck_for_updates">
    <property name="text">
-    <string>check for updates</string>
+    <string>Check for Updates</string>
    </property>
   </action>
   <action name="actionBlog">
    <property name="text">
-    <string>blog</string>
+    <string>Blog</string>
    </property>
   </action>
   <action name="actionclose">
    <property name="text">
     <string>close</string>
-   </property>
-  </action>
-  <action name="actionRaw">
-   <property name="text">
-    <string>Raw</string>
-   </property>
-  </action>
-  <action name="actionRawOsint">
-   <property name="text">
-    <string>raw-osint</string>
-   </property>
-  </action>
-  <action name="actionIpTool">
-   <property name="text">
-    <string>IP Tool</string>
-   </property>
-  </action>
-  <action name="actionASNTool">
-   <property name="text">
-    <string>ASN Tool</string>
-   </property>
-  </action>
-  <action name="actionCertTool">
-   <property name="text">
-    <string>CERT Tool</string>
-   </property>
-  </action>
-  <action name="actionEmailTool">
-   <property name="text">
-    <string>EMAIL Tool</string>
-   </property>
-  </action>
-  <action name="actionCIDRTool">
-   <property name="text">
-    <string>CIDR Tool</string>
-   </property>
-  </action>
-  <action name="actionBannerTool">
-   <property name="text">
-    <string>BANNER Tool</string>
-   </property>
-  </action>
-  <action name="actionDomainTool">
-   <property name="text">
-    <string>DOMAIN Tool</string>
-   </property>
-  </action>
-  <action name="actionNSTool">
-   <property name="text">
-    <string>NS Tool</string>
-   </property>
-  </action>
-  <action name="actionMXTool">
-   <property name="text">
-    <string>MX Tool</string>
    </property>
   </action>
   <action name="actionApiKeys">
@@ -972,12 +865,12 @@ QRadioButton:hover {
   </action>
   <action name="actionlogViewer">
    <property name="text">
-    <string>log viewer</string>
+    <string>Log Viewer</string>
    </property>
   </action>
   <action name="actionTwitter">
    <property name="text">
-    <string>twitter</string>
+    <string>Twitter</string>
    </property>
   </action>
  </widget>

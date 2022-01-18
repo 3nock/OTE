@@ -54,7 +54,7 @@ Osint::Osint(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent,
 
 
     /* ... */
-    m_currentPath = QDir::currentPath();
+    m_currentPath = QApplication::applicationDirPath();
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
     ui->lineEditFilter->setPlaceholderText("Filter...");
 

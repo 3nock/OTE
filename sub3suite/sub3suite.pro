@@ -28,7 +28,7 @@ CONFIG += c++11
 include(../include/gumbo-parser.pri)
 
 SOURCES += \
-    src/dialogs/AboutEngineDialog.cpp \
+    src/dialogs/DocumentationDialog.cpp \
     src/dialogs/ActiveConfigDialog.cpp \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
@@ -188,12 +188,11 @@ SOURCES += \
     src/dialogs/AboutDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
     src/dialogs/wordlist/WordlistDialog.cpp \
-    src/SplashScreen.cpp \
     src/MainWindow.cpp \
     src/main.cpp
 
 HEADERS += \
-    src/dialogs/AboutEngineDialog.h \
+    src/dialogs/DocumentationDialog.h \
     src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
@@ -348,11 +347,10 @@ HEADERS += \
     src/dialogs/wordlist/WordlistDialog.h \
     src/utils/utils.h \
     src/utils/Config.h \
-    src/SplashScreen.h \
     src/MainWindow.h
 
 FORMS += \
-    src/dialogs/AboutEngineDialog.ui \
+    src/dialogs/DocumentationDialog.ui \
     src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \

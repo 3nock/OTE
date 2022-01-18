@@ -66,12 +66,11 @@ void FailedScansDialog::on_tableView_customContextMenuRequested(const QPoint &po
     });
 
     /* creating the context menu */
-    QMenu *menu = new QMenu(this);
-    menu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
 
     /* adding to mainMenu */
-    menu->addAction(&remove);
+    menu.addAction(&remove);
 
     /* showing the context menu */
-    menu->exec(QCursor::pos());
+    menu.exec(QCursor::pos());
 }

@@ -71,46 +71,45 @@ void Brute::on_buttonAction_clicked(){
     pos = QPoint(pos.x()+65, pos.y());
 
     /* creating the context menu... */
-    QMenu *mainMenu = new QMenu(this);
-    QMenu *saveMenu = new QMenu(this);
-    QMenu *copyMenu = new QMenu(this);
-    saveMenu->setTitle("Save");
-    copyMenu->setTitle("Copy");
-    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
+    QMenu saveMenu(this);
+    QMenu copyMenu(this);
+    saveMenu.setTitle("Save");
+    copyMenu.setTitle("Copy");
 
     /* adding actions */
-    saveMenu->addAction(&a_SaveSubdomainIp);
-    saveMenu->addAction(&a_SaveSubdomain);
-    saveMenu->addAction(&a_SaveIp);
-    copyMenu->addAction(&a_CopySubdomainIp);
-    copyMenu->addAction(&a_CopySubdomain);
-    copyMenu->addAction(&a_CopyIp);
+    saveMenu.addAction(&a_SaveSubdomainIp);
+    saveMenu.addAction(&a_SaveSubdomain);
+    saveMenu.addAction(&a_SaveIp);
+    copyMenu.addAction(&a_CopySubdomainIp);
+    copyMenu.addAction(&a_CopySubdomain);
+    copyMenu.addAction(&a_CopyIp);
     /* adding to mainMenu */
-    mainMenu->addAction(&a_ClearResults);
-    mainMenu->addSeparator();
-    mainMenu->addMenu(saveMenu);
-    mainMenu->addMenu(copyMenu);
-    mainMenu->addAction(&a_ExtractAll);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendAllToProject);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendAllIpToIp);
-    mainMenu->addAction(&a_SendAllIpToOsint);
-    mainMenu->addAction(&a_SendAllIpToRaw);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendAllHostToOsint);
-    mainMenu->addAction(&a_SendAllHostToRaw);
-    mainMenu->addAction(&a_SendAllHostToBrute);
-    mainMenu->addAction(&a_SendAllHostToActive);
-    mainMenu->addAction(&a_SendAllHostToDNS);
-    mainMenu->addAction(&a_SendAllHostToSSL);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendAllIpToIPTool);
-    mainMenu->addAction(&a_SendAllHostToSSLTool);
-    mainMenu->addAction(&a_SendAllHostToDomainTool);
+    menu.addAction(&a_ClearResults);
+    menu.addSeparator();
+    menu.addMenu(&saveMenu);
+    menu.addMenu(&copyMenu);
+    menu.addAction(&a_ExtractAll);
+    menu.addSeparator();
+    menu.addAction(&a_SendAllToProject);
+    menu.addSeparator();
+    menu.addAction(&a_SendAllIpToIp);
+    menu.addAction(&a_SendAllIpToOsint);
+    menu.addAction(&a_SendAllIpToRaw);
+    menu.addSeparator();
+    menu.addAction(&a_SendAllHostToOsint);
+    menu.addAction(&a_SendAllHostToRaw);
+    menu.addAction(&a_SendAllHostToBrute);
+    menu.addAction(&a_SendAllHostToActive);
+    menu.addAction(&a_SendAllHostToDNS);
+    menu.addAction(&a_SendAllHostToSSL);
+    menu.addSeparator();
+    menu.addAction(&a_SendAllIpToIPTool);
+    menu.addAction(&a_SendAllHostToSSLTool);
+    menu.addAction(&a_SendAllHostToDomainTool);
 
     /* showing the context menu... */
-    mainMenu->exec(pos);
+    menu.exec(pos);
 }
 
 void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
@@ -124,36 +123,35 @@ void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     selectionModel = ui->tableViewResults->selectionModel();
 
     /* creating the context menu... */
-    QMenu *mainMenu = new QMenu(this);
-    mainMenu->setAttribute(Qt::WA_DeleteOnClose, true);
+    QMenu menu(this);
 
     /* adding to mainMenu */
-    mainMenu->addAction(&a_RemoveResults);
-    mainMenu->addAction(&a_OpenInBrowser);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_Save);
-    mainMenu->addAction(&a_Copy);
-    mainMenu->addAction(&a_ExtractSelected);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendSelectedToProject);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendSelectedIpToIp);
-    mainMenu->addAction(&a_SendSelectedIpToOsint);
-    mainMenu->addAction(&a_SendSelectedIpToRaw);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendSelectedHostToOsint);
-    mainMenu->addAction(&a_SendSelectedHostToRaw);
-    mainMenu->addAction(&a_SendSelectedHostToBrute);
-    mainMenu->addAction(&a_SendSelectedHostToActive);
-    mainMenu->addAction(&a_SendSelectedHostToDNS);
-    mainMenu->addAction(&a_SendSelectedHostToSSL);
-    mainMenu->addSeparator();
-    mainMenu->addAction(&a_SendSelectedIpToIPTool);
-    mainMenu->addAction(&a_SendSelectedHostToSSLTool);
-    mainMenu->addAction(&a_SendSelectedHostToDomainTool);
+    menu.addAction(&a_RemoveResults);
+    menu.addAction(&a_OpenInBrowser);
+    menu.addSeparator();
+    menu.addAction(&a_Save);
+    menu.addAction(&a_Copy);
+    menu.addAction(&a_ExtractSelected);
+    menu.addSeparator();
+    menu.addAction(&a_SendSelectedToProject);
+    menu.addSeparator();
+    menu.addAction(&a_SendSelectedIpToIp);
+    menu.addAction(&a_SendSelectedIpToOsint);
+    menu.addAction(&a_SendSelectedIpToRaw);
+    menu.addSeparator();
+    menu.addAction(&a_SendSelectedHostToOsint);
+    menu.addAction(&a_SendSelectedHostToRaw);
+    menu.addAction(&a_SendSelectedHostToBrute);
+    menu.addAction(&a_SendSelectedHostToActive);
+    menu.addAction(&a_SendSelectedHostToDNS);
+    menu.addAction(&a_SendSelectedHostToSSL);
+    menu.addSeparator();
+    menu.addAction(&a_SendSelectedIpToIPTool);
+    menu.addAction(&a_SendSelectedHostToSSLTool);
+    menu.addAction(&a_SendSelectedHostToDomainTool);
 
     /* showing the context menu... */
-    mainMenu->exec(QCursor::pos());
+    menu.exec(QCursor::pos());
 }
 
 void Brute::m_clearResults(){

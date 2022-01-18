@@ -14,6 +14,7 @@
 
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
+
 /* engines */
 #include "src/engines/ip/Ip.h"
 #include "src/engines/dns/Dns.h"
@@ -22,6 +23,7 @@
 #include "src/engines/active/Active.h"
 #include "src/engines/raw/Raw.h"
 #include "src/engines/ssl/Ssl.h"
+
 /* tools */
 #include "src/tools/ip/IpTool.h"
 #include "src/tools/asn/ASNTool.h"
@@ -37,7 +39,7 @@ class s3s_ClickableLabel : public QLabel{
        Q_OBJECT
     public:
        s3s_ClickableLabel(QString text, QWidget *parent = nullptr) : QLabel(text, parent) {}
-       ~s3s_ClickableLabel() {}
+       ~s3s_ClickableLabel(){}
 
     signals:
        void clicked();
@@ -65,6 +67,7 @@ class MainWindow : public QMainWindow{
 
     public slots:
         void onReceiveStatus(QString status);
+
         /* tab change */
         void onChangeTabToOsint();
         void onChangeTabToActive();
@@ -77,22 +80,27 @@ class MainWindow : public QMainWindow{
     private slots:
         /* file menu */
         void on_actionExit_triggered();
+
         /* options menu */
         void on_actionApiKeys_triggered();
         void on_actionPreferences_triggered();
+
         /* help menu */
         void on_actionBlog_triggered();
         void on_actionAbout_triggered();
         void on_actionAboutQt_triggered();
         void on_actionlogViewer_triggered();
         void on_actionTwitter_triggered();
-        /* ... */
-        void onAbout_active();
-        void onAbout_passive();
-        void onAbout_tools();
+        void on_actionDocumentation_triggered();
+
+        /* documentations */
+        void on_documentation_active();
+        void on_documentation_passive();
+        void on_documentation_tools();
 
     private:
         Project *project = nullptr;
+
         /* engines */
         Ip *ip = nullptr;
         Osint *osint = nullptr;
@@ -101,6 +109,7 @@ class MainWindow : public QMainWindow{
         Dns *dns = nullptr;
         Raw *raw = nullptr;
         Ssl *ssl = nullptr;
+
         /* tools */
         DomainTool *domainTool = nullptr;
         IpTool *ipTool = nullptr;
@@ -110,10 +119,7 @@ class MainWindow : public QMainWindow{
         MXTool *mxTool = nullptr;
         SSLTool *sslTool = nullptr;
         EmailTool *emailTool = nullptr;
-        /* ... */
-        s3s_ClickableLabel *help_active; // about
-        s3s_ClickableLabel *help_passive;
-        s3s_ClickableLabel *help_tools;
+
         /* ... */
         void m_connectSignals(AbstractEngine *engine);
 };
