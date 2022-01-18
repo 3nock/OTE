@@ -186,16 +186,21 @@ void Brute::m_openInBrowser(QItemSelectionModel *selectionModel){
 void Brute::m_removeResults(QItemSelectionModel *selectionModel){
     /* findout from what results model */
     QStandardItemModel *model = nullptr;
+    QSet<QString> set;
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
         model = m_resultModelSubdomain;
+        set = m_subdomainSet;
         break;
     case brute::OUTPUT::TLD:
         model = m_resultModelTld;
+        set = m_tldSet;
     }
 
+    QModelIndex index;
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        auto index = m_resultProxyModel->mapToSource(proxyIndex);
+        index = m_resultProxyModel->mapToSource(proxyIndex);
+        set.remove(index.data().toString());
         model->removeRow(index.row());
     }
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());

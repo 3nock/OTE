@@ -208,8 +208,10 @@ void Dns::m_openInBrowser(QItemSelectionModel *selectionModel){
 }
 
 void Dns::m_removeResults(QItemSelectionModel *selectionModel){
+    QModelIndex index;
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        auto index = m_resultProxyModel->mapToSource(proxyIndex);
+        index = m_resultProxyModel->mapToSource(proxyIndex);
+        m_resultSet.remove(index.data().toString());
         m_resultModel->removeRow(index.row());
     }
 

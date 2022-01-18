@@ -114,11 +114,12 @@ void SSLTool::on_buttonStart_clicked(){
     {
         /* getting target, and determining target type */
         ssl::ScanArgs *args = new ssl::ScanArgs;
+        /*
         args->target = ui->lineEditTarget->text();
         args->singleTarget = true;
         args->raw = true;
 
-        /* getting protocal to use */
+        // getting protocal to use
         switch(ui->comboBoxOption->currentIndex()){
         case PROTOCAL::HTTPS:
             args->https = true;
@@ -130,12 +131,13 @@ void SSLTool::on_buttonStart_clicked(){
             args->ftp = true;
             break;
         }
+        */
 
         /* enumerating */
         ssl::Scanner *scanner = new ssl::Scanner(args);
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
-        connect(scanner, &ssl::Scanner::resultRaw, this, &SSLTool::onResult);
+        //connect(scanner, &ssl::Scanner::resultRaw, this, &SSLTool::onResult);
         connect(scanner, &ssl::Scanner::errorLog, this, &SSLTool::onErrorLogTxt);
         connect(scanner, &ssl::Scanner::infoLog, this, &SSLTool::onInfoLogTxt);
         connect(cThread, &QThread::finished, this, &SSLTool::onEnumerationComplete);

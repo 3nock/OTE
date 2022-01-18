@@ -74,6 +74,15 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
 
     ssl = true;
     this->m_initWidgets();
+    this->m_loadConfigDns();
+
+    /* hiding unused widgets */
+    ui->groupBoxLevel->hide();
+    ui->checkBoxWildcards->hide();
+    ui->radioButtonA->hide();
+    ui->radioButtonAAAA->hide();
+    ui->labelRecordType->hide();
+    ui->tabWidget->removeTab(1);
 }
 
 /* for IP */
@@ -227,6 +236,13 @@ void ActiveConfigDialog::m_loadConfigDns(){
         ui->customNameservers->add(CONFIG_DNS.value("value").toString());
     }
     CONFIG_DNS.endArray();
+}
+
+void ActiveConfigDialog::m_loadConfigSSL(){
+    ui->lineEditTimeout->setText(CONFIG_SSL.value("timeout").toString());
+    ui->lineEditThreads->setText(CONFIG_SSL.value("threads").toString());
+    ui->checkBoxAutosave->setChecked(CONFIG_SSL.value("autosaveToProject").toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG_SSL.value("noDuplicates").toBool());
 }
 
 /* saving configurations... */
@@ -499,7 +515,27 @@ void ActiveConfigDialog::m_saveDns(){
 }
 
 void ActiveConfigDialog::m_saveSSL(){
+    /* get values... */
 
+    QString thread = ui->lineEditThreads->text();
+    QString timeout = ui->lineEditTimeout->text();
+
+    bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+
+    /* saving values to config file... */
+
+    CONFIG_SSL.setValue("threads", thread);
+    CONFIG_SSL.setValue("timeout", timeout);
+    CONFIG_SSL.setValue("noDuplicates", noDuplicates);
+    CONFIG_SSL.setValue("autosaveToProject", autosaveToProject);
+
+    /* saving to ssl::ScanConfig structure... */
+
+    m_configSSL->timeout = timeout.toInt();
+    m_configSSL->threads = thread.toInt();
+    m_configSSL->noDuplicates = noDuplicates;
+    m_configSSL->autoSaveToProject = autosaveToProject;
 }
 
 void ActiveConfigDialog::m_saveIp(){

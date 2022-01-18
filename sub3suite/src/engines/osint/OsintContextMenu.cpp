@@ -299,34 +299,45 @@ void Osint::m_openInBrowser(QItemSelectionModel *selectionModel){
 
 void Osint::m_removeResults(QItemSelectionModel *selectionModel){
     QStandardItemModel *model = nullptr;
+    QSet<QString> set;
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
         model = m_resultModelSubdomainIp;
+        set = m_subdomainIpSet;
         break;
     case osint::OUTPUT::SUBDOMAIN:
         model = m_resultModelSubdomain;
+        set = m_subdomainSet;
         break;
     case osint::OUTPUT::IP:
         model = m_resultModelIp;
+        set = m_ipSet;
         break;
     case osint::OUTPUT::EMAIL:
         model = m_resultModelEmail;
+        set = m_emailSet;
         break;
     case osint::OUTPUT::URL:
         model = m_resultModelUrl;
+        set = m_urlSet;
         break;
     case osint::OUTPUT::ASN:
         model = m_resultModelAsn;
+        set = m_asnSet;
         break;
     case osint::OUTPUT::CERT:
         model = m_resultModelCert;
+        set = m_sslCertSet;
         break;
     case osint::OUTPUT::CIDR:
         model = m_resultModelCidr;
+        set = m_cidrSet;
     }
 
+    QModelIndex index;
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        QModelIndex index = m_resultProxyModel->mapToSource(proxyIndex);
+        index = m_resultProxyModel->mapToSource(proxyIndex);
+        set.remove(index.data().toString());
         model->removeRow(index.row());
     }
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());

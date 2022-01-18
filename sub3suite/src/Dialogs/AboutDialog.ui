@@ -136,11 +136,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEditDescription">
-         <property name="textInteractionFlags">
-          <set>Qt::NoTextInteraction</set>
-         </property>
-        </widget>
+        <widget class="QTextBrowser" name="textBrowserDescription"/>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">

@@ -9,18 +9,11 @@
 #define SSL_H
 
 #include <QWidget>
+#include <QElapsedTimer>
 #include "../AbstractEngine.h"
 #include "src/modules/active/SSLScanner.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 
-
-namespace ssl{
-    enum OUTPUT{
-        SUBDOMAIN = 0,
-        CERT_ID = 1,
-        CERT_INFO = 2
-    };
-}
 
 namespace Ui {
     class Ssl;
@@ -35,13 +28,14 @@ class Ssl : public AbstractEngine{
 
     public slots:
         void onScanThreadEnded();
-        void onInfoLog(QString log);
-        void onErrorLog(QString log);
+        void onScanLog(scan::Log log);
         /* scan results */
         void onScanResultSHA1(QString sha1);
         void onScanResultSHA256(QString sha256);
-        void onScanResultCertInfo(QByteArray cert);
-        void onScanResultSubdomain(QString subdomain);
+        void onScanResultSubdomain(QString target, QStringList subdomain);
+        void onScanResultRaw(QString target, QSslCertificate certificate);
+        /* ... */
+        void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -53,22 +47,29 @@ class Ssl : public AbstractEngine{
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_comboBoxOutput_currentIndexChanged(int index);
         void on_lineEditFilter_textChanged(const QString &arg1);
+        void on_lineEditTarget_returnPressed();
+        void on_buttonConfig_clicked();
 
     private:
         Ui::Ssl *ui;
+        QElapsedTimer m_timer;
         ssl::ScanConfig *m_scanConfig;
         ssl::ScanArgs *m_scanArgs;
+        ssl::ScanStat *m_scanStats;
+        QSet<QString> m_subdomainSet;
+        QSet<QString> m_certIdSet;
+        QSet<QString> m_certInfoSet;
+        QMap<QString,QString> m_failedScans;
         QStringListModel *m_targetListModel;
         QStandardItemModel *m_resultModelSubdomain;
         QStandardItemModel *m_resultModelCertId;
         QStandardItemModel *m_resultModelCertInfo;
         QSortFilterProxyModel *m_resultProxyModel;
         NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
-        /* ... */
-        void m_stopScan();
+        void m_getConfigValues();
         void m_startScan();
-        void m_pauseScan();
-        void m_ResumeScan();
+        void m_log(QString log);
+        void m_scanSummary();
 
         /* for context menu */
     private:

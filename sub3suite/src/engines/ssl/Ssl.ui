@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>664</width>
+    <width>727</width>
     <height>429</height>
    </rect>
   </property>
@@ -55,7 +55,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Cert Fingerprints</string>
+         <string>Cert Hash</string>
         </property>
        </item>
        <item>
@@ -83,9 +83,34 @@
          <string>SHA-256</string>
         </property>
        </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxProtocal">
+       <property name="minimumSize">
+        <size>
+         <width>110</width>
+         <height>21</height>
+        </size>
+       </property>
        <item>
         <property name="text">
-         <string>Serial No:</string>
+         <string>HTTPS</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>FTP</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>FTPs</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>SSH</string>
         </property>
        </item>
       </widget>
@@ -141,14 +166,14 @@
       <widget class="QProgressBar" name="progressBar">
        <property name="minimumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>16777215</width>
+         <height>16777215</height>
         </size>
        </property>
        <property name="styleSheet">
@@ -192,7 +217,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>*Scan Config</string>
+         <string>*Scan Configuration</string>
         </property>
        </widget>
       </item>
@@ -425,6 +450,13 @@
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <item>
               <widget class="QLineEdit" name="lineEditFilter"/>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBoxRegex">
+               <property name="text">
+                <string>Regex</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>

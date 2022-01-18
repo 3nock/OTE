@@ -16,11 +16,19 @@
         <file>res/icons/logo.ico</file>
         <file>res/icons/s3s_logo.ico</file>
         <file>res/icons/splash.png</file>
+        <file>res/icons/help.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>
         <file>res/files/userAgents.txt</file>
         <file>res/files/LICENSE</file>
+        <file>res/files/about/brute.html</file>
+        <file>res/files/about/dns.html</file>
+        <file>res/files/about/ip.html</file>
+        <file>res/files/about/osint.html</file>
+        <file>res/files/about/raw.html</file>
+        <file>res/files/about/ssl.html</file>
+        <file>res/files/about/active.html</file>
     </qresource>
     <qresource prefix="/themes">
         <file>res/themes/default.css</file>

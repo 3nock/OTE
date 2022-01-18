@@ -90,7 +90,11 @@ int main(int argc, char *argv[])
     /* Handle DPI scaling on Windows */
 #if defined(Q_OS_WIN)
     s3s_Application::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
+#endif  // Q_OS_WIN
+
+    /* setting org and app name */
+    QCoreApplication::setOrganizationName("3Suite");
+    QCoreApplication::setApplicationName("Sub3 Suite");
 
     /* create the sub3suite app */
     s3s_Application s3s_app(argc, argv);
@@ -116,7 +120,7 @@ int main(int argc, char *argv[])
     /* splashscreen timing */
     splash.finish(&w);
 
-    /* setting configurations...*/
+    /* init configurations...*/
     CONFIG;
 
     /* starting the app... */

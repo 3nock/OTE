@@ -28,6 +28,7 @@ CONFIG += c++11
 include(../include/gumbo-parser.pri)
 
 SOURCES += \
+    src/dialogs/AboutEngineDialog.cpp \
     src/dialogs/ActiveConfigDialog.cpp \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
@@ -113,7 +114,6 @@ SOURCES += \
     src/modules/passive/mal/HybridAnalysis.cpp \
     src/modules/passive/mal/IpQualityScore.cpp \
     src/modules/passive/mal/LeakLookup.cpp \
-    src/modules/active/BannerScanner.cpp \
     src/modules/active/DNSScanner.cpp \
     src/modules/active/SSLScanner.cpp \
     src/modules/active/WildcardScanner.cpp \
@@ -193,6 +193,7 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+    src/dialogs/AboutEngineDialog.h \
     src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
@@ -201,7 +202,6 @@ HEADERS += \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
     src/models/ASNModel.h \
-    src/models/BannerModel.h \
     src/models/IPModel.h \
     src/models/NSModel.h \
     src/models/SSLModel.h \
@@ -266,7 +266,6 @@ HEADERS += \
     src/modules/passive/mal/HybridAnalysis.h \
     src/modules/passive/mal/IpQualityScore.h \
     src/modules/passive/mal/LeakLookup.h \
-    src/modules/active/BannerScanner.h \
     src/modules/active/DNSScanner.h \
     src/modules/active/SSLScanner.h \
     src/modules/active/WildcardScanner.h \
@@ -353,6 +352,7 @@ HEADERS += \
     src/MainWindow.h
 
 FORMS += \
+    src/dialogs/AboutEngineDialog.ui \
     src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \

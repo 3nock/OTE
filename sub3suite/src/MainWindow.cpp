@@ -8,11 +8,13 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include <QPushButton>
 #include <QDesktopServices>
 #include "src/dialogs/AboutDialog.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/LogViewerDialog.h"
 #include "src/dialogs/preference/PreferenceDialog.h"
+#include "src/dialogs/AboutEngineDialog.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow),
@@ -82,9 +84,43 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     qRegisterMetaType<MXModelStruct>("MXModelStruct");
     qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
     qRegisterMetaType<AsModelStruct>("AsModelStruct");
+    qRegisterMetaType<QSslCertificate>("QSslCertificate");
 
     /* Welcome... */
     ui->statusbar->showMessage("Welcome!", 5000);
+
+    /* help button */
+    QWidget *cornerWidget_active = new QWidget(this);
+    QWidget *cornerWidget_passive = new QWidget(this);
+    QWidget *cornerWidget_tools = new QWidget(this);
+    QHBoxLayout *hbox_active = new QHBoxLayout(cornerWidget_active);
+    QHBoxLayout *hbox_passive = new QHBoxLayout(cornerWidget_passive);
+    QHBoxLayout *hbox_tools = new QHBoxLayout(cornerWidget_tools);
+    help_active = new s3s_ClickableLabel("", this);
+    help_passive = new s3s_ClickableLabel("", this);
+    help_tools = new s3s_ClickableLabel("", this);
+    help_active->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    help_passive->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    help_tools->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    hbox_active->addWidget(help_active);
+    hbox_passive->addWidget(help_passive);
+    hbox_tools->addWidget(help_tools);
+    hbox_active->setContentsMargins(0, 0, 10, 2);
+    hbox_passive->setContentsMargins(0, 0, 10, 2);
+    hbox_tools->setContentsMargins(0, 0, 10, 2);
+    ui->tabWidgetPassive->setCornerWidget(cornerWidget_passive);
+    ui->tabWidgetActive->setCornerWidget(cornerWidget_active);
+    ui->tabWidgetTools->setCornerWidget(cornerWidget_tools);
+
+    /* ... */
+    connect(help_passive, &s3s_ClickableLabel::clicked, this, &MainWindow::onAbout_passive);
+    connect(help_active, &s3s_ClickableLabel::clicked, this, &MainWindow::onAbout_active);
+    connect(help_tools, &s3s_ClickableLabel::clicked, this, &MainWindow::onAbout_tools);
+
+    /* build info */
+    QAction* buildInfo = new QAction(tr("%1 (%2)").arg("Feb 01 2022").arg("BETA"), this);
+    buildInfo->setEnabled(false);
+    ui->menubar->addAction(buildInfo);
 }
 MainWindow::~MainWindow(){
     /* engines */
@@ -104,6 +140,10 @@ MainWindow::~MainWindow(){
     delete mxTool;
     delete sslTool;
     delete emailTool;
+    /* ... */
+    delete help_active;
+    delete help_passive;
+    delete help_tools;
     /* ... */
     delete project;
     delete projectDataModel;
@@ -193,6 +233,51 @@ void MainWindow::on_actionBlog_triggered(){
 
 void MainWindow::on_actionTwitter_triggered(){
     QDesktopServices::openUrl(QUrl("https://twitter.com/sub3suite", QUrl::TolerantMode));
+}
+
+void MainWindow::onAbout_active(){
+    AboutEngineDialog *aboutEngineDialog = nullptr;
+
+    switch (ui->tabWidgetActive->currentIndex()) {
+    case 0:
+        aboutEngineDialog = new AboutEngineDialog(ENGINE::BRUTE, this);
+        break;
+    case 1:
+        aboutEngineDialog = new AboutEngineDialog(ENGINE::ACTIVE, this);
+        break;
+    case 2:
+        aboutEngineDialog = new AboutEngineDialog(ENGINE::DNS, this);
+        break;
+    case 3:
+        aboutEngineDialog = new AboutEngineDialog(ENGINE::CERT, this);
+        break;
+    case 4:
+        aboutEngineDialog = new AboutEngineDialog(ENGINE::IP, this);
+        break;
+    }
+    aboutEngineDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    aboutEngineDialog->show();
+}
+
+void MainWindow::onAbout_passive(){
+    AboutEngineDialog *aboutEngineDialog = nullptr;
+    switch (ui->tabWidgetPassive->currentIndex()) {
+    case 0:
+        aboutEngineDialog = new AboutEngineDialog(ENGINE::OSINT, this);
+        break;
+    case 1:
+        aboutEngineDialog = new AboutEngineDialog(ENGINE::RAW, this);
+        break;
+    }
+
+    aboutEngineDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    aboutEngineDialog->show();
+}
+
+void MainWindow::onAbout_tools(){
+    /*
+     * nothing yet...
+     */
 }
 
 void MainWindow::on_actionApiKeys_triggered(){

@@ -485,6 +485,10 @@ QMenuBar::item {
     background: transparent;
 }
 
+QMenuBar::item:disabled {
+    color: grey;
+}
+
 QMenuBar::item:selected,
 QMenuBar::item:hover,
 QMenu::item:selected {

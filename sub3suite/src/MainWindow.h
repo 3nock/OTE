@@ -10,6 +10,7 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QLabel>
 
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
@@ -26,10 +27,24 @@
 #include "src/tools/asn/ASNTool.h"
 #include "src/tools/ssl/SSLTool.h"
 #include "src/tools/email/EmailTool.h"
-#include "src/tools/cidr/CIDRTool.h"
+#include "src/tools/cidr/CidrTool.h"
 #include "src/tools/domain/DomainTool.h"
 #include "src/tools/ns/NSTool.h"
 #include "src/tools/mx/MXTool.h"
+
+
+class s3s_ClickableLabel : public QLabel{
+       Q_OBJECT
+    public:
+       s3s_ClickableLabel(QString text, QWidget *parent = nullptr) : QLabel(text, parent) {}
+       ~s3s_ClickableLabel() {}
+
+    signals:
+       void clicked();
+
+    protected:
+       void mousePressEvent(QMouseEvent *event) { Q_UNUSED(event); emit clicked(); }
+};
 
 
 namespace Ui {
@@ -71,6 +86,10 @@ class MainWindow : public QMainWindow{
         void on_actionAboutQt_triggered();
         void on_actionlogViewer_triggered();
         void on_actionTwitter_triggered();
+        /* ... */
+        void onAbout_active();
+        void onAbout_passive();
+        void onAbout_tools();
 
     private:
         Project *project = nullptr;
@@ -91,6 +110,10 @@ class MainWindow : public QMainWindow{
         MXTool *mxTool = nullptr;
         SSLTool *sslTool = nullptr;
         EmailTool *emailTool = nullptr;
+        /* ... */
+        s3s_ClickableLabel *help_active; // about
+        s3s_ClickableLabel *help_passive;
+        s3s_ClickableLabel *help_tools;
         /* ... */
         void m_connectSignals(AbstractEngine *engine);
 };

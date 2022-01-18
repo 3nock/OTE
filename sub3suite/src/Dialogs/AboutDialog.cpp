@@ -33,17 +33,22 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
     ui->labelVersion->setText("Version 0.1 (BETA)");
 
     /* setting up description */
-    ui->plainTextEditDescription->appendHtml("Copyright 2020-2022 © Enock Nicholaus <font color=\"green\">3nock@protonmail.com</font> and contributors.");
+    ui->textBrowserDescription->setOpenExternalLinks(true);
+    ui->textBrowserDescription->append("Copyright 2020-2022 © Enock Nicholaus <font color=\"blue\">3nock@protonmail.com</font> and contributors.");
 
-    ui->plainTextEditDescription->appendPlainText("\n");
+    ui->textBrowserDescription->append("\n");
 
-    ui->plainTextEditDescription->appendHtml("License GPLv3: GNU GPL version 3 or later <font color=\"green\">https://www.gnu.org/licenses/gpl-3.0.html</font>."
+    ui->textBrowserDescription->append("License GPLv3: GNU GPL version 3 or later <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">https://www.gnu.org/licenses/gpl-3.0.html</a>."
                                   " This is free software; see the source for copying conditions."
                                   " There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
 
-    ui->plainTextEditDescription->appendPlainText("\nsub3suite is Open Source Software released under the GNU General Public License.\n");
+    ui->textBrowserDescription->append("\nsub3suite is Open Source Software released under the GNU General Public License.\n");
 
-    ui->plainTextEditDescription->appendHtml("visit <font color=\"green\">https://3nock.github.io</font> for more information");
+    ui->textBrowserDescription->append("visit <a href=\"https://3nock.github.io\">https://3nock.github.io</a> for more information.");
+
+    ui->textBrowserDescription->append("\n");
+
+    ui->textBrowserDescription->append("follow <a href=\"https://twitter.com/sub3suite\">@sub3suite</a> for more updates on the project.");
 
     ///
     /// for authors...
@@ -99,7 +104,7 @@ AboutDialog::~AboutDialog(){
 
 void AboutDialog::on_buttonCopy_clicked(){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString description = ui->plainTextEditDescription->toPlainText();
+    QString description = ui->textBrowserDescription->toPlainText();
     clipboard->setText(description);
 }
 

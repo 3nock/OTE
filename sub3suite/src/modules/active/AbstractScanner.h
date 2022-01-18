@@ -70,15 +70,6 @@ class AbstractScanner : public QObject{
         void scanLog(scan::Log log); // scan error & info log
         void scanProgress(int value);
 
-        /* for certScanner... */
-        void resultSHA1(QString);
-        void resultSHA256(QString);
-        void resultRaw(QByteArray);
-        void resultSubdomain(QString);
-
-        /* for banner... */
-        void scanResultBanner(QString banner);
-
     private:
         QSemaphore semaphore;
 

@@ -69,7 +69,7 @@ void Ssl::on_buttonAction_clicked(){
     mainMenu->addSeparator();
 
     switch (ui->comboBoxOutput->currentIndex()) {
-    case ssl::OUTPUT::SUBDOMAIN:
+    case 0: // subdomain
         mainMenu->addAction(&a_SendAllHostToOsint);
         mainMenu->addAction(&a_SendAllHostToRaw);
         mainMenu->addAction(&a_SendAllHostToBrute);
@@ -80,13 +80,13 @@ void Ssl::on_buttonAction_clicked(){
         mainMenu->addAction(&a_SendAllHostToCertTool);
         mainMenu->addAction(&a_SendAllHostToDomainTool);
         break;
-    case ssl::OUTPUT::CERT_ID:
+    case 1: // cert id
         mainMenu->addAction(&a_SendAllCertToOsint);
         mainMenu->addAction(&a_SendAllCertToRaw);
         mainMenu->addSeparator();
         mainMenu->addAction(&a_SendAllCertToCertTool);
         break;
-    case ssl::OUTPUT::CERT_INFO:
+    case 2: // raw cert
         mainMenu->addAction(&a_ExpandResults);
         mainMenu->addAction(&a_CollapseResults);
     }
@@ -118,7 +118,7 @@ void Ssl::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     mainMenu->addSeparator();
 
     switch (ui->comboBoxOutput->currentIndex()) {
-    case ssl::OUTPUT::SUBDOMAIN:
+    case 0: // subdomain
         mainMenu->addAction(&a_SendSelectedHostToOsint);
         mainMenu->addAction(&a_SendSelectedHostToRaw);
         mainMenu->addAction(&a_SendSelectedHostToBrute);
@@ -129,13 +129,13 @@ void Ssl::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
         mainMenu->addAction(&a_SendSelectedHostToCertTool);
         mainMenu->addAction(&a_SendSelectedHostToDomainTool);
         break;
-    case ssl::OUTPUT::CERT_ID:
+    case 1: // cert id
         mainMenu->addAction(&a_SendSelectedCertToOsint);
         mainMenu->addAction(&a_SendSelectedCertToRaw);
         mainMenu->addSeparator();
         mainMenu->addAction(&a_SendSelectedCertToCertTool);
         break;
-    case ssl::OUTPUT::CERT_INFO:
+    case 2: // raw cert
         /* nothing */
         break;
     }
@@ -147,14 +147,20 @@ void Ssl::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
 void Ssl::m_clearResults(){
     /* clear appropriate model */
     switch (ui->comboBoxOutput->currentIndex()) {
-    case ssl::OUTPUT::SUBDOMAIN:
+    case 0: // subdomain
         m_resultModelSubdomain->clear();
+        m_subdomainSet.clear();
+        m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomains"});
         break;
-    case ssl::OUTPUT::CERT_ID:
+    case 1: // cert id
         m_resultModelCertId->clear();
+        m_certIdSet.clear();
+        m_resultModelCertId->setHorizontalHeaderLabels({"Certificate Hash"});
         break;
-    case ssl::OUTPUT::CERT_INFO:
+    case 2: // raw cert
         m_resultModelCertInfo->clear();
+        m_certInfoSet.clear();
+        m_resultModelCertInfo->setHorizontalHeaderLabels({"Property", "Value"});
     }
 
     /* clear the filter and the result count */
@@ -182,19 +188,24 @@ void Ssl::m_openInBrowser(QItemSelectionModel *selectionModel){
 
 void Ssl::m_removeResults(QItemSelectionModel *selectionModel){
     QStandardItemModel *model = nullptr;
+    QSet<QString> set;
     switch (ui->comboBoxOutput->currentIndex()) {
-    case ssl::OUTPUT::SUBDOMAIN:
+    case 0: // subdomain
         model = m_resultModelSubdomain;
+        set = m_subdomainSet;
         break;
-    case ssl::OUTPUT::CERT_ID:
+    case 1: // cert id
         model = m_resultModelCertId;
+        set = m_certIdSet;
         break;
-    case ssl::OUTPUT::CERT_INFO:
+    case 2: // raw cert
         model = m_resultModelCertInfo;
+        set = m_certInfoSet;
     }
 
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
         QModelIndex index = m_resultProxyModel->mapToSource(proxyIndex);
+        set.remove(index.data().toString());
         model->removeRow(index.row());
     }
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());

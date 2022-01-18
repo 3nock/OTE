@@ -174,8 +174,10 @@ void Active::m_openInBrowser(QItemSelectionModel *selectionModel){
 }
 
 void Active::m_removeResults(QItemSelectionModel *selectionModel){
+    QModelIndex index;
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        auto index = m_resultProxyModel->mapToSource(proxyIndex);
+        index = m_resultProxyModel->mapToSource(proxyIndex);
+        m_activeDns.remove(index.data().toString());
         m_resultModel->removeRow(index.row());
     }
 
