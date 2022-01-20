@@ -16,7 +16,7 @@
 #include "src/modules/active/SSLScanner.h"
 
 
-Ssl::Ssl(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, project), ui(new Ui::Ssl),
+Ssl::Ssl(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project), ui(new Ui::Ssl),
     m_scanConfig(new ssl::ScanConfig),
     m_scanArgs(new ssl::ScanArgs),
     m_scanStats(new ssl::ScanStat),
@@ -65,14 +65,14 @@ Ssl::Ssl(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, pro
     this->m_getConfigValues();
 }
 Ssl::~Ssl(){
+    delete m_resultProxyModel;
+    delete m_resultModelCertId;
+    delete m_resultModelCertInfo;
+    delete m_resultModelSubdomain;
+    delete m_targetListModel;
+    delete m_scanStats;
     delete m_scanArgs;
     delete m_scanConfig;
-    delete m_scanStats;
-    delete m_targetListModel;
-    delete m_resultModelSubdomain;
-    delete m_resultModelCertInfo;
-    delete m_resultModelCertId;
-    delete m_resultProxyModel;
     delete ui;
 }
 

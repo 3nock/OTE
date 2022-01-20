@@ -51,6 +51,7 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
 }
+
 DocumentationDialog::~DocumentationDialog(){
     delete ui;
 }

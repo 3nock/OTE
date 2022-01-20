@@ -48,7 +48,7 @@ void Osint::onResultSubdomainIp(QString subdomain, QString ip){
     m_subdomainIpSet.insert(subdomain+ip);
     if(m_subdomainIpSet.count() > prevSize && !subdomain.isEmpty()){
         m_resultModelSubdomainIp->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
-        project->addPassiveSubdomain({subdomain, ip});
+        project->addPassiveSubdomainIp(subdomain, ip);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -58,7 +58,7 @@ void Osint::onResultSubdomain(QString subdomain){
     m_subdomainSet.insert(subdomain);
     if(m_subdomainSet.count() > prevSize && !subdomain.isEmpty()){
         m_resultModelSubdomain->appendRow(new QStandardItem(subdomain));
-        project->addPassiveSubdomain({subdomain});
+        project->addPassiveSubdomain(subdomain);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -72,10 +72,8 @@ void Osint::onResultMightContainWildcards(QString subdomain){
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
 
         /* save as wildcard if starts with *. */
-        if(subdomain.startsWith("*"))
-            project->addPassiveWildcard({subdomain});
-        else
-            project->addPassiveSubdomain({subdomain});
+        if(!subdomain.startsWith("*"))
+            project->addPassiveSubdomain(subdomain);
     }
 }
 
@@ -84,7 +82,7 @@ void Osint::onResultIp(QString ip){
     m_ipSet.insert(ip);
     if(m_ipSet.count() > prevSize && !ip.isEmpty()){
         m_resultModelIp->appendRow(new QStandardItem(ip));
-        project->addPassiveIp({ip});
+        project->addPassiveIp(ip);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -94,7 +92,7 @@ void Osint::onResultEmail(QString email){
     m_emailSet.insert(email);
     if(m_emailSet.count() > prevSize && !email.isEmpty()){
         m_resultModelEmail->appendRow(new QStandardItem(email));
-        project->addPassiveEMail({email});
+        project->addPassiveEMail(email);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -104,7 +102,7 @@ void Osint::onResultUrl(QString url){
     m_urlSet.insert(url);
     if(m_urlSet.count() > prevSize && !url.isEmpty()){
         m_resultModelUrl->appendRow(new QStandardItem(url));
-        project->addPassiveUrl({url});
+        project->addPassiveUrl(url);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -114,7 +112,7 @@ void Osint::onResultAsn(QString asn, QString name){
     m_asnSet.insert(asn);
     if(m_asnSet.count() > prevSize && !asn.isEmpty()){
         m_resultModelAsn->appendRow({new QStandardItem(asn), new QStandardItem(name)});
-        project->addPassiveAsn({asn, name});
+        project->addPassiveAsn(asn, name);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -124,7 +122,7 @@ void Osint::onResultCidr(QString cidr){
     m_cidrSet.insert(cidr);
     if(m_cidrSet.count() > prevSize && !cidr.isEmpty()){
         m_resultModelCidr->appendRow(new QStandardItem(cidr));
-        project->addPassiveCidr({cidr});
+        project->addPassiveCidr(cidr);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -134,7 +132,7 @@ void Osint::onResultA(QString A){
     m_ipSet.insert(A);
     if(m_ipSet.count() > prevSize && !A.isEmpty()){
         m_resultModelIp->appendRow(new QStandardItem(A));
-        project->addPassiveA({A});
+        project->addPassiveA(A);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -144,7 +142,7 @@ void Osint::onResultAAAA(QString AAAA){
     m_ipSet.insert(AAAA);
     if(m_ipSet.count() > prevSize && !AAAA.isEmpty()){
         m_resultModelIp->appendRow(new QStandardItem(AAAA));
-        project->addPassiveAAAA({AAAA});
+        project->addPassiveAAAA(AAAA);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -154,7 +152,7 @@ void Osint::onResultCNAME(QString CNAME){
     m_subdomainSet.insert(CNAME);
     if(m_subdomainSet.count() > prevSize && !CNAME.isEmpty()){
         m_resultModelSubdomain->appendRow(new QStandardItem(CNAME));
-        project->addPassiveCNAME({CNAME});
+        project->addPassiveCNAME(CNAME);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -164,7 +162,7 @@ void Osint::onResultMX(QString MX){
     m_subdomainSet.insert(MX);
     if(m_subdomainSet.count() > prevSize && !MX.isEmpty()){
         m_resultModelSubdomain->appendRow(new QStandardItem(MX));
-        project->addPassiveMX({MX});
+        project->addPassiveMX(MX);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
@@ -174,14 +172,14 @@ void Osint::onResultNS(QString NS){
     m_subdomainSet.insert(NS);
     if(m_subdomainSet.count() > prevSize && !NS.isEmpty()){
         m_resultModelSubdomain->appendRow(new QStandardItem(NS));
-        project->addPassiveNS({NS});
+        project->addPassiveNS(NS);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }
 
 void Osint::onResultTXT(QString TXT){
     if(!TXT.isEmpty())
-        project->addPassiveTXT({TXT});
+        project->addPassiveTXT(TXT);
 }
 
 void Osint::onResultSSLCert(QString sha1_or_sha256){
@@ -189,7 +187,7 @@ void Osint::onResultSSLCert(QString sha1_or_sha256){
     m_sslCertSet.insert(sha1_or_sha256);
     if(m_sslCertSet.count() > prevSize && !sha1_or_sha256.isEmpty()){
         m_resultModelCert->appendRow(new QStandardItem(sha1_or_sha256));
-        project->addPassiveSSLCert({sha1_or_sha256});
+        project->addPassiveSSL(sha1_or_sha256);
         ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     }
 }

@@ -24,7 +24,7 @@ class Brute : public AbstractEngine{
     Q_OBJECT
 
     public:
-        Brute(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
+        Brute(QWidget *parent = nullptr, ProjectModel *project = nullptr);
         ~Brute();
 
     public slots:

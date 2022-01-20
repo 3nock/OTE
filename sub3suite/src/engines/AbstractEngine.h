@@ -14,7 +14,7 @@
 #include <QStringListModel>
 #include "src/utils/utils.h"
 #include "src/widgets/InputWidget.h"
-#include "src/project/ProjectDataModel.h"
+#include "src/models/ProjectModel.h"
 
 
 struct ScanStatus{
@@ -29,7 +29,7 @@ class AbstractEngine : public QWidget{
         Q_OBJECT
 
     public:
-        AbstractEngine(QWidget *parent = nullptr, ProjectDataModel *project = nullptr): QWidget(parent),
+        AbstractEngine(QWidget *parent = nullptr, ProjectModel *project = nullptr): QWidget(parent),
               status(new ScanStatus),
               project(project)
         {
@@ -40,7 +40,7 @@ class AbstractEngine : public QWidget{
 
     protected:
         ScanStatus *status;
-        ProjectDataModel *project;
+        ProjectModel *project;
         QItemSelectionModel *selectionModel;
 
     signals:

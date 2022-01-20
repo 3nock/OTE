@@ -100,5 +100,5 @@ void Ip::onScanResult(QString subdomain, QString ipAddress){
     ui->labelResultsCount->setNum(m_resultModel->rowCount());
 
     /* save to project model... */
-    project->addActiveSubdomain(QStringList()<<subdomain<<ipAddress<<subdomain);
+    project->addActiveSubdomainIp(subdomain, ipAddress);
 }

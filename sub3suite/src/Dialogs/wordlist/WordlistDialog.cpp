@@ -24,8 +24,9 @@ WordListDialog::WordListDialog(QWidget *parent, QStringListModel *wordlistModel)
     this->adjustSize();
 }
 WordListDialog::~WordListDialog(){
-    delete ui;
+    delete m_generateWordlistModel;
     delete m_customWordlistModel;
+    delete ui;
 }
 
 void WordListDialog::on_tabWidget_currentChanged(int index){

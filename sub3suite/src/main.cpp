@@ -7,6 +7,7 @@
 
 #include "MainWindow.h"
 #include "src/utils/Config.h"
+#include "src/dialogs/StartupDialog.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -91,11 +92,14 @@ int main(int argc, char *argv[])
     /* Handle DPI scaling on Windows */
 #if defined(Q_OS_WIN)
     s3s_Application::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif  // Q_OS_WIN
+#endif
 
     /* setting org and app name */
     QCoreApplication::setOrganizationName("3Suite");
     QCoreApplication::setApplicationName("Sub3 Suite");
+
+    /* removing context help button from all on dialogs for now */
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 
     /* create the sub3suite app */
     s3s_Application s3s_app(argc, argv);
@@ -106,25 +110,37 @@ int main(int argc, char *argv[])
     QSplashScreen splash(splashImage);
     splash.show();
 
-    /* removing context help button from all on dialogs... */
-    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    /* project path */
+    QString project;
 
-    /* starting the application */
-    MainWindow w;
-
-    /* setting the app to the center of Screen on start */
-    int x = (s3s_app.desktop()->width()-w.width()) / 2;
-    int y = (s3s_app.desktop()->height()-w.height()) / 2;
-    w.move(x, y-35);
-    w.show();
+    /* startup dialog */
+    StartupDialog startupDialog(&project);
+    startupDialog.setModal(true);
 
     /* splashscreen timing */
-    splash.finish(&w);
+    splash.finish(&startupDialog);
 
-    /* init configurations...*/
-    CONFIG;
+    /* start startupDialog */
+    startupDialog.exec();
 
-    /* starting the app... */
-    qInfo() << "starting sub3suite...";
-    return s3s_app.exec();
+    if(project.isEmpty() || project.isNull())
+        s3s_app.quit();
+    else
+    {
+        /* creating the main window */
+        MainWindow w;
+
+        /* setting the app to the center of Screen on start */
+        int x = (s3s_app.desktop()->width()-w.width()) / 2;
+        int y = (s3s_app.desktop()->height()-w.height()) / 2;
+        w.move(x, y-35);
+        w.show();
+
+        /* init configurations */
+        CONFIG;
+
+        /* starting the app */
+        qInfo() << "starting sub3suite...";
+        return s3s_app.exec();
+    }
 }

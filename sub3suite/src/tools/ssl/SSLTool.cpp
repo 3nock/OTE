@@ -36,7 +36,8 @@ enum MODULE{
  * articles on ssl-cert osint
  * https://osintcurio.us/2019/03/12/certificates-the-osint-gift-that-keeps-on-giving/
  */
-SSLTool::SSLTool(QWidget *parent) : QWidget(parent), ui(new Ui::SSLTool),
+SSLTool::SSLTool(QWidget *parent) : QWidget(parent),
+    ui(new Ui::SSLTool),
     m_model(new CertModel),
     m_proxyModel(new QSortFilterProxyModel)
 {
@@ -56,9 +57,9 @@ SSLTool::SSLTool(QWidget *parent) : QWidget(parent), ui(new Ui::SSLTool),
                                         << static_cast<int>((this->width() * 0.50)));
 }
 SSLTool::~SSLTool(){
-    delete ui;
-    delete m_model;
     delete m_proxyModel;
+    delete m_model;
+    delete ui;
 }
 
 void SSLTool::on_buttonStart_clicked(){

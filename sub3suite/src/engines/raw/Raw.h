@@ -26,7 +26,7 @@ class Raw : public AbstractEngine{
         Q_OBJECT
 
     public:
-        explicit Raw(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
+        explicit Raw(QWidget *parent = nullptr, ProjectModel *project = nullptr);
         ~Raw();
 
     signals:

@@ -12,7 +12,8 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-ASNTool::ASNTool(QWidget *parent) : QWidget(parent), ui(new Ui::ASNTool),
+ASNTool::ASNTool(QWidget *parent) : QWidget(parent),
+    ui(new Ui::ASNTool),
     m_model(new AsModel)
 {
     ui->setupUi(this);
@@ -29,6 +30,7 @@ ASNTool::ASNTool(QWidget *parent) : QWidget(parent), ui(new Ui::ASNTool),
                                         << static_cast<int>((this->width() * 0.50)));
 }
 ASNTool::~ASNTool(){
+    delete m_model;
     delete ui;
 }
 

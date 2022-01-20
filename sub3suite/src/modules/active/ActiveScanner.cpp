@@ -20,8 +20,8 @@ active::Scanner::Scanner(active::ScanArgs *args): AbstractScanner (nullptr),
     connect(this, &active::Scanner::next, this, &active::Scanner::lookup);
 }
 active::Scanner::~Scanner(){
-    delete m_dns;
     delete m_socket;
+    delete m_dns;
 }
 
 void active::Scanner::lookupFinished(){

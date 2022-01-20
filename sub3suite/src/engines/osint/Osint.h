@@ -49,7 +49,7 @@ class Osint : public AbstractEngine{
     Q_OBJECT
 
     public:
-        Osint(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
+        Osint(QWidget *parent = nullptr, ProjectModel *project = nullptr);
         ~Osint();
 
     public slots:

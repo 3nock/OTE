@@ -13,7 +13,8 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 
 
-Ip::Ip(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Ip),
+Ip::Ip(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, project),
+    ui(new Ui::Ip),
     m_scanConfig(new ip::ScanConfig),
     m_scanArgs(new ip::ScanArgs),
     m_targetListModel(new QStringListModel),

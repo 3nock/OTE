@@ -10,8 +10,7 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-EmailTool::EmailTool(QWidget *parent) :
-    QWidget(parent),
+EmailTool::EmailTool(QWidget *parent) : QWidget(parent),
     ui(new Ui::EmailTool)
 {
     ui->setupUi(this);
@@ -20,9 +19,7 @@ EmailTool::EmailTool(QWidget *parent) :
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
 }
-
-EmailTool::~EmailTool()
-{
+EmailTool::~EmailTool(){
     delete ui;
 }
 

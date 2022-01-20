@@ -15,7 +15,8 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 
 
-Active::Active(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Active),
+Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, project),
+    ui(new Ui::Active),
     m_scanConfig(new active::ScanConfig),
     m_scanArgs(new active::ScanArgs),
     m_scanStats(new active::ScanStat),
@@ -59,12 +60,12 @@ Active::Active(QWidget *parent, ProjectDataModel *project) : AbstractEngine(pare
     this->m_getConfigValues();
 }
 Active::~Active(){
-    delete m_scanConfig;
-    delete m_scanArgs;
-    delete m_scanStats;
-    delete m_targetListModel;
-    delete m_resultModel;
     delete m_resultProxyModel;
+    delete m_resultModel;
+    delete m_targetListModel;
+    delete m_scanStats;
+    delete m_scanArgs;
+    delete m_scanConfig;
     delete ui;
 }
 

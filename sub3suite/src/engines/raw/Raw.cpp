@@ -14,7 +14,8 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-Raw::Raw(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, project), ui(new Ui::Raw),
+Raw::Raw(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project),
+    ui(new Ui::Raw),
     m_model(new QStandardItemModel),
     m_targetListModel(new QStringListModel),
     m_targetListModelHostname(new QStringListModel),
@@ -62,14 +63,14 @@ Raw::Raw(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, pro
     m_jsonSyntaxHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditResults->document());
 }
 Raw::~Raw(){
-    delete m_model;
-    delete m_targetListModel;
-    delete m_targetListModelIp;
-    delete m_targetListModelAsn;
-    delete m_targetListModelCert;
-    delete m_targetListModelCidr;
-    delete m_targetListModelEmail;
     delete m_targetListModelHostname;
+    delete m_targetListModelEmail;
+    delete m_targetListModelCidr;
+    delete m_targetListModelCert;
+    delete m_targetListModelAsn;
+    delete m_targetListModelIp;
+    delete m_targetListModel;
+    delete m_model;
     delete ui;
 }
 

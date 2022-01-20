@@ -42,7 +42,7 @@ void Brute::onResultSubdomain(QString subdomain, QString ip){
 
     /* save to Project model... */
     if(m_scanConfig->autoSaveToProject)
-        project->addActiveSubdomain(QStringList()<<subdomain<<ip);
+        project->addActiveSubdomainIp(subdomain, ip);
 }
 
 void Brute::onResultTLD(QString tld, QString ip){
@@ -67,5 +67,5 @@ void Brute::onResultTLD(QString tld, QString ip){
 
     /* save to Project model... */
     if(m_scanConfig->autoSaveToProject)
-        project->addActiveTLD(QStringList()<<tld<<ip);
+        project->addActiveTLD(tld, ip);
 }

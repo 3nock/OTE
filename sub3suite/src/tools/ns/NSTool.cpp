@@ -14,7 +14,8 @@
 #define DNSLYTICS 0
 
 
-NSTool::NSTool(QWidget *parent) : QWidget(parent), ui(new Ui::NSTool),
+NSTool::NSTool(QWidget *parent) : QWidget(parent),
+    ui(new Ui::NSTool),
     m_model(new NSModel)
 {
     ui->setupUi(this);
@@ -34,9 +35,8 @@ NSTool::NSTool(QWidget *parent) : QWidget(parent), ui(new Ui::NSTool),
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
 }
-
-NSTool::~NSTool()
-{
+NSTool::~NSTool(){
+    delete m_model;
     delete ui;
 }
 

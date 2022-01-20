@@ -23,7 +23,7 @@ class Ip : public AbstractEngine{
         Q_OBJECT
 
     public:
-        Ip(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
+        Ip(QWidget *parent = nullptr, ProjectModel *project = nullptr);
         ~Ip();
 
     public slots:

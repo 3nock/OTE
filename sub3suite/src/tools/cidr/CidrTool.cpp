@@ -12,7 +12,8 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-CidrTool::CidrTool(QWidget *parent) : QWidget(parent), ui(new Ui::CidrTool),
+CidrTool::CidrTool(QWidget *parent) : QWidget(parent),
+    ui(new Ui::CidrTool),
     m_model(new CidrModel)
 {
     ui->setupUi(this);
@@ -29,6 +30,7 @@ CidrTool::CidrTool(QWidget *parent) : QWidget(parent), ui(new Ui::CidrTool),
                                         << static_cast<int>((this->width() * 0.50)));
 }
 CidrTool::~CidrTool(){
+    delete m_model;
     delete ui;
 }
 

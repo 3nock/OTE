@@ -26,7 +26,7 @@ class Dns : public AbstractEngine{
     Q_OBJECT
 
     public:
-        Dns(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
+        Dns(QWidget *parent = nullptr, ProjectModel *project = nullptr);
         ~Dns();
 
     public slots:

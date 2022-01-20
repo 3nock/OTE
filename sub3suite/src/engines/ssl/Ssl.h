@@ -23,7 +23,7 @@ class Ssl : public AbstractEngine{
         Q_OBJECT
 
     public:
-        Ssl(QWidget *parent = nullptr, ProjectDataModel *project = nullptr);
+        Ssl(QWidget *parent = nullptr, ProjectModel *project = nullptr);
         ~Ssl();
 
     public slots:

@@ -33,6 +33,7 @@
 #include "src/tools/domain/DomainTool.h"
 #include "src/tools/ns/NSTool.h"
 #include "src/tools/mx/MXTool.h"
+#include "src/tools/url/UrlTool.h"
 
 
 class s3s_ClickableLabel : public QLabel{
@@ -63,8 +64,6 @@ class MainWindow : public QMainWindow{
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
 
-        ProjectDataModel *projectDataModel;
-
     public slots:
         void onReceiveStatus(QString status);
 
@@ -94,12 +93,14 @@ class MainWindow : public QMainWindow{
         void on_actionDocumentation_triggered();
 
         /* documentations */
-        void on_documentation_active();
-        void on_documentation_passive();
-        void on_documentation_tools();
+        void onDocumentation_active();
+        void onDocumentation_passive();
+        void onDocumentation_tools();
 
     private:
+        /* project */
         Project *project = nullptr;
+        ProjectModel *projectModel = nullptr;
 
         /* engines */
         Ip *ip = nullptr;
@@ -119,8 +120,11 @@ class MainWindow : public QMainWindow{
         MXTool *mxTool = nullptr;
         SSLTool *sslTool = nullptr;
         EmailTool *emailTool = nullptr;
+        UrlTool *urlTool = nullptr;
 
-        /* ... */
+        void m_initEngines();
+        void m_documentation();
+        void m_registerMetaTypes();
         void m_connectSignals(AbstractEngine *engine);
 };
 

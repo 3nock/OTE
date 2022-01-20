@@ -36,5 +36,5 @@ void Active::onScanResult(QString host, QString ip){
 
     /* save to Project model */
     if(m_scanConfig->autoSaveToProject)
-        project->addActiveSubdomain(QStringList()<<host<<ip);
+        project->addActiveSubdomainIp(host, ip);
 }

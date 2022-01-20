@@ -11,7 +11,8 @@
 #include <QClipboard>
 
 
-InputWidget::InputWidget(QWidget *parent) : QWidget(parent), ui(new Ui::InputWidget)
+InputWidget::InputWidget(QWidget *parent) : QWidget(parent),
+    ui(new Ui::InputWidget)
 {
     ui->setupUi(this);
 

@@ -10,7 +10,8 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-DomainTool::DomainTool(QWidget *parent) : QWidget(parent), ui(new Ui::DomainTool)
+DomainTool::DomainTool(QWidget *parent) : QWidget(parent),
+    ui(new Ui::DomainTool)
 {
     ui->setupUi(this);
 
@@ -18,9 +19,7 @@ DomainTool::DomainTool(QWidget *parent) : QWidget(parent), ui(new Ui::DomainTool
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
 }
-
-DomainTool::~DomainTool()
-{
+DomainTool::~DomainTool(){
     delete ui;
 }
 

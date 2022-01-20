@@ -24,8 +24,8 @@
         <file>res/files/LICENSE</file>
     </qresource>
     <qresource prefix="/themes">
-        <file>res/themes/default.css</file>
         <file>res/themes/light.css</file>
+        <file>res/themes/dark.css</file>
     </qresource>
     <qresource prefix="/documentation">
         <file>res/documentation/active.html</file>

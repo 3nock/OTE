@@ -12,7 +12,8 @@
 #include <QMessageBox>
 
 
-PassiveConfigDialog::PassiveConfigDialog(QWidget *parent) : QDialog(parent), ui(new Ui::PassiveConfigDialog)
+PassiveConfigDialog::PassiveConfigDialog(QWidget *parent) : QDialog(parent),
+    ui(new Ui::PassiveConfigDialog)
 {
     ui->setupUi(this);
 

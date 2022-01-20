@@ -12,7 +12,8 @@
 #include <QDateTime>
 
 
-LogViewerDialog::LogViewerDialog(QWidget *parent): QDialog(parent),ui(new Ui::LogViewerDialog)
+LogViewerDialog::LogViewerDialog(QWidget *parent): QDialog(parent),
+    ui(new Ui::LogViewerDialog)
 {
     ui->setupUi(this);
 

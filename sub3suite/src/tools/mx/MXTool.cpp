@@ -14,7 +14,8 @@
 #define DNSLYTICS 0
 
 
-MXTool::MXTool(QWidget *parent) : QWidget(parent), ui(new Ui::MXTool),
+MXTool::MXTool(QWidget *parent) : QWidget(parent),
+    ui(new Ui::MXTool),
     m_model(new MXModel)
 {
     ui->setupUi(this);
@@ -35,6 +36,7 @@ MXTool::MXTool(QWidget *parent) : QWidget(parent), ui(new Ui::MXTool),
                                         << static_cast<int>((this->width() * 0.50)));
 }
 MXTool::~MXTool(){
+    delete m_model;
     delete ui;
 }
 

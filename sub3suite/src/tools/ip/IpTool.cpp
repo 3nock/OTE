@@ -15,7 +15,8 @@
 #define IPAPI 2
 
 
-IpTool::IpTool(QWidget *parent) : QWidget(parent), ui(new Ui::IpTool),
+IpTool::IpTool(QWidget *parent) : QWidget(parent),
+    ui(new Ui::IpTool),
     m_model(new IpModel)
 {
     ui->setupUi(this);
@@ -32,6 +33,7 @@ IpTool::IpTool(QWidget *parent) : QWidget(parent), ui(new Ui::IpTool),
                                         << static_cast<int>((this->width() * 0.50)));
 }
 IpTool::~IpTool(){
+    delete m_model;
     delete ui;
 }
 

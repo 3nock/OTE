@@ -12,7 +12,8 @@
 #include <QFile>
 
 
-AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDialog),
+AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
+    ui(new Ui::AboutDialog),
     m_authorsModel(new QStandardItemModel),
     m_modulesModel(new QStandardItemModel),
     m_foldersModel(new QStandardItemModel)
@@ -96,9 +97,9 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AboutDia
     }
 }
 AboutDialog::~AboutDialog(){
-    delete m_authorsModel;
-    delete m_modulesModel;
     delete m_foldersModel;
+    delete m_modulesModel;
+    delete m_authorsModel;
     delete ui;
 }
 

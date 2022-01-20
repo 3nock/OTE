@@ -32,6 +32,7 @@ FailedScansDialog::FailedScansDialog(QWidget *parent, QMap<QString,QString> targ
     ui->tableView->setModel(m_model);
 }
 FailedScansDialog::~FailedScansDialog(){
+    delete m_model;
     delete ui;
 }
 

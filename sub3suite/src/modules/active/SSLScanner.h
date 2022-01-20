@@ -26,6 +26,10 @@
 465             SMTP SSL – Outgoing
 */
 
+struct SSL_struct{
+    QString target;
+};
+
 namespace ssl {
 
 enum PORT { // ssl port

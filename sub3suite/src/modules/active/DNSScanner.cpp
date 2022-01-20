@@ -49,13 +49,13 @@ dns::Scanner::Scanner(dns::ScanArgs *args): AbstractScanner (nullptr),
     connect(m_dns_cname, &QDnsLookup::finished, this, &dns::Scanner::cnameLookupFinished);
 }
 dns::Scanner::~Scanner(){
-    delete m_dns_a;
-    delete m_dns_aaaa;
-    delete m_dns_mx;
-    delete m_dns_ns;
-    delete m_dns_txt;
-    delete m_dns_cname;
     delete m_dns_srv;
+    delete m_dns_cname;
+    delete m_dns_txt;
+    delete m_dns_ns;
+    delete m_dns_mx;
+    delete m_dns_aaaa;
+    delete m_dns_a;
 }
 
 void dns::Scanner::srvLookupFinished(){

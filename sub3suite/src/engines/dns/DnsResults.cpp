@@ -8,6 +8,7 @@
 #include "Dns.h"
 #include "ui_Dns.h"
 
+
 void Dns::onScanLog(scan::Log log){
     ui->plainTextEditLogs->appendHtml("[Error]      : <font color=\"red\">"+log.message+"</font>");
     ui->plainTextEditLogs->appendHtml("[Target]     : <font color=\"red\">"+log.target+"</font>");
@@ -29,6 +30,7 @@ void Dns::onScanResult(dns::ScanResult results){
             return;
     }
 
+
     /* for other record types...*/
     QStandardItem *targetItem = new QStandardItem(results.target);
     targetItem->setIcon(QIcon(":/img/res/icons/folder.png"));
@@ -40,14 +42,9 @@ void Dns::onScanResult(dns::ScanResult results){
         QStandardItem *recordItem = new QStandardItem("A");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
-        for(const QString &item: results.A)
-        {
-            recordItem->appendRow(new QStandardItem(item));
 
-            /* save to Project model */
-            if(m_scanConfig->autoSaveToProject)
-                project->addActiveA(QStringList()<<item<<results.target);
-        }
+        for(const QString &item: results.A)
+            recordItem->appendRow(new QStandardItem(item));
         targetItem->appendRow(recordItem);
     }
 
@@ -55,14 +52,9 @@ void Dns::onScanResult(dns::ScanResult results){
         QStandardItem *recordItem = new QStandardItem("AAAA");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
-        for(QString item: results.AAAA)
-        {
-            recordItem->appendRow(new QStandardItem(item));
 
-            /* save to Project model */
-            if(m_scanConfig->autoSaveToProject)
-                project->addActiveAAAA(QStringList()<<item<<results.target);
-        }
+        for(QString item: results.AAAA)
+            recordItem->appendRow(new QStandardItem(item));
         targetItem->appendRow(recordItem);
     }
 
@@ -70,14 +62,9 @@ void Dns::onScanResult(dns::ScanResult results){
         QStandardItem *recordItem = new QStandardItem("NS");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
-        for(QString item: results.NS)
-        {
-            recordItem->appendRow(new QStandardItem(item));
 
-            /* save to Project model */
-            if(m_scanConfig->autoSaveToProject)
-                project->addActiveNS(QStringList()<<item<<results.target);
-        }
+        for(QString item: results.NS)
+            recordItem->appendRow(new QStandardItem(item));
         targetItem->appendRow(recordItem);
     }
 
@@ -85,14 +72,9 @@ void Dns::onScanResult(dns::ScanResult results){
         QStandardItem *recordItem = new QStandardItem("MX");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
-        for(QString item: results.MX)
-        {
-            recordItem->appendRow(new QStandardItem(item));
 
-            /* save to Project model */
-            if(m_scanConfig->autoSaveToProject)
-                project->addActiveMX(QStringList()<<item<<results.target);
-        }
+        for(QString item: results.MX)
+            recordItem->appendRow(new QStandardItem(item));
         targetItem->appendRow(recordItem);
     }
 
@@ -100,14 +82,9 @@ void Dns::onScanResult(dns::ScanResult results){
         QStandardItem *recordItem = new QStandardItem("TXT");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
-        for(QString item: results.TXT)
-        {
-            recordItem->appendRow(new QStandardItem(item));
 
-            /* save to Project model */
-            if(m_scanConfig->autoSaveToProject)
-                project->addActiveTXT(QStringList()<<item<<results.target);
-        }
+        for(QString item: results.TXT)
+            recordItem->appendRow(new QStandardItem(item));
         targetItem->appendRow(recordItem);
     }
 
@@ -115,16 +92,15 @@ void Dns::onScanResult(dns::ScanResult results){
         QStandardItem *recordItem = new QStandardItem("CNAME");
         recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
         recordItem->setForeground(Qt::white);
-        for(QString item: results.CNAME)
-        {
-            recordItem->appendRow(new QStandardItem(item));
 
-            /* save to Project model */
-            if(m_scanConfig->autoSaveToProject)
-                project->addActiveCNAME(QStringList()<<item<<results.target);
-        }
+        for(QString item: results.CNAME)
+            recordItem->appendRow(new QStandardItem(item));
         targetItem->appendRow(recordItem);
     }
+
+    /* save to Project model */
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveDNS(results);
 
     m_scanStats->resolved++;
 }

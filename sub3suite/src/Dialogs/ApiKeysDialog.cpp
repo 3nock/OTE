@@ -10,19 +10,13 @@
 
 #include "src/utils/Config.h"
 #include "src/modules/passive/OsintDefinitions.h"
+
 #include <QUrl>
 #include <QDesktopServices>
 
 
-/*
- * TODO: fix hunter..
- *       add more api keys..
- *       modify such that more info can be shown eg(api csubdomainIps left)
- *       save the urls in the .ini file instead of hardcoding them...
- *       also add a widget to display those url so they can be modifiable
- */
-
-ApiKeysDialog::ApiKeysDialog(QWidget *parent): QDialog(parent),ui(new Ui::ApiKeysDialog)
+ApiKeysDialog::ApiKeysDialog(QWidget *parent): QDialog(parent),
+    ui(new Ui::ApiKeysDialog)
 {
     ui->setupUi(this);
     this->m_loadApiKeys();

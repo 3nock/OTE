@@ -345,7 +345,7 @@ void Active::m_sendToProject(){
     for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
         host = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
         ip = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
-        project->addActiveSubdomain({host, ip});
+        project->addActiveSubdomainIp(host, ip);
     }
 }
 
@@ -360,7 +360,7 @@ void Active::m_sendToProject(QItemSelectionModel *selection){
         i++;
         if((i < indexList.size()) && (row == indexList.at(i).row())){
             ip = indexList.at(i).data().toString();
-            project->addActiveSubdomain({host, ip});
+            project->addActiveSubdomainIp(host, ip);
             i++;
         }
     }

@@ -99,8 +99,8 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ip::ScanConfig *config) 
 }
 
 ActiveConfigDialog::~ActiveConfigDialog(){
-    delete ui;
     delete m_customNameserverListModel;
+    delete ui;
 }
 
 void ActiveConfigDialog::on_buttonCancel_clicked(){

@@ -15,7 +15,8 @@
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
-Osint::Osint(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent, project), ui(new Ui::Osint),
+Osint::Osint(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project),
+    ui(new Ui::Osint),
     m_targetListModelHostname(new QStringListModel),
     m_targetListModelIp(new QStringListModel),
     m_targetListModelAsn(new QStringListModel),
@@ -75,21 +76,21 @@ Osint::Osint(QWidget *parent, ProjectDataModel *project): AbstractEngine(parent,
     this->m_initActions();
 }
 Osint::~Osint(){
-    delete m_targetListModelIp;
-    delete m_targetListModelAsn;
-    delete m_targetListModelCert;
-    delete m_targetListModelCidr;
-    delete m_targetListModelEmail;
-    delete m_targetListModelHostname;
-    delete m_resultModelSubdomainIp;
-    delete m_resultModelSubdomain;
-    delete m_resultModelIp;
-    delete m_resultModelEmail;
-    delete m_resultModelUrl;
-    delete m_resultModelAsn;
-    delete m_resultModelCert;
-    delete m_resultModelCidr;
     delete m_resultProxyModel;
+    delete m_resultModelCidr;
+    delete m_resultModelCert;
+    delete m_resultModelAsn;
+    delete m_resultModelUrl;
+    delete m_resultModelEmail;
+    delete m_resultModelIp;
+    delete m_resultModelSubdomain;
+    delete m_resultModelSubdomainIp;
+    delete m_targetListModelHostname;
+    delete m_targetListModelEmail;
+    delete m_targetListModelCidr;
+    delete m_targetListModelCert;
+    delete m_targetListModelAsn;
+    delete m_targetListModelIp;
     delete ui;
 }
 

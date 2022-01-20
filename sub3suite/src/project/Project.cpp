@@ -1,144 +1,122 @@
-/*
- Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
- Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
-
- @brief :
-*/
-
 #include "Project.h"
 #include "ui_Project.h"
 
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QFile>
 
-
-Project::Project(QWidget *parent, ProjectDataModel *projectDataModel) :QWidget(parent), ui(new Ui::Project),
-    m_projectDataModel(projectDataModel),
-    m_proxyModel(new QSortFilterProxyModel)
+Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
+    ui(new Ui::Project),
+    m_projectModel(projectModel),
+    m_siteMapProxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
 
-    /* setting up signals and slots... */
-    m_proxyModel->setSourceModel(m_projectDataModel->projectModel);
-    m_proxyModel->setRecursiveFilteringEnabled(true);
+    ui->treeViewProjectExplorer->setModel(m_projectModel->projectExplorerModel);
 
-    ui->treeView->setModel(m_proxyModel);
-    ui->treeView->expandAll();
-    ui->treeView->setColumnHidden(1, true);
+    /* placeholder texts */
+    ui->lineEditSiteMapFilter->setPlaceholderText("Filter...");
 
-    ui->lineEdit_inScope->setPlaceholderText("e.g google ...");
-    ui->lineEdit_filter->setPlaceholderText("Enter filter...");
-
-    ui->frame_filter->hide();
-    ui->treeView->setColumnHidden(1, true);
-    ui->treeView->setColumnHidden(2, true);
+    /* underdevelopment txt */
+    ui->labelGraph->setDisabled(true);
+    ui->labelAnalysis->setDisabled(true);
 }
 Project::~Project(){
-    delete m_proxyModel;
+    delete m_siteMapProxyModel;
     delete ui;
 }
 
-void Project::updateFilter(){
-    ///
-    /// adding the targets to the proxy model filter....
-    ///
-    // QString pattern("(subdomains|records|tld|a|aaaa|ns|mx|cname|txt|srv");
-    QString pattern("(");
-    for(int i = 0; i < ui->listWidget_inScope->count(); i++){
-        if(i > 0)
-            pattern.append("|");
-        pattern.append(ui->listWidget_inScope->item(i)->text());
-    }
-    pattern.append(")");
-    m_proxyModel->setFilterKeyColumn(2);
-    QRegExp regExp(pattern, Qt::CaseInsensitive);
-    m_proxyModel->setFilterRegExp(regExp);
-    ui->treeView->setModel(m_proxyModel);
-}
-
-void Project::on_pushButton_clearInScope_clicked(){
-    ui->listWidget_inScope->clear();
-    updateFilter();
-}
-
-void Project::on_pushButton_removeInScope_clicked(){
-    int selectionCount = ui->listWidget_inScope->selectedItems().count();
-    if(selectionCount){
-        qDeleteAll(ui->listWidget_inScope->selectedItems());
-    }
-    updateFilter();
-}
-
-void Project::on_pushButton_loadInScope_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, "Load From File...", "./");
-    if(filename.isEmpty()){
+/* changing the model */
+void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
+    if(index.parent() == m_projectModel->explorerRootItem->index())
         return;
-    }
-    QFile file(filename);
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        QTextStream in(&file);
-        while (!in.atEnd()){
-            ui->listWidget_inScope->addItem(in.readLine());
-        }
-        file.close();
-    }else{
-        QMessageBox::warning(this, "Error!", "Failed To Open the File!");
-    }
-    updateFilter();
-}
 
-void Project::on_pushButton_addInScope_clicked(){
-    if(ui->lineEdit_inScope->text().isEmpty())
-        return;
-    ///
-    /// ...
-    ///
-    if(ui->lineEdit_inScope->text().contains("."))
-    {
-        ui->listWidget_inScope->addItem(ui->lineEdit_inScope->text().split(".")[0]);
-    }
-    else{
-        ui->listWidget_inScope->addItem(ui->lineEdit_inScope->text());
-    }
-    ui->lineEdit_inScope->clear();
-    updateFilter();
-}
+    QString type(index.data().toString());
+    QString engine(index.parent().data().toString());
 
-void Project::on_lineEdit_inScope_returnPressed(){
-    on_pushButton_addInScope_clicked();
-}
+    if(engine == "Active"){
+        if(type == "Subdomain Ip")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeSubdomainIp_model);
+        if(type == "Subdomain")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeSubdomain_model);
+        if(type == "TLD")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeTld_model);
+        if(type == "DNS")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeDNS_model);
+        if(type == "Widlcard")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeWildcard_model);
+        if(type == "SSL")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeSSL_model);
+    }
 
-void Project::on_checkBox_enableFilter_clicked(bool checked){
-    if(checked){
-        ui->frame_filter->show();
+    if(engine == "DNS"){
+        if(type == "A")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeA_model);
+        if(type == "AAAA")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeAAAA_model);
+        if(type == "NS")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeNS_model);
+        if(type == "MX")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeMX_model);
+        if(type == "TXT")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeTXT_model);
+        if(type == "CNAME")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeCNAME_model);
+        if(type == "SRV")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeSRV_model);
     }
-    else{
-        ui->frame_filter->hide();
-    }
-}
 
-void Project::on_checkBox_columnIpAddress_clicked(bool checked){
-    if(checked){
-        ui->treeView->setColumnHidden(1, false);
+    if(engine == "SSL"){
+        if(type == "SHA-1")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeSSL_sha1_model);
+        if(type == "SHA-256")
+            ui->treeViewSiteMap->setModel(m_projectModel->activeSSL_sha256_model);
     }
-    else{
-        ui->treeView->setColumnHidden(1, true);
-    }
-}
 
-void Project::on_checkBox_columnScopeTarget_clicked(bool checked){
-    if(checked){
-        ui->treeView->setColumnHidden(2, false);
+    if(engine == "Passive"){
+        if(type == "Subdomain Ip")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveSubdomainIp_model);
+        if(type == "Subdomain")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveSubdomain_model);
+        if(type == "A")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveA_model);
+        if(type == "AAAA")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveAAAA_model);
+        if(type == "CIDR")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveCidr_model);
+        if(type == "NS")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveNS_model);
+        if(type == "MX")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveMX_model);
+        if(type == "TXT")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveTXT_model);
+        if(type == "CNAME")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveCNAME_model);
+        if(type == "EMAIL")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveEmail_model);
+        if(type == "URL")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveUrl_model);
+        if(type == "ASN")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveAsn_model);
+        if(type == "SSL")
+            ui->treeViewSiteMap->setModel(m_projectModel->passiveSSL_model);
     }
-    else{
-        ui->treeView->setColumnHidden(2, true);
-    }
-}
 
-void Project::on_pushButton_filter_clicked(){
-    m_proxyModel->setFilterKeyColumn(ui->comboBox_filter->currentIndex());
-    QRegExp regExp(ui->lineEdit_filter->text(), Qt::CaseInsensitive);
-    m_proxyModel->setFilterRegExp(regExp);
-    ui->treeView->setModel(m_proxyModel);
+    if(engine == "Enum"){
+        if(type == "IP")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumIp_model);
+        if(type == "MX")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumMX_model);
+        if(type == "Domain")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumDomain_model);
+        if(type == "ASN")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumASN_model);
+        if(type == "CIDR")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumCIDR_model);
+        if(type == "NS")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumNS_model);
+        if(type == "SSL")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumSSL_model);
+        if(type == "Email")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumEmail_model);
+        if(type == "URL")
+            ui->treeViewSiteMap->setModel(m_projectModel->enumURL_model);
+    }
 }

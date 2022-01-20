@@ -32,6 +32,7 @@ SOURCES += \
     src/dialogs/ActiveConfigDialog.cpp \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
+    src/dialogs/StartupDialog.cpp \
     src/dialogs/ToolsConfigDialog.cpp \
     src/dialogs/preference/PreferenceDialog.cpp \
     src/dialogs/wordlist/ChooseWordlist.cpp \
@@ -60,6 +61,7 @@ SOURCES += \
     src/engines/raw/RawModules.cpp \
     src/engines/dns/DnsContextMenu.cpp \
     src/engines/dns/DnsScan.cpp \
+    src/models/ProjectModel.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
     src/modules/passive/api/JsonWhois.cpp \
@@ -117,6 +119,8 @@ SOURCES += \
     src/modules/active/DNSScanner.cpp \
     src/modules/active/SSLScanner.cpp \
     src/modules/active/WildcardScanner.cpp \
+    src/project/Project.cpp \
+    src/tools/url/UrlTool.cpp \
     src/tools/asn/ASNTool.cpp \
     src/tools/cidr/CidrTool.cpp \
     src/tools/domain/DomainTool.cpp \
@@ -178,8 +182,6 @@ SOURCES += \
     src/engines/active/Active.cpp \
     src/engines/brute/Brute.cpp \
     src/engines/osint/Osint.cpp \
-    src/project/ProjectDataModel.cpp \
-    src/project/Project.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/utils/LogsSyntaxHighlighter.cpp \
     src/utils/NotesSyntaxHighlighter.cpp \
@@ -196,6 +198,7 @@ HEADERS += \
     src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
+    src/dialogs/StartupDialog.h \
     src/dialogs/ToolsConfigDialog.h \
     src/dialogs/preference/PreferenceDialog.h \
     src/engines/ssl/Ssl.h \
@@ -203,6 +206,7 @@ HEADERS += \
     src/models/ASNModel.h \
     src/models/IPModel.h \
     src/models/NSModel.h \
+    src/models/ProjectModel.h \
     src/models/SSLModel.h \
     src/models/CIDRModel.h \
     src/models/DomainModel.h \
@@ -268,7 +272,9 @@ HEADERS += \
     src/modules/active/DNSScanner.h \
     src/modules/active/SSLScanner.h \
     src/modules/active/WildcardScanner.h \
+    src/project/Project.h \
     src/tools/AbstractTool.h \
+    src/tools/url/UrlTool.h \
     src/tools/asn/ASNTool.h \
     src/tools/cidr/CidrTool.h \
     src/tools/domain/DomainTool.h \
@@ -333,8 +339,6 @@ HEADERS += \
     src/engines/brute/Brute.h \
     src/engines/osint/Osint.h \
     src/engines/AbstractEngine.h \
-    src/project/ProjectDataModel.h \
-    src/project/Project.h \
     src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \
@@ -354,9 +358,12 @@ FORMS += \
     src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \
+    src/dialogs/StartupDialog.ui \
     src/dialogs/ToolsConfigDialog.ui \
     src/dialogs/preference/PreferenceDialog.ui \
     src/engines/ssl/Ssl.ui \
+    src/project/Project.ui \
+    src/tools/url/UrlTool.ui \
     src/tools/asn/ASNTool.ui \
     src/tools/cidr/CidrTool.ui \
     src/tools/domain/DomainTool.ui \
@@ -365,7 +372,6 @@ FORMS += \
     src/tools/mx/MXTool.ui \
     src/tools/ns/NSTool.ui \
     src/tools/ssl/SSLTool.ui \
-    src/project/Project.ui \
     src/engines/raw/Raw.ui \
     src/engines/ip/Ip.ui \
     src/engines/dns/Dns.ui \

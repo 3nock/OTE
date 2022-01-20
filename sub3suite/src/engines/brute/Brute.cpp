@@ -17,7 +17,8 @@
 #include "src/dialogs/wordlist/WordlistDialog.h"
 
 
-Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Brute),
+Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, project),
+    ui(new Ui::Brute),
     m_scanConfig(new brute::ScanConfig),
     m_scanArgs(new brute::ScanArgs),
     m_scanStats(new brute::ScanStat),
@@ -68,14 +69,14 @@ Brute::Brute(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent
     this->m_getConfigValues();
 }
 Brute::~Brute(){
-    delete m_scanConfig;
-    delete m_scanArgs;
-    delete m_scanStats;
-    delete m_targetListModel;
-    delete m_wordlistModel;
-    delete m_resultModelSubdomain;
-    delete m_resultModelTld;
     delete m_resultProxyModel;
+    delete m_resultModelTld;
+    delete m_resultModelSubdomain;
+    delete m_wordlistModel;
+    delete m_targetListModel;
+    delete m_scanStats;
+    delete m_scanArgs;
+    delete m_scanConfig;
     delete ui;
 }
 

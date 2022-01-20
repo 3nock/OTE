@@ -14,8 +14,11 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Definitions.h"
 
-
-Dns::Dns(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, project), ui(new Ui::Dns),
+/*
+ * save targets as json
+ */
+Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, project),
+    ui(new Ui::Dns),
     m_scanConfig(new dns::ScanConfig),
     m_scanArgs(new dns::ScanArgs),
     m_scanStats(new dns::ScanStat),
@@ -61,13 +64,13 @@ Dns::Dns(QWidget *parent, ProjectDataModel *project) : AbstractEngine(parent, pr
     this->m_getConfigValues();
 }
 Dns::~Dns(){
-    delete m_scanConfig;
+    delete m_resultProxyModel;
+    delete m_resultModel;
+    delete m_srvWordlitsModel;
+    delete m_targetListModel;
     delete m_scanArgs;
     delete m_scanStats;
-    delete m_targetListModel;
-    delete m_srvWordlitsModel;
-    delete m_resultModel;
-    delete m_resultProxyModel;
+    delete m_scanConfig;
     delete ui;
 }
 

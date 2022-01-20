@@ -10,6 +10,8 @@
 
 #include <QPushButton>
 #include <QDesktopServices>
+
+#include "src/dialogs/StartupDialog.h"
 #include "src/dialogs/AboutDialog.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/LogViewerDialog.h"
@@ -17,21 +19,78 @@
 #include "src/dialogs/DocumentationDialog.h"
 
 
-MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow),
-    projectDataModel(new ProjectDataModel)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    /* creating and initiating the classes for the modules... */
-    project = new Project(this, projectDataModel);
+    /* init */
+    this->m_registerMetaTypes();
+    this->m_initEngines();
+    this->m_documentation();
+
+    /* build info */
+    QAction* buildInfo = new QAction(tr("%1 (%2)").arg("Feb 01 2022").arg("BETA"), this);
+    buildInfo->setEnabled(false);
+    ui->menubar->addAction(buildInfo);
+
+    /* welcome */
+    ui->statusbar->showMessage("Welcome!", 5000);
+}
+MainWindow::~MainWindow(){
+    /* tools */
+    delete urlTool;
+    delete emailTool;
+    delete sslTool;
+    delete mxTool;
+    delete nsTool;
+    delete cidrTool;
+    delete asnTool;
+    delete ipTool;
+    delete domainTool;
+
     /* engines */
-    ip = new Ip(this, projectDataModel);
-    osint = new Osint(this, projectDataModel);
-    brute = new Brute(this, projectDataModel);
-    active = new Active(this, projectDataModel);
-    dns = new Dns(this, projectDataModel);
-    ssl = new Ssl(this, projectDataModel);
-    raw = new Raw(this, projectDataModel);
+    delete raw;
+    delete ssl;
+    delete dns;
+    delete active;
+    delete brute;
+    delete osint;
+    delete ip;
+
+    /* ... */
+    delete project;
+    delete ui;
+}
+
+void MainWindow::m_registerMetaTypes(){
+    qDebug() << "Registering meta types...";
+
+    qRegisterMetaType<scan::Log>("scan::Log");
+    qRegisterMetaType<dns::ScanResult>("dns::ScanResult");
+    qRegisterMetaType<ScanLog>("ScanLog");
+    qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
+    qRegisterMetaType<MXModelStruct>("MXModelStruct");
+    qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
+    qRegisterMetaType<AsModelStruct>("AsModelStruct");
+    qRegisterMetaType<QSslCertificate>("QSslCertificate");
+}
+
+void MainWindow::m_initEngines(){
+    /* project */
+    projectModel = new ProjectModel;
+    project = new Project(this, projectModel);
+
+    /* engines */
+    ip = new Ip(this, projectModel);
+    osint = new Osint(this, projectModel);
+    brute = new Brute(this, projectModel);
+    active = new Active(this, projectModel);
+    dns = new Dns(this, projectModel);
+    ssl = new Ssl(this, projectModel);
+    raw = new Raw(this, projectModel);
+
     /* tools */
     domainTool = new DomainTool(this);
     ipTool = new IpTool(this);
@@ -41,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     mxTool = new MXTool(this);
     sslTool = new SSLTool(this);
     emailTool = new EmailTool(this);
+    urlTool = new UrlTool(this);
 
     /* connecting signals and slots */
     this->m_connectSignals(ip);
@@ -71,83 +131,14 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->tabWidgetTools->insertTab(5, mxTool, "MX");
     ui->tabWidgetTools->insertTab(6, sslTool, "SSL");
     ui->tabWidgetTools->insertTab(7, emailTool, "EMAIL");
+    ui->tabWidgetTools->insertTab(8, urlTool, "URL");
     /* main tabwidget */
     ui->tabWidgetMain->insertTab(3, project, "Project");
     ui->tabWidgetMain->setCurrentIndex(0);
-
-    /* registering meta-types */
-    qDebug() << "Registering meta types...";
-    qRegisterMetaType<scan::Log>("scan::Log");
-    qRegisterMetaType<dns::ScanResult>("dns::ScanResult");
-    qRegisterMetaType<ScanLog>("ScanLog");
-    qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
-    qRegisterMetaType<MXModelStruct>("MXModelStruct");
-    qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
-    qRegisterMetaType<AsModelStruct>("AsModelStruct");
-    qRegisterMetaType<QSslCertificate>("QSslCertificate");
-
-    /* Welcome... */
-    ui->statusbar->showMessage("Welcome!", 5000);
-
-    /* help button */
-    QWidget *cornerWidget_active = new QWidget(this);
-    QWidget *cornerWidget_passive = new QWidget(this);
-    QWidget *cornerWidget_tools = new QWidget(this);
-    QHBoxLayout *hbox_active = new QHBoxLayout(cornerWidget_active);
-    QHBoxLayout *hbox_passive = new QHBoxLayout(cornerWidget_passive);
-    QHBoxLayout *hbox_tools = new QHBoxLayout(cornerWidget_tools);
-    s3s_ClickableLabel *documentation_active = new s3s_ClickableLabel("", this);
-    s3s_ClickableLabel *documentation_passive = new s3s_ClickableLabel("", this);
-    s3s_ClickableLabel *documentation_tools = new s3s_ClickableLabel("", this);
-    documentation_active->setPixmap(QPixmap(":/img/res/icons/help.png"));
-    documentation_passive->setPixmap(QPixmap(":/img/res/icons/help.png"));
-    documentation_tools->setPixmap(QPixmap(":/img/res/icons/help.png"));
-    hbox_active->addWidget(documentation_active);
-    hbox_passive->addWidget(documentation_passive);
-    hbox_tools->addWidget(documentation_tools);
-    hbox_active->setContentsMargins(0, 0, 10, 2);
-    hbox_passive->setContentsMargins(0, 0, 10, 2);
-    hbox_tools->setContentsMargins(0, 0, 10, 2);
-    ui->tabWidgetPassive->setCornerWidget(cornerWidget_passive);
-    ui->tabWidgetActive->setCornerWidget(cornerWidget_active);
-    ui->tabWidgetTools->setCornerWidget(cornerWidget_tools);
-
-    /* ... */
-    connect(documentation_passive, &s3s_ClickableLabel::clicked, this, &MainWindow::on_documentation_passive);
-    connect(documentation_active, &s3s_ClickableLabel::clicked, this, &MainWindow::on_documentation_active);
-    connect(documentation_tools, &s3s_ClickableLabel::clicked, this, &MainWindow::on_documentation_tools);
-
-    /* build info */
-    QAction* buildInfo = new QAction(tr("%1 (%2)").arg("Feb 01 2022").arg("BETA"), this);
-    buildInfo->setEnabled(false);
-    ui->menubar->addAction(buildInfo);
-}
-MainWindow::~MainWindow(){
-    /* engines */
-    delete ip;
-    delete osint;
-    delete brute;
-    delete active;
-    delete dns;
-    delete raw;
-    delete ssl;
-    /* tools */
-    delete domainTool;
-    delete ipTool;
-    delete asnTool;
-    delete cidrTool;
-    delete nsTool;
-    delete mxTool;
-    delete sslTool;
-    delete emailTool;
-    /* ... */
-    delete project;
-    delete projectDataModel;
-    delete ui;
 }
 
 void MainWindow::m_connectSignals(AbstractEngine *engine){
-    /* for all */
+    /* sending results */
     connect(engine, SIGNAL(sendResultsToOsint(QString, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), active, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
@@ -155,7 +146,8 @@ void MainWindow::m_connectSignals(AbstractEngine *engine){
     connect(engine, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    /* for change of tab */
+
+    /* change of tab */
     connect(engine, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
     connect(engine, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
     connect(engine, SIGNAL(changeTabToBrute()), this, SLOT(onChangeTabToBrute()));
@@ -163,6 +155,40 @@ void MainWindow::m_connectSignals(AbstractEngine *engine){
     connect(engine, SIGNAL(changeTabToDns()), this, SLOT(onChangeTabToDns()));
     connect(engine, SIGNAL(changeTabToRaw()), this, SLOT(onChangeTabToRaw()));
     connect(engine, SIGNAL(changeTabToCert()), this, SLOT(onChangeTabToCert()));
+}
+
+void MainWindow::m_documentation(){
+    QWidget *cornerWidget_active = new QWidget(this);
+    QWidget *cornerWidget_passive = new QWidget(this);
+    QWidget *cornerWidget_tools = new QWidget(this);
+
+    QHBoxLayout *hbox_active = new QHBoxLayout(cornerWidget_active);
+    QHBoxLayout *hbox_passive = new QHBoxLayout(cornerWidget_passive);
+    QHBoxLayout *hbox_tools = new QHBoxLayout(cornerWidget_tools);
+
+    s3s_ClickableLabel *documentation_active = new s3s_ClickableLabel("", this);
+    s3s_ClickableLabel *documentation_passive = new s3s_ClickableLabel("", this);
+    s3s_ClickableLabel *documentation_tools = new s3s_ClickableLabel("", this);
+
+    documentation_active->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    documentation_passive->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    documentation_tools->setPixmap(QPixmap(":/img/res/icons/help.png"));
+
+    hbox_active->addWidget(documentation_active);
+    hbox_passive->addWidget(documentation_passive);
+    hbox_tools->addWidget(documentation_tools);
+
+    hbox_active->setContentsMargins(0, 0, 10, 2);
+    hbox_passive->setContentsMargins(0, 0, 10, 2);
+    hbox_tools->setContentsMargins(0, 0, 10, 2);
+
+    ui->tabWidgetPassive->setCornerWidget(cornerWidget_passive);
+    ui->tabWidgetActive->setCornerWidget(cornerWidget_active);
+    ui->tabWidgetTools->setCornerWidget(cornerWidget_tools);
+
+    connect(documentation_passive, &s3s_ClickableLabel::clicked, this, &MainWindow::onDocumentation_passive);
+    connect(documentation_active, &s3s_ClickableLabel::clicked, this, &MainWindow::onDocumentation_active);
+    connect(documentation_tools, &s3s_ClickableLabel::clicked, this, &MainWindow::onDocumentation_tools);
 }
 
 void MainWindow::onReceiveStatus(QString status){
@@ -207,7 +233,7 @@ void MainWindow::onChangeTabToIp(){
     ui->tabWidgetActive->setCurrentIndex(4);
 }
 
-/* Actions... */
+/* Actions */
 
 void MainWindow::on_actionAbout_triggered(){
     AboutDialog *aboutDialog = new AboutDialog(this);
@@ -231,7 +257,7 @@ void MainWindow::on_actionTwitter_triggered(){
     QDesktopServices::openUrl(QUrl("https://twitter.com/sub3suite", QUrl::TolerantMode));
 }
 
-void MainWindow::on_documentation_active(){
+void MainWindow::onDocumentation_active(){
     DocumentationDialog *documentationDialog = nullptr;
 
     switch (ui->tabWidgetActive->currentIndex()) {
@@ -251,11 +277,12 @@ void MainWindow::on_documentation_active(){
         documentationDialog = new DocumentationDialog(ENGINE::IP, this);
         break;
     }
+
     documentationDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     documentationDialog->show();
 }
 
-void MainWindow::on_documentation_passive(){
+void MainWindow::onDocumentation_passive(){
     DocumentationDialog *documentationDialog = nullptr;
     switch (ui->tabWidgetPassive->currentIndex()) {
     case 0:
@@ -270,7 +297,7 @@ void MainWindow::on_documentation_passive(){
     documentationDialog->show();
 }
 
-void MainWindow::on_documentation_tools(){
+void MainWindow::onDocumentation_tools(){
     /*
      * nothing yet...
      */
