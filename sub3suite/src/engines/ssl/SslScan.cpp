@@ -118,8 +118,8 @@ void Ssl::m_startScan(){
         connect(cThread, &QThread::finished, this, &Ssl::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &ssl::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &Ssl::stopScanThread, scanner, &ssl::Scanner::onStopScan);
-        connect(this, &Ssl::pauseScanThread, scanner, &ssl::Scanner::onPauseScan);
+        connect(this, &Ssl::stopScanThread, scanner, &ssl::Scanner::onStopScan, Qt::DirectConnection);
+        connect(this, &Ssl::pauseScanThread, scanner, &ssl::Scanner::onPauseScan, Qt::DirectConnection);
         connect(this, &Ssl::resumeScanThread, scanner, &ssl::Scanner::onResumeScan, Qt::DirectConnection);
         cThread->start();
     }

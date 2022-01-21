@@ -188,7 +188,6 @@ void Dns::on_checkBoxSRV_clicked(bool checked){
 }
 
 void Dns::m_getConfigValues(){
-    m_scanArgs->config->timeout = CONFIG_DNS.value("timeout").toInt();
     m_scanArgs->config->threads = CONFIG_DNS.value("threads").toInt();
     m_scanArgs->config->noDuplicates = CONFIG_DNS.value("noDuplicates").toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG_DNS.value("autosaveToProject").toBool();

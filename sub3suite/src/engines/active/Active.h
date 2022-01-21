@@ -97,7 +97,6 @@ class Active : public AbstractEngine{
 
         /* for all */
         QAction a_SendAllToProject{"Send To Project"};
-        QAction a_SendAllIpToIp{"Send IpAddress To IP"};
         QAction a_SendAllIpToOsint{"Send IpAddress To OSINT"};
         QAction a_SendAllIpToRaw{"Send IpAddress To RAW"};
         QAction a_SendAllHostToOsint{"Send Hostname To OSINT"};
@@ -111,7 +110,6 @@ class Active : public AbstractEngine{
         QAction a_SendAllHostToDomainTool{"Send Hostname To DomainTool"};
         /* for selected */
         QAction a_SendSelectedToProject{"Send To Project"};
-        QAction a_SendSelectedIpToIp{"Send IpAddress To IP"};
         QAction a_SendSelectedIpToOsint{"Send IpAddress To OSINT"};
         QAction a_SendSelectedIpToRaw{"Send Address To RAW"};
         QAction a_SendSelectedHostToOsint{"Send Hostname To OSINT"};

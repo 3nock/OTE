@@ -19,7 +19,6 @@ void Dns::m_initActions(){
     connect(&a_CollapseResults, &QAction::triggered, this, [=](){this->m_collapseResults();});
     connect(&a_OpenInBrowser, &QAction::triggered, this, [=](){this->m_openInBrowser(selectionModel);});
     /* ... */
-    connect(&a_SendIpToIp, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::IP);});
     connect(&a_SendIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT);});
     connect(&a_SendIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW);});
     connect(&a_SendHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT);});
@@ -34,7 +33,6 @@ void Dns::m_initActions(){
     connect(&a_SendNSToNSTool, &QAction::triggered, this, [=](){this->m_sendNSToTool(TOOL::NS);});
     connect(&a_SendMXToMXTool, &QAction::triggered, this, [=](){this->m_sendMXToTool(TOOL::MX);});
     /* ... */
-    connect(&a_SendSelectedIpToIp, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::IP, selectionModel);});
     connect(&a_SendSelectedIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT, selectionModel);});
     connect(&a_SendSelectedIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW, selectionModel);});
     connect(&a_SendSelectedHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT, selectionModel);});
@@ -118,7 +116,6 @@ void Dns::on_buttonAction_clicked(){
     menu.addMenu(&saveMenu);
     menu.addMenu(&copyMenu);
     menu.addSeparator();
-    menu.addAction(&a_SendIpToIp);
     menu.addAction(&a_SendIpToOsint);
     menu.addAction(&a_SendIpToRaw);
     menu.addSeparator();
@@ -159,7 +156,6 @@ void Dns::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     menu.addAction(&a_Save);
     menu.addAction(&a_Copy);
     menu.addSeparator();
-    menu.addAction(&a_SendSelectedIpToIp);
     menu.addAction(&a_SendSelectedIpToOsint);
     menu.addAction(&a_SendSelectedIpToRaw);
     menu.addSeparator();
@@ -513,7 +509,7 @@ void Dns::m_sendSubdomainToEngine(ENGINE engine){
                 }
             }
         }
-        emit changeTabToCert();
+        emit changeTabToSSL();
     }
         break;
     default:
@@ -561,25 +557,6 @@ void Dns::m_sendIpToEngine(ENGINE engine){
             }
         }
         emit changeTabToRaw();
-    }
-        break;
-    case ENGINE::IP:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "A" || type == "AAAA"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToIp(item, RESULT_TYPE::IP);
-                    }
-                }
-            }
-        }
-        emit changeTabToIp();
     }
         break;
 
@@ -631,7 +608,7 @@ void Dns::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selection)
             item = index.data().toString();
             emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
         }
-        emit changeTabToCert();
+        emit changeTabToSSL();
         break;
     default:
         break;
@@ -649,13 +626,6 @@ void Dns::m_sendIpToEngine(ENGINE engine, QItemSelectionModel *selection){
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToRaw();
-        break;
-    case ENGINE::IP:
         foreach(const QModelIndex &index, selection->selectedIndexes()){
             item = index.data().toString();
             emit sendResultsToRaw(item, RESULT_TYPE::IP);

@@ -21,7 +21,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupBoxScan">
      <property name="font">
       <font>
        <weight>50</weight>
@@ -29,29 +29,9 @@
       </font>
      </property>
      <property name="title">
-      <string>Request</string>
+      <string>Scan</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Timeout (secs):</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEditTimeout"/>
-        </item>
-       </layout>
-      </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
@@ -76,30 +56,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Results</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <widget class="QCheckBox" name="checkBoxNoDuplicates">
-        <property name="text">
-         <string>No Duplicates</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBoxAutosave">
-        <property name="text">
-         <string>AutoSave To Project</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="groupBoxProxy">
      <property name="title">
       <string>Proxy</string>
      </property>
@@ -156,6 +113,29 @@
          <widget class="QLineEdit" name="lineEditProxyPort"/>
         </item>
        </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBoxResults">
+     <property name="title">
+      <string>Results</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QCheckBox" name="checkBoxNoDuplicates">
+        <property name="text">
+         <string>No Duplicates</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxAutosave">
+        <property name="text">
+         <string>AutoSave To Project</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

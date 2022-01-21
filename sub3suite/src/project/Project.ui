@@ -40,13 +40,13 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>200</width>
+        <width>0</width>
         <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>200</width>
+        <width>16777215</width>
         <height>16777215</height>
        </size>
       </property>
@@ -86,17 +86,7 @@
        <attribute name="title">
         <string>Options</string>
        </attribute>
-      </widget>
-     </widget>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="tabSiteMap">
-       <attribute name="title">
-        <string>Site map</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QVBoxLayout" name="verticalLayout_6">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -110,20 +100,102 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTreeView" name="treeViewSiteMap">
-          <property name="sortingEnabled">
-           <bool>true</bool>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Project</string>
           </property>
-          <attribute name="headerMinimumSectionSize">
-           <number>200</number>
-          </attribute>
-          <attribute name="headerDefaultSectionSize">
-           <number>200</number>
-          </attribute>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEditSiteMapFilter"/>
+         <widget class="QLineEdit" name="lineEditProjectPath"/>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>383</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tabSiteMap">
+       <attribute name="title">
+        <string>Site map</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QSplitter" name="splitterSiteMap">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QWidget" name="">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>3</number>
+            </property>
+            <item>
+             <widget class="QTreeView" name="treeViewSiteMap">
+              <property name="sortingEnabled">
+               <bool>true</bool>
+              </property>
+              <attribute name="headerMinimumSectionSize">
+               <number>200</number>
+              </attribute>
+              <attribute name="headerDefaultSectionSize">
+               <number>200</number>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEditSiteMapFilter"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QTabWidget" name="tabWidgetSiteMap">
+           <property name="tabPosition">
+            <enum>QTabWidget::North</enum>
+           </property>
+           <property name="tabShape">
+            <enum>QTabWidget::Rounded</enum>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="tabSummary">
+            <attribute name="title">
+             <string>Summary</string>
+            </attribute>
+           </widget>
+           <widget class="QWidget" name="tab_2">
+            <attribute name="title">
+             <string>Actions</string>
+            </attribute>
+           </widget>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>

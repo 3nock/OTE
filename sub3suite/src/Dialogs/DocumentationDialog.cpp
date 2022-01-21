@@ -41,9 +41,6 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
     case ENGINE::CERT:
         this->about_ssl();
         break;
-    case ENGINE::IP:
-        this->about_ip();
-        break;
     default:
         break;
     }

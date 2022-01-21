@@ -36,7 +36,6 @@ struct ScanStat {  // scan statistics
 struct ScanConfig { // scan configurations
     QStringList nameservers;
     int threads = 50;
-    int timeout = 3000;
 
     bool noDuplicates = false;
     bool autoSaveToProject = false;

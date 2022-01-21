@@ -23,6 +23,9 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, brute::ScanConfig *confi
     brute = true;
     this->m_initWidgets();
     this->m_loadConfigBrute();
+
+    /* hiding unused widgets */
+    ui->groupBoxTimeout->hide();
 }
 
 /* for active... */
@@ -57,6 +60,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config)
 
     /* hiding unused widgets */
     ui->groupBoxLevel->hide();
+    ui->groupBoxTimeout->hide();
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
     ui->radioButtonAAAA->hide();
@@ -74,7 +78,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
 
     ssl = true;
     this->m_initWidgets();
-    this->m_loadConfigDns();
+    this->m_loadConfigSSL();
 
     /* hiding unused widgets */
     ui->groupBoxLevel->hide();
@@ -142,7 +146,6 @@ void ActiveConfigDialog::m_initWidgets(){
 /* get config settings from config file... */
 
 void ActiveConfigDialog::m_loadConfigBrute(){
-    ui->lineEditTimeout->setText(CONFIG_BRUTE.value("timeout").toString());
     ui->lineEditThreads->setText(CONFIG_BRUTE.value("threads").toString());
     ui->lineEditLevels->setText(CONFIG_BRUTE.value("maxLevel").toString());
     ui->checkBoxWildcards->setChecked(CONFIG_BRUTE.value("wildcard").toBool());
@@ -212,7 +215,6 @@ void ActiveConfigDialog::m_loadConfigActive(){
 }
 
 void ActiveConfigDialog::m_loadConfigDns(){
-    ui->lineEditTimeout->setText(CONFIG_DNS.value("timeout").toString());
     ui->lineEditThreads->setText(CONFIG_DNS.value("threads").toString());
     ui->checkBoxAutosave->setChecked(CONFIG_DNS.value("autosaveToProject").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG_DNS.value("noDuplicates").toBool());
@@ -251,7 +253,6 @@ void ActiveConfigDialog::m_saveBrute(){
     /* get values... */
 
     QString thread = ui->lineEditThreads->text();
-    QString timeout = ui->lineEditTimeout->text();
     QString maxlevel = ui->lineEditLevels->text();
 
     bool wildcard = ui->checkBoxWildcards->isChecked();
@@ -270,7 +271,6 @@ void ActiveConfigDialog::m_saveBrute(){
     /* saving values to config file... */
 
     CONFIG_BRUTE.setValue("threads", thread);
-    CONFIG_BRUTE.setValue("timeout", timeout);
     CONFIG_BRUTE.setValue("maxlevel", maxlevel);
     CONFIG_BRUTE.setValue("useLevel", useLevel);
     CONFIG_BRUTE.setValue("wildcard", wildcard);
@@ -300,7 +300,6 @@ void ActiveConfigDialog::m_saveBrute(){
 
     /* saving to brute::ScanConfig structure... */
 
-    m_configBrute->timeout = timeout.toInt();
     m_configBrute->threads = thread.toInt();
     m_configBrute->levels = maxlevel.toInt();
 
@@ -442,7 +441,6 @@ void ActiveConfigDialog::m_saveDns(){
     /* get values... */
 
     QString thread = ui->lineEditThreads->text();
-    QString timeout = ui->lineEditTimeout->text();
 
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
@@ -455,7 +453,6 @@ void ActiveConfigDialog::m_saveDns(){
     /* saving values to config file... */
 
     CONFIG_DNS.setValue("threads", thread);
-    CONFIG_DNS.setValue("timeout", timeout);
     CONFIG_DNS.setValue("noDuplicates", noDuplicates);
     CONFIG_DNS.setValue("autosaveToProject", autosaveToProject);
     CONFIG_DNS.setValue("nameserver", ui->comboBoxSingleNameserver->currentText());
@@ -477,7 +474,6 @@ void ActiveConfigDialog::m_saveDns(){
 
     /* saving to brute::ScanConfig structure... */
 
-    m_configDns->timeout = timeout.toInt();
     m_configDns->threads = thread.toInt();
     m_configDns->noDuplicates = noDuplicates;
     m_configDns->autoSaveToProject = autosaveToProject;

@@ -16,7 +16,6 @@
 #include "src/project/Project.h"
 
 /* engines */
-#include "src/engines/ip/Ip.h"
 #include "src/engines/dns/Dns.h"
 #include "src/engines/brute/Brute.h"
 #include "src/engines/osint/Osint.h"
@@ -25,15 +24,14 @@
 #include "src/engines/ssl/Ssl.h"
 
 /* tools */
-#include "src/tools/ip/IpTool.h"
-#include "src/tools/asn/ASNTool.h"
-#include "src/tools/ssl/SSLTool.h"
-#include "src/tools/email/EmailTool.h"
-#include "src/tools/cidr/CidrTool.h"
-#include "src/tools/domain/DomainTool.h"
-#include "src/tools/ns/NSTool.h"
-#include "src/tools/mx/MXTool.h"
-#include "src/tools/url/UrlTool.h"
+#include "src/enums/ip/IpEnum.h"
+#include "src/enums/asn/ASNEnum.h"
+#include "src/enums/ssl/SSLEnum.h"
+#include "src/enums/email/EmailEnum.h"
+#include "src/enums/cidr/CidrEnum.h"
+#include "src/enums/ns/NSEnum.h"
+#include "src/enums/mx/MXEnum.h"
+#include "src/enums/url/UrlEnum.h"
 
 
 class s3s_ClickableLabel : public QLabel{
@@ -64,17 +62,27 @@ class MainWindow : public QMainWindow{
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
 
+        void projectFile(QString projectFile);
+
     public slots:
         void onReceiveStatus(QString status);
 
-        /* tab change */
+        /* change to Engine */
         void onChangeTabToOsint();
         void onChangeTabToActive();
         void onChangeTabToBrute();
-        void onChangeTabToIp();
         void onChangeTabToDns();
         void onChangeTabToRaw();
-        void onChangeTabToCert();
+        void onChangeTabToSSL();
+        /* change tab To Enum */
+        void onChangeTabToIpEnum();
+        void onChangeTabToAsnEnum();
+        void onChangeTabToCidrEnum();
+        void onChangeTabToNSEnum();
+        void onChangeTabToMXEnum();
+        void onChangeTabToSSLEnum();
+        void onChangeTabToEmailEnum();
+        void onChangeTabToUrlEnum();
 
     private slots:
         /* file menu */
@@ -101,9 +109,9 @@ class MainWindow : public QMainWindow{
         /* project */
         Project *project = nullptr;
         ProjectModel *projectModel = nullptr;
+        QString m_projectFile;
 
         /* engines */
-        Ip *ip = nullptr;
         Osint *osint = nullptr;
         Brute *brute = nullptr;
         Active *active = nullptr;
@@ -112,15 +120,14 @@ class MainWindow : public QMainWindow{
         Ssl *ssl = nullptr;
 
         /* tools */
-        DomainTool *domainTool = nullptr;
-        IpTool *ipTool = nullptr;
-        ASNTool *asnTool = nullptr;
-        CidrTool *cidrTool = nullptr;
-        NSTool *nsTool = nullptr;
-        MXTool *mxTool = nullptr;
-        SSLTool *sslTool = nullptr;
-        EmailTool *emailTool = nullptr;
-        UrlTool *urlTool = nullptr;
+        IpEnum *ipEnum = nullptr;
+        ASNEnum *asnEnum = nullptr;
+        CidrEnum *cidrEnum = nullptr;
+        NSEnum *nsEnum = nullptr;
+        MXEnum *mxEnum = nullptr;
+        SSLEnum *sslEnum = nullptr;
+        EmailEnum *emailEnum = nullptr;
+        UrlEnum *urlEnum = nullptr;
 
         void m_initEngines();
         void m_documentation();

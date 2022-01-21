@@ -17,10 +17,43 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     /* underdevelopment txt */
     ui->labelGraph->setDisabled(true);
     ui->labelAnalysis->setDisabled(true);
+
+    /* resizing */
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.10))
+                                        << static_cast<int>((this->width() * 0.90)));
+
+    ui->splitterSiteMap->setSizes(QList<int>() << static_cast<int>((this->width() * 0.70))
+                                               << static_cast<int>((this->width() * 0.30)));
 }
 Project::~Project(){
+    this->m_saveProject();
     delete m_siteMapProxyModel;
     delete ui;
+}
+
+void Project::initProject(QString projectFile){
+    m_projectFile = projectFile;
+
+    if(m_projectFile != "Temp")
+        this->m_openProject();
+
+    this->m_setupProjetct();
+}
+
+void Project::m_openProject(){
+
+}
+
+void Project::m_saveProject(){
+
+}
+
+void Project::m_closeProject(){
+    this->m_saveProject();
+}
+
+void Project::m_setupProjetct(){
+    ui->lineEditProjectPath->setText(m_projectFile);
 }
 
 /* changing the model */

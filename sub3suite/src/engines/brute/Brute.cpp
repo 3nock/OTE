@@ -237,7 +237,6 @@ void Brute::m_log(QString log){
 
 /* get config settings from config file & saving to brute::ScanConfig structure*/
 void Brute::m_getConfigValues(){
-    m_scanArgs->config->timeout = CONFIG_BRUTE.value("timeout").toInt();
     m_scanArgs->config->threads = CONFIG_BRUTE.value("threads").toInt();
     m_scanArgs->config->levels = CONFIG_BRUTE.value("maxLevel").toInt();
     m_scanArgs->config->checkWildcard = CONFIG_BRUTE.value("wildcard").toBool();

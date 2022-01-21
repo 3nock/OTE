@@ -22,7 +22,6 @@ void Active::m_initActions(){
     connect(&a_ExtractSelected, &QAction::triggered, this, [=](){this->m_extract(selectionModel);});
     /* ... */
     connect(&a_SendAllToProject, &QAction::triggered, this, [=](){this->m_sendToProject();});
-    connect(&a_SendAllIpToIp, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::IP);});
     connect(&a_SendAllIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT);});
     connect(&a_SendAllIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW);});
     connect(&a_SendAllHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT);});
@@ -36,7 +35,6 @@ void Active::m_initActions(){
     connect(&a_SendAllHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::DOMAINTOOL);});
     /* ... */
     connect(&a_SendSelectedToProject, &QAction::triggered, this, [=](){this->m_sendToProject(selectionModel);});
-    connect(&a_SendSelectedIpToIp, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::IP, selectionModel);});
     connect(&a_SendSelectedIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT, selectionModel);});
     connect(&a_SendSelectedIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW, selectionModel);});
     connect(&a_SendSelectedHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT, selectionModel);});
@@ -92,7 +90,6 @@ void Active::on_buttonAction_clicked(){
     menu.addSeparator();
     menu.addAction(&a_SendAllToProject);
     menu.addSeparator();
-    menu.addAction(&a_SendAllIpToIp);
     menu.addAction(&a_SendAllIpToOsint);
     menu.addAction(&a_SendAllIpToRaw);
     menu.addSeparator();
@@ -134,7 +131,6 @@ void Active::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     menu.addSeparator();
     menu.addAction(&a_SendSelectedToProject);
     menu.addSeparator();
-    menu.addAction(&a_SendSelectedIpToIp);
     menu.addAction(&a_SendSelectedIpToOsint);
     menu.addAction(&a_SendSelectedIpToRaw);
     menu.addSeparator();
@@ -409,7 +405,7 @@ void Active::m_sendSubdomainToEngine(ENGINE engine){
             item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
             emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
         }
-        emit changeTabToCert();
+        emit changeTabToSSL();
         break;
     default:
         break;
@@ -433,13 +429,6 @@ void Active::m_sendIpToEngine(ENGINE engine){
             emit sendResultsToRaw(item, RESULT_TYPE::IP);
         }
         emit changeTabToRaw();
-        break;
-    case ENGINE::IP:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
-            emit sendResultsToIp(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToIp();
         break;
 
     default:
@@ -502,7 +491,7 @@ void Active::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selecti
             item = index.data().toString();
             emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
         }
-        emit changeTabToCert();
+        emit changeTabToSSL();
         break;
     default:
         break;
@@ -529,15 +518,6 @@ void Active::m_sendIpToEngine(ENGINE engine, QItemSelectionModel *selection){
             emit sendResultsToRaw(item, RESULT_TYPE::IP);
         }
         emit changeTabToRaw();
-        break;
-    case ENGINE::IP:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(!index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToIp(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToIp();
         break;
 
     default:

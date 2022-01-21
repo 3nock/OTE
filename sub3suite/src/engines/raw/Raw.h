@@ -219,7 +219,6 @@ private:
         QAction a_CollapseResults{"Collapse Results"};
 
         /* for all */
-        QAction a_SendAllIpToIp{"Send Addresses To Ip"};
         QAction a_SendAllIpToOsint{"Send Addresses To Osint"};
         QAction a_SendAllIpToRaw{"Send Address To Raw"};
         QAction a_SendAllHostToOsint{"Send Hostnames To Osint"};
@@ -245,7 +244,6 @@ private:
         QAction a_SendAllCidrToCidrTool{"Send Cidr To CidrTool"};
         QAction a_SendAllEmailToEmailTool{"Send Emails To EmailTool"};
         /* for selected */
-        QAction a_SendSelectedIpToIp{"Send Addresses To Ip"};
         QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
         QAction a_SendSelectedIpToRaw{"Send Address To Raw"};
         QAction a_SendSelectedHostToOsint{"Send Hostnames To Osint"};

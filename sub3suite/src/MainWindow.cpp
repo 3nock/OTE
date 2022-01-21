@@ -40,15 +40,14 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 MainWindow::~MainWindow(){
     /* tools */
-    delete urlTool;
-    delete emailTool;
-    delete sslTool;
-    delete mxTool;
-    delete nsTool;
-    delete cidrTool;
-    delete asnTool;
-    delete ipTool;
-    delete domainTool;
+    delete urlEnum;
+    delete emailEnum;
+    delete sslEnum;
+    delete mxEnum;
+    delete nsEnum;
+    delete cidrEnum;
+    delete asnEnum;
+    delete ipEnum;
 
     /* engines */
     delete raw;
@@ -57,11 +56,14 @@ MainWindow::~MainWindow(){
     delete active;
     delete brute;
     delete osint;
-    delete ip;
 
     /* ... */
     delete project;
     delete ui;
+}
+
+void MainWindow::projectFile(QString projectFile){
+    m_projectFile = projectFile;
 }
 
 void MainWindow::m_registerMetaTypes(){
@@ -78,12 +80,11 @@ void MainWindow::m_registerMetaTypes(){
 }
 
 void MainWindow::m_initEngines(){
-    /* project */
+    /* Project */
     projectModel = new ProjectModel;
     project = new Project(this, projectModel);
 
-    /* engines */
-    ip = new Ip(this, projectModel);
+    /* Engines */
     osint = new Osint(this, projectModel);
     brute = new Brute(this, projectModel);
     active = new Active(this, projectModel);
@@ -91,19 +92,17 @@ void MainWindow::m_initEngines(){
     ssl = new Ssl(this, projectModel);
     raw = new Raw(this, projectModel);
 
-    /* tools */
-    domainTool = new DomainTool(this);
-    ipTool = new IpTool(this);
-    asnTool = new ASNTool(this);
-    cidrTool = new CidrTool(this);
-    nsTool = new NSTool(this);
-    mxTool = new MXTool(this);
-    sslTool = new SSLTool(this);
-    emailTool = new EmailTool(this);
-    urlTool = new UrlTool(this);
+    /* Enumerators */
+    ipEnum = new IpEnum(this, projectModel);
+    asnEnum = new ASNEnum(this, projectModel);
+    cidrEnum = new CidrEnum(this, projectModel);
+    nsEnum = new NSEnum(this, projectModel);
+    mxEnum = new MXEnum(this, projectModel);
+    sslEnum = new SSLEnum(this, projectModel);
+    emailEnum = new EmailEnum(this, projectModel);
+    urlEnum = new UrlEnum(this, projectModel);
 
     /* connecting signals and slots */
-    this->m_connectSignals(ip);
     this->m_connectSignals(osint);
     this->m_connectSignals(brute);
     this->m_connectSignals(active);
@@ -120,21 +119,22 @@ void MainWindow::m_initEngines(){
     ui->tabWidgetActive->insertTab(1, active, "ACTIVE");
     ui->tabWidgetActive->insertTab(2, dns, "DNS");
     ui->tabWidgetActive->insertTab(3, ssl, "SSL");
-    ui->tabWidgetActive->insertTab(4, ip, "IP");
     ui->tabWidgetActive->setCurrentIndex(0);
     /* tools tabwidget */
-    ui->tabWidgetTools->insertTab(0, ipTool, "IP");
-    ui->tabWidgetTools->insertTab(1, domainTool, "Domain");
-    ui->tabWidgetTools->insertTab(2, asnTool, "ASN");
-    ui->tabWidgetTools->insertTab(3, cidrTool, "CIDR");
-    ui->tabWidgetTools->insertTab(4, nsTool, "NS");
-    ui->tabWidgetTools->insertTab(5, mxTool, "MX");
-    ui->tabWidgetTools->insertTab(6, sslTool, "SSL");
-    ui->tabWidgetTools->insertTab(7, emailTool, "EMAIL");
-    ui->tabWidgetTools->insertTab(8, urlTool, "URL");
+    ui->tabWidgetEnums->insertTab(0, ipEnum, "IP");
+    ui->tabWidgetEnums->insertTab(1, asnEnum, "ASN");
+    ui->tabWidgetEnums->insertTab(2, cidrEnum, "CIDR");
+    ui->tabWidgetEnums->insertTab(3, nsEnum, "NS");
+    ui->tabWidgetEnums->insertTab(4, mxEnum, "MX");
+    ui->tabWidgetEnums->insertTab(5, sslEnum, "SSL");
+    ui->tabWidgetEnums->insertTab(6, emailEnum, "EMAIL");
+    ui->tabWidgetEnums->insertTab(7, urlEnum, "URL");
     /* main tabwidget */
     ui->tabWidgetMain->insertTab(3, project, "Project");
     ui->tabWidgetMain->setCurrentIndex(0);
+
+    /* initiate project */
+    project->initProject(m_projectFile);
 }
 
 void MainWindow::m_connectSignals(AbstractEngine *engine){
@@ -142,53 +142,60 @@ void MainWindow::m_connectSignals(AbstractEngine *engine){
     connect(engine, SIGNAL(sendResultsToOsint(QString, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), active, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToIp(QString, RESULT_TYPE)), ip, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
 
-    /* change of tab */
+    /* change tab to Engine */
     connect(engine, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
     connect(engine, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
     connect(engine, SIGNAL(changeTabToBrute()), this, SLOT(onChangeTabToBrute()));
-    connect(engine, SIGNAL(changeTabToIp()), this, SLOT(onChangeTabToIp()));
     connect(engine, SIGNAL(changeTabToDns()), this, SLOT(onChangeTabToDns()));
     connect(engine, SIGNAL(changeTabToRaw()), this, SLOT(onChangeTabToRaw()));
-    connect(engine, SIGNAL(changeTabToCert()), this, SLOT(onChangeTabToCert()));
+    connect(engine, SIGNAL(changeTabToSSL()), this, SLOT(onChangeTabToSSL()));
+    /* change tab to Enumerator */
+    connect(engine, SIGNAL(changeTabToIpEnum()), this, SLOT(onChangeTabToIpEnum()));
+    connect(engine, SIGNAL(changeTabToAsnEnum()), this, SLOT(onChangeTabToAsnEnum()));
+    connect(engine, SIGNAL(changeTabToCidrEnum()), this, SLOT(onChangeTabToCidrEnum()));
+    connect(engine, SIGNAL(changeTabToNSEnum()), this, SLOT(onChangeTabToNSEnum()));
+    connect(engine, SIGNAL(changeTabToMXEnum()), this, SLOT(onChangeTabToMXEnum()));
+    connect(engine, SIGNAL(changeTabToSSLEnum()), this, SLOT(onChangeTabToSSLEnum()));
+    connect(engine, SIGNAL(changeTabToEmailEnum()), this, SLOT(onChangeTabToEmailEnum()));
+    connect(engine, SIGNAL(changeTabToUrlEnum()), this, SLOT(onChangeTabToUrlEnum()));
 }
 
 void MainWindow::m_documentation(){
     QWidget *cornerWidget_active = new QWidget(this);
     QWidget *cornerWidget_passive = new QWidget(this);
-    QWidget *cornerWidget_tools = new QWidget(this);
+    QWidget *cornerWidget_enums = new QWidget(this);
 
     QHBoxLayout *hbox_active = new QHBoxLayout(cornerWidget_active);
     QHBoxLayout *hbox_passive = new QHBoxLayout(cornerWidget_passive);
-    QHBoxLayout *hbox_tools = new QHBoxLayout(cornerWidget_tools);
+    QHBoxLayout *hbox_enums = new QHBoxLayout(cornerWidget_enums);
 
     s3s_ClickableLabel *documentation_active = new s3s_ClickableLabel("", this);
     s3s_ClickableLabel *documentation_passive = new s3s_ClickableLabel("", this);
-    s3s_ClickableLabel *documentation_tools = new s3s_ClickableLabel("", this);
+    s3s_ClickableLabel *documentation_enums = new s3s_ClickableLabel("", this);
 
     documentation_active->setPixmap(QPixmap(":/img/res/icons/help.png"));
     documentation_passive->setPixmap(QPixmap(":/img/res/icons/help.png"));
-    documentation_tools->setPixmap(QPixmap(":/img/res/icons/help.png"));
+    documentation_enums->setPixmap(QPixmap(":/img/res/icons/help.png"));
 
     hbox_active->addWidget(documentation_active);
     hbox_passive->addWidget(documentation_passive);
-    hbox_tools->addWidget(documentation_tools);
+    hbox_enums->addWidget(documentation_enums);
 
     hbox_active->setContentsMargins(0, 0, 10, 2);
     hbox_passive->setContentsMargins(0, 0, 10, 2);
-    hbox_tools->setContentsMargins(0, 0, 10, 2);
+    hbox_enums->setContentsMargins(0, 0, 10, 2);
 
     ui->tabWidgetPassive->setCornerWidget(cornerWidget_passive);
     ui->tabWidgetActive->setCornerWidget(cornerWidget_active);
-    ui->tabWidgetTools->setCornerWidget(cornerWidget_tools);
+    ui->tabWidgetEnums->setCornerWidget(cornerWidget_enums);
 
     connect(documentation_passive, &s3s_ClickableLabel::clicked, this, &MainWindow::onDocumentation_passive);
     connect(documentation_active, &s3s_ClickableLabel::clicked, this, &MainWindow::onDocumentation_active);
-    connect(documentation_tools, &s3s_ClickableLabel::clicked, this, &MainWindow::onDocumentation_tools);
+    connect(documentation_enums, &s3s_ClickableLabel::clicked, this, &MainWindow::onDocumentation_tools);
 }
 
 void MainWindow::onReceiveStatus(QString status){
@@ -223,14 +230,49 @@ void MainWindow::onChangeTabToDns(){
     ui->tabWidgetActive->setCurrentIndex(2);
 }
 
-void MainWindow::onChangeTabToCert(){
+void MainWindow::onChangeTabToSSL(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(3);
 }
 
-void MainWindow::onChangeTabToIp(){
-    ui->tabWidgetMain->setCurrentIndex(1);
+void MainWindow::onChangeTabToIpEnum(){
+    ui->tabWidgetMain->setCurrentIndex(2);
+    ui->tabWidgetActive->setCurrentIndex(0);
+}
+
+void MainWindow::onChangeTabToAsnEnum(){
+    ui->tabWidgetMain->setCurrentIndex(2);
+    ui->tabWidgetActive->setCurrentIndex(1);
+}
+
+void MainWindow::onChangeTabToCidrEnum(){
+    ui->tabWidgetMain->setCurrentIndex(2);
+    ui->tabWidgetActive->setCurrentIndex(2);
+}
+
+void MainWindow::onChangeTabToNSEnum(){
+    ui->tabWidgetMain->setCurrentIndex(2);
+    ui->tabWidgetActive->setCurrentIndex(3);
+}
+
+void MainWindow::onChangeTabToMXEnum(){
+    ui->tabWidgetMain->setCurrentIndex(2);
     ui->tabWidgetActive->setCurrentIndex(4);
+}
+
+void MainWindow::onChangeTabToSSLEnum(){
+    ui->tabWidgetMain->setCurrentIndex(2);
+    ui->tabWidgetActive->setCurrentIndex(5);
+}
+
+void MainWindow::onChangeTabToEmailEnum(){
+    ui->tabWidgetMain->setCurrentIndex(2);
+    ui->tabWidgetActive->setCurrentIndex(6);
+}
+
+void MainWindow::onChangeTabToUrlEnum(){
+    ui->tabWidgetMain->setCurrentIndex(2);
+    ui->tabWidgetActive->setCurrentIndex(7);
 }
 
 /* Actions */
@@ -272,9 +314,6 @@ void MainWindow::onDocumentation_active(){
         break;
     case 3:
         documentationDialog = new DocumentationDialog(ENGINE::CERT, this);
-        break;
-    case 4:
-        documentationDialog = new DocumentationDialog(ENGINE::IP, this);
         break;
     }
 

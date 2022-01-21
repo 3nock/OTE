@@ -719,9 +719,9 @@ QRadioButton:hover {
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabTools">
+      <widget class="QWidget" name="tabEnums">
        <attribute name="title">
-        <string>Enum</string>
+        <string>Enums</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <property name="leftMargin">
@@ -737,7 +737,7 @@ QRadioButton:hover {
          <number>0</number>
         </property>
         <item>
-         <widget class="QTabWidget" name="tabWidgetTools"/>
+         <widget class="QTabWidget" name="tabWidgetEnums"/>
         </item>
        </layout>
       </widget>

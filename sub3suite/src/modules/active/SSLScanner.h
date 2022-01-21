@@ -13,6 +13,7 @@
 #include <QMutex>
 #include <QQueue>
 #include <QSslSocket>
+#include <QWaitCondition>
 #include <QSslCertificate>
 #include "AbstractScanner.h"
 
@@ -84,11 +85,37 @@ class Scanner : public AbstractScanner{
         void resultSubdomain(QString target, QStringList subdomain);
         void resultRaw(QString target, QSslCertificate certificate);
 
+    public slots:
+        virtual void onStopScan() override {
+            m_stop = true;
+        }
+
+        /*
+         * use QWaitCondition to pause and resume the thread, QSemaphore is
+         * not ideal in this class using loop with blocking connection to target.
+         */
+        void onPauseScan() override {
+            m_mutex.lock();
+            m_pause = true;
+            m_mutex.unlock();
+        }
+
+        void onResumeScan() override {
+            m_mutex.lock();
+            m_pause = false;
+            m_mutex.unlock();
+            m_wait.wakeAll();
+        }
+
     private slots:
         void lookup() override;
 
     private:
         ssl::ScanArgs *m_args;
+        bool m_pause = false;
+        bool m_stop = false;
+        QWaitCondition m_wait;
+        QMutex m_mutex;
 };
 
 QString getTarget(ssl::ScanArgs *args);

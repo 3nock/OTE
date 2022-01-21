@@ -105,7 +105,6 @@ class Dns : public AbstractEngine{
         QAction a_CollapseResults{"Collapse Results"};
 
         /* action button */
-        QAction a_SendIpToIp{"Send IpAddress To IP"};
         QAction a_SendIpToOsint{"Send IpAddress To OSINT"};
         QAction a_SendIpToRaw{"Send IpAddress To RAW"};
         QAction a_SendHostToOsint{"Send Hostname To OSINT"};
@@ -120,7 +119,6 @@ class Dns : public AbstractEngine{
         QAction a_SendMXToMXTool{"Send MX to MXTool"};
         QAction a_SendNSToNSTool{"Send NS to NSTool"};
         /* right-click */
-        QAction a_SendSelectedIpToIp{"Send IpAddress To IP"};
         QAction a_SendSelectedIpToOsint{"Send IpAddress To OSINT"};
         QAction a_SendSelectedIpToRaw{"Send IpAddress To RAW"};
         QAction a_SendSelectedHostToOsint{"Send Hostname To OSINT"};

@@ -48,13 +48,11 @@ SOURCES += \
     src/engines/ssl/SslContextMenu.cpp \
     src/engines/ssl/SslResults.cpp \
     src/engines/ssl/SslScan.cpp \
-    src/engines/ip/IpScan.cpp \
     src/engines/osint/OsintResults.cpp \
     src/engines/osint/OsintScan.cpp \
     src/engines/raw/RawResults.cpp \
     src/engines/raw/RawScan.cpp \
     src/engines/dns/Dns.cpp \
-    src/engines/ip/IpContextMenu.cpp \
     src/engines/osint/OsintContextMenu.cpp \
     src/engines/osint/OsintModules.cpp \
     src/engines/raw/RawContextMenu.cpp \
@@ -120,15 +118,14 @@ SOURCES += \
     src/modules/active/SSLScanner.cpp \
     src/modules/active/WildcardScanner.cpp \
     src/project/Project.cpp \
-    src/tools/url/UrlTool.cpp \
-    src/tools/asn/ASNTool.cpp \
-    src/tools/cidr/CidrTool.cpp \
-    src/tools/domain/DomainTool.cpp \
-    src/tools/email/EmailTool.cpp \
-    src/tools/ip/IpTool.cpp \
-    src/tools/mx/MXTool.cpp \
-    src/tools/ns/NSTool.cpp \
-    src/tools/ssl/SSLTool.cpp \
+    src/enums/url/UrlEnum.cpp \
+    src/enums/asn/ASNEnum.cpp \
+    src/enums/cidr/CidrEnum.cpp \
+    src/enums/email/EmailEnum.cpp \
+    src/enums/ip/IpEnum.cpp \
+    src/enums/mx/MXEnum.cpp \
+    src/enums/ns/NSEnum.cpp \
+    src/enums/ssl/SSLEnum.cpp \
     src/modules/active/BruteScanner.cpp \
     src/modules/active/ActiveScanner.cpp \
     src/modules/active/IpScanner.cpp \
@@ -178,7 +175,6 @@ SOURCES += \
     src/modules/passive/site/Rapiddns.cpp \
     src/modules/passive/site/SiteDossier.cpp \
     src/engines/raw/Raw.cpp \
-    src/engines/ip/Ip.cpp \
     src/engines/active/Active.cpp \
     src/engines/brute/Brute.cpp \
     src/engines/osint/Osint.cpp \
@@ -273,16 +269,15 @@ HEADERS += \
     src/modules/active/SSLScanner.h \
     src/modules/active/WildcardScanner.h \
     src/project/Project.h \
-    src/tools/AbstractTool.h \
-    src/tools/url/UrlTool.h \
-    src/tools/asn/ASNTool.h \
-    src/tools/cidr/CidrTool.h \
-    src/tools/domain/DomainTool.h \
-    src/tools/email/EmailTool.h \
-    src/tools/ip/IpTool.h \
-    src/tools/mx/MXTool.h \
-    src/tools/ns/NSTool.h \
-    src/tools/ssl/SSLTool.h \
+    src/enums/AbstractEnum.h \
+    src/enums/url/UrlEnum.h \
+    src/enums/asn/ASNEnum.h \
+    src/enums/cidr/CidrEnum.h \
+    src/enums/email/EmailEnum.h \
+    src/enums/ip/IpEnum.h \
+    src/enums/mx/MXEnum.h \
+    src/enums/ns/NSEnum.h \
+    src/enums/ssl/SSLEnum.h \
     src/modules/active/BruteScanner.h \
     src/modules/active/ActiveScanner.h \
     src/modules/active/IpScanner.h \
@@ -334,7 +329,6 @@ HEADERS += \
     src/modules/passive/site/SiteDossier.h \
     src/modules/passive/AbstractOsintModule.h \
     src/engines/raw/Raw.h \
-    src/engines/ip/Ip.h \
     src/engines/active/Active.h \
     src/engines/brute/Brute.h \
     src/engines/osint/Osint.h \
@@ -363,17 +357,15 @@ FORMS += \
     src/dialogs/preference/PreferenceDialog.ui \
     src/engines/ssl/Ssl.ui \
     src/project/Project.ui \
-    src/tools/url/UrlTool.ui \
-    src/tools/asn/ASNTool.ui \
-    src/tools/cidr/CidrTool.ui \
-    src/tools/domain/DomainTool.ui \
-    src/tools/email/EmailTool.ui \
-    src/tools/ip/IpTool.ui \
-    src/tools/mx/MXTool.ui \
-    src/tools/ns/NSTool.ui \
-    src/tools/ssl/SSLTool.ui \
+    src/enums/url/UrlEnum.ui \
+    src/enums/asn/ASNEnum.ui \
+    src/enums/cidr/CidrEnum.ui \
+    src/enums/email/EmailEnum.ui \
+    src/enums/ip/IpEnum.ui \
+    src/enums/mx/MXEnum.ui \
+    src/enums/ns/NSEnum.ui \
+    src/enums/ssl/SSLEnum.ui \
     src/engines/raw/Raw.ui \
-    src/engines/ip/Ip.ui \
     src/engines/dns/Dns.ui \
     src/engines/brute/Brute.ui \
     src/engines/osint/Osint.ui \

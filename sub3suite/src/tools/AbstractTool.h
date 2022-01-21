@@ -1,4 +1,0 @@
-#ifndef ABSTRACTTOOL_H
-#define ABSTRACTTOOL_H
-
-#endif // ABSTRACTTOOL_H

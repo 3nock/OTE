@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : The Base class for Engines classes.
 */
 
 #ifndef ABSTRACTCLASS_H
@@ -16,14 +16,6 @@
 #include "src/widgets/InputWidget.h"
 #include "src/models/ProjectModel.h"
 
-
-struct ScanStatus{
-    bool isNotActive = true;
-    bool isRunning = false;
-    bool isStopped = false;
-    bool isPaused = false;
-    int activeScanThreads = 0;
-};
 
 class AbstractEngine : public QWidget{
         Q_OBJECT
@@ -52,15 +44,23 @@ class AbstractEngine : public QWidget{
         /* status To mainwindow */
         void sendStatus(QString status);
 
-        /* tab change */
-        void changeTabToIp();
+        /* chage tab to Engine */
         void changeTabToOsint();
         void changeTabToRaw();
         void changeTabToBrute();
         void changeTabToActive();
         void changeTabToDns();
-        void changeTabToCert();
+        void changeTabToSSL();
         void changeTabToProject();
+        /* change tab To Enum */
+        void changeTabToIpEnum();
+        void changeTabToAsnEnum();
+        void changeTabToCidrEnum();
+        void changeTabToNSEnum();
+        void changeTabToMXEnum();
+        void changeTabToSSLEnum();
+        void changeTabToEmailEnum();
+        void changeTabToUrlEnum();
 
         /* sending results to an engine */
         void sendResultsToOsint(QString, RESULT_TYPE);
@@ -68,8 +68,16 @@ class AbstractEngine : public QWidget{
         void sendResultsToBrute(QString, RESULT_TYPE);
         void sendResultsToActive(QString, RESULT_TYPE);
         void sendResultsToDns(QString, RESULT_TYPE);
-        void sendResultsToIp(QString, RESULT_TYPE);
         void sendResultsToCert(QString, RESULT_TYPE);
+        /* sending results to an Enumerator */
+        void sendResultsToIpEnum(QString, RESULT_TYPE);
+        void sendResultsToAsnEnum(QString, RESULT_TYPE);
+        void sendResultsToCidrEnum(QString, RESULT_TYPE);
+        void sendResultsToNSEnum(QString, RESULT_TYPE);
+        void sendResultsToMXEnum(QString, RESULT_TYPE);
+        void sendResultsToSSLEnum(QString, RESULT_TYPE);
+        void sendResultsToEmailEnum(QString, RESULT_TYPE);
+        void sendResultsToUrlEnum(QString, RESULT_TYPE);
 };
 
 #endif // ABSTRACTCLASS_H

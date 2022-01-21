@@ -16,13 +16,21 @@ class Project : public QWidget{
         Project(QWidget *parent = nullptr, ProjectModel *projectModel = nullptr);
         ~Project();
 
-private slots:
+        void initProject(QString projectFile);
+
+    private slots:
         void on_treeViewProjectExplorer_clicked(const QModelIndex &index);
 
-private:
+    private:
         Ui::Project *ui;
+        QString m_projectFile;
         ProjectModel *m_projectModel;
         QSortFilterProxyModel *m_siteMapProxyModel;
+        //...
+        void m_openProject();
+        void m_saveProject();
+        void m_closeProject();
+        void m_setupProjetct();
 };
 
 #endif // S3SPROJECT_H

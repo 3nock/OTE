@@ -51,15 +51,16 @@ class AbstractScanner : public QObject{
         virtual void lookup()=0;
 
         /* quiting all running threads upon receiving stop signal... */
-        void onStopScan(){
+        virtual void onStopScan(){
             emit quitThread();
         }
 
-        void onPauseScan(){
+        /* use QSemaphore to pause and resume threads */
+        virtual void onPauseScan(){
             semaphore.acquire();
         }
 
-        void onResumeScan(){
+        virtual void onResumeScan(){
             semaphore.release();
         }
 

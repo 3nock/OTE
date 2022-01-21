@@ -51,7 +51,6 @@ struct PassiveScanConfig{
     QString proxyAddress;
     QString proxyPort;
     /* ... */
-    int timeout;
     int maxPage;
 };
 

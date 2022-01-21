@@ -61,6 +61,13 @@
 #define OSINT_PASSIVEDNS "passivedns"
 #define OSINT_YAHOO "yahoo"
 
+struct ScanStatus{
+    bool isNotActive = true;
+    bool isRunning = false;
+    bool isStopped = false;
+    bool isPaused = false;
+    int activeScanThreads = 0;
+};
 
 enum class RESULT_TYPE{
     SUBDOMAINIP,
@@ -89,7 +96,6 @@ enum class ENGINE{
     DNS,
     ACTIVE,
     OSINT,
-    IP,
     RAW,
     CERT
 };

@@ -341,7 +341,7 @@ void Ip::m_sendSubdomainToEngine(ENGINE engine){
             item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
             emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
         }
-        emit changeTabToCert();
+        emit changeTabToSSL();
         break;
     default:
         break;
@@ -422,7 +422,7 @@ void Ip::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selection){
             item = index.data().toString();
             emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
         }
-        emit changeTabToCert();
+        emit changeTabToSSL();
         break;
     default:
         break;

@@ -18,7 +18,6 @@ struct ScanConfig{
     bool useCustomNameServers = false;
     QStringList customNameServers;
     int threadsCount = 50;
-    int timeout = 3000;
 
     bool checkWildcard = false;
     bool hasWildcard = false;

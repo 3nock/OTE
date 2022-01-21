@@ -26,6 +26,16 @@ void ssl::Scanner::lookup(){
     while(!target.isNull())
     {
 
+    /* if received pause signal lock the thread, dont unlock until resume signal*/
+    m_mutex.lock();
+    if(m_pause)
+        m_wait.wait(&m_mutex);
+    m_mutex.unlock();
+
+    /* check if received stop signal */
+    if(m_stop)
+        emit quitThread();
+
     switch(m_args->port){
     case HTTPS:
         socket.connectToHostEncrypted(target, 443);
