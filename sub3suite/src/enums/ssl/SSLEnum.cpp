@@ -139,8 +139,6 @@ void SSLEnum::on_buttonStart_clicked(){
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
         //connect(scanner, &ssl::Scanner::resultRaw, this, &SSLEnum::onResult);
-        connect(scanner, &ssl::Scanner::errorLog, this, &SSLEnum::onErrorLogTxt);
-        connect(scanner, &ssl::Scanner::infoLog, this, &SSLEnum::onInfoLogTxt);
         connect(cThread, &QThread::finished, this, &SSLEnum::onEnumerationComplete);
         connect(cThread, &QThread::finished, scanner, &ssl::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

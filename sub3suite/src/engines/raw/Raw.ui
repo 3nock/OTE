@@ -460,7 +460,7 @@
          </property>
          <widget class="QWidget" name="tabModuleInfo">
           <attribute name="title">
-           <string>Module Info</string>
+           <string>Module</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_20">
            <property name="leftMargin">
@@ -986,7 +986,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>183</width>
+                <width>184</width>
                 <height>1501</height>
                </rect>
               </property>

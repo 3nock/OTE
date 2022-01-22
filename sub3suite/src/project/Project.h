@@ -21,12 +21,15 @@ class Project : public QWidget{
     private slots:
         void on_treeViewProjectExplorer_clicked(const QModelIndex &index);
 
-    private:
+        void on_lineEditFilter_textChanged(const QString &arg1);
+
+private:
         Ui::Project *ui;
         QString m_projectFile;
         ProjectModel *m_projectModel;
-        QSortFilterProxyModel *m_siteMapProxyModel;
-        //...
+        QSortFilterProxyModel *m_proxyModel;
+
+        void m_initUI();
         void m_openProject();
         void m_saveProject();
         void m_closeProject();

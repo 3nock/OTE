@@ -48,7 +48,7 @@ class AbstractScanner : public QObject{
 
     public slots:
         /* the main method that performs the lookup... */
-        virtual void lookup()=0;
+        virtual void lookup() = 0;
 
         /* quiting all running threads upon receiving stop signal... */
         virtual void onStopScan(){
@@ -66,9 +66,7 @@ class AbstractScanner : public QObject{
 
     signals:
         void quitThread();
-        void infoLog(QString log);
-        void errorLog(QString log);
-        void scanLog(scan::Log log); // scan error & info log
+        void scanLog(scan::Log log);
         void scanProgress(int value);
 
     private:

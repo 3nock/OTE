@@ -25,83 +25,83 @@ void ssl::Scanner::lookup(){
     /* a blocking connection to the target to obtain ssl certificate */
     while(!target.isNull())
     {
+        m_mutex.lock();
 
-    /* if received pause signal lock the thread, dont unlock until resume signal*/
-    m_mutex.lock();
-    if(m_pause)
-        m_wait.wait(&m_mutex);
-    m_mutex.unlock();
+        /* if received pause signal lock the thread, dont unlock until resume signal*/
+        if(m_pause)
+            m_wait.wait(&m_mutex);
 
-    /* check if received stop signal */
-    if(m_stop)
-        emit quitThread();
-
-    switch(m_args->port){
-    case HTTPS:
-        socket.connectToHostEncrypted(target, 443);
-        break;
-    case FTP:
-        socket.connectToHostEncrypted(target, 21);
-        break;
-    case FTPs:
-        socket.connectToHostEncrypted(target, 990);
-        break;
-    case SSH:
-        socket.connectToHostEncrypted(target, 22);
-        break;
-    }
-
-    if(!socket.waitForEncrypted(m_args->config->timeout*1000))
-    {
-        switch (socket.error())
-        {
-        case QAbstractSocket::ConnectionRefusedError:
-        case QAbstractSocket::HostNotFoundError:
+        /* check if received stop signal */
+        if(m_stop)
             break;
-        default:
-            log.target = target;
-            log.message = socket.errorString();
-            emit scanLog(log);
+
+        m_mutex.unlock();
+
+        switch(m_args->port){
+        case HTTPS:
+            socket.connectToHostEncrypted(target, 443);
+            break;
+        case FTP:
+            socket.connectToHostEncrypted(target, 21);
+            break;
+        case FTPs:
+            socket.connectToHostEncrypted(target, 990);
+            break;
+        case SSH:
+            socket.connectToHostEncrypted(target, 22);
+            break;
         }
-    }
-    else
-    {
-        /* obtaining the certificate */
-        QSslCertificate certificate = socket.peerCertificate();
 
-        /* close connetion after obtaining the certificate */
-        socket.close();
-
-        if(!certificate.isNull())
+        if(!socket.waitForEncrypted(m_args->config->timeout*1000))
         {
-            /* emiting the obtained results */
-            switch (m_args->output) {
-            case ssl::OUTPUT::RAW:
-                emit resultRaw(target, certificate);
+            switch (socket.error())
+            {
+            case QAbstractSocket::ConnectionRefusedError:
+            case QAbstractSocket::HostNotFoundError:
                 break;
-            case ssl::OUTPUT::SHA1:
-                emit resultSHA1(certificate.digest(QCryptographicHash::Sha1).toHex());
-                break;
-            case ssl::OUTPUT::SHA256:
-                emit resultSHA256(certificate.digest(QCryptographicHash::Sha256).toHex());
-                break;
-            case ssl::OUTPUT::SUBDOMAIN:
-                QStringList subdomains;
-                foreach(const QString &domain, certificate.subjectAlternativeNames())
-                    subdomains.append(domain);
-                emit resultSubdomain(target, subdomains);
-                break;
+            default:
+                log.target = target;
+                log.message = socket.errorString();
+                emit scanLog(log);
             }
         }
-    }
+        else
+        {
+            /* obtaining the certificate */
+            QSslCertificate certificate = socket.peerCertificate();
 
-    /* scan progress */
-    m_args->progress++;
-    emit scanProgress(m_args->progress);
+            /* close connetion after obtaining the certificate */
+            socket.close();
 
-    /* next target */
-    target = getTarget(m_args);
+            if(!certificate.isNull())
+            {
+                /* emiting the obtained results */
+                switch (m_args->output) {
+                case ssl::OUTPUT::RAW:
+                    emit resultRaw(target, certificate);
+                    break;
+                case ssl::OUTPUT::SHA1:
+                    emit resultSHA1(certificate.digest(QCryptographicHash::Sha1).toHex());
+                    break;
+                case ssl::OUTPUT::SHA256:
+                    emit resultSHA256(certificate.digest(QCryptographicHash::Sha256).toHex());
+                    break;
+                case ssl::OUTPUT::SUBDOMAIN:
+                    QStringList subdomains;
+                    foreach(const QString &domain, certificate.subjectAlternativeNames())
+                        subdomains.append(domain);
+                    emit resultSubdomain(target, subdomains);
+                    break;
+                }
+            }
+        }
 
+        /* scan progress */
+        m_args->progress++;
+        emit scanProgress(m_args->progress);
+
+        /* next target */
+        target = getTarget(m_args);
     }
 
     /* end of targets */

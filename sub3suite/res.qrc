@@ -22,6 +22,7 @@
         <file>res/files/srv.txt</file>
         <file>res/files/userAgents.txt</file>
         <file>res/files/LICENSE</file>
+        <file>res/files/under_development.html</file>
     </qresource>
     <qresource prefix="/themes">
         <file>res/themes/light.css</file>

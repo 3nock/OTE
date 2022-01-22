@@ -18,6 +18,10 @@
     outline: 0;
 }
 
+*[default_color=&quot;true&quot;] {
+    color: rgb(185, 185, 145);
+}
+
 QComboBox {
     border-style: outset;
     border-style: solid;
@@ -72,11 +76,12 @@ QToolBox QWidget {
 }
 
 QToolBox::tab {
-    color: rgb(250,250,250);
+    padding-left: 12px;
+    color: white;
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(37, 37, 37, 255), stop:1 rgba(57, 57, 57, 255));
     border-style: solid;
     border-width: 1px;
-    border-color: rgb(25,25,25);
+    border-color: rgb(20,20,20);;
 }
 
 QToolBox::tab:hover {
@@ -84,8 +89,8 @@ QToolBox::tab:hover {
 }
 
 QToolBox::tab:selected {
-    background-color: rgba(130,130,130,100);
-    color: rgb(25,25,25);
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(37, 37, 37, 255), stop:1 rgba(47, 47, 47, 255));
+    color: white;
 }
 
 QScrollBar:horizontal {
@@ -282,6 +287,7 @@ QFrame#frame {
     background-color: rgb(40, 40, 40);
 }
 
+QLabel[dark=&quot;true&quot;],
 QLabel#labelResultsCount,
 QLabel#label_level,
 QLabel#labelResultsCountTree,
@@ -335,6 +341,7 @@ QSplitter::handle:vertical:hover {
 }
 
 QListView:!read-only,
+QTreeView:!disabled,
 QTextEdit,
 QListWidget,
 QTableView,
@@ -790,9 +797,31 @@ QRadioButton:hover {
     <addaction name="actionApiKeys"/>
     <addaction name="actionPreferences"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionOsint"/>
+    <addaction name="actionRaw"/>
+    <addaction name="separator"/>
+    <addaction name="actionBrute"/>
+    <addaction name="actionActive"/>
+    <addaction name="actionDNS"/>
+    <addaction name="actionSSL"/>
+    <addaction name="separator"/>
+    <addaction name="actionIP_Enumerator"/>
+    <addaction name="actionASN_Enumerator"/>
+    <addaction name="actionCIDR_Enumerator"/>
+    <addaction name="actionNS_Enumerator"/>
+    <addaction name="actionMX_Enumerator"/>
+    <addaction name="actionSSL_Enumerator"/>
+    <addaction name="actionURL_Enumerator"/>
+    <addaction name="actionEmail_Enumerator"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuConfig"/>
    <addaction name="menuProject"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
@@ -871,6 +900,76 @@ QRadioButton:hover {
   <action name="actionTwitter">
    <property name="text">
     <string>Twitter</string>
+   </property>
+  </action>
+  <action name="actionOsint">
+   <property name="text">
+    <string>OSINT Engine</string>
+   </property>
+  </action>
+  <action name="actionRaw">
+   <property name="text">
+    <string>RAW Engine</string>
+   </property>
+  </action>
+  <action name="actionBrute">
+   <property name="text">
+    <string>BRUTE Engine</string>
+   </property>
+  </action>
+  <action name="actionActive">
+   <property name="text">
+    <string>ACTIVE Engine</string>
+   </property>
+  </action>
+  <action name="actionDNS">
+   <property name="text">
+    <string>DNS Engine</string>
+   </property>
+  </action>
+  <action name="actionSSL">
+   <property name="text">
+    <string>SSL Engine</string>
+   </property>
+  </action>
+  <action name="actionIP_Enumerator">
+   <property name="text">
+    <string>IP Enumerator</string>
+   </property>
+  </action>
+  <action name="actionASN_Enumerator">
+   <property name="text">
+    <string>ASN Enumerator</string>
+   </property>
+  </action>
+  <action name="actionCIDR_Enumerator">
+   <property name="text">
+    <string>CIDR Enumerator</string>
+   </property>
+  </action>
+  <action name="actionNS_Enumerator">
+   <property name="text">
+    <string>NS Enumerator</string>
+   </property>
+  </action>
+  <action name="actionMX_Enumerator">
+   <property name="text">
+    <string>MX Enumerator</string>
+   </property>
+  </action>
+  <action name="actionSSL_Enumerator">
+   <property name="text">
+    <string>SSL Enumerator</string>
+   </property>
+  </action>
+  <action name="actionURL_Enumerator">
+   <property name="text">
+    <string>URL Enumerator</string>
+   </property>
+  </action>
+  <action name="actionEmail_Enumerator">
+   <property name="text">
+    <string>Email Enumerator</string>
    </property>
   </action>
  </widget>
