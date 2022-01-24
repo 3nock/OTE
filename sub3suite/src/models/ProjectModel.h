@@ -18,8 +18,12 @@ class ProjectModel
 {
 
 public:
-    ProjectModel();
+    ProjectModel(QString projectPath);
     ~ProjectModel();
+
+    void openProject();
+    void saveProject();
+    QString projectFile;
 
     /* for active results */
     void addActiveSubdomainIp(const QString &subdomain, const QString &ip);

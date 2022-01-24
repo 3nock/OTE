@@ -34,6 +34,10 @@ Osint::Osint(QWidget *parent, ProjectModel *project): AbstractEngine(parent, pro
     m_resultProxyModel(new QSortFilterProxyModel)
 {
     ui->setupUi(this);
+
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+
     /* init... */
     ui->targets->setListName("Targets");
     ui->targets->setListModel(m_targetListModelHostname);

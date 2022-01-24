@@ -26,6 +26,9 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
 {
     ui->setupUi(this);
 
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+
     /* targets */
     ui->targets->setListName("Targets");
     ui->targets->setListModel(m_targetListModel);

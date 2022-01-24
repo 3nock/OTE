@@ -43,6 +43,8 @@ SSLEnum::SSLEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, 
 {
     ui->setupUi(this);
 
+    ui->frame->setProperty("default_frame", true);
+
     /* setting the placeholdertxt */
     ui->lineEditFilter->setPlaceholderText("Filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);

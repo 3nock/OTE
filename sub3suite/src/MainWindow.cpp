@@ -19,7 +19,7 @@
 #include "src/dialogs/DocumentationDialog.h"
 
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QString project, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     /* init */
     this->m_registerMetaTypes();
-    this->m_initEngines();
+    this->m_initEngines(project);
     this->m_documentation();
 
     /* build info */
@@ -62,10 +62,6 @@ MainWindow::~MainWindow(){
     delete ui;
 }
 
-void MainWindow::projectFile(QString projectFile){
-    m_projectFile = projectFile;
-}
-
 void MainWindow::m_registerMetaTypes(){
     qDebug() << "Registering meta types...";
 
@@ -79,9 +75,10 @@ void MainWindow::m_registerMetaTypes(){
     qRegisterMetaType<QSslCertificate>("QSslCertificate");
 }
 
-void MainWindow::m_initEngines(){
+void MainWindow::m_initEngines(QString projectFile){
+    qDebug() << projectFile;
     /* Project */
-    projectModel = new ProjectModel;
+    projectModel = new ProjectModel(projectFile);
     project = new Project(this, projectModel);
 
     /* Engines */
@@ -132,9 +129,6 @@ void MainWindow::m_initEngines(){
     /* main tabwidget */
     ui->tabWidgetMain->insertTab(3, project, "Project");
     ui->tabWidgetMain->setCurrentIndex(0);
-
-    /* initiate project */
-    project->initProject(m_projectFile);
 }
 
 void MainWindow::m_connectSignals(AbstractEngine *engine){

@@ -30,6 +30,9 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
 {
     ui->setupUi(this);
 
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+
     /* wordlist & target models */
     ui->targets->setListName("Targets");
     ui->wordlist->setListName("Wordlist");

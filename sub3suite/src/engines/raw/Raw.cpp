@@ -26,6 +26,10 @@ Raw::Raw(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project
     m_targetListModelEmail(new QStringListModel)
 {
     ui->setupUi(this);
+
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+
     /* init... */
     ui->targets->setListName("Targets");
     ui->targets->setListModel(m_targetListModel);

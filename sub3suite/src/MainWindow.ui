@@ -18,10 +18,6 @@
     outline: 0;
 }
 
-*[default_color=&quot;true&quot;] {
-    color: rgb(185, 185, 145);
-}
-
 QComboBox {
     border-style: outset;
     border-style: solid;
@@ -280,20 +276,14 @@ QFrame[frameShape=&quot;5&quot;] {
     background: transparent;
 }
 
-QFrame#frame {
+QFrame[default_frame=&quot;true&quot;] {
     height: 45px;
     max-height: 45px;
     min-height: 45px;
     background-color: rgb(40, 40, 40);
 }
 
-QLabel[dark=&quot;true&quot;],
-QLabel#labelResultsCount,
-QLabel#label_level,
-QLabel#labelResultsCountTree,
-QLabel#labelResultsCountJson,
-QLabel#labelCount,
-QLabel#labelResultsCountSRV {
+QLabel[dark=&quot;true&quot;] {
     border-style: outset;
     border-style: solid;
     border-width: 1px;
@@ -341,7 +331,6 @@ QSplitter::handle:vertical:hover {
 }
 
 QListView:!read-only,
-QTreeView:!disabled,
 QTextEdit,
 QListWidget,
 QTableView,
@@ -456,7 +445,6 @@ QProgressBar {
     border-width: 1px;
     border-color: rgb(20,20,20);
     border-style: inset;
-    /*border-radius: 10px;*/
     background-color: rgb(40,40,40);
     height: 22px;
     max-width: 200px;
@@ -464,7 +452,6 @@ QProgressBar {
 }
 
 QProgressBar::chunk {
-    /*border-radius: 10px;*/
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(50, 50, 50, 255), stop:1 rgba(150, 150, 112, 200));
 }
 
@@ -615,9 +602,17 @@ QRadioButton {
 }
 
 QRadioButton:hover {
-     border-style: solid;
-     border-width:1px;
-     border-color: rgb(50,50,50);
+    border-style: solid;
+    border-width:1px;
+    border-color: rgb(50,50,50);
+}
+
+*[default_color=&quot;true&quot;] {
+    color: rgb(185, 185, 145);
+}
+
+*::item[no_item_border=&quot;true&quot;]{
+    border-width: 0px;
 }
 </string>
   </property>

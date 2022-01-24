@@ -20,6 +20,8 @@ NSEnum::NSEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
 {
     ui->setupUi(this);
 
+    ui->frame->setProperty("default_frame", true);
+
     /* enter used modules */
     ui->comboBoxEngine->addItem("DNSLytics");
     ui->comboBoxOption->addItem("Domains");

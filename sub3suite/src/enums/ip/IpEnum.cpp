@@ -21,6 +21,8 @@ IpEnum::IpEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
 {
     ui->setupUi(this);
 
+    ui->frame->setProperty("default_frame", true);
+
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText("Filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_IP);

@@ -2,8 +2,14 @@
 
 #include "src/models/SSLModel.h"
 
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
 
-ProjectModel::ProjectModel():
+
+ProjectModel::ProjectModel(QString projectPath):
+    projectFile(projectPath),
     model_explorer(new QStandardItemModel),
     active_explorer(new QStandardItem("Active")),
     passive_explorer(new QStandardItem("Passive")),
@@ -333,6 +339,11 @@ ProjectModel::ProjectModel():
     rootItem_explorer->appendRow(passive_explorer);
     rootItem_explorer->appendRow(enums_explorer);
     rootItem_explorer->appendRow(custom_explorer);
+
+    ///
+    /// opening the project...
+    ///
+    this->openProject();
 }
 ProjectModel::~ProjectModel(){
     delete model_explorer;
@@ -664,5 +675,275 @@ void ProjectModel::addEnumEmail(){
 }
 
 void ProjectModel::addEnumURL(){
+
+}
+
+/*
+ * opening and saving project....
+ */
+void ProjectModel::openProject(){
+    qDebug() << "Opening Project: " << projectFile;
+
+    QFile file(projectFile);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        qWarning() << "Failed To Open Project File, defaulting to Temporary Project";
+
+        /* default to Temporary Project */
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    if(document.isNull() || document.isEmpty()){
+        qWarning() << "Error parsing the project file";
+        return;
+    }
+
+    QJsonObject mainObj = document.object();
+
+    ///
+    /// Project Information
+    ///
+    QJsonObject info = mainObj["general"].toObject();
+
+    ///
+    /// Project Data
+    ///
+    QJsonObject data = mainObj["data"].toObject();
+
+    /* active subdomainIp */
+    foreach(const QJsonValue &value, data["active_subdomainIP"].toArray())
+        m_activeSubdomainIp_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
+                                                 new QStandardItem(value.toArray()[1].toString())});
+
+    /* active subdomain */
+    foreach(const QJsonValue &value, data["active_subdomain"].toArray())
+        m_activeSubdomain_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* active TLD */
+    foreach(const QJsonValue &value, data["active_TLD"].toArray())
+        m_activeTld_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
+                                         new QStandardItem(value.toArray()[1].toString())});
+
+    /* active Wildcards */
+    foreach(const QJsonValue &value, data["active_wildcard"].toArray())
+        m_activeWildcard_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
+                                              new QStandardItem(value.toArray()[1].toString())});
+
+    /* active dns */
+    foreach(const QJsonValue &value, data["active_dns"].toArray()){
+        QJsonObject obj = value.toObject();
+
+        QStandardItem *dns_item = new QStandardItem(obj["domain"].toString());
+        dns_item->setIcon(QIcon(":/img/res/icons/folder.png"));
+        dns_item->setForeground(Qt::white);
+        m_activeDNS_rootItem->appendRow(dns_item);
+
+        QJsonArray A = obj["A"].toArray();
+        QJsonArray AAAA = obj["AAAA"].toArray();
+        QJsonArray NS = obj["NS"].toArray();
+        QJsonArray MX = obj["MX"].toArray();
+        QJsonArray TXT = obj["TXT"].toArray();
+        QJsonArray CNAME = obj["CNAME"].toArray();
+        QJsonArray SRV = obj["SRV"].toArray();
+
+        if(!A.isEmpty()){
+            QStandardItem *record = new QStandardItem("A");
+            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            record->setForeground(Qt::white);
+            foreach(const QJsonValue &value, A){
+                record->appendRow(new QStandardItem(value.toString()));
+                m_activeA_rootItem->appendRow(new QStandardItem(value.toString()));
+            }
+            dns_item->appendRow(record);
+        }
+        if(!AAAA.isEmpty()){
+            QStandardItem *record = new QStandardItem("AAAA");
+            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            record->setForeground(Qt::white);
+            foreach(const QJsonValue &value, AAAA){
+                record->appendRow(new QStandardItem(value.toString()));
+                m_activeAAAA_rootItem->appendRow(new QStandardItem(value.toString()));
+            }
+            dns_item->appendRow(record);
+        }
+        if(!NS.isEmpty()){
+            QStandardItem *record = new QStandardItem("NS");
+            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            record->setForeground(Qt::white);
+            foreach(const QJsonValue &value, NS){
+                record->appendRow(new QStandardItem(value.toString()));
+                m_activeNS_rootItem->appendRow(new QStandardItem(value.toString()));
+            }
+            dns_item->appendRow(record);
+        }
+        if(!MX.isEmpty()){
+            QStandardItem *record = new QStandardItem("MX");
+            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            record->setForeground(Qt::white);
+            foreach(const QJsonValue &value, MX){
+                record->appendRow(new QStandardItem(value.toString()));
+                m_activeMX_rootItem->appendRow(new QStandardItem(value.toString()));
+            }
+            dns_item->appendRow(record);
+        }
+        if(!TXT.isEmpty()){
+            QStandardItem *record = new QStandardItem("TXT");
+            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            record->setForeground(Qt::white);
+            foreach(const QJsonValue &value, TXT){
+                record->appendRow(new QStandardItem(value.toString()));
+                m_activeTXT_rootItem->appendRow(new QStandardItem(value.toString()));
+            }
+            dns_item->appendRow(record);
+        }
+        if(!CNAME.isEmpty()){
+            QStandardItem *record = new QStandardItem("CNAME");
+            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            record->setForeground(Qt::white);
+            foreach(const QJsonValue &value, CNAME){
+                record->appendRow(new QStandardItem(value.toString()));
+                m_activeCNAME_rootItem->appendRow(new QStandardItem(value.toString()));
+            }
+            dns_item->appendRow(record);
+        }
+        if(!SRV.isEmpty()){
+            QStandardItem *record = new QStandardItem("SRV");
+            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            record->setForeground(Qt::white);
+            foreach(const QJsonValue &value, SRV){
+                record->appendRow(new QStandardItem(value.toString()));
+                m_activeSRV_rootItem->appendRow({new QStandardItem(value.toArray().at(0).toString()),
+                                                 new QStandardItem(value.toArray().at(1).toString()),
+                                                 new QStandardItem(value.toArray().at(2).toString())});
+            }
+            dns_item->appendRow(record);
+        }
+        activeDNS_model->appendRow(dns_item);
+    }
+
+    /* active SSL sha1 */
+    foreach(const QJsonValue &value, data["active_SSL_sha1"].toArray())
+        m_activeSSL_sha1_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* active SSL sha256 */
+    foreach(const QJsonValue &value, data["active_SSL_sha256"].toArray())
+        m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* active SSL */
+    foreach(const QJsonValue &value, data["active_SSL"].toArray()){
+        CertModel *certModel = new CertModel;
+        certModel->mainItem->setText(value.toObject()["domain"].toString());
+
+        /* info */
+        certModel->info_verison->setText(value.toObject()["info_version"].toString());
+        certModel->info_serialNumber->setText(value.toObject()["info_serialNumber"].toString());
+        certModel->info_signatureAlgorithm->setText(value.toObject()["info_signatureAlgorithm"].toString()); // none yet
+
+        /* fingerprint */
+        certModel->fingerprint_md5->setText(value.toObject()["fingerprint_md5"].toString());
+        certModel->fingerprint_sha1->setText(value.toObject()["fingerprint_sha1"].toString());
+        certModel->fingerprint_sha256->setText(value.toObject()["fingerprint_sha256"].toString());
+
+        /* validity */
+        certModel->validity_notBefore->setText(value.toObject()["validity_notBefore"].toString());
+        certModel->validity_notAfter->setText(value.toObject()["validity_notAfter"].toString());
+
+        /* issuer */
+        certModel->issuer_commonName->setText(value.toObject()["issuer_commonName"].toString());
+        certModel->issuer_organizationName->setText(value.toObject()["issuer_organizationName"].toString());
+        certModel->issuer_countryName->setText(value.toObject()["issuer_countryName"].toString());
+
+        /* subject */
+        certModel->subject_commonName->setText(value.toObject()["subject_commonName"].toString());
+        certModel->subject_countryName->setText(value.toObject()["subject_countryName"].toString());
+        certModel->subject_localityName->setText(value.toObject()["subject_localityName"].toString());
+        certModel->subject_organizationName->setText(value.toObject()["subject_organizationName"].toString());
+        certModel->subject_stateOrProvinceName->setText(value.toObject()["subject_state"].toString());
+        certModel->subject_email->setText(value.toObject()["subject_email"].toString());
+
+        /* key */
+        certModel->key_type->setText(value.toObject()["key_type"].toString());
+        certModel->key_algorithm->setText(value.toObject()["key_algorithm"].toString());
+
+        int count = 0;
+        foreach(const QJsonValue &alternativeName, value.toArray()){
+            certModel->subjectAltNames->appendRow({new QStandardItem(QString::number(count)),
+                                                   new QStandardItem(alternativeName.toString())});
+            count++;
+        }
+
+        m_activeSSL_rootItem->appendRow(certModel->mainItem);
+        /* to sha1 & sha256 model */
+        m_activeSSL_sha1_rootItem->appendRow(new QStandardItem(value.toObject()["fingerprint_sha1"].toString()));
+        m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(value.toObject()["fingerprint_sha256"].toString()));
+    }
+
+    /* passive subdomainIP */
+    foreach(const QJsonValue &value, data["passive_subdomainIP"].toArray())
+        m_passiveSubdomainIp_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
+                                                 new QStandardItem(value.toArray()[1].toString())});
+
+    /* passive ASN */
+    foreach(const QJsonValue &value, data["passive_ASN"].toArray())
+        m_passiveAsn_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
+                                                 new QStandardItem(value.toArray()[1].toString())});
+
+    /* passive Subdomain */
+    foreach(const QJsonValue &value, data["passive_Subdomain"].toArray())
+        m_passiveSubdomain_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive A */
+    foreach(const QJsonValue &value, data["passive_A"].toArray())
+        m_passiveA_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive AAAA */
+    foreach(const QJsonValue &value, data["passive_AAAA"].toArray())
+        m_passiveAAAA_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive CIDR */
+    foreach(const QJsonValue &value, data["passive_CIDR"].toArray())
+        m_passiveCidr_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive NS */
+    foreach(const QJsonValue &value, data["passive_NS"].toArray())
+        m_passiveNS_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive MX */
+    foreach(const QJsonValue &value, data["passive_MX"].toArray())
+        m_passiveMX_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive TXT */
+    foreach(const QJsonValue &value, data["passive_TXT"].toArray())
+        m_passiveTXT_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive CNAME */
+    foreach(const QJsonValue &value, data["passive_CNAME"].toArray())
+        m_passiveCNAME_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive Email */
+    foreach(const QJsonValue &value, data["passive_Email"].toArray())
+        m_passiveEmail_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive URL */
+    foreach(const QJsonValue &value, data["passive_URL"].toArray())
+        m_passiveUrl_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* passive SSL */
+    foreach(const QJsonValue &value, data["passive_SSL"].toArray())
+        m_passiveSSL_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* enum IP */
+    /* enum MX" */
+    /* enum NS" */
+    /* enum ASN" */
+    /* enum CIDR" */
+    /* enum SSL" */
+    /* enum Email" */
+    /* enum URL" */
+    /* custom" */
+}
+
+void ProjectModel::saveProject(){
 
 }

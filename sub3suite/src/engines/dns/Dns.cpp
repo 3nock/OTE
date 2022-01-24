@@ -29,6 +29,9 @@ Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
 {
     ui->setupUi(this);
 
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+
     /* init... */
     ui->targets->setListName("Targets");
     ui->srvWordlist->setListName("SRV");

@@ -2,6 +2,9 @@
 #include "ui_Project.h"
 
 #include <QFile>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 
 Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
@@ -28,34 +31,8 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     ui->treeViewSiteMap->setModel(m_proxyModel);
 }
 Project::~Project(){
-    this->m_saveProject();
     delete m_proxyModel;
     delete ui;
-}
-
-void Project::initProject(QString projectFile){
-    m_projectFile = projectFile;
-
-    if(m_projectFile != "Temp")
-        this->m_openProject();
-
-    this->m_setupProjetct();
-}
-
-void Project::m_openProject(){
-
-}
-
-void Project::m_saveProject(){
-
-}
-
-void Project::m_closeProject(){
-    this->m_saveProject();
-}
-
-void Project::m_setupProjetct(){
-
 }
 
 /* changing the model */
@@ -230,6 +207,18 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
     ui->labelFilterCount->setNum(m_proxyModel->rowCount());
 }
 
+void Project::on_lineEditFilter_textChanged(const QString &filterKeyword){
+    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+
+    if(ui->checkBoxRegex->isChecked())
+        m_proxyModel->setFilterRegExp(QRegExp(filterKeyword));
+    else
+        m_proxyModel->setFilterFixedString(filterKeyword);
+
+    ui->treeViewSiteMap->setModel(m_proxyModel);
+    ui->labelFilterCount->setNum(m_proxyModel->rowCount());
+}
+
 void Project::m_initUI(){
     /* setup ui */
     ui->setupUi(this);
@@ -238,6 +227,7 @@ void Project::m_initUI(){
     ui->labelType->setProperty("default_color", true);
     ui->labelFilterCount->setProperty("default_color", true);
     ui->labelOriginalCount->setProperty("default_color", true);
+    ui->treeViewProjectExplorer->setProperty("no_item_border", true);
 
     /* hiding un-used widgets */
     ui->comboBoxFilter->hide();
@@ -251,16 +241,4 @@ void Project::m_initUI(){
 
     ui->splitter_2->setSizes(QList<int>() << static_cast<int>((this->width() * 0.80))
                                                << static_cast<int>((this->width() * 0.20)));
-}
-
-void Project::on_lineEditFilter_textChanged(const QString &filterKeyword){
-    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
-
-    if(ui->checkBoxRegex->isChecked())
-        m_proxyModel->setFilterRegExp(QRegExp(filterKeyword));
-    else
-        m_proxyModel->setFilterFixedString(filterKeyword);
-
-    ui->treeViewSiteMap->setModel(m_proxyModel);
-    ui->labelFilterCount->setNum(m_proxyModel->rowCount());
 }

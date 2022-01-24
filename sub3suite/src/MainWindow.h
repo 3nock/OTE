@@ -59,10 +59,8 @@ class MainWindow : public QMainWindow{
         Ui::MainWindow *ui;
 
     public:
-        explicit MainWindow(QWidget *parent = nullptr);
+        MainWindow(QString project, QWidget *parent = nullptr);
         ~MainWindow();
-
-        void projectFile(QString projectFile);
 
     public slots:
         void onReceiveStatus(QString status);
@@ -109,7 +107,6 @@ class MainWindow : public QMainWindow{
         /* project */
         Project *project = nullptr;
         ProjectModel *projectModel = nullptr;
-        QString m_projectFile;
 
         /* engines */
         Osint *osint = nullptr;
@@ -129,7 +126,7 @@ class MainWindow : public QMainWindow{
         EmailEnum *emailEnum = nullptr;
         UrlEnum *urlEnum = nullptr;
 
-        void m_initEngines();
+        void m_initEngines(QString project);
         void m_documentation();
         void m_registerMetaTypes();
         void m_connectSignals(AbstractEngine *engine);

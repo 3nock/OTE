@@ -3,6 +3,8 @@
 
 #include "AboutDialog.h"
 
+#include <QDir>
+
 
 StartupDialog::StartupDialog(QString *project, QWidget *parent) : QDialog(parent),
     ui(new Ui::StartupDialog),
@@ -15,6 +17,9 @@ StartupDialog::StartupDialog(QString *project, QWidget *parent) : QDialog(parent
     logo_sub3suite.scaled(ui->labelS3S->width(), ui->labelS3S->height());
     ui->labelS3S->setPixmap(logo_sub3suite);
     ui->labelS3S->setScaledContents(true);
+
+    /* ... */
+    ui->lineEditLocation->setText(QDir::currentPath());
 }
 StartupDialog::~StartupDialog(){
     delete ui;
@@ -23,6 +28,12 @@ StartupDialog::~StartupDialog(){
 void StartupDialog::on_buttonOpen_clicked(){
     if(ui->checkBoxTemporary->isChecked())
         m_project->append("Temp");
+
+    if(ui->groupBoxNewProject->isChecked()){
+        QString file = ui->lineEditLocation->text();
+        file.append("/");
+        m_project->append(file+ui->lineEditName->text());
+    }
 
     accept();
 }

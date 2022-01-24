@@ -104,6 +104,12 @@ int main(int argc, char *argv[])
     /* create the sub3suite app */
     s3s_Application s3s_app(argc, argv);
 
+    /* setting stylesheets */
+    QFile file(":/themes/res/themes/dark.css");
+    if(file.open(QFile::ReadOnly) || QIODevice::Text){
+        qApp->setStyleSheet(QLatin1String(file.readAll()));
+    }
+
     /* splash screen */
     QPixmap splashImage = QPixmap(":/img/res/icons/splash.png");
     splashImage.scaledToWidth(600);
@@ -128,8 +134,7 @@ int main(int argc, char *argv[])
     else
     {
         /* creating the main window */
-        MainWindow w;
-        w.projectFile(project);
+        MainWindow w(project);
 
         /* setting the app to the center of Screen on start */
         int x = (s3s_app.desktop()->width()-w.width()) / 2;

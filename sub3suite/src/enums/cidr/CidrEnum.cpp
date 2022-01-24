@@ -18,6 +18,8 @@ CidrEnum::CidrEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent
 {
     ui->setupUi(this);
 
+    ui->frame->setProperty("default_frame", true);
+
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText("Filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_CIDR);
