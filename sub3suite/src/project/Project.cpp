@@ -25,6 +25,8 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
 
     /* data models */
     ui->treeViewProjectExplorer->setModel(m_projectModel->model_explorer);
+    ui->treeViewProjectExplorer->expand(m_projectModel->project_explorer->index());
+
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setRecursiveFilteringEnabled(true);
     m_proxyModel->setFilterKeyColumn(0);
@@ -36,8 +38,9 @@ Project::~Project(){
 }
 
 /* changing the model */
+/* compare indexes instead of strings */
 void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
-    if(index.parent() == m_projectModel->rootItem_explorer->index())
+    if(index.parent() == m_projectModel->project_explorer->index())
         return;
 
     QString type(index.data().toString());

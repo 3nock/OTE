@@ -614,6 +614,11 @@ QRadioButton:hover {
 *::item[no_item_border=&quot;true&quot;]{
     border-width: 0px;
 }
+
+QListView:disabled,
+QTreeView:disabled {
+    color: grey;
+}
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">

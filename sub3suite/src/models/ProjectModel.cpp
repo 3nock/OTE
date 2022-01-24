@@ -11,6 +11,7 @@
 ProjectModel::ProjectModel(QString projectPath):
     projectFile(projectPath),
     model_explorer(new QStandardItemModel),
+    project_explorer(new QStandardItem("Temp")),
     active_explorer(new QStandardItem("Active")),
     passive_explorer(new QStandardItem("Passive")),
     enums_explorer(new QStandardItem("Enum")),
@@ -50,7 +51,6 @@ ProjectModel::ProjectModel(QString projectPath):
 
     /* enum Results explorer */
     enumIp_explorer(new QStandardItem("IP")),
-    enumDomain_explorer(new QStandardItem("Domain")),
     enumASN_explorer(new QStandardItem("ASN")),
     enumCIDR_explorer(new QStandardItem("CIDR")),
     enumNS_explorer(new QStandardItem("NS")),
@@ -93,7 +93,6 @@ ProjectModel::ProjectModel(QString projectPath):
 
     /* enum Results model */
     enumIp_model(new QStandardItemModel),
-    enumDomain_model(new QStandardItemModel),
     enumASN_model(new QStandardItemModel),
     enumCIDR_model(new QStandardItemModel),
     enumNS_model(new QStandardItemModel),
@@ -109,7 +108,7 @@ ProjectModel::ProjectModel(QString projectPath):
     activeSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
     activeTld_model->setHorizontalHeaderLabels({"    TLD", "    IpAddress"});
     activeWildcard_model->setHorizontalHeaderLabels({"    Wildcard", "    IpAddress"});
-    activeDNS_model->setHorizontalHeaderLabels({"    DNS Records"});
+    activeDNS_model->setHorizontalHeaderLabels({"    DNS Records", "", ""});
     activeA_model->setHorizontalHeaderLabels({"    A DNS Records"});
     activeAAAA_model->setHorizontalHeaderLabels({"    AAAA DNS Records"});
     activeNS_model->setHorizontalHeaderLabels({"    NS DNS Records"});
@@ -137,21 +136,18 @@ ProjectModel::ProjectModel(QString projectPath):
     passiveSSL_model->setHorizontalHeaderLabels({"    SSL Certificates ID"});
 
     /* enum Results model */
-    enumIp_model->setHorizontalHeaderLabels({"    IP Info"});
-    enumDomain_model->setHorizontalHeaderLabels({"    Domain Info"});
-    enumASN_model->setHorizontalHeaderLabels({"    ASN Info"});
-    enumCIDR_model->setHorizontalHeaderLabels({"    CIDR Info"});
-    enumNS_model->setHorizontalHeaderLabels({"    NS Info"});
-    enumMX_model->setHorizontalHeaderLabels({"    MX Info"});
-    enumSSL_model->setHorizontalHeaderLabels({"    SSL Certificate Info"});
-    enumEmail_model->setHorizontalHeaderLabels({"    Email Info"});
-    enumURL_model->setHorizontalHeaderLabels({"    URL Info"});
+    enumIp_model->setHorizontalHeaderLabels({"    IP Info", "    Values"});
+    enumASN_model->setHorizontalHeaderLabels({"    ASN Info", "    Values"});
+    enumCIDR_model->setHorizontalHeaderLabels({"    CIDR Info", "    Values"});
+    enumNS_model->setHorizontalHeaderLabels({"    NS Info", "    Values"});
+    enumMX_model->setHorizontalHeaderLabels({"    MX Info", "    Values"});
+    enumSSL_model->setHorizontalHeaderLabels({"    SSL Certificate Info", "    Values"});
+    enumEmail_model->setHorizontalHeaderLabels({"    Email Info", "    Values"});
+    enumURL_model->setHorizontalHeaderLabels({"    URL Info", "    Values"});
 
     ///
     /// getting rootItems
     ///
-    rootItem_explorer = model_explorer->invisibleRootItem();
-
     /* active results model */
     m_activeSubdomainIp_rootItem = activeSubdomainIp_model->invisibleRootItem();
     m_activeSubdomain_rootItem = activeSubdomain_model->invisibleRootItem();
@@ -186,7 +182,6 @@ ProjectModel::ProjectModel(QString projectPath):
 
     /* enum Results model */
     m_enumIp_rootItem = enumIp_model->invisibleRootItem();
-    m_enumDomain_rootItem = enumDomain_model->invisibleRootItem();
     m_enumASN_rootItem = enumASN_model->invisibleRootItem();
     m_enumCIDR_rootItem = enumCIDR_model->invisibleRootItem();
     m_enumNS_rootItem = enumNS_model->invisibleRootItem();
@@ -199,6 +194,9 @@ ProjectModel::ProjectModel(QString projectPath):
     /// setting icons
     ///
     QFont font("Segoe UI", 9, QFont::Bold);
+    project_explorer->setFont(font);
+    project_explorer->setForeground(Qt::white);
+    project_explorer->setIcon(QIcon(":/img/res/icons/setting.png"));
     active_explorer->setFont(font);
     active_explorer->setForeground(Qt::white);
     active_explorer->setIcon(QIcon(":/img/res/icons/folder.png"));
@@ -241,7 +239,6 @@ ProjectModel::ProjectModel(QString projectPath):
     passiveAsn_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     passiveSSL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     enumIp_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumDomain_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     enumASN_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     enumCIDR_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     enumNS_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
@@ -282,7 +279,6 @@ ProjectModel::ProjectModel(QString projectPath):
     passiveAsn_explorer->setForeground(Qt::white);
     passiveSSL_explorer->setForeground(Qt::white);
     enumIp_explorer->setForeground(Qt::white);
-    enumDomain_explorer->setForeground(Qt::white);
     enumASN_explorer->setForeground(Qt::white);
     enumCIDR_explorer->setForeground(Qt::white);
     enumNS_explorer->setForeground(Qt::white);
@@ -324,7 +320,6 @@ ProjectModel::ProjectModel(QString projectPath):
     passive_explorer->appendRow(passiveSSL_explorer);
     enums_explorer->appendRow(enumIp_explorer);
     enums_explorer->appendRow(enumMX_explorer);
-    enums_explorer->appendRow(enumDomain_explorer);
     enums_explorer->appendRow(enumASN_explorer);
     enums_explorer->appendRow(enumCIDR_explorer);
     enums_explorer->appendRow(enumNS_explorer);
@@ -333,12 +328,19 @@ ProjectModel::ProjectModel(QString projectPath):
     enums_explorer->appendRow(enumURL_explorer);
 
     ///
-    /// append to rootItem....
+    /// append to project explorer....
     ///
-    rootItem_explorer->appendRow(active_explorer);
-    rootItem_explorer->appendRow(passive_explorer);
-    rootItem_explorer->appendRow(enums_explorer);
-    rootItem_explorer->appendRow(custom_explorer);
+    if(projectFile != "Temp"){
+        QString name = projectFile.split("/").last();
+        name = name.remove(".json");
+        project_explorer->setText(name);
+    }
+
+    model_explorer->invisibleRootItem()->appendRow(project_explorer);
+    project_explorer->appendRow(active_explorer);
+    project_explorer->appendRow(passive_explorer);
+    project_explorer->appendRow(enums_explorer);
+    project_explorer->appendRow(custom_explorer);
 
     ///
     /// opening the project...
@@ -380,7 +382,6 @@ ProjectModel::~ProjectModel(){
     delete passiveAsn_explorer;
     delete passiveSSL_explorer;
     delete enumIp_explorer;
-    delete enumDomain_explorer;
     delete enumASN_explorer;
     delete enumCIDR_explorer;
     delete enumNS_explorer;
@@ -417,7 +418,6 @@ ProjectModel::~ProjectModel(){
     delete passiveAsn_model;
     delete passiveSSL_model;
     delete enumIp_model;
-    delete enumDomain_model;
     delete enumASN_model;
     delete enumCIDR_model;
     delete enumNS_model;
@@ -646,10 +646,6 @@ void ProjectModel::addEnumIp(){
 
 }
 
-void ProjectModel::addEnumDomain(){
-
-}
-
 void ProjectModel::addEnumASN(){
 
 }
@@ -812,7 +808,9 @@ void ProjectModel::openProject(){
             record->setIcon(QIcon(":/img/res/icons/folder2.png"));
             record->setForeground(Qt::white);
             foreach(const QJsonValue &value, SRV){
-                record->appendRow(new QStandardItem(value.toString()));
+                record->appendRow({new QStandardItem(value.toArray().at(0).toString()),
+                                   new QStandardItem(value.toArray().at(1).toString()),
+                                   new QStandardItem(value.toArray().at(2).toString())});
                 m_activeSRV_rootItem->appendRow({new QStandardItem(value.toArray().at(0).toString()),
                                                  new QStandardItem(value.toArray().at(1).toString()),
                                                  new QStandardItem(value.toArray().at(2).toString())});

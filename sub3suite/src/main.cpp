@@ -116,6 +116,9 @@ int main(int argc, char *argv[])
     QSplashScreen splash(splashImage);
     splash.show();
 
+    /* init configurations */
+    CONFIG;
+
     /* project path */
     QString project;
 
@@ -141,9 +144,6 @@ int main(int argc, char *argv[])
         int y = (s3s_app.desktop()->height()-w.height()) / 2;
         w.move(x, y-35);
         w.show();
-
-        /* init configurations */
-        CONFIG;
 
         /* starting the app */
         qInfo() << "starting sub3suite...";

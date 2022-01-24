@@ -598,3 +598,8 @@ QRadioButton:hover {
 *::item[no_item_border="true"]{
     border-width: 0px;
 }
+
+QListView:disabled,
+QTreeView:disabled {
+    color: grey;
+}

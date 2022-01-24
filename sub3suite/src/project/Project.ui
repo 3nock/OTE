@@ -62,7 +62,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>251</width>
+          <width>250</width>
           <height>440</height>
          </rect>
         </property>
@@ -86,6 +86,9 @@
           <widget class="QTreeView" name="treeViewProjectExplorer">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="indentation">
+            <number>15</number>
            </property>
            <attribute name="headerVisible">
             <bool>false</bool>
@@ -121,6 +124,9 @@
          </property>
          <item>
           <widget class="QTreeView" name="treeViewSiteMap">
+           <property name="indentation">
+            <number>15</number>
+           </property>
            <property name="sortingEnabled">
             <bool>false</bool>
            </property>
@@ -222,7 +228,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>168</width>
+         <width>165</width>
          <height>423</height>
         </rect>
        </property>

@@ -53,7 +53,6 @@ public:
 
     /* for enum */
     void addEnumIp();
-    void addEnumDomain();
     void addEnumASN();
     void addEnumCIDR();
     void addEnumNS();
@@ -64,7 +63,7 @@ public:
 
 public:
     QStandardItemModel *model_explorer;
-    QStandardItem *rootItem_explorer = nullptr;
+    QStandardItem *project_explorer;
 
     QStandardItem *active_explorer;
     QStandardItem *passive_explorer;
@@ -105,7 +104,6 @@ public:
 
     /* enum Results explorer */
     QStandardItem *enumIp_explorer;
-    QStandardItem *enumDomain_explorer;
     QStandardItem *enumASN_explorer;
     QStandardItem *enumCIDR_explorer;
     QStandardItem *enumNS_explorer;
@@ -148,7 +146,6 @@ public:
 
     /* enum Results model */
     QStandardItemModel *enumIp_model;
-    QStandardItemModel *enumDomain_model;
     QStandardItemModel *enumASN_model;
     QStandardItemModel *enumCIDR_model;
     QStandardItemModel *enumNS_model;
@@ -192,7 +189,6 @@ private:
 
     /* enum Results model */
     QStandardItem *m_enumIp_rootItem = nullptr;
-    QStandardItem *m_enumDomain_rootItem = nullptr;
     QStandardItem *m_enumASN_rootItem = nullptr;
     QStandardItem *m_enumCIDR_rootItem = nullptr;
     QStandardItem *m_enumNS_rootItem = nullptr;

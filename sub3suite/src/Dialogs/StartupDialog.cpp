@@ -1,9 +1,10 @@
 #include "StartupDialog.h"
 #include "ui_StartupDialog.h"
 
-#include "AboutDialog.h"
+#include "src/utils/Config.h"
 
 #include <QDir>
+#include <QDebug>
 
 
 StartupDialog::StartupDialog(QString *project, QWidget *parent) : QDialog(parent),
@@ -20,6 +21,24 @@ StartupDialog::StartupDialog(QString *project, QWidget *parent) : QDialog(parent
 
     /* ... */
     ui->lineEditLocation->setText(QDir::currentPath());
+
+    /* load recent projects */
+    CONFIG.beginGroup("recent_projects");
+    QStringList keys = CONFIG.allKeys();
+    foreach(const QString &key, keys){
+        QString projectfile = CONFIG.value(key).toString();
+
+        /* check if project file exists if it doesnt delete in recents */
+        QFile file(projectfile);
+        if(!file.exists()){
+            qDebug() << "Project File: " << projectfile << " doesnt exists. Deleting from existing Projects";
+            CONFIG.remove(key);
+        }
+
+        /* add file to listwidget */
+        ui->listWidgetProjects->addItem(projectfile);
+    }
+    CONFIG.endGroup();
 }
 StartupDialog::~StartupDialog(){
     delete ui;
@@ -33,6 +52,13 @@ void StartupDialog::on_buttonOpen_clicked(){
         QString file = ui->lineEditLocation->text();
         file.append("/");
         m_project->append(file+ui->lineEditName->text());
+    }
+
+    if(ui->groupBoxExistingProject->isChecked()){
+        if(ui->listWidgetProjects->selectedItems().isEmpty())
+            m_project->append("Temp");
+        else
+            m_project->append(ui->listWidgetProjects->selectedItems().at(0)->text());
     }
 
     accept();
