@@ -75,3 +75,7 @@ void FailedScansDialog::on_tableView_customContextMenuRequested(const QPoint &po
     /* showing the context menu */
     menu.exec(QCursor::pos());
 }
+
+void FailedScansDialog::on_buttonCopy_clicked(){
+
+}

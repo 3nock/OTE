@@ -11,13 +11,11 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 
-/*
- key->appendRow({new QStandardItem("Exponent"), key_exponent});
- key->appendRow({new QStandardItem("Modulus"), key_modulus});
- */
+
 class CertModel{
 public:
     CertModel():
+        mainItem(new QStandardItem),
         info(new QStandardItem("Info")),
         fingerprint(new QStandardItem("Fingerprint")),
         issuer(new QStandardItem("Issuer")),
@@ -57,22 +55,23 @@ public:
         key_type(new QStandardItem),
         key_algorithm(new QStandardItem)
     {
-        info->setForeground(QColor(220,220,220));
-        fingerprint->setForeground(QColor(220,220,220));
-        issuer->setForeground(QColor(220,220,220));
-        validity->setForeground(QColor(220,220,220));
-        subject->setForeground(QColor(220,220,220));
-        key->setForeground(QColor(220,220,220));
-        subjectAltNames->setForeground(QColor(220,220,220));
+        mainItem->setForeground(Qt::white);
+        info->setForeground(Qt::white);
+        fingerprint->setForeground(Qt::white);
+        issuer->setForeground(Qt::white);
+        validity->setForeground(Qt::white);
+        subject->setForeground(Qt::white);
+        key->setForeground(Qt::white);
+        subjectAltNames->setForeground(Qt::white);
 
-        QFont font("Segoe UI", 9, QFont::Bold);
-        info->setFont(font);
-        fingerprint->setFont(font);
-        issuer->setFont(font);
-        validity->setFont(font);
-        subject->setFont(font);
-        key->setFont(font);
-        subjectAltNames->setFont(font);
+        mainItem->setIcon(QIcon(":/img/res/icons/folder.png"));
+        info->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        fingerprint->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        issuer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        validity->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        subject->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        key->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        subjectAltNames->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
         info->appendRow({new QStandardItem("Version"), info_verison});
         info->appendRow({new QStandardItem("signature Algorithm"), info_signatureAlgorithm});
@@ -98,28 +97,8 @@ public:
 
         key->appendRow({new QStandardItem("Type"), key_type});
         key->appendRow({new QStandardItem("Algorithm"), key_algorithm});
-    }
-    ~CertModel(){
-    }
 
-    void initModel(){
-        mainModel = new QStandardItemModel;
-        mainModel->setColumnCount(2);
-        mainModel->setHorizontalHeaderLabels({"  Property", "  Value"});
-
-        /* appending to the model */
-        mainModel->appendRow(info);
-        mainModel->appendRow(fingerprint);
-        mainModel->appendRow(validity);
-        mainModel->appendRow(issuer);
-        mainModel->appendRow(subject);
-        mainModel->appendRow(key);
-        mainModel->appendRow(subjectAltNames);
-    }
-
-    void initItem(){
-        mainItem = new QStandardItem;
-        /* appending to the item */
+        /* appending to the mainItem */
         mainItem->appendRow(info);
         mainItem->appendRow(fingerprint);
         mainItem->appendRow(validity);
@@ -128,11 +107,12 @@ public:
         mainItem->appendRow(key);
         mainItem->appendRow(subjectAltNames);
     }
-    QStandardItem *mainItem = nullptr;
-    QStandardItemModel *mainModel = nullptr;
+    ~CertModel(){
+    }
+
+    QStandardItem *mainItem;
 
 private:
-    /* ... */
     QStandardItem *info;
     QStandardItem *fingerprint;
     QStandardItem *issuer;

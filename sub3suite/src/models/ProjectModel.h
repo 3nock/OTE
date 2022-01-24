@@ -26,11 +26,9 @@ public:
     void addActiveSubdomain(const QString &subdomain);
     void addActiveTLD(const QString &subdomain, const QString &ip);
     void addActiveWildcard(const QString &subdomain, const QString &ip);
-    // ssl
-    void addActiveSSL(const SSL_struct &ssl);
+    void addActiveSSL(const QString &target, const QSslCertificate &cert);
     void addActiveSSL_sha1(const QString &sha1);
     void addActiveSSL_sha256(const QString &sha256);
-    // dns
     void addActiveDNS(const dns::ScanResult &dns);
 
     /* for passive results */
@@ -61,66 +59,62 @@ public:
     void addEnumURL();
 
 public:
-    void setHeaderLabels();
+    QStandardItemModel *model_explorer;
+    QStandardItem *rootItem_explorer = nullptr;
 
-    QStandardItemModel *projectExplorerModel;
-    QStandardItem *explorerRootItem = nullptr;
-    QStandardItem *active;
-    QStandardItem *passive;
-    QStandardItem *enums;
-    QStandardItem *custom;
+    QStandardItem *active_explorer;
+    QStandardItem *passive_explorer;
+    QStandardItem *enums_explorer;
+    QStandardItem *custom_explorer;
 
     /* active Results Explorer */
-    QStandardItem *activeSubdomainIp;
-    QStandardItem *activeSubdomain;
-    QStandardItem *activeTld;
-    QStandardItem *activeWildcard;
-    // dns
-    QStandardItem *activeDNS;
-    QStandardItem *activeA;
-    QStandardItem *activeAAAA;
-    QStandardItem *activeNS;
-    QStandardItem *activeMX;
-    QStandardItem *activeTXT;
-    QStandardItem *activeCNAME;
-    QStandardItem *activeSRV;
-    // ssl
-    QStandardItem *activeSSL;
-    QStandardItem *activeSSL_sha1;
-    QStandardItem *activeSSL_sha256;
+    QStandardItem *activeSubdomainIp_explorer;
+    QStandardItem *activeSubdomain_explorer;
+    QStandardItem *activeTld_explorer;
+    QStandardItem *activeWildcard_explorer;
+    QStandardItem *activeDNS_explorer;
+    QStandardItem *activeA_explorer;
+    QStandardItem *activeAAAA_explorer;
+    QStandardItem *activeNS_explorer;
+    QStandardItem *activeMX_explorer;
+    QStandardItem *activeTXT_explorer;
+    QStandardItem *activeCNAME_explorer;
+    QStandardItem *activeSRV_explorer;
+    QStandardItem *activeSSL_explorer;
+    QStandardItem *activeSSL_sha1_explorer;
+    QStandardItem *activeSSL_sha256_explorer;
 
     /* passive Results explorer */
-    QStandardItem *passiveSubdomainIp;
-    QStandardItem *passiveSubdomain;
-    QStandardItem *passiveA;
-    QStandardItem *passiveAAAA;
-    QStandardItem *passiveNS;
-    QStandardItem *passiveMX;
-    QStandardItem *passiveTXT;
-    QStandardItem *passiveCNAME;
-    QStandardItem *passiveCidr;
-    QStandardItem *passiveEmail;
-    QStandardItem *passiveUrl;
-    QStandardItem *passiveAsn;
-    QStandardItem *passiveSSL;
+    QStandardItem *passiveSubdomainIp_explorer;
+    QStandardItem *passiveSubdomain_explorer;
+    QStandardItem *passiveA_explorer;
+    QStandardItem *passiveAAAA_explorer;
+    QStandardItem *passiveNS_explorer;
+    QStandardItem *passiveMX_explorer;
+    QStandardItem *passiveTXT_explorer;
+    QStandardItem *passiveCNAME_explorer;
+    QStandardItem *passiveCidr_explorer;
+    QStandardItem *passiveEmail_explorer;
+    QStandardItem *passiveUrl_explorer;
+    QStandardItem *passiveAsn_explorer;
+    QStandardItem *passiveSSL_explorer;
 
     /* enum Results explorer */
-    QStandardItem *enumIp;
-    QStandardItem *enumDomain;
-    QStandardItem *enumASN;
-    QStandardItem *enumCIDR;
-    QStandardItem *enumNS;
-    QStandardItem *enumMX;
-    QStandardItem *enumSSL;
-    QStandardItem *enumEmail;
-    QStandardItem *enumURL;
+    QStandardItem *enumIp_explorer;
+    QStandardItem *enumDomain_explorer;
+    QStandardItem *enumASN_explorer;
+    QStandardItem *enumCIDR_explorer;
+    QStandardItem *enumNS_explorer;
+    QStandardItem *enumMX_explorer;
+    QStandardItem *enumSSL_explorer;
+    QStandardItem *enumEmail_explorer;
+    QStandardItem *enumURL_explorer;
 
     /* active Results Model */
     QStandardItemModel *activeSubdomainIp_model;
     QStandardItemModel *activeSubdomain_model;
     QStandardItemModel *activeTld_model;
     QStandardItemModel *activeWildcard_model;
-    // dns
     QStandardItemModel *activeDNS_model;
     QStandardItemModel *activeA_model;
     QStandardItemModel *activeAAAA_model;
@@ -129,7 +123,6 @@ public:
     QStandardItemModel *activeTXT_model;
     QStandardItemModel *activeCNAME_model;
     QStandardItemModel *activeSRV_model;
-    // ssl
     QStandardItemModel *activeSSL_model;
     QStandardItemModel *activeSSL_sha1_model;
     QStandardItemModel *activeSSL_sha256_model;
@@ -161,50 +154,48 @@ public:
     QStandardItemModel *enumURL_model;
 
 private:
-    /* active Results  */
-    QStandardItem *m_activeSubdomainIp = nullptr;
-    QStandardItem *m_activeSubdomain = nullptr;
-    QStandardItem *m_activeTld = nullptr;
-    QStandardItem *m_activeWildcard = nullptr;
-    // dns
-    QStandardItem *m_activeDNS = nullptr;
-    QStandardItem *m_activeA = nullptr;
-    QStandardItem *m_activeAAAA = nullptr;
-    QStandardItem *m_activeNS = nullptr;
-    QStandardItem *m_activeMX = nullptr;
-    QStandardItem *m_activeTXT = nullptr;
-    QStandardItem *m_activeCNAME = nullptr;
-    QStandardItem *m_activeSRV = nullptr;
-    // ssl
-    QStandardItem *m_activeSSL = nullptr;
-    QStandardItem *m_activeSSL_sha1 = nullptr;
-    QStandardItem *m_activeSSL_sha256 = nullptr;
+    /* active results model */
+    QStandardItem *m_activeSubdomainIp_rootItem = nullptr;
+    QStandardItem *m_activeSubdomain_rootItem = nullptr;
+    QStandardItem *m_activeTld_rootItem = nullptr;
+    QStandardItem *m_activeWildcard_rootItem = nullptr;
+    QStandardItem *m_activeDNS_rootItem = nullptr;
+    QStandardItem *m_activeA_rootItem = nullptr;
+    QStandardItem *m_activeAAAA_rootItem = nullptr;
+    QStandardItem *m_activeNS_rootItem = nullptr;
+    QStandardItem *m_activeMX_rootItem = nullptr;
+    QStandardItem *m_activeTXT_rootItem = nullptr;
+    QStandardItem *m_activeCNAME_rootItem = nullptr;
+    QStandardItem *m_activeSRV_rootItem = nullptr;
+    QStandardItem *m_activeSSL_rootItem = nullptr;
+    QStandardItem *m_activeSSL_sha1_rootItem = nullptr;
+    QStandardItem *m_activeSSL_sha256_rootItem = nullptr;
 
     /* passive results model */
-    QStandardItem *m_passiveSubdomainIp = nullptr;
-    QStandardItem *m_passiveSubdomain = nullptr;
-    QStandardItem *m_passiveA = nullptr;
-    QStandardItem *m_passiveAAAA = nullptr;
-    QStandardItem *m_passiveCidr = nullptr;
-    QStandardItem *m_passiveNS = nullptr;
-    QStandardItem *m_passiveMX = nullptr;
-    QStandardItem *m_passiveTXT = nullptr;
-    QStandardItem *m_passiveCNAME = nullptr;
-    QStandardItem *m_passiveEmail = nullptr;
-    QStandardItem *m_passiveUrl = nullptr;
-    QStandardItem *m_passiveAsn = nullptr;
-    QStandardItem *m_passiveSSL = nullptr;
+    QStandardItem *m_passiveSubdomainIp_rootItem = nullptr;
+    QStandardItem *m_passiveSubdomain_rootItem = nullptr;
+    QStandardItem *m_passiveA_rootItem = nullptr;
+    QStandardItem *m_passiveAAAA_rootItem = nullptr;
+    QStandardItem *m_passiveCidr_rootItem = nullptr;
+    QStandardItem *m_passiveNS_rootItem = nullptr;
+    QStandardItem *m_passiveMX_rootItem = nullptr;
+    QStandardItem *m_passiveTXT_rootItem = nullptr;
+    QStandardItem *m_passiveCNAME_rootItem = nullptr;
+    QStandardItem *m_passiveEmail_rootItem = nullptr;
+    QStandardItem *m_passiveUrl_rootItem = nullptr;
+    QStandardItem *m_passiveAsn_rootItem = nullptr;
+    QStandardItem *m_passiveSSL_rootItem = nullptr;
 
     /* enum Results model */
-    QStandardItem *m_enumIp = nullptr;
-    QStandardItem *m_enumDomain = nullptr;
-    QStandardItem *m_enumASN = nullptr;
-    QStandardItem *m_enumCIDR = nullptr;
-    QStandardItem *m_enumNS = nullptr;
-    QStandardItem *m_enumMX = nullptr;
-    QStandardItem *m_enumSSL = nullptr;
-    QStandardItem *m_enumEmail = nullptr;
-    QStandardItem *m_enumURL = nullptr;
+    QStandardItem *m_enumIp_rootItem = nullptr;
+    QStandardItem *m_enumDomain_rootItem = nullptr;
+    QStandardItem *m_enumASN_rootItem = nullptr;
+    QStandardItem *m_enumCIDR_rootItem = nullptr;
+    QStandardItem *m_enumNS_rootItem = nullptr;
+    QStandardItem *m_enumMX_rootItem = nullptr;
+    QStandardItem *m_enumSSL_rootItem = nullptr;
+    QStandardItem *m_enumEmail_rootItem = nullptr;
+    QStandardItem *m_enumURL_rootItem = nullptr;
 };
 
 #endif // PROJECTMODEL_H

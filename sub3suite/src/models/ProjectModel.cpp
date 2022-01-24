@@ -1,64 +1,63 @@
 #include "ProjectModel.h"
 
+#include "src/models/SSLModel.h"
+
 
 ProjectModel::ProjectModel():
-    projectExplorerModel(new QStandardItemModel),
-    active(new QStandardItem("Active")),
-    passive(new QStandardItem("Passive")),
-    enums(new QStandardItem("Enum")),
-    custom(new QStandardItem("Custom")),
+    model_explorer(new QStandardItemModel),
+    active_explorer(new QStandardItem("Active")),
+    passive_explorer(new QStandardItem("Passive")),
+    enums_explorer(new QStandardItem("Enum")),
+    custom_explorer(new QStandardItem("Custom")),
 
     /* active Results Explorer */
-    activeSubdomainIp(new QStandardItem("Subdomain Ip")),
-    activeSubdomain(new QStandardItem("Subdomain")),
-    activeTld(new QStandardItem("TLD")),
-    activeWildcard(new QStandardItem("Wildcard")),
-    // dns
-    activeDNS(new QStandardItem("DNS")),
-    activeA(new QStandardItem("A")),
-    activeAAAA(new QStandardItem("AAAA")),
-    activeNS(new QStandardItem("NS")),
-    activeMX(new QStandardItem("MX")),
-    activeTXT(new QStandardItem("TXT")),
-    activeCNAME(new QStandardItem("CNAME")),
-    activeSRV(new QStandardItem("SRV")),
-    // ssl
-    activeSSL(new QStandardItem("SSL")),
-    activeSSL_sha1(new QStandardItem("SHA-1")),
-    activeSSL_sha256(new QStandardItem("SHA-256")),
+    activeSubdomainIp_explorer(new QStandardItem("Subdomain Ip")),
+    activeSubdomain_explorer(new QStandardItem("Subdomain")),
+    activeTld_explorer(new QStandardItem("TLD")),
+    activeWildcard_explorer(new QStandardItem("Wildcard")),
+    activeDNS_explorer(new QStandardItem("DNS")),
+    activeA_explorer(new QStandardItem("A")),
+    activeAAAA_explorer(new QStandardItem("AAAA")),
+    activeNS_explorer(new QStandardItem("NS")),
+    activeMX_explorer(new QStandardItem("MX")),
+    activeTXT_explorer(new QStandardItem("TXT")),
+    activeCNAME_explorer(new QStandardItem("CNAME")),
+    activeSRV_explorer(new QStandardItem("SRV")),
+    activeSSL_explorer(new QStandardItem("SSL")),
+    activeSSL_sha1_explorer(new QStandardItem("SHA-1")),
+    activeSSL_sha256_explorer(new QStandardItem("SHA-256")),
 
     /* passive Results explorer */
-    passiveSubdomainIp(new QStandardItem("Subdomain Ip")),
-    passiveSubdomain(new QStandardItem("Subdomain")),
-    passiveA(new QStandardItem("A")),
-    passiveAAAA(new QStandardItem("AAAA")),
-    passiveNS(new QStandardItem("NS")),
-    passiveMX(new QStandardItem("MX")),
-    passiveTXT(new QStandardItem("TXT")),
-    passiveCNAME(new QStandardItem("CNAME")),
-    passiveCidr(new QStandardItem("CIDR")),
-    passiveEmail(new QStandardItem("EMAIL")),
-    passiveUrl(new QStandardItem("URL")),
-    passiveAsn(new QStandardItem("ASN")),
-    passiveSSL(new QStandardItem("SSL")),
+    passiveSubdomainIp_explorer(new QStandardItem("Subdomain Ip")),
+    passiveSubdomain_explorer(new QStandardItem("Subdomain")),
+    passiveA_explorer(new QStandardItem("A")),
+    passiveAAAA_explorer(new QStandardItem("AAAA")),
+    passiveNS_explorer(new QStandardItem("NS")),
+    passiveMX_explorer(new QStandardItem("MX")),
+    passiveTXT_explorer(new QStandardItem("TXT")),
+    passiveCNAME_explorer(new QStandardItem("CNAME")),
+    passiveCidr_explorer(new QStandardItem("CIDR")),
+    passiveEmail_explorer(new QStandardItem("EMAIL")),
+    passiveUrl_explorer(new QStandardItem("URL")),
+    passiveAsn_explorer(new QStandardItem("ASN")),
+    passiveSSL_explorer(new QStandardItem("SSL")),
 
     /* enum Results explorer */
-    enumIp(new QStandardItem("IP")),
-    enumDomain(new QStandardItem("Domain")),
-    enumASN(new QStandardItem("ASN")),
-    enumCIDR(new QStandardItem("CIDR")),
-    enumNS(new QStandardItem("NS")),
-    enumMX(new QStandardItem("MX")),
-    enumSSL(new QStandardItem("SSL")),
-    enumEmail(new QStandardItem("Email")),
-    enumURL(new QStandardItem("URL")),
+    enumIp_explorer(new QStandardItem("IP")),
+    enumDomain_explorer(new QStandardItem("Domain")),
+    enumASN_explorer(new QStandardItem("ASN")),
+    enumCIDR_explorer(new QStandardItem("CIDR")),
+    enumNS_explorer(new QStandardItem("NS")),
+    enumMX_explorer(new QStandardItem("MX")),
+    enumSSL_explorer(new QStandardItem("SSL")),
+    enumEmail_explorer(new QStandardItem("Email")),
+    enumURL_explorer(new QStandardItem("URL")),
 
     /* active Results Model */
     activeSubdomainIp_model(new QStandardItemModel),
     activeSubdomain_model(new QStandardItemModel),
     activeTld_model(new QStandardItemModel),
     activeWildcard_model(new QStandardItemModel),
-    // dns
     activeDNS_model(new QStandardItemModel),
     activeA_model(new QStandardItemModel),
     activeAAAA_model(new QStandardItemModel),
@@ -67,7 +66,6 @@ ProjectModel::ProjectModel():
     activeTXT_model(new QStandardItemModel),
     activeCNAME_model(new QStandardItemModel),
     activeSRV_model(new QStandardItemModel),
-    // ssl
     activeSSL_model(new QStandardItemModel),
     activeSSL_sha1_model(new QStandardItemModel),
     activeSSL_sha256_model(new QStandardItemModel),
@@ -98,198 +96,287 @@ ProjectModel::ProjectModel():
     enumEmail_model(new QStandardItemModel),
     enumURL_model(new QStandardItemModel)
 {
-    this->setHeaderLabels();
-    explorerRootItem = projectExplorerModel->invisibleRootItem();
+    ///
+    /// models header labels...
+    ///
+    activeSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
+    activeSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
+    activeTld_model->setHorizontalHeaderLabels({"    TLD", "    IpAddress"});
+    activeWildcard_model->setHorizontalHeaderLabels({"    Wildcard", "    IpAddress"});
+    activeDNS_model->setHorizontalHeaderLabels({"    DNS Records"});
+    activeA_model->setHorizontalHeaderLabels({"    A DNS Records"});
+    activeAAAA_model->setHorizontalHeaderLabels({"    AAAA DNS Records"});
+    activeNS_model->setHorizontalHeaderLabels({"    NS DNS Records"});
+    activeMX_model->setHorizontalHeaderLabels({"    MX DNS Records"});
+    activeTXT_model->setHorizontalHeaderLabels({"    TXT DNS Records"});
+    activeCNAME_model->setHorizontalHeaderLabels({"    CNAME DNS Records"});
+    activeSRV_model->setHorizontalHeaderLabels({"    Name", "    Target", "    Port"});
+    activeSSL_model->setHorizontalHeaderLabels({"    SSL Certificates", "    Values"});
+    activeSSL_sha1_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-1 Fingerprints"});
+    activeSSL_sha256_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-256 Fingerprints"});
 
+    /* passive results model */
+    passiveSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
+    passiveSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
+    passiveA_model->setHorizontalHeaderLabels({"    A Records"});
+    passiveAAAA_model->setHorizontalHeaderLabels({"    AAAA Records"});
+    passiveCidr_model->setHorizontalHeaderLabels({"    IP/CIDR"});
+    passiveNS_model->setHorizontalHeaderLabels({"    NS Records"});
+    passiveMX_model->setHorizontalHeaderLabels({"    MX Records"});
+    passiveTXT_model->setHorizontalHeaderLabels({"    TXT Records"});
+    passiveCNAME_model->setHorizontalHeaderLabels({"    CNAME Records"});
+    passiveEmail_model->setHorizontalHeaderLabels({"    Emails"});
+    passiveUrl_model->setHorizontalHeaderLabels({"    URLs"});
+    passiveAsn_model->setHorizontalHeaderLabels({"    ASN", "    Name"});
+    passiveSSL_model->setHorizontalHeaderLabels({"    SSL Certificates ID"});
+
+    /* enum Results model */
+    enumIp_model->setHorizontalHeaderLabels({"    IP Info"});
+    enumDomain_model->setHorizontalHeaderLabels({"    Domain Info"});
+    enumASN_model->setHorizontalHeaderLabels({"    ASN Info"});
+    enumCIDR_model->setHorizontalHeaderLabels({"    CIDR Info"});
+    enumNS_model->setHorizontalHeaderLabels({"    NS Info"});
+    enumMX_model->setHorizontalHeaderLabels({"    MX Info"});
+    enumSSL_model->setHorizontalHeaderLabels({"    SSL Certificate Info"});
+    enumEmail_model->setHorizontalHeaderLabels({"    Email Info"});
+    enumURL_model->setHorizontalHeaderLabels({"    URL Info"});
+
+    ///
+    /// getting rootItems
+    ///
+    rootItem_explorer = model_explorer->invisibleRootItem();
+
+    /* active results model */
+    m_activeSubdomainIp_rootItem = activeSubdomainIp_model->invisibleRootItem();
+    m_activeSubdomain_rootItem = activeSubdomain_model->invisibleRootItem();
+    m_activeTld_rootItem = activeTld_model->invisibleRootItem();
+    m_activeWildcard_rootItem = activeWildcard_model->invisibleRootItem();
+    m_activeDNS_rootItem = activeDNS_model->invisibleRootItem();
+    m_activeA_rootItem = activeA_model->invisibleRootItem();
+    m_activeAAAA_rootItem = activeAAAA_model->invisibleRootItem();
+    m_activeNS_rootItem = activeNS_model->invisibleRootItem();
+    m_activeMX_rootItem = activeMX_model->invisibleRootItem();
+    m_activeTXT_rootItem = activeTXT_model->invisibleRootItem();
+    m_activeCNAME_rootItem = activeCNAME_model->invisibleRootItem();
+    m_activeSRV_rootItem = activeSRV_model->invisibleRootItem();
+    m_activeSSL_rootItem = activeSSL_model->invisibleRootItem();
+    m_activeSSL_sha1_rootItem = activeSSL_sha1_model->invisibleRootItem();
+    m_activeSSL_sha256_rootItem = activeSSL_sha256_model->invisibleRootItem();
+
+    /* passive results model */
+    m_passiveSubdomainIp_rootItem = passiveSubdomainIp_model->invisibleRootItem();
+    m_passiveSubdomain_rootItem = passiveSubdomain_model->invisibleRootItem();
+    m_passiveA_rootItem = passiveA_model->invisibleRootItem();
+    m_passiveAAAA_rootItem = passiveAAAA_model->invisibleRootItem();
+    m_passiveCidr_rootItem = passiveCidr_model->invisibleRootItem();
+    m_passiveNS_rootItem = passiveNS_model->invisibleRootItem();
+    m_passiveMX_rootItem = passiveMX_model->invisibleRootItem();
+    m_passiveTXT_rootItem = passiveTXT_model->invisibleRootItem();
+    m_passiveCNAME_rootItem = passiveCNAME_model->invisibleRootItem();
+    m_passiveEmail_rootItem = passiveEmail_model->invisibleRootItem();
+    m_passiveUrl_rootItem = passiveUrl_model->invisibleRootItem();
+    m_passiveAsn_rootItem = passiveAsn_model->invisibleRootItem();
+    m_passiveSSL_rootItem = passiveSSL_model->invisibleRootItem();
+
+    /* enum Results model */
+    m_enumIp_rootItem = enumIp_model->invisibleRootItem();
+    m_enumDomain_rootItem = enumDomain_model->invisibleRootItem();
+    m_enumASN_rootItem = enumASN_model->invisibleRootItem();
+    m_enumCIDR_rootItem = enumCIDR_model->invisibleRootItem();
+    m_enumNS_rootItem = enumNS_model->invisibleRootItem();
+    m_enumMX_rootItem = enumMX_model->invisibleRootItem();
+    m_enumSSL_rootItem = enumSSL_model->invisibleRootItem();
+    m_enumEmail_rootItem = enumEmail_model->invisibleRootItem();
+    m_enumURL_rootItem = enumURL_model->invisibleRootItem();
+
+    ///
+    /// setting icons
+    ///
     QFont font("Segoe UI", 9, QFont::Bold);
-    active->setFont(font);
-    active->setForeground(Qt::white);
-    active->setIcon(QIcon(":/img/res/icons/folder.png"));
-    passive->setFont(font);
-    passive->setForeground(Qt::white);
-    passive->setIcon(QIcon(":/img/res/icons/folder.png"));
-    enums->setFont(font);
-    enums->setForeground(Qt::white);
-    enums->setIcon(QIcon(":/img/res/icons/folder.png"));
-    custom->setFont(font);
-    custom->setForeground(Qt::white);
-    custom->setIcon(QIcon(":/img/res/icons/folder.png"));
+    active_explorer->setFont(font);
+    active_explorer->setForeground(Qt::white);
+    active_explorer->setIcon(QIcon(":/img/res/icons/folder.png"));
+    passive_explorer->setFont(font);
+    passive_explorer->setForeground(Qt::white);
+    passive_explorer->setIcon(QIcon(":/img/res/icons/folder.png"));
+    enums_explorer->setFont(font);
+    enums_explorer->setForeground(Qt::white);
+    enums_explorer->setIcon(QIcon(":/img/res/icons/folder.png"));
+    custom_explorer->setFont(font);
+    custom_explorer->setForeground(Qt::white);
+    custom_explorer->setIcon(QIcon(":/img/res/icons/folder.png"));
 
-    ///
-    /// setting items icons
-    ///
-    activeSubdomainIp->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeSubdomain->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeTld->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeWildcard->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeDNS->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeA->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeAAAA->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeNS->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeMX->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeTXT->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeCNAME->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeSRV->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeSSL->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeSSL_sha1->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeSSL_sha256->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveSubdomainIp->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveSubdomain->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveA->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveAAAA->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveCidr->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveNS->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveMX->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveTXT->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveCNAME->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveEmail->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveUrl->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveAsn->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    passiveSSL->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumIp->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumDomain->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumASN->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumCIDR->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumNS->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumMX->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumSSL->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumEmail->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumURL->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeSubdomainIp_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeSubdomain_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeTld_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeWildcard_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeDNS_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeA_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeAAAA_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeNS_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeMX_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeTXT_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeCNAME_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeSRV_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeSSL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeSSL_sha1_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeSSL_sha256_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveSubdomainIp_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveSubdomain_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveA_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveAAAA_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveCidr_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveNS_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveMX_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveTXT_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveCNAME_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveEmail_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveUrl_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveAsn_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    passiveSSL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumIp_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumDomain_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumASN_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumCIDR_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumNS_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumMX_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumSSL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumEmail_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    enumURL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
     ///
     /// setting foreground
     ///
-    activeSubdomainIp->setForeground(Qt::white);
-    activeSubdomain->setForeground(Qt::white);
-    activeTld->setForeground(Qt::white);
-    activeWildcard->setForeground(Qt::white);
-    activeDNS->setForeground(Qt::white);
-    activeA->setForeground(Qt::white);
-    activeAAAA->setForeground(Qt::white);
-    activeNS->setForeground(Qt::white);
-    activeMX->setForeground(Qt::white);
-    activeTXT->setForeground(Qt::white);
-    activeCNAME->setForeground(Qt::white);
-    activeSRV->setForeground(Qt::white);
-    activeSSL->setForeground(Qt::white);
-    activeSSL_sha1->setForeground(Qt::white);
-    activeSSL_sha256->setForeground(Qt::white);
-    passiveSubdomain->setForeground(Qt::white);
-    passiveSubdomainIp->setForeground(Qt::white);
-    passiveA->setForeground(Qt::white);
-    passiveAAAA->setForeground(Qt::white);
-    passiveCidr->setForeground(Qt::white);
-    passiveNS->setForeground(Qt::white);
-    passiveMX->setForeground(Qt::white);
-    passiveTXT->setForeground(Qt::white);
-    passiveCNAME->setForeground(Qt::white);
-    passiveEmail->setForeground(Qt::white);
-    passiveUrl->setForeground(Qt::white);
-    passiveAsn->setForeground(Qt::white);
-    passiveSSL->setForeground(Qt::white);
-    enumIp->setForeground(Qt::white);
-    enumDomain->setForeground(Qt::white);
-    enumASN->setForeground(Qt::white);
-    enumCIDR->setForeground(Qt::white);
-    enumNS->setForeground(Qt::white);
-    enumMX->setForeground(Qt::white);
-    enumSSL->setForeground(Qt::white);
-    enumEmail->setForeground(Qt::white);
-    enumURL->setForeground(Qt::white);
+    activeSubdomainIp_explorer->setForeground(Qt::white);
+    activeSubdomain_explorer->setForeground(Qt::white);
+    activeTld_explorer->setForeground(Qt::white);
+    activeWildcard_explorer->setForeground(Qt::white);
+    activeDNS_explorer->setForeground(Qt::white);
+    activeA_explorer->setForeground(Qt::white);
+    activeAAAA_explorer->setForeground(Qt::white);
+    activeNS_explorer->setForeground(Qt::white);
+    activeMX_explorer->setForeground(Qt::white);
+    activeTXT_explorer->setForeground(Qt::white);
+    activeCNAME_explorer->setForeground(Qt::white);
+    activeSRV_explorer->setForeground(Qt::white);
+    activeSSL_explorer->setForeground(Qt::white);
+    activeSSL_sha1_explorer->setForeground(Qt::white);
+    activeSSL_sha256_explorer->setForeground(Qt::white);
+    passiveSubdomain_explorer->setForeground(Qt::white);
+    passiveSubdomainIp_explorer->setForeground(Qt::white);
+    passiveA_explorer->setForeground(Qt::white);
+    passiveAAAA_explorer->setForeground(Qt::white);
+    passiveCidr_explorer->setForeground(Qt::white);
+    passiveNS_explorer->setForeground(Qt::white);
+    passiveMX_explorer->setForeground(Qt::white);
+    passiveTXT_explorer->setForeground(Qt::white);
+    passiveCNAME_explorer->setForeground(Qt::white);
+    passiveEmail_explorer->setForeground(Qt::white);
+    passiveUrl_explorer->setForeground(Qt::white);
+    passiveAsn_explorer->setForeground(Qt::white);
+    passiveSSL_explorer->setForeground(Qt::white);
+    enumIp_explorer->setForeground(Qt::white);
+    enumDomain_explorer->setForeground(Qt::white);
+    enumASN_explorer->setForeground(Qt::white);
+    enumCIDR_explorer->setForeground(Qt::white);
+    enumNS_explorer->setForeground(Qt::white);
+    enumMX_explorer->setForeground(Qt::white);
+    enumSSL_explorer->setForeground(Qt::white);
+    enumEmail_explorer->setForeground(Qt::white);
+    enumURL_explorer->setForeground(Qt::white);
 
     ///
     /// appending items...
     ///
-
-    activeDNS->appendRow(activeA);
-    activeDNS->appendRow(activeAAAA);
-    activeDNS->appendRow(activeNS);
-    activeDNS->appendRow(activeMX);
-    activeDNS->appendRow(activeTXT);
-    activeDNS->appendRow(activeCNAME);
-    activeDNS->appendRow(activeSRV);
-    activeSSL->appendRow(activeSSL_sha1);
-    activeSSL->appendRow(activeSSL_sha256);
-    active->appendRow(activeSubdomainIp);
-    active->appendRow(activeSubdomain);
-    active->appendRow(activeTld);
-    active->appendRow(activeWildcard);
-    active->appendRow(activeDNS);
-    active->appendRow(activeSSL);
-    passive->appendRow(passiveSubdomainIp);
-    passive->appendRow(passiveSubdomain);
-    passive->appendRow(passiveA);
-    passive->appendRow(passiveAAAA);
-    passive->appendRow(passiveCidr);
-    passive->appendRow(passiveNS);
-    passive->appendRow(passiveMX);
-    passive->appendRow(passiveTXT);
-    passive->appendRow(passiveCNAME);
-    passive->appendRow(passiveEmail);
-    passive->appendRow(passiveUrl);
-    passive->appendRow(passiveAsn);
-    passive->appendRow(passiveSSL);
-    enums->appendRow(enumIp);
-    enums->appendRow(enumMX);
-    enums->appendRow(enumDomain);
-    enums->appendRow(enumASN);
-    enums->appendRow(enumCIDR);
-    enums->appendRow(enumNS);
-    enums->appendRow(enumSSL);
-    enums->appendRow(enumEmail);
-    enums->appendRow(enumURL);
+    activeDNS_explorer->appendRow(activeA_explorer);
+    activeDNS_explorer->appendRow(activeAAAA_explorer);
+    activeDNS_explorer->appendRow(activeNS_explorer);
+    activeDNS_explorer->appendRow(activeMX_explorer);
+    activeDNS_explorer->appendRow(activeTXT_explorer);
+    activeDNS_explorer->appendRow(activeCNAME_explorer);
+    activeDNS_explorer->appendRow(activeSRV_explorer);
+    activeSSL_explorer->appendRow(activeSSL_sha1_explorer);
+    activeSSL_explorer->appendRow(activeSSL_sha256_explorer);
+    active_explorer->appendRow(activeSubdomainIp_explorer);
+    active_explorer->appendRow(activeSubdomain_explorer);
+    active_explorer->appendRow(activeTld_explorer);
+    active_explorer->appendRow(activeWildcard_explorer);
+    active_explorer->appendRow(activeDNS_explorer);
+    active_explorer->appendRow(activeSSL_explorer);
+    passive_explorer->appendRow(passiveSubdomainIp_explorer);
+    passive_explorer->appendRow(passiveSubdomain_explorer);
+    passive_explorer->appendRow(passiveA_explorer);
+    passive_explorer->appendRow(passiveAAAA_explorer);
+    passive_explorer->appendRow(passiveCidr_explorer);
+    passive_explorer->appendRow(passiveNS_explorer);
+    passive_explorer->appendRow(passiveMX_explorer);
+    passive_explorer->appendRow(passiveTXT_explorer);
+    passive_explorer->appendRow(passiveCNAME_explorer);
+    passive_explorer->appendRow(passiveEmail_explorer);
+    passive_explorer->appendRow(passiveUrl_explorer);
+    passive_explorer->appendRow(passiveAsn_explorer);
+    passive_explorer->appendRow(passiveSSL_explorer);
+    enums_explorer->appendRow(enumIp_explorer);
+    enums_explorer->appendRow(enumMX_explorer);
+    enums_explorer->appendRow(enumDomain_explorer);
+    enums_explorer->appendRow(enumASN_explorer);
+    enums_explorer->appendRow(enumCIDR_explorer);
+    enums_explorer->appendRow(enumNS_explorer);
+    enums_explorer->appendRow(enumSSL_explorer);
+    enums_explorer->appendRow(enumEmail_explorer);
+    enums_explorer->appendRow(enumURL_explorer);
 
     ///
     /// append to rootItem....
     ///
-    explorerRootItem->appendRow(active);
-    explorerRootItem->appendRow(passive);
-    explorerRootItem->appendRow(enums);
-    explorerRootItem->appendRow(custom);
+    rootItem_explorer->appendRow(active_explorer);
+    rootItem_explorer->appendRow(passive_explorer);
+    rootItem_explorer->appendRow(enums_explorer);
+    rootItem_explorer->appendRow(custom_explorer);
 }
 ProjectModel::~ProjectModel(){
-    delete projectExplorerModel;
-    delete active;
-    delete passive;
-    delete enums;
-    delete custom;
-    delete activeSubdomainIp;
-    delete activeSubdomain;
-    delete activeTld;
-    delete activeWildcard;
-    delete activeDNS;
-    delete activeA;
-    delete activeAAAA;
-    delete activeNS;
-    delete activeMX;
-    delete activeTXT;
-    delete activeCNAME;
-    delete activeSRV;
-    delete activeSSL;
-    delete activeSSL_sha1;
-    delete activeSSL_sha256;
-    delete passiveSubdomainIp;
-    delete passiveSubdomain;
-    delete passiveA;
-    delete passiveAAAA;
-    delete passiveNS;
-    delete passiveMX;
-    delete passiveTXT;
-    delete passiveCNAME;
-    delete passiveCidr;
-    delete passiveEmail;
-    delete passiveUrl;
-    delete passiveAsn;
-    delete passiveSSL;
-    delete enumIp;
-    delete enumDomain;
-    delete enumASN;
-    delete enumCIDR;
-    delete enumNS;
-    delete enumMX;
-    delete enumSSL;
-    delete enumEmail;
-    delete enumURL;
+    delete model_explorer;
+    delete active_explorer;
+    delete passive_explorer;
+    delete enums_explorer;
+    delete custom_explorer;
+    delete activeSubdomainIp_explorer;
+    delete activeSubdomain_explorer;
+    delete activeTld_explorer;
+    delete activeWildcard_explorer;
+    delete activeDNS_explorer;
+    delete activeA_explorer;
+    delete activeAAAA_explorer;
+    delete activeNS_explorer;
+    delete activeMX_explorer;
+    delete activeTXT_explorer;
+    delete activeCNAME_explorer;
+    delete activeSRV_explorer;
+    delete activeSSL_explorer;
+    delete activeSSL_sha1_explorer;
+    delete activeSSL_sha256_explorer;
+    delete passiveSubdomainIp_explorer;
+    delete passiveSubdomain_explorer;
+    delete passiveA_explorer;
+    delete passiveAAAA_explorer;
+    delete passiveNS_explorer;
+    delete passiveMX_explorer;
+    delete passiveTXT_explorer;
+    delete passiveCNAME_explorer;
+    delete passiveCidr_explorer;
+    delete passiveEmail_explorer;
+    delete passiveUrl_explorer;
+    delete passiveAsn_explorer;
+    delete passiveSSL_explorer;
+    delete enumIp_explorer;
+    delete enumDomain_explorer;
+    delete enumASN_explorer;
+    delete enumCIDR_explorer;
+    delete enumNS_explorer;
+    delete enumMX_explorer;
+    delete enumSSL_explorer;
+    delete enumEmail_explorer;
+    delete enumURL_explorer;
     delete activeSubdomainIp_model;
     delete activeSubdomain_model;
     delete activeTld_model;
@@ -330,95 +417,218 @@ ProjectModel::~ProjectModel(){
 }
 
 void ProjectModel::addActiveSubdomainIp(const QString &subdomain, const QString &ip){
-    activeSubdomainIp_model->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
+    m_activeSubdomainIp_rootItem->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
 }
 
 void ProjectModel::addActiveSubdomain(const QString &subdomain){
-    activeSubdomain_model->appendRow(new QStandardItem(subdomain));
+    m_activeSubdomain_rootItem->appendRow(new QStandardItem(subdomain));
 
 }
 
 void ProjectModel::addActiveTLD(const QString &subdomain, const QString &ip){
-    activeTld_model->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
+    m_activeTld_rootItem->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
 }
 
 void ProjectModel::addActiveWildcard(const QString &subdomain, const QString &ip){
-    activeWildcard_model->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
+    m_activeWildcard_rootItem->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
 }
 
-void ProjectModel::addActiveSSL(const SSL_struct &ssl){
-    /* nothing yet */
+void ProjectModel::addActiveSSL(const QString &target, const QSslCertificate &cert){
+    CertModel *certModel = new CertModel;
+    certModel->mainItem->setText(target);
+
+    /* ... */
+    certModel->info_verison->setText(cert.version());
+    certModel->info_serialNumber->setText(cert.serialNumber());
+    certModel->info_signatureAlgorithm->setText(""); // none yet
+
+    /* fingerprint */
+    certModel->fingerprint_md5->setText(cert.digest(QCryptographicHash::Md5).toHex());
+    certModel->fingerprint_sha1->setText(cert.digest(QCryptographicHash::Sha1).toHex());
+    certModel->fingerprint_sha256->setText(cert.digest(QCryptographicHash::Sha256).toHex());
+
+    /* validity */
+    certModel->validity_notBefore->setText(cert.effectiveDate().toString());
+    certModel->validity_notAfter->setText(cert.expiryDate().toString());
+
+    /* issuer Info */
+    if(cert.issuerInfo(QSslCertificate::CommonName).length() > 0)
+        certModel->issuer_commonName->setText(cert.issuerInfo(QSslCertificate::CommonName)[0]);
+    if(cert.issuerInfo(QSslCertificate::Organization).length() > 0)
+        certModel->issuer_organizationName->setText(cert.issuerInfo(QSslCertificate::Organization)[0]);
+    if(cert.issuerInfo(QSslCertificate::CountryName).length() > 0)
+        certModel->issuer_countryName->setText(cert.issuerInfo(QSslCertificate::CountryName)[0]);
+
+    /* subject info */
+    if(cert.subjectInfo(QSslCertificate::CommonName).length() > 0)
+        certModel->subject_commonName->setText(cert.subjectInfo(QSslCertificate::CommonName)[0]);
+    if(cert.subjectInfo(QSslCertificate::CountryName).length() > 0)
+        certModel->subject_countryName->setText(cert.subjectInfo(QSslCertificate::CountryName)[0]);
+    if(cert.subjectInfo(QSslCertificate::LocalityName).length() > 0)
+        certModel->subject_localityName->setText(cert.subjectInfo(QSslCertificate::LocalityName)[0]);
+    if(cert.subjectInfo(QSslCertificate::Organization).length() > 0)
+        certModel->subject_organizationName->setText(cert.subjectInfo(QSslCertificate::Organization)[0]);
+    if(cert.subjectInfo(QSslCertificate::StateOrProvinceName).length() > 0)
+        certModel->subject_stateOrProvinceName->setText(cert.subjectInfo(QSslCertificate::StateOrProvinceName)[0]);
+    if(cert.subjectInfo(QSslCertificate::EmailAddress).length() > 0)
+        certModel->subject_email->setText(cert.subjectInfo(QSslCertificate::EmailAddress)[0]);
+
+    int alternativeName = 0;
+    foreach(const QString &value, cert.subjectAlternativeNames()){
+        certModel->subjectAltNames->appendRow({new QStandardItem(QString::number(alternativeName)), new QStandardItem(value)});
+        alternativeName++;
+    }
+
+    m_activeSSL_rootItem->appendRow(certModel->mainItem);
+    /* to sha1 & sha256 model */
+    m_activeSSL_sha1_rootItem->appendRow(new QStandardItem(QString(cert.digest(QCryptographicHash::Sha1).toHex())));
+    m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(QString(cert.digest(QCryptographicHash::Sha256).toHex())));
 }
 
 void ProjectModel::addActiveSSL_sha1(const QString &sha1){
-    activeSSL_sha1_model->appendRow(new QStandardItem(sha1));
+    m_activeSSL_sha1_rootItem->appendRow(new QStandardItem(sha1));
 }
 
 void ProjectModel::addActiveSSL_sha256(const QString &sha256){
-    activeSSL_sha256_model->appendRow(new QStandardItem(sha256));
+    m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(sha256));
 }
 
 void ProjectModel::addActiveDNS(const dns::ScanResult &dns){
-    /* nothing yet */
+    QStandardItem *targetItem = new QStandardItem(dns.target);
+    targetItem->setIcon(QIcon(":/img/res/icons/folder.png"));
+    targetItem->setForeground(Qt::white);
+    m_activeDNS_rootItem->appendRow(targetItem);
+
+    if(!dns.A.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("A");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+
+        for(const QString &item: dns.A){
+            recordItem->appendRow(new QStandardItem(item));
+            m_activeA_rootItem->appendRow(new QStandardItem(item));
+        }
+        targetItem->appendRow(recordItem);
+    }
+
+    if(!dns.AAAA.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("AAAA");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+
+        for(QString item: dns.AAAA){
+            recordItem->appendRow(new QStandardItem(item));
+            m_activeAAAA_rootItem->appendRow(new QStandardItem(item));
+        }
+        targetItem->appendRow(recordItem);
+    }
+
+    if(!dns.NS.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("NS");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+
+        for(QString item: dns.NS){
+            recordItem->appendRow(new QStandardItem(item));
+            m_activeNS_rootItem->appendRow(new QStandardItem(item));
+        }
+        targetItem->appendRow(recordItem);
+    }
+
+    if(!dns.MX.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("MX");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+
+        for(QString item: dns.MX){
+            recordItem->appendRow(new QStandardItem(item));
+            m_activeMX_rootItem->appendRow(new QStandardItem(item));
+        }
+        targetItem->appendRow(recordItem);
+    }
+
+    if(!dns.TXT.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("TXT");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+
+        for(QString item: dns.TXT){
+            recordItem->appendRow(new QStandardItem(item));
+            m_activeTXT_rootItem->appendRow(new QStandardItem(item));
+        }
+        targetItem->appendRow(recordItem);
+    }
+
+    if(!dns.CNAME.isEmpty()){
+        QStandardItem *recordItem = new QStandardItem("CNAME");
+        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        recordItem->setForeground(Qt::white);
+
+        for(QString item: dns.CNAME){
+            recordItem->appendRow(new QStandardItem(item));
+            m_activeCNAME_rootItem->appendRow(new QStandardItem(item));
+        }
+        targetItem->appendRow(recordItem);
+    }
 }
 
 void ProjectModel::addPassiveSubdomainIp(const QString &subdomain, const QString &ip){
-    passiveSubdomainIp_model->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
+    m_passiveSubdomainIp_rootItem->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
 }
 
 void ProjectModel::addPassiveSubdomain(const QString &subdomain){
-    passiveSubdomain_model->appendRow(new QStandardItem(subdomain));
+    m_passiveSubdomain_rootItem->appendRow(new QStandardItem(subdomain));
 }
 
 void ProjectModel::addPassiveIp(const QString &ip){
     if(ip.contains(":"))
-        passiveAAAA_model->appendRow(new QStandardItem(ip));
+        m_passiveAAAA_rootItem->appendRow(new QStandardItem(ip));
     else
-        passiveA_model->appendRow(new QStandardItem(ip));
+        m_passiveA_rootItem->appendRow(new QStandardItem(ip));
 }
 
 void ProjectModel::addPassiveA(const QString &ipv4){
-    passiveA_model->appendRow(new QStandardItem(ipv4));
+    m_passiveA_rootItem->appendRow(new QStandardItem(ipv4));
 }
 
 void ProjectModel::addPassiveAAAA(const QString &ipv6){
-    passiveAAAA_model->appendRow(new QStandardItem(ipv6));
+    m_passiveAAAA_rootItem->appendRow(new QStandardItem(ipv6));
 }
 
 void ProjectModel::addPassiveCidr(const QString &cidr){
-    passiveCidr_model->appendRow(new QStandardItem(cidr));
+    m_passiveCidr_rootItem->appendRow(new QStandardItem(cidr));
 }
 
 void ProjectModel::addPassiveNS(const QString &ns){
-    passiveNS_model->appendRow(new QStandardItem(ns));
+    m_passiveNS_rootItem->appendRow(new QStandardItem(ns));
 }
 
 void ProjectModel::addPassiveMX(const QString &mx){
-    passiveMX_model->appendRow(new QStandardItem(mx));
+    m_passiveMX_rootItem->appendRow(new QStandardItem(mx));
 }
 
 void ProjectModel::addPassiveTXT(const QString &txt){
-    passiveTXT_model->appendRow(new QStandardItem(txt));
+    m_passiveTXT_rootItem->appendRow(new QStandardItem(txt));
 }
 
 void ProjectModel::addPassiveCNAME(const QString &cname){
-    passiveCNAME_model->appendRow(new QStandardItem(cname));
+    m_passiveCNAME_rootItem->appendRow(new QStandardItem(cname));
 }
 
 void ProjectModel::addPassiveEMail(const QString &email){
-    passiveEmail_model->appendRow(new QStandardItem(email));
+    m_passiveEmail_rootItem->appendRow(new QStandardItem(email));
 }
 
 void ProjectModel::addPassiveUrl(const QString &url){
-    passiveUrl_model->appendRow(new QStandardItem(url));
+    m_passiveUrl_rootItem->appendRow(new QStandardItem(url));
 }
 
 void ProjectModel::addPassiveAsn(const QString &asn, const QString &name){
-    passiveAsn_model->appendRow({new QStandardItem(asn), new QStandardItem(name)});
+    m_passiveAsn_rootItem->appendRow({new QStandardItem(asn), new QStandardItem(name)});
 }
 
 void ProjectModel::addPassiveSSL(const QString &ssl){
-    passiveSSL_model->appendRow(new QStandardItem(ssl));
+    m_passiveSSL_rootItem->appendRow(new QStandardItem(ssl));
 }
 
 void ProjectModel::addEnumIp(){
@@ -455,51 +665,4 @@ void ProjectModel::addEnumEmail(){
 
 void ProjectModel::addEnumURL(){
 
-}
-
-void ProjectModel::setHeaderLabels(){
-    /* active Results Model */
-    activeSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
-    activeSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
-    activeTld_model->setHorizontalHeaderLabels({"    TLD", "    IpAddress"});
-    activeWildcard_model->setHorizontalHeaderLabels({"    Wildcard", "    IpAddress"});
-    // dns
-    activeDNS_model->setHorizontalHeaderLabels({"    DNS Records"});
-    activeA_model->setHorizontalHeaderLabels({"    A DNS Records"});
-    activeAAAA_model->setHorizontalHeaderLabels({"    AAAA DNS Records"});
-    activeNS_model->setHorizontalHeaderLabels({"    NS DNS Records"});
-    activeMX_model->setHorizontalHeaderLabels({"    MX DNS Records"});
-    activeTXT_model->setHorizontalHeaderLabels({"    TXT DNS Records"});
-    activeCNAME_model->setHorizontalHeaderLabels({"    CNAME DNS Records"});
-    activeSRV_model->setHorizontalHeaderLabels({"    Name", "    Target", "    Port"});
-    // ssl
-    activeSSL_model->setHorizontalHeaderLabels({"    SSL Certificates"});
-    activeSSL_sha1_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-1 Fingerprints"});
-    activeSSL_sha256_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-256 Fingerprints"});
-
-    /* passive results model */
-    passiveSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
-    passiveSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
-    passiveA_model->setHorizontalHeaderLabels({"    A Records"});
-    passiveAAAA_model->setHorizontalHeaderLabels({"    AAAA Records"});
-    passiveCidr_model->setHorizontalHeaderLabels({"    IP/CIDR"});
-    passiveNS_model->setHorizontalHeaderLabels({"    NS Records"});
-    passiveMX_model->setHorizontalHeaderLabels({"    MX Records"});
-    passiveTXT_model->setHorizontalHeaderLabels({"    TXT Records"});
-    passiveCNAME_model->setHorizontalHeaderLabels({"    CNAME Records"});
-    passiveEmail_model->setHorizontalHeaderLabels({"    Emails"});
-    passiveUrl_model->setHorizontalHeaderLabels({"    URLs"});
-    passiveAsn_model->setHorizontalHeaderLabels({"    ASN", "    Name"});
-    passiveSSL_model->setHorizontalHeaderLabels({"    SSL Certificates ID"});
-
-    /* enum Results model */
-    enumIp_model->setHorizontalHeaderLabels({"    IP Info"});
-    enumDomain_model->setHorizontalHeaderLabels({"    Domain Info"});
-    enumASN_model->setHorizontalHeaderLabels({"    ASN Info"});
-    enumCIDR_model->setHorizontalHeaderLabels({"    CIDR Info"});
-    enumNS_model->setHorizontalHeaderLabels({"    NS Info"});
-    enumMX_model->setHorizontalHeaderLabels({"    MX Info"});
-    enumSSL_model->setHorizontalHeaderLabels({"    SSL Certificate Info"});
-    enumEmail_model->setHorizontalHeaderLabels({"    Email Info"});
-    enumURL_model->setHorizontalHeaderLabels({"    URL Info"});
 }

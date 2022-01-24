@@ -34,7 +34,9 @@ class FailedScansDialog : public QDialog{
 
         void on_tableView_customContextMenuRequested(const QPoint &pos);
 
-    private:
+        void on_buttonCopy_clicked();
+
+private:
         Ui::FailedScansDialog *ui;
         QStandardItemModel *m_model;
 };

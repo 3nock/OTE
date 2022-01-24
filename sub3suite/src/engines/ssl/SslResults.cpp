@@ -26,18 +26,23 @@ void Ssl::onScanResultSHA1(QString sha1){
     m_resultModelCertId->appendRow(new QStandardItem(sha1));
     ui->labelResultsCount->setNum(m_resultModelCertId->rowCount());
     m_scanStats->resolved++;
+
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveSSL_sha1(sha1);
 }
 
 void Ssl::onScanResultSHA256(QString sha256){
     m_resultModelCertId->appendRow(new QStandardItem(sha256));
     ui->labelResultsCount->setNum(m_resultModelCertId->rowCount());
     m_scanStats->resolved++;
+
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveSSL_sha256(sha256);
 }
 
 void Ssl::onScanResultRaw(QString target, QSslCertificate cert){
 
     CertModel *certModel = new CertModel;
-    certModel->initItem();
     certModel->mainItem->setText(target);
 
     /* ... */
@@ -105,6 +110,9 @@ void Ssl::onScanResultRaw(QString target, QSslCertificate cert){
 
     ui->labelResultsCount->setNum(m_resultModelCertInfo->rowCount());
     m_scanStats->resolved++;
+
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveSSL(target, cert);
 }
 
 void Ssl::onScanResultSubdomain(QString target, QStringList subdomains){
@@ -119,8 +127,10 @@ void Ssl::onScanResultSubdomain(QString target, QStringList subdomains){
     */
     Q_UNUSED(target);
 
-    foreach(const QString &subdomain, subdomains)
+    foreach(const QString &subdomain, subdomains){
         m_resultModelSubdomain->appendRow(new QStandardItem(subdomain));
+        project->addActiveSubdomain(subdomain);
+    }
 
     ui->labelResultsCount->setNum(m_resultModelSubdomain->rowCount());
     m_scanStats->resolved++;

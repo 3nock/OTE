@@ -48,9 +48,9 @@ SSLEnum::SSLEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, 
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
 
     /* setting the models */
-    m_model->initModel();
-    m_proxyModel->setSourceModel(m_model->mainModel);
-    ui->treeResults->setModel(m_proxyModel);
+    //m_model->initModel();
+    //m_proxyModel->setSourceModel(m_model->mainModel);
+    //ui->treeResults->setModel(m_proxyModel);
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))

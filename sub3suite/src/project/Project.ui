@@ -62,7 +62,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>232</width>
+          <width>251</width>
           <height>440</height>
          </rect>
         </property>
@@ -122,7 +122,7 @@
          <item>
           <widget class="QTreeView" name="treeViewSiteMap">
            <property name="sortingEnabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <attribute name="headerMinimumSectionSize">
             <number>200</number>
@@ -222,7 +222,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>179</width>
+         <width>162</width>
          <height>423</height>
         </rect>
        </property>
