@@ -5,11 +5,13 @@
 
 #include <QDir>
 #include <QDebug>
+#include <QFileInfo>
 
 
 StartupDialog::StartupDialog(QString *project, QWidget *parent) : QDialog(parent),
     ui(new Ui::StartupDialog),
-    m_project(project)
+    m_project(project),
+    existing_model(new QStandardItemModel)
 {
     ui->setupUi(this);
 
@@ -20,7 +22,8 @@ StartupDialog::StartupDialog(QString *project, QWidget *parent) : QDialog(parent
     ui->labelS3S->setScaledContents(true);
 
     /* ... */
-    ui->lineEditLocation->setText(QDir::currentPath());
+    existing_model->setHorizontalHeaderLabels({"Name", "File"});
+    ui->tableViewProjects->setModel(existing_model);
 
     /* load recent projects */
     CONFIG.beginGroup("recent_projects");
@@ -35,8 +38,11 @@ StartupDialog::StartupDialog(QString *project, QWidget *parent) : QDialog(parent
             CONFIG.remove(key);
         }
 
-        /* add file to listwidget */
-        ui->listWidgetProjects->addItem(projectfile);
+        QFileInfo fileInfo(file.fileName());
+
+        /* add file to list */
+        existing_model->invisibleRootItem()->appendRow({new QStandardItem(fileInfo.fileName().split(".")[0]),
+                                                       new QStandardItem(projectfile)});
     }
     CONFIG.endGroup();
 }
@@ -45,9 +51,10 @@ StartupDialog::~StartupDialog(){
 }
 
 void StartupDialog::on_buttonOpen_clicked(){
-    if(ui->checkBoxTemporary->isChecked())
+    if(ui->radioButtonTemporary->isChecked())
         m_project->append("Temp");
 
+    /*
     if(ui->groupBoxNewProject->isChecked()){
         QString file = ui->lineEditLocation->text();
         file.append("/");
@@ -60,31 +67,11 @@ void StartupDialog::on_buttonOpen_clicked(){
         else
             m_project->append(ui->listWidgetProjects->selectedItems().at(0)->text());
     }
+    */
 
     accept();
 }
 
 void StartupDialog::on_buttonCancel_clicked(){
     accept();
-}
-
-void StartupDialog::on_checkBoxTemporary_clicked(bool checked){
-    if(checked){
-        ui->groupBoxNewProject->setChecked(false);
-        ui->groupBoxExistingProject->setChecked(false);
-    }
-}
-
-void StartupDialog::on_groupBoxNewProject_toggled(bool checked){
-    if(checked){
-        ui->checkBoxTemporary->setChecked(false);
-        ui->groupBoxExistingProject->setChecked(false);
-    }
-}
-
-void StartupDialog::on_groupBoxExistingProject_toggled(bool checked){
-    if(checked){
-        ui->groupBoxNewProject->setChecked(false);
-        ui->checkBoxTemporary->setChecked(false);
-    }
 }

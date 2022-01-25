@@ -2,6 +2,7 @@
 #define STARTUPDIALOG_H
 
 #include <QDialog>
+#include <QStandardItemModel>
 
 
 namespace Ui {
@@ -18,13 +19,12 @@ class StartupDialog : public QDialog{
     private slots:
         void on_buttonOpen_clicked();
         void on_buttonCancel_clicked();
-        void on_checkBoxTemporary_clicked(bool checked);
-        void on_groupBoxNewProject_toggled(bool arg1);
-        void on_groupBoxExistingProject_toggled(bool arg1);
 
     private:
         Ui::StartupDialog *ui;
         QString *m_project;
+        QStandardItemModel *existing_model;
+
 };
 
 #endif // STARTUPDIALOG_H

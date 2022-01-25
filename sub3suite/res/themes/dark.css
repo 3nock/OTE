@@ -356,6 +356,9 @@ QColumnView::item:hover {
 }
 
 QHeaderView::section {
+    max-height: 20px;
+    min-height:20px;
+    height: 20px;
     background-color: rgba(80,80,80,90);
     border-style: solid;
     border-width: 1px;

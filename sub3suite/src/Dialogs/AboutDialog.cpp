@@ -35,7 +35,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
 
     /* setting up description */
     ui->textBrowserDescription->setOpenExternalLinks(true);
-    ui->textBrowserDescription->append("Copyright 2020-2022 © Enock Nicholaus <font color=\"blue\">3nock@protonmail.com</font> and contributors.");
+    ui->textBrowserDescription->append("Copyright 2020-2022 © Enock Nicholaus <a href=\"https://twitter.com/3nock_\">@3nock</a> and contributors.");
 
     ui->textBrowserDescription->append("\n");
 
