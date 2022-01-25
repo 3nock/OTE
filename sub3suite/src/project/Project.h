@@ -20,7 +20,9 @@ class Project : public QWidget{
         void on_treeViewProjectExplorer_clicked(const QModelIndex &index);
         void on_lineEditFilter_textChanged(const QString &arg1);
 
-    private:
+        void on_buttonSaveProject_clicked();
+
+private:
         void m_initUI();
         Ui::Project *ui;
         QString m_projectFile;

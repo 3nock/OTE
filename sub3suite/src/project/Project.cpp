@@ -43,6 +43,14 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
     if(index.parent() == m_projectModel->project_explorer->index())
         return;
 
+    if(index.parent() == m_projectModel->model_explorer->invisibleRootItem()->index()){
+        ui->buttonSaveProject->show();
+        return;
+    }else{
+        ui->buttonSaveProject->hide();
+    }
+
+
     QString type(index.data().toString());
     QString engine(index.parent().data().toString());
 
@@ -244,4 +252,8 @@ void Project::m_initUI(){
 
     ui->splitter_2->setSizes(QList<int>() << static_cast<int>((this->width() * 0.80))
                                                << static_cast<int>((this->width() * 0.20)));
+}
+
+void Project::on_buttonSaveProject_clicked(){
+    m_projectModel->saveProject();
 }

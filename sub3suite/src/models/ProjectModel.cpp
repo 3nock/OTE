@@ -733,7 +733,6 @@ void ProjectModel::openProject(){
         QStandardItem *dns_item = new QStandardItem(obj["domain"].toString());
         dns_item->setIcon(QIcon(":/img/res/icons/folder.png"));
         dns_item->setForeground(Qt::white);
-        m_activeDNS_rootItem->appendRow(dns_item);
 
         QJsonArray A = obj["A"].toArray();
         QJsonArray AAAA = obj["AAAA"].toArray();
@@ -817,7 +816,7 @@ void ProjectModel::openProject(){
             }
             dns_item->appendRow(record);
         }
-        activeDNS_model->appendRow(dns_item);
+        m_activeDNS_rootItem->appendRow(dns_item);
     }
 
     /* active SSL sha1 */
@@ -888,7 +887,7 @@ void ProjectModel::openProject(){
                                                  new QStandardItem(value.toArray()[1].toString())});
 
     /* passive Subdomain */
-    foreach(const QJsonValue &value, data["passive_Subdomain"].toArray())
+    foreach(const QJsonValue &value, data["passive_subdomain"].toArray())
         m_passiveSubdomain_rootItem->appendRow(new QStandardItem(value.toString()));
 
     /* passive A */
@@ -943,5 +942,254 @@ void ProjectModel::openProject(){
 }
 
 void ProjectModel::saveProject(){
+    QJsonArray passive_SSL_array;
+    QJsonArray passive_URL_array;
+    QJsonArray passive_Email_array;
+    QJsonArray passive_CNAME_array;
+    QJsonArray passive_TXT_array;
+    QJsonArray passive_NS_array;
+    QJsonArray passive_MX_array;
+    QJsonArray passive_CIDR_array;
+    QJsonArray passive_A_array;
+    QJsonArray passive_AAAA_array;
+    QJsonArray passive_Subdomain_array;
+    QJsonArray passive_ASN_array;
+    QJsonArray passive_SubdomainIp_array;
 
+    QJsonArray active_SSL_sha1_array;
+    QJsonArray active_SSL_sha256_array;
+    QJsonArray active_Subdomain_array;
+    QJsonArray active_TLD_array;
+    QJsonArray active_wildcard_array;
+    QJsonArray active_SubdomainIp_array;
+    QJsonArray active_SSL_array;
+    QJsonArray active_DNS_array;
+
+    QJsonArray enum_IP_array;
+    QJsonArray enum_MX_array;
+    QJsonArray enum_NS_array;
+    QJsonArray enum_ASN_array;
+    QJsonArray enum_CIDR_array;
+    QJsonArray enum_SSL_array;
+    QJsonArray enum_Email_array;
+    QJsonArray enum_URL_array;
+    QJsonArray custom_array;
+
+    /* passive SSL */
+    for(int i = 0; i != m_passiveSSL_rootItem->rowCount(); ++i)
+        passive_SSL_array.append(m_passiveSSL_rootItem->child(i, 0)->text());
+
+    /* passive URL */
+    for(int i = 0; i != m_passiveUrl_rootItem->rowCount(); ++i)
+        passive_URL_array.append(m_passiveUrl_rootItem->child(i, 0)->text());
+
+    /* passive Email */
+    for(int i = 0; i != m_passiveEmail_rootItem->rowCount(); ++i)
+        passive_Email_array.append(m_passiveEmail_rootItem->child(i, 0)->text());
+
+    /* passive CNAME */
+    for(int i = 0; i != m_passiveCNAME_rootItem->rowCount(); ++i)
+        passive_CNAME_array.append(m_passiveCNAME_rootItem->child(i, 0)->text());
+
+    /* passive TXT */
+    for(int i = 0; i != m_passiveTXT_rootItem->rowCount(); ++i)
+        passive_TXT_array.append(m_passiveTXT_rootItem->child(i, 0)->text());
+
+    /* passive NS */
+    for(int i = 0; i != m_passiveNS_rootItem->rowCount(); ++i)
+        passive_NS_array.append(m_passiveNS_rootItem->child(i, 0)->text());
+
+    /* passive MX */
+    for(int i = 0; i != m_passiveMX_rootItem->rowCount(); ++i)
+        passive_MX_array.append(m_passiveMX_rootItem->child(i, 0)->text());
+
+    /* passive CIDR */
+    for(int i = 0; i != m_passiveCidr_rootItem->rowCount(); ++i)
+        passive_CIDR_array.append(m_passiveCidr_rootItem->child(i, 0)->text());
+
+    /* passive A */
+    for(int i = 0; i != m_passiveA_rootItem->rowCount(); ++i)
+        passive_A_array.append(m_passiveA_rootItem->child(i, 0)->text());
+
+    /* passive AAAA */
+    for(int i = 0; i != m_passiveAAAA_rootItem->rowCount(); ++i)
+        passive_AAAA_array.append(m_passiveAAAA_rootItem->child(i, 0)->text());
+
+    /* passive Subdomain */
+    for(int i = 0; i != m_passiveSubdomain_rootItem->rowCount(); ++i)
+        passive_Subdomain_array.append(m_passiveSubdomain_rootItem->child(i, 0)->text());
+
+    /* passive ASN */
+    for(int i = 0; i != m_passiveAsn_rootItem->rowCount(); ++i){
+        QJsonArray asn;
+        asn.append(m_passiveAsn_rootItem->child(i, 0)->text());
+        asn.append(m_passiveAsn_rootItem->child(i, 1)->text());
+        passive_ASN_array.append(asn);
+    }
+
+    /* passive subdomainIP */
+    for(int i = 0; i != m_passiveSubdomainIp_rootItem->rowCount(); ++i){
+        QJsonArray subdomainIp;
+        subdomainIp.append(m_passiveSubdomainIp_rootItem->child(i, 0)->text());
+        subdomainIp.append(m_passiveSubdomainIp_rootItem->child(i, 1)->text());
+        passive_SubdomainIp_array.append(subdomainIp);
+    }
+
+    /* active SSL sha1 */
+    for(int i = 0; i != m_activeSSL_sha1_rootItem->rowCount(); ++i)
+        active_SSL_sha1_array.append(m_activeSSL_sha1_rootItem->child(i, 0)->text());
+
+    /* active SSL sha256 */
+    for(int i = 0; i != m_activeSSL_sha256_rootItem->rowCount(); ++i)
+        active_SSL_sha256_array.append(m_activeSSL_sha256_rootItem->child(i, 0)->text());
+
+    /* active Subdomain */
+    for(int i = 0; i != m_activeSubdomain_rootItem->rowCount(); ++i)
+        active_Subdomain_array.append(m_activeSubdomain_rootItem->child(i, 0)->text());
+
+    /* active TLD */
+    for(int i = 0; i != m_activeTld_rootItem->rowCount(); ++i){
+        QJsonArray tld;
+        tld.append(m_activeTld_rootItem->child(i, 0)->text());
+        tld.append(m_activeTld_rootItem->child(i, 1)->text());
+        active_TLD_array.append(tld);
+    }
+
+    /* active Wildcard */
+    for(int i = 0; i != m_activeWildcard_rootItem->rowCount(); ++i){
+        QJsonArray wildcard;
+        wildcard.append(m_activeWildcard_rootItem->child(i, 0)->text());
+        wildcard.append(m_activeWildcard_rootItem->child(i, 1)->text());
+        active_wildcard_array.append(wildcard);
+    }
+
+    /* active SubdomainIp */
+    for(int i = 0; i != m_activeSubdomainIp_rootItem->rowCount(); ++i){
+        QJsonArray subdomainIp;
+        subdomainIp.append(m_activeSubdomainIp_rootItem->child(i, 0)->text());
+        subdomainIp.append(m_activeSubdomainIp_rootItem->child(i, 1)->text());
+        active_SubdomainIp_array.append(subdomainIp);
+    }
+
+    /* active DNS */
+    for(int i = 0; i < m_activeDNS_rootItem->rowCount(); ++i){
+        QJsonObject dns;
+        QStandardItem *domain = m_activeDNS_rootItem->child(i, 0);
+        dns.insert("domain", domain->text());
+
+        for(int j = 0; j < domain->rowCount(); ++j){
+            QStandardItem *record = domain->child(j, 0);
+            QString record_name = record->text();
+
+            if(record_name == "A"){
+                QJsonArray A_array;
+                for(int k = 0; k < record->rowCount(); ++k)
+                    A_array.append(record->child(k, 0)->text());
+                dns.insert("A", A_array);
+                continue;
+            }
+            if(record_name == "AAAA"){
+                QJsonArray AAAA_array;
+                for(int k = 0; k < record->rowCount(); ++k)
+                    AAAA_array.append(record->child(k, 0)->text());
+                dns.insert("AAAA", AAAA_array);
+                continue;
+            }
+            if(record_name == "NS"){
+                QJsonArray NS_array;
+                for(int k = 0; k < record->rowCount(); ++k)
+                    NS_array.append(record->child(k, 0)->text());
+                dns.insert("NS", NS_array);
+                continue;
+            }
+            if(record_name == "MX"){
+                QJsonArray MX_array;
+                for(int k = 0; k < record->rowCount(); ++k)
+                    MX_array.append(record->child(k, 0)->text());
+                dns.insert("MX", MX_array);
+                continue;
+            }
+            if(record_name == "CNAME"){
+                QJsonArray CNAME_array;
+                for(int k = 0; k < record->rowCount(); ++k)
+                    CNAME_array.append(record->child(k, 0)->text());
+                dns.insert("CNAME", CNAME_array);
+                continue;
+            }
+            if(record_name == "TXT"){
+                QJsonArray TXT_array;
+                for(int k = 0; k < record->rowCount(); ++k)
+                    TXT_array.append(record->child(k, 0)->text());
+                dns.insert("TXT", TXT_array);
+                continue;
+            }
+            if(record_name == "SRV"){
+                QJsonArray SRV_array;
+                for(int k = 0; k < record->rowCount(); ++k){
+                    QJsonArray srv;
+                    srv.append(record->child(k, 0)->text());
+                    srv.append(record->child(k, 1)->text());
+                    srv.append(record->child(k, 2)->text());
+                    SRV_array.append(srv);
+                }
+                dns.insert("SRV", SRV_array);
+            }
+        }
+        active_DNS_array.append(dns);
+    }
+
+    QJsonObject general;
+    general.insert("path", "C:/Users/inner peace/Desktop/sub3suite/MSVC2017_64-Release/projects");
+    general.insert("name", "one");
+
+    QJsonObject data;
+    data.insert("active_subdomainIP", active_SubdomainIp_array);
+    data.insert("active_subdomain", active_Subdomain_array);
+    data.insert("active_TLD", active_TLD_array);
+    data.insert("active_wildcard", active_wildcard_array);
+    data.insert("active_dns", active_DNS_array);
+    data.insert("active_SSL", active_SSL_array);
+    data.insert("active_SSL_sha1", active_SSL_sha1_array);
+    data.insert("active_SSL_sha256", active_SSL_sha256_array);
+    data.insert("passive_subdomainIP", passive_SubdomainIp_array);
+    data.insert("passive_subdomain", passive_Subdomain_array);
+    data.insert("passive_A", passive_A_array);
+    data.insert("passive_AAAA", passive_AAAA_array);
+    data.insert("passive_CIDR", passive_CIDR_array);
+    data.insert("passive_NS", passive_NS_array);
+    data.insert("passive_MX", passive_MX_array);
+    data.insert("passive_TXT", passive_TXT_array);
+    data.insert("passive_CNAME", passive_CNAME_array);
+    data.insert("passive_Email", passive_Email_array);
+    data.insert("passive_URL", passive_URL_array);
+    data.insert("passive_ASN", passive_ASN_array);
+    data.insert("passive_SSL", passive_SSL_array);
+    data.insert("enum_IP", enum_IP_array);
+    data.insert("enum_MX", enum_MX_array);
+    data.insert("enum_NS", enum_NS_array);
+    data.insert("enum_ASN", enum_ASN_array);
+    data.insert("enum_CIDR", enum_CIDR_array);
+    data.insert("enum_SSL", enum_SSL_array);
+    data.insert("enum_Email", enum_Email_array);
+    data.insert("enum_URL", enum_URL_array);
+    data.insert("custom", custom_array);
+
+    QJsonObject mainObj;
+    mainObj.insert("general", general);
+    mainObj.insert("data", data);
+
+    QJsonDocument document;
+    document.setObject(mainObj);
+
+    qDebug() << "Saving the Project To: " << projectFile;
+
+    QFile file(projectFile);
+    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        file.write(document.toJson(QJsonDocument::Compact));
+        file.close();
+    }
+    else{
+        qWarning() << "Failed To Open Project File";
+    }
 }
