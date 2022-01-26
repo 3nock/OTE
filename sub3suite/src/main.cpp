@@ -9,6 +9,7 @@
 #include "src/utils/Config.h"
 #include "src/dialogs/StartupDialog.h"
 
+#include <QMap>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QSplashScreen>
@@ -119,8 +120,8 @@ int main(int argc, char *argv[])
     /* init configurations */
     CONFIG;
 
-    /* project path */
-    QString project;
+    /* project */
+    QMap<QString, QString> project;
 
     /* startup dialog */
     StartupDialog startupDialog(&project);
@@ -132,18 +133,21 @@ int main(int argc, char *argv[])
     /* start startupDialog */
     startupDialog.exec();
 
-    if(project.isEmpty() || project.isNull())
+    if(project.isEmpty())
         s3s_app.quit();
     else
     {
         /* creating the main window */
-        MainWindow w(project);
+        MainWindow w;
 
         /* setting the app to the center of Screen on start */
         int x = (s3s_app.desktop()->width()-w.width()) / 2;
         int y = (s3s_app.desktop()->height()-w.height()) / 2;
         w.move(x, y-35);
         w.show();
+
+        /* opening the project */
+        w.initProject(project);
 
         /* starting the app */
         qInfo() << "starting sub3suite...";

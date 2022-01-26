@@ -18,6 +18,7 @@
         <file>res/icons/splash.png</file>
         <file>res/icons/help.png</file>
         <file>res/icons/setting.png</file>
+        <file>res/icons/github.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>

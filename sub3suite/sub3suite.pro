@@ -333,6 +333,7 @@ HEADERS += \
     src/engines/brute/Brute.h \
     src/engines/osint/Osint.h \
     src/engines/AbstractEngine.h \
+    src/s3s.h \
     src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \

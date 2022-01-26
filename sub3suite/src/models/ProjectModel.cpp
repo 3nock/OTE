@@ -5,13 +5,15 @@
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QMessageBox>
 #include <QJsonDocument>
+#include <QGuiApplication>
+#include <QCryptographicHash>
 
 
-ProjectModel::ProjectModel(QString projectPath):
-    projectFile(projectPath),
+ProjectModel::ProjectModel():
     model_explorer(new QStandardItemModel),
-    project_explorer(new QStandardItem("Temp")),
+    project_explorer(new QStandardItem),
     active_explorer(new QStandardItem("Active")),
     passive_explorer(new QStandardItem("Passive")),
     enums_explorer(new QStandardItem("Enum")),
@@ -330,22 +332,11 @@ ProjectModel::ProjectModel(QString projectPath):
     ///
     /// append to project explorer....
     ///
-    if(projectFile != "Temp"){
-        QString name = projectFile.split("/").last();
-        name = name.remove(".json");
-        project_explorer->setText(name);
-    }
-
     model_explorer->invisibleRootItem()->appendRow(project_explorer);
     project_explorer->appendRow(active_explorer);
     project_explorer->appendRow(passive_explorer);
     project_explorer->appendRow(enums_explorer);
     project_explorer->appendRow(custom_explorer);
-
-    ///
-    /// opening the project...
-    ///
-    this->openProject();
 }
 ProjectModel::~ProjectModel(){
     delete model_explorer;
@@ -677,21 +668,43 @@ void ProjectModel::addEnumURL(){
 /*
  * opening and saving project....
  */
-void ProjectModel::openProject(){
-    qDebug() << "Opening Project: " << projectFile;
+void ProjectModel::openProject(QMap<QString, QString> _projectFile){
+    projectFile = _projectFile;
+    QString projectName = projectFile.keys().at(0);
+    QString projectPath = projectFile.value(projectName);
 
-    QFile file(projectFile);
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qWarning() << "Failed To Open Project File, defaulting to Temporary Project";
+    /* set project name on the project explorer */
+    project_explorer->setText(projectFile.keys().at(0));
+
+    /* opening the the project */
+    qDebug() << "Opening Project: " << projectPath;
+
+    QFile file(projectPath);
+    if(!file.open(QIODevice::ReadOnly)){
+        qWarning() << "Failed To Open Project File. Defaulting to Temporary Project";
 
         /* default to Temporary Project */
+        projectFile.clear();
+        projectFile.insert("Temp", "");
+        project_explorer->setText("Temp");
         return;
     }
 
-    QJsonDocument document = QJsonDocument::fromJson(file.readAll());
+    /* uncompress the file then open json */
+    QByteArray project_json(qUncompress(file.readAll()));
+
+    /* get the project hash, so as to alert on closing if any changes made */
+    m_project_hash = QCryptographicHash::hash(project_json, QCryptographicHash::Md5);
+
+    QJsonDocument document = QJsonDocument::fromJson(project_json);
     file.close();
     if(document.isNull() || document.isEmpty()){
-        qWarning() << "Error parsing the project file";
+        qWarning() << "Error parsing the project file. Defaulting To Temporary Project";
+
+        /* default to Temporary Project */
+        projectFile.clear();
+        projectFile.insert("Temp", "");
+        project_explorer->setText("Temp");
         return;
     }
 
@@ -942,6 +955,37 @@ void ProjectModel::openProject(){
 }
 
 void ProjectModel::saveProject(){
+    QString projectPath = projectFile.value(project_explorer->text());
+    qDebug() << "Saving the Project To: " << projectPath;
+
+    QFile file(projectPath);
+    if(file.open(QIODevice::WriteOnly))
+    {
+        /* compress the data then save */
+        file.write(qCompress(this->getJson()));
+        file.close();
+    }
+    else{
+        qWarning() << "Failed To Open Project File";
+    }
+}
+
+void ProjectModel::closeProject(){
+    QByteArray project_json(this->getJson());
+    if(m_project_hash == QCryptographicHash::hash(project_json, QCryptographicHash::Md5))
+        return; // no changes made to project
+
+    int retVal = QMessageBox::warning(nullptr, "Sub3 Suite",
+                               "The project has been modified.\n"
+                               "Do you want to save project?",
+                                   QMessageBox::Save |
+                                   QMessageBox::Cancel,
+                                   QMessageBox::Save);
+    if(retVal == QMessageBox::Save)
+        this->saveProject();
+}
+
+QByteArray ProjectModel::getJson(){
     QJsonArray passive_SSL_array;
     QJsonArray passive_URL_array;
     QJsonArray passive_Email_array;
@@ -1180,16 +1224,5 @@ void ProjectModel::saveProject(){
 
     QJsonDocument document;
     document.setObject(mainObj);
-
-    qDebug() << "Saving the Project To: " << projectFile;
-
-    QFile file(projectFile);
-    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        file.write(document.toJson(QJsonDocument::Compact));
-        file.close();
-    }
-    else{
-        qWarning() << "Failed To Open Project File";
-    }
+    return document.toJson(QJsonDocument::Compact);
 }

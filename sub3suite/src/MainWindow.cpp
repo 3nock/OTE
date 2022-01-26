@@ -18,8 +18,12 @@
 #include "src/dialogs/preference/PreferenceDialog.h"
 #include "src/dialogs/DocumentationDialog.h"
 
-
-MainWindow::MainWindow(QString project, QWidget *parent) :
+/*
+ * TODO:
+ *      status from all engines, so as to alert during close event
+ *      if some engines are still active
+ */
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -27,7 +31,7 @@ MainWindow::MainWindow(QString project, QWidget *parent) :
 
     /* init */
     this->m_registerMetaTypes();
-    this->m_initEngines(project);
+    this->m_initEngines();
     this->m_documentation();
 
     /* build info */
@@ -39,27 +43,19 @@ MainWindow::MainWindow(QString project, QWidget *parent) :
     ui->statusbar->showMessage("Welcome!", 5000);
 }
 MainWindow::~MainWindow(){
-    /* tools */
-    delete urlEnum;
-    delete emailEnum;
-    delete sslEnum;
-    delete mxEnum;
-    delete nsEnum;
-    delete cidrEnum;
-    delete asnEnum;
-    delete ipEnum;
-
-    /* engines */
-    delete raw;
-    delete ssl;
-    delete dns;
-    delete active;
-    delete brute;
-    delete osint;
-
-    /* ... */
-    delete project;
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event){
+    /* save project */
+    projectModel->closeProject();
+
+    /* check if any engine or enumerator is active and prompt to continue */
+}
+
+void MainWindow::initProject(QMap<QString, QString> projectfile){
+    ui->statusbar->showMessage("Opening Project....", 6000);
+    projectModel->openProject(projectfile);
 }
 
 void MainWindow::m_registerMetaTypes(){
@@ -75,10 +71,9 @@ void MainWindow::m_registerMetaTypes(){
     qRegisterMetaType<QSslCertificate>("QSslCertificate");
 }
 
-void MainWindow::m_initEngines(QString projectFile){
-    qDebug() << projectFile;
+void MainWindow::m_initEngines(){
     /* Project */
-    projectModel = new ProjectModel(projectFile);
+    projectModel = new ProjectModel;
     project = new Project(this, projectModel);
 
     /* Engines */

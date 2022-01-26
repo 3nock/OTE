@@ -139,22 +139,9 @@
         <widget class="QTextBrowser" name="textBrowserDescription"/>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="horizontalLayoutGithub">
          <item>
-          <widget class="QPushButton" name="buttonCopy">
-           <property name="minimumSize">
-            <size>
-             <width>100</width>
-             <height>23</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Copy To Clipboard</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_5">
+          <spacer name="horizontalSpacerGithub">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>

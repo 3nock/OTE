@@ -13,17 +13,24 @@
 #include <QStandardItemModel>
 #include <QSet>
 
+/* TODO:
+ *      compress & decompress data before saving and loading project,
+ *      use a fast compression library eg https://github.com/lz4/lz4
+ *
+ *      QMap<QString, QStringList> projectFile; // ProjectName, {ProjectFile, ProjectChecksum}
+ */
 
 class ProjectModel
 {
 
 public:
-    ProjectModel(QString projectPath);
+    ProjectModel();
     ~ProjectModel();
 
-    void openProject();
+    void openProject(QMap<QString, QString> projectFile);
     void saveProject();
-    QString projectFile;
+    void closeProject();
+    QMap<QString, QString> projectFile;
 
     /* for active results */
     void addActiveSubdomainIp(const QString &subdomain, const QString &ip);
@@ -155,6 +162,9 @@ public:
     QStandardItemModel *enumURL_model;
 
 private:
+    QByteArray getJson();
+    QByteArray m_project_hash;
+
     /* active results model */
     QStandardItem *m_activeSubdomainIp_rootItem = nullptr;
     QStandardItem *m_activeSubdomain_rootItem = nullptr;

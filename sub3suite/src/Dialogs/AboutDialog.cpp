@@ -8,8 +8,9 @@
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
 
-#include <QClipboard>
+#include "src/s3s.h"
 #include <QFile>
+#include <QDesktopServices>
 
 
 AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
@@ -19,6 +20,16 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     m_foldersModel(new QStandardItemModel)
 {
     ui->setupUi(this);
+
+    /* github account */
+    s3s_ClickableLabel *githubLabel = new s3s_ClickableLabel("", this);
+    QPixmap github_logo(":/img/res/icons/github.png");
+    githubLabel->setPixmap(github_logo);
+    ui->horizontalLayoutGithub->insertWidget(0, githubLabel);
+
+    connect(githubLabel, &s3s_ClickableLabel::clicked, this, [=](){
+        QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite", QUrl::TolerantMode));
+    });
 
     ///
     /// for sub3suite...
@@ -101,12 +112,6 @@ AboutDialog::~AboutDialog(){
     delete m_modulesModel;
     delete m_authorsModel;
     delete ui;
-}
-
-void AboutDialog::on_buttonCopy_clicked(){
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    QString description = ui->textBrowserDescription->toPlainText();
-    clipboard->setText(description);
 }
 
 void AboutDialog::m_setAuthors(){

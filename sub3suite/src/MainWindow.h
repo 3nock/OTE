@@ -12,6 +12,7 @@
 #include <QSettings>
 #include <QLabel>
 
+#include "s3s.h"
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
 
@@ -34,20 +35,6 @@
 #include "src/enums/url/UrlEnum.h"
 
 
-class s3s_ClickableLabel : public QLabel{
-       Q_OBJECT
-    public:
-       s3s_ClickableLabel(QString text, QWidget *parent = nullptr) : QLabel(text, parent) {}
-       ~s3s_ClickableLabel(){}
-
-    signals:
-       void clicked();
-
-    protected:
-       void mousePressEvent(QMouseEvent *event) { Q_UNUSED(event); emit clicked(); }
-};
-
-
 namespace Ui {
     class MainWindow;
 }
@@ -59,8 +46,10 @@ class MainWindow : public QMainWindow{
         Ui::MainWindow *ui;
 
     public:
-        MainWindow(QString project, QWidget *parent = nullptr);
-        ~MainWindow();
+        explicit MainWindow(QWidget *parent = nullptr);
+        ~MainWindow() override;
+
+        void initProject(QMap<QString, QString> projectfile);
 
     public slots:
         void onReceiveStatus(QString status);
@@ -103,6 +92,9 @@ class MainWindow : public QMainWindow{
         void onDocumentation_passive();
         void onDocumentation_tools();
 
+    protected:
+        void closeEvent(QCloseEvent *event) override;
+
     private:
         /* project */
         Project *project = nullptr;
@@ -126,7 +118,7 @@ class MainWindow : public QMainWindow{
         EmailEnum *emailEnum = nullptr;
         UrlEnum *urlEnum = nullptr;
 
-        void m_initEngines(QString project);
+        void m_initEngines();
         void m_documentation();
         void m_registerMetaTypes();
         void m_connectSignals(AbstractEngine *engine);

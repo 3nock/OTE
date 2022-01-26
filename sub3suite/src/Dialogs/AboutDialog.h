@@ -23,9 +23,6 @@ class AboutDialog : public QDialog{
         explicit AboutDialog(QWidget *parent = nullptr);
         ~AboutDialog();
 
-    private slots:
-        void on_buttonCopy_clicked();
-
     private:
         Ui::AboutDialog *ui;
         QStandardItemModel *m_authorsModel;

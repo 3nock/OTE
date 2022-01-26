@@ -19,10 +19,9 @@ class Project : public QWidget{
     private slots:
         void on_treeViewProjectExplorer_clicked(const QModelIndex &index);
         void on_lineEditFilter_textChanged(const QString &arg1);
-
         void on_buttonSaveProject_clicked();
 
-private:
+    private:
         void m_initUI();
         Ui::Project *ui;
         QString m_projectFile;

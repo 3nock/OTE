@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Open Project</string>
+   <string>Sub3 Suite</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
@@ -635,7 +635,7 @@ QTreeView:disabled {
     <number>15</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
@@ -693,7 +693,7 @@ QTreeView:disabled {
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_3">
+      <widget class="QToolButton" name="buttonAbout">
        <property name="text">
         <string>  About  </string>
        </property>
@@ -717,7 +717,7 @@ QTreeView:disabled {
    <item>
     <widget class="QRadioButton" name="radioButtonTemporary">
      <property name="text">
-      <string>Temporary Project</string>
+      <string>Temporary project</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -729,7 +729,7 @@ QTreeView:disabled {
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>2</height>
+       <height>1</height>
       </size>
      </property>
      <property name="orientation">
@@ -750,7 +750,7 @@ QTreeView:disabled {
           </size>
          </property>
          <property name="text">
-          <string>New Project</string>
+          <string>New project</string>
          </property>
         </widget>
        </item>
@@ -819,7 +819,7 @@ QTreeView:disabled {
         <widget class="QLineEdit" name="lineEditLocation"/>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButton">
+        <widget class="QToolButton" name="buttonChooseNew">
          <property name="text">
           <string>Choose file...</string>
          </property>
@@ -834,7 +834,7 @@ QTreeView:disabled {
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>2</height>
+       <height>1</height>
       </size>
      </property>
      <property name="orientation">
@@ -855,7 +855,7 @@ QTreeView:disabled {
           </size>
          </property>
          <property name="text">
-          <string>Existing Project</string>
+          <string>Existing project</string>
          </property>
         </widget>
        </item>
@@ -922,7 +922,7 @@ QTreeView:disabled {
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
+             <width>30</width>
              <height>0</height>
             </size>
            </property>
@@ -935,7 +935,7 @@ QTreeView:disabled {
           <widget class="QLineEdit" name="lineEditLocation_2"/>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_2">
+          <widget class="QToolButton" name="buttonChooseExisting">
            <property name="text">
             <string>Choose file...</string>
            </property>
@@ -964,7 +964,7 @@ QTreeView:disabled {
     </spacer>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
+    <layout class="QHBoxLayout" name="horizontalLayout_s3s">
      <item>
       <spacer name="horizontalSpacer_5">
        <property name="orientation">
