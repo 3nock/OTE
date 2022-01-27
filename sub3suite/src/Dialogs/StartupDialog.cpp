@@ -12,7 +12,7 @@
 #include <QDesktopServices>
 
 
-StartupDialog::StartupDialog(QMap<QString, QString> *project, QWidget *parent) : QDialog(parent),
+StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(parent),
     ui(new Ui::StartupDialog),
     m_project(project),
     existing_model(new QStandardItemModel)
@@ -67,16 +67,16 @@ StartupDialog::~StartupDialog(){
 
 void StartupDialog::on_buttonOpen_clicked(){
     if(ui->radioButtonTemporary->isChecked()){
-        m_project->insert("Temp",
-                          QGuiApplication::applicationDirPath()+"/projects/");
+        m_project->name = "Temp";
+        m_project->path = QGuiApplication::applicationDirPath()+"/projects/";
     }
 
     if(ui->radioButtonNewProject->isChecked())
     {
         if(!ui->lineEditName->text().isEmpty()){
             QString projectName = ui->lineEditName->text();
-            m_project->insert(projectName,
-                              QGuiApplication::applicationDirPath()+"/projects/"+projectName+".s3s");
+            m_project->name = projectName;
+            m_project->path = QGuiApplication::applicationDirPath()+"/projects/"+projectName+".s3s";
             accept();
             return;
         }
@@ -85,25 +85,29 @@ void StartupDialog::on_buttonOpen_clicked(){
             if(file.exists())
             {
                 QFileInfo fileInfo(file);
-                m_project->insert(fileInfo.fileName().split(".")[0],
-                                  file.fileName());
+                m_project->name = fileInfo.fileName().split(".")[0];
+                m_project->path = file.fileName();
             }
             else {
-                m_project->insert("Temp",
-                                  QGuiApplication::applicationDirPath()+"/projects/");
+                m_project->name = "Temp";
+                m_project->path = QGuiApplication::applicationDirPath()+"/projects/";
             }
         }
-        m_project->insert(ui->lineEditName->text(), ui->lineEditLocation->text());
+        m_project->name = ui->lineEditName->text();
+        m_project->path = ui->lineEditLocation->text();
     }
 
     if(ui->radioButtonExistingProject->isChecked())
     {
         QItemSelectionModel *selection = ui->tableViewProjects->selectionModel();
-        if(selection->selectedIndexes().isEmpty())
-            m_project->insert("Temp", QGuiApplication::applicationDirPath()+"/projects/");
-        else
-            m_project->insert(selection->selectedIndexes()[0].data().toString(),
-                              selection->selectedIndexes()[1].data().toString());
+        if(selection->selectedIndexes().isEmpty()){
+            m_project->name = "Temp";
+            m_project->path = QGuiApplication::applicationDirPath()+"/projects/";
+        }
+        else{
+            m_project->name = selection->selectedIndexes()[0].data().toString();
+            m_project->path = selection->selectedIndexes()[1].data().toString();
+        }
     }
 
     accept();

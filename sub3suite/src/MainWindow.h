@@ -49,7 +49,7 @@ class MainWindow : public QMainWindow{
         explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow() override;
 
-        void initProject(QMap<QString, QString> projectfile);
+        void initProject(ProjectStruct project);
 
     public slots:
         void onReceiveStatus(QString status);
@@ -91,6 +91,7 @@ class MainWindow : public QMainWindow{
         void onDocumentation_active();
         void onDocumentation_passive();
         void onDocumentation_tools();
+        void on_actionConfig_triggered();
 
     protected:
         void closeEvent(QCloseEvent *event) override;

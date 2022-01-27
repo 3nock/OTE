@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
     CONFIG;
 
     /* project */
-    QMap<QString, QString> project;
+    ProjectStruct project;
 
     /* startup dialog */
     StartupDialog startupDialog(&project);
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     /* start startupDialog */
     startupDialog.exec();
 
-    if(project.isEmpty())
+    if(project.name.isEmpty())
         s3s_app.quit();
     else
     {

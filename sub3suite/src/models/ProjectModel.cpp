@@ -1,6 +1,7 @@
 #include "ProjectModel.h"
 
 #include "src/models/SSLModel.h"
+#include "src/utils/Config.h"
 
 #include <QFile>
 #include <QJsonArray>
@@ -666,27 +667,25 @@ void ProjectModel::addEnumURL(){
 }
 
 /*
- * opening and saving project....
+ * opening and saving projectInfo....
  */
-void ProjectModel::openProject(QMap<QString, QString> _projectFile){
-    projectFile = _projectFile;
-    QString projectName = projectFile.keys().at(0);
-    QString projectPath = projectFile.value(projectName);
+void ProjectModel::openProject(ProjectStruct projectStruct){
+    projectInfo = projectStruct;
 
     /* set project name on the project explorer */
-    project_explorer->setText(projectFile.keys().at(0));
+    project_explorer->setText(projectInfo.name);
 
     /* opening the the project */
-    qDebug() << "Opening Project: " << projectPath;
+    qDebug() << "Opening Project: " << projectInfo.path;
 
-    QFile file(projectPath);
+    QFile file(projectInfo.path);
     if(!file.open(QIODevice::ReadOnly)){
         qWarning() << "Failed To Open Project File. Defaulting to Temporary Project";
 
         /* default to Temporary Project */
-        projectFile.clear();
-        projectFile.insert("Temp", "");
-        project_explorer->setText("Temp");
+        projectInfo.name = "Temp";
+        projectInfo.path = "";
+        project_explorer->setText(projectInfo.name);
         return;
     }
 
@@ -702,9 +701,9 @@ void ProjectModel::openProject(QMap<QString, QString> _projectFile){
         qWarning() << "Error parsing the project file. Defaulting To Temporary Project";
 
         /* default to Temporary Project */
-        projectFile.clear();
-        projectFile.insert("Temp", "");
-        project_explorer->setText("Temp");
+        projectInfo.name = "Temp";
+        projectInfo.path = "";
+        project_explorer->setText(projectInfo.name);
         return;
     }
 
@@ -955,15 +954,18 @@ void ProjectModel::openProject(QMap<QString, QString> _projectFile){
 }
 
 void ProjectModel::saveProject(){
-    QString projectPath = projectFile.value(project_explorer->text());
-    qDebug() << "Saving the Project To: " << projectPath;
+    qDebug() << "Saving the Project To: " << projectInfo.path;
 
-    QFile file(projectPath);
+    QFile file(projectInfo.path);
     if(file.open(QIODevice::WriteOnly))
     {
         /* compress the data then save */
         file.write(qCompress(this->getJson()));
         file.close();
+
+        CONFIG.beginGroup("recent_projects");
+        CONFIG.setValue(projectInfo.name, projectInfo.path);
+        CONFIG.endGroup();
     }
     else{
         qWarning() << "Failed To Open Project File";

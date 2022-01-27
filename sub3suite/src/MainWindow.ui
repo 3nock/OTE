@@ -778,6 +778,7 @@ QTreeView:disabled {
     <property name="title">
      <string>Project</string>
     </property>
+    <addaction name="actionConfig"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -973,6 +974,11 @@ QTreeView:disabled {
   <action name="actionEmail_Enumerator">
    <property name="text">
     <string>Email Enumerator</string>
+   </property>
+  </action>
+  <action name="actionConfig">
+   <property name="text">
+    <string>Config</string>
    </property>
   </action>
  </widget>

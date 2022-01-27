@@ -5,6 +5,7 @@
 #include <QStandardItemModel>
 
 #include "src/s3s.h"
+#include "src/models/ProjectModel.h"
 
 
 namespace Ui {
@@ -15,7 +16,7 @@ class StartupDialog : public QDialog{
         Q_OBJECT
 
     public:
-        explicit StartupDialog(QMap<QString, QString> *project, QWidget *parent = nullptr);
+        explicit StartupDialog(ProjectStruct *project, QWidget *parent = nullptr);
         ~StartupDialog();
 
     private slots:
@@ -28,7 +29,7 @@ class StartupDialog : public QDialog{
 
     private:
         Ui::StartupDialog *ui;
-        QMap<QString, QString> *m_project;
+        ProjectStruct *m_project;
         QStandardItemModel *existing_model;
 };
 

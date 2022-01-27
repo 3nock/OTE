@@ -19,6 +19,10 @@
  *
  *      QMap<QString, QStringList> projectFile; // ProjectName, {ProjectFile, ProjectChecksum}
  */
+struct ProjectStruct{
+    QString name;
+    QString path;
+};
 
 class ProjectModel
 {
@@ -27,10 +31,10 @@ public:
     ProjectModel();
     ~ProjectModel();
 
-    void openProject(QMap<QString, QString> projectFile);
+    void openProject(ProjectStruct project);
     void saveProject();
     void closeProject();
-    QMap<QString, QString> projectFile;
+    ProjectStruct projectInfo;
 
     /* for active results */
     void addActiveSubdomainIp(const QString &subdomain, const QString &ip);

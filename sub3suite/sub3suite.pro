@@ -32,6 +32,7 @@ SOURCES += \
     src/dialogs/ActiveConfigDialog.cpp \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
+    src/dialogs/ProjectConfigDialog.cpp \
     src/dialogs/StartupDialog.cpp \
     src/dialogs/ToolsConfigDialog.cpp \
     src/dialogs/preference/PreferenceDialog.cpp \
@@ -194,6 +195,7 @@ HEADERS += \
     src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
+    src/dialogs/ProjectConfigDialog.h \
     src/dialogs/StartupDialog.h \
     src/dialogs/ToolsConfigDialog.h \
     src/dialogs/preference/PreferenceDialog.h \
@@ -353,6 +355,7 @@ FORMS += \
     src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \
+    src/dialogs/ProjectConfigDialog.ui \
     src/dialogs/StartupDialog.ui \
     src/dialogs/ToolsConfigDialog.ui \
     src/dialogs/preference/PreferenceDialog.ui \

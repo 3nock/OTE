@@ -17,6 +17,7 @@
 #include "src/dialogs/LogViewerDialog.h"
 #include "src/dialogs/preference/PreferenceDialog.h"
 #include "src/dialogs/DocumentationDialog.h"
+#include "src/dialogs/ProjectConfigDialog.h"
 
 /*
  * TODO:
@@ -53,9 +54,9 @@ void MainWindow::closeEvent(QCloseEvent *event){
     /* check if any engine or enumerator is active and prompt to continue */
 }
 
-void MainWindow::initProject(QMap<QString, QString> projectfile){
+void MainWindow::initProject(ProjectStruct projectInfo){
     ui->statusbar->showMessage("Opening Project....", 6000);
-    projectModel->openProject(projectfile);
+    projectModel->openProject(projectInfo);
 }
 
 void MainWindow::m_registerMetaTypes(){
@@ -354,4 +355,10 @@ void MainWindow::on_actionDocumentation_triggered(){
     documentationDialog = new DocumentationDialog(this);
     documentationDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     documentationDialog->show();
+}
+
+void MainWindow::on_actionConfig_triggered(){
+    ProjectConfigDialog projectConfigDialog(projectModel, this);
+    projectConfigDialog.setModal(true);
+    projectConfigDialog.exec();
 }
