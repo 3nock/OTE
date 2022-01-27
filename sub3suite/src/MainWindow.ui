@@ -522,6 +522,16 @@ QTabWidget::pane {
     border-bottom-width: 0px;
 }
 
+QTabWidget::pane[upside=&quot;true&quot;] {
+    border-color: rgb(30,30,30);
+    background-color:transparent;
+    border-style: solid;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+    border-bottom-width: 1px;
+}
+
 QTabBar::tab {
     padding-left: 12px;
     padding-right: 12px;
@@ -534,6 +544,22 @@ QTabBar::tab {
     border-color: rgb(30,30,30);
     border-bottom-width: 0px;
     margin-left: 2px;
+    margin-right: 1px;
+}
+
+QTabBar::tab[upside=&quot;true&quot;] {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 3.5px;
+    padding-bottom: 3.5px;
+    color: rgb(250,250,250);
+    background-color: qlineargradient(spread:pad, x1:z0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(35, 35, 35, 255), stop:1 rgba(50, 50, 50, 255));
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(30,30,30);
+    border-bottom-width: 0px;
+    border-top-width: 0px;
+    margin-left: 0px;
     margin-right: 1px;
 }
 
@@ -768,9 +794,8 @@ QTreeView:disabled {
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionopen_project"/>
-    <addaction name="actionrecent_projects"/>
-    <addaction name="actionclose"/>
+    <addaction name="actionOpenProject"/>
+    <addaction name="actionRecentProjects"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -805,22 +830,6 @@ QTreeView:disabled {
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionOsint"/>
-    <addaction name="actionRaw"/>
-    <addaction name="separator"/>
-    <addaction name="actionBrute"/>
-    <addaction name="actionActive"/>
-    <addaction name="actionDNS"/>
-    <addaction name="actionSSL"/>
-    <addaction name="separator"/>
-    <addaction name="actionIP_Enumerator"/>
-    <addaction name="actionASN_Enumerator"/>
-    <addaction name="actionCIDR_Enumerator"/>
-    <addaction name="actionNS_Enumerator"/>
-    <addaction name="actionMX_Enumerator"/>
-    <addaction name="actionSSL_Enumerator"/>
-    <addaction name="actionURL_Enumerator"/>
-    <addaction name="actionEmail_Enumerator"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuConfig"/>
@@ -836,12 +845,12 @@ QTreeView:disabled {
     </size>
    </property>
   </widget>
-  <action name="actionopen_project">
+  <action name="actionOpenProject">
    <property name="text">
     <string>open</string>
    </property>
   </action>
-  <action name="actionrecent_projects">
+  <action name="actionRecentProjects">
    <property name="text">
     <string>open recent</string>
    </property>
@@ -881,11 +890,6 @@ QTreeView:disabled {
     <string>Blog</string>
    </property>
   </action>
-  <action name="actionclose">
-   <property name="text">
-    <string>close</string>
-   </property>
-  </action>
   <action name="actionApiKeys">
    <property name="text">
     <string>API Keys</string>
@@ -901,84 +905,14 @@ QTreeView:disabled {
     <string>Log Viewer</string>
    </property>
   </action>
-  <action name="actionTwitter">
-   <property name="text">
-    <string>Twitter</string>
-   </property>
-  </action>
-  <action name="actionOsint">
-   <property name="text">
-    <string>OSINT Engine</string>
-   </property>
-  </action>
-  <action name="actionRaw">
-   <property name="text">
-    <string>RAW Engine</string>
-   </property>
-  </action>
-  <action name="actionBrute">
-   <property name="text">
-    <string>BRUTE Engine</string>
-   </property>
-  </action>
-  <action name="actionActive">
-   <property name="text">
-    <string>ACTIVE Engine</string>
-   </property>
-  </action>
-  <action name="actionDNS">
-   <property name="text">
-    <string>DNS Engine</string>
-   </property>
-  </action>
-  <action name="actionSSL">
-   <property name="text">
-    <string>SSL Engine</string>
-   </property>
-  </action>
-  <action name="actionIP_Enumerator">
-   <property name="text">
-    <string>IP Enumerator</string>
-   </property>
-  </action>
-  <action name="actionASN_Enumerator">
-   <property name="text">
-    <string>ASN Enumerator</string>
-   </property>
-  </action>
-  <action name="actionCIDR_Enumerator">
-   <property name="text">
-    <string>CIDR Enumerator</string>
-   </property>
-  </action>
-  <action name="actionNS_Enumerator">
-   <property name="text">
-    <string>NS Enumerator</string>
-   </property>
-  </action>
-  <action name="actionMX_Enumerator">
-   <property name="text">
-    <string>MX Enumerator</string>
-   </property>
-  </action>
-  <action name="actionSSL_Enumerator">
-   <property name="text">
-    <string>SSL Enumerator</string>
-   </property>
-  </action>
-  <action name="actionURL_Enumerator">
-   <property name="text">
-    <string>URL Enumerator</string>
-   </property>
-  </action>
-  <action name="actionEmail_Enumerator">
-   <property name="text">
-    <string>Email Enumerator</string>
-   </property>
-  </action>
   <action name="actionConfig">
    <property name="text">
     <string>Config</string>
+   </property>
+  </action>
+  <action name="actionTwitter">
+   <property name="text">
+    <string>Twitter</string>
    </property>
   </action>
  </widget>

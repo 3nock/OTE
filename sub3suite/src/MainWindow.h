@@ -93,7 +93,9 @@ class MainWindow : public QMainWindow{
         void onDocumentation_tools();
         void on_actionConfig_triggered();
 
-    protected:
+        void on_actionOpenProject_triggered();
+
+protected:
         void closeEvent(QCloseEvent *event) override;
 
     private:
@@ -119,6 +121,10 @@ class MainWindow : public QMainWindow{
         EmailEnum *emailEnum = nullptr;
         UrlEnum *urlEnum = nullptr;
 
+        /* ... */
+        QMenu *m_menuRecents;
+        void recents();
+        void initActions();
         void m_initEngines();
         void m_documentation();
         void m_registerMetaTypes();

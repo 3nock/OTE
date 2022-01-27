@@ -16,13 +16,16 @@
 /* TODO:
  *      compress & decompress data before saving and loading project,
  *      use a fast compression library eg https://github.com/lz4/lz4
- *
- *      QMap<QString, QStringList> projectFile; // ProjectName, {ProjectFile, ProjectChecksum}
  */
 struct ProjectStruct{
     QString name;
     QString path;
+    bool isNew = false;
+    bool isExisting = false;
+    bool isTemporary = false;
+    bool isConfigured = false;
 };
+
 
 class ProjectModel
 {
@@ -32,6 +35,7 @@ public:
     ~ProjectModel();
 
     void openProject(ProjectStruct project);
+    void openExistingProject(QString name, QString path);
     void saveProject();
     void closeProject();
     ProjectStruct projectInfo;
@@ -166,6 +170,9 @@ public:
     QStandardItemModel *enumURL_model;
 
 private:
+    void clearModels();
+    void getRootItems();
+    void setHeaderLabels();
     QByteArray getJson();
     QByteArray m_project_hash;
 

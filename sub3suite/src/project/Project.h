@@ -2,7 +2,10 @@
 #define PROJECT_H
 
 #include <QWidget>
+#include <QMenuBar>
+
 #include "src/models/ProjectModel.h"
+
 
 
 namespace Ui {
@@ -19,14 +22,19 @@ class Project : public QWidget{
     private slots:
         void on_treeViewProjectExplorer_clicked(const QModelIndex &index);
         void on_lineEditFilter_textChanged(const QString &arg1);
-        void on_buttonSaveProject_clicked();
 
     private:
         void m_initUI();
+        void init_sitemapMenuBar();
+        void init_notesMenuBar();
         Ui::Project *ui;
         QString m_projectFile;
         ProjectModel *m_projectModel;
         QSortFilterProxyModel *m_proxyModel;
+
+        /* menu bars */
+        QMenuBar *m_sitemapMenuBar;
+        QMenuBar *m_notesMenuBar;
 };
 
 #endif // S3SPROJECT_H

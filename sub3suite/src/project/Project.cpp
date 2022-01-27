@@ -31,6 +31,9 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     m_proxyModel->setRecursiveFilteringEnabled(true);
     m_proxyModel->setFilterKeyColumn(0);
     ui->treeViewSiteMap->setModel(m_proxyModel);
+
+    this->init_notesMenuBar();
+    this->init_sitemapMenuBar();
 }
 Project::~Project(){
     delete m_proxyModel;
@@ -43,178 +46,133 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
     if(index.parent() == m_projectModel->project_explorer->index())
         return;
 
-    if(index.parent() == m_projectModel->model_explorer->invisibleRootItem()->index()){
-        ui->buttonSaveProject->show();
-        return;
-    }else{
-        ui->buttonSaveProject->hide();
-    }
-
-
     QString type(index.data().toString());
     QString engine(index.parent().data().toString());
 
     if(engine == "Active"){
         if(type == "Subdomain Ip"){
             m_proxyModel->setSourceModel(m_projectModel->activeSubdomainIp_model);
-            ui->labelType->setText("subdomain&Ip");
         }
         if(type == "Subdomain"){
             m_proxyModel->setSourceModel(m_projectModel->activeSubdomain_model);
-            ui->labelType->setText("Subdomain");
         }
         if(type == "TLD"){
             m_proxyModel->setSourceModel(m_projectModel->activeTld_model);
-            ui->labelType->setText("TLD");
         }
         if(type == "DNS"){
             m_proxyModel->setSourceModel(m_projectModel->activeDNS_model);
-            ui->labelType->setText("DNS");
         }
         if(type == "Wildcard"){
             m_proxyModel->setSourceModel(m_projectModel->activeWildcard_model);
-            ui->labelType->setText("Widlcard");
         }
         if(type == "SSL"){
             m_proxyModel->setSourceModel(m_projectModel->activeSSL_model);
-            ui->labelType->setText("SSL");
         }
     }
 
     if(engine == "DNS"){
         if(type == "A"){
             m_proxyModel->setSourceModel(m_projectModel->activeA_model);
-            ui->labelType->setText("A");
         }
         if(type == "AAAA"){
             m_proxyModel->setSourceModel(m_projectModel->activeAAAA_model);
-            ui->labelType->setText("AAAA");
         }
         if(type == "NS"){
             m_proxyModel->setSourceModel(m_projectModel->activeNS_model);
-            ui->labelType->setText("NS");
         }
         if(type == "MX"){
             m_proxyModel->setSourceModel(m_projectModel->activeMX_model);
-            ui->labelType->setText("MX");
         }
         if(type == "TXT"){
             m_proxyModel->setSourceModel(m_projectModel->activeTXT_model);
-            ui->labelType->setText("TXT");
         }
         if(type == "CNAME"){
             m_proxyModel->setSourceModel(m_projectModel->activeCNAME_model);
-            ui->labelType->setText("CNAME");
         }
         if(type == "SRV"){
             m_proxyModel->setSourceModel(m_projectModel->activeSRV_model);
-            ui->labelType->setText("SRV");
         }
     }
 
     if(engine == "SSL"){
         if(type == "SHA-1"){
             m_proxyModel->setSourceModel(m_projectModel->activeSSL_sha1_model);
-            ui->labelType->setText("SHA-1");
         }
         if(type == "SHA-256"){
             m_proxyModel->setSourceModel(m_projectModel->activeSSL_sha256_model);
-            ui->labelType->setText("SHA-2");
         }
     }
 
     if(engine == "Passive"){
         if(type == "Subdomain Ip"){
             m_proxyModel->setSourceModel(m_projectModel->passiveSubdomainIp_model);
-            ui->labelType->setText("Subdomain&Ip");
         }
         if(type == "Subdomain"){
             m_proxyModel->setSourceModel(m_projectModel->passiveSubdomain_model);
-            ui->labelType->setText("Subdomain");
         }
         if(type == "A"){
             m_proxyModel->setSourceModel(m_projectModel->passiveA_model);
-            ui->labelType->setText("A");
         }
         if(type == "AAAA"){
             m_proxyModel->setSourceModel(m_projectModel->passiveAAAA_model);
-            ui->labelType->setText("AAAA");
         }
         if(type == "CIDR"){
             m_proxyModel->setSourceModel(m_projectModel->passiveCidr_model);
-            ui->labelType->setText("CIDR");
         }
         if(type == "NS"){
             m_proxyModel->setSourceModel(m_projectModel->passiveNS_model);
-            ui->labelType->setText("NS");
         }
         if(type == "MX"){
             m_proxyModel->setSourceModel(m_projectModel->passiveMX_model);
-            ui->labelType->setText("MX");
         }
         if(type == "TXT"){
             m_proxyModel->setSourceModel(m_projectModel->passiveTXT_model);
-            ui->labelType->setText("TXT");
         }
         if(type == "CNAME"){
             m_proxyModel->setSourceModel(m_projectModel->passiveCNAME_model);
-            ui->labelType->setText("CNAME");
         }
         if(type == "EMAIL"){
             m_proxyModel->setSourceModel(m_projectModel->passiveEmail_model);
-            ui->labelType->setText("EMAIL");
         }
         if(type == "URL"){
             m_proxyModel->setSourceModel(m_projectModel->passiveUrl_model);
-            ui->labelType->setText("URL");
         }
         if(type == "ASN"){
             m_proxyModel->setSourceModel(m_projectModel->passiveAsn_model);
-            ui->labelType->setText("ASN");
         }
         if(type == "SSL"){
             m_proxyModel->setSourceModel(m_projectModel->passiveSSL_model);
-            ui->labelType->setText("SSL");
         }
     }
 
     if(engine == "Enum"){
         if(type == "IP"){
             m_proxyModel->setSourceModel(m_projectModel->enumIp_model);
-            ui->labelType->setText("IP");
         }
         if(type == "MX"){
             m_proxyModel->setSourceModel(m_projectModel->enumMX_model);
-            ui->labelType->setText("MX");
         }
         if(type == "ASN"){
             m_proxyModel->setSourceModel(m_projectModel->enumASN_model);
-            ui->labelType->setText("ASN");
         }
         if(type == "CIDR"){
             m_proxyModel->setSourceModel(m_projectModel->enumCIDR_model);
-            ui->labelType->setText("CIDR");
         }
         if(type == "NS"){
             m_proxyModel->setSourceModel(m_projectModel->enumNS_model);
-            ui->labelType->setText("NS");
         }
         if(type == "SSL"){
             m_proxyModel->setSourceModel(m_projectModel->enumSSL_model);
-            ui->labelType->setText("SSL");
         }
         if(type == "Email"){
             m_proxyModel->setSourceModel(m_projectModel->enumEmail_model);
-            ui->labelType->setText("Email");
         }
         if(type == "URL"){
             m_proxyModel->setSourceModel(m_projectModel->enumURL_model);
-            ui->labelType->setText("URL");
         }
     }
 
     ui->comboBoxFilter->setCurrentIndex(0);
-    ui->labelOriginalCount->setNum(m_proxyModel->sourceModel()->rowCount());
     ui->labelFilterCount->setNum(m_proxyModel->rowCount());
 }
 
@@ -235,10 +193,9 @@ void Project::m_initUI(){
     ui->setupUi(this);
 
     /* setting widgets special properties for diff stylesheets */
-    ui->labelType->setProperty("default_color", true);
     ui->labelFilterCount->setProperty("default_color", true);
-    ui->labelOriginalCount->setProperty("default_color", true);
     ui->treeViewProjectExplorer->setProperty("no_item_border", true);
+    ui->tabWidget->setProperty("upside", true);
 
     /* hiding un-used widgets */
     ui->comboBoxFilter->hide();
@@ -247,13 +204,22 @@ void Project::m_initUI(){
     ui->lineEditFilter->setPlaceholderText("Filter...");
 
     /* resizing */
-    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.23))
-                                        << static_cast<int>((this->width() * 0.77)));
-
-    ui->splitter_2->setSizes(QList<int>() << static_cast<int>((this->width() * 0.80))
-                                               << static_cast<int>((this->width() * 0.20)));
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.20))
+                           << static_cast<int>((this->width() * 0.80)));
 }
 
-void Project::on_buttonSaveProject_clicked(){
-    m_projectModel->saveProject();
+void Project::init_sitemapMenuBar(){
+    m_sitemapMenuBar = new QMenuBar(this);
+    m_sitemapMenuBar->addAction("Save As", this, [=](){});
+    m_sitemapMenuBar->addAction("Clear", this, [=](){});
+    m_sitemapMenuBar->addAction("Send To", this, [=](){});
+    m_sitemapMenuBar->addAction("Expand", this, [=](){});
+    m_sitemapMenuBar->addAction("Collapse", this, [=](){});
+    ui->horizontalLayoutMap->insertWidget(0, m_sitemapMenuBar);
+}
+
+void Project::init_notesMenuBar(){
+    m_notesMenuBar = new QMenuBar(this);
+    m_notesMenuBar->addAction("Clear", this, [=](){ui->plainTextEdit->clear();});
+    ui->horizontalLayoutNotes->insertWidget(0, m_notesMenuBar);
 }

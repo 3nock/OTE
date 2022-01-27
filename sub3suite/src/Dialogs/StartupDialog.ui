@@ -900,10 +900,10 @@ QTreeView:disabled {
           <bool>false</bool>
          </attribute>
          <attribute name="verticalHeaderMinimumSectionSize">
-          <number>20</number>
+          <number>16</number>
          </attribute>
          <attribute name="verticalHeaderDefaultSectionSize">
-          <number>20</number>
+          <number>16</number>
          </attribute>
          <attribute name="verticalHeaderHighlightSections">
           <bool>false</bool>
@@ -932,7 +932,7 @@ QTreeView:disabled {
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditLocation_2"/>
+          <widget class="QLineEdit" name="lineEditExisting"/>
          </item>
          <item>
           <widget class="QToolButton" name="buttonChooseExisting">

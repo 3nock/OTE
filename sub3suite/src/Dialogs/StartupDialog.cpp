@@ -46,7 +46,7 @@ StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(
 
         /* add file to list */
         existing_model->invisibleRootItem()->appendRow({new QStandardItem(fileInfo.fileName().split(".")[0]),
-                                                       new QStandardItem(projectfile)});
+                                                        new QStandardItem(projectfile)});
     }
     CONFIG.endGroup();
 
@@ -66,10 +66,8 @@ StartupDialog::~StartupDialog(){
 }
 
 void StartupDialog::on_buttonOpen_clicked(){
-    if(ui->radioButtonTemporary->isChecked()){
-        m_project->name = "Temp";
-        m_project->path = QGuiApplication::applicationDirPath()+"/projects/";
-    }
+    if(ui->radioButtonTemporary->isChecked())
+        m_project->isTemporary = true;
 
     if(ui->radioButtonNewProject->isChecked())
     {
@@ -77,6 +75,7 @@ void StartupDialog::on_buttonOpen_clicked(){
             QString projectName = ui->lineEditName->text();
             m_project->name = projectName;
             m_project->path = QGuiApplication::applicationDirPath()+"/projects/"+projectName+".s3s";
+            m_project->isNew = true;
             accept();
             return;
         }
@@ -87,26 +86,34 @@ void StartupDialog::on_buttonOpen_clicked(){
                 QFileInfo fileInfo(file);
                 m_project->name = fileInfo.fileName().split(".")[0];
                 m_project->path = file.fileName();
+                m_project->isNew = true;
             }
-            else {
-                m_project->name = "Temp";
-                m_project->path = QGuiApplication::applicationDirPath()+"/projects/";
-            }
+            else
+                m_project->isTemporary = true;
         }
-        m_project->name = ui->lineEditName->text();
-        m_project->path = ui->lineEditLocation->text();
     }
 
     if(ui->radioButtonExistingProject->isChecked())
     {
         QItemSelectionModel *selection = ui->tableViewProjects->selectionModel();
-        if(selection->selectedIndexes().isEmpty()){
-            m_project->name = "Temp";
-            m_project->path = QGuiApplication::applicationDirPath()+"/projects/";
+        if(selection->selectedIndexes().isEmpty())
+        {
+            if(!ui->lineEditExisting->text().isEmpty()){
+                QFile file(ui->lineEditExisting->text());
+                if(file.exists())
+                {
+                    QFileInfo fileInfo(file);
+                    m_project->name = fileInfo.fileName().split(".")[0];
+                    m_project->path = file.fileName();
+                    m_project->isExisting = true;
+                }
+            }else
+                m_project->isTemporary = true;
         }
         else{
             m_project->name = selection->selectedIndexes()[0].data().toString();
             m_project->path = selection->selectedIndexes()[1].data().toString();
+            m_project->isExisting = true;
         }
     }
 
@@ -130,14 +137,14 @@ void StartupDialog::on_tableViewProjects_pressed(const QModelIndex &index){
 }
 
 void StartupDialog::on_buttonChooseNew_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, "Open", "./");
+    QString filename = QFileDialog::getOpenFileName(this, "Open", ui->lineEditLocation->text(), "*.s3s");
     if(filename.isEmpty()){
         return;
     }
 }
 
 void StartupDialog::on_buttonChooseExisting_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, "Open", "./");
+    QString filename = QFileDialog::getOpenFileName(this, "Open", ui->lineEditExisting->text(), "*.s3s");
     if(filename.isEmpty()){
         return;
     }

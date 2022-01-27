@@ -133,10 +133,7 @@ int main(int argc, char *argv[])
     /* start startupDialog */
     startupDialog.exec();
 
-    if(project.name.isEmpty())
-        s3s_app.quit();
-    else
-    {
+    if(project.isNew || project.isExisting || project.isTemporary){
         /* creating the main window */
         MainWindow w;
 
@@ -153,4 +150,6 @@ int main(int argc, char *argv[])
         qInfo() << "starting sub3suite...";
         return s3s_app.exec();
     }
+    else
+        s3s_app.quit();
 }

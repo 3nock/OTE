@@ -2,6 +2,7 @@
 
 #include "src/models/SSLModel.h"
 #include "src/utils/Config.h"
+#include "src/dialogs/ProjectConfigDialog.h"
 
 #include <QFile>
 #include <QJsonArray>
@@ -104,94 +105,8 @@ ProjectModel::ProjectModel():
     enumEmail_model(new QStandardItemModel),
     enumURL_model(new QStandardItemModel)
 {
-    ///
-    /// models header labels...
-    ///
-    activeSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
-    activeSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
-    activeTld_model->setHorizontalHeaderLabels({"    TLD", "    IpAddress"});
-    activeWildcard_model->setHorizontalHeaderLabels({"    Wildcard", "    IpAddress"});
-    activeDNS_model->setHorizontalHeaderLabels({"    DNS Records", "", ""});
-    activeA_model->setHorizontalHeaderLabels({"    A DNS Records"});
-    activeAAAA_model->setHorizontalHeaderLabels({"    AAAA DNS Records"});
-    activeNS_model->setHorizontalHeaderLabels({"    NS DNS Records"});
-    activeMX_model->setHorizontalHeaderLabels({"    MX DNS Records"});
-    activeTXT_model->setHorizontalHeaderLabels({"    TXT DNS Records"});
-    activeCNAME_model->setHorizontalHeaderLabels({"    CNAME DNS Records"});
-    activeSRV_model->setHorizontalHeaderLabels({"    Name", "    Target", "    Port"});
-    activeSSL_model->setHorizontalHeaderLabels({"    SSL Certificates", "    Values"});
-    activeSSL_sha1_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-1 Fingerprints"});
-    activeSSL_sha256_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-256 Fingerprints"});
-
-    /* passive results model */
-    passiveSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
-    passiveSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
-    passiveA_model->setHorizontalHeaderLabels({"    A Records"});
-    passiveAAAA_model->setHorizontalHeaderLabels({"    AAAA Records"});
-    passiveCidr_model->setHorizontalHeaderLabels({"    IP/CIDR"});
-    passiveNS_model->setHorizontalHeaderLabels({"    NS Records"});
-    passiveMX_model->setHorizontalHeaderLabels({"    MX Records"});
-    passiveTXT_model->setHorizontalHeaderLabels({"    TXT Records"});
-    passiveCNAME_model->setHorizontalHeaderLabels({"    CNAME Records"});
-    passiveEmail_model->setHorizontalHeaderLabels({"    Emails"});
-    passiveUrl_model->setHorizontalHeaderLabels({"    URLs"});
-    passiveAsn_model->setHorizontalHeaderLabels({"    ASN", "    Name"});
-    passiveSSL_model->setHorizontalHeaderLabels({"    SSL Certificates ID"});
-
-    /* enum Results model */
-    enumIp_model->setHorizontalHeaderLabels({"    IP Info", "    Values"});
-    enumASN_model->setHorizontalHeaderLabels({"    ASN Info", "    Values"});
-    enumCIDR_model->setHorizontalHeaderLabels({"    CIDR Info", "    Values"});
-    enumNS_model->setHorizontalHeaderLabels({"    NS Info", "    Values"});
-    enumMX_model->setHorizontalHeaderLabels({"    MX Info", "    Values"});
-    enumSSL_model->setHorizontalHeaderLabels({"    SSL Certificate Info", "    Values"});
-    enumEmail_model->setHorizontalHeaderLabels({"    Email Info", "    Values"});
-    enumURL_model->setHorizontalHeaderLabels({"    URL Info", "    Values"});
-
-    ///
-    /// getting rootItems
-    ///
-    /* active results model */
-    m_activeSubdomainIp_rootItem = activeSubdomainIp_model->invisibleRootItem();
-    m_activeSubdomain_rootItem = activeSubdomain_model->invisibleRootItem();
-    m_activeTld_rootItem = activeTld_model->invisibleRootItem();
-    m_activeWildcard_rootItem = activeWildcard_model->invisibleRootItem();
-    m_activeDNS_rootItem = activeDNS_model->invisibleRootItem();
-    m_activeA_rootItem = activeA_model->invisibleRootItem();
-    m_activeAAAA_rootItem = activeAAAA_model->invisibleRootItem();
-    m_activeNS_rootItem = activeNS_model->invisibleRootItem();
-    m_activeMX_rootItem = activeMX_model->invisibleRootItem();
-    m_activeTXT_rootItem = activeTXT_model->invisibleRootItem();
-    m_activeCNAME_rootItem = activeCNAME_model->invisibleRootItem();
-    m_activeSRV_rootItem = activeSRV_model->invisibleRootItem();
-    m_activeSSL_rootItem = activeSSL_model->invisibleRootItem();
-    m_activeSSL_sha1_rootItem = activeSSL_sha1_model->invisibleRootItem();
-    m_activeSSL_sha256_rootItem = activeSSL_sha256_model->invisibleRootItem();
-
-    /* passive results model */
-    m_passiveSubdomainIp_rootItem = passiveSubdomainIp_model->invisibleRootItem();
-    m_passiveSubdomain_rootItem = passiveSubdomain_model->invisibleRootItem();
-    m_passiveA_rootItem = passiveA_model->invisibleRootItem();
-    m_passiveAAAA_rootItem = passiveAAAA_model->invisibleRootItem();
-    m_passiveCidr_rootItem = passiveCidr_model->invisibleRootItem();
-    m_passiveNS_rootItem = passiveNS_model->invisibleRootItem();
-    m_passiveMX_rootItem = passiveMX_model->invisibleRootItem();
-    m_passiveTXT_rootItem = passiveTXT_model->invisibleRootItem();
-    m_passiveCNAME_rootItem = passiveCNAME_model->invisibleRootItem();
-    m_passiveEmail_rootItem = passiveEmail_model->invisibleRootItem();
-    m_passiveUrl_rootItem = passiveUrl_model->invisibleRootItem();
-    m_passiveAsn_rootItem = passiveAsn_model->invisibleRootItem();
-    m_passiveSSL_rootItem = passiveSSL_model->invisibleRootItem();
-
-    /* enum Results model */
-    m_enumIp_rootItem = enumIp_model->invisibleRootItem();
-    m_enumASN_rootItem = enumASN_model->invisibleRootItem();
-    m_enumCIDR_rootItem = enumCIDR_model->invisibleRootItem();
-    m_enumNS_rootItem = enumNS_model->invisibleRootItem();
-    m_enumMX_rootItem = enumMX_model->invisibleRootItem();
-    m_enumSSL_rootItem = enumSSL_model->invisibleRootItem();
-    m_enumEmail_rootItem = enumEmail_model->invisibleRootItem();
-    m_enumURL_rootItem = enumURL_model->invisibleRootItem();
+    this->setHeaderLabels();
+    this->getRootItems();
 
     ///
     /// setting icons
@@ -666,12 +581,157 @@ void ProjectModel::addEnumURL(){
 
 }
 
+void ProjectModel::setHeaderLabels(){
+    activeSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
+    activeSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
+    activeTld_model->setHorizontalHeaderLabels({"    TLD", "    IpAddress"});
+    activeWildcard_model->setHorizontalHeaderLabels({"    Wildcard", "    IpAddress"});
+    activeDNS_model->setHorizontalHeaderLabels({"    DNS Records", "", ""});
+    activeA_model->setHorizontalHeaderLabels({"    A DNS Records"});
+    activeAAAA_model->setHorizontalHeaderLabels({"    AAAA DNS Records"});
+    activeNS_model->setHorizontalHeaderLabels({"    NS DNS Records"});
+    activeMX_model->setHorizontalHeaderLabels({"    MX DNS Records"});
+    activeTXT_model->setHorizontalHeaderLabels({"    TXT DNS Records"});
+    activeCNAME_model->setHorizontalHeaderLabels({"    CNAME DNS Records"});
+    activeSRV_model->setHorizontalHeaderLabels({"    Name", "    Target", "    Port"});
+    activeSSL_model->setHorizontalHeaderLabels({"    SSL Certificates", "    Values"});
+    activeSSL_sha1_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-1 Fingerprints"});
+    activeSSL_sha256_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-256 Fingerprints"});
+
+    /* passive results model */
+    passiveSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
+    passiveSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
+    passiveA_model->setHorizontalHeaderLabels({"    A Records"});
+    passiveAAAA_model->setHorizontalHeaderLabels({"    AAAA Records"});
+    passiveCidr_model->setHorizontalHeaderLabels({"    IP/CIDR"});
+    passiveNS_model->setHorizontalHeaderLabels({"    NS Records"});
+    passiveMX_model->setHorizontalHeaderLabels({"    MX Records"});
+    passiveTXT_model->setHorizontalHeaderLabels({"    TXT Records"});
+    passiveCNAME_model->setHorizontalHeaderLabels({"    CNAME Records"});
+    passiveEmail_model->setHorizontalHeaderLabels({"    Emails"});
+    passiveUrl_model->setHorizontalHeaderLabels({"    URLs"});
+    passiveAsn_model->setHorizontalHeaderLabels({"    ASN", "    Name"});
+    passiveSSL_model->setHorizontalHeaderLabels({"    SSL Certificates ID"});
+
+    /* enum Results model */
+    enumIp_model->setHorizontalHeaderLabels({"    IP Info", "    Values"});
+    enumASN_model->setHorizontalHeaderLabels({"    ASN Info", "    Values"});
+    enumCIDR_model->setHorizontalHeaderLabels({"    CIDR Info", "    Values"});
+    enumNS_model->setHorizontalHeaderLabels({"    NS Info", "    Values"});
+    enumMX_model->setHorizontalHeaderLabels({"    MX Info", "    Values"});
+    enumSSL_model->setHorizontalHeaderLabels({"    SSL Certificate Info", "    Values"});
+    enumEmail_model->setHorizontalHeaderLabels({"    Email Info", "    Values"});
+    enumURL_model->setHorizontalHeaderLabels({"    URL Info", "    Values"});
+}
+
+void ProjectModel::getRootItems(){
+    /* active results model */
+    m_activeSubdomainIp_rootItem = activeSubdomainIp_model->invisibleRootItem();
+    m_activeSubdomain_rootItem = activeSubdomain_model->invisibleRootItem();
+    m_activeTld_rootItem = activeTld_model->invisibleRootItem();
+    m_activeWildcard_rootItem = activeWildcard_model->invisibleRootItem();
+    m_activeDNS_rootItem = activeDNS_model->invisibleRootItem();
+    m_activeA_rootItem = activeA_model->invisibleRootItem();
+    m_activeAAAA_rootItem = activeAAAA_model->invisibleRootItem();
+    m_activeNS_rootItem = activeNS_model->invisibleRootItem();
+    m_activeMX_rootItem = activeMX_model->invisibleRootItem();
+    m_activeTXT_rootItem = activeTXT_model->invisibleRootItem();
+    m_activeCNAME_rootItem = activeCNAME_model->invisibleRootItem();
+    m_activeSRV_rootItem = activeSRV_model->invisibleRootItem();
+    m_activeSSL_rootItem = activeSSL_model->invisibleRootItem();
+    m_activeSSL_sha1_rootItem = activeSSL_sha1_model->invisibleRootItem();
+    m_activeSSL_sha256_rootItem = activeSSL_sha256_model->invisibleRootItem();
+
+    /* passive results model */
+    m_passiveSubdomainIp_rootItem = passiveSubdomainIp_model->invisibleRootItem();
+    m_passiveSubdomain_rootItem = passiveSubdomain_model->invisibleRootItem();
+    m_passiveA_rootItem = passiveA_model->invisibleRootItem();
+    m_passiveAAAA_rootItem = passiveAAAA_model->invisibleRootItem();
+    m_passiveCidr_rootItem = passiveCidr_model->invisibleRootItem();
+    m_passiveNS_rootItem = passiveNS_model->invisibleRootItem();
+    m_passiveMX_rootItem = passiveMX_model->invisibleRootItem();
+    m_passiveTXT_rootItem = passiveTXT_model->invisibleRootItem();
+    m_passiveCNAME_rootItem = passiveCNAME_model->invisibleRootItem();
+    m_passiveEmail_rootItem = passiveEmail_model->invisibleRootItem();
+    m_passiveUrl_rootItem = passiveUrl_model->invisibleRootItem();
+    m_passiveAsn_rootItem = passiveAsn_model->invisibleRootItem();
+    m_passiveSSL_rootItem = passiveSSL_model->invisibleRootItem();
+
+    /* enum Results model */
+    m_enumIp_rootItem = enumIp_model->invisibleRootItem();
+    m_enumASN_rootItem = enumASN_model->invisibleRootItem();
+    m_enumCIDR_rootItem = enumCIDR_model->invisibleRootItem();
+    m_enumNS_rootItem = enumNS_model->invisibleRootItem();
+    m_enumMX_rootItem = enumMX_model->invisibleRootItem();
+    m_enumSSL_rootItem = enumSSL_model->invisibleRootItem();
+    m_enumEmail_rootItem = enumEmail_model->invisibleRootItem();
+    m_enumURL_rootItem = enumURL_model->invisibleRootItem();
+}
+
+void ProjectModel::clearModels(){
+    activeSubdomainIp_model->clear();
+    activeSubdomain_model->clear();
+    activeTld_model->clear();
+    activeWildcard_model->clear();
+    activeDNS_model->clear();
+    activeA_model->clear();
+    activeAAAA_model->clear();
+    activeNS_model->clear();
+    activeMX_model->clear();
+    activeTXT_model->clear();
+    activeCNAME_model->clear();
+    activeSRV_model->clear();
+    activeSSL_model->clear();
+    activeSSL_sha1_model->clear();
+    activeSSL_sha256_model->clear();
+    passiveSubdomainIp_model->clear();
+    passiveSubdomain_model->clear();
+    passiveA_model->clear();
+    passiveAAAA_model->clear();
+    passiveCidr_model->clear();
+    passiveNS_model->clear();
+    passiveMX_model->clear();
+    passiveTXT_model->clear();
+    passiveCNAME_model->clear();
+    passiveEmail_model->clear();
+    passiveUrl_model->clear();
+    passiveAsn_model->clear();
+    passiveSSL_model->clear();
+    enumIp_model->clear();
+    enumASN_model->clear();
+    enumCIDR_model->clear();
+    enumNS_model->clear();
+    enumMX_model->clear();
+    enumSSL_model->clear();
+    enumEmail_model->clear();
+    enumURL_model->clear();
+
+    this->setHeaderLabels();
+    this->getRootItems();
+}
+
 /*
  * opening and saving projectInfo....
  */
 void ProjectModel::openProject(ProjectStruct projectStruct){
     projectInfo = projectStruct;
 
+    if(projectInfo.isTemporary){
+        projectInfo.name = "Temp";
+        projectInfo.path = QGuiApplication::applicationDirPath()+"/projects/";
+
+        /* set project name on the project explorer */
+        project_explorer->setText(projectInfo.name);
+        return;
+    }
+
+    if(projectInfo.isNew){
+        /* set project name on the project explorer */
+        project_explorer->setText(projectInfo.name);
+        return;
+    }
+
+    /* if it is an existing project */
     /* set project name on the project explorer */
     project_explorer->setText(projectInfo.name);
 
@@ -680,12 +740,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
 
     QFile file(projectInfo.path);
     if(!file.open(QIODevice::ReadOnly)){
-        qWarning() << "Failed To Open Project File. Defaulting to Temporary Project";
-
-        /* default to Temporary Project */
-        projectInfo.name = "Temp";
-        projectInfo.path = "";
-        project_explorer->setText(projectInfo.name);
+        qWarning() << "Failed To Open Project File.";
         return;
     }
 
@@ -695,15 +750,11 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     /* get the project hash, so as to alert on closing if any changes made */
     m_project_hash = QCryptographicHash::hash(project_json, QCryptographicHash::Md5);
 
+    qDebug() << "Parsing the Project...";
     QJsonDocument document = QJsonDocument::fromJson(project_json);
     file.close();
     if(document.isNull() || document.isEmpty()){
-        qWarning() << "Error parsing the project file. Defaulting To Temporary Project";
-
-        /* default to Temporary Project */
-        projectInfo.name = "Temp";
-        projectInfo.path = "";
-        project_explorer->setText(projectInfo.name);
+        qWarning() << "Error parsing the project file";
         return;
     }
 
@@ -951,6 +1002,23 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     /* enum Email" */
     /* enum URL" */
     /* custom" */
+
+    qDebug() << "Project " << projectInfo.name << " Opened.";
+}
+
+void ProjectModel::openExistingProject(QString name, QString path){
+    ProjectStruct project_info;
+    project_info.name = name;
+    project_info.path = path;
+    project_info.isExisting = true;
+
+    /* clear models */
+    qDebug() << "Clearing current project models";
+    this->clearModels();
+
+    /* open project */
+    qDebug() << "Opening Another Project";
+    this->openProject(project_info);
 }
 
 void ProjectModel::saveProject(){
