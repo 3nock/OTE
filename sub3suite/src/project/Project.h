@@ -33,6 +33,10 @@ class Project : public QWidget{
         QSortFilterProxyModel *m_proxyModel;
 
         /* menu bars */
+        void action_save();
+        void action_clear();
+        void action_copy();
+        void action_send();
         QMenuBar *m_sitemapMenuBar;
         QMenuBar *m_notesMenuBar;
 };

@@ -195,6 +195,7 @@ void Project::m_initUI(){
     /* setting widgets special properties for diff stylesheets */
     ui->labelFilterCount->setProperty("default_color", true);
     ui->treeViewProjectExplorer->setProperty("no_item_border", true);
+    ui->treeViewSummary->setProperty("no_item_border", true);
     ui->tabWidget->setProperty("upside", true);
 
     /* hiding un-used widgets */
@@ -204,17 +205,19 @@ void Project::m_initUI(){
     ui->lineEditFilter->setPlaceholderText("Filter...");
 
     /* resizing */
-    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.20))
-                           << static_cast<int>((this->width() * 0.80)));
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.22))
+                           << static_cast<int>((this->width() * 0.78)));
+
+    ui->splitter_2->setSizes(QList<int>() << static_cast<int>((this->width() * 0.80))
+                             << static_cast<int>((this->width() * 0.20)));
 }
 
 void Project::init_sitemapMenuBar(){
     m_sitemapMenuBar = new QMenuBar(this);
-    m_sitemapMenuBar->addAction("Save As", this, [=](){});
-    m_sitemapMenuBar->addAction("Clear", this, [=](){});
-    m_sitemapMenuBar->addAction("Send To", this, [=](){});
-    m_sitemapMenuBar->addAction("Expand", this, [=](){});
-    m_sitemapMenuBar->addAction("Collapse", this, [=](){});
+    m_sitemapMenuBar->addAction("Save", this, [=](){this->action_save();});
+    m_sitemapMenuBar->addAction("Copy", this, [=](){this->action_copy();});
+    m_sitemapMenuBar->addAction("Send", this, [=](){this->action_send();});
+    m_sitemapMenuBar->addAction("Clear", this, [=](){this->action_clear();});
     ui->horizontalLayoutMap->insertWidget(0, m_sitemapMenuBar);
 }
 
@@ -222,4 +225,20 @@ void Project::init_notesMenuBar(){
     m_notesMenuBar = new QMenuBar(this);
     m_notesMenuBar->addAction("Clear", this, [=](){ui->plainTextEdit->clear();});
     ui->horizontalLayoutNotes->insertWidget(0, m_notesMenuBar);
+}
+
+void Project::action_save(){
+
+}
+
+void Project::action_clear(){
+
+}
+
+void Project::action_copy(){
+
+}
+
+void Project::action_send(){
+
 }
