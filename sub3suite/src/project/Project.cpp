@@ -23,6 +23,18 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
         file.close();
     }
 
+    /* set cursor at begining of document */
+    QTextCursor textCursor_graph = ui->textBrowserGraph->textCursor();
+    QTextCursor textCursor_analysis = ui->textBrowserAnalysis->textCursor();
+    textCursor_graph.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor,1);
+    textCursor_analysis.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor,1);
+    ui->textBrowserGraph->setTextCursor(textCursor_graph);
+    ui->textBrowserAnalysis->setTextCursor(textCursor_analysis);
+
+    /* resolve external links in default browser */
+    ui->textBrowserGraph->setOpenExternalLinks(true);
+    ui->textBrowserAnalysis->setOpenExternalLinks(true);
+
     /* data models */
     ui->treeViewProjectExplorer->setModel(m_projectModel->model_explorer);
     ui->treeViewProjectExplorer->expand(m_projectModel->project_explorer->index());
@@ -36,164 +48,19 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     this->init_sitemapMenuBar();
 }
 Project::~Project(){
+    delete m_sitemapMenuBar;
+    delete m_notesMenuBar;
     delete m_proxyModel;
     delete ui;
 }
 
-/* changing the model */
-/* compare indexes instead of strings */
-void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
-    if(index.parent() == m_projectModel->project_explorer->index())
-        return;
-
-    QString type(index.data().toString());
-    QString engine(index.parent().data().toString());
-
-    if(engine == "Active"){
-        if(type == "Subdomain Ip"){
-            m_proxyModel->setSourceModel(m_projectModel->activeSubdomainIp_model);
-        }
-        if(type == "Subdomain"){
-            m_proxyModel->setSourceModel(m_projectModel->activeSubdomain_model);
-        }
-        if(type == "TLD"){
-            m_proxyModel->setSourceModel(m_projectModel->activeTld_model);
-        }
-        if(type == "DNS"){
-            m_proxyModel->setSourceModel(m_projectModel->activeDNS_model);
-        }
-        if(type == "Wildcard"){
-            m_proxyModel->setSourceModel(m_projectModel->activeWildcard_model);
-        }
-        if(type == "SSL"){
-            m_proxyModel->setSourceModel(m_projectModel->activeSSL_model);
-        }
-    }
-
-    if(engine == "DNS"){
-        if(type == "A"){
-            m_proxyModel->setSourceModel(m_projectModel->activeA_model);
-        }
-        if(type == "AAAA"){
-            m_proxyModel->setSourceModel(m_projectModel->activeAAAA_model);
-        }
-        if(type == "NS"){
-            m_proxyModel->setSourceModel(m_projectModel->activeNS_model);
-        }
-        if(type == "MX"){
-            m_proxyModel->setSourceModel(m_projectModel->activeMX_model);
-        }
-        if(type == "TXT"){
-            m_proxyModel->setSourceModel(m_projectModel->activeTXT_model);
-        }
-        if(type == "CNAME"){
-            m_proxyModel->setSourceModel(m_projectModel->activeCNAME_model);
-        }
-        if(type == "SRV"){
-            m_proxyModel->setSourceModel(m_projectModel->activeSRV_model);
-        }
-    }
-
-    if(engine == "SSL"){
-        if(type == "SHA-1"){
-            m_proxyModel->setSourceModel(m_projectModel->activeSSL_sha1_model);
-        }
-        if(type == "SHA-256"){
-            m_proxyModel->setSourceModel(m_projectModel->activeSSL_sha256_model);
-        }
-    }
-
-    if(engine == "Passive"){
-        if(type == "Subdomain Ip"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveSubdomainIp_model);
-        }
-        if(type == "Subdomain"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveSubdomain_model);
-        }
-        if(type == "A"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveA_model);
-        }
-        if(type == "AAAA"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveAAAA_model);
-        }
-        if(type == "CIDR"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveCidr_model);
-        }
-        if(type == "NS"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveNS_model);
-        }
-        if(type == "MX"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveMX_model);
-        }
-        if(type == "TXT"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveTXT_model);
-        }
-        if(type == "CNAME"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveCNAME_model);
-        }
-        if(type == "EMAIL"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveEmail_model);
-        }
-        if(type == "URL"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveUrl_model);
-        }
-        if(type == "ASN"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveAsn_model);
-        }
-        if(type == "SSL"){
-            m_proxyModel->setSourceModel(m_projectModel->passiveSSL_model);
-        }
-    }
-
-    if(engine == "Enum"){
-        if(type == "IP"){
-            m_proxyModel->setSourceModel(m_projectModel->enumIp_model);
-        }
-        if(type == "MX"){
-            m_proxyModel->setSourceModel(m_projectModel->enumMX_model);
-        }
-        if(type == "ASN"){
-            m_proxyModel->setSourceModel(m_projectModel->enumASN_model);
-        }
-        if(type == "CIDR"){
-            m_proxyModel->setSourceModel(m_projectModel->enumCIDR_model);
-        }
-        if(type == "NS"){
-            m_proxyModel->setSourceModel(m_projectModel->enumNS_model);
-        }
-        if(type == "SSL"){
-            m_proxyModel->setSourceModel(m_projectModel->enumSSL_model);
-        }
-        if(type == "Email"){
-            m_proxyModel->setSourceModel(m_projectModel->enumEmail_model);
-        }
-        if(type == "URL"){
-            m_proxyModel->setSourceModel(m_projectModel->enumURL_model);
-        }
-    }
-
-    ui->comboBoxFilter->setCurrentIndex(0);
-    ui->labelFilterCount->setNum(m_proxyModel->rowCount());
-}
-
-void Project::on_lineEditFilter_textChanged(const QString &filterKeyword){
-    m_proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
-
-    if(ui->checkBoxRegex->isChecked())
-        m_proxyModel->setFilterRegExp(QRegExp(filterKeyword));
-    else
-        m_proxyModel->setFilterFixedString(filterKeyword);
-
-    ui->treeViewSiteMap->setModel(m_proxyModel);
-    ui->labelFilterCount->setNum(m_proxyModel->rowCount());
-}
 
 void Project::m_initUI(){
     /* setup ui */
     ui->setupUi(this);
 
     /* setting widgets special properties for diff stylesheets */
-    ui->labelFilterCount->setProperty("default_color", true);
+    ui->labelCount->setProperty("default_color", true);
     ui->treeViewProjectExplorer->setProperty("no_item_border", true);
     ui->treeViewSummary->setProperty("no_item_border", true);
     ui->tabWidget->setProperty("upside", true);
@@ -225,20 +92,4 @@ void Project::init_notesMenuBar(){
     m_notesMenuBar = new QMenuBar(this);
     m_notesMenuBar->addAction("Clear", this, [=](){ui->plainTextEdit->clear();});
     ui->horizontalLayoutNotes->insertWidget(0, m_notesMenuBar);
-}
-
-void Project::action_save(){
-
-}
-
-void Project::action_clear(){
-
-}
-
-void Project::action_copy(){
-
-}
-
-void Project::action_send(){
-
 }

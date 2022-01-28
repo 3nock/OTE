@@ -148,7 +148,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="labelFilterCount">
+            <widget class="QLabel" name="labelCount">
              <property name="minimumSize">
               <size>
                <width>50</width>
@@ -164,8 +164,14 @@
          </item>
          <item>
           <widget class="QTreeView" name="treeViewSiteMap">
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
            <property name="indentation">
             <number>15</number>
+           </property>
+           <property name="uniformRowHeights">
+            <bool>true</bool>
            </property>
            <property name="sortingEnabled">
             <bool>false</bool>
@@ -180,6 +186,9 @@
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>6</number>
+           </property>
            <item>
             <widget class="QComboBox" name="comboBoxFilter">
              <property name="minimumSize">

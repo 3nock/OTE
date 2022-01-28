@@ -179,6 +179,8 @@ SOURCES += \
     src/engines/active/Active.cpp \
     src/engines/brute/Brute.cpp \
     src/engines/osint/Osint.cpp \
+    src/project/Project_actions.cpp \
+    src/project/Project_slots.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/utils/LogsSyntaxHighlighter.cpp \
     src/utils/NotesSyntaxHighlighter.cpp \

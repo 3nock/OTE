@@ -6,6 +6,7 @@
 
 #include "src/models/ProjectModel.h"
 
+#define PROJECT_MODEL_TYPE "pmt"
 
 
 namespace Ui {

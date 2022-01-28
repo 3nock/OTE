@@ -1046,8 +1046,7 @@ void ProjectModel::closeProject(){
         return; // no changes made to project
 
     int retVal = QMessageBox::warning(nullptr, "Sub3 Suite",
-                               "The project has been modified.\n"
-                               "Do you want to save project?",
+                               "The project has been modified. Do you want to save changes?",
                                    QMessageBox::Save |
                                    QMessageBox::Cancel,
                                    QMessageBox::Save);

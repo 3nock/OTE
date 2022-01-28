@@ -17,6 +17,46 @@
  *      compress & decompress data before saving and loading project,
  *      use a fast compression library eg https://github.com/lz4/lz4
  */
+enum ModelType {
+    activeSubdomainIp,
+    activeSubdomain,
+    activeTld,
+    activeWildcard,
+    activeDNS,
+    activeDNS_A,
+    activeDNS_AAAA,
+    activeDNS_NS,
+    activeDNS_MX,
+    activeDNS_TXT,
+    activeDNS_CNAME,
+    activeDNS_SRV,
+    activeSSL,
+    activeSSL_sha1,
+    activeSSL_sha256,
+    passive_subdomainIp,
+    passive_subdomain,
+    passive_A,
+    passive_AAAA,
+    passive_CIDR,
+    passive_NS,
+    passive_MX,
+    passive_TXT,
+    passive_CNAME,
+    passive_Email,
+    passive_URL,
+    passive_ASN,
+    passive_SSL,
+    enum_IP,
+    enum_CIDR,
+    enum_ASN,
+    enum_NS,
+    enum_MX,
+    enum_SSL,
+    enum_Email,
+    enum_URL,
+    custom
+};
+
 struct ProjectStruct{
     QString name;
     QString path;
@@ -38,6 +78,12 @@ public:
     void openExistingProject(QString name, QString path);
     void saveProject();
     void closeProject();
+
+    /* ... */
+    void clearModels();
+    void getRootItems();
+    void setHeaderLabels();
+
     ProjectStruct projectInfo;
 
     /* for active results */
@@ -170,9 +216,6 @@ public:
     QStandardItemModel *enumURL_model;
 
 private:
-    void clearModels();
-    void getRootItems();
-    void setHeaderLabels();
     QByteArray getJson();
     QByteArray m_project_hash;
 
