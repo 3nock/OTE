@@ -10,10 +10,11 @@ DocumentationDialog::DocumentationDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->general_documentation();
-
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
+    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation");
+
+    this->general_documentation();
 }
 
 DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
@@ -21,6 +22,10 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
     ui(new Ui::DocumentationDialog)
 {
     ui->setupUi(this);
+
+    /* text broswer */
+    ui->textBrowser->setOpenExternalLinks(true);
+    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation");
 
     switch(engine){
     case ENGINE::OSINT:
@@ -44,9 +49,6 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
     default:
         break;
     }
-
-    /* text broswer */
-    ui->textBrowser->setOpenExternalLinks(true);
 }
 
 DocumentationDialog::~DocumentationDialog(){
@@ -56,83 +58,55 @@ DocumentationDialog::~DocumentationDialog(){
 void DocumentationDialog::general_documentation(){
     this->setWindowTitle("Documentation");
 
-    QFile file(":/documentation/res/documentation/index.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowser->append(file.readAll());
-        file.close();
-    }
+    ui->textBrowser->setSource(QUrl("index.html"));
 }
 
 void DocumentationDialog::about_osint(){
     this->setWindowTitle("About OSINT");
 
-    QFile file(":/documentation/res/documentation/osint.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowser->append(file.readAll());
-        file.close();
-    }
+    ui->textBrowser->setSource(QUrl("engines/osint.html"));
 }
 
 void DocumentationDialog::about_raw(){
     this->setWindowTitle("About RAW");
 
-    QFile file(":/documentation/res/documentation/raw.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowser->append(file.readAll());
-        file.close();
-    }
+    ui->textBrowser->setSource(QUrl("engines/raw.html"));
 }
 
 void DocumentationDialog::about_brute(){
     this->setWindowTitle("About BRUTE");
 
-    QFile file(":/documentation/res/documentation/brute.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowser->append(file.readAll());
-        file.close();
-    }
+    ui->textBrowser->setSource(QUrl("engines/brute.html"));
 }
 
 void DocumentationDialog::about_active(){
     this->setWindowTitle("About ACTIVE");
 
-    QFile file(":/documentation/res/documentation/active.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowser->append(file.readAll());
-        file.close();
-    }
+    ui->textBrowser->setSource(QUrl("engines/active.html"));
 }
 
 void DocumentationDialog::about_dns(){
     this->setWindowTitle("About DNS");
 
-    QFile file(":/documentation/res/documentation/dns.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowser->append(file.readAll());
-        file.close();
-    }
+    ui->textBrowser->setSource(QUrl("engines/dns.html"));
 }
 
 void DocumentationDialog::about_ssl(){
     this->setWindowTitle("About SSL");
 
-    QFile file(":/documentation/res/documentation/ssl.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowser->append(file.readAll());
-        file.close();
-    }
+    ui->textBrowser->setSource(QUrl("engines/ssl.html"));
 }
 
 void DocumentationDialog::about_ip(){
     this->setWindowTitle("About IP");
 
-    QFile file(":/documentation/res/documentation/ip.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowser->append(file.readAll());
-        file.close();
-    }
+    ui->textBrowser->setSource(QUrl("engines/ip.html"));
 }
 
 void DocumentationDialog::on_buttonOk_clicked(){
     accept();
+}
+
+void DocumentationDialog::on_buttonBack_clicked(){
+    ui->textBrowser->backward();
 }
