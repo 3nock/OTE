@@ -1,1 +1,30 @@
-<h1> ABOUT ACTIVE ENGINE </h1>
+<h1> ACTIVE ENGINE </h1>
+
+The Active Engine performs enumeration on target hostnames to determine active ones.<br><br>
+
+The Tool performs this enumeration using multiple techniques;<br>
+	--> DNS Lookup by resolving target to A(ipv4) or AAAA(ipv6) dns records as configured by user.<br>
+	--> Pinging the Target to see if its active.<br>
+	--> Trying to connect to target using different services e.g. HTTP, HTTPS, FTP, SSH etc. Rr any as specified by user.<br><br>
+	
+This Tool uses multiple threads as alocated by the user to perform enumeration on targets also support use of multiple nameservers as provided
+by the user or default list by s3s.
+
+
+<h2> Features </h2>
+1. Supports use of multiple nameservers.<br>
+2. Supports A(ipv4) and AAAA(ipv6) dns records lookups.<br>
+5. Supports multiple Targets lookup in one scan (one target after another).<br>
+5. Supports enumeration by connecting to host on specified ports eg (HTTP, HTTPS, FTP etc.).
+6. Supports enumeration by Pinging The targets.
+
+<h2> Usage & Examples </h2>
+<br><img src="images/active_1.png"><br>
+
+<br><img src="images/active_2.png"><br>
+
+<br> <a href=https://github.com/3nock/sub3suite>Help improve the documentation...</a><br>
+
+<h2> Blog Posts </h2>
+
+<h2> References </h2>

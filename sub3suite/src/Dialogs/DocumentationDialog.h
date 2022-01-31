@@ -31,7 +31,6 @@ private:
         void about_active();
         void about_dns();
         void about_ssl();
-        void about_ip();
 };
 
 #endif // DOCUMENTATIONDIALOG_H

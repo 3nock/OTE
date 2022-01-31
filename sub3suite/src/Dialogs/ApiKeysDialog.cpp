@@ -19,6 +19,7 @@ ApiKeysDialog::ApiKeysDialog(QWidget *parent): QDialog(parent),
     ui(new Ui::ApiKeysDialog)
 {
     ui->setupUi(this);
+
     this->m_loadApiKeys();
 }
 ApiKeysDialog::~ApiKeysDialog(){

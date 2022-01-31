@@ -352,12 +352,12 @@
       <attribute name="title">
        <string>Generate</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_7">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="leftMargin">
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>6</number>
+        <number>4</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
@@ -366,49 +366,31 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QToolBox" name="toolBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
+        <widget class="QScrollArea" name="scrollAreaGenerate">
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>410</height>
+           <height>445</height>
           </size>
          </property>
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <property name="tabSpacing">
-          <number>6</number>
-         </property>
-         <widget class="QWidget" name="pageRanges">
+         <widget class="QWidget" name="scrollAreaWidgetContents">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>376</width>
-            <height>357</height>
+            <width>357</width>
+            <height>469</height>
            </rect>
           </property>
-          <attribute name="label">
-           <string>Ranges</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_12">
+          <layout class="QVBoxLayout" name="verticalLayout_7">
            <property name="leftMargin">
             <number>0</number>
            </property>
            <property name="topMargin">
-            <number>6</number>
+            <number>0</number>
            </property>
            <property name="rightMargin">
             <number>0</number>
@@ -753,24 +735,6 @@
              </layout>
             </widget>
            </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="pagePermute">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>282</width>
-            <height>223</height>
-           </rect>
-          </property>
-          <attribute name="label">
-           <string>Permutation</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <item>
-            <widget class="InputWidget" name="generateWordlist" native="true"/>
-           </item>
            <item>
             <widget class="QGroupBox" name="groupBoxPermutations">
              <property name="title">
@@ -875,20 +839,6 @@
                </widget>
               </item>
              </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_2">
-             <property name="title">
-              <string>Alterations</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox">
-             <property name="title">
-              <string>Homoglyphs</string>
-             </property>
             </widget>
            </item>
           </layout>

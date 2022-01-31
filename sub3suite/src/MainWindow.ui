@@ -61,8 +61,19 @@ QScrollArea {
     border-color: rgb(25,25,25);
 }
 
+QScrollArea[without_border=&quot;true&quot;] {
+    border-style: solid;
+    border-width: 0px;
+}
+
 QScrollArea QWidget {
     background-color: rgb(40,40,40);
+}
+
+QWidget[s3s_light=&quot;true&quot;],
+QScrollArea QWidget[s3s_light=&quot;true&quot;],
+QScrollArea[s3s_light=&quot;true&quot;] QWidget {
+    background-color: rgb(45,45,45);
 }
 
 QAbstractScrollArea {
@@ -71,10 +82,6 @@ QAbstractScrollArea {
 
 QToolBox QScrollArea {
     border-width: 0px;
-}
-
-QToolBox QScrollArea[show_border=&quot;true&quot;] {
-    border-width: 1px;
 }
 
 QToolBox QWidget {
@@ -277,13 +284,10 @@ QToolButton:pressed {
 }
 
 QFrame[frameShape=&quot;4&quot;] {
+    min-height: 1px;
+    max-height: 1px;
     border: none;
     background: rgb(30,30,30);
-}
-
-QFrame[frameShape=&quot;5&quot;] {
-    border: none;
-    background: transparent;
 }
 
 QFrame[default_frame=&quot;true&quot;] {

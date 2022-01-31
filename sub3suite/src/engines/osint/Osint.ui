@@ -754,7 +754,7 @@
              <property name="widgetResizable">
               <bool>true</bool>
              </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents_3">
+             <widget class="QWidget" name="scrollAreaWidgetContents1">
               <property name="geometry">
                <rect>
                 <x>0</x>
@@ -764,6 +764,18 @@
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_4">
+               <property name="leftMargin">
+                <number>9</number>
+               </property>
+               <property name="topMargin">
+                <number>9</number>
+               </property>
+               <property name="rightMargin">
+                <number>9</number>
+               </property>
+               <property name="bottomMargin">
+                <number>9</number>
+               </property>
                <item>
                 <widget class="QGroupBox" name="groupBox">
                  <property name="title">
@@ -1156,7 +1168,7 @@
              <property name="widgetResizable">
               <bool>true</bool>
              </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents_4">
+             <widget class="QWidget" name="scrollAreaWidgetContents">
               <property name="geometry">
                <rect>
                 <x>0</x>
@@ -1166,7 +1178,13 @@
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_14">
+               <property name="leftMargin">
+                <number>9</number>
+               </property>
                <property name="topMargin">
+                <number>9</number>
+               </property>
+               <property name="rightMargin">
                 <number>9</number>
                </property>
                <property name="bottomMargin">

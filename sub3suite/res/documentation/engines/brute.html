@@ -1,1 +1,33 @@
-<h1> ABOUT BRUTE ENGINE </h1>
+<h1> BRUTE ENGINE </h1>
+
+The BRUTE Engine performs subdomain & TLD enumeration by bruteforce.<br>
+Performs DNS lookup on subdomain & TLD created by appending the words from wordlist to the
+target.<br>
+The tool accomplishes this by resolving the targets using the public nameservers or internal nameservers as provided
+by the user.<br><br>
+The domains are resolved to either A(ipv4) or AAAA(ipv6) dns records depending on the scan configuration by user.<br>
+The resolved subdomains or TLDs does not necessarily mean the targets are active but an indicator that they can be resolved by
+the particular nameservers.<br><br>
+
+This Tool uses multiple threads as alocated by the user to perform DNS lookup on targets also support use of multiple nameservers as provided
+by the user or default list by s3s.
+
+
+<h2> Features </h2>
+1. Supports use of multiple nameservers.<br>
+2. Supports A(ipv4) and AAAA(ipv6) dns records lookups.<br>
+3. Supports subdomain(e.g. *.example.com) and Top-level-domain(TLD e.g. example.*) bruteforcing.<br>
+4. Supports automated multi-level scan (*.example.com --> *.*.example.com --> *.*.*.example.com).<br>
+5. Supports multiple Targets lookup in one scan (one target after another).<br>
+5. Has a simple wordlist generator(still an early feature, will be advanced later).
+
+<h2> Usage & Examples </h2>
+<br><img src="images/brute_1.png"><br>
+
+<br><img src="images/brute_2.png"><br>
+
+<br> <a href=https://github.com/3nock/sub3suite>Help improve the documentation...</a><br>
+
+<h2> Blog Posts </h2>
+
+<h2> References </h2>

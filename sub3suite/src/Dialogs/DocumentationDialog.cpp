@@ -99,12 +99,6 @@ void DocumentationDialog::about_ssl(){
     ui->textBrowser->setSource(QUrl("engines/ssl.html"));
 }
 
-void DocumentationDialog::about_ip(){
-    this->setWindowTitle("About IP");
-
-    ui->textBrowser->setSource(QUrl("engines/ip.html"));
-}
-
 void DocumentationDialog::on_buttonOk_clicked(){
     accept();
 }

@@ -58,7 +58,6 @@ class WordListDialog : public QDialog{
         void m_generateDate();
         void m_generatePermutations();
         void m_generateSubstitutions();
-        QStringListModel *m_generateWordlistModel;
 };
 
 #endif // WORDLISTDIALOG_H

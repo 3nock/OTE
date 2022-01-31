@@ -11,20 +11,24 @@
 
 WordListDialog::WordListDialog(QWidget *parent, QStringListModel *wordlistModel): QDialog(parent), ui(new Ui::WordListDialog),
       m_wordlistModel(wordlistModel),
-      m_customWordlistModel(new QStringListModel),
-      m_generateWordlistModel(new QStringListModel)
+      m_customWordlistModel(new QStringListModel)
 {
     ui->setupUi(this);
+
+    ui->scrollAreaGenerate->setProperty("without_border", true);
+    ui->scrollAreaGenerate->setProperty("s3s_light", true);
+    ui->scrollAreaWidgetContents->setProperty("s3s_light", true);
 
     this->m_initChoose();
     this->m_initGenerate();
 
     /* adjust the dialog size accordingly */
-    ui->toolBox->hide();
+
+
+    ui->scrollAreaGenerate->hide();
     this->adjustSize();
 }
 WordListDialog::~WordListDialog(){
-    delete m_generateWordlistModel;
     delete m_customWordlistModel;
     delete ui;
 }
@@ -35,11 +39,11 @@ void WordListDialog::on_tabWidget_currentChanged(int index){
     /* adjust the dialog size accordingly */
     switch (index) {
     case 0: // Choose Tab
-        ui->toolBox->hide();
+        ui->scrollAreaGenerate->hide();
         ui->groupBoxChoose->show();
         break;
     case 1: // Generate Tab
-        ui->toolBox->show();
+        ui->scrollAreaGenerate->show();
         ui->groupBoxChoose->hide();
     }
 

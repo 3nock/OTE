@@ -13,9 +13,6 @@
 
 
 void WordListDialog::m_initGenerate(){
-    ui->generateWordlist->setListName("Wordlist");
-    ui->generateWordlist->setListModel(m_generateWordlistModel);
-
     ///
     /// placeholder texts
     ///
@@ -222,7 +219,7 @@ void WordListDialog::m_generateDate(){
 
 void WordListDialog::m_generatePermutations(){
     int numberOfPermuations = ui->lineEditPermutes->text().toInt();
-    QStringList targets(m_generateWordlistModel->stringList());
+    QStringList targets;
 
     /* get the stringList from model */
     QStringList list(m_wordlistModel->stringList());

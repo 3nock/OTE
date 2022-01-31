@@ -1,1 +1,41 @@
-<h1> ABOUT RAW ENGINE </h1>
+<h1> RAW ENGINE </h1>
+
+The Raw Engine queries API endpoints of different osint modules to return raw json results.<br>
+The tool uses different osint modules and their different endpoints to obtain the desired output.<br><br>
+
+This Tool does not support multi-threading, uses one thread upon each invocation to perform one lookup after another
+even for multiple targets due to rate limits imposed by most osint sources(modules).<br>
+
+<h2> Modules </h2>
+The osint modules are mainly categorized in two major groups; Those that require API keys & those that do not require API keys.
+They are further categorized into different sub-groups depending on the type that the osint source majorly deals with.<br>
+
+<h3> The Osint Source's Sub-groups </h3><br>
+<b>--> Iana sub-group:</b> These are the Osint Sources associated with the Iana.<br>
+<b>--> Certificates sub-group:</b>  These Osint Sources majorly contains resources associating with SSL Certificates gathered for different sites.<br>
+<b>--> Emails sub-group:</b> These Osint Sources majorly deals with osint of emails.<br>
+<b>--> API sub-group:</b> These are Osint Sources that contain a variety of osint API endpoints.<br>
+<b>--> Archives sub-group:</b> These are Osint Sources containing archives of different internet entities.<br>
+<b>--> Scrape sub-group:</b> These are Osint modules that obtain data by scrapping the indicated search engine.<br>
+<b>--> Site sub-group:</b> These are Osint modules that obtain data from different website containing osint info.<br>
+
+<h2> Features </h2>
+1. Supports different Input types depending on the endpoint query request<br>
+2. Results are returned as Raw json in a TextEdit and also as item-based in a TreeView.<br>
+3. Use filters to extract specific entities from the returned json results<br>
+2. Supports querying for multiple targets.<br>
+
+<h2> Usage & Examples </h2><br>
+<br><img src="images/raw_1.png"><br>
+
+<br><img src="images/raw_2.png"><br>
+
+<br> <a href=https://github.com/3nock/sub3suite>Help improve the documentation...</a><br>
+
+<h2> Blog Posts </h2>
+
+<h2> References </h2>
+1. <a href=https://blog.appsecco.com/a-penetration-testers-guide-to-sub-domain-enumeration-7d842d5570f6>https://blog.appsecco.com/a-penetration-testers-guide-to-sub-domain-enumeration-7d842d5570f6</a>
+
+
+
