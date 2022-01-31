@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1033</width>
-    <height>693</height>
+    <width>1048</width>
+    <height>695</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Sub3 Suite</string>
@@ -654,8 +660,8 @@ QTreeView:disabled {
      <widget class="QTabWidget" name="tabWidgetMain">
       <property name="minimumSize">
        <size>
-        <width>1000</width>
-        <height>650</height>
+        <width>0</width>
+        <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -769,7 +775,7 @@ QTreeView:disabled {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1033</width>
+     <width>1048</width>
      <height>19</height>
     </rect>
    </property>

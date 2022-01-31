@@ -35,7 +35,6 @@
         <file>res/documentation/engines/brute.html</file>
         <file>res/documentation/engines/dns.html</file>
         <file>res/documentation/engines/ip.html</file>
-        <file>res/documentation/engines/osint.html</file>
         <file>res/documentation/engines/raw.html</file>
         <file>res/documentation/engines/ssl.html</file>
         <file>res/documentation/enums/asn.html</file>
@@ -47,5 +46,8 @@
         <file>res/documentation/enums/url.html</file>
         <file>res/documentation/enums/email.html</file>
         <file>res/documentation/index.html</file>
+        <file>res/documentation/engines/osint.html</file>
+        <file>res/documentation/engines/images/osint_1.png</file>
+        <file>res/documentation/engines/images/osint_2.png</file>
     </qresource>
 </RCC>

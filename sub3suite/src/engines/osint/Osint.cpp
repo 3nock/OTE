@@ -35,6 +35,9 @@ Osint::Osint(QWidget *parent, ProjectModel *project): AbstractEngine(parent, pro
 {
     ui->setupUi(this);
 
+    ui->labelIn->setProperty("default_color", true);
+    ui->labelOut->setProperty("default_color", true);
+
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
 

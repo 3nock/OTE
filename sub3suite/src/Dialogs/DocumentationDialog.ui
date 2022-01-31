@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>732</width>
-    <height>565</height>
+    <width>854</width>
+    <height>643</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,9 +32,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="buttonBack">
+      <widget class="QToolButton" name="buttonBack">
        <property name="text">
-        <string>Back</string>
+        <string>  &lt;---  </string>
        </property>
       </widget>
      </item>

@@ -12,7 +12,8 @@ DocumentationDialog::DocumentationDialog(QWidget *parent) :
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
-    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation");
+    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation/engines"
+                                                  << ":/documentation/res/documentation");
 
     this->general_documentation();
 }
@@ -25,7 +26,8 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
-    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation");
+    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation/engines"
+                                                  << ":/documentation/res/documentation");
 
     switch(engine){
     case ENGINE::OSINT:

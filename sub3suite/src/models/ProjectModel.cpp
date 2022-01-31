@@ -12,6 +12,11 @@
 #include <QGuiApplication>
 #include <QCryptographicHash>
 
+/*
+ * TODO:
+ *      QJsonDocument size limit is 128mb. find a workaround or an alternative for serialization.
+ */
+
 
 ProjectModel::ProjectModel():
     model_explorer(new QStandardItemModel),
