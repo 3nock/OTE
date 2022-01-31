@@ -7,9 +7,7 @@ manual and automated analysis on targets with many available feautues. You can f
 # ScreenShots
 <img src="docs/images/screenshot_osint.png"/>
 <img src="docs/images/screenshot_brute.png"/>
-<img src="docs/images/screenshot_ssl.png"/>
 <img src="docs/images/screenshot_project.png"/>
-<img src="docs/images/sub3suite.png"/>
 
 # Installation & Usage
 
