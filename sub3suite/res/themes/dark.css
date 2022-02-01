@@ -3,6 +3,8 @@ QWidget {
 }
 
 QComboBox {
+    min-height: 19px;
+    max-height: 19px;
     border-style: outset;
     border-style: solid;
     border-color: rgb(25,25,25);
@@ -340,8 +342,11 @@ QPlainTextEdit {
 
 QTreeView::item{
     border-style: solid;
-    border-color: rgb(27, 27, 27);
-    border-width: 1px;
+    border-color: rgb(15,15,15);
+    border-top-width: 0px;
+    border-right-width: 1px;
+    border-left-width: 0px;
+    border-bottom-width: 1px;
 }
 
 QListWidget::item:selected,
@@ -607,7 +612,7 @@ QRadioButton:hover {
     border-color: rgb(50,50,50);
 }
 
-*[default_color="true"] {
+*[s3s_color="true"] {
     color: rgb(185, 185, 145);
 }
 

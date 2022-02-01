@@ -4,7 +4,7 @@
 
 #include <QObject>
 #include <QThread>
-#include <QStack>
+#include <QQueue>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
@@ -45,26 +45,24 @@
 /* ... */
 #define REQUEST_TYPE "type"
 
-/* stores the scan configurations */
-struct PassiveScanConfig{
-    bool useProxy = false;
-    QString proxyAddress;
-    QString proxyPort;
-    /* ... */
-    int maxPage;
+struct ScanLog{
+    QString moduleName;
+    QString message;
+    QString target;
+    int statusCode;
+    unsigned int resultsCount;
 };
 
+struct ScanConfig{
+    int maxPage = 50;
+    bool noDuplicates = false;
+    bool autosaveToProject = false;
+};
 
-/*
- * all arguments that an osint module needs including
- * scan configurations
- */
 struct ScanArgs{
-    /* scan configurations */
-    PassiveScanConfig *config;
-
-    /* target */
-    QStack<QString> targets;
+    ScanConfig *config;
+    QQueue<QString> targets;
+    int progress;
 
     /* input type */
     bool inputIp = false;
@@ -103,15 +101,6 @@ struct ScanArgs{
     QMap<int, QString> rawParameters;
 };
 
-struct ScanLog{
-    QString moduleName;
-    QString message;
-    QString target;
-    int statusCode;
-    unsigned int resultsCount;
-};
-
-
 class s3sNetworkAccessManager: public QNetworkAccessManager {
     public:
         s3sNetworkAccessManager(QObject *parent = nullptr): QNetworkAccessManager(parent)
@@ -145,13 +134,15 @@ class AbstractOsintModule : public QObject {
             connect(this, &AbstractOsintModule::quitThread, cThread, &QThread::quit); // ends(terminates) the thread
 
             /* first target */
-            target = args.targets.pop();
+            target = args.targets.dequeue();
             log.target = target;
         }
 
     signals:
         void quitThread();
         void nextTarget();
+        /* ... */
+        void scanProgress(int progress);
         /* ... */
         void infoLog(ScanLog log);
         void rateLimitLog(ScanLog log);
@@ -176,7 +167,7 @@ class AbstractOsintModule : public QObject {
         void rawResults(QByteArray reply);
         void rawResultsTxt(QByteArray reply);
         /* ... */
-        void infoASN(AsModelStruct);
+        void infoASN(s3s_struct::ASN);
         void infoCidr(CidrModelStruct);
         void infoMX(MXModelStruct);
         void infoNS(NSModelStruct);
@@ -300,9 +291,13 @@ class AbstractOsintModule : public QObject {
                 /* send logs on the target scanned */
                 emit infoLog(log);
 
+                /* scan prohress */
+                args.progress++;
+                emit scanProgress(args.progress);
+
                 /* enumerate next target if there are still targets available */
                 if(args.targets.length()){
-                    target = args.targets.pop();
+                    target = args.targets.dequeue();
                     emit nextTarget();
                 }
 

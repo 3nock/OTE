@@ -85,7 +85,7 @@ void IpEnum::on_buttonStart_clicked(){
     if(ui->checkBoxMultipleTargets->isChecked()){
         // for multiple targets...
     }else{
-        scanArgs.targets.push(ui->lineEditTarget->text());
+        scanArgs.targets.enqueue(ui->lineEditTarget->text());
     }
 
     ui->buttonStop->setEnabled(true);

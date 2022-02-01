@@ -130,7 +130,7 @@ void MainWindow::m_registerMetaTypes(){
     qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
     qRegisterMetaType<MXModelStruct>("MXModelStruct");
     qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
-    qRegisterMetaType<AsModelStruct>("AsModelStruct");
+    qRegisterMetaType<s3s_struct::ASN>("s3s_struct::ASN");
     qRegisterMetaType<QSslCertificate>("QSslCertificate");
 }
 

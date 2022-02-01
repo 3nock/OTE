@@ -17,9 +17,9 @@ void Osint::m_startScan(){
     /* get the targets... */
     if(ui->checkBoxMultipleTargets->isChecked()){
         foreach(const QString &target, ui->targets->getlistModel()->stringList())
-            scanArgs.targets.push(target);
+            scanArgs.targets.enqueue(target);
     }else
-        scanArgs.targets.push(ui->lineEditTarget->text());
+        scanArgs.targets.enqueue(ui->lineEditTarget->text());
 
     /* getting input type as specified by user... */
     switch(ui->comboBoxInput->currentIndex()){

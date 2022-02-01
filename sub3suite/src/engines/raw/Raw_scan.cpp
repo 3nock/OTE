@@ -34,7 +34,7 @@ void Raw::m_startScan(){
         // for multiple targets...
     }
     else
-        scanArgs.targets.push(ui->lineEditTarget->text());
+        scanArgs.targets.enqueue(ui->lineEditTarget->text());
 
     /* starting the appropriate scan... */
     if(ui->moduleCertspotter->isChecked())

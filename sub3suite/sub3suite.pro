@@ -38,29 +38,41 @@ SOURCES += \
     src/dialogs/preference/PreferenceDialog.cpp \
     src/dialogs/wordlist/ChooseWordlist.cpp \
     src/dialogs/wordlist/GenerateWordlist.cpp \
-    src/engines/active/ActiveContextMenu.cpp \
-    src/engines/active/ActiveResults.cpp \
-    src/engines/active/ActiveScan.cpp \
-    src/engines/brute/BruteContextMenu.cpp \
-    src/engines/brute/BruteResults.cpp \
-    src/engines/brute/BruteScan.cpp \
-    src/engines/dns/DnsResults.cpp \
+    src/engines/active/Active_actions.cpp \
+    src/engines/active/Active_contextmenu.cpp \
+    src/engines/active/Active_results.cpp \
+    src/engines/active/Active_scan.cpp \
+    src/engines/brute/Brute_actions.cpp \
+    src/engines/brute/Brute_contextmenu.cpp \
+    src/engines/brute/Brute_results.cpp \
+    src/engines/brute/Brute_scan.cpp \
+    src/engines/dns/Dns_actions.cpp \
+    src/engines/dns/Dns_contextmenu.cpp \
+    src/engines/dns/Dns_results.cpp \
+    src/engines/dns/Dns_scan.cpp \
+    src/engines/osint/Osint_actions.cpp \
+    src/engines/osint/Osint_contextmenu.cpp \
+    src/engines/osint/Osint_modules.cpp \
+    src/engines/osint/Osint_results.cpp \
+    src/engines/osint/Osint_scan.cpp \
+    src/engines/raw/Raw_actions.cpp \
+    src/engines/raw/Raw_contextmenu.cpp \
+    src/engines/raw/Raw_modules.cpp \
+    src/engines/raw/Raw_results.cpp \
+    src/engines/raw/Raw_scan.cpp \
     src/engines/ssl/Ssl.cpp \
-    src/engines/ssl/SslContextMenu.cpp \
-    src/engines/ssl/SslResults.cpp \
-    src/engines/ssl/SslScan.cpp \
-    src/engines/osint/OsintResults.cpp \
-    src/engines/osint/OsintScan.cpp \
-    src/engines/raw/RawResults.cpp \
-    src/engines/raw/RawScan.cpp \
     src/engines/dns/Dns.cpp \
-    src/engines/osint/OsintContextMenu.cpp \
-    src/engines/osint/OsintModules.cpp \
-    src/engines/raw/RawContextMenu.cpp \
-    src/engines/raw/RawModules.cpp \
-    src/engines/dns/DnsContextMenu.cpp \
-    src/engines/dns/DnsScan.cpp \
+    src/engines/ssl/Ssl_actions.cpp \
+    src/engines/ssl/Ssl_contextmenu.cpp \
+    src/engines/ssl/Ssl_results.cpp \
+    src/engines/ssl/Ssl_scan.cpp \
+    src/enums/asn/ASNEnum_actions.cpp \
+    src/enums/asn/ASNEnum_contextmenu.cpp \
+    src/enums/asn/ASNEnum_results.cpp \
+    src/enums/asn/ASNEnum_scan.cpp \
     src/models/ProjectModel.cpp \
+    src/models/ProjectModel_serialization.cpp \
+    src/models/ProjectModel_slots.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
     src/modules/passive/api/JsonWhois.cpp \

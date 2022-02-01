@@ -60,7 +60,7 @@ void Project::m_initUI(){
     ui->setupUi(this);
 
     /* setting widgets special properties for diff stylesheets */
-    ui->labelCount->setProperty("default_color", true);
+    ui->labelCount->setProperty("s3s_color", true);
     ui->treeViewProjectExplorer->setProperty("no_item_border", true);
     ui->treeViewSummary->setProperty("no_item_border", true);
     ui->tabWidget->setProperty("upside", true);

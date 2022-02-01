@@ -96,7 +96,7 @@ void MXEnum::on_buttonStart_clicked(){
     if(ui->checkBoxMultipleTargets->isChecked()){
 
     }else
-        scanArgs.targets.push(ui->lineEditTarget->text());
+        scanArgs.targets.enqueue(ui->lineEditTarget->text());
 
     scanArgs.outputInfoMX = true;
 

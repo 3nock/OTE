@@ -12,8 +12,13 @@
 #include <QStandardItem>
 #include <QSet>
 
-/* structure for sending asModel data along signals & slots */
-struct AsModelStruct{
+
+/* structure for sending ASN data along signals & slots */
+namespace s3s_struct {
+struct ASN {
+    QString asn;
+
+    /* ... */
     QSet<QString> emailcontacts;
     QSet<QString> abusecontacts;
     QSet<QString> peers;
@@ -33,12 +38,14 @@ struct AsModelStruct{
     QString rir_dateallocated;
 };
 
-/* the main AS results data model */
-class AsModel{
-public:
-    AsModel():
-        model(new QStandardItemModel),
+}
 
+namespace s3s_item {
+
+class ASN: public QStandardItem
+{
+public:
+    ASN(const s3s_struct::ASN &asn): QStandardItem(),
         /* general */
         info(new QStandardItem("Info")),
         emailContacts(new QStandardItem("Email Contacts")),
@@ -60,20 +67,22 @@ public:
         rir_country(new QStandardItem),
         rir_dateAllocated(new QStandardItem)
     {
-        info->setForeground(QColor(220,220,220));
-        emailContacts->setForeground(QColor(220,220,220));
-        abuseContacts->setForeground(QColor(220,220,220));
-        rir->setForeground(QColor(220,220,220));
-        peers->setForeground(QColor(220,220,220));
-        prefixes->setForeground(QColor(220,220,220));
+        this->setForeground(Qt::white);
+        this->setIcon(QIcon(":/img/res/icons/folder.png"));
 
-        QFont font("Segoe UI", 9, QFont::Bold);
-        info->setFont(font);
-        emailContacts->setFont(font);
-        abuseContacts->setFont(font);
-        rir->setFont(font);
-        peers->setFont(font);
-        prefixes->setFont(font);
+        info->setForeground(Qt::white);
+        emailContacts->setForeground(Qt::white);
+        abuseContacts->setForeground(Qt::white);
+        rir->setForeground(Qt::white);
+        peers->setForeground(Qt::white);
+        prefixes->setForeground(Qt::white);
+
+        info->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        emailContacts->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        abuseContacts->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        rir->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        peers->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        prefixes->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
         info->appendRow({new QStandardItem("asn"), info_asn});
         info->appendRow({new QStandardItem("name"), info_name});
@@ -86,26 +95,22 @@ public:
         rir->appendRow({new QStandardItem("country"), rir_country});
         rir->appendRow({new QStandardItem("date allocated"), rir_dateAllocated});
 
-        /* the model */
-        model->setColumnCount(2);
-        model->setHorizontalHeaderLabels({"  Property", "  Value"});
+        /* append to the asn */
+        this->appendRow(info);
+        this->appendRow(emailContacts);
+        this->appendRow(abuseContacts);
+        this->appendRow(rir);
+        this->appendRow(peers);
+        this->appendRow(prefixes);
 
-        /* append to the model */
-        model->appendRow(info);
-        model->appendRow(emailContacts);
-        model->appendRow(abuseContacts);
-        model->appendRow(rir);
-        model->appendRow(peers);
-        model->appendRow(prefixes);
+        /* set the values */
+        this->setValues(asn);
     }
-    ~AsModel()
+    ~ASN()
     {
-        /* not yet implemented */
     }
 
 public:
-    QStandardItemModel *model;
-
     /* general */
     QStandardItem *info;
     QStandardItem *emailContacts;
@@ -126,6 +131,55 @@ public:
     QStandardItem *rir_name;
     QStandardItem *rir_country;
     QStandardItem *rir_dateAllocated;
+
+    void setValues(const s3s_struct::ASN &asn){
+        this->setText(asn.asn);
+
+        /* info */
+        info_asn->setText(asn.info_asn);
+        info_name->setText(asn.info_name);
+        info_description->setText(asn.info_description);
+        info_country->setText(asn.info_country);
+        info_website->setText(asn.info_website);
+        info_ownerAddress->setText(asn.info_ownerAddress);
+
+        /* rir */
+        rir_name->setText(asn.rir_name);
+        rir_country->setText(asn.rir_country);
+        rir_dateAllocated->setText(asn.rir_dateallocated);
+
+        /* email contacts */
+        int emailCount = 0;
+        foreach(const QString &value, asn.emailcontacts){
+            emailContacts->appendRow({new QStandardItem(QString::number(emailCount)), new QStandardItem(value)});
+            emailCount++;
+        }
+
+        /* abuse contacts */
+        int abuseContactsCount = 0;
+        foreach(const QString &value, asn.abusecontacts){
+            abuseContacts->appendRow({new QStandardItem(QString::number(abuseContactsCount)), new QStandardItem(value)});
+            abuseContactsCount++;
+        }
+    }
+
+    void setPeers(const QSet<QString> &peersList){
+        int count = 0;
+        foreach(const QString &peer, peersList){
+            peers->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(peer)});
+            count++;
+        }
+    }
+
+    void setPrefixes(const QSet<QString> &prefixList){
+        int count = 0;
+        foreach(const QString &prefix, prefixList){
+            prefixes->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(prefix)});
+            count++;
+        }
+    }
 };
+
+}
 
 #endif // ASNMODEL_H

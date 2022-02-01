@@ -8,10 +8,12 @@
 #ifndef PROJECTMODEL_H
 #define PROJECTMODEL_H
 
+#include <QSet>
+#include <QStandardItemModel>
+
+#include "src/models/ASNModel.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
-#include <QStandardItemModel>
-#include <QSet>
 
 /* TODO:
  *      compress & decompress data before saving and loading project,
@@ -113,9 +115,9 @@ public:
     void addPassiveSSL(const QString &ssl);
 
     /* for enum */
-    void addEnumIp();
-    void addEnumASN();
+    void addEnumASN(const s3s_struct::ASN &asn);
     void addEnumCIDR();
+    void addEnumIp();
     void addEnumNS();
     void addEnumMX();
     void addEnumSSL();

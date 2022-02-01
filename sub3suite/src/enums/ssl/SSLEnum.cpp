@@ -82,7 +82,7 @@ void SSLEnum::on_buttonStart_clicked(){
             // for multpile targets...
         }
         else{
-            scanArgs.targets.push(ui->lineEditTarget->text());
+            scanArgs.targets.enqueue(ui->lineEditTarget->text());
         }
 
         ///

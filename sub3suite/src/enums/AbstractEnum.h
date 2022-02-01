@@ -20,10 +20,12 @@ class AbstractEnum : public QWidget{
     public:
         AbstractEnum(QWidget *parent = nullptr, ProjectModel *project = nullptr): QWidget(parent),
               status(new ScanStatus),
-              project(project)
+              project(project),
+              proxyModel(new QSortFilterProxyModel)
         {
         }
         ~AbstractEnum(){
+            delete proxyModel;
             delete status;
         }
 
@@ -31,6 +33,7 @@ class AbstractEnum : public QWidget{
         ScanStatus *status;
         ProjectModel *project;
         QItemSelectionModel *selectionModel;
+        QSortFilterProxyModel *proxyModel;
 
     signals:
         /* signals to scanning threads */
