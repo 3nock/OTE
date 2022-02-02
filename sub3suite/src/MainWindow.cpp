@@ -15,7 +15,7 @@
 #include "src/dialogs/AboutDialog.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/LogViewerDialog.h"
-#include "src/dialogs/preference/PreferenceDialog.h"
+#include "src/dialogs/PreferenceDialog.h"
 #include "src/dialogs/DocumentationDialog.h"
 #include "src/dialogs/ProjectConfigDialog.h"
 

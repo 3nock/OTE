@@ -62,7 +62,6 @@ class ASNEnum : public AbstractEnum{
     private:
         void initActions();
         /* ... */
-        void m_openInBrowser(QItemSelectionModel*);
         void m_clearResults();
         void m_removeResults(QItemSelectionModel*);
         void m_saveResults();
@@ -73,38 +72,35 @@ class ASNEnum : public AbstractEnum{
         void m_sendToProject();
         void m_sendASNToEngine(ENGINE);
         void m_sendCIDRToEngine(ENGINE);
-        void m_sendASNToEnum(TOOL);
-        void m_sendCIDRToEnum(TOOL);
+        void m_sendASNToEnum();
+        void m_sendCIDRToEnum();
         void m_sendToProject(QItemSelectionModel*);
         void m_sendASNToEngine(ENGINE, QItemSelectionModel*);
         void m_sendCIDRToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendASNToEnum(TOOL, QItemSelectionModel*);
-        void m_sendCIDRToEnum(TOOL, QItemSelectionModel*);
+        void m_sendASNToEnum(QItemSelectionModel*);
+        void m_sendCIDRToEnum(QItemSelectionModel*);
 
     protected:
-        /* general actions */
         QAction a_RemoveResults{"Remove"};
         QAction a_ClearResults{"Clear Results"};
-        QAction a_OpenInBrowser{"Open in Browser"};
         QAction a_Save{"Save"};
         QAction a_Copy{"Copy"};
-
         /* for all */
         QAction a_SendAllToProject{"Send To Project"};
-        QAction a_SendAllASNToOsint{"Send ASN To OSINT"};
-        QAction a_SendAllASNToRaw{"Send ASN To RAW"};
-        QAction a_SendAllCIDRToOsint{"Send CIDR To OSINT"};
-        QAction a_SendAllCIDRToRaw{"Send CIDR To RAW"};
-        QAction a_SendAllASNToASNEnum{"Send ASN To ASNEnum"};
-        QAction a_SendAllCIDRToCIDREnum{"Send CIDR To CIDREnum"};
+        QAction a_SendAllASNToOsint{"Send ASNs To OSINT"};
+        QAction a_SendAllASNToRaw{"Send ASNs To RAW"};
+        QAction a_SendAllCIDRToOsint{"Send CIDRs To OSINT"};
+        QAction a_SendAllCIDRToRaw{"Send CIDRs To RAW"};
+        QAction a_SendAllASNToASNEnum{"Send ASNs To ASNEnum"};
+        QAction a_SendAllCIDRToCIDREnum{"Send CIDRs To CIDREnum"};
         /* for selected */
         QAction a_SendSelectedToProject{"Send To Project"};
-        QAction a_SendSelectedASNToOsint{"Send ASN To OSINT"};
-        QAction a_SendSelectedASNToRaw{"Send ASN To RAW"};
-        QAction a_SendSelectedCIDRToOsint{"Send CIDR To OSINT"};
-        QAction a_SendSelectedCIDRToRaw{"Send CIDR To RAW"};
-        QAction a_SendSelectedASNToASNEnum{"Send ASN To ASNEnum"};
-        QAction a_SendSelectedCIDRToCIDREnum{"Send CIDR To CIDREnum"};
+        QAction a_SendSelectedASNToOsint{"Send ASNs To OSINT"};
+        QAction a_SendSelectedASNToRaw{"Send ASNs To RAW"};
+        QAction a_SendSelectedCIDRToOsint{"Send CIDRs To OSINT"};
+        QAction a_SendSelectedCIDRToRaw{"Send CIDRs To RAW"};
+        QAction a_SendSelectedASNToASNEnum{"Send ASNs To ASNEnum"};
+        QAction a_SendSelectedCIDRToCIDREnum{"Send CIDRs To CIDREnum"};
 };
 
 #endif // ASNENUM_H

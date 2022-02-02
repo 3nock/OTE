@@ -35,9 +35,9 @@ SOURCES += \
     src/dialogs/ProjectConfigDialog.cpp \
     src/dialogs/StartupDialog.cpp \
     src/dialogs/ToolsConfigDialog.cpp \
-    src/dialogs/preference/PreferenceDialog.cpp \
-    src/dialogs/wordlist/ChooseWordlist.cpp \
-    src/dialogs/wordlist/GenerateWordlist.cpp \
+    src/dialogs/PreferenceDialog.cpp \
+    src/dialogs/WordlistDialog_choose.cpp \
+    src/dialogs/WordlistDialog_generate.cpp \
     src/engines/active/Active_actions.cpp \
     src/engines/active/Active_contextmenu.cpp \
     src/engines/active/Active_results.cpp \
@@ -200,7 +200,7 @@ SOURCES += \
     src/dialogs/LogViewerDialog.cpp \
     src/dialogs/AboutDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
-    src/dialogs/wordlist/WordlistDialog.cpp \
+    src/dialogs/WordlistDialog.cpp \
     src/MainWindow.cpp \
     src/main.cpp
 
@@ -212,7 +212,7 @@ HEADERS += \
     src/dialogs/ProjectConfigDialog.h \
     src/dialogs/StartupDialog.h \
     src/dialogs/ToolsConfigDialog.h \
-    src/dialogs/preference/PreferenceDialog.h \
+    src/dialogs/PreferenceDialog.h \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
     src/models/ASNModel.h \
@@ -359,7 +359,7 @@ HEADERS += \
     src/dialogs/LogViewerDialog.h \
     src/dialogs/AboutDialog.h \
     src/dialogs/ApiKeysDialog.h \
-    src/dialogs/wordlist/WordlistDialog.h \
+    src/dialogs/WordlistDialog.h \
     src/utils/utils.h \
     src/utils/Config.h \
     src/MainWindow.h
@@ -372,7 +372,7 @@ FORMS += \
     src/dialogs/ProjectConfigDialog.ui \
     src/dialogs/StartupDialog.ui \
     src/dialogs/ToolsConfigDialog.ui \
-    src/dialogs/preference/PreferenceDialog.ui \
+    src/dialogs/PreferenceDialog.ui \
     src/engines/ssl/Ssl.ui \
     src/project/Project.ui \
     src/enums/url/UrlEnum.ui \
@@ -391,7 +391,7 @@ FORMS += \
     src/widgets/InputWidget.ui \
     src/dialogs/LogViewerDialog.ui \
     src/dialogs/AboutDialog.ui \
-    src/dialogs/wordlist/WordlistDialog.ui \
+    src/dialogs/WordlistDialog.ui \
     src/dialogs/ApiKeysDialog.ui \
     src/MainWindow.ui
 

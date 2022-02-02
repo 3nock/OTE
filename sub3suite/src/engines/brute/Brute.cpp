@@ -14,7 +14,7 @@
 #include "src/utils/Config.h"
 #include "src/utils/Definitions.h"
 #include "src/dialogs/ActiveConfigDialog.h"
-#include "src/dialogs/wordlist/WordlistDialog.h"
+#include "src/dialogs/WordlistDialog.h"
 
 
 Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, project),
