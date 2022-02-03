@@ -1,6 +1,16 @@
 #include "ASNEnum.h"
 #include "ui_ASNEnum.h"
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QClipboard>
+
+
+/* TODO:
+ *     validate if selected index is asn...
+ *     sujest to save as json
+ */
 
 void ASNEnum::m_clearResults(){
     /* clear the results... */
@@ -35,19 +45,95 @@ void ASNEnum::m_removeResults(QItemSelectionModel *selectionModel){
 }
 
 void ASNEnum::m_saveResults(){
+    /* checks... */
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty())
+        return;
 
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    if(!file.isOpen())
+        return;
+
+    QJsonArray asn_array;
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
+
+        asn_array.append(asn_to_json(asn));
+    }
+
+    QJsonDocument document;
+    document.setArray(asn_array);
+
+    qDebug() << "Saving ASN results to File: " << file.fileName();
+    file.write(document.toJson());
+    file.close();
 }
 
-void ASNEnum::m_saveResults(QItemSelectionModel *){
+void ASNEnum::m_saveResults(QItemSelectionModel *selection){
+    /* checks... */
+    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
+    if(filename.isEmpty())
+        return;
 
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    if(!file.isOpen())
+        return;
+
+    QJsonArray asn_array;
+    foreach(const QModelIndex &index, selection->selectedIndexes()){
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
+
+        asn_array.append(asn_to_json(asn));
+    }
+
+    QJsonDocument document;
+    document.setArray(asn_array);
+
+    qDebug() << "Saving ASN results to File: " << file.fileName();
+    file.write(document.toJson());
+    file.close();
 }
 
 void ASNEnum::m_copyResults(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
 
+    QJsonArray asn_array;
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
+
+        asn_array.append(asn_to_json(asn));
+    }
+
+    QJsonDocument document;
+    document.setArray(asn_array);
+
+    qDebug() << "Copying ASN results to clipboard...";
+    clipboard->setText(document.toJson());
 }
 
-void ASNEnum::m_copyResults(QItemSelectionModel *){
+void ASNEnum::m_copyResults(QItemSelectionModel *selection){
+    QClipboard *clipboard = QGuiApplication::clipboard();
 
+    QJsonArray asn_array;
+    foreach(const QModelIndex &index, selection->selectedIndexes()){
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
+
+        asn_array.append(asn_to_json(asn));
+    }
+
+    QJsonDocument document;
+    document.setArray(asn_array);
+
+    qDebug() << "Copying ASN results to clipboard...";
+    clipboard->setText(document.toJson());
 }
 
 ///
@@ -148,8 +234,6 @@ void ASNEnum::m_sendCIDRToEnum(){
 
 ///
 /// send selected...
-/// TODO:
-///     validate if selected index is asn...
 ///
 
 void ASNEnum::m_sendToProject(QItemSelectionModel *selection){
@@ -239,7 +323,7 @@ void ASNEnum::m_sendCIDRToEnum(QItemSelectionModel *selection){
     emit changeTabToCidrEnum();
 }
 
-void ASNEnum::onReceiveResults(QString target, RESULT_TYPE resultType){
+void ASNEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::SUBDOMAIN)
         ui->targets->add(target);
 

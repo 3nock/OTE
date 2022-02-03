@@ -149,18 +149,32 @@ public:
         rir_country->setText(asn.rir_country);
         rir_dateAllocated->setText(asn.rir_dateallocated);
 
+        int count = 0;
         /* email contacts */
-        int emailCount = 0;
         foreach(const QString &value, asn.emailcontacts){
-            emailContacts->appendRow({new QStandardItem(QString::number(emailCount)), new QStandardItem(value)});
-            emailCount++;
+            emailContacts->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(value)});
+            count++;
         }
 
         /* abuse contacts */
-        int abuseContactsCount = 0;
+        count = 0;
         foreach(const QString &value, asn.abusecontacts){
-            abuseContacts->appendRow({new QStandardItem(QString::number(abuseContactsCount)), new QStandardItem(value)});
-            abuseContactsCount++;
+            abuseContacts->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(value)});
+            count++;
+        }
+
+        /* peers */
+        count = 0;
+        foreach(const QString &peer, asn.peers){
+            peers->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(peer)});
+            count++;
+        }
+
+        /* prefixes */
+        count = 0;
+        foreach(const QString &prefix, asn.prefixes){
+            prefixes->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(prefix)});
+            count++;
         }
     }
 
@@ -184,7 +198,9 @@ public:
 }
 
 s3s_struct::ASN asn_model_to_struct(s3s_item::ASN *item);
-void asn_to_json(s3s_item::ASN *asn_item, QJsonObject &jsonObj);
+
+QJsonObject asn_to_json(s3s_item::ASN *asn_item);
+
 void json_to_asn(const QJsonObject &jsonObj, s3s_item::ASN *asn_item);
 
 #endif // ASNMODEL_H

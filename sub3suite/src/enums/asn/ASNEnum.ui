@@ -249,6 +249,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="treeResults">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="acceptDrops">
            <bool>false</bool>
           </property>

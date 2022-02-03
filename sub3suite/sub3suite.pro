@@ -34,7 +34,7 @@ SOURCES += \
     src/dialogs/PassiveConfigDialog.cpp \
     src/dialogs/ProjectConfigDialog.cpp \
     src/dialogs/StartupDialog.cpp \
-    src/dialogs/ToolsConfigDialog.cpp \
+    src/dialogs/EnumConfigDialog.cpp \
     src/dialogs/PreferenceDialog.cpp \
     src/dialogs/WordlistDialog_choose.cpp \
     src/dialogs/WordlistDialog_generate.cpp \
@@ -212,7 +212,7 @@ HEADERS += \
     src/dialogs/PassiveConfigDialog.h \
     src/dialogs/ProjectConfigDialog.h \
     src/dialogs/StartupDialog.h \
-    src/dialogs/ToolsConfigDialog.h \
+    src/dialogs/EnumConfigDialog.h \
     src/dialogs/PreferenceDialog.h \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
@@ -372,7 +372,7 @@ FORMS += \
     src/dialogs/PassiveConfigDialog.ui \
     src/dialogs/ProjectConfigDialog.ui \
     src/dialogs/StartupDialog.ui \
-    src/dialogs/ToolsConfigDialog.ui \
+    src/dialogs/EnumConfigDialog.ui \
     src/dialogs/PreferenceDialog.ui \
     src/engines/ssl/Ssl.ui \
     src/project/Project.ui \

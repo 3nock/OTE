@@ -36,7 +36,7 @@ class ASNEnum : public AbstractEnum{
         void onErrorLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
 
-        void onReceiveResults(QString, RESULT_TYPE);
+        void onReceiveTargets(QString, RESULT_TYPE);
 
     private slots:
         void on_buttonStart_clicked();
@@ -85,8 +85,8 @@ class ASNEnum : public AbstractEnum{
     protected:
         QAction a_RemoveResults{"Remove"};
         QAction a_ClearResults{"Clear Results"};
-        QAction a_Save{"Save"};
-        QAction a_Copy{"Copy"};
+        QAction a_Save{"Save as Json"};
+        QAction a_Copy{"Copy as Json"};
         /* for all */
         QAction a_SendAllToProject{"Send To Project"};
         QAction a_SendAllASNToOsint{"Send ASNs To OSINT"};
