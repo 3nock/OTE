@@ -217,6 +217,7 @@ HEADERS += \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
     src/models/ASNModel.h \
+    src/models/DNSModel.h \
     src/models/IPModel.h \
     src/models/NSModel.h \
     src/models/ProjectModel.h \
