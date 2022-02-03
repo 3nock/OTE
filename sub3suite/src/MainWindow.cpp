@@ -165,6 +165,15 @@ void MainWindow::m_initEngines(){
     this->m_connectSignals(ssl);
     this->m_connectSignals(raw);
 
+    this->m_connectSignals(ipEnum);
+    this->m_connectSignals(asnEnum);
+    this->m_connectSignals(cidrEnum);
+    this->m_connectSignals(nsEnum);
+    this->m_connectSignals(mxEnum);
+    this->m_connectSignals(sslEnum);
+    this->m_connectSignals(emailEnum);
+    this->m_connectSignals(urlEnum);
+
     /* passive tabwidget */
     ui->tabWidgetPassive->insertTab(0, osint, "OSINT");
     ui->tabWidgetPassive->insertTab(1, raw, "RAW");
@@ -197,6 +206,15 @@ void MainWindow::m_connectSignals(AbstractEngine *engine){
     connect(engine, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    /* sending results enum */
+    connect(engine, SIGNAL(sendResultsToOsint(QString, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), ipEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), nsEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), mxEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), emailEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), urlEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), sslEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
 
     /* change tab to Engine */
     connect(engine, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
@@ -214,6 +232,42 @@ void MainWindow::m_connectSignals(AbstractEngine *engine){
     connect(engine, SIGNAL(changeTabToSSLEnum()), this, SLOT(onChangeTabToSSLEnum()));
     connect(engine, SIGNAL(changeTabToEmailEnum()), this, SLOT(onChangeTabToEmailEnum()));
     connect(engine, SIGNAL(changeTabToUrlEnum()), this, SLOT(onChangeTabToUrlEnum()));
+}
+
+void MainWindow::m_connectSignals(AbstractEnum *enumerator){
+    /* sending results to engine */
+    connect(enumerator, SIGNAL(sendResultsToOsint(QString, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), active, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    /* sending results enum */
+    connect(enumerator, SIGNAL(sendResultsToOsint(QString, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), ipEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), nsEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), mxEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), emailEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), urlEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), sslEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+
+    /* change tab to Engine */
+    connect(enumerator, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
+    connect(enumerator, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
+    connect(enumerator, SIGNAL(changeTabToBrute()), this, SLOT(onChangeTabToBrute()));
+    connect(enumerator, SIGNAL(changeTabToDns()), this, SLOT(onChangeTabToDns()));
+    connect(enumerator, SIGNAL(changeTabToRaw()), this, SLOT(onChangeTabToRaw()));
+    connect(enumerator, SIGNAL(changeTabToSSL()), this, SLOT(onChangeTabToSSL()));
+    /* change tab to Enumerator */
+    connect(enumerator, SIGNAL(changeTabToIpEnum()), this, SLOT(onChangeTabToIpEnum()));
+    connect(enumerator, SIGNAL(changeTabToAsnEnum()), this, SLOT(onChangeTabToAsnEnum()));
+    connect(enumerator, SIGNAL(changeTabToCidrEnum()), this, SLOT(onChangeTabToCidrEnum()));
+    connect(enumerator, SIGNAL(changeTabToNSEnum()), this, SLOT(onChangeTabToNSEnum()));
+    connect(enumerator, SIGNAL(changeTabToMXEnum()), this, SLOT(onChangeTabToMXEnum()));
+    connect(enumerator, SIGNAL(changeTabToSSLEnum()), this, SLOT(onChangeTabToSSLEnum()));
+    connect(enumerator, SIGNAL(changeTabToEmailEnum()), this, SLOT(onChangeTabToEmailEnum()));
+    connect(enumerator, SIGNAL(changeTabToUrlEnum()), this, SLOT(onChangeTabToUrlEnum()));
 }
 
 void MainWindow::m_documentation(){

@@ -11,6 +11,7 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSet>
+#include <QJsonObject>
 
 
 /* structure for sending ASN data along signals & slots */
@@ -181,5 +182,9 @@ public:
 };
 
 }
+
+s3s_struct::ASN asn_model_to_struct(s3s_item::ASN *item);
+void asn_to_json(s3s_item::ASN *asn_item, QJsonObject &jsonObj);
+void json_to_asn(const QJsonObject &jsonObj, s3s_item::ASN *asn_item);
 
 #endif // ASNMODEL_H

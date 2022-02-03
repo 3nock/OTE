@@ -20,6 +20,7 @@ ASNEnum::ASNEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, 
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
+    this->initActions();
 
     /* setting targets model */
     ui->targets->setListName("Targets");

@@ -36,6 +36,8 @@ class ASNEnum : public AbstractEnum{
         void onErrorLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
 
+        void onReceiveResults(QString, RESULT_TYPE);
+
     private slots:
         void on_buttonStart_clicked();
         void on_buttonConfig_clicked();

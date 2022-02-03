@@ -70,6 +70,7 @@ SOURCES += \
     src/enums/asn/ASNEnum_contextmenu.cpp \
     src/enums/asn/ASNEnum_results.cpp \
     src/enums/asn/ASNEnum_scan.cpp \
+    src/models/ASNModel.cpp \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \
