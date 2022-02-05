@@ -17,7 +17,6 @@
 #include "src/models/ASNModel.h"
 #include "src/models/CIDRModel.h"
 #include "src/models/SSLModel.h"
-#include "src/models/DomainModel.h"
 #include "src/models/EmailModel.h"
 #include "src/models/MXModel.h"
 #include "src/models/NSModel.h"

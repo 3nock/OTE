@@ -9,6 +9,7 @@
 
 #include "src/utils/Config.h"
 #include "src/models/SSLModel.h"
+#include "src/models/ASNModel.h"
 
 
 void ProjectModel::openExistingProject(QString name, QString path){
@@ -339,7 +340,12 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     foreach(const QJsonValue &value, data["passive_SSL"].toArray())
         m_passiveSSL_rootItem->appendRow(new QStandardItem(value.toString()));
 
-    /* enum ASN" */
+    /* enum ASN */
+    foreach(const QJsonValue &value, data["enum_ASN"].toArray()){
+        s3s_item::ASN *item = new s3s_item::ASN;
+        json_to_asn(value.toObject(), item);
+        m_enumASN_rootItem->appendRow(item);
+    }
     /* enum CIDR" */
     /* enum IP */
     /* enum MX" */
@@ -547,6 +553,14 @@ QByteArray ProjectModel::getJson(){
             }
         }
         active_DNS_array.append(dns);
+    }
+
+    /* enum ASN */
+    for(int i = 0; i < m_enumASN_rootItem->rowCount(); ++i){
+        QModelIndex index = m_enumASN_rootItem->child(i, 0)->index();
+        s3s_item::ASN *item = static_cast<s3s_item::ASN*>(enumASN_model->item(index.row(), index.column()));
+
+        enum_ASN_array.append(asn_to_json(item));
     }
 
     QJsonObject general;

@@ -46,7 +46,7 @@ namespace s3s_item {
 class ASN: public QStandardItem
 {
 public:
-    ASN(const s3s_struct::ASN &asn): QStandardItem(),
+    ASN(): QStandardItem(),
         /* general */
         info(new QStandardItem("Info")),
         emailContacts(new QStandardItem("Email Contacts")),
@@ -103,9 +103,6 @@ public:
         this->appendRow(rir);
         this->appendRow(peers);
         this->appendRow(prefixes);
-
-        /* set the values */
-        this->setValues(asn);
     }
     ~ASN()
     {

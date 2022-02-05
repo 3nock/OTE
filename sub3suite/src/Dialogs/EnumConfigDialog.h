@@ -2,26 +2,32 @@
 #define ENUMCONFIGDIALOG_H
 
 #include <QDialog>
+#include "src/modules/passive/AbstractOsintModule.h"
+
 
 namespace Ui {
 class EnumConfigDialog;
 }
 
-class EnumConfigDialog : public QDialog
-{
-    Q_OBJECT
+class EnumConfigDialog : public QDialog{
+        Q_OBJECT
 
-public:
-    explicit EnumConfigDialog(QWidget *parent = nullptr);
-    ~EnumConfigDialog();
+    public:
+        EnumConfigDialog(QWidget *parent = nullptr, ScanConfig *config = nullptr);
+        ~EnumConfigDialog();
 
-private slots:
-    void on_buttonOk_clicked();
+        void loadConfig_asn();
 
-    void on_buttonCancel_clicked();
+    private slots:
+        void on_buttonOk_clicked();
+        void on_buttonCancel_clicked();
 
-private:
-    Ui::EnumConfigDialog *ui;
+    private:
+        Ui::EnumConfigDialog *ui;
+        ScanConfig *m_config;
+        bool asn = false;
+
+        void saveConfig_asn();
 };
 
 #endif // ENUMCONFIGDIALOG_H

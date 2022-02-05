@@ -228,7 +228,9 @@ void ProjectModel::addPassiveSSL(const QString &ssl){
 /// enum slots...
 ///
 void ProjectModel::addEnumASN(const s3s_struct::ASN &asn){
-    m_enumASN_rootItem->appendRow(new s3s_item::ASN(asn));
+    s3s_item::ASN *item = new s3s_item::ASN;
+    item->setValues(asn);
+    m_enumASN_rootItem->appendRow(item);
 }
 
 void ProjectModel::addEnumCIDR(){

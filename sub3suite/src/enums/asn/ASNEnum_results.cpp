@@ -6,7 +6,8 @@ void ASNEnum::onResultsAsn(s3s_struct::ASN results){
     if(m_resultsSet.contains(results.asn))
         return;
 
-    s3s_item::ASN *item = new s3s_item::ASN(results);
+    s3s_item::ASN *item = new s3s_item::ASN;
+    item->setValues(results);
     m_model->appendRow(item);
     m_resultsSet.insert(results.asn, item);
 
@@ -20,7 +21,8 @@ void ASNEnum::onResultsAsnPeers(s3s_struct::ASN results){
         item->setPeers(results.peers);
     }
     else{
-        s3s_item::ASN *item = new s3s_item::ASN(results);
+        s3s_item::ASN *item = new s3s_item::ASN;
+        item->setValues(results);
         m_model->appendRow(item);
         m_resultsSet.insert(results.asn, item);
     }
@@ -35,7 +37,8 @@ void ASNEnum::onResultsAsnPrefixes(s3s_struct::ASN results){
         item->setPrefixes(results.prefixes);
     }
     else{
-        s3s_item::ASN *item = new s3s_item::ASN(results);
+        s3s_item::ASN *item = new s3s_item::ASN;
+        item->setValues(results);
         m_model->appendRow(item);
         m_resultsSet.insert(results.asn, item);
     }

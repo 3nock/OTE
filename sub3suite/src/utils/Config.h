@@ -13,6 +13,7 @@
 
 #define APIKEY Config::apiKeys()
 #define CONFIG Config::general()
+#define CONFIG_ENUM Config::enumerator()
 #define CONFIG_OSINT Config::osint()
 #define CONFIG_RAW Config::raw()
 #define CONFIG_BRUTE Config::brute()
@@ -83,6 +84,10 @@ class Config
         }
         static QSettings &ip(){
             static QSettings settings("config/ip.ini", QSettings::IniFormat);
+            return settings;
+        }
+        static QSettings &enumerator(){
+            static QSettings settings("config/enums.ini", QSettings::IniFormat);
             return settings;
         }
         static QSettings &project(){

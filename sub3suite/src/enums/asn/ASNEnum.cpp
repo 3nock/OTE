@@ -8,8 +8,9 @@
 #include "ASNEnum.h"
 #include "ui_ASNEnum.h"
 
+#include "src/utils/Config.h"
 #include "src/utils/Definitions.h"
-#include "src/dialogs/PassiveConfigDialog.h"
+#include "src/dialogs/EnumConfigDialog.h"
 
 
 ASNEnum::ASNEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
@@ -21,6 +22,7 @@ ASNEnum::ASNEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, 
 {
     this->initUI();
     this->initActions();
+    this->initConfigValues();
 
     /* setting targets model */
     ui->targets->setListName("Targets");
@@ -85,8 +87,9 @@ void ASNEnum::on_buttonStop_clicked(){
 }
 
 void ASNEnum::on_buttonConfig_clicked(){
-    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this, m_scanConfig);
+    EnumConfigDialog *scanConfig = new EnumConfigDialog(this, m_scanConfig);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->loadConfig_asn();
     scanConfig->show();
 }
 
@@ -110,6 +113,11 @@ void ASNEnum::initUI(){
     /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                            << static_cast<int>((this->width() * 0.50)));
+}
+
+void ASNEnum::initConfigValues(){
+    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_asn").toBool();
+    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_asn").toBool();
 }
 
 void ASNEnum::log(QString log){
