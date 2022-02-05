@@ -12,6 +12,7 @@
 #include <QStandardItemModel>
 
 #include "src/models/ASNModel.h"
+#include "src/models/CIDRModel.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 
@@ -116,7 +117,7 @@ public:
 
     /* for enum */
     void addEnumASN(const s3s_struct::ASN &asn);
-    void addEnumCIDR();
+    void addEnumCIDR(const s3s_struct::CIDR &cidr);
     void addEnumIp();
     void addEnumNS();
     void addEnumMX();

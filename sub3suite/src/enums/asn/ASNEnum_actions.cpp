@@ -145,7 +145,7 @@ void ASNEnum::m_sendToProject(){
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::ASN *asn_item = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
-        s3s_struct::ASN asn_struct = asn_model_to_struct(asn_item);
+        s3s_struct::ASN asn_struct = asn_to_struct(asn_item);
         project->addEnumASN(asn_struct);
     }
 }
@@ -241,7 +241,7 @@ void ASNEnum::m_sendToProject(QItemSelectionModel *selection){
         QModelIndex model_index = proxyModel->mapToSource(index);
         s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
 
-        project->addEnumASN(asn_model_to_struct(asn));
+        project->addEnumASN(asn_to_struct(asn));
     }
 }
 
@@ -324,7 +324,7 @@ void ASNEnum::m_sendCIDRToEnum(QItemSelectionModel *selection){
 }
 
 void ASNEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::SUBDOMAIN)
+    if(resultType == RESULT_TYPE::ASN)
         ui->targets->add(target);
 
     /* set multiple targets checkbox checked */

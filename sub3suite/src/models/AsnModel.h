@@ -14,7 +14,6 @@
 #include <QJsonObject>
 
 
-/* structure for sending ASN data along signals & slots */
 namespace s3s_struct {
 struct ASN {
     QString asn;
@@ -194,10 +193,10 @@ public:
 
 }
 
-s3s_struct::ASN asn_model_to_struct(s3s_item::ASN *item);
+s3s_struct::ASN asn_to_struct(s3s_item::ASN*);
 
-QJsonObject asn_to_json(s3s_item::ASN *asn_item);
+QJsonObject asn_to_json(s3s_item::ASN*);
 
-void json_to_asn(const QJsonObject &jsonObj, s3s_item::ASN *asn_item);
+void json_to_asn(const QJsonObject&, s3s_item::ASN*);
 
 #endif // ASNMODEL_H

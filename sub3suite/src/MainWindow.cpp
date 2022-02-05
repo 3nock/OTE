@@ -127,9 +127,8 @@ void MainWindow::m_registerMetaTypes(){
     qRegisterMetaType<scan::Log>("scan::Log");
     qRegisterMetaType<dns::ScanResult>("dns::ScanResult");
     qRegisterMetaType<ScanLog>("ScanLog");
-    qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
     qRegisterMetaType<MXModelStruct>("MXModelStruct");
-    qRegisterMetaType<CidrModelStruct>("CidrModelStruct");
+    qRegisterMetaType<s3s_struct::CIDR>("s3s_struct::CIDR");
     qRegisterMetaType<s3s_struct::ASN>("s3s_struct::ASN");
     qRegisterMetaType<QSslCertificate>("QSslCertificate");
 }

@@ -167,7 +167,7 @@ class AbstractOsintModule : public QObject {
         void rawResultsTxt(QByteArray reply);
         /* ... */
         void infoASN(s3s_struct::ASN);
-        void infoCidr(CidrModelStruct);
+        void infoCIDR(s3s_struct::CIDR);
         void infoMX(MXModelStruct);
         void infoNS(NSModelStruct);
         void infoIp(IpModelStruct);

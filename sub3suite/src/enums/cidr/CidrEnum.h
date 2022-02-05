@@ -12,12 +12,14 @@
 #include "src/models/CIDRModel.h"
 #include "src/modules/passive/OsintModulesHeaders.h"
 
+#include <QAction>
+
 
 namespace Ui {
 class CidrEnum;
 }
 
-class CidrEnum : public AbstractEnum{
+class CidrEnum : public AbstractEnum {
         Q_OBJECT
 
     public:
@@ -25,20 +27,72 @@ class CidrEnum : public AbstractEnum{
         ~CidrEnum();
 
     public slots:
-        void onResult(CidrModelStruct results);
-        /* ... */
-        void onEnumerationComplete();
+        void onResult(s3s_struct::CIDR);
+        void onScanThreadEnded();
         void onErrorLog(ScanLog log);
         void onInfoLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
 
+        void onReceiveTargets(QString, RESULT_TYPE);
+
     private slots:
         void on_buttonStart_clicked();
         void on_buttonConfig_clicked();
+        void on_lineEditTarget_returnPressed();
+        void on_buttonStop_clicked();
+        void on_lineEditFilter_textChanged(const QString &arg1);
+        void on_treeResults_customContextMenuRequested(const QPoint &pos);
+        void on_buttonAction_clicked();
 
     private:
         Ui::CidrEnum *ui;
-        CidrModel *m_model;
+        QStandardItemModel *m_model;
+        QStringListModel *m_targetsListModel;
+        QMap<QString, s3s_item::CIDR*> m_resultsSet;
+        ScanConfig *m_scanConfig;
+        ScanArgs *m_scanArgs;
+
+        void initUI();
+        void initConfigValues();
+
+        void startScan();
+        void log(QString log);
+
+        /* for context menu */
+    private:
+        void initActions();
+        /* ... */
+        void m_clearResults();
+        void m_removeResults(QItemSelectionModel*);
+        void m_saveResults();
+        void m_saveResults(QItemSelectionModel*);
+        void m_copyResults();
+        void m_copyResults(QItemSelectionModel*);
+        /* sending results to other tools */
+        void m_sendToProject();
+        void m_sendASNToEngine(ENGINE);
+        void m_sendASNToEnum();
+        void m_sendToProject(QItemSelectionModel*);
+        void m_sendASNToEngine(ENGINE, QItemSelectionModel*);
+        void m_sendASNToEnum(QItemSelectionModel*);
+
+    protected:
+        QAction a_RemoveResults{"Remove"};
+        QAction a_ClearResults{"Clear Results"};
+        QAction a_ExpandResults{"Expand"};
+        QAction a_CollapseResults{"Collapse"};
+        QAction a_Save{"Save as Json"};
+        QAction a_Copy{"Copy as Json"};
+        /* for all */
+        QAction a_SendAllToProject{"Send To Project"};
+        QAction a_SendAllASNToOsint{"Send ASNs To OSINT"};
+        QAction a_SendAllASNToRaw{"Send ASNs To RAW"};
+        QAction a_SendAllASNToASNEnum{"Send ASNs To ASNEnum"};
+        /* for selected */
+        QAction a_SendSelectedToProject{"Send To Project"};
+        QAction a_SendSelectedASNToOsint{"Send ASNs To OSINT"};
+        QAction a_SendSelectedASNToRaw{"Send ASNs To RAW"};
+        QAction a_SendSelectedASNToASNEnum{"Send ASNs To ASNEnum"};
 };
 
 #endif // CIDRENUM_H

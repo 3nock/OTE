@@ -17,6 +17,7 @@ class EnumConfigDialog : public QDialog{
         ~EnumConfigDialog();
 
         void loadConfig_asn();
+        void loadConfig_cidr();
 
     private slots:
         void on_buttonOk_clicked();
@@ -26,8 +27,10 @@ class EnumConfigDialog : public QDialog{
         Ui::EnumConfigDialog *ui;
         ScanConfig *m_config;
         bool asn = false;
+        bool cidr = false;
 
         void saveConfig_asn();
+        void saveConfig_cidr();
 };
 
 #endif // ENUMCONFIGDIALOG_H

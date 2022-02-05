@@ -70,7 +70,13 @@ SOURCES += \
     src/enums/asn/ASNEnum_contextmenu.cpp \
     src/enums/asn/ASNEnum_results.cpp \
     src/enums/asn/ASNEnum_scan.cpp \
+    src/enums/cidr/CidrEnum.cpp \
+    src/enums/cidr/CidrEnum_actions.cpp \
+    src/enums/cidr/CidrEnum_contextmenu.cpp \
+    src/enums/cidr/CidrEnum_results.cpp \
+    src/enums/cidr/CidrEnum_scan.cpp \
     src/models/ASNModel.cpp \
+    src/models/CIDRModel.cpp \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \
@@ -134,7 +140,6 @@ SOURCES += \
     src/project/Project.cpp \
     src/enums/url/UrlEnum.cpp \
     src/enums/asn/ASNEnum.cpp \
-    src/enums/cidr/CidrEnum.cpp \
     src/enums/email/EmailEnum.cpp \
     src/enums/ip/IpEnum.cpp \
     src/enums/mx/MXEnum.cpp \

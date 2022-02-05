@@ -86,6 +86,8 @@ class ASNEnum : public AbstractEnum{
     protected:
         QAction a_RemoveResults{"Remove"};
         QAction a_ClearResults{"Clear Results"};
+        QAction a_ExpandResults{"Expand"};
+        QAction a_CollapseResults{"Collapse"};
         QAction a_Save{"Save as Json"};
         QAction a_Copy{"Copy as Json"};
         /* for all */

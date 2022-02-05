@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>641</width>
-    <height>505</height>
+    <height>377</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,18 +29,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QComboBox" name="comboBoxEngine">
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>0</height>
-        </size>
+      <widget class="QLabel" name="labelOutput">
+       <property name="text">
+        <string>Out:</string>
        </property>
-       <item>
-        <property name="text">
-         <string>Bgpview</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>
@@ -54,6 +46,28 @@
        <item>
         <property name="text">
          <string>PREFIX</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelModule">
+       <property name="text">
+        <string>Module:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxEngine">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>Bgpview</string>
         </property>
        </item>
       </widget>
@@ -84,6 +98,13 @@
        </property>
        <property name="text">
         <string>Stop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -171,6 +192,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
              <string>Enumerated CIDR:</string>
             </property>
@@ -206,6 +233,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="treeResults">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="acceptDrops">
            <bool>false</bool>
           </property>
@@ -254,14 +284,16 @@
           <item>
            <widget class="QLineEdit" name="lineEditFilter"/>
           </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRegex">
+            <property name="text">
+             <string>Regex</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="tabGraph">
-       <attribute name="title">
-        <string>Graph</string>
-       </attribute>
       </widget>
       <widget class="QWidget" name="tabLogs">
        <attribute name="title">

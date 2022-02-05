@@ -12,8 +12,12 @@
 #include <QStandardItem>
 #include <QSet>
 
-/* structure for sending CidrModel data along signals & slots */
-struct CidrModelStruct{
+namespace s3s_struct {
+
+struct CIDR {
+    QString cidr;
+
+    /* ... */
     QSet<QString> emailcontacts;
     QSet<QString> abusecontacts;
     QSet<QString> asns;
@@ -35,13 +39,13 @@ struct CidrModelStruct{
     QString rir_dateallocated;
 };
 
-/* the main Cidr results data Model */
-class CidrModel{
-public:
-    CidrModel():
-        model(new QStandardItemModel),
+}
 
-        /* general */
+namespace s3s_item {
+
+class CIDR: public QStandardItem {
+public:
+    CIDR(): QStandardItem(),
         info(new QStandardItem("Info")),
         emailContacts(new QStandardItem("Email Contacts")),
         abuseContacts(new QStandardItem("Abuse Contacts")),
@@ -53,6 +57,7 @@ public:
         info_ip(new QStandardItem),
         info_cidr(new QStandardItem),
         info_name(new QStandardItem),
+        info_country(new QStandardItem),
         info_description(new QStandardItem),
         info_website(new QStandardItem),
         info_ownerAddress(new QStandardItem),
@@ -63,23 +68,26 @@ public:
         rir_country(new QStandardItem),
         rir_dateAllocated(new QStandardItem)
     {
-        info->setForeground(QColor(220,220,220));
-        emailContacts->setForeground(QColor(220,220,220));
-        abuseContacts->setForeground(QColor(220,220,220));
-        rir->setForeground(QColor(220,220,220));
-        asns->setForeground(QColor(220,220,220));
+        this->setForeground(Qt::white);
+        this->setIcon(QIcon(":/img/res/icons/folder.png"));
 
-        QFont font("Segoe UI", 9, QFont::Bold);
-        info->setFont(font);
-        emailContacts->setFont(font);
-        abuseContacts->setFont(font);
-        rir->setFont(font);
-        asns->setFont(font);
+        info->setForeground(Qt::white);
+        emailContacts->setForeground(Qt::white);
+        abuseContacts->setForeground(Qt::white);
+        rir->setForeground(Qt::white);
+        asns->setForeground(Qt::white);
+
+        info->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        emailContacts->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        abuseContacts->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        rir->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        asns->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
         info->appendRow({new QStandardItem("prefix"), info_prefix});
         info->appendRow({new QStandardItem("ip"), info_ip});
         info->appendRow({new QStandardItem("cidr"), info_cidr});
         info->appendRow({new QStandardItem("name"), info_name});
+        info->appendRow({new QStandardItem("Country"), info_country});
         info->appendRow({new QStandardItem("description"), info_description});
         info->appendRow({new QStandardItem("website"), info_website});
         info->appendRow({new QStandardItem("owner's address"), info_ownerAddress});
@@ -89,25 +97,18 @@ public:
         rir->appendRow({new QStandardItem("country"), rir_country});
         rir->appendRow({new QStandardItem("date allocated"), rir_dateAllocated});
 
-        /* the model */
-        model->setColumnCount(2);
-        model->setHorizontalHeaderLabels({"  Property", "  Value"});
-
-        /* append to the model */
-        model->appendRow(info);
-        model->appendRow(emailContacts);
-        model->appendRow(abuseContacts);
-        model->appendRow(rir);
-        model->appendRow(asns);
+        /* append to the cidr */
+        this->appendRow(info);
+        this->appendRow(emailContacts);
+        this->appendRow(abuseContacts);
+        this->appendRow(rir);
+        this->appendRow(asns);
     }
-    ~CidrModel()
+    ~CIDR()
     {
-        /* not yet implemented */
     }
 
 public:
-    QStandardItemModel *model;
-
     /* general */
     QStandardItem *info;
     QStandardItem *emailContacts;
@@ -120,6 +121,7 @@ public:
     QStandardItem *info_ip;
     QStandardItem *info_cidr;
     QStandardItem *info_name;
+    QStandardItem *info_country;
     QStandardItem *info_description;
     QStandardItem *info_website;
     QStandardItem *info_ownerAddress;
@@ -129,7 +131,55 @@ public:
     QStandardItem *rir_prefix;
     QStandardItem *rir_country;
     QStandardItem *rir_dateAllocated;
-    QString aaa;
+
+    void setValues(const s3s_struct::CIDR &cidr){
+        this->setText(cidr.cidr);
+
+        /* info */
+        info_prefix->setText(cidr.info_prefix);
+        info_ip->setText(cidr.info_ip);
+        info_cidr->setText(cidr.info_cidr);
+        info_name->setText(cidr.info_name);
+        info_description->setText(cidr.info_description);
+        info_country->setText(cidr.info_country);
+        info_website->setText(cidr.info_website);
+        info_ownerAddress->setText(cidr.info_ownerAddress);
+
+        /* rir */
+        rir_name->setText(cidr.rir_name);
+        rir_country->setText(cidr.rir_country);
+        rir_prefix->setText(cidr.rir_prefix);
+        rir_dateAllocated->setText(cidr.rir_dateallocated);
+
+        int count = 0;
+        /* email contacts */
+        foreach(const QString &value, cidr.emailcontacts){
+            emailContacts->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(value)});
+            count++;
+        }
+
+        /* abuse contacts */
+        count = 0;
+        foreach(const QString &value, cidr.abusecontacts){
+            abuseContacts->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(value)});
+            count++;
+        }
+
+        /* asns */
+        count = 0;
+        foreach(const QString &asn, cidr.asns){
+            asns->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(asn)});
+            count++;
+        }
+    }
 };
+
+}
+
+s3s_struct::CIDR cidr_to_struct(s3s_item::CIDR*);
+
+QJsonObject cidr_to_json(s3s_item::CIDR*);
+
+void json_to_cidr(const QJsonObject&, s3s_item::CIDR*);
 
 #endif // CIDRMODEL_H

@@ -347,6 +347,11 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         m_enumASN_rootItem->appendRow(item);
     }
     /* enum CIDR" */
+    foreach(const QJsonValue &value, data["enum_CIDR"].toArray()){
+        s3s_item::CIDR *item = new s3s_item::CIDR;
+        json_to_cidr(value.toObject(), item);
+        m_enumCIDR_rootItem->appendRow(item);
+    }
     /* enum IP */
     /* enum MX" */
     /* enum NS" */
@@ -561,6 +566,14 @@ QByteArray ProjectModel::getJson(){
         s3s_item::ASN *item = static_cast<s3s_item::ASN*>(enumASN_model->item(index.row(), index.column()));
 
         enum_ASN_array.append(asn_to_json(item));
+    }
+
+    /* enum CIDR */
+    for(int i = 0; i < m_enumCIDR_rootItem->rowCount(); ++i){
+        QModelIndex index = m_enumCIDR_rootItem->child(i, 0)->index();
+        s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(enumCIDR_model->item(index.row(), index.column()));
+
+        enum_CIDR_array.append(cidr_to_json(item));
     }
 
     QJsonObject general;

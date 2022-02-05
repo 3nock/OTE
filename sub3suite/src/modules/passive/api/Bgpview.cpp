@@ -467,45 +467,47 @@ void Bgpview::replyFinishedInfoCidr(QNetworkReply *reply){
 
     if(QUERY_TYPE == IP_PREFIXES)
     {
-        CidrModelStruct cidrModel;
+        s3s_struct::CIDR cidr;
 
-        /* general info */
-        cidrModel.info_prefix = data["prefix"].toString();
-        cidrModel.info_ip = data["ip"].toString();
-        cidrModel.info_cidr = QString::number(data["cidr"].toInt());
-        cidrModel.info_name = data["name"].toString();
-        cidrModel.info_description = data["description_short"].toString();
-        cidrModel.info_country = data["country_code"].toString();
-        cidrModel.info_website = data["website"].toString();
+        cidr.cidr = target;
+
+        /* info */
+        cidr.info_prefix = data["prefix"].toString();
+        cidr.info_ip = data["ip"].toString();
+        cidr.info_cidr = QString::number(data["cidr"].toInt());
+        cidr.info_name = data["name"].toString();
+        cidr.info_description = data["description_short"].toString();
+        cidr.info_country = data["country_code"].toString();
+        cidr.info_website = data["website"].toString();
         // owner's address...
         QString address = "";
         foreach(const QJsonValue &value, data["owner_address"].toArray())
             address.append(value.toString()+", ");
-        cidrModel.info_ownerAddress = address;
+        cidr.info_ownerAddress = address;
 
         /* email contacts */
         foreach(const QJsonValue &value, data["email_contacts"].toArray())
-            cidrModel.emailcontacts.insert(value.toString());
+            cidr.emailcontacts.insert(value.toString());
 
         /* abuse contacts */
         foreach(const QJsonValue &value, data["abuse_contacts"].toArray())
-            cidrModel.abusecontacts.insert(value.toString());
+            cidr.abusecontacts.insert(value.toString());
 
         /* rir allocation */
         QJsonObject rirAllocation = data["rir_allocation"].toObject();
-        cidrModel.rir_name = rirAllocation["rir_name"].toString();
-        cidrModel.rir_country = rirAllocation["country_code"].toString();
-        cidrModel.rir_prefix = rirAllocation["prefix"].toString();
-        cidrModel.rir_dateallocated = rirAllocation["date_allocated"].toString();
+        cidr.rir_name = rirAllocation["rir_name"].toString();
+        cidr.rir_country = rirAllocation["country_code"].toString();
+        cidr.rir_prefix = rirAllocation["prefix"].toString();
+        cidr.rir_dateallocated = rirAllocation["date_allocated"].toString();
 
         /* asns */
         foreach(const QJsonValue &value, data["asns"].toArray()){
             QString asn = QString::number(value.toObject()["asn"].toInt());
-            cidrModel.asns.insert(asn);
+            cidr.asns.insert(asn);
         }
 
         /* sending results */
-        emit infoCidr(cidrModel);
+        emit infoCIDR(cidr);
     }
 
     end(reply);
