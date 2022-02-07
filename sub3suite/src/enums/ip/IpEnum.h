@@ -37,7 +37,6 @@ class IpEnum : public AbstractEnum{
 
     private:
         Ui::IpEnum *ui;
-        IpModel *m_model;
 };
 
 #endif // IPENUM_H

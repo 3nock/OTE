@@ -16,8 +16,7 @@
 
 
 IpEnum::IpEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
-    ui(new Ui::IpEnum),
-    m_model(new IpModel)
+    ui(new Ui::IpEnum)
 {
     ui->setupUi(this);
 
@@ -27,15 +26,11 @@ IpEnum::IpEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
     ui->lineEditFilter->setPlaceholderText("Filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_IP);
 
-    /* setting model with tableView...*/
-    ui->treeResults->setModel(m_model->model);
-
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
 }
 IpEnum::~IpEnum(){
-    delete m_model;
     delete ui;
 }
 

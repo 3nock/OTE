@@ -8,22 +8,69 @@
 #ifndef IPMODEL_H
 #define IPMODEL_H
 
-#include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSet>
 
 
-struct IpModelStruct{
+namespace s3s_struct {
+
+struct IP {
+    /* info */
+    QString info_ip;
+    QString info_type;
+    QString info_host;
+    QString info_city;
+    QString info_region;
+    QString info_countryName;
+    QString info_countryCode;
+    QString info_zip;
+    QString info_geoLocation;
+    QString info_organization;
+    QString info_timezone;
+    QString info_currency;
+
+    /* asnInfo */
+    QString asnInfo_asn;
+    QString asnInfo_name;
+    QString asnInfo_domain;
+    QString asnInfo_route;
+    QString asnInfo_type;
+
+    /* companyInfo */
+    QString companyInfo_name;
+    QString companyInfo_domain;
+    QString companyInfo_type;
+
+    /* privacyInfo */
+    QString privacyInfo_vpn;
+    QString privacyInfo_proxy;
+    QString privacyInfo_tor;
+    QString privacyInfo_hosting;
+    QString privacyInfo_relay;
+    QString privacyInfo_threatLevel;
+
+    /* abuseInfo */
+    QString abuseInfo_address;
+    QString abuseInfo_country;
+    QString abuseInfo_email;
+    QString abuseInfo_name;
+    QString abuseInfo_network;
+    QString abuseInfo_phone;
+
+    /* ... */
     QSet<QString> domains;
 };
+}
 
-class IpModel{
+
+namespace s3s_item {
+
+class IP: public QStandardItem{
 public:
-    IpModel():
-        model(new QStandardItemModel),
+    IP(): QStandardItem(),
 
-        /* main */
-        info(new QStandardItem("Ip Basic Information")),
+        /* general */
+        info(new QStandardItem("Ip Information")),
         asnInfo(new QStandardItem("ASN information")),
         companyInfo(new QStandardItem("Company Information")),
         privacyInfo(new QStandardItem("Privacy Information")),
@@ -71,21 +118,22 @@ public:
         abuseInfo_network(new QStandardItem),
         abuseInfo_phone(new QStandardItem)
     {
-        info->setForeground(QColor(220,220,220));
-        asnInfo->setForeground(QColor(220,220,220));
-        companyInfo->setForeground(QColor(220,220,220));
-        privacyInfo->setForeground(QColor(220,220,220));
-        abuseInfo->setForeground(QColor(220,220,220));
-        domains->setForeground(QColor(220,220,220));
+        this->setForeground(Qt::white);
+        this->setIcon(QIcon(":/img/res/icons/folder.png"));
 
-        QFont font("Segoe UI", 9, QFont::Bold);
-        //...
-        info->setFont(font);
-        asnInfo->setFont(font);
-        companyInfo->setFont(font);
-        privacyInfo->setFont(font);
-        abuseInfo->setFont(font);
-        domains->setFont(font);
+        info->setForeground(Qt::white);
+        asnInfo->setForeground(Qt::white);
+        companyInfo->setForeground(Qt::white);
+        privacyInfo->setForeground(Qt::white);
+        abuseInfo->setForeground(Qt::white);
+        domains->setForeground(Qt::white);
+
+        info->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        asnInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        companyInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        privacyInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        abuseInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        domains->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
         info->appendRow({new QStandardItem("Ip"), info_ip});
         info->appendRow({new QStandardItem("Type"), info_type});
@@ -123,26 +171,19 @@ public:
         abuseInfo->appendRow({new QStandardItem("Network"), abuseInfo_network});
         abuseInfo->appendRow({new QStandardItem("Phone"), abuseInfo_phone});
 
-        /* the model */
-        model->setColumnCount(2);
-        model->setHorizontalHeaderLabels({"  Property", "  Value"});
-
-        /* append to the model */
-        model->appendRow(info);
-        model->appendRow(asnInfo);
-        model->appendRow(companyInfo);
-        model->appendRow(privacyInfo);
-        model->appendRow(abuseInfo);
-        model->appendRow(domains);
+        /* append to the IP */
+        this->appendRow(info);
+        this->appendRow(asnInfo);
+        this->appendRow(companyInfo);
+        this->appendRow(privacyInfo);
+        this->appendRow(abuseInfo);
+        this->appendRow(domains);
     }
-    ~IpModel(){
-        delete model;
+    ~IP()
+    {
     }
 
 public:
-    QStandardItemModel *model;
-
-    /* ... */
     QStandardItem *info;
     QStandardItem *asnInfo;
     QStandardItem *companyInfo;
@@ -191,6 +232,65 @@ public:
     QStandardItem *abuseInfo_name;
     QStandardItem *abuseInfo_network;
     QStandardItem *abuseInfo_phone;
+
+    void setValues(const s3s_struct::IP &ip){
+        /* ip info */
+        info_ip->setText(ip.info_ip);
+        info_type->setText(ip.info_type);
+        info_host->setText(ip.info_host);
+        info_city->setText(ip.info_city);
+        info_region->setText(ip.info_region);
+        info_countryName->setText(ip.info_countryName);
+        info_countryCode->setText(ip.info_countryCode);
+        info_zip->setText(ip.info_zip);
+        info_geoLocation->setText(ip.info_geoLocation);
+        info_organization->setText(ip.info_organization);
+        info_timezone->setText(ip.info_timezone);
+        info_currency->setText(ip.info_currency);
+
+        /* asn info */
+        asnInfo_asn->setText(ip.asnInfo_asn);
+        asnInfo_name->setText(ip.asnInfo_name);
+        asnInfo_domain->setText(ip.asnInfo_domain);
+        asnInfo_route->setText(ip.asnInfo_route);
+        asnInfo_type->setText(ip.asnInfo_type);
+
+        /* company info */
+        companyInfo_name->setText(ip.companyInfo_name);
+        companyInfo_domain->setText(ip.companyInfo_domain);
+        companyInfo_type->setText(ip.companyInfo_type);
+
+        /* privacy info */
+        privacyInfo_vpn->setText(ip.privacyInfo_vpn);
+        privacyInfo_proxy->setText(ip.privacyInfo_proxy);
+        privacyInfo_tor->setText(ip.privacyInfo_tor);
+        privacyInfo_hosting->setText(ip.privacyInfo_hosting);
+        privacyInfo_relay->setText(ip.privacyInfo_relay);
+        privacyInfo_threatLevel->setText(ip.privacyInfo_threatLevel);
+
+        /* abuse info */
+        abuseInfo_address->setText(ip.abuseInfo_address);
+        abuseInfo_country->setText(ip.abuseInfo_country);
+        abuseInfo_email->setText(ip.abuseInfo_email);
+        abuseInfo_name->setText(ip.abuseInfo_name);
+        abuseInfo_network->setText(ip.abuseInfo_network);
+        abuseInfo_phone->setText(ip.abuseInfo_phone);
+
+        /* domains */
+        int count = domains->rowCount();
+        foreach(const QString &domain, ip.domains){
+            domains->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(domain)});
+            count++;
+        }
+    }
 };
+
+}
+
+s3s_struct::IP ip_to_struct(s3s_item::IP*);
+
+QJsonObject ip_to_json(s3s_item::IP*);
+
+void json_to_ip(const QJsonObject&, s3s_item::IP*);
 
 #endif // IPMODEL_H

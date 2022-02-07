@@ -179,6 +179,12 @@
            <property name="sortingEnabled">
             <bool>false</bool>
            </property>
+           <property name="headerHidden">
+            <bool>false</bool>
+           </property>
+           <attribute name="headerCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
            <attribute name="headerMinimumSectionSize">
             <number>200</number>
            </attribute>

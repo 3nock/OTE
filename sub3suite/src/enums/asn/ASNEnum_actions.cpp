@@ -9,7 +9,6 @@
 
 /* TODO:
  *     validate if selected index is asn...
- *     sujest to save as json
  */
 
 void ASNEnum::m_clearResults(){

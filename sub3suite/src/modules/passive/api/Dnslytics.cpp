@@ -503,15 +503,15 @@ void Dnslytics::replyFinishedInfoIp(QNetworkReply *reply){
     QJsonObject data = document.object()["data"].toObject();
 
     /* initiate the struct */
-    IpModelStruct ipModelStruct;
+    s3s_struct::IP ip;
 
     /* append the domains */
     foreach(const QJsonValue &value, data["domains"].toArray()){
-        ipModelStruct.domains.insert(value.toString());
+        ip.domains.insert(value.toString());
     }
 
     /* send the structure */
-    emit infoIp(ipModelStruct);
+    emit infoIp(ip);
 
     end(reply);
 }

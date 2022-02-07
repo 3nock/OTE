@@ -8,10 +8,9 @@
 #ifndef ASNMODEL_H
 #define ASNMODEL_H
 
-#include <QStandardItemModel>
 #include <QStandardItem>
-#include <QSet>
 #include <QJsonObject>
+#include <QSet>
 
 
 namespace s3s_struct {

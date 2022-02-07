@@ -8,7 +8,6 @@
 #ifndef CIDRMODEL_H
 #define CIDRMODEL_H
 
-#include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSet>
 

@@ -170,7 +170,7 @@ class AbstractOsintModule : public QObject {
         void infoCIDR(s3s_struct::CIDR);
         void infoMX(MXModelStruct);
         void infoNS(NSModelStruct);
-        void infoIp(IpModelStruct);
+        void infoIp(s3s_struct::IP);
 
     public slots:
         void onStop(){
