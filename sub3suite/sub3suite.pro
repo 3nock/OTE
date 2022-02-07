@@ -79,9 +79,19 @@ SOURCES += \
     src/enums/ip/IpEnum_contextmenu.cpp \
     src/enums/ip/IpEnum_results.cpp \
     src/enums/ip/IpEnum_scan.cpp \
+    src/enums/mx/MXEnum_actions.cpp \
+    src/enums/mx/MXEnum_contextmenu.cpp \
+    src/enums/mx/MXEnum_results.cpp \
+    src/enums/mx/MXEnum_scan.cpp \
+    src/enums/ns/NSEnum_actions.cpp \
+    src/enums/ns/NSEnum_contextmenu.cpp \
+    src/enums/ns/NSEnum_results.cpp \
+    src/enums/ns/NSEnum_scan.cpp \
     src/models/ASNModel.cpp \
     src/models/CIDRModel.cpp \
     src/models/IPModel.cpp \
+    src/models/MXModel.cpp \
+    src/models/NSModel.cpp \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \

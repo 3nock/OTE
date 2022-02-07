@@ -28,7 +28,6 @@ class IpEnum : public AbstractEnum{
     public slots:
         void onResult(s3s_struct::IP);
         void onScanThreadEnded();
-
         void onInfoLog(ScanLog log);
         void onErrorLog(ScanLog log);
         void onRateLimitLog(ScanLog log);

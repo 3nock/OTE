@@ -8,121 +8,130 @@
 #include "NSEnum.h"
 #include "ui_NSEnum.h"
 
-#include "src/dialogs/PassiveConfigDialog.h"
-
-
-#define DNSLYTICS 0
+#include "src/utils/Config.h"
+#include "src/dialogs/EnumConfigDialog.h"
 
 
 NSEnum::NSEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
     ui(new Ui::NSEnum),
-    m_model(new NSModel)
+    m_model(new QStandardItemModel),
+    m_targetsListModel(new QStringListModel),
+    m_scanConfig(new ScanConfig),
+    m_scanArgs(new ScanArgs)
 {
+    this->initUI();
+    //this->initActions();
+    this->initConfigValues();
+
+    /* setting targets model */
+    ui->targets->setListName("Targets");
+    ui->targets->setListModel(m_targetsListModel);
+
+    /* setting model with tableView... */
+    m_model->setHorizontalHeaderLabels({"    NS", "    Values"});
+    proxyModel->setSourceModel(m_model);
+    ui->treeResults->setModel(proxyModel);
+
+    /* scan arguments */
+    m_scanArgs->config = m_scanConfig;
+}
+NSEnum::~NSEnum(){
+    delete m_scanArgs;
+    delete m_scanConfig;
+    delete m_targetsListModel;
+    delete m_model;
+    delete ui;
+}
+
+void NSEnum::on_lineEditTarget_returnPressed(){
+    this->on_buttonStart_clicked();
+}
+
+void NSEnum::on_buttonStart_clicked(){
+    /* checks */
+    if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
+        QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+        return;
+    }
+    if(ui->checkBoxMultipleTargets->isChecked() && m_targetsListModel->rowCount() < 1){
+        QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+        return;
+    }
+
+    /* enabling/disabling widgets... */
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setDisabled(true);
+
+    /* setting status */
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
+
+    /* start scan */
+    this->startScan();
+
+    /* logs */
+    this->log("------------------ start ----------------");
+    qInfo() << "Scan Started";
+}
+
+void NSEnum::on_buttonStop_clicked(){
+    emit stopScanThread();
+
+    status->isStopped = true;
+    status->isNotActive = false;
+    status->isPaused = false;
+    status->isRunning = false;
+}
+
+void NSEnum::on_buttonConfig_clicked(){
+    EnumConfigDialog *scanConfig = new EnumConfigDialog(this, m_scanConfig);
+    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->loadConfig_ns();
+    scanConfig->show();
+}
+
+void NSEnum::initUI(){
     ui->setupUi(this);
 
-    ui->frame->setProperty("default_frame", true);
+    /* hiding & disabling some widgets */
+    ui->progressBar->hide();
+    ui->buttonStop->setDisabled(true);
 
-    /* enter used modules */
-    ui->comboBoxEngine->addItem("DNSLytics");
-    ui->comboBoxOption->addItem("Domains");
+    /* setting specific properties */
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+    ui->labelOut->setProperty("s3s_color", true);
+    ui->labelModule->setProperty("s3s_color", true);
 
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText("Filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_NS);
 
-    /* setting model with tableView... */
-    ui->treeResults->setModel(m_model->model);
-
-    /* equally seperate the widgets... */
+    /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
-                                        << static_cast<int>((this->width() * 0.50)));
-}
-NSEnum::~NSEnum(){
-    delete m_model;
-    delete ui;
+                           << static_cast<int>((this->width() * 0.50)));
 }
 
-void NSEnum::onResultsNS(NSModelStruct results){
-    /* info */
-    m_model->info_ns->setText(results.info_ns);
-    m_model->info_ip->setText(results.info_ip);
-
-    /* domains */
-    int domains = 0;
-    foreach(const QString &value, results.domains){
-        m_model->domains->appendRow({new QStandardItem(QString::number(domains)), new QStandardItem(value)});
-        domains++;
-    }
+void NSEnum::initConfigValues(){
+    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_ns").toBool();
+    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_ns").toBool();
 }
 
-void NSEnum::onEnumerationComplete(){
-    ui->buttonStart->setEnabled(true);
-    ui->buttonStop->setDisabled(true);
+void NSEnum::log(QString log){
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
 
-void NSEnum::onErrorLog(ScanLog log){
-    QString message("<font color=\"red\">"+log.message+"</font>");
-    QString module("<font color=\"red\">"+log.moduleName+"</font>");
-    QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
-    ui->plainTextEditLogs->appendPlainText("");
-}
+void NSEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
+    proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
 
-void NSEnum::onInfoLog(ScanLog log){
-    QString module("<font color=\"green\">"+log.moduleName+"</font>");
-    QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendPlainText("");
-}
+    if(ui->checkBoxRegex->isChecked())
+        proxyModel->setFilterRegExp(QRegExp(filterKeyword));
+    else
+        proxyModel->setFilterFixedString(filterKeyword);
 
-void NSEnum::onRateLimitLog(ScanLog log){
-    QString message("<font color=\"yellow\">"+log.message+"</font>");
-    QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
-    QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
-    ui->plainTextEditLogs->appendPlainText("");
-}
-
-void NSEnum::on_buttonStart_clicked(){
-    /* scan argumemts */
-    ScanArgs scanArgs;
-
-    /* getting the targets */
-    if(ui->checkBoxMultipleTargets->isChecked()){
-
-    }else
-        scanArgs.targets.enqueue(ui->lineEditTarget->text());
-
-    scanArgs.outputInfoNS = true;
-
-    ui->buttonStop->setEnabled(true);
-    ui->buttonStart->setDisabled(true);
-
-    /* starting appropriate engine enumeration thread */
-    QThread *cThread = new QThread;
-    switch (ui->comboBoxEngine->currentIndex()) {
-    case DNSLYTICS:
-        Dnslytics *dnslytics = new Dnslytics(scanArgs);
-        dnslytics->startScan(cThread);
-        dnslytics->moveToThread(cThread);
-        connect(dnslytics, &IpInfo::infoNS, this, &NSEnum::onResultsNS);
-        connect(dnslytics, &IpInfo::infoLog, this, &NSEnum::onInfoLog);
-        connect(dnslytics, &IpInfo::errorLog, this, &NSEnum::onErrorLog);
-        connect(dnslytics, &IpInfo::rateLimitLog, this, &NSEnum::onRateLimitLog);
-        connect(cThread, &QThread::finished, this, &NSEnum::onEnumerationComplete);
-        connect(cThread, &QThread::finished, dnslytics, &Bgpview::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-    }
-}
-
-void NSEnum::on_buttonConfig_clicked(){
-    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
-    scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
-    scanConfig->show();
+    ui->treeResults->setModel(proxyModel);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }

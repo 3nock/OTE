@@ -111,7 +111,7 @@ void IpEnum::initUI(){
 
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText("Filter...");
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_CIDR);
+    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_IP);
 
     /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))

@@ -168,8 +168,8 @@ class AbstractOsintModule : public QObject {
         /* ... */
         void infoASN(s3s_struct::ASN);
         void infoCIDR(s3s_struct::CIDR);
-        void infoMX(MXModelStruct);
-        void infoNS(NSModelStruct);
+        void infoMX(s3s_struct::MX);
+        void infoNS(s3s_struct::NS);
         void infoIp(s3s_struct::IP);
 
     public slots:

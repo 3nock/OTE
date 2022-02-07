@@ -245,12 +245,16 @@ void ProjectModel::addEnumIP(const s3s_struct::IP &ip){
     m_enumIp_rootItem->appendRow(item);
 }
 
-void ProjectModel::addEnumNS(){
-
+void ProjectModel::addEnumNS(const s3s_struct::NS &ns){
+    s3s_item::NS *item = new s3s_item::NS;
+    item->setValues(ns);
+    m_enumNS_rootItem->appendRow(item);
 }
 
-void ProjectModel::addEnumMX(){
-
+void ProjectModel::addEnumMX(const s3s_struct::MX &mx){
+    s3s_item::MX *item = new s3s_item::MX;
+    item->setValues(mx);
+    m_enumMX_rootItem->appendRow(item);
 }
 
 void ProjectModel::addEnumSSL(){

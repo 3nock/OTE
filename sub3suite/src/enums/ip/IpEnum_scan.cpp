@@ -51,7 +51,7 @@ void IpEnum::startScan(){
     ui->progressBar->setMaximum(scanArgs.targets.length());
     scanArgs.progress = 0;
 
-    scanArgs.outputInfoCidr = true;
+    scanArgs.outputInfoIp = true;
 
     QThread *cThread = new QThread;
     switch (ui->comboBoxEngine->currentIndex()) {

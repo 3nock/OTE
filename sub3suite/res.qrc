@@ -27,7 +27,6 @@
         <file>res/files/under_development.html</file>
     </qresource>
     <qresource prefix="/themes">
-        <file>res/themes/light.css</file>
         <file>res/themes/dark.css</file>
     </qresource>
     <qresource prefix="/documentation">

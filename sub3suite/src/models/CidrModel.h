@@ -153,21 +153,24 @@ public:
         int count = 0;
         /* email contacts */
         foreach(const QString &value, cidr.emailcontacts){
-            emailContacts->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(value)});
+            emailContacts->appendRow({new QStandardItem(QString::number(count)),
+                                      new QStandardItem(value)});
             count++;
         }
 
         /* abuse contacts */
         count = 0;
         foreach(const QString &value, cidr.abusecontacts){
-            abuseContacts->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(value)});
+            abuseContacts->appendRow({new QStandardItem(QString::number(count)),
+                                      new QStandardItem(value)});
             count++;
         }
 
         /* asns */
         count = 0;
         foreach(const QString &asn, cidr.asns){
-            asns->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(asn)});
+            asns->appendRow({new QStandardItem(QString::number(count)),
+                             new QStandardItem(asn)});
             count++;
         }
     }

@@ -21,6 +21,10 @@ void EnumConfigDialog::on_buttonOk_clicked(){
         this->saveConfig_cidr();
     if(ip)
         this->saveConfig_ip();
+    if(ns)
+        this->saveConfig_ns();
+    if(mx)
+        this->saveConfig_mx();
 
     accept();
 }
@@ -53,6 +57,20 @@ void EnumConfigDialog::loadConfig_ip(){
     ip = true;
 }
 
+void EnumConfigDialog::loadConfig_ns(){
+    ui->checkBoxAutosave->setChecked(CONFIG_ENUM.value("autosave_to_Project_ns").toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG_ENUM.value("no_duplicates_ns").toBool());
+
+    ns = true;
+}
+
+void EnumConfigDialog::loadConfig_mx(){
+    ui->checkBoxAutosave->setChecked(CONFIG_ENUM.value("autosave_to_Project_mx").toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG_ENUM.value("no_duplicates_mx").toBool());
+
+    mx = true;
+}
+
 ///
 /// saving the configurations
 ///
@@ -80,6 +98,26 @@ void EnumConfigDialog::saveConfig_ip(){
     /* save to config file */
     CONFIG_ENUM.setValue("autosave_to_Project_ip", ui->checkBoxAutosave->isChecked());
     CONFIG_ENUM.setValue("no_duplicates_ip", ui->checkBoxNoDuplicates->isChecked());
+
+    /* save to config structure */
+    m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
+    m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+}
+
+void EnumConfigDialog::saveConfig_ns(){
+    /* save to config file */
+    CONFIG_ENUM.setValue("autosave_to_Project_ns", ui->checkBoxAutosave->isChecked());
+    CONFIG_ENUM.setValue("no_duplicates_ns", ui->checkBoxNoDuplicates->isChecked());
+
+    /* save to config structure */
+    m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
+    m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+}
+
+void EnumConfigDialog::saveConfig_mx(){
+    /* save to config file */
+    CONFIG_ENUM.setValue("autosave_to_Project_mx", ui->checkBoxAutosave->isChecked());
+    CONFIG_ENUM.setValue("no_duplicates_mx", ui->checkBoxNoDuplicates->isChecked());
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();

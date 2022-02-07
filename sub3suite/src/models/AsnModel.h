@@ -147,28 +147,32 @@ public:
         int count = 0;
         /* email contacts */
         foreach(const QString &value, asn.emailcontacts){
-            emailContacts->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(value)});
+            emailContacts->appendRow({new QStandardItem(QString::number(count)),
+                                      new QStandardItem(value)});
             count++;
         }
 
         /* abuse contacts */
         count = 0;
         foreach(const QString &value, asn.abusecontacts){
-            abuseContacts->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(value)});
+            abuseContacts->appendRow({new QStandardItem(QString::number(count)),
+                                      new QStandardItem(value)});
             count++;
         }
 
         /* peers */
         count = 0;
         foreach(const QString &peer, asn.peers){
-            peers->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(peer)});
+            peers->appendRow({new QStandardItem(QString::number(count)),
+                              new QStandardItem(peer)});
             count++;
         }
 
         /* prefixes */
         count = 0;
         foreach(const QString &prefix, asn.prefixes){
-            prefixes->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(prefix)});
+            prefixes->appendRow({new QStandardItem(QString::number(count)),
+                                 new QStandardItem(prefix)});
             count++;
         }
     }
@@ -176,7 +180,8 @@ public:
     void setPeers(const QSet<QString> &peersList){
         int count = 0;
         foreach(const QString &peer, peersList){
-            peers->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(peer)});
+            peers->appendRow({new QStandardItem(QString::number(count)),
+                              new QStandardItem(peer)});
             count++;
         }
     }
@@ -184,7 +189,8 @@ public:
     void setPrefixes(const QSet<QString> &prefixList){
         int count = 0;
         foreach(const QString &prefix, prefixList){
-            prefixes->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(prefix)});
+            prefixes->appendRow({new QStandardItem(QString::number(count)),
+                                 new QStandardItem(prefix)});
             count++;
         }
     }

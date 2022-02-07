@@ -14,6 +14,8 @@
 #include "src/models/ASNModel.h"
 #include "src/models/CIDRModel.h"
 #include "src/models/IPModel.h"
+#include "src/models/MXModel.h"
+#include "src/models/NSModel.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 
@@ -120,8 +122,8 @@ public:
     void addEnumASN(const s3s_struct::ASN &asn);
     void addEnumCIDR(const s3s_struct::CIDR &cidr);
     void addEnumIP(const s3s_struct::IP &ip);
-    void addEnumNS();
-    void addEnumMX();
+    void addEnumNS(const s3s_struct::NS &ns);
+    void addEnumMX(const s3s_struct::MX &xm);
     void addEnumSSL();
     void addEnumEmail();
     void addEnumURL();

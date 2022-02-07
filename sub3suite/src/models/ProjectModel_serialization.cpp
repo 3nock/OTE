@@ -359,7 +359,17 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         m_enumIp_rootItem->appendRow(item);
     }
     /* enum MX" */
+    foreach(const QJsonValue &value, data["enum_MX"].toArray()){
+        s3s_item::MX *item = new s3s_item::MX;
+        json_to_mx(value.toObject(), item);
+        m_enumMX_rootItem->appendRow(item);
+    }
     /* enum NS" */
+    foreach(const QJsonValue &value, data["enum_NS"].toArray()){
+        s3s_item::NS *item = new s3s_item::NS;
+        json_to_ns(value.toObject(), item);
+        m_enumNS_rootItem->appendRow(item);
+    }
     /* enum SSL" */
     /* enum Email" */
     /* enum URL" */
@@ -587,6 +597,22 @@ QByteArray ProjectModel::getJson(){
         s3s_item::IP *item = static_cast<s3s_item::IP*>(enumIp_model->item(index.row(), index.column()));
 
         enum_IP_array.append(ip_to_json(item));
+    }
+
+    /* enum MX */
+    for(int i = 0; i < m_enumMX_rootItem->rowCount(); ++i){
+        QModelIndex index = m_enumMX_rootItem->child(i, 0)->index();
+        s3s_item::MX *item = static_cast<s3s_item::MX*>(enumMX_model->item(index.row(), index.column()));
+
+        enum_MX_array.append(mx_to_json(item));
+    }
+
+    /* enum NS */
+    for(int i = 0; i < m_enumNS_rootItem->rowCount(); ++i){
+        QModelIndex index = m_enumNS_rootItem->child(i, 0)->index();
+        s3s_item::NS *item = static_cast<s3s_item::NS*>(enumNS_model->item(index.row(), index.column()));
+
+        enum_NS_array.append(ns_to_json(item));
     }
 
     QJsonObject general;

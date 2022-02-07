@@ -12,57 +12,74 @@
 #include <QSet>
 
 
-/* structure for sending MXModel data along signals & slots */
-struct MXModelStruct{
+namespace s3s_struct {
+
+struct MX{
     QString info_mx;
     QString info_ip;
     QSet<QString> domains;
 };
+}
 
-/* the main MX results data Model */
-class MXModel{
+namespace s3s_item {
+
+class MX: public QStandardItem {
 public:
-    MXModel():
-        model(new QStandardItemModel),
-
-        /* ... */
+    MX(): QStandardItem(),
         info(new QStandardItem("Info")),
         domains(new QStandardItem("Domains")),
-
         /* info */
         info_mx(new QStandardItem),
         info_ip(new QStandardItem)
     {
-        info->setForeground(QColor(220,220,220));
-        domains->setForeground(QColor(220,220,220));
+        this->setForeground(Qt::white);
+        this->setIcon(QIcon(":/img/res/icons/folder.png"));
 
-        QFont font("Segoe UI", 9, QFont::Bold);
-        info->setFont(font);
-        domains->setFont(font);
+        info->setForeground(Qt::white);
+        domains->setForeground(Qt::white);
+
+        info->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        domains->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
         info->appendRow({new QStandardItem("MailServer"), info_mx});
         info->appendRow({new QStandardItem("Ip"), info_ip});
 
-        /* the model */
-        model->setColumnCount(2);
-        model->setHorizontalHeaderLabels({"  Property", "  Value"});
-
-        /* append to the model */
-        model->appendRow(info);
-        model->appendRow(domains);
+        /* append to the MX */
+        this->appendRow(info);
+        this->appendRow(domains);
     }
-    ~MXModel(){}
+    ~MX(){}
 
 public:
-    QStandardItemModel *model;
-
-    /* ... */
     QStandardItem *info;
     QStandardItem *domains;
-
     /* info */
     QStandardItem *info_mx;
     QStandardItem *info_ip;
+
+    void setValues(const s3s_struct::MX &mx){
+        this->setText(mx.info_mx);
+
+        /* info */
+        info_mx->setText(mx.info_mx);
+        info_ip->setText(mx.info_ip);
+
+        /* domains */
+        int count = domains->rowCount();
+        foreach(const QString &domain, mx.domains){
+            domains->appendRow({new QStandardItem(QString::number(count)),
+                                new QStandardItem(domain)});
+            count++;
+        }
+    }
 };
+
+}
+
+s3s_struct::MX mx_to_struct(s3s_item::MX*);
+
+QJsonObject mx_to_json(s3s_item::MX*);
+
+void json_to_mx(const QJsonObject&, s3s_item::MX*);
 
 #endif // MXMODEL_H

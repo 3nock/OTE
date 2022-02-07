@@ -457,15 +457,15 @@ void Dnslytics::replyFinishedInfoMX(QNetworkReply *reply){
     QJsonObject data = document.object()["data"].toObject();
 
     /* initiate the struct */
-    MXModelStruct mxModelStruct;
+    s3s_struct::MX mx;
 
     /* append the domains */
     foreach(const QJsonValue &value, data["domains"].toArray()){
-        mxModelStruct.domains.insert(value.toString());
+        mx.domains.insert(value.toString());
     }
 
     /* send the structure */
-    emit infoMX(mxModelStruct);
+    emit infoMX(mx);
 
     end(reply);
 }
@@ -480,15 +480,15 @@ void Dnslytics::replyFinishedInfoNS(QNetworkReply *reply){
     QJsonObject data = document.object()["data"].toObject();
 
     /* initiate the struct */
-    NSModelStruct nsModelStruct;
+    s3s_struct::NS ns;
 
     /* append the domains */
     foreach(const QJsonValue &value, data["domains"].toArray()){
-        nsModelStruct.domains.insert(value.toString());
+        ns.domains.insert(value.toString());
     }
 
     /* send the structure */
-    emit infoNS(nsModelStruct);
+    emit infoNS(ns);
 
     end(reply);
 }

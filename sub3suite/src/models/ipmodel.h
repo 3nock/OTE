@@ -283,7 +283,8 @@ public:
         /* domains */
         int count = domains->rowCount();
         foreach(const QString &domain, ip.domains){
-            domains->appendRow({new QStandardItem(QString::number(count)), new QStandardItem(domain)});
+            domains->appendRow({new QStandardItem(QString::number(count)),
+                                new QStandardItem(domain)});
             count++;
         }
     }

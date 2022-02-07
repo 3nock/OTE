@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>607</width>
-    <height>500</height>
+    <width>669</width>
+    <height>357</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,12 +29,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QComboBox" name="comboBoxEngine">
-       <property name="minimumSize">
-        <size>
-         <width>110</width>
-         <height>0</height>
-        </size>
+      <widget class="QLabel" name="labelOut">
+       <property name="text">
+        <string>Out:</string>
        </property>
       </widget>
      </item>
@@ -46,6 +43,33 @@
          <height>0</height>
         </size>
        </property>
+       <item>
+        <property name="text">
+         <string>Domains</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelModule">
+       <property name="text">
+        <string>Module:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxEngine">
+       <property name="minimumSize">
+        <size>
+         <width>110</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>DNSLytics</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -89,6 +113,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -101,10 +132,10 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="leftMargin">
-       <number>2</number>
+       <number>9</number>
       </property>
       <property name="rightMargin">
-       <number>2</number>
+       <number>9</number>
       </property>
       <item>
        <widget class="QCheckBox" name="checkBoxMultipleTargets">
@@ -179,6 +210,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
              <string>Enumerated MX:</string>
             </property>
@@ -198,7 +235,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton">
+           <widget class="QToolButton" name="buttonAction">
             <property name="minimumSize">
              <size>
               <width>65</width>
@@ -214,6 +251,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="treeResults">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="acceptDrops">
            <bool>false</bool>
           </property>
@@ -240,7 +280,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QComboBox" name="comboBox_3">
+           <widget class="QComboBox" name="comboBoxFilter">
             <property name="minimumSize">
              <size>
               <width>100</width>
@@ -249,7 +289,7 @@
             </property>
             <item>
              <property name="text">
-              <string>Property</string>
+              <string>MX</string>
              </property>
             </item>
             <item>
@@ -261,6 +301,13 @@
           </item>
           <item>
            <widget class="QLineEdit" name="lineEditFilter"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRegex">
+            <property name="text">
+             <string>Regex</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
