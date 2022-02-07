@@ -239,8 +239,10 @@ void ProjectModel::addEnumCIDR(const s3s_struct::CIDR &cidr){
     m_enumCIDR_rootItem->appendRow(item);
 }
 
-void ProjectModel::addEnumIp(){
-
+void ProjectModel::addEnumIP(const s3s_struct::IP &ip){
+    s3s_item::IP *item = new s3s_item::IP;
+    item->setValues(ip);
+    m_enumIp_rootItem->appendRow(item);
 }
 
 void ProjectModel::addEnumNS(){

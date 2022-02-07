@@ -175,9 +175,9 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tabInfo">
+      <widget class="QWidget" name="tabResults">
        <attribute name="title">
-        <string>Info</string>
+        <string>Results</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="leftMargin">

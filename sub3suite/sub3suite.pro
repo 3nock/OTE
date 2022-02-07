@@ -75,8 +75,13 @@ SOURCES += \
     src/enums/cidr/CidrEnum_contextmenu.cpp \
     src/enums/cidr/CidrEnum_results.cpp \
     src/enums/cidr/CidrEnum_scan.cpp \
+    src/enums/ip/IpEnum_actions.cpp \
+    src/enums/ip/IpEnum_contextmenu.cpp \
+    src/enums/ip/IpEnum_results.cpp \
+    src/enums/ip/IpEnum_scan.cpp \
     src/models/ASNModel.cpp \
     src/models/CIDRModel.cpp \
+    src/models/IPModel.cpp \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \

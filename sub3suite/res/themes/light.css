@@ -1,88 +1,41 @@
-QTabWidget::pane {
-    border-style: inset;
-    border-color: rgb(170, 170, 127);
-    background-color:transparent;
-    border-style: solid;
-    border-top-width: 1px;
-    border-right-width: 0px;
-    border-left-width: 0px;
-    border-bottom-width: 0px;
-}
+/* info */
+item->info_ip->setText(ip.value("").toString());
+item->info_type->setText(ip.value("").toString());
+item->info_host->setText(ip.value("").toString());
+item->info_city->setText(ip.value("").toString());
+item->info_region->setText(ip.value("").toString());
+item->info_countryName->setText(ip.value("").toString());
+item->info_countryCode->setText(ip.value("").toString());
+item->info_zip->setText(ip.value("").toString());
+item->info_geoLocation->setText(ip.value("").toString());
+item->info_organization->setText(ip.value("").toString());
+item->info_timezone->setText(ip.value("").toString());
+item->info_currency->setText(ip.value("").toString());
 
-QTabWidget::tab-bar {
-    left: 10px;
-}
+/* asnInfo */
+item->asnInfo_asn->setText(ip.value("").toString());
+item->asnInfo_name->setText(ip.value("").toString());
+item->asnInfo_domain->setText(ip.value("").toString());
+item->asnInfo_route->setText(ip.value("").toString());
+item->asnInfo_type->setText(ip.value("").toString());
 
-QTabBar::tab,
-QToolBox::tab {
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-top: 3.5px;
-    padding-bottom: 3.5px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: rgb(170, 170, 127);
-    border-bottom-width: 0px;
-    margin-left: 2px;
-    margin-right: 1px;
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(245,245,245), stop: 0.4 rgb(215,215,215));
-}
+/* companyInfo */
+item->companyInfo_name->setText(ip.value("").toString());
+item->companyInfo_domain->setText(ip.value("").toString());
+item->companyInfo_type->setText(ip.value("").toString());
 
-QTabBar::tab:hover,
-QToolBox::tab:hover {
-    color: rgb(140, 140, 87);
-}
+/* privacyInfo */
+item->privacyInfo_vpn->setText(ip.value("").toString());
+item->privacyInfo_proxy->setText(ip.value("").toString());
+item->privacyInfo_tor->setText(ip.value("").toString());
+item->privacyInfo_hosting->setText(ip.value("").toString());
+item->privacyInfo_relay->setText(ip.value("").toString());
+item->privacyInfo_threatLevel->setText(ip.value("").toString());
 
-QTabBar::tab:selected,
-QToolBox::tab:selected {
-    color: rgb(140, 140, 87);
-    background: white;
-}
-
-QTextEdit,
-QListWidget,
-QTableView,
-QTreeView,
-QListView,
-QColumnView,
-QPlainTextEdit {
-    alternate-background-color: rgba(170, 170, 127, 110);
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.1  rgb(246, 255, 199));
-}
-
-QPushButton {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
-}
-
-QToolButton {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(210,210,210));
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 15px;
-    border-color: black;
-}
-
-QLabel#labelResultsCount,
-QLabel#label_level,
-QLabel#labelResultsCountTree,
-QLabel#labelResultsCountJson,
-QLabel#labelCount,
-QLabel#labelResultsCountSRV {
-    background: rgb(210,210,210);
-}
-
-QProgressBar {
-    text-align: center;
-    color: black;
-    border-width: 1px;
-    border-color: black;
-    border-style: inset;
-    background-color: white;
-    height: 22px;
-    max-width: 200px;
-    min-width: 200px;
-}
-
-QProgressBar::chunk {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
-}
+/* abuseInfo */
+item->abuseInfo_address->setText(ip.value("").toString());
+item->abuseInfo_country->setText(ip.value("").toString());
+item->abuseInfo_email->setText(ip.value("").toString());
+item->abuseInfo_name->setText(ip.value("").toString());
+item->abuseInfo_network->setText(ip.value("").toString());
+item->abuseInfo_phone->setText(ip.value("").toString());

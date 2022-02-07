@@ -8,7 +8,8 @@
 #include "IpEnum.h"
 #include "ui_IpEnum.h"
 
-#include "src/dialogs/PassiveConfigDialog.h"
+#include "src/utils/Config.h"
+#include "src/dialogs/EnumConfigDialog.h"
 
 #define ALL 0
 #define IPINFO 1
@@ -16,125 +17,125 @@
 
 
 IpEnum::IpEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
-    ui(new Ui::IpEnum)
+    ui(new Ui::IpEnum),
+    m_model(new QStandardItemModel),
+    m_targetsListModel(new QStringListModel),
+    m_scanConfig(new ScanConfig),
+    m_scanArgs(new ScanArgs)
 {
-    ui->setupUi(this);
+    this->initUI();
+    //this->initActions();
+    this->initConfigValues();
 
-    ui->frame->setProperty("default_frame", true);
+    /* setting targets model */
+    ui->targets->setListName("Targets");
+    ui->targets->setListModel(m_targetsListModel);
 
-    /* placeholder texts... */
-    ui->lineEditFilter->setPlaceholderText("Filter...");
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_IP);
+    /* setting model with tableView... */
+    m_model->setHorizontalHeaderLabels({"    IP", "    Values"});
+    proxyModel->setSourceModel(m_model);
+    ui->treeResults->setModel(proxyModel);
 
-    /* equally seperate the widgets... */
-    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
-                                        << static_cast<int>((this->width() * 0.50)));
+    /* scan arguments */
+    m_scanArgs->config = m_scanConfig;
 }
 IpEnum::~IpEnum(){
+    delete m_scanArgs;
+    delete m_scanConfig;
+    delete m_targetsListModel;
+    delete m_model;
     delete ui;
 }
 
-void IpEnum::onResult(){
-    /* NOT YET IMPLEMENTED */
-}
-
-void IpEnum::onEnumerationComplete(){
-    ui->buttonStart->setEnabled(true);
-    ui->buttonStop->setDisabled(true);
-}
-
-void IpEnum::onErrorLog(ScanLog log){
-    QString message("<font color=\"red\">"+log.message+"</font>");
-    QString module("<font color=\"red\">"+log.moduleName+"</font>");
-    QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
-    ui->plainTextEditLogs->appendPlainText("");
-}
-
-void IpEnum::onInfoLog(ScanLog log){
-    QString module("<font color=\"green\">"+log.moduleName+"</font>");
-    QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendPlainText("");
-}
-
-void IpEnum::onRateLimitLog(ScanLog log){
-    QString message("<font color=\"yellow\">"+log.message+"</font>");
-    QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
-    QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
-    ui->plainTextEditLogs->appendPlainText("");
+void IpEnum::on_lineEditTarget_returnPressed(){
+    this->on_buttonStart_clicked();
 }
 
 void IpEnum::on_buttonStart_clicked(){
-    ScanArgs scanArgs;
-
-    ///
-    /// getting arguments...
-    ///
-    if(ui->checkBoxMultipleTargets->isChecked()){
-        // for multiple targets...
-    }else{
-        scanArgs.targets.enqueue(ui->lineEditTarget->text());
+    /* checks */
+    if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
+        QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+        return;
+    }
+    if(ui->checkBoxMultipleTargets->isChecked() && m_targetsListModel->rowCount() < 1){
+        QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+        return;
     }
 
+    /* enabling/disabling widgets... */
     ui->buttonStop->setEnabled(true);
     ui->buttonStart->setDisabled(true);
 
-    ///
-    /// starting the scan thread...
-    ///
-    QThread *cThread = new QThread;
-    int engineToUse = ui->comboBoxEngine->currentIndex();
+    /* setting status */
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
 
-    if(engineToUse == ALL || engineToUse == IPINFO)
-    {
-        IpInfo *ipinfo = new IpInfo(scanArgs);
-        ipinfo->startScan(cThread);
-        ipinfo->moveToThread(cThread);
+    /* start scan */
+    this->startScan();
 
-        connect(ipinfo, &IpInfo::infoLog, this, &IpEnum::onInfoLog);
-        connect(ipinfo, &IpInfo::errorLog, this, &IpEnum::onErrorLog);
-        connect(ipinfo, &IpInfo::rateLimitLog, this, &IpEnum::onRateLimitLog);
-        /* ... */
-        connect(this, &IpEnum::stopScanThread, ipinfo, &AbstractOsintModule::onStop);
-        connect(this, &IpEnum::pauseScanThread, ipinfo, &AbstractOsintModule::onPause);
-        /* ... */
-        connect(cThread, &QThread::finished, this, &IpEnum::onEnumerationComplete);
-        connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+    /* logs */
+    this->log("------------------ start ----------------");
+    qInfo() << "Scan Started";
+}
 
-        cThread->start();
-    }
+void IpEnum::on_buttonStop_clicked(){
+    emit stopScanThread();
 
-    if(engineToUse == ALL || engineToUse == IPAPI)
-    {
-        IpApi *ipApi = new IpApi(scanArgs);
-        ipApi->startScan(cThread);
-        ipApi->moveToThread(cThread);
-
-        connect(ipApi, &IpInfo::infoLog, this, &IpEnum::onInfoLog);
-        connect(ipApi, &IpInfo::errorLog, this, &IpEnum::onErrorLog);
-        connect(ipApi, &IpInfo::rateLimitLog, this, &IpEnum::onRateLimitLog);
-        /* ... */
-        connect(this, &IpEnum::stopScanThread, ipApi, &AbstractOsintModule::onStop);
-        connect(this, &IpEnum::pauseScanThread, ipApi, &AbstractOsintModule::onPause);
-        /* ... */
-        connect(cThread, &QThread::finished, this, &IpEnum::onEnumerationComplete);
-        connect(cThread, &QThread::finished, ipApi, &IpInfo::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-
-        cThread->start();
-    }
+    status->isStopped = true;
+    status->isNotActive = false;
+    status->isPaused = false;
+    status->isRunning = false;
 }
 
 void IpEnum::on_buttonConfig_clicked(){
-    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    EnumConfigDialog *scanConfig = new EnumConfigDialog(this, m_scanConfig);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->loadConfig_ip();
     scanConfig->show();
+}
+
+void IpEnum::initUI(){
+    ui->setupUi(this);
+
+    /* hiding & disabling some widgets */
+    ui->progressBar->hide();
+    ui->buttonStop->setDisabled(true);
+
+    /* setting specific properties */
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+    ui->labelOut->setProperty("s3s_color", true);
+    ui->labelModule->setProperty("s3s_color", true);
+
+    /* placeholder texts... */
+    ui->lineEditFilter->setPlaceholderText("Filter...");
+    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_CIDR);
+
+    /* resizing splitter */
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
+                           << static_cast<int>((this->width() * 0.50)));
+}
+
+void IpEnum::initConfigValues(){
+    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_ip").toBool();
+    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_ip").toBool();
+}
+
+void IpEnum::log(QString log){
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
+}
+
+void IpEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
+    proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+
+    if(ui->checkBoxRegex->isChecked())
+        proxyModel->setFilterRegExp(QRegExp(filterKeyword));
+    else
+        proxyModel->setFilterFixedString(filterKeyword);
+
+    ui->treeResults->setModel(proxyModel);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }

@@ -8,7 +8,7 @@
 
 
 /* TODO:
- *     validate if selected index is asn...
+ *     validate if selected index is cidr...
  */
 
 void CidrEnum::m_clearResults(){
@@ -54,17 +54,17 @@ void CidrEnum::m_saveResults(){
     if(!file.isOpen())
         return;
 
-    QJsonArray asn_array;
+    QJsonArray cidr_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(index.row(), index.column()));
 
-        asn_array.append(cidr_to_json(cidr));
+        cidr_array.append(cidr_to_json(cidr));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(cidr_array);
 
     qDebug() << "Saving CIDR results to File: " << file.fileName();
     file.write(document.toJson());
@@ -82,16 +82,16 @@ void CidrEnum::m_saveResults(QItemSelectionModel *selection){
     if(!file.isOpen())
         return;
 
-    QJsonArray asn_array;
+    QJsonArray cidr_array;
     foreach(const QModelIndex &index, selection->selectedIndexes()){
         QModelIndex model_index = proxyModel->mapToSource(index);
         s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(model_index.row(), model_index.column()));
 
-        asn_array.append(cidr_to_json(cidr));
+        cidr_array.append(cidr_to_json(cidr));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(cidr_array);
 
     qDebug() << "Saving CIDR results to File: " << file.fileName();
     file.write(document.toJson());
@@ -101,17 +101,17 @@ void CidrEnum::m_saveResults(QItemSelectionModel *selection){
 void CidrEnum::m_copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
-    QJsonArray asn_array;
+    QJsonArray cidr_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(index.row(), index.column()));
 
-        asn_array.append(cidr_to_json(cidr));
+        cidr_array.append(cidr_to_json(cidr));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(cidr_array);
 
     qDebug() << "Copying CIDR results to clipboard...";
     clipboard->setText(document.toJson());
@@ -120,18 +120,18 @@ void CidrEnum::m_copyResults(){
 void CidrEnum::m_copyResults(QItemSelectionModel *selection){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
-    QJsonArray asn_array;
+    QJsonArray cidr_array;
     foreach(const QModelIndex &index, selection->selectedIndexes()){
         QModelIndex model_index = proxyModel->mapToSource(index);
         s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(model_index.row(), model_index.column()));
 
-        asn_array.append(cidr_to_json(cidr));
+        cidr_array.append(cidr_to_json(cidr));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(cidr_array);
 
-    qDebug() << "Copying ASN results to clipboard...";
+    qDebug() << "Copying CIDR results to clipboard...";
     clipboard->setText(document.toJson());
 }
 

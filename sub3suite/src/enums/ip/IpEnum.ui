@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>639</width>
-    <height>510</height>
+    <height>371</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,28 +29,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QComboBox" name="comboBoxEngine">
-       <property name="minimumSize">
-        <size>
-         <width>110</width>
-         <height>0</height>
-        </size>
+      <widget class="QLabel" name="labelOut">
+       <property name="text">
+        <string>Out:</string>
        </property>
-       <item>
-        <property name="text">
-         <string>All</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>IpInfo</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>IpApi</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>
@@ -63,7 +45,39 @@
        </property>
        <item>
         <property name="text">
-         <string>All</string>
+         <string>IP Info</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Reverse IP</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelModule">
+       <property name="text">
+        <string>Module:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxEngine">
+       <property name="minimumSize">
+        <size>
+         <width>110</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>IpInfo</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>IpApi</string>
         </property>
        </item>
       </widget>
@@ -109,6 +123,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -121,10 +142,10 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="leftMargin">
-       <number>2</number>
+       <number>9</number>
       </property>
       <property name="rightMargin">
-       <number>2</number>
+       <number>9</number>
       </property>
       <item>
        <widget class="QCheckBox" name="checkBoxMultipleTargets">
@@ -172,9 +193,9 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tabInfo">
+      <widget class="QWidget" name="tabResults">
        <attribute name="title">
-        <string>Ip Info</string>
+        <string>Results</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="leftMargin">
@@ -199,8 +220,14 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
-             <string>Enumerated IPs:</string>
+             <string>Enumerated IP:</string>
             </property>
            </widget>
           </item>
@@ -218,7 +245,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton">
+           <widget class="QToolButton" name="buttonAction">
             <property name="minimumSize">
              <size>
               <width>65</width>
@@ -234,6 +261,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="treeResults">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="acceptDrops">
            <bool>false</bool>
           </property>
@@ -260,7 +290,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QComboBox" name="comboBox_3">
+           <widget class="QComboBox" name="comboBoxFilter">
             <property name="minimumSize">
              <size>
               <width>100</width>
@@ -269,7 +299,7 @@
             </property>
             <item>
              <property name="text">
-              <string>Property</string>
+              <string>IP</string>
              </property>
             </item>
             <item>
@@ -281,6 +311,13 @@
           </item>
           <item>
            <widget class="QLineEdit" name="lineEditFilter"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRegex">
+            <property name="text">
+             <string>Regex</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>

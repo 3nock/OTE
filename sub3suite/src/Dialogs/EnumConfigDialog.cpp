@@ -19,6 +19,8 @@ void EnumConfigDialog::on_buttonOk_clicked(){
         this->saveConfig_asn();
     if(cidr)
         this->saveConfig_cidr();
+    if(ip)
+        this->saveConfig_ip();
 
     accept();
 }
@@ -44,6 +46,13 @@ void EnumConfigDialog::loadConfig_cidr(){
     cidr = true;
 }
 
+void EnumConfigDialog::loadConfig_ip(){
+    ui->checkBoxAutosave->setChecked(CONFIG_ENUM.value("autosave_to_Project_ip").toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG_ENUM.value("no_duplicates_ip").toBool());
+
+    ip = true;
+}
+
 ///
 /// saving the configurations
 ///
@@ -61,6 +70,16 @@ void EnumConfigDialog::saveConfig_cidr(){
     /* save to config file */
     CONFIG_ENUM.setValue("autosave_to_Project_cidr", ui->checkBoxAutosave->isChecked());
     CONFIG_ENUM.setValue("no_duplicates_cidr", ui->checkBoxNoDuplicates->isChecked());
+
+    /* save to config structure */
+    m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
+    m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+}
+
+void EnumConfigDialog::saveConfig_ip(){
+    /* save to config file */
+    CONFIG_ENUM.setValue("autosave_to_Project_ip", ui->checkBoxAutosave->isChecked());
+    CONFIG_ENUM.setValue("no_duplicates_ip", ui->checkBoxNoDuplicates->isChecked());
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();

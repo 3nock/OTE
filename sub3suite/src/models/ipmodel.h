@@ -15,6 +15,8 @@
 namespace s3s_struct {
 
 struct IP {
+    QString ip;
+
     /* info */
     QString info_ip;
     QString info_type;
@@ -234,6 +236,8 @@ public:
     QStandardItem *abuseInfo_phone;
 
     void setValues(const s3s_struct::IP &ip){
+        this->setText(ip.ip);
+
         /* ip info */
         info_ip->setText(ip.info_ip);
         info_type->setText(ip.info_type);
