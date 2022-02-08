@@ -54,17 +54,17 @@ void MXEnum::m_saveResults(){
     if(!file.isOpen())
         return;
 
-    QJsonArray asn_array;
+    QJsonArray mx_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::MX *mx = static_cast<s3s_item::MX*>(m_model->item(index.row(), index.column()));
 
-        asn_array.append(mx_to_json(mx));
+        mx_array.append(mx_to_json(mx));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(mx_array);
 
     qDebug() << "Saving MX results to File: " << file.fileName();
     file.write(document.toJson());
@@ -82,16 +82,16 @@ void MXEnum::m_saveResults(QItemSelectionModel *selection){
     if(!file.isOpen())
         return;
 
-    QJsonArray asn_array;
+    QJsonArray mx_array;
     foreach(const QModelIndex &index, selection->selectedIndexes()){
         QModelIndex model_index = proxyModel->mapToSource(index);
         s3s_item::MX *mx = static_cast<s3s_item::MX*>(m_model->item(model_index.row(), model_index.column()));
 
-        asn_array.append(mx_to_json(mx));
+        mx_array.append(mx_to_json(mx));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(mx_array);
 
     qDebug() << "Saving MX results to File: " << file.fileName();
     file.write(document.toJson());
@@ -101,17 +101,17 @@ void MXEnum::m_saveResults(QItemSelectionModel *selection){
 void MXEnum::m_copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
-    QJsonArray asn_array;
+    QJsonArray mx_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::MX *mx = static_cast<s3s_item::MX*>(m_model->item(index.row(), index.column()));
 
-        asn_array.append(mx_to_json(mx));
+        mx_array.append(mx_to_json(mx));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(mx_array);
 
     qDebug() << "Copying MX results to clipboard...";
     clipboard->setText(document.toJson());
@@ -120,16 +120,16 @@ void MXEnum::m_copyResults(){
 void MXEnum::m_copyResults(QItemSelectionModel *selection){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
-    QJsonArray asn_array;
+    QJsonArray mx_array;
     foreach(const QModelIndex &index, selection->selectedIndexes()){
         QModelIndex model_index = proxyModel->mapToSource(index);
         s3s_item::MX *mx = static_cast<s3s_item::MX*>(m_model->item(model_index.row(), model_index.column()));
 
-        asn_array.append(mx_to_json(mx));
+        mx_array.append(mx_to_json(mx));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(mx_array);
 
     qDebug() << "Copying MX results to clipboard...";
     clipboard->setText(document.toJson());

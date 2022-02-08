@@ -8,14 +8,16 @@
 #ifndef CERTMODEL_H
 #define CERTMODEL_H
 
-#include <QStandardItemModel>
 #include <QStandardItem>
+#include <QSslCertificate>
+#include <QSslKey>
 
 
-class CertModel{
+namespace s3s_item {
+
+class SSL: public QStandardItem {
 public:
-    CertModel():
-        mainItem(new QStandardItem),
+    SSL(): QStandardItem (),
         info(new QStandardItem("Info")),
         fingerprint(new QStandardItem("Fingerprint")),
         issuer(new QStandardItem("Issuer")),
@@ -23,26 +25,21 @@ public:
         subject(new QStandardItem("Subject")),
         key(new QStandardItem("Key")),
         subjectAltNames(new QStandardItem("Subject Alternative Names")),
-
         /* info */
         info_verison(new QStandardItem),
         info_signatureAlgorithm(new QStandardItem),
         info_serialNumber(new QStandardItem),
-
         /* fingerprint */
         fingerprint_md5(new QStandardItem),
         fingerprint_sha1(new QStandardItem),
         fingerprint_sha256(new QStandardItem),
-
         /* issuer */
         issuer_commonName(new QStandardItem),
         issuer_organizationName(new QStandardItem),
         issuer_countryName(new QStandardItem),
-
         /* validity */
         validity_notBefore(new QStandardItem),
         validity_notAfter(new QStandardItem),
-
         /* subject */
         subject_commonName(new QStandardItem),
         subject_organizationName(new QStandardItem),
@@ -50,12 +47,13 @@ public:
         subject_stateOrProvinceName(new QStandardItem),
         subject_countryName(new QStandardItem),
         subject_email(new QStandardItem),
-
         /* key */
         key_type(new QStandardItem),
         key_algorithm(new QStandardItem)
     {
-        mainItem->setForeground(Qt::white);
+        this->setForeground(Qt::white);
+        this->setIcon(QIcon(":/img/res/icons/folder.png"));
+
         info->setForeground(Qt::white);
         fingerprint->setForeground(Qt::white);
         issuer->setForeground(Qt::white);
@@ -64,7 +62,6 @@ public:
         key->setForeground(Qt::white);
         subjectAltNames->setForeground(Qt::white);
 
-        mainItem->setIcon(QIcon(":/img/res/icons/folder.png"));
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
         fingerprint->setIcon(QIcon(":/img/res/icons/folder2.png"));
         issuer->setIcon(QIcon(":/img/res/icons/folder2.png"));
@@ -98,29 +95,26 @@ public:
         key->appendRow({new QStandardItem("Type"), key_type});
         key->appendRow({new QStandardItem("Algorithm"), key_algorithm});
 
-        /* appending to the mainItem */
-        mainItem->appendRow(info);
-        mainItem->appendRow(fingerprint);
-        mainItem->appendRow(validity);
-        mainItem->appendRow(issuer);
-        mainItem->appendRow(subject);
-        mainItem->appendRow(key);
-        mainItem->appendRow(subjectAltNames);
+        /* appending to the SSL */
+        this->appendRow(info);
+        this->appendRow(fingerprint);
+        this->appendRow(validity);
+        this->appendRow(issuer);
+        this->appendRow(subject);
+        this->appendRow(key);
+        this->appendRow(subjectAltNames);
     }
-    ~CertModel(){
+    ~SSL()
+    {
     }
 
-    QStandardItem *mainItem;
-
-private:
+public:
     QStandardItem *info;
     QStandardItem *fingerprint;
     QStandardItem *issuer;
     QStandardItem *validity;
     QStandardItem *subject;
     QStandardItem *key;
-
-public:
     QStandardItem *subjectAltNames;
 
     /* info */
@@ -153,6 +147,76 @@ public:
     /* Key */
     QStandardItem *key_type;
     QStandardItem *key_algorithm;
+
+    void setValues(const QString &target, const QSslCertificate &cert){
+        this->setText(target);
+
+        info_verison->setText(cert.version());
+        info_serialNumber->setText(cert.serialNumber());
+        info_signatureAlgorithm->setText(""); // none yet
+
+        /* fingerprint */
+        fingerprint_md5->setText(cert.digest(QCryptographicHash::Md5).toHex());
+        fingerprint_sha1->setText(cert.digest(QCryptographicHash::Sha1).toHex());
+        fingerprint_sha256->setText(cert.digest(QCryptographicHash::Sha256).toHex());
+
+        /* validity */
+        validity_notBefore->setText(cert.effectiveDate().toString());
+        validity_notAfter->setText(cert.expiryDate().toString());
+
+        /* issuer Info */
+        if(cert.issuerInfo(QSslCertificate::CommonName).length() > 0)
+            issuer_commonName->setText(cert.issuerInfo(QSslCertificate::CommonName)[0]);
+        if(cert.issuerInfo(QSslCertificate::Organization).length() > 0)
+            issuer_organizationName->setText(cert.issuerInfo(QSslCertificate::Organization)[0]);
+        if(cert.issuerInfo(QSslCertificate::CountryName).length() > 0)
+            issuer_countryName->setText(cert.issuerInfo(QSslCertificate::CountryName)[0]);
+
+        /* subject info */
+        if(cert.subjectInfo(QSslCertificate::CommonName).length() > 0)
+            subject_commonName->setText(cert.subjectInfo(QSslCertificate::CommonName)[0]);
+        if(cert.subjectInfo(QSslCertificate::CountryName).length() > 0)
+            subject_countryName->setText(cert.subjectInfo(QSslCertificate::CountryName)[0]);
+        if(cert.subjectInfo(QSslCertificate::LocalityName).length() > 0)
+            subject_localityName->setText(cert.subjectInfo(QSslCertificate::LocalityName)[0]);
+        if(cert.subjectInfo(QSslCertificate::Organization).length() > 0)
+            subject_organizationName->setText(cert.subjectInfo(QSslCertificate::Organization)[0]);
+        if(cert.subjectInfo(QSslCertificate::StateOrProvinceName).length() > 0)
+            subject_stateOrProvinceName->setText(cert.subjectInfo(QSslCertificate::StateOrProvinceName)[0]);
+        if(cert.subjectInfo(QSslCertificate::EmailAddress).length() > 0)
+            subject_email->setText(cert.subjectInfo(QSslCertificate::EmailAddress)[0]);
+
+        /* key type */
+        if(cert.publicKey().type() == QSsl::PrivateKey)
+            key_type->setText("Private Key");
+        if(cert.publicKey().type() == QSsl::PublicKey)
+            key_type->setText("Public Key");
+
+        /* algorithm type */
+        if(cert.publicKey().algorithm() == QSsl::Rsa)
+            key_algorithm->setText("RSA algorithm.");
+        if(cert.publicKey().algorithm() == QSsl::Dsa)
+            key_algorithm->setText("DSA algorithm.");
+        if(cert.publicKey().algorithm() == QSsl::Ec)
+            key_algorithm->setText("Elliptic Curve algorithm.");
+        if(cert.publicKey().algorithm() == QSsl::Dh)
+            key_algorithm->setText("Diffie-Hellman algorithm.");
+        if(cert.publicKey().algorithm() == QSsl::Opaque)
+            key_algorithm->setText("BlackBox");
+
+        /* alternative names */
+        int count = 0;
+        foreach(const QString &value, cert.subjectAlternativeNames()){
+            subjectAltNames->appendRow({new QStandardItem(QString::number(count)),
+                                        new QStandardItem(value)});
+            count++;
+        }
+    }
 };
+}
+
+QJsonObject ssl_to_json(s3s_item::SSL*);
+
+void json_to_ssl(const QJsonObject&, s3s_item::SSL*);
 
 #endif // CERTMODEL_H

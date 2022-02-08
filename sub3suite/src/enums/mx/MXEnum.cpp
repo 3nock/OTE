@@ -20,7 +20,7 @@ MXEnum::MXEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
-    //this->initActions();
+    this->initActions();
     this->initConfigValues();
 
     /* setting targets model */

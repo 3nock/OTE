@@ -124,7 +124,7 @@ public:
     void addEnumIP(const s3s_struct::IP &ip);
     void addEnumNS(const s3s_struct::NS &ns);
     void addEnumMX(const s3s_struct::MX &xm);
-    void addEnumSSL();
+    void addEnumSSL(const QString &target, const QSslCertificate &ssl);
     void addEnumEmail();
     void addEnumURL();
 

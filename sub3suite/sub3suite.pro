@@ -87,6 +87,10 @@ SOURCES += \
     src/enums/ns/NSEnum_contextmenu.cpp \
     src/enums/ns/NSEnum_results.cpp \
     src/enums/ns/NSEnum_scan.cpp \
+    src/enums/ssl/SSLEnum_actions.cpp \
+    src/enums/ssl/SSLEnum_contextmenu.cpp \
+    src/enums/ssl/SSLEnum_results.cpp \
+    src/enums/ssl/SSLEnum_scan.cpp \
     src/models/ASNModel.cpp \
     src/models/CIDRModel.cpp \
     src/models/IPModel.cpp \
@@ -95,6 +99,7 @@ SOURCES += \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \
+    src/models/SSLEnum.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
     src/modules/passive/api/JsonWhois.cpp \

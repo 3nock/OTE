@@ -13,7 +13,6 @@
 
 
 namespace s3s_struct {
-
 struct NS {
     QString info_ns;
     QString info_ip;

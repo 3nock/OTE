@@ -21,6 +21,7 @@ class EnumConfigDialog : public QDialog{
         void loadConfig_ip();
         void loadConfig_ns();
         void loadConfig_mx();
+        void loadConfig_ssl();
 
     private slots:
         void on_buttonOk_clicked();
@@ -34,12 +35,14 @@ class EnumConfigDialog : public QDialog{
         bool ip = false;
         bool ns = false;
         bool mx = false;
+        bool ssl = false;
 
         void saveConfig_asn();
         void saveConfig_cidr();
         void saveConfig_ip();
         void saveConfig_ns();
         void saveConfig_mx();
+        void saveConfig_ssl();
 };
 
 #endif // ENUMCONFIGDIALOG_H

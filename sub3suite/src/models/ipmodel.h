@@ -13,7 +13,6 @@
 
 
 namespace s3s_struct {
-
 struct IP {
     QString ip;
 

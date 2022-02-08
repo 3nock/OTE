@@ -54,17 +54,17 @@ void NSEnum::m_saveResults(){
     if(!file.isOpen())
         return;
 
-    QJsonArray asn_array;
+    QJsonArray ns_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(index.row(), index.column()));
 
-        asn_array.append(ns_to_json(ns));
+        ns_array.append(ns_to_json(ns));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(ns_array);
 
     qDebug() << "Saving NS results to File: " << file.fileName();
     file.write(document.toJson());
@@ -82,16 +82,16 @@ void NSEnum::m_saveResults(QItemSelectionModel *selection){
     if(!file.isOpen())
         return;
 
-    QJsonArray asn_array;
+    QJsonArray ns_array;
     foreach(const QModelIndex &index, selection->selectedIndexes()){
         QModelIndex model_index = proxyModel->mapToSource(index);
         s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(model_index.row(), model_index.column()));
 
-        asn_array.append(ns_to_json(ns));
+        ns_array.append(ns_to_json(ns));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(ns_array);
 
     qDebug() << "Saving NS results to File: " << file.fileName();
     file.write(document.toJson());
@@ -101,17 +101,17 @@ void NSEnum::m_saveResults(QItemSelectionModel *selection){
 void NSEnum::m_copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
-    QJsonArray asn_array;
+    QJsonArray ns_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(index.row(), index.column()));
 
-        asn_array.append(ns_to_json(ns));
+        ns_array.append(ns_to_json(ns));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(ns_array);
 
     qDebug() << "Copying NS results to clipboard...";
     clipboard->setText(document.toJson());
@@ -120,16 +120,16 @@ void NSEnum::m_copyResults(){
 void NSEnum::m_copyResults(QItemSelectionModel *selection){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
-    QJsonArray asn_array;
+    QJsonArray ns_array;
     foreach(const QModelIndex &index, selection->selectedIndexes()){
         QModelIndex model_index = proxyModel->mapToSource(index);
         s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(model_index.row(), model_index.column()));
 
-        asn_array.append(ns_to_json(ns));
+        ns_array.append(ns_to_json(ns));
     }
 
     QJsonDocument document;
-    document.setArray(asn_array);
+    document.setArray(ns_array);
 
     qDebug() << "Copying NS results to clipboard...";
     clipboard->setText(document.toJson());

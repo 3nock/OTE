@@ -23,56 +23,10 @@ void ProjectModel::addActiveWildcard(const QString &subdomain, const QString &ip
     m_activeWildcard_rootItem->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
 }
 
-void ProjectModel::addActiveSSL(const QString &target, const QSslCertificate &cert){
-    CertModel *certModel = new CertModel;
-    certModel->mainItem->setText(target);
-
-    /* ... */
-    certModel->info_verison->setText(cert.version());
-    certModel->info_serialNumber->setText(cert.serialNumber());
-    certModel->info_signatureAlgorithm->setText(""); // none yet
-
-    /* fingerprint */
-    certModel->fingerprint_md5->setText(cert.digest(QCryptographicHash::Md5).toHex());
-    certModel->fingerprint_sha1->setText(cert.digest(QCryptographicHash::Sha1).toHex());
-    certModel->fingerprint_sha256->setText(cert.digest(QCryptographicHash::Sha256).toHex());
-
-    /* validity */
-    certModel->validity_notBefore->setText(cert.effectiveDate().toString());
-    certModel->validity_notAfter->setText(cert.expiryDate().toString());
-
-    /* issuer Info */
-    if(cert.issuerInfo(QSslCertificate::CommonName).length() > 0)
-        certModel->issuer_commonName->setText(cert.issuerInfo(QSslCertificate::CommonName)[0]);
-    if(cert.issuerInfo(QSslCertificate::Organization).length() > 0)
-        certModel->issuer_organizationName->setText(cert.issuerInfo(QSslCertificate::Organization)[0]);
-    if(cert.issuerInfo(QSslCertificate::CountryName).length() > 0)
-        certModel->issuer_countryName->setText(cert.issuerInfo(QSslCertificate::CountryName)[0]);
-
-    /* subject info */
-    if(cert.subjectInfo(QSslCertificate::CommonName).length() > 0)
-        certModel->subject_commonName->setText(cert.subjectInfo(QSslCertificate::CommonName)[0]);
-    if(cert.subjectInfo(QSslCertificate::CountryName).length() > 0)
-        certModel->subject_countryName->setText(cert.subjectInfo(QSslCertificate::CountryName)[0]);
-    if(cert.subjectInfo(QSslCertificate::LocalityName).length() > 0)
-        certModel->subject_localityName->setText(cert.subjectInfo(QSslCertificate::LocalityName)[0]);
-    if(cert.subjectInfo(QSslCertificate::Organization).length() > 0)
-        certModel->subject_organizationName->setText(cert.subjectInfo(QSslCertificate::Organization)[0]);
-    if(cert.subjectInfo(QSslCertificate::StateOrProvinceName).length() > 0)
-        certModel->subject_stateOrProvinceName->setText(cert.subjectInfo(QSslCertificate::StateOrProvinceName)[0]);
-    if(cert.subjectInfo(QSslCertificate::EmailAddress).length() > 0)
-        certModel->subject_email->setText(cert.subjectInfo(QSslCertificate::EmailAddress)[0]);
-
-    int alternativeName = 0;
-    foreach(const QString &value, cert.subjectAlternativeNames()){
-        certModel->subjectAltNames->appendRow({new QStandardItem(QString::number(alternativeName)), new QStandardItem(value)});
-        alternativeName++;
-    }
-
-    m_activeSSL_rootItem->appendRow(certModel->mainItem);
-    /* to sha1 & sha256 model */
-    m_activeSSL_sha1_rootItem->appendRow(new QStandardItem(QString(cert.digest(QCryptographicHash::Sha1).toHex())));
-    m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(QString(cert.digest(QCryptographicHash::Sha256).toHex())));
+void ProjectModel::addActiveSSL(const QString &target, const QSslCertificate &ssl){
+    s3s_item::SSL *item = new s3s_item::SSL;
+    item->setValues(target, ssl);
+    m_activeSSL_rootItem->appendRow(item);
 }
 
 void ProjectModel::addActiveSSL_sha1(const QString &sha1){
@@ -257,8 +211,10 @@ void ProjectModel::addEnumMX(const s3s_struct::MX &mx){
     m_enumMX_rootItem->appendRow(item);
 }
 
-void ProjectModel::addEnumSSL(){
-
+void ProjectModel::addEnumSSL(const QString &target, const QSslCertificate &ssl){
+    s3s_item::SSL *item = new s3s_item::SSL;
+    item->setValues(target, ssl);
+    m_enumSSL_rootItem->appendRow(item);
 }
 
 void ProjectModel::addEnumEmail(){

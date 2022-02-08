@@ -239,51 +239,9 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
 
     /* active SSL */
     foreach(const QJsonValue &value, data["active_SSL"].toArray()){
-        CertModel *certModel = new CertModel;
-        certModel->mainItem->setText(value.toObject()["domain"].toString());
-
-        /* info */
-        certModel->info_verison->setText(value.toObject()["info_version"].toString());
-        certModel->info_serialNumber->setText(value.toObject()["info_serialNumber"].toString());
-        certModel->info_signatureAlgorithm->setText(value.toObject()["info_signatureAlgorithm"].toString()); // none yet
-
-        /* fingerprint */
-        certModel->fingerprint_md5->setText(value.toObject()["fingerprint_md5"].toString());
-        certModel->fingerprint_sha1->setText(value.toObject()["fingerprint_sha1"].toString());
-        certModel->fingerprint_sha256->setText(value.toObject()["fingerprint_sha256"].toString());
-
-        /* validity */
-        certModel->validity_notBefore->setText(value.toObject()["validity_notBefore"].toString());
-        certModel->validity_notAfter->setText(value.toObject()["validity_notAfter"].toString());
-
-        /* issuer */
-        certModel->issuer_commonName->setText(value.toObject()["issuer_commonName"].toString());
-        certModel->issuer_organizationName->setText(value.toObject()["issuer_organizationName"].toString());
-        certModel->issuer_countryName->setText(value.toObject()["issuer_countryName"].toString());
-
-        /* subject */
-        certModel->subject_commonName->setText(value.toObject()["subject_commonName"].toString());
-        certModel->subject_countryName->setText(value.toObject()["subject_countryName"].toString());
-        certModel->subject_localityName->setText(value.toObject()["subject_localityName"].toString());
-        certModel->subject_organizationName->setText(value.toObject()["subject_organizationName"].toString());
-        certModel->subject_stateOrProvinceName->setText(value.toObject()["subject_state"].toString());
-        certModel->subject_email->setText(value.toObject()["subject_email"].toString());
-
-        /* key */
-        certModel->key_type->setText(value.toObject()["key_type"].toString());
-        certModel->key_algorithm->setText(value.toObject()["key_algorithm"].toString());
-
-        int count = 0;
-        foreach(const QJsonValue &alternativeName, value.toArray()){
-            certModel->subjectAltNames->appendRow({new QStandardItem(QString::number(count)),
-                                                   new QStandardItem(alternativeName.toString())});
-            count++;
-        }
-
-        m_activeSSL_rootItem->appendRow(certModel->mainItem);
-        /* to sha1 & sha256 model */
-        m_activeSSL_sha1_rootItem->appendRow(new QStandardItem(value.toObject()["fingerprint_sha1"].toString()));
-        m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(value.toObject()["fingerprint_sha256"].toString()));
+        s3s_item::SSL *item = new s3s_item::SSL;
+        json_to_ssl(value.toObject(), item);
+        m_activeSSL_rootItem->appendRow(item);
     }
 
     /* passive subdomainIP */
@@ -371,6 +329,11 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         m_enumNS_rootItem->appendRow(item);
     }
     /* enum SSL" */
+    foreach(const QJsonValue &value, data["enum_SSL"].toArray()){
+        s3s_item::SSL *item = new s3s_item::SSL;
+        json_to_ssl(value.toObject(), item);
+        m_enumSSL_rootItem->appendRow(item);
+    }
     /* enum Email" */
     /* enum URL" */
     /* custom" */
@@ -575,6 +538,14 @@ QByteArray ProjectModel::getJson(){
         active_DNS_array.append(dns);
     }
 
+    /* active SSL */
+    for(int i = 0; i < m_activeSSL_rootItem->rowCount(); ++i){
+        QModelIndex index = m_activeSSL_rootItem->child(i, 0)->index();
+        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(activeSSL_model->item(index.row(), index.column()));
+
+        active_SSL_array.append(ssl_to_json(item));
+    }
+
     /* enum ASN */
     for(int i = 0; i < m_enumASN_rootItem->rowCount(); ++i){
         QModelIndex index = m_enumASN_rootItem->child(i, 0)->index();
@@ -613,6 +584,14 @@ QByteArray ProjectModel::getJson(){
         s3s_item::NS *item = static_cast<s3s_item::NS*>(enumNS_model->item(index.row(), index.column()));
 
         enum_NS_array.append(ns_to_json(item));
+    }
+
+    /* enum NS */
+    for(int i = 0; i < m_enumSSL_rootItem->rowCount(); ++i){
+        QModelIndex index = m_enumSSL_rootItem->child(i, 0)->index();
+        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(enumSSL_model->item(index.row(), index.column()));
+
+        enum_SSL_array.append(ssl_to_json(item));
     }
 
     QJsonObject general;

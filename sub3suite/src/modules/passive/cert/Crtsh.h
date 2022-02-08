@@ -35,7 +35,6 @@ class Crtsh: public AbstractOsintModule{
     private:
         void m_getCertId(QNetworkReply *reply);
         bool m_queryToGetId = true;
-        CertModel *m_certModel;
 };
 
 

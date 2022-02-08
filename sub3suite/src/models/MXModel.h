@@ -13,7 +13,6 @@
 
 
 namespace s3s_struct {
-
 struct MX{
     QString info_mx;
     QString info_ip;

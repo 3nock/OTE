@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>634</width>
-    <height>504</height>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,34 +29,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QComboBox" name="comboBoxTargetType">
-       <property name="minimumSize">
-        <size>
-         <width>110</width>
-         <height>0</height>
-        </size>
-       </property>
-       <item>
-        <property name="text">
-         <string>Cert FingerPrint</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Hostname</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="labelOption">
+      <widget class="QLabel" name="labelModule">
        <property name="text">
-        <string>*Option</string>
+        <string>Module:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBoxOption">
+      <widget class="QComboBox" name="comboBoxModule">
        <property name="minimumSize">
         <size>
          <width>100</width>
@@ -113,6 +93,13 @@
        </property>
        <property name="text">
         <string>Stop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -200,8 +187,14 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
-             <string>Enumerated SSL Cert:</string>
+             <string>Enumerated SSL:</string>
             </property>
            </widget>
           </item>
@@ -219,7 +212,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton">
+           <widget class="QToolButton" name="buttonAction">
             <property name="minimumSize">
              <size>
               <width>65</width>
@@ -235,6 +228,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="treeResults">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="acceptDrops">
            <bool>false</bool>
           </property>
@@ -261,7 +257,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QComboBox" name="comboBox_3">
+           <widget class="QComboBox" name="comboBoxFilter">
             <property name="minimumSize">
              <size>
               <width>100</width>
@@ -270,7 +266,7 @@
             </property>
             <item>
              <property name="text">
-              <string>Property</string>
+              <string>SSL</string>
              </property>
             </item>
             <item>
@@ -282,6 +278,13 @@
           </item>
           <item>
            <widget class="QLineEdit" name="lineEditFilter"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRegex">
+            <property name="text">
+             <string>Regex</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
