@@ -32,7 +32,7 @@ class Dns : public AbstractEngine{
     public slots:
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
-        void onScanResult(dns::ScanResult result);
+        void onScanResult(s3s_struct::DNS result);
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
@@ -57,7 +57,7 @@ class Dns : public AbstractEngine{
         QStringListModel *m_srvWordlitsModel;
         QStandardItemModel *m_resultModel;
         QSortFilterProxyModel *m_resultProxyModel;
-        QSet<QString> m_resultSet;
+        QMap<QString, s3s_item::DNS*> m_resultSet;
         QMap<QString, QString> m_failedScans; // target, error
         QElapsedTimer m_timer;
         void m_getConfigValues();

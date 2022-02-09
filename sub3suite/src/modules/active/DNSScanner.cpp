@@ -59,6 +59,9 @@ dns::Scanner::~Scanner(){
 }
 
 void dns::Scanner::srvLookupFinished(){
+    s3s_struct::DNS dns;
+    dns.dns = m_currentTarget;
+
     /* get records results */
     switch(m_dns_srv->error()){
     case QDnsLookup::NotFoundError:
@@ -66,7 +69,7 @@ void dns::Scanner::srvLookupFinished(){
 
     case QDnsLookup::NoError:
         foreach(const QDnsServiceRecord &record, m_dns_srv->serviceRecords())
-            m_results.SRV.insert(record.target(), record.port());
+            dns.SRV.insert({record.name(), record.target(), QString::number(record.port())});
         break;
 
     default:
@@ -84,13 +87,16 @@ void dns::Scanner::srvLookupFinished(){
         if(!m_activeLookups){
             m_args->progress++;
             emit scanProgress(m_args->progress);
-            emit scanResult(m_results);
+            emit scanResult(dns);
             emit next();
         }
     }
 }
 
 void dns::Scanner::aLookupFinished(){
+    s3s_struct::DNS dns;
+    dns.dns = m_currentTarget;
+
     /* get records results */
     switch(m_dns_a->error()){
     case QDnsLookup::NotFoundError:
@@ -98,7 +104,7 @@ void dns::Scanner::aLookupFinished(){
 
     case QDnsLookup::NoError:
         foreach(const QDnsHostAddressRecord &record, m_dns_a->hostAddressRecords())
-            m_results.A.append(record.value().toString());
+            dns.A.insert(record.value().toString());
         break;
 
     default:
@@ -110,17 +116,21 @@ void dns::Scanner::aLookupFinished(){
         break;
     }
 
+    emit scanResult(dns);
+
     /* if this is the last lookup, save send results then go to next lookup */
     m_activeLookups--;
     if(!m_activeLookups){
         m_args->progress++;
         emit scanProgress(m_args->progress);
-        emit scanResult(m_results);
         emit next();
     }
 }
 
 void dns::Scanner::aaaaLookupFinished(){
+    s3s_struct::DNS dns;
+    dns.dns = m_currentTarget;
+
     /* get records results */
     switch(m_dns_aaaa->error()){
     case QDnsLookup::NotFoundError:
@@ -128,7 +138,7 @@ void dns::Scanner::aaaaLookupFinished(){
 
     case QDnsLookup::NoError:
         foreach(const QDnsHostAddressRecord &record, m_dns_aaaa->hostAddressRecords())
-            m_results.AAAA.append(record.value().toString());
+            dns.AAAA.insert(record.value().toString());
         break;
 
     default:
@@ -140,17 +150,21 @@ void dns::Scanner::aaaaLookupFinished(){
         break;
     }
 
+    emit scanResult(dns);
+
     /* if this is the last lookup, save send results then go to next lookup */
     m_activeLookups--;
     if(!m_activeLookups){
         m_args->progress++;
         emit scanProgress(m_args->progress);
-        emit scanResult(m_results);
         emit next();
     }
 }
 
 void dns::Scanner::mxLookupFinished(){
+    s3s_struct::DNS dns;
+    dns.dns = m_currentTarget;
+
     /* get records results */
     switch(m_dns_mx->error()){
     case QDnsLookup::NotFoundError:
@@ -158,7 +172,7 @@ void dns::Scanner::mxLookupFinished(){
 
     case QDnsLookup::NoError:
         foreach(const QDnsMailExchangeRecord &record, m_dns_mx->mailExchangeRecords())
-            m_results.MX.append(record.exchange());
+            dns.MX.insert(record.exchange());
         break;
 
     default:
@@ -170,17 +184,21 @@ void dns::Scanner::mxLookupFinished(){
         break;
     }
 
+    emit scanResult(dns);
+
     /* if this is the last lookup, save send results then go to next lookup */
     m_activeLookups--;
     if(!m_activeLookups){
         m_args->progress++;
         emit scanProgress(m_args->progress);
-        emit scanResult(m_results);
         emit next();
     }
 }
 
 void dns::Scanner::cnameLookupFinished(){
+    s3s_struct::DNS dns;
+    dns.dns = m_currentTarget;
+
     /* get records results */
     switch(m_dns_cname->error()){
     case QDnsLookup::NotFoundError:
@@ -188,7 +206,7 @@ void dns::Scanner::cnameLookupFinished(){
 
     case QDnsLookup::NoError:
         foreach(const QDnsDomainNameRecord &record, m_dns_cname->canonicalNameRecords())
-            m_results.CNAME.append(record.value());
+            dns.CNAME.insert(record.value());
         break;
 
     default:
@@ -200,17 +218,21 @@ void dns::Scanner::cnameLookupFinished(){
         break;
     }
 
+    emit scanResult(dns);
+
     /* if this is the last lookup, save send results then go to next lookup */
     m_activeLookups--;
     if(!m_activeLookups){
         m_args->progress++;
         emit scanProgress(m_args->progress);
-        emit scanResult(m_results);
         emit next();
     }
 }
 
 void dns::Scanner::nsLookupFinished(){
+    s3s_struct::DNS dns;
+    dns.dns = m_currentTarget;
+
     /* get records results */
     switch(m_dns_ns->error()){
     case QDnsLookup::NotFoundError:
@@ -218,7 +240,7 @@ void dns::Scanner::nsLookupFinished(){
 
     case QDnsLookup::NoError:
         foreach(const QDnsDomainNameRecord &record, m_dns_ns->nameServerRecords())
-            m_results.NS.append(record.value());
+            dns.NS.insert(record.value());
         break;
 
     default:
@@ -230,17 +252,21 @@ void dns::Scanner::nsLookupFinished(){
         break;
     }
 
+    emit scanResult(dns);
+
     /* if this is the last lookup, save send results then go to next lookup */
     m_activeLookups--;
     if(!m_activeLookups){
         m_args->progress++;
         emit scanProgress(m_args->progress);
-        emit scanResult(m_results);
         emit next();
     }
 }
 
 void dns::Scanner::txtLookupFinished(){
+    s3s_struct::DNS dns;
+    dns.dns = m_currentTarget;
+
     /* get records results */
     switch(m_dns_txt->error()){
     case QDnsLookup::NotFoundError:
@@ -249,7 +275,7 @@ void dns::Scanner::txtLookupFinished(){
     case QDnsLookup::NoError:
         foreach(const QDnsTextRecord &record, m_dns_txt->textRecords()){
             foreach(const QByteArray &txt, record.values())
-                m_results.TXT.append(txt);
+                dns.TXT.insert(txt);
         }
         break;
 
@@ -262,12 +288,13 @@ void dns::Scanner::txtLookupFinished(){
         break;
     }
 
+    emit scanResult(dns);
+
     /* if this is the last lookup, save send results then go to next lookup */
     m_activeLookups--;
     if(!m_activeLookups){
         m_args->progress++;
         emit scanProgress(m_args->progress);
-        emit scanResult(m_results);
         emit next();
     }
 }
@@ -281,8 +308,6 @@ void dns::Scanner::lookup(){
         emit quitThread();
         return;
     }
-
-    m_results.target = m_currentTarget;
 
     if(m_args->RecordType_a){
         m_activeLookups++;

@@ -10,7 +10,9 @@
 
 #include <QMutex>
 #include <QQueue>
+
 #include "AbstractScanner.h"
+#include "src/models/DNSModel.h"
 
 
 namespace dns {
@@ -57,19 +59,6 @@ struct ScanArgs {   // scan arguments
     bool RecordType_srv;
 };
 
-struct ScanResult { // scan results
-    QString target;
-
-    QStringList A;
-    QStringList AAAA;
-    QStringList MX;
-    QStringList NS;
-    QStringList TXT;
-    QStringList CNAME;
-    QMap<QString, int> SRV; // srv, port
-};
-
-
 class Scanner: public AbstractScanner {
     Q_OBJECT
 
@@ -89,7 +78,7 @@ class Scanner: public AbstractScanner {
         void txtLookupFinished();
 
     signals:
-        void scanResult(dns::ScanResult);
+        void scanResult(s3s_struct::DNS);
         void finish();
         void next();
 
@@ -99,7 +88,6 @@ class Scanner: public AbstractScanner {
         int m_currentSrvWordlist = 0;
 
         dns::ScanArgs *m_args;
-        dns::ScanResult m_results;
 
         QDnsLookup *m_dns_a;
         QDnsLookup *m_dns_aaaa;

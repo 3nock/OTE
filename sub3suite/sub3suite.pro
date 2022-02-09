@@ -93,13 +93,14 @@ SOURCES += \
     src/enums/ssl/SSLEnum_scan.cpp \
     src/models/ASNModel.cpp \
     src/models/CIDRModel.cpp \
+    src/models/DNSModel.cpp \
     src/models/IPModel.cpp \
     src/models/MXModel.cpp \
     src/models/NSModel.cpp \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \
-    src/models/SSLEnum.cpp \
+    src/models/SSLModel.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
     src/modules/passive/api/JsonWhois.cpp \

@@ -100,7 +100,7 @@ public:
     void addActiveSSL(const QString &target, const QSslCertificate &cert);
     void addActiveSSL_sha1(const QString &sha1);
     void addActiveSSL_sha256(const QString &sha256);
-    void addActiveDNS(const dns::ScanResult &dns);
+    void addActiveDNS(const s3s_struct::DNS &dns);
 
     /* for passive results */
     void addPassiveSubdomainIp(const QString &subdomain, const QString &ip);

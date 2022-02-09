@@ -37,83 +37,10 @@ void ProjectModel::addActiveSSL_sha256(const QString &sha256){
     m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(sha256));
 }
 
-void ProjectModel::addActiveDNS(const dns::ScanResult &dns){
-    QStandardItem *targetItem = new QStandardItem(dns.target);
-    targetItem->setIcon(QIcon(":/img/res/icons/folder.png"));
-    targetItem->setForeground(Qt::white);
-    m_activeDNS_rootItem->appendRow(targetItem);
-
-    if(!dns.A.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("A");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-
-        for(const QString &item: dns.A){
-            recordItem->appendRow(new QStandardItem(item));
-            m_activeA_rootItem->appendRow(new QStandardItem(item));
-        }
-        targetItem->appendRow(recordItem);
-    }
-
-    if(!dns.AAAA.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("AAAA");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-
-        for(QString item: dns.AAAA){
-            recordItem->appendRow(new QStandardItem(item));
-            m_activeAAAA_rootItem->appendRow(new QStandardItem(item));
-        }
-        targetItem->appendRow(recordItem);
-    }
-
-    if(!dns.NS.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("NS");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-
-        for(QString item: dns.NS){
-            recordItem->appendRow(new QStandardItem(item));
-            m_activeNS_rootItem->appendRow(new QStandardItem(item));
-        }
-        targetItem->appendRow(recordItem);
-    }
-
-    if(!dns.MX.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("MX");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-
-        for(QString item: dns.MX){
-            recordItem->appendRow(new QStandardItem(item));
-            m_activeMX_rootItem->appendRow(new QStandardItem(item));
-        }
-        targetItem->appendRow(recordItem);
-    }
-
-    if(!dns.TXT.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("TXT");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-
-        for(QString item: dns.TXT){
-            recordItem->appendRow(new QStandardItem(item));
-            m_activeTXT_rootItem->appendRow(new QStandardItem(item));
-        }
-        targetItem->appendRow(recordItem);
-    }
-
-    if(!dns.CNAME.isEmpty()){
-        QStandardItem *recordItem = new QStandardItem("CNAME");
-        recordItem->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        recordItem->setForeground(Qt::white);
-
-        for(QString item: dns.CNAME){
-            recordItem->appendRow(new QStandardItem(item));
-            m_activeCNAME_rootItem->appendRow(new QStandardItem(item));
-        }
-        targetItem->appendRow(recordItem);
-    }
+void ProjectModel::addActiveDNS(const s3s_struct::DNS &dns){
+    s3s_item::DNS *item = new s3s_item::DNS;
+    item->setValues(dns);
+    m_activeDNS_rootItem->appendRow(item);
 }
 
 ///

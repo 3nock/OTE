@@ -12,7 +12,6 @@
 #include <QSet>
 
 namespace s3s_struct {
-
 struct CIDR {
     QString cidr;
 

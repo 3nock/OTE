@@ -138,95 +138,9 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
 
     /* active dns */
     foreach(const QJsonValue &value, data["active_dns"].toArray()){
-        QJsonObject obj = value.toObject();
-
-        QStandardItem *dns_item = new QStandardItem(obj["domain"].toString());
-        dns_item->setIcon(QIcon(":/img/res/icons/folder.png"));
-        dns_item->setForeground(Qt::white);
-
-        QJsonArray A = obj["A"].toArray();
-        QJsonArray AAAA = obj["AAAA"].toArray();
-        QJsonArray NS = obj["NS"].toArray();
-        QJsonArray MX = obj["MX"].toArray();
-        QJsonArray TXT = obj["TXT"].toArray();
-        QJsonArray CNAME = obj["CNAME"].toArray();
-        QJsonArray SRV = obj["SRV"].toArray();
-
-        if(!A.isEmpty()){
-            QStandardItem *record = new QStandardItem("A");
-            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            record->setForeground(Qt::white);
-            foreach(const QJsonValue &value, A){
-                record->appendRow(new QStandardItem(value.toString()));
-                m_activeA_rootItem->appendRow(new QStandardItem(value.toString()));
-            }
-            dns_item->appendRow(record);
-        }
-        if(!AAAA.isEmpty()){
-            QStandardItem *record = new QStandardItem("AAAA");
-            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            record->setForeground(Qt::white);
-            foreach(const QJsonValue &value, AAAA){
-                record->appendRow(new QStandardItem(value.toString()));
-                m_activeAAAA_rootItem->appendRow(new QStandardItem(value.toString()));
-            }
-            dns_item->appendRow(record);
-        }
-        if(!NS.isEmpty()){
-            QStandardItem *record = new QStandardItem("NS");
-            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            record->setForeground(Qt::white);
-            foreach(const QJsonValue &value, NS){
-                record->appendRow(new QStandardItem(value.toString()));
-                m_activeNS_rootItem->appendRow(new QStandardItem(value.toString()));
-            }
-            dns_item->appendRow(record);
-        }
-        if(!MX.isEmpty()){
-            QStandardItem *record = new QStandardItem("MX");
-            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            record->setForeground(Qt::white);
-            foreach(const QJsonValue &value, MX){
-                record->appendRow(new QStandardItem(value.toString()));
-                m_activeMX_rootItem->appendRow(new QStandardItem(value.toString()));
-            }
-            dns_item->appendRow(record);
-        }
-        if(!TXT.isEmpty()){
-            QStandardItem *record = new QStandardItem("TXT");
-            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            record->setForeground(Qt::white);
-            foreach(const QJsonValue &value, TXT){
-                record->appendRow(new QStandardItem(value.toString()));
-                m_activeTXT_rootItem->appendRow(new QStandardItem(value.toString()));
-            }
-            dns_item->appendRow(record);
-        }
-        if(!CNAME.isEmpty()){
-            QStandardItem *record = new QStandardItem("CNAME");
-            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            record->setForeground(Qt::white);
-            foreach(const QJsonValue &value, CNAME){
-                record->appendRow(new QStandardItem(value.toString()));
-                m_activeCNAME_rootItem->appendRow(new QStandardItem(value.toString()));
-            }
-            dns_item->appendRow(record);
-        }
-        if(!SRV.isEmpty()){
-            QStandardItem *record = new QStandardItem("SRV");
-            record->setIcon(QIcon(":/img/res/icons/folder2.png"));
-            record->setForeground(Qt::white);
-            foreach(const QJsonValue &value, SRV){
-                record->appendRow({new QStandardItem(value.toArray().at(0).toString()),
-                                   new QStandardItem(value.toArray().at(1).toString()),
-                                   new QStandardItem(value.toArray().at(2).toString())});
-                m_activeSRV_rootItem->appendRow({new QStandardItem(value.toArray().at(0).toString()),
-                                                 new QStandardItem(value.toArray().at(1).toString()),
-                                                 new QStandardItem(value.toArray().at(2).toString())});
-            }
-            dns_item->appendRow(record);
-        }
-        m_activeDNS_rootItem->appendRow(dns_item);
+        s3s_item::DNS *item = new s3s_item::DNS;
+        json_to_dns(value.toObject(), item);
+        m_activeDNS_rootItem->appendRow(item);
     }
 
     /* active SSL sha1 */
@@ -473,69 +387,10 @@ QByteArray ProjectModel::getJson(){
 
     /* active DNS */
     for(int i = 0; i < m_activeDNS_rootItem->rowCount(); ++i){
-        QJsonObject dns;
-        QStandardItem *domain = m_activeDNS_rootItem->child(i, 0);
-        dns.insert("domain", domain->text());
+        QModelIndex index = m_activeDNS_rootItem->child(i, 0)->index();
+        s3s_item::DNS *item = static_cast<s3s_item::DNS*>(activeDNS_model->item(index.row(), index.column()));
 
-        for(int j = 0; j < domain->rowCount(); ++j){
-            QStandardItem *record = domain->child(j, 0);
-            QString record_name = record->text();
-
-            if(record_name == "A"){
-                QJsonArray A_array;
-                for(int k = 0; k < record->rowCount(); ++k)
-                    A_array.append(record->child(k, 0)->text());
-                dns.insert("A", A_array);
-                continue;
-            }
-            if(record_name == "AAAA"){
-                QJsonArray AAAA_array;
-                for(int k = 0; k < record->rowCount(); ++k)
-                    AAAA_array.append(record->child(k, 0)->text());
-                dns.insert("AAAA", AAAA_array);
-                continue;
-            }
-            if(record_name == "NS"){
-                QJsonArray NS_array;
-                for(int k = 0; k < record->rowCount(); ++k)
-                    NS_array.append(record->child(k, 0)->text());
-                dns.insert("NS", NS_array);
-                continue;
-            }
-            if(record_name == "MX"){
-                QJsonArray MX_array;
-                for(int k = 0; k < record->rowCount(); ++k)
-                    MX_array.append(record->child(k, 0)->text());
-                dns.insert("MX", MX_array);
-                continue;
-            }
-            if(record_name == "CNAME"){
-                QJsonArray CNAME_array;
-                for(int k = 0; k < record->rowCount(); ++k)
-                    CNAME_array.append(record->child(k, 0)->text());
-                dns.insert("CNAME", CNAME_array);
-                continue;
-            }
-            if(record_name == "TXT"){
-                QJsonArray TXT_array;
-                for(int k = 0; k < record->rowCount(); ++k)
-                    TXT_array.append(record->child(k, 0)->text());
-                dns.insert("TXT", TXT_array);
-                continue;
-            }
-            if(record_name == "SRV"){
-                QJsonArray SRV_array;
-                for(int k = 0; k < record->rowCount(); ++k){
-                    QJsonArray srv;
-                    srv.append(record->child(k, 0)->text());
-                    srv.append(record->child(k, 1)->text());
-                    srv.append(record->child(k, 2)->text());
-                    SRV_array.append(srv);
-                }
-                dns.insert("SRV", SRV_array);
-            }
-        }
-        active_DNS_array.append(dns);
+        active_DNS_array.append(dns_to_json(item));
     }
 
     /* active SSL */
