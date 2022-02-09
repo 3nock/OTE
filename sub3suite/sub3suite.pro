@@ -75,6 +75,10 @@ SOURCES += \
     src/enums/cidr/CidrEnum_contextmenu.cpp \
     src/enums/cidr/CidrEnum_results.cpp \
     src/enums/cidr/CidrEnum_scan.cpp \
+    src/enums/email/EmailEnum_actions.cpp \
+    src/enums/email/EmailEnum_contextmenu.cpp \
+    src/enums/email/EmailEnum_results.cpp \
+    src/enums/email/EmailEnum_scan.cpp \
     src/enums/ip/IpEnum_actions.cpp \
     src/enums/ip/IpEnum_contextmenu.cpp \
     src/enums/ip/IpEnum_results.cpp \
@@ -94,6 +98,7 @@ SOURCES += \
     src/models/ASNModel.cpp \
     src/models/CIDRModel.cpp \
     src/models/DNSModel.cpp \
+    src/models/EmailModel.cpp \
     src/models/IPModel.cpp \
     src/models/MXModel.cpp \
     src/models/NSModel.cpp \

@@ -249,6 +249,11 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         m_enumSSL_rootItem->appendRow(item);
     }
     /* enum Email" */
+    foreach(const QJsonValue &value, data["enum_Email"].toArray()){
+        s3s_item::Email *item = new s3s_item::Email;
+        json_to_email(value.toObject(), item);
+        m_enumEmail_rootItem->appendRow(item);
+    }
     /* enum URL" */
     /* custom" */
 
@@ -441,12 +446,20 @@ QByteArray ProjectModel::getJson(){
         enum_NS_array.append(ns_to_json(item));
     }
 
-    /* enum NS */
+    /* enum SSL */
     for(int i = 0; i < m_enumSSL_rootItem->rowCount(); ++i){
         QModelIndex index = m_enumSSL_rootItem->child(i, 0)->index();
         s3s_item::SSL *item = static_cast<s3s_item::SSL*>(enumSSL_model->item(index.row(), index.column()));
 
         enum_SSL_array.append(ssl_to_json(item));
+    }
+
+    /* enum Email */
+    for(int i = 0; i < m_enumEmail_rootItem->rowCount(); ++i){
+        QModelIndex index = m_enumEmail_rootItem->child(i, 0)->index();
+        s3s_item::Email *item = static_cast<s3s_item::Email*>(enumEmail_model->item(index.row(), index.column()));
+
+        enum_Email_array.append(email_to_json(item));
     }
 
     QJsonObject general;

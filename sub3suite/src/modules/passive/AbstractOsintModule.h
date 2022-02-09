@@ -81,6 +81,7 @@ struct ScanArgs{
     bool outputInfoSSLCert = false;
     bool outputInfoMX = false;
     bool outputInfoNS = false;
+    bool outputInfoEmail = false;
     /* ... */
     bool outputInfoAsn = false;
     bool outputInfoAsnPeers = false;
@@ -171,6 +172,7 @@ class AbstractOsintModule : public QObject {
         void infoMX(s3s_struct::MX);
         void infoNS(s3s_struct::NS);
         void infoIp(s3s_struct::IP);
+        void infoEmail(s3s_struct::Email);
 
     public slots:
         void onStop(){

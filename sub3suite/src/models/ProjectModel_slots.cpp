@@ -144,8 +144,10 @@ void ProjectModel::addEnumSSL(const QString &target, const QSslCertificate &ssl)
     m_enumSSL_rootItem->appendRow(item);
 }
 
-void ProjectModel::addEnumEmail(){
-
+void ProjectModel::addEnumEmail(const s3s_struct::Email &email){
+    s3s_item::Email *item = new s3s_item::Email;
+    item->setValues(email);
+    m_enumEmail_rootItem->appendRow(item);
 }
 
 void ProjectModel::addEnumURL(){

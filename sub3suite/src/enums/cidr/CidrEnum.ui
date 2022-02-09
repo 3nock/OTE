@@ -271,7 +271,7 @@
             </property>
             <item>
              <property name="text">
-              <string>Property</string>
+              <string>CIDR</string>
              </property>
             </item>
             <item>

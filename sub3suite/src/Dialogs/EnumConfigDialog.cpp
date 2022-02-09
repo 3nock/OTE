@@ -27,6 +27,8 @@ void EnumConfigDialog::on_buttonOk_clicked(){
         this->saveConfig_mx();
     if(ssl)
         this->saveConfig_ssl();
+    if(email)
+        this->saveConfig_email();
 
     accept();
 }
@@ -78,6 +80,13 @@ void EnumConfigDialog::loadConfig_ssl(){
     ui->checkBoxNoDuplicates->setChecked(CONFIG_ENUM.value("no_duplicates_ssl").toBool());
 
     ssl = true;
+}
+
+void EnumConfigDialog::loadConfig_email(){
+    ui->checkBoxAutosave->setChecked(CONFIG_ENUM.value("autosave_to_Project_email").toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG_ENUM.value("no_duplicates_email").toBool());
+
+    email = true;
 }
 
 ///
@@ -137,6 +146,16 @@ void EnumConfigDialog::saveConfig_ssl(){
     /* save to config file */
     CONFIG_ENUM.setValue("autosave_to_Project_ssl", ui->checkBoxAutosave->isChecked());
     CONFIG_ENUM.setValue("no_duplicates_ssl", ui->checkBoxNoDuplicates->isChecked());
+
+    /* save to config structure */
+    m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
+    m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+}
+
+void EnumConfigDialog::saveConfig_email(){
+    /* save to config file */
+    CONFIG_ENUM.setValue("autosave_to_Project_email", ui->checkBoxAutosave->isChecked());
+    CONFIG_ENUM.setValue("no_duplicates_email", ui->checkBoxNoDuplicates->isChecked());
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();

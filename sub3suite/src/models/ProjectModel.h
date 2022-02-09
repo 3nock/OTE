@@ -16,6 +16,8 @@
 #include "src/models/IPModel.h"
 #include "src/models/MXModel.h"
 #include "src/models/NSModel.h"
+#include "src/models/EmailModel.h"
+#include "src/models/DNSModel.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 
@@ -125,7 +127,7 @@ public:
     void addEnumNS(const s3s_struct::NS &ns);
     void addEnumMX(const s3s_struct::MX &xm);
     void addEnumSSL(const QString &target, const QSslCertificate &ssl);
-    void addEnumEmail();
+    void addEnumEmail(const s3s_struct::Email &email);
     void addEnumURL();
 
 public:
