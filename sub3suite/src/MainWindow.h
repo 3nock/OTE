@@ -23,6 +23,7 @@
 #include "src/engines/active/Active.h"
 #include "src/engines/raw/Raw.h"
 #include "src/engines/ssl/Ssl.h"
+#include "src/engines/url/Url.h"
 
 /* tools */
 #include "src/enums/ip/IpEnum.h"
@@ -32,7 +33,6 @@
 #include "src/enums/cidr/CidrEnum.h"
 #include "src/enums/ns/NSEnum.h"
 #include "src/enums/mx/MXEnum.h"
-#include "src/enums/url/UrlEnum.h"
 
 
 namespace Ui {
@@ -61,6 +61,7 @@ class MainWindow : public QMainWindow{
         void onChangeTabToDns();
         void onChangeTabToRaw();
         void onChangeTabToSSL();
+        void onChangeTabToURL();
         /* change tab To Enum */
         void onChangeTabToIpEnum();
         void onChangeTabToAsnEnum();
@@ -69,7 +70,6 @@ class MainWindow : public QMainWindow{
         void onChangeTabToMXEnum();
         void onChangeTabToSSLEnum();
         void onChangeTabToEmailEnum();
-        void onChangeTabToUrlEnum();
 
     private slots:
         /* file menu */
@@ -110,6 +110,7 @@ protected:
         Dns *dns = nullptr;
         Raw *raw = nullptr;
         Ssl *ssl = nullptr;
+        Url *url = nullptr;
 
         /* tools */
         IpEnum *ipEnum = nullptr;
@@ -119,7 +120,6 @@ protected:
         MXEnum *mxEnum = nullptr;
         SSLEnum *sslEnum = nullptr;
         EmailEnum *emailEnum = nullptr;
-        UrlEnum *urlEnum = nullptr;
 
         /* ... */
         QMenu *m_menuRecents;

@@ -51,6 +51,7 @@ class AbstractEnum : public QWidget{
         void changeTabToActive();
         void changeTabToDns();
         void changeTabToSSL();
+        void changeTabToURL();
         void changeTabToProject();
         /* change tab To Enum */
         void changeTabToIpEnum();
@@ -60,7 +61,6 @@ class AbstractEnum : public QWidget{
         void changeTabToMXEnum();
         void changeTabToSSLEnum();
         void changeTabToEmailEnum();
-        void changeTabToUrlEnum();
 
         /* sending results to an engine */
         void sendResultsToOsint(QString, RESULT_TYPE);
@@ -69,6 +69,7 @@ class AbstractEnum : public QWidget{
         void sendResultsToActive(QString, RESULT_TYPE);
         void sendResultsToDns(QString, RESULT_TYPE);
         void sendResultsToCert(QString, RESULT_TYPE);
+        void sendResultsToUrl(QString, RESULT_TYPE);
         /* sending results to an Enumerator */
         void sendResultsToIpEnum(QString, RESULT_TYPE);
         void sendResultsToAsnEnum(QString, RESULT_TYPE);
@@ -77,7 +78,6 @@ class AbstractEnum : public QWidget{
         void sendResultsToMXEnum(QString, RESULT_TYPE);
         void sendResultsToSSLEnum(QString, RESULT_TYPE);
         void sendResultsToEmailEnum(QString, RESULT_TYPE);
-        void sendResultsToUrlEnum(QString, RESULT_TYPE);
 };
 
 #endif // ABSTRACTENUM_H

@@ -38,6 +38,11 @@ SOURCES += \
     src/dialogs/PreferenceDialog.cpp \
     src/dialogs/WordlistDialog_choose.cpp \
     src/dialogs/WordlistDialog_generate.cpp \
+    src/engines/url/Url.cpp \
+    src/engines/url/Url_actions.cpp \
+    src/engines/url/Url_contextmenu.cpp \
+    src/engines/url/Url_results.cpp \
+    src/engines/url/Url_scan.cpp \
     src/engines/active/Active_actions.cpp \
     src/engines/active/Active_contextmenu.cpp \
     src/engines/active/Active_results.cpp \
@@ -106,6 +111,7 @@ SOURCES += \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \
     src/models/SSLModel.cpp \
+    src/modules/active/UrlScanner.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
     src/modules/passive/api/JsonWhois.cpp \
@@ -164,7 +170,6 @@ SOURCES += \
     src/modules/active/SSLScanner.cpp \
     src/modules/active/WildcardScanner.cpp \
     src/project/Project.cpp \
-    src/enums/url/UrlEnum.cpp \
     src/enums/asn/ASNEnum.cpp \
     src/enums/email/EmailEnum.cpp \
     src/enums/ip/IpEnum.cpp \
@@ -245,6 +250,7 @@ HEADERS += \
     src/dialogs/StartupDialog.h \
     src/dialogs/EnumConfigDialog.h \
     src/dialogs/PreferenceDialog.h \
+    src/engines/url/Url.h \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
     src/models/ASNModel.h \
@@ -257,6 +263,7 @@ HEADERS += \
     src/models/DomainModel.h \
     src/models/EmailModel.h \
     src/models/MXModel.h \
+    src/modules/active/UrlScanner.h \
     src/modules/passive/OsintDefinitions.h \
     src/modules/passive/api/HaveIBeenPawned.h \
     src/modules/passive/api/Host.h \
@@ -319,7 +326,6 @@ HEADERS += \
     src/modules/active/WildcardScanner.h \
     src/project/Project.h \
     src/enums/AbstractEnum.h \
-    src/enums/url/UrlEnum.h \
     src/enums/asn/ASNEnum.h \
     src/enums/cidr/CidrEnum.h \
     src/enums/email/EmailEnum.h \
@@ -406,9 +412,9 @@ FORMS += \
     src/dialogs/StartupDialog.ui \
     src/dialogs/EnumConfigDialog.ui \
     src/dialogs/PreferenceDialog.ui \
+    src/engines/url/Url.ui \
     src/engines/ssl/Ssl.ui \
     src/project/Project.ui \
-    src/enums/url/UrlEnum.ui \
     src/enums/asn/ASNEnum.ui \
     src/enums/cidr/CidrEnum.ui \
     src/enums/email/EmailEnum.ui \
