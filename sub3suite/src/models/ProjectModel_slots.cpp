@@ -43,6 +43,12 @@ void ProjectModel::addActiveDNS(const s3s_struct::DNS &dns){
     m_activeDNS_rootItem->appendRow(item);
 }
 
+void ProjectModel::addActiveURL(const s3s_struct::URL &url){
+    s3s_item::URL *item = new s3s_item::URL;
+    item->setValues(url);
+    m_activeURL_rootItem->appendRow(item);
+}
+
 ///
 /// passive slots...
 ///
@@ -148,8 +154,4 @@ void ProjectModel::addEnumEmail(const s3s_struct::Email &email){
     s3s_item::Email *item = new s3s_item::Email;
     item->setValues(email);
     m_enumEmail_rootItem->appendRow(item);
-}
-
-void ProjectModel::addEnumURL(){
-
 }

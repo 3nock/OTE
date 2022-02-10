@@ -158,6 +158,13 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         m_activeSSL_rootItem->appendRow(item);
     }
 
+    /* active URL */
+    foreach(const QJsonValue &value, data["active_URL"].toArray()){
+        s3s_item::URL *item = new s3s_item::URL;
+        json_to_url(value.toObject(), item);
+        m_activeURL_rootItem->appendRow(item);
+    }
+
     /* passive subdomainIP */
     foreach(const QJsonValue &value, data["passive_subdomainIP"].toArray())
         m_passiveSubdomainIp_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
@@ -254,7 +261,6 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         json_to_email(value.toObject(), item);
         m_enumEmail_rootItem->appendRow(item);
     }
-    /* enum URL" */
     /* custom" */
 
     qDebug() << "Project " << projectInfo.name << " Opened.";
@@ -283,6 +289,7 @@ QByteArray ProjectModel::getJson(){
     QJsonArray active_SubdomainIp_array;
     QJsonArray active_SSL_array;
     QJsonArray active_DNS_array;
+    QJsonArray active_URL_array;
 
     QJsonArray enum_IP_array;
     QJsonArray enum_MX_array;
@@ -291,7 +298,6 @@ QByteArray ProjectModel::getJson(){
     QJsonArray enum_CIDR_array;
     QJsonArray enum_SSL_array;
     QJsonArray enum_Email_array;
-    QJsonArray enum_URL_array;
     QJsonArray custom_array;
 
     /* passive SSL */
@@ -406,6 +412,14 @@ QByteArray ProjectModel::getJson(){
         active_SSL_array.append(ssl_to_json(item));
     }
 
+    /* active URL */
+    for(int i = 0; i < m_activeURL_rootItem->rowCount(); ++i){
+        QModelIndex index = m_activeURL_rootItem->child(i, 0)->index();
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(activeURL_model->item(index.row(), index.column()));
+
+        active_URL_array.append(url_to_json(item));
+    }
+
     /* enum ASN */
     for(int i = 0; i < m_enumASN_rootItem->rowCount(); ++i){
         QModelIndex index = m_enumASN_rootItem->child(i, 0)->index();
@@ -475,6 +489,7 @@ QByteArray ProjectModel::getJson(){
     data.insert("active_SSL", active_SSL_array);
     data.insert("active_SSL_sha1", active_SSL_sha1_array);
     data.insert("active_SSL_sha256", active_SSL_sha256_array);
+    data.insert("active_URL", active_URL_array);
     data.insert("passive_subdomainIP", passive_SubdomainIp_array);
     data.insert("passive_subdomain", passive_Subdomain_array);
     data.insert("passive_A", passive_A_array);
@@ -495,7 +510,6 @@ QByteArray ProjectModel::getJson(){
     data.insert("enum_CIDR", enum_CIDR_array);
     data.insert("enum_SSL", enum_SSL_array);
     data.insert("enum_Email", enum_Email_array);
-    data.insert("enum_URL", enum_URL_array);
     data.insert("custom", custom_array);
 
     QJsonObject mainObj;

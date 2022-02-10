@@ -157,7 +157,8 @@ void Osint::m_copyResults(RESULT_TYPE resultType){
                 item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
                 clipboardData.append(item);
             }
-            break;
+            clipboard->setText(clipboardData.trimmed());
+            return;
 
         case RESULT_TYPE::IP:
             for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
@@ -165,7 +166,8 @@ void Osint::m_copyResults(RESULT_TYPE resultType){
                 item = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString().append(NEWLINE);
                 clipboardData.append(item);
             }
-            break;
+            clipboard->setText(clipboardData.trimmed());
+            return;
 
         case RESULT_TYPE::SUBDOMAINIP:
             for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
@@ -173,19 +175,18 @@ void Osint::m_copyResults(RESULT_TYPE resultType){
                 item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString()+":"+m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
                 clipboardData.append(item);
             }
-            break;
+            clipboard->setText(clipboardData.trimmed());
+            return;
 
         default:
             break;
         }
-        clipboard->setText(clipboardData.trimmed());
-        return;
     }
 
     /* for other result types */
-    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
+    for(int i = 0; i < m_resultProxyModel->rowCount(); i++)
     {
-        item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString()+":"+m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
+        item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
         clipboardData.append(item);
     }
 

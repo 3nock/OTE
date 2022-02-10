@@ -329,7 +329,7 @@
             </layout>
            </item>
            <item>
-            <widget class="QTableView" name="tableViewResults">
+            <widget class="QTreeView" name="tableViewResults">
              <property name="font">
               <font>
                <family>MS Shell Dlg 2</family>
@@ -363,47 +363,23 @@
              <property name="selectionMode">
               <enum>QAbstractItemView::ExtendedSelection</enum>
              </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectItems</enum>
+             </property>
              <property name="verticalScrollMode">
               <enum>QAbstractItemView::ScrollPerPixel</enum>
              </property>
              <property name="horizontalScrollMode">
               <enum>QAbstractItemView::ScrollPerPixel</enum>
              </property>
-             <property name="showGrid">
-              <bool>true</bool>
+             <property name="indentation">
+              <number>15</number>
              </property>
-             <property name="sortingEnabled">
-              <bool>true</bool>
-             </property>
-             <property name="cornerButtonEnabled">
-              <bool>false</bool>
-             </property>
-             <attribute name="horizontalHeaderCascadingSectionResizes">
-              <bool>true</bool>
+             <attribute name="headerMinimumSectionSize">
+              <number>200</number>
              </attribute>
-             <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>220</number>
-             </attribute>
-             <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>220</number>
-             </attribute>
-             <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="horizontalHeaderStretchLastSection">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderMinimumSectionSize">
-              <number>18</number>
-             </attribute>
-             <attribute name="verticalHeaderDefaultSectionSize">
-              <number>18</number>
-             </attribute>
-             <attribute name="verticalHeaderHighlightSections">
-              <bool>true</bool>
+             <attribute name="headerDefaultSectionSize">
+              <number>230</number>
              </attribute>
             </widget>
            </item>

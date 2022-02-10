@@ -34,7 +34,7 @@ Url::Url(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
     ui->targets->setListModel(m_targetListModel);
 
     /* result model */
-    m_resultModel->setHorizontalHeaderLabels({"URLs"});
+    m_resultModel->setHorizontalHeaderLabels({"    URL", "    Values"});
     m_resultProxyModel->setSourceModel(m_resultModel);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);

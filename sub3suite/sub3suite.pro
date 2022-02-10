@@ -111,6 +111,7 @@ SOURCES += \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \
     src/models/SSLModel.cpp \
+    src/models/URLModel.cpp \
     src/modules/active/UrlScanner.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
@@ -263,6 +264,7 @@ HEADERS += \
     src/models/DomainModel.h \
     src/models/EmailModel.h \
     src/models/MXModel.h \
+    src/models/URLModel.h \
     src/modules/active/UrlScanner.h \
     src/modules/passive/OsintDefinitions.h \
     src/modules/passive/api/HaveIBeenPawned.h \

@@ -22,7 +22,7 @@ void Url::m_clearResults(){
     /* clear the results... */
     m_resultModel->clear();
     ui->labelResultsCount->clear();
-    m_resultModel->setHorizontalHeaderLabels({"URLs"});
+    m_resultModel->setHorizontalHeaderLabels({"    URLs", "    Values"});
     m_activeDns.clear();
 
     /* clear the progressbar... */

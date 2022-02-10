@@ -31,6 +31,7 @@ ProjectModel::ProjectModel():
     activeSSL_explorer(new QStandardItem("SSL")),
     activeSSL_sha1_explorer(new QStandardItem("SHA-1")),
     activeSSL_sha256_explorer(new QStandardItem("SHA-256")),
+    activeURL_explorer(new QStandardItem("URL")),
 
     /* passive Results explorer */
     passiveSubdomainIp_explorer(new QStandardItem("Subdomain Ip")),
@@ -55,7 +56,6 @@ ProjectModel::ProjectModel():
     enumMX_explorer(new QStandardItem("MX")),
     enumSSL_explorer(new QStandardItem("SSL")),
     enumEmail_explorer(new QStandardItem("Email")),
-    enumURL_explorer(new QStandardItem("URL")),
 
     /* active Results Model */
     activeSubdomainIp_model(new QStandardItemModel),
@@ -73,6 +73,7 @@ ProjectModel::ProjectModel():
     activeSSL_model(new QStandardItemModel),
     activeSSL_sha1_model(new QStandardItemModel),
     activeSSL_sha256_model(new QStandardItemModel),
+    activeURL_model(new QStandardItemModel),
 
     /* passive results model */
     passiveSubdomainIp_model(new QStandardItemModel),
@@ -96,8 +97,7 @@ ProjectModel::ProjectModel():
     enumNS_model(new QStandardItemModel),
     enumMX_model(new QStandardItemModel),
     enumSSL_model(new QStandardItemModel),
-    enumEmail_model(new QStandardItemModel),
-    enumURL_model(new QStandardItemModel)
+    enumEmail_model(new QStandardItemModel)
 {
     this->setHeaderLabels();
     this->getRootItems();
@@ -137,6 +137,7 @@ ProjectModel::ProjectModel():
     activeSSL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     activeSSL_sha1_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     activeSSL_sha256_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeURL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     passiveSubdomainIp_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     passiveSubdomain_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     passiveA_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
@@ -157,7 +158,6 @@ ProjectModel::ProjectModel():
     enumMX_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     enumSSL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     enumEmail_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    enumURL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
     ///
     /// setting foreground
@@ -177,6 +177,7 @@ ProjectModel::ProjectModel():
     activeSSL_explorer->setForeground(Qt::white);
     activeSSL_sha1_explorer->setForeground(Qt::white);
     activeSSL_sha256_explorer->setForeground(Qt::white);
+    activeURL_explorer->setForeground(Qt::white);
     passiveSubdomain_explorer->setForeground(Qt::white);
     passiveSubdomainIp_explorer->setForeground(Qt::white);
     passiveA_explorer->setForeground(Qt::white);
@@ -197,7 +198,6 @@ ProjectModel::ProjectModel():
     enumMX_explorer->setForeground(Qt::white);
     enumSSL_explorer->setForeground(Qt::white);
     enumEmail_explorer->setForeground(Qt::white);
-    enumURL_explorer->setForeground(Qt::white);
 
     ///
     /// appending items...
@@ -217,6 +217,7 @@ ProjectModel::ProjectModel():
     active_explorer->appendRow(activeWildcard_explorer);
     active_explorer->appendRow(activeDNS_explorer);
     active_explorer->appendRow(activeSSL_explorer);
+    active_explorer->appendRow(activeURL_explorer);
     passive_explorer->appendRow(passiveSubdomainIp_explorer);
     passive_explorer->appendRow(passiveSubdomain_explorer);
     passive_explorer->appendRow(passiveA_explorer);
@@ -237,7 +238,6 @@ ProjectModel::ProjectModel():
     enums_explorer->appendRow(enumNS_explorer);
     enums_explorer->appendRow(enumSSL_explorer);
     enums_explorer->appendRow(enumEmail_explorer);
-    enums_explorer->appendRow(enumURL_explorer);
 
     ///
     /// append to project explorer....
@@ -269,6 +269,7 @@ ProjectModel::~ProjectModel(){
     delete activeSSL_explorer;
     delete activeSSL_sha1_explorer;
     delete activeSSL_sha256_explorer;
+    delete activeURL_explorer;
     delete passiveSubdomainIp_explorer;
     delete passiveSubdomain_explorer;
     delete passiveA_explorer;
@@ -289,7 +290,6 @@ ProjectModel::~ProjectModel(){
     delete enumMX_explorer;
     delete enumSSL_explorer;
     delete enumEmail_explorer;
-    delete enumURL_explorer;
     delete activeSubdomainIp_model;
     delete activeSubdomain_model;
     delete activeTld_model;
@@ -305,6 +305,7 @@ ProjectModel::~ProjectModel(){
     delete activeSSL_model;
     delete activeSSL_sha1_model;
     delete activeSSL_sha256_model;
+    delete activeURL_model;
     delete passiveSubdomainIp_model;
     delete passiveSubdomain_model;
     delete passiveA_model;
@@ -325,7 +326,6 @@ ProjectModel::~ProjectModel(){
     delete enumMX_model;
     delete enumSSL_model;
     delete enumEmail_model;
-    delete enumURL_model;
 }
 
 void ProjectModel::setHeaderLabels(){
@@ -344,6 +344,7 @@ void ProjectModel::setHeaderLabels(){
     activeSSL_model->setHorizontalHeaderLabels({"    SSL Certificates", "    Values"});
     activeSSL_sha1_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-1 Fingerprints"});
     activeSSL_sha256_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-256 Fingerprints"});
+    activeURL_model->setHorizontalHeaderLabels({"    URLs", "    Values"});
 
     /* passive results model */
     passiveSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
@@ -368,7 +369,6 @@ void ProjectModel::setHeaderLabels(){
     enumMX_model->setHorizontalHeaderLabels({"    MX", "    Values"});
     enumSSL_model->setHorizontalHeaderLabels({"    SSL Certificate", "    Values"});
     enumEmail_model->setHorizontalHeaderLabels({"    Email", "    Values"});
-    enumURL_model->setHorizontalHeaderLabels({"    URL", "    Values"});
 }
 
 void ProjectModel::getRootItems(){
@@ -388,6 +388,7 @@ void ProjectModel::getRootItems(){
     m_activeSSL_rootItem = activeSSL_model->invisibleRootItem();
     m_activeSSL_sha1_rootItem = activeSSL_sha1_model->invisibleRootItem();
     m_activeSSL_sha256_rootItem = activeSSL_sha256_model->invisibleRootItem();
+    m_activeURL_rootItem = activeURL_model->invisibleRootItem();
 
     /* passive results model */
     m_passiveSubdomainIp_rootItem = passiveSubdomainIp_model->invisibleRootItem();
@@ -412,7 +413,6 @@ void ProjectModel::getRootItems(){
     m_enumMX_rootItem = enumMX_model->invisibleRootItem();
     m_enumSSL_rootItem = enumSSL_model->invisibleRootItem();
     m_enumEmail_rootItem = enumEmail_model->invisibleRootItem();
-    m_enumURL_rootItem = enumURL_model->invisibleRootItem();
 }
 
 void ProjectModel::clearModels(){
@@ -431,6 +431,7 @@ void ProjectModel::clearModels(){
     activeSSL_model->clear();
     activeSSL_sha1_model->clear();
     activeSSL_sha256_model->clear();
+    activeURL_model->clear();
     passiveSubdomainIp_model->clear();
     passiveSubdomain_model->clear();
     passiveA_model->clear();
@@ -451,7 +452,6 @@ void ProjectModel::clearModels(){
     enumMX_model->clear();
     enumSSL_model->clear();
     enumEmail_model->clear();
-    enumURL_model->clear();
 
     this->setHeaderLabels();
     this->getRootItems();

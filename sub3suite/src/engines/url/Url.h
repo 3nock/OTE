@@ -27,7 +27,7 @@ class Url : public AbstractEngine{
     public slots:
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
-        void onScanResult(QString url);
+        void onScanResult(s3s_struct::URL url);
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */

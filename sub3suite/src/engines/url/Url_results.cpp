@@ -12,7 +12,6 @@
 void Url::onScanLog(scan::Log log){
     ui->plainTextEditLogs->appendHtml("[Error]      : <font color=\"red\">"+log.message+"</font>");
     ui->plainTextEditLogs->appendHtml("[Target]     : <font color=\"red\">"+log.target+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Nameserver] : <font color=\"red\">"+log.nameserver+"</font>");
     /* add a new line... */
     ui->plainTextEditLogs->appendPlainText("");
 
@@ -20,6 +19,14 @@ void Url::onScanLog(scan::Log log){
     m_scanStats->failed++;
 }
 
-void Url::onScanResult(QString url){
+void Url::onScanResult(s3s_struct::URL url){
+    s3s_item::URL *item = new s3s_item::URL;
+    item->setValues(url);
+    m_resultModel->appendRow(item);
 
+    //if(m_scanConfig->autoSaveToProject)
+        project->addActiveURL(url);
+
+    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    m_scanStats->resolved++;
 }

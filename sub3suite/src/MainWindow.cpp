@@ -132,6 +132,7 @@ void MainWindow::m_registerMetaTypes(){
     qRegisterMetaType<s3s_struct::CIDR>("s3s_struct::CIDR");
     qRegisterMetaType<s3s_struct::NS>("s3s_struct::NS");
     qRegisterMetaType<s3s_struct::MX>("s3s_struct::MX");
+    qRegisterMetaType<s3s_struct::URL>("s3s_struct::URL");
     qRegisterMetaType<QSslCertificate>("QSslCertificate");
 }
 

@@ -18,6 +18,7 @@
 #include "src/models/NSModel.h"
 #include "src/models/EmailModel.h"
 #include "src/models/DNSModel.h"
+#include "src/models/URLModel.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 
@@ -41,6 +42,7 @@ enum ModelType {
     activeSSL,
     activeSSL_sha1,
     activeSSL_sha256,
+    activeURL,
     passive_subdomainIp,
     passive_subdomain,
     passive_A,
@@ -103,6 +105,7 @@ public:
     void addActiveSSL_sha1(const QString &sha1);
     void addActiveSSL_sha256(const QString &sha256);
     void addActiveDNS(const s3s_struct::DNS &dns);
+    void addActiveURL(const s3s_struct::URL &url);
 
     /* for passive results */
     void addPassiveSubdomainIp(const QString &subdomain, const QString &ip);
@@ -128,7 +131,6 @@ public:
     void addEnumMX(const s3s_struct::MX &xm);
     void addEnumSSL(const QString &target, const QSslCertificate &ssl);
     void addEnumEmail(const s3s_struct::Email &email);
-    void addEnumURL();
 
 public:
     QStandardItemModel *model_explorer;
@@ -155,6 +157,7 @@ public:
     QStandardItem *activeSSL_explorer;
     QStandardItem *activeSSL_sha1_explorer;
     QStandardItem *activeSSL_sha256_explorer;
+    QStandardItem *activeURL_explorer;
 
     /* passive Results explorer */
     QStandardItem *passiveSubdomainIp_explorer;
@@ -179,7 +182,6 @@ public:
     QStandardItem *enumMX_explorer;
     QStandardItem *enumSSL_explorer;
     QStandardItem *enumEmail_explorer;
-    QStandardItem *enumURL_explorer;
 
     /* active Results Model */
     QStandardItemModel *activeSubdomainIp_model;
@@ -197,6 +199,7 @@ public:
     QStandardItemModel *activeSSL_model;
     QStandardItemModel *activeSSL_sha1_model;
     QStandardItemModel *activeSSL_sha256_model;
+    QStandardItemModel *activeURL_model;
 
     /* passive results model */
     QStandardItemModel *passiveSubdomainIp_model;
@@ -221,7 +224,6 @@ public:
     QStandardItemModel *enumMX_model;
     QStandardItemModel *enumSSL_model;
     QStandardItemModel *enumEmail_model;
-    QStandardItemModel *enumURL_model;
 
 private:
     QByteArray getJson();
@@ -243,6 +245,7 @@ private:
     QStandardItem *m_activeSSL_rootItem = nullptr;
     QStandardItem *m_activeSSL_sha1_rootItem = nullptr;
     QStandardItem *m_activeSSL_sha256_rootItem = nullptr;
+    QStandardItem *m_activeURL_rootItem = nullptr;
 
     /* passive results model */
     QStandardItem *m_passiveSubdomainIp_rootItem = nullptr;
@@ -267,7 +270,6 @@ private:
     QStandardItem *m_enumMX_rootItem = nullptr;
     QStandardItem *m_enumSSL_rootItem = nullptr;
     QStandardItem *m_enumEmail_rootItem = nullptr;
-    QStandardItem *m_enumURL_rootItem = nullptr;
 };
 
 #endif // PROJECTMODEL_H

@@ -9,10 +9,12 @@
 #define URLSCANNER_H
 
 
-#include <QTcpSocket>
+#include "AbstractScanner.h"
+#include "src/models/URLModel.h"
+
+#include <QNetworkAccessManager>
 #include <QMutex>
 #include <QQueue>
-#include "AbstractScanner.h"
 
 
 namespace url {
@@ -29,7 +31,7 @@ struct ScanConfig { // scan configurations
     int timeout = 3000;
 
     bool noDuplicates = false;
-    bool autoSaveToProject = false;
+    bool autoSaveToProject = true;
 };
 
 struct ScanArgs { // scan arguments
@@ -50,15 +52,19 @@ class Scanner : public AbstractScanner{
 
     private slots:
         void lookup() override;
-        void lookupFinished();
+        void lookupFinished(QNetworkReply *reply);
 
     signals:
         void next(); // next lookup
-        void scanResult(QString url);
+        void scanResult(s3s_struct::URL);
 
     private:
         url::ScanArgs *m_args;
+        QNetworkAccessManager *m_manager;
 };
+
+RETVAL getTarget(url::ScanArgs *args, QUrl &url);
+
 }
 
 #endif // URLSCANNER_H

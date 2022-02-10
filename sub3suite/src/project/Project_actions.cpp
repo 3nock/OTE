@@ -46,6 +46,9 @@ void Project::action_clear(){
     case ModelType::activeSSL_sha256:
         m_projectModel->activeSSL_sha256_model->clear();
         break;
+    case ModelType::activeURL:
+        m_projectModel->activeURL_model->clear();
+        break;
     case ModelType::passive_subdomainIp:
         m_projectModel->passiveSubdomainIp_model->clear();
         break;
@@ -102,9 +105,6 @@ void Project::action_clear(){
         break;
     case ModelType::enum_SSL:
         m_projectModel->enumSSL_model->clear();
-        break;
-    case ModelType::enum_URL:
-        m_projectModel->enumURL_model->clear();
         break;
     }
 

@@ -44,6 +44,12 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->addItems({"SSL", "Value"});
             ui->comboBoxFilter->show();
         }
+        if(index == m_projectModel->activeURL_explorer->index()){
+            m_proxyModel->setSourceModel(m_projectModel->activeURL_model);
+            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeURL);
+            ui->comboBoxFilter->addItems({"URL", "Value"});
+            ui->comboBoxFilter->show();
+        }
     }
 
     if(parent_index == m_projectModel->activeDNS_explorer->index()){
@@ -190,12 +196,6 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             m_proxyModel->setSourceModel(m_projectModel->enumEmail_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_Email);
             ui->comboBoxFilter->addItems({"Email", "Value"});
-            ui->comboBoxFilter->show();
-        }
-        if(index == m_projectModel->enumURL_explorer->index()){
-            m_proxyModel->setSourceModel(m_projectModel->enumURL_model);
-            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_URL);
-            ui->comboBoxFilter->addItems({"URL", "Value"});
             ui->comboBoxFilter->show();
         }
     }
