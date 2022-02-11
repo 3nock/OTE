@@ -329,46 +329,46 @@ ProjectModel::~ProjectModel(){
 }
 
 void ProjectModel::setHeaderLabels(){
-    activeSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
-    activeSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
-    activeTld_model->setHorizontalHeaderLabels({"    TLD", "    IpAddress"});
-    activeWildcard_model->setHorizontalHeaderLabels({"    Wildcard", "    IpAddress"});
-    activeDNS_model->setHorizontalHeaderLabels({"    DNS Records", "", ""});
-    activeA_model->setHorizontalHeaderLabels({"    A DNS Records"});
-    activeAAAA_model->setHorizontalHeaderLabels({"    AAAA DNS Records"});
-    activeNS_model->setHorizontalHeaderLabels({"    NS DNS Records"});
-    activeMX_model->setHorizontalHeaderLabels({"    MX DNS Records"});
-    activeTXT_model->setHorizontalHeaderLabels({"    TXT DNS Records"});
-    activeCNAME_model->setHorizontalHeaderLabels({"    CNAME DNS Records"});
-    activeSRV_model->setHorizontalHeaderLabels({"    Name", "    Target", "    Port"});
-    activeSSL_model->setHorizontalHeaderLabels({"    SSL Certificates", "    Values"});
-    activeSSL_sha1_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-1 Fingerprints"});
-    activeSSL_sha256_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-256 Fingerprints"});
+    activeSubdomainIp_model->setHorizontalHeaderLabels({" Subdomains", " IpAddress"});
+    activeSubdomain_model->setHorizontalHeaderLabels({" Subdomains"});
+    activeTld_model->setHorizontalHeaderLabels({" TLD", " IpAddress"});
+    activeWildcard_model->setHorizontalHeaderLabels({" Wildcard", " IpV4", " IpV6"});
+    activeDNS_model->setHorizontalHeaderLabels({" DNS Records", "", ""});
+    activeA_model->setHorizontalHeaderLabels({" A DNS Records"});
+    activeAAAA_model->setHorizontalHeaderLabels({" AAAA DNS Records"});
+    activeNS_model->setHorizontalHeaderLabels({" NS DNS Records"});
+    activeMX_model->setHorizontalHeaderLabels({" MX DNS Records"});
+    activeTXT_model->setHorizontalHeaderLabels({" TXT DNS Records"});
+    activeCNAME_model->setHorizontalHeaderLabels({" CNAME DNS Records"});
+    activeSRV_model->setHorizontalHeaderLabels({" Name", " Target", " Port"});
+    activeSSL_model->setHorizontalHeaderLabels({" SSL Certificates", " Values"});
+    activeSSL_sha1_model->setHorizontalHeaderLabels({" SSL Certificates SHA-1 Fingerprints"});
+    activeSSL_sha256_model->setHorizontalHeaderLabels({" SSL Certificates SHA-256 Fingerprints"});
     activeURL_model->setHorizontalHeaderLabels({" URL", " Status", " Server", " Content Type"});
 
     /* passive results model */
-    passiveSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});
-    passiveSubdomain_model->setHorizontalHeaderLabels({"    Subdomains"});
-    passiveA_model->setHorizontalHeaderLabels({"    A Records"});
-    passiveAAAA_model->setHorizontalHeaderLabels({"    AAAA Records"});
-    passiveCidr_model->setHorizontalHeaderLabels({"    IP/CIDR"});
-    passiveNS_model->setHorizontalHeaderLabels({"    NS Records"});
-    passiveMX_model->setHorizontalHeaderLabels({"    MX Records"});
-    passiveTXT_model->setHorizontalHeaderLabels({"    TXT Records"});
-    passiveCNAME_model->setHorizontalHeaderLabels({"    CNAME Records"});
-    passiveEmail_model->setHorizontalHeaderLabels({"    Emails"});
-    passiveUrl_model->setHorizontalHeaderLabels({"    URLs"});
-    passiveAsn_model->setHorizontalHeaderLabels({"    ASN", "    Name"});
-    passiveSSL_model->setHorizontalHeaderLabels({"    SSL Certificates ID"});
+    passiveSubdomainIp_model->setHorizontalHeaderLabels({" Subdomains", " IpAddress"});
+    passiveSubdomain_model->setHorizontalHeaderLabels({" Subdomains"});
+    passiveA_model->setHorizontalHeaderLabels({" A Records"});
+    passiveAAAA_model->setHorizontalHeaderLabels({" AAAA Records"});
+    passiveCidr_model->setHorizontalHeaderLabels({" IP/CIDR"});
+    passiveNS_model->setHorizontalHeaderLabels({" NS Records"});
+    passiveMX_model->setHorizontalHeaderLabels({" MX Records"});
+    passiveTXT_model->setHorizontalHeaderLabels({" TXT Records"});
+    passiveCNAME_model->setHorizontalHeaderLabels({" CNAME Records"});
+    passiveEmail_model->setHorizontalHeaderLabels({" Emails"});
+    passiveUrl_model->setHorizontalHeaderLabels({" URLs"});
+    passiveAsn_model->setHorizontalHeaderLabels({" ASN", " Name"});
+    passiveSSL_model->setHorizontalHeaderLabels({" SSL Certificates ID"});
 
     /* enum Results model */
-    enumIp_model->setHorizontalHeaderLabels({"    IP", "    Values"});
-    enumASN_model->setHorizontalHeaderLabels({"    ASN", "    Values"});
-    enumCIDR_model->setHorizontalHeaderLabels({"    CIDR", "    Values"});
-    enumNS_model->setHorizontalHeaderLabels({"    NS", "    Values"});
-    enumMX_model->setHorizontalHeaderLabels({"    MX", "    Values"});
-    enumSSL_model->setHorizontalHeaderLabels({"    SSL Certificate", "    Values"});
-    enumEmail_model->setHorizontalHeaderLabels({"    Email", "    Values"});
+    enumIp_model->setHorizontalHeaderLabels({" IP", " Values"});
+    enumASN_model->setHorizontalHeaderLabels({" ASN", " Values"});
+    enumCIDR_model->setHorizontalHeaderLabels({" CIDR", " Values"});
+    enumNS_model->setHorizontalHeaderLabels({" NS", " Values"});
+    enumMX_model->setHorizontalHeaderLabels({" MX", " Values"});
+    enumSSL_model->setHorizontalHeaderLabels({" SSL Certificate", " Values"});
+    enumEmail_model->setHorizontalHeaderLabels({" Email", " Values"});
 }
 
 void ProjectModel::getRootItems(){

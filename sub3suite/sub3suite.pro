@@ -104,6 +104,7 @@ SOURCES += \
     src/models/CIDRModel.cpp \
     src/models/DNSModel.cpp \
     src/models/EmailModel.cpp \
+    src/models/HostModel.cpp \
     src/models/IPModel.cpp \
     src/models/MXModel.cpp \
     src/models/NSModel.cpp \
@@ -112,6 +113,7 @@ SOURCES += \
     src/models/ProjectModel_slots.cpp \
     src/models/SSLModel.cpp \
     src/models/URLModel.cpp \
+    src/models/WildcardModel.cpp \
     src/modules/active/UrlScanner.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
@@ -256,15 +258,16 @@ HEADERS += \
     src/engines/dns/Dns.h \
     src/models/ASNModel.h \
     src/models/DNSModel.h \
+    src/models/HostModel.h \
     src/models/IPModel.h \
     src/models/NSModel.h \
     src/models/ProjectModel.h \
     src/models/SSLModel.h \
     src/models/CIDRModel.h \
-    src/models/DomainModel.h \
     src/models/EmailModel.h \
     src/models/MXModel.h \
     src/models/URLModel.h \
+    src/models/WildcardModel.h \
     src/modules/active/UrlScanner.h \
     src/modules/passive/OsintDefinitions.h \
     src/modules/passive/api/HaveIBeenPawned.h \

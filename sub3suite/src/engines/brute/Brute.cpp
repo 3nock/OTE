@@ -40,7 +40,7 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
     ui->wordlist->setListModel(m_wordlistModel);
 
     /* results models */
-    m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+    m_resultModelSubdomain->setHorizontalHeaderLabels({" Subdomain", " IpAddress"});
     m_resultModelTld->setHorizontalHeaderLabels({"TLD", "IpAddress"});
     /* default is subdomain result model */
     m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
@@ -48,6 +48,8 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
     m_resultProxyModel->setFilterKeyColumn(0);
     ui->tableViewResults->setModel(m_resultProxyModel);
+
+    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* placeholder texts */
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);

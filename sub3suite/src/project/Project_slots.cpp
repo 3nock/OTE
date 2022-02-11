@@ -47,7 +47,8 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->addItems({"Wildcard", "IpAddress"});
             ui->comboBoxFilter->show();
 
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->header()->resizeSection(0, 200);
+            ui->treeViewSiteMap->header()->resizeSection(1, 200);
         }
         if(index == m_projectModel->activeSSL_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeSSL_model);

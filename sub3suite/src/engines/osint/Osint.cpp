@@ -46,20 +46,21 @@ Osint::Osint(QWidget *parent, ProjectModel *project): AbstractEngine(parent, pro
     ui->targets->setListModel(m_targetListModelHostname);
 
     /* results models */
-    m_resultModelSubdomainIp->setHorizontalHeaderLabels({"Subdomains", "IpAddresses"});
-    m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomains"});
-    m_resultModelIp->setHorizontalHeaderLabels({"IpAddresses"});
-    m_resultModelEmail->setHorizontalHeaderLabels({"Emails"});
-    m_resultModelUrl->setHorizontalHeaderLabels({"Urls"});
-    m_resultModelAsn->setHorizontalHeaderLabels({"Asn", "Name"});
-    m_resultModelCert->setHorizontalHeaderLabels({"SSL-Cert FingerPrint"});
-    m_resultModelCidr->setHorizontalHeaderLabels({"Cidr"});
+    m_resultModelSubdomainIp->setHorizontalHeaderLabels({" Subdomains", " IpAddresses"});
+    m_resultModelSubdomain->setHorizontalHeaderLabels({" Subdomains"});
+    m_resultModelIp->setHorizontalHeaderLabels({" IpAddresses"});
+    m_resultModelEmail->setHorizontalHeaderLabels({" Emails"});
+    m_resultModelUrl->setHorizontalHeaderLabels({" Urls"});
+    m_resultModelAsn->setHorizontalHeaderLabels({" Asn", " Name"});
+    m_resultModelCert->setHorizontalHeaderLabels({" SSL-Cert FingerPrint"});
+    m_resultModelCidr->setHorizontalHeaderLabels({" Cidr"});
     m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
     m_resultProxyModel->setFilterKeyColumn(0);
     ui->tableViewResults->setModel(m_resultProxyModel);
 
+    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* ... */
     m_currentPath = QApplication::applicationDirPath();

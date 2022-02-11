@@ -41,7 +41,7 @@ Url::Url(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
     m_resultProxyModel->setFilterKeyColumn(0);
     ui->tableViewResults->setModel(m_resultProxyModel);
 
-    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     ui->tableViewResults->horizontalHeader()->resizeSection(0, 230);
     ui->tableViewResults->horizontalHeader()->resizeSection(1, 10);
     ui->tableViewResults->horizontalHeader()->resizeSection(2, 120);
