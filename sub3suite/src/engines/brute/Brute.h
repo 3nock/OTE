@@ -31,8 +31,8 @@ class Brute : public AbstractEngine{
         void onNextLevel();
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
-        void onResultSubdomain(QString subdomain, QString ip);
-        void onResultTLD(QString tld, QString ip);
+        void onResultSubdomain(s3s_struct::HOST host);
+        void onResultTLD(s3s_struct::HOST host);
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
@@ -55,8 +55,8 @@ class Brute : public AbstractEngine{
 
         QMap<QString,QString> m_failedScans;
 
-        QSet<QString> m_subdomainSet;
-        QSet<QString> m_tldSet;
+        QMap<QString, s3s_item::HOST*> m_subdomainSet;
+        QMap<QString, s3s_item::HOST*> m_tldSet;
 
         brute::ScanConfig *m_scanConfig;
         brute::ScanArgs *m_scanArgs;

@@ -9,6 +9,7 @@
 #define ACTIVE_H
 
 #include <QElapsedTimer>
+
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/active/ActiveScanner.h"
@@ -28,7 +29,7 @@ class Active : public AbstractEngine{
     public slots:
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
-        void onScanResult(QString host, QString ip);
+        void onScanResult(s3s_struct::HOST host);
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
@@ -46,8 +47,8 @@ class Active : public AbstractEngine{
     private:
         Ui::Active *ui;
         QElapsedTimer m_timer;
-        QSet<QString> m_activeDns;
         QMap<QString,QString> m_failedScans;
+        QMap<QString, s3s_item::HOST*> m_resultSet;
         active::ScanConfig *m_scanConfig;
         active::ScanArgs *m_scanArgs;
         active::ScanStat *m_scanStats;

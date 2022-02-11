@@ -20,52 +20,52 @@ void Brute::onScanLog(scan::Log log){
     m_scanStats->failed++;
 }
 
-void Brute::onResultSubdomain(QString subdomain, QString ip){
-    /* if no-duplicates is allowed, prevent duplicate results using a set */
-    if(m_scanConfig->noDuplicates){
-        int prevSize = m_subdomainSet.size();
-        m_subdomainSet.insert(subdomain+ip);
-        if(prevSize == m_subdomainSet.size())
-            return;
+void Brute::onResultSubdomain(s3s_struct::HOST host){
+    if(m_subdomainSet.contains(host.host)) // for existing entry...
+    {
+        s3s_item::HOST *item = m_subdomainSet.value(host.host);
+        if(m_scanConfig->recordType == QDnsLookup::A)
+            item->setValue_ipv4(host.ipv4);
+        else
+            item->setValue_ipv6(host.ipv6);
+    }
+    else // for new entry...
+    {
+        s3s_item::HOST *item = new s3s_item::HOST;
+        item->setValues(host);
+        m_resultModelSubdomain->appendRow({item, item->ipv4, item->ipv6});
+        m_subdomainSet.insert(host.host, item);
+
+        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+        m_scanStats->resolved++;
     }
 
-    /* if multilevel scan add results to the nextlevel targets queue */
-    if(m_scanConfig->multiLevelScan){
-        if(m_scanArgs->currentLevel < m_scanConfig->levels)
-            m_scanArgs->nextLevelTargets.enqueue(subdomain);
-    }
-
-    /* save to subdomain result model */
-    m_resultModelSubdomain->appendRow(QList<QStandardItem*>() <<new QStandardItem(subdomain) <<new QStandardItem(ip));
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    m_scanStats->resolved++;
-
-    /* save to Project model... */
+    /* save to Project model */
     if(m_scanConfig->autoSaveToProject)
-        project->addActiveSubdomainIp(subdomain, ip);
+        project->addActiveHost(host);
 }
 
-void Brute::onResultTLD(QString tld, QString ip){
-    /* if no-duplicates is allowed, prevent duplicate results using a set */
-    if(m_scanConfig->noDuplicates){
-        int prevSize = m_tldSet.size();
-        m_tldSet.insert(tld+ip);
-        if(prevSize == m_tldSet.size())
-            return;
+void Brute::onResultTLD(s3s_struct::HOST host){
+    if(m_tldSet.contains(host.host)) // for existing entry...
+    {
+        s3s_item::HOST *item = m_tldSet.value(host.host);
+        if(m_scanConfig->recordType == QDnsLookup::A)
+            item->setValue_ipv4(host.ipv4);
+        else
+            item->setValue_ipv6(host.ipv6);
+    }
+    else // for new entry...
+    {
+        s3s_item::HOST *item = new s3s_item::HOST;
+        item->setValues(host);
+        m_resultModelTld->appendRow({item, item->ipv4, item->ipv6});
+        m_tldSet.insert(host.host, item);
+
+        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+        m_scanStats->resolved++;
     }
 
-    /* if multilevel scan add results to the nextleveltargets queue */
-    if(m_scanConfig->multiLevelScan){
-        if(m_scanArgs->currentLevel < m_scanConfig->levels)
-            m_scanArgs->nextLevelTargets.enqueue(tld);
-    }
-
-    /* save to model */
-    m_resultModelTld->appendRow(QList<QStandardItem*>() <<new QStandardItem(tld) <<new QStandardItem(ip));
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    m_scanStats->resolved++;
-
-    /* save to Project model... */
+    /* save to Project model */
     if(m_scanConfig->autoSaveToProject)
-        project->addActiveTLD(tld, ip);
+        project->addActiveHost(host);
 }

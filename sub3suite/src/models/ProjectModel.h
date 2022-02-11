@@ -19,6 +19,8 @@
 #include "src/models/EmailModel.h"
 #include "src/models/DNSModel.h"
 #include "src/models/URLModel.h"
+#include "src/models/HostModel.h"
+#include "src/models/WildcardModel.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 
@@ -27,9 +29,7 @@
  *      use a fast compression library eg https://github.com/lz4/lz4
  */
 enum ModelType {
-    activeSubdomainIp,
-    activeSubdomain,
-    activeTld,
+    activeHost,
     activeWildcard,
     activeDNS,
     activeDNS_A,
@@ -42,6 +42,7 @@ enum ModelType {
     activeSSL,
     activeSSL_sha1,
     activeSSL_sha256,
+    activeSSL_altNames,
     activeURL,
     passive_subdomainIp,
     passive_subdomain,
@@ -97,15 +98,14 @@ public:
     ProjectStruct projectInfo;
 
     /* for active results */
-    void addActiveSubdomainIp(const QString &subdomain, const QString &ip);
-    void addActiveSubdomain(const QString &subdomain);
-    void addActiveTLD(const QString &subdomain, const QString &ip);
-    void addActiveWildcard(const QString &subdomain, const QString &ip);
+    void addActiveHost(const s3s_struct::HOST &host);
+    void addActiveWildcard(const s3s_struct::Wildcard &wildcard);
+    void addActiveDNS(const s3s_struct::DNS &dns);
+    void addActiveURL(const s3s_struct::URL &url);
     void addActiveSSL(const QString &target, const QSslCertificate &cert);
     void addActiveSSL_sha1(const QString &sha1);
     void addActiveSSL_sha256(const QString &sha256);
-    void addActiveDNS(const s3s_struct::DNS &dns);
-    void addActiveURL(const s3s_struct::URL &url);
+    void addActiveSSL_altNames(const QString &alternative_names);
 
     /* for passive results */
     void addPassiveSubdomainIp(const QString &subdomain, const QString &ip);
@@ -142,9 +142,7 @@ public:
     QStandardItem *custom_explorer;
 
     /* active Results Explorer */
-    QStandardItem *activeSubdomainIp_explorer;
-    QStandardItem *activeSubdomain_explorer;
-    QStandardItem *activeTld_explorer;
+    QStandardItem *activeHost_explorer;
     QStandardItem *activeWildcard_explorer;
     QStandardItem *activeDNS_explorer;
     QStandardItem *activeA_explorer;
@@ -157,6 +155,7 @@ public:
     QStandardItem *activeSSL_explorer;
     QStandardItem *activeSSL_sha1_explorer;
     QStandardItem *activeSSL_sha256_explorer;
+    QStandardItem *activeSSL_altNames_explorer;
     QStandardItem *activeURL_explorer;
 
     /* passive Results explorer */
@@ -184,9 +183,7 @@ public:
     QStandardItem *enumEmail_explorer;
 
     /* active Results Model */
-    QStandardItemModel *activeSubdomainIp_model;
-    QStandardItemModel *activeSubdomain_model;
-    QStandardItemModel *activeTld_model;
+    QStandardItemModel *activeHost_model;
     QStandardItemModel *activeWildcard_model;
     QStandardItemModel *activeDNS_model;
     QStandardItemModel *activeA_model;
@@ -199,6 +196,7 @@ public:
     QStandardItemModel *activeSSL_model;
     QStandardItemModel *activeSSL_sha1_model;
     QStandardItemModel *activeSSL_sha256_model;
+    QStandardItemModel *activeSSL_altNames_model;
     QStandardItemModel *activeURL_model;
 
     /* passive results model */
@@ -230,9 +228,7 @@ private:
     QByteArray m_project_hash;
 
     /* active results model */
-    QStandardItem *m_activeSubdomainIp_rootItem = nullptr;
-    QStandardItem *m_activeSubdomain_rootItem = nullptr;
-    QStandardItem *m_activeTld_rootItem = nullptr;
+    QStandardItem *m_activeHost_rootItem = nullptr;
     QStandardItem *m_activeWildcard_rootItem = nullptr;
     QStandardItem *m_activeDNS_rootItem = nullptr;
     QStandardItem *m_activeA_rootItem = nullptr;
@@ -245,6 +241,7 @@ private:
     QStandardItem *m_activeSSL_rootItem = nullptr;
     QStandardItem *m_activeSSL_sha1_rootItem = nullptr;
     QStandardItem *m_activeSSL_sha256_rootItem = nullptr;
+    QStandardItem *m_activeSSL_altNames_rootItem = nullptr;
     QStandardItem *m_activeURL_rootItem = nullptr;
 
     /* passive results model */

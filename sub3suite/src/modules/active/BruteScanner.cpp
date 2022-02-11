@@ -30,9 +30,18 @@ void brute::Scanner::lookupFinished(){
     case QDnsLookup::NoError:
         if(m_dns->hostAddressRecords().isEmpty())
             break;
-        emit scanResult(m_dns->name(), m_dns->hostAddressRecords().at(0).value().toString());
-        break;
+        else
+        {
+            s3s_struct::HOST host;
+            host.host = m_dns->name();
+            if(m_args->config->recordType == QDnsLookup::A)
+                host.ipv4 = m_dns->hostAddressRecords().at(0).value().toString();
+            else
+                host.ipv6 = m_dns->hostAddressRecords().at(0).value().toString();
 
+            emit scanResult(host);
+            break;
+        }
     default:
         log.message = m_dns->errorString();
         log.target = m_dns->name();

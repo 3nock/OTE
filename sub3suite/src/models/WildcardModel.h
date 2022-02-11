@@ -28,7 +28,7 @@ public:
     QStandardItem *ipv4;
     QStandardItem *ipv6;
 
-    void setValue(const s3s_struct::Wildcard &host){
+    void setValues(const s3s_struct::Wildcard &host){
         this->setText(host.wildcard);
         ipv4->setText(host.ipv4);
         ipv6->setText(host.ipv6);

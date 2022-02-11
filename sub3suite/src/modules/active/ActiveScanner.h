@@ -12,6 +12,7 @@
 #include <QMutex>
 #include <QQueue>
 #include "AbstractScanner.h"
+#include "src/models/HostModel.h"
 
 
 namespace active {
@@ -72,7 +73,7 @@ class Scanner : public AbstractScanner{
 
     signals:
         void next(); // next lookup
-        void scanResult(QString domain, QString ip); // send active enumerated results
+        void scanResult(s3s_struct::HOST host); // send active enumerated results
 
     private:
         active::ScanArgs *m_args;

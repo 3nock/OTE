@@ -16,10 +16,8 @@ ProjectModel::ProjectModel():
     custom_explorer(new QStandardItem("Custom")),
 
     /* active Results Explorer */
-    activeSubdomainIp_explorer(new QStandardItem("Subdomain Ip")),
-    activeSubdomain_explorer(new QStandardItem("Subdomain")),
-    activeTld_explorer(new QStandardItem("TLD")),
-    activeWildcard_explorer(new QStandardItem("Wildcard")),
+    activeHost_explorer(new QStandardItem("Hostnames")),
+    activeWildcard_explorer(new QStandardItem("Wildcards")),
     activeDNS_explorer(new QStandardItem("DNS")),
     activeA_explorer(new QStandardItem("A")),
     activeAAAA_explorer(new QStandardItem("AAAA")),
@@ -31,10 +29,11 @@ ProjectModel::ProjectModel():
     activeSSL_explorer(new QStandardItem("SSL")),
     activeSSL_sha1_explorer(new QStandardItem("SHA-1")),
     activeSSL_sha256_explorer(new QStandardItem("SHA-256")),
+    activeSSL_altNames_explorer(new QStandardItem("Alt-names")),
     activeURL_explorer(new QStandardItem("URL")),
 
     /* passive Results explorer */
-    passiveSubdomainIp_explorer(new QStandardItem("Subdomain Ip")),
+    passiveSubdomainIp_explorer(new QStandardItem("Subdomain & Ip")),
     passiveSubdomain_explorer(new QStandardItem("Subdomain")),
     passiveA_explorer(new QStandardItem("A")),
     passiveAAAA_explorer(new QStandardItem("AAAA")),
@@ -58,9 +57,7 @@ ProjectModel::ProjectModel():
     enumEmail_explorer(new QStandardItem("Email")),
 
     /* active Results Model */
-    activeSubdomainIp_model(new QStandardItemModel),
-    activeSubdomain_model(new QStandardItemModel),
-    activeTld_model(new QStandardItemModel),
+    activeHost_model(new QStandardItemModel),
     activeWildcard_model(new QStandardItemModel),
     activeDNS_model(new QStandardItemModel),
     activeA_model(new QStandardItemModel),
@@ -73,6 +70,7 @@ ProjectModel::ProjectModel():
     activeSSL_model(new QStandardItemModel),
     activeSSL_sha1_model(new QStandardItemModel),
     activeSSL_sha256_model(new QStandardItemModel),
+    activeSSL_altNames_model(new QStandardItemModel),
     activeURL_model(new QStandardItemModel),
 
     /* passive results model */
@@ -122,9 +120,7 @@ ProjectModel::ProjectModel():
     custom_explorer->setForeground(Qt::white);
     custom_explorer->setIcon(QIcon(":/img/res/icons/folder.png"));
 
-    activeSubdomainIp_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeSubdomain_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
-    activeTld_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeHost_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     activeWildcard_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     activeDNS_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     activeA_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
@@ -137,6 +133,7 @@ ProjectModel::ProjectModel():
     activeSSL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     activeSSL_sha1_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     activeSSL_sha256_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
+    activeSSL_altNames_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     activeURL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     passiveSubdomainIp_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     passiveSubdomain_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
@@ -162,9 +159,7 @@ ProjectModel::ProjectModel():
     ///
     /// setting foreground
     ///
-    activeSubdomainIp_explorer->setForeground(Qt::white);
-    activeSubdomain_explorer->setForeground(Qt::white);
-    activeTld_explorer->setForeground(Qt::white);
+    activeHost_explorer->setForeground(Qt::white);
     activeWildcard_explorer->setForeground(Qt::white);
     activeDNS_explorer->setForeground(Qt::white);
     activeA_explorer->setForeground(Qt::white);
@@ -177,6 +172,7 @@ ProjectModel::ProjectModel():
     activeSSL_explorer->setForeground(Qt::white);
     activeSSL_sha1_explorer->setForeground(Qt::white);
     activeSSL_sha256_explorer->setForeground(Qt::white);
+    activeSSL_altNames_explorer->setForeground(Qt::white);
     activeURL_explorer->setForeground(Qt::white);
     passiveSubdomain_explorer->setForeground(Qt::white);
     passiveSubdomainIp_explorer->setForeground(Qt::white);
@@ -211,13 +207,12 @@ ProjectModel::ProjectModel():
     activeDNS_explorer->appendRow(activeSRV_explorer);
     activeSSL_explorer->appendRow(activeSSL_sha1_explorer);
     activeSSL_explorer->appendRow(activeSSL_sha256_explorer);
-    active_explorer->appendRow(activeSubdomainIp_explorer);
-    active_explorer->appendRow(activeSubdomain_explorer);
-    active_explorer->appendRow(activeTld_explorer);
+    activeSSL_explorer->appendRow(activeSSL_altNames_explorer);
+    active_explorer->appendRow(activeHost_explorer);
     active_explorer->appendRow(activeWildcard_explorer);
+    active_explorer->appendRow(activeURL_explorer);
     active_explorer->appendRow(activeDNS_explorer);
     active_explorer->appendRow(activeSSL_explorer);
-    active_explorer->appendRow(activeURL_explorer);
     passive_explorer->appendRow(passiveSubdomainIp_explorer);
     passive_explorer->appendRow(passiveSubdomain_explorer);
     passive_explorer->appendRow(passiveA_explorer);
@@ -254,9 +249,7 @@ ProjectModel::~ProjectModel(){
     delete passive_explorer;
     delete enums_explorer;
     delete custom_explorer;
-    delete activeSubdomainIp_explorer;
-    delete activeSubdomain_explorer;
-    delete activeTld_explorer;
+    delete activeHost_explorer;
     delete activeWildcard_explorer;
     delete activeDNS_explorer;
     delete activeA_explorer;
@@ -269,6 +262,7 @@ ProjectModel::~ProjectModel(){
     delete activeSSL_explorer;
     delete activeSSL_sha1_explorer;
     delete activeSSL_sha256_explorer;
+    delete activeSSL_altNames_explorer;
     delete activeURL_explorer;
     delete passiveSubdomainIp_explorer;
     delete passiveSubdomain_explorer;
@@ -290,9 +284,7 @@ ProjectModel::~ProjectModel(){
     delete enumMX_explorer;
     delete enumSSL_explorer;
     delete enumEmail_explorer;
-    delete activeSubdomainIp_model;
-    delete activeSubdomain_model;
-    delete activeTld_model;
+    delete activeHost_model;
     delete activeWildcard_model;
     delete activeDNS_model;
     delete activeA_model;
@@ -305,6 +297,7 @@ ProjectModel::~ProjectModel(){
     delete activeSSL_model;
     delete activeSSL_sha1_model;
     delete activeSSL_sha256_model;
+    delete activeSSL_altNames_model;
     delete activeURL_model;
     delete passiveSubdomainIp_model;
     delete passiveSubdomain_model;
@@ -329,11 +322,9 @@ ProjectModel::~ProjectModel(){
 }
 
 void ProjectModel::setHeaderLabels(){
-    activeSubdomainIp_model->setHorizontalHeaderLabels({" Subdomains", " IpAddress"});
-    activeSubdomain_model->setHorizontalHeaderLabels({" Subdomains"});
-    activeTld_model->setHorizontalHeaderLabels({" TLD", " IpAddress"});
+    activeHost_model->setHorizontalHeaderLabels({" Host", " IpV4", " IpV6"});
     activeWildcard_model->setHorizontalHeaderLabels({" Wildcard", " IpV4", " IpV6"});
-    activeDNS_model->setHorizontalHeaderLabels({" DNS Records", "", ""});
+    activeDNS_model->setHorizontalHeaderLabels({" DNS Records", " Value", " Value"});
     activeA_model->setHorizontalHeaderLabels({" A DNS Records"});
     activeAAAA_model->setHorizontalHeaderLabels({" AAAA DNS Records"});
     activeNS_model->setHorizontalHeaderLabels({" NS DNS Records"});
@@ -344,6 +335,7 @@ void ProjectModel::setHeaderLabels(){
     activeSSL_model->setHorizontalHeaderLabels({" SSL Certificates", " Values"});
     activeSSL_sha1_model->setHorizontalHeaderLabels({" SSL Certificates SHA-1 Fingerprints"});
     activeSSL_sha256_model->setHorizontalHeaderLabels({" SSL Certificates SHA-256 Fingerprints"});
+    activeSSL_altNames_model->setHorizontalHeaderLabels({" Alternative Names"});
     activeURL_model->setHorizontalHeaderLabels({" URL", " Status", " Server", " Content Type"});
 
     /* passive results model */
@@ -373,9 +365,7 @@ void ProjectModel::setHeaderLabels(){
 
 void ProjectModel::getRootItems(){
     /* active results model */
-    m_activeSubdomainIp_rootItem = activeSubdomainIp_model->invisibleRootItem();
-    m_activeSubdomain_rootItem = activeSubdomain_model->invisibleRootItem();
-    m_activeTld_rootItem = activeTld_model->invisibleRootItem();
+    m_activeHost_rootItem = activeHost_model->invisibleRootItem();
     m_activeWildcard_rootItem = activeWildcard_model->invisibleRootItem();
     m_activeDNS_rootItem = activeDNS_model->invisibleRootItem();
     m_activeA_rootItem = activeA_model->invisibleRootItem();
@@ -388,6 +378,7 @@ void ProjectModel::getRootItems(){
     m_activeSSL_rootItem = activeSSL_model->invisibleRootItem();
     m_activeSSL_sha1_rootItem = activeSSL_sha1_model->invisibleRootItem();
     m_activeSSL_sha256_rootItem = activeSSL_sha256_model->invisibleRootItem();
+    m_activeSSL_altNames_rootItem = activeSSL_altNames_model->invisibleRootItem();
     m_activeURL_rootItem = activeURL_model->invisibleRootItem();
 
     /* passive results model */
@@ -416,9 +407,7 @@ void ProjectModel::getRootItems(){
 }
 
 void ProjectModel::clearModels(){
-    activeSubdomainIp_model->clear();
-    activeSubdomain_model->clear();
-    activeTld_model->clear();
+    activeHost_model->clear();
     activeWildcard_model->clear();
     activeDNS_model->clear();
     activeA_model->clear();
@@ -431,6 +420,7 @@ void ProjectModel::clearModels(){
     activeSSL_model->clear();
     activeSSL_sha1_model->clear();
     activeSSL_sha256_model->clear();
+    activeSSL_altNames_model->clear();
     activeURL_model->clear();
     passiveSubdomainIp_model->clear();
     passiveSubdomain_model->clear();

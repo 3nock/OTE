@@ -4,14 +4,8 @@
 
 void Project::action_clear(){
     switch (ui->treeViewSiteMap->property(PROJECT_MODEL_TYPE).toInt()) {
-    case ModelType::activeSubdomainIp:
-        m_projectModel->activeSubdomainIp_model->clear();
-        break;
-    case ModelType::activeSubdomain:
-        m_projectModel->activeSubdomain_model->clear();
-        break;
-    case ModelType::activeTld:
-        m_projectModel->activeTld_model->clear();
+    case ModelType::activeHost:
+        m_projectModel->activeHost_model->clear();
         break;
     case ModelType::activeWildcard:
         m_projectModel->activeWildcard_model->clear();
@@ -45,6 +39,9 @@ void Project::action_clear(){
         break;
     case ModelType::activeSSL_sha256:
         m_projectModel->activeSSL_sha256_model->clear();
+        break;
+    case ModelType::activeSSL_altNames:
+        m_projectModel->activeSSL_altNames_model->clear();
         break;
     case ModelType::activeURL:
         m_projectModel->activeURL_model->clear();

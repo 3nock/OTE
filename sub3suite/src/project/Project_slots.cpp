@@ -14,41 +14,31 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
         return;
 
     if(parent_index == m_projectModel->active_explorer->index()){
-        if(index == m_projectModel->activeSubdomainIp_explorer->index()){
-            m_proxyModel->setSourceModel(m_projectModel->activeSubdomainIp_model);
-            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeSubdomainIp);
-            ui->comboBoxFilter->addItems({"Subdomain", "IpAddress"});
+        if(index == m_projectModel->activeHost_explorer->index()){
+            m_proxyModel->setSourceModel(m_projectModel->activeHost_model);
+            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeHost);
+            ui->comboBoxFilter->addItems({"Hostname", "IpV4", "IpV6"});
             ui->comboBoxFilter->show();
 
             ui->treeViewSiteMap->header()->resizeSection(0, 300);
-        }
-        if(index == m_projectModel->activeSubdomain_explorer->index()){
-            m_proxyModel->setSourceModel(m_projectModel->activeSubdomain_model);
-            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeSubdomain);
-        }
-        if(index == m_projectModel->activeTld_explorer->index()){
-            m_proxyModel->setSourceModel(m_projectModel->activeTld_model);
-            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeTld);
-            ui->comboBoxFilter->addItems({"TLD", "IpAddress"});
-            ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->header()->resizeSection(1, 150);
         }
         if(index == m_projectModel->activeDNS_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeDNS_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeDNS);
 
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->header()->resizeSection(0, 200);
+            ui->treeViewSiteMap->header()->resizeSection(1, 200);
             ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->activeWildcard_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeWildcard_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeWildcard);
-            ui->comboBoxFilter->addItems({"Wildcard", "IpAddress"});
+            ui->comboBoxFilter->addItems({"Wildcard", "IpV4", "IpV6"});
             ui->comboBoxFilter->show();
 
-            ui->treeViewSiteMap->header()->resizeSection(0, 200);
-            ui->treeViewSiteMap->header()->resizeSection(1, 200);
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->header()->resizeSection(1, 150);
         }
         if(index == m_projectModel->activeSSL_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeSSL_model);
@@ -115,6 +105,10 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
         if(index == m_projectModel->activeSSL_sha256_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeSSL_sha256_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeSSL_sha256);
+        }
+        if(index == m_projectModel->activeSSL_altNames_explorer->index()){
+            m_proxyModel->setSourceModel(m_projectModel->activeSSL_altNames_model);
+            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeSSL_altNames);
         }
     }
 

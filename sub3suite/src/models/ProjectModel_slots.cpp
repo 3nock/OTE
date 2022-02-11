@@ -6,21 +6,16 @@
 ///
 /// active slots...
 ///
-void ProjectModel::addActiveSubdomainIp(const QString &subdomain, const QString &ip){
-    m_activeSubdomainIp_rootItem->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
+void ProjectModel::addActiveHost(const s3s_struct::HOST &host){
+    s3s_item::HOST *item = new s3s_item::HOST;
+    item->setValues(host);
+    m_activeHost_rootItem->appendRow({item, item->ipv4, item->ipv6});
 }
 
-void ProjectModel::addActiveSubdomain(const QString &subdomain){
-    m_activeSubdomain_rootItem->appendRow(new QStandardItem(subdomain));
-
-}
-
-void ProjectModel::addActiveTLD(const QString &subdomain, const QString &ip){
-    m_activeTld_rootItem->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
-}
-
-void ProjectModel::addActiveWildcard(const QString &subdomain, const QString &ip){
-    m_activeWildcard_rootItem->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
+void ProjectModel::addActiveWildcard(const s3s_struct::Wildcard &wildcard){
+    s3s_item::Wildcard *item = new s3s_item::Wildcard;
+    item->setValues(wildcard);
+    m_activeWildcard_rootItem->appendRow({item, item->ipv4, item->ipv6});
 }
 
 void ProjectModel::addActiveSSL(const QString &target, const QSslCertificate &ssl){
@@ -35,6 +30,10 @@ void ProjectModel::addActiveSSL_sha1(const QString &sha1){
 
 void ProjectModel::addActiveSSL_sha256(const QString &sha256){
     m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(sha256));
+}
+
+void ProjectModel::addActiveSSL_altNames(const QString &alternative_names){
+    m_activeSSL_altNames_rootItem->appendRow(new QStandardItem(alternative_names));
 }
 
 void ProjectModel::addActiveDNS(const s3s_struct::DNS &dns){

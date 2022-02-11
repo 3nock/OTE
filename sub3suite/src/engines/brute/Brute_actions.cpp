@@ -43,7 +43,7 @@ void Brute::m_openInBrowser(QItemSelectionModel *selectionModel){
 void Brute::m_removeResults(QItemSelectionModel *selectionModel){
     /* findout from what results model */
     QStandardItemModel *model = nullptr;
-    QSet<QString> set;
+    QMap<QString, s3s_item::HOST*> set;
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
         model = m_resultModelSubdomain;
@@ -223,20 +223,21 @@ void Brute::onReceiveTargets(QString target, RESULT_TYPE resultType){
 ******************************************************************************/
 
 void Brute::m_sendToProject(){
-    QString host, ip;
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            host = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-            ip = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
-            project->addActiveSubdomainIp(host, ip);
+        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = m_resultProxyModel->mapToSource(m_resultProxyModel->index(i ,0));
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_resultModelSubdomain->item(index.row(), index.column()));
+            project->addActiveHost(host_to_struct(item));
         }
         break;
     case brute::OUTPUT::TLD:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            host = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-            ip = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
-            project->addActiveTLD(host, ip);
+        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = m_resultProxyModel->mapToSource(m_resultProxyModel->index(i ,0));
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_resultModelTld->item(index.row(), index.column()));
+            project->addActiveHost(host_to_struct(item));
         }
     }
 }
@@ -247,33 +248,19 @@ void Brute::m_sendToProject(){
  *      Fix. selection can be host, ip or both
  */
 void Brute::m_sendToProject(QItemSelectionModel *selection){
-    int row;
-    QString host(""), ip("");
-    QModelIndexList indexList(selection->selectedIndexes());
-
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
-        for(int i = 0; i < indexList.size();){
-            host = indexList.at(i).data().toString();
-            row = indexList.at(i).row();
-            i++;
-            if((i < indexList.size()) && (row == indexList.at(i).row())){
-                ip = indexList.at(i).data().toString();
-                project->addActiveSubdomainIp(host, ip);
-                i++;
-            }
+        foreach(const QModelIndex &index, selection->selectedIndexes()){
+            QModelIndex model_index = m_resultProxyModel->mapToSource(index);
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_resultModelSubdomain->item(model_index.row(), model_index.column()));
+            project->addActiveHost(host_to_struct(item));
         }
         break;
     case brute::OUTPUT::TLD:
-        for(int i = 0; i < indexList.size();){
-            host = indexList.at(i).data().toString();
-            row = indexList.at(i).row();
-            i++;
-            if((i < indexList.size()) && (row == indexList.at(i).row())){
-                ip = indexList.at(i).data().toString();
-                project->addActiveTLD(host, ip);
-                i++;
-            }
+        foreach(const QModelIndex &index, selection->selectedIndexes()){
+            QModelIndex model_index = m_resultProxyModel->mapToSource(index);
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_resultModelTld->item(model_index.row(), model_index.column()));
+            project->addActiveHost(host_to_struct(item));
         }
     }
 }

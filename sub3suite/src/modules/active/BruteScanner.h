@@ -12,7 +12,9 @@
 #include <QQueue>
 #include <QDnsLookup>
 #include <QHostAddress>
+
 #include "AbstractScanner.h"
+#include "src/models/HostModel.h"
 
 
 namespace brute {
@@ -73,7 +75,7 @@ class Scanner : public AbstractScanner{
         void next(); // next lookup
         void nextLevel(); // send signal, going to the next level
         void newProgress(int); // send new progressBar max value
-        void scanResult(QString subdomain, QString ip); // lookup results
+        void scanResult(s3s_struct::HOST host); // lookup results
 
     private:
         brute::ScanArgs *m_args;

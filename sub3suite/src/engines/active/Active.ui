@@ -387,10 +387,10 @@
               <bool>true</bool>
              </attribute>
              <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>220</number>
+              <number>100</number>
              </attribute>
              <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>220</number>
+              <number>100</number>
              </attribute>
              <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
               <bool>true</bool>

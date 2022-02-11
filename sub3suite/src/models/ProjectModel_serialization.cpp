@@ -117,24 +117,19 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     ///
     QJsonObject data = mainObj["data"].toObject();
 
-    /* active subdomainIp */
-    foreach(const QJsonValue &value, data["active_subdomainIP"].toArray())
-        m_activeSubdomainIp_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
-                                                 new QStandardItem(value.toArray()[1].toString())});
-
-    /* active subdomain */
-    foreach(const QJsonValue &value, data["active_subdomain"].toArray())
-        m_activeSubdomain_rootItem->appendRow(new QStandardItem(value.toString()));
-
-    /* active TLD */
-    foreach(const QJsonValue &value, data["active_TLD"].toArray())
-        m_activeTld_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
-                                         new QStandardItem(value.toArray()[1].toString())});
+    /* active Hostnames */
+    foreach(const QJsonValue &value, data["active_Host"].toArray()){
+        s3s_item::HOST *item = new s3s_item::HOST;
+        json_to_host(value.toObject(), item);
+        m_activeHost_rootItem->appendRow({item, item->ipv4, item->ipv6});
+    }
 
     /* active Wildcards */
-    foreach(const QJsonValue &value, data["active_wildcard"].toArray())
-        m_activeWildcard_rootItem->appendRow({new QStandardItem(value.toArray()[0].toString()),
-                                              new QStandardItem(value.toArray()[1].toString())});
+    foreach(const QJsonValue &value, data["active_wildcard"].toArray()){
+        s3s_item::Wildcard *item = new s3s_item::Wildcard;
+        json_to_wildcard(value.toObject(), item);
+        m_activeWildcard_rootItem->appendRow({item, item->ipv4, item->ipv6});
+    }
 
     /* active dns */
     foreach(const QJsonValue &value, data["active_dns"].toArray()){
@@ -150,6 +145,10 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     /* active SSL sha256 */
     foreach(const QJsonValue &value, data["active_SSL_sha256"].toArray())
         m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(value.toString()));
+
+    /* active SSL alternativeNames */
+    foreach(const QJsonValue &value, data["active_SSL_altNames"].toArray())
+        m_activeSSL_altNames_rootItem->appendRow(new QStandardItem(value.toString()));
 
     /* active SSL */
     foreach(const QJsonValue &value, data["active_SSL"].toArray()){
@@ -283,10 +282,9 @@ QByteArray ProjectModel::getJson(){
 
     QJsonArray active_SSL_sha1_array;
     QJsonArray active_SSL_sha256_array;
-    QJsonArray active_Subdomain_array;
-    QJsonArray active_TLD_array;
+    QJsonArray active_SSL_altNames_array;
+    QJsonArray active_Host_array;
     QJsonArray active_wildcard_array;
-    QJsonArray active_SubdomainIp_array;
     QJsonArray active_SSL_array;
     QJsonArray active_DNS_array;
     QJsonArray active_URL_array;
@@ -368,32 +366,24 @@ QByteArray ProjectModel::getJson(){
     for(int i = 0; i != m_activeSSL_sha256_rootItem->rowCount(); ++i)
         active_SSL_sha256_array.append(m_activeSSL_sha256_rootItem->child(i, 0)->text());
 
-    /* active Subdomain */
-    for(int i = 0; i != m_activeSubdomain_rootItem->rowCount(); ++i)
-        active_Subdomain_array.append(m_activeSubdomain_rootItem->child(i, 0)->text());
+    /* active SSL alternative names */
+    for(int i = 0; i != m_activeSSL_altNames_rootItem->rowCount(); ++i)
+        active_SSL_altNames_array.append(m_activeSSL_altNames_rootItem->child(i, 0)->text());
 
-    /* active TLD */
-    for(int i = 0; i != m_activeTld_rootItem->rowCount(); ++i){
-        QJsonArray tld;
-        tld.append(m_activeTld_rootItem->child(i, 0)->text());
-        tld.append(m_activeTld_rootItem->child(i, 1)->text());
-        active_TLD_array.append(tld);
+    /* active Host */
+    for(int i = 0; i != m_activeHost_rootItem->rowCount(); ++i){
+        QModelIndex index = m_activeHost_rootItem->child(i, 0)->index();
+        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(activeHost_model->item(index.row(), 0));
+
+        active_Host_array.append(host_to_json(item));
     }
 
     /* active Wildcard */
     for(int i = 0; i != m_activeWildcard_rootItem->rowCount(); ++i){
-        QJsonArray wildcard;
-        wildcard.append(m_activeWildcard_rootItem->child(i, 0)->text());
-        wildcard.append(m_activeWildcard_rootItem->child(i, 1)->text());
-        active_wildcard_array.append(wildcard);
-    }
+        QModelIndex index = m_activeWildcard_rootItem->child(i, 0)->index();
+        s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(activeHost_model->item(index.row(), 0));
 
-    /* active SubdomainIp */
-    for(int i = 0; i != m_activeSubdomainIp_rootItem->rowCount(); ++i){
-        QJsonArray subdomainIp;
-        subdomainIp.append(m_activeSubdomainIp_rootItem->child(i, 0)->text());
-        subdomainIp.append(m_activeSubdomainIp_rootItem->child(i, 1)->text());
-        active_SubdomainIp_array.append(subdomainIp);
+        active_wildcard_array.append(wildcard_to_json(item));
     }
 
     /* active DNS */
@@ -481,14 +471,13 @@ QByteArray ProjectModel::getJson(){
     general.insert("name", "one");
 
     QJsonObject data;
-    data.insert("active_subdomainIP", active_SubdomainIp_array);
-    data.insert("active_subdomain", active_Subdomain_array);
-    data.insert("active_TLD", active_TLD_array);
+    data.insert("active_Host", active_Host_array);
     data.insert("active_wildcard", active_wildcard_array);
     data.insert("active_dns", active_DNS_array);
     data.insert("active_SSL", active_SSL_array);
     data.insert("active_SSL_sha1", active_SSL_sha1_array);
     data.insert("active_SSL_sha256", active_SSL_sha256_array);
+    data.insert("active_SSL_altNames", active_SSL_altNames_array);
     data.insert("active_URL", active_URL_array);
     data.insert("passive_subdomainIP", passive_SubdomainIp_array);
     data.insert("passive_subdomain", passive_Subdomain_array);

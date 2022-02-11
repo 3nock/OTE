@@ -33,17 +33,17 @@ public:
     QString last_modified;
     QString notes;
 
-    void setValue(const s3s_struct::HOST &host){
+    void setValues(const s3s_struct::HOST &host){
         this->setText(host.host);
         ipv4->setText(host.ipv4);
         ipv6->setText(host.ipv6);
     }
 
-    void seValue_ipv4(const QString &_ipv4){
+    void setValue_ipv4(const QString &_ipv4){
         ipv4->setText(_ipv4);
     }
 
-    void seValue_ipv6(const QString &_ipv6){
+    void setValue_ipv6(const QString &_ipv6){
         ipv6->setText(_ipv6);
     }
 };

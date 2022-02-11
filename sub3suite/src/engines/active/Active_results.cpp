@@ -20,21 +20,27 @@ void Active::onScanLog(scan::Log log){
     m_scanStats->failed++;
 }
 
-void Active::onScanResult(QString host, QString ip){
-    /* if no-duplicates is allowed, prevent duplicate results using a set */
-    if(m_scanConfig->noDuplicates){
-        int prevSize = m_activeDns.size();
-        m_activeDns.insert(host+ip);
-        if(prevSize == m_activeDns.size())
-            return;
+void Active::onScanResult(s3s_struct::HOST host){
+    if(m_resultSet.contains(host.host)) // for existing entry...
+    {
+        s3s_item::HOST *item = m_resultSet.value(host.host);
+        if(m_scanConfig->recordType == QDnsLookup::A)
+            item->setValue_ipv4(host.ipv4);
+        else
+            item->setValue_ipv6(host.ipv6);
     }
+    else // for new entry...
+    {
+        s3s_item::HOST *item = new s3s_item::HOST;
+        item->setValues(host);
+        m_resultModel->appendRow({item, item->ipv4, item->ipv6});
+        m_resultSet.insert(host.host, item);
 
-    /* save to active dns model */
-    m_resultModel->appendRow(QList<QStandardItem*>() << new QStandardItem(host) << new QStandardItem(ip));
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    m_scanStats->resolved++;
+        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+        m_scanStats->resolved++;
+    }
 
     /* save to Project model */
     if(m_scanConfig->autoSaveToProject)
-        project->addActiveSubdomainIp(host, ip);
+        project->addActiveHost(host);
 }

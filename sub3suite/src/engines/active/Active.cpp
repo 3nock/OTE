@@ -34,13 +34,15 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
     ui->targets->setListModel(m_targetListModel);
 
     /* result model */
-    m_resultModel->setHorizontalHeaderLabels({" Host", " IpAddress"});
+    m_resultModel->setHorizontalHeaderLabels({" Host", " Ipv4", " Ipv6"});
     m_resultProxyModel->setSourceModel(m_resultModel);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
     m_resultProxyModel->setFilterKeyColumn(0);
     ui->tableViewResults->setModel(m_resultProxyModel);
 
+    ui->tableViewResults->horizontalHeader()->resizeSection(0, 200);
+    ui->tableViewResults->horizontalHeader()->resizeSection(1, 100);
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* hiding widgets */

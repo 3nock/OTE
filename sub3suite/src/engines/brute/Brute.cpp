@@ -40,8 +40,8 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
     ui->wordlist->setListModel(m_wordlistModel);
 
     /* results models */
-    m_resultModelSubdomain->setHorizontalHeaderLabels({" Subdomain", " IpAddress"});
-    m_resultModelTld->setHorizontalHeaderLabels({"TLD", "IpAddress"});
+    m_resultModelSubdomain->setHorizontalHeaderLabels({" Subdomain", " Ipv4", " Ipv6"});
+    m_resultModelTld->setHorizontalHeaderLabels({" TLD", " Ipv4", " Ipv6"});
     /* default is subdomain result model */
     m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -49,6 +49,8 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
     m_resultProxyModel->setFilterKeyColumn(0);
     ui->tableViewResults->setModel(m_resultProxyModel);
 
+    ui->tableViewResults->horizontalHeader()->resizeSection(0, 200);
+    ui->tableViewResults->horizontalHeader()->resizeSection(1, 100);
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* placeholder texts */

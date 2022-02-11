@@ -22,8 +22,8 @@ void Active::m_clearResults(){
     /* clear the results... */
     m_resultModel->clear();
     ui->labelResultsCount->clear();
-    m_resultModel->setHorizontalHeaderLabels({"Host", "IpAddress"});
-    m_activeDns.clear();
+    m_resultModel->setHorizontalHeaderLabels({" Host", " Ipv4", " Ipv6"});
+    m_resultSet.clear();
 
     /* clear the progressbar... */
     ui->progressBar->clearMask();
@@ -35,7 +35,7 @@ void Active::m_removeResults(QItemSelectionModel *selectionModel){
     QModelIndex index;
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
         index = m_resultProxyModel->mapToSource(proxyIndex);
-        m_activeDns.remove(index.data().toString());
+        m_resultSet.remove(index.data().toString());
         m_resultModel->removeRow(index.row());
     }
 
@@ -201,28 +201,19 @@ void Active::onReceiveTargets(QString target, RESULT_TYPE resultType){
                             SENDING RESULTS
 ******************************************************************************/
 void Active::m_sendToProject(){
-    QString host, ip;
-    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-        host = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-        ip = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
-        project->addActiveSubdomainIp(host, ip);
+    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
+    {
+        QModelIndex index = m_resultProxyModel->mapToSource(m_resultProxyModel->index(i ,0));
+        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_resultModel->item(index.row(), index.column()));
+        project->addActiveHost(host_to_struct(item));
     }
 }
 
 void Active::m_sendToProject(QItemSelectionModel *selection){
-    int row;
-    QString host(""), ip("");
-    QModelIndexList indexList(selection->selectedIndexes());
-
-    for(int i = 0; i < indexList.size();){
-        host = indexList.at(i).data().toString();
-        row = indexList.at(i).row();
-        i++;
-        if((i < indexList.size()) && (row == indexList.at(i).row())){
-            ip = indexList.at(i).data().toString();
-            project->addActiveSubdomainIp(host, ip);
-            i++;
-        }
+    foreach(const QModelIndex &index, selection->selectedIndexes()){
+        QModelIndex model_index = m_resultProxyModel->mapToSource(index);
+        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_resultModel->item(model_index.row(), model_index.column()));
+        project->addActiveHost(host_to_struct(item));
     }
 }
 

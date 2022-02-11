@@ -67,7 +67,7 @@ void Ssl::onScanResultSubdomain(QString target, QStringList subdomains){
 
     foreach(const QString &subdomain, subdomains){
         m_resultModelSubdomain->appendRow(new QStandardItem(subdomain));
-        project->addActiveSubdomain(subdomain);
+        project->addActiveSSL_altNames(subdomain);
     }
 
     ui->labelResultsCount->setNum(m_resultModelSubdomain->rowCount());
