@@ -34,12 +34,17 @@ Url::Url(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
     ui->targets->setListModel(m_targetListModel);
 
     /* result model */
-    m_resultModel->setHorizontalHeaderLabels({"    URL", "    Values"});
+    m_resultModel->setHorizontalHeaderLabels({" URL", " Status", " Server", " Content Type"});
     m_resultProxyModel->setSourceModel(m_resultModel);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
     m_resultProxyModel->setFilterKeyColumn(0);
     ui->tableViewResults->setModel(m_resultProxyModel);
+
+    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    ui->tableViewResults->horizontalHeader()->resizeSection(0, 230);
+    ui->tableViewResults->horizontalHeader()->resizeSection(1, 10);
+    ui->tableViewResults->horizontalHeader()->resizeSection(2, 120);
 
     /* hiding widgets */
     ui->progressBar->hide();

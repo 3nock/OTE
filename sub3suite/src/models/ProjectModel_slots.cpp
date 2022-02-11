@@ -46,7 +46,7 @@ void ProjectModel::addActiveDNS(const s3s_struct::DNS &dns){
 void ProjectModel::addActiveURL(const s3s_struct::URL &url){
     s3s_item::URL *item = new s3s_item::URL;
     item->setValues(url);
-    m_activeURL_rootItem->appendRow(item);
+    m_activeURL_rootItem->appendRow({item, item->status_code, item->banner, item->content_type});
 }
 
 ///

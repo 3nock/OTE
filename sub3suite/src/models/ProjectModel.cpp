@@ -344,7 +344,7 @@ void ProjectModel::setHeaderLabels(){
     activeSSL_model->setHorizontalHeaderLabels({"    SSL Certificates", "    Values"});
     activeSSL_sha1_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-1 Fingerprints"});
     activeSSL_sha256_model->setHorizontalHeaderLabels({"    SSL Certificates SHA-256 Fingerprints"});
-    activeURL_model->setHorizontalHeaderLabels({"    URLs", "    Values"});
+    activeURL_model->setHorizontalHeaderLabels({" URL", " Status", " Server", " Content Type"});
 
     /* passive results model */
     passiveSubdomainIp_model->setHorizontalHeaderLabels({"    Subdomains", "    IpAddress"});

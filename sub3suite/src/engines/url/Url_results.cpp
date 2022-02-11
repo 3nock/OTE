@@ -22,10 +22,9 @@ void Url::onScanLog(scan::Log log){
 void Url::onScanResult(s3s_struct::URL url){
     s3s_item::URL *item = new s3s_item::URL;
     item->setValues(url);
-    m_resultModel->appendRow(item);
+    m_resultModel->appendRow({item, item->status_code, item->banner, item->content_type});
 
-    //if(m_scanConfig->autoSaveToProject)
-        project->addActiveURL(url);
+    project->addActiveURL(url);
 
     ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
     m_scanStats->resolved++;

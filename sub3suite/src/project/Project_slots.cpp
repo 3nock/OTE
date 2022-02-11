@@ -8,6 +8,8 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
     ui->comboBoxFilter->clear();
     ui->comboBoxFilter->hide();
 
+    ui->treeViewSiteMap->setIndentation(0);
+
     if(parent_index == m_projectModel->project_explorer->index())
         return;
 
@@ -17,6 +19,8 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeSubdomainIp);
             ui->comboBoxFilter->addItems({"Subdomain", "IpAddress"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
         }
         if(index == m_projectModel->activeSubdomain_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeSubdomain_model);
@@ -27,28 +31,42 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeTld);
             ui->comboBoxFilter->addItems({"TLD", "IpAddress"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
         }
         if(index == m_projectModel->activeDNS_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeDNS_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeDNS);
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->activeWildcard_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeWildcard_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeWildcard);
             ui->comboBoxFilter->addItems({"Wildcard", "IpAddress"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
         }
         if(index == m_projectModel->activeSSL_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeSSL_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeSSL);
             ui->comboBoxFilter->addItems({"SSL", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->activeURL_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeURL_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeURL);
             ui->comboBoxFilter->addItems({"URL", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->header()->resizeSection(1, 10);
+            ui->treeViewSiteMap->header()->resizeSection(2, 120);
         }
     }
 
@@ -82,6 +100,9 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeDNS_SRV);
             ui->comboBoxFilter->addItems({"Name", "Target", "Port"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->header()->resizeSection(1, 300);
         }
     }
 
@@ -102,6 +123,8 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::passive_subdomainIp);
             ui->comboBoxFilter->addItems({"Subdomain", "IpAddress"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
         }
         if(index == m_projectModel->passiveSubdomain_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->passiveSubdomain_model);
@@ -148,6 +171,8 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::passive_ASN);
             ui->comboBoxFilter->addItems({"ASN", "name"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
         }
         if(index == m_projectModel->passiveSSL_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->passiveSSL_model);
@@ -161,42 +186,63 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_IP);
             ui->comboBoxFilter->addItems({"IP", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumMX_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->enumMX_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_MX);
             ui->comboBoxFilter->addItems({"MX", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumASN_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->enumASN_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_ASN);
             ui->comboBoxFilter->addItems({"ASN", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumCIDR_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->enumCIDR_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_CIDR);
             ui->comboBoxFilter->addItems({"CIDR", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumNS_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->enumNS_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_NS);
             ui->comboBoxFilter->addItems({"NS", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumSSL_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->enumSSL_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_SSL);
             ui->comboBoxFilter->addItems({"SSL", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumEmail_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->enumEmail_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_Email);
             ui->comboBoxFilter->addItems({"Email", "Value"});
             ui->comboBoxFilter->show();
+
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
         }
     }
 

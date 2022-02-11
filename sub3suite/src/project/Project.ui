@@ -186,10 +186,13 @@
             <bool>true</bool>
            </attribute>
            <attribute name="headerMinimumSectionSize">
-            <number>200</number>
+            <number>40</number>
            </attribute>
            <attribute name="headerDefaultSectionSize">
-            <number>200</number>
+            <number>40</number>
+           </attribute>
+           <attribute name="headerShowSortIndicator" stdset="0">
+            <bool>true</bool>
            </attribute>
           </widget>
          </item>

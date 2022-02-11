@@ -4,6 +4,7 @@
 
 #include <QStandardItem>
 #include <QJsonObject>
+#include <QString>
 
 
 namespace s3s_struct {
@@ -24,16 +25,6 @@ public:
         content_type(new QStandardItem),
         status_code(new QStandardItem)
     {
-        auto banner_text = new QStandardItem("Banner");
-        auto content_type_text = new QStandardItem("Content-Type");
-        auto status_code_text = new QStandardItem("Status-code");
-        banner_text->setForeground(Qt::white);
-        content_type_text->setForeground(Qt::white);
-        status_code_text->setForeground(Qt::white);
-
-        this->appendRow({banner_text, banner});
-        this->appendRow({content_type_text, content_type});
-        this->appendRow({status_code_text, status_code});
     }
     ~URL()
     {

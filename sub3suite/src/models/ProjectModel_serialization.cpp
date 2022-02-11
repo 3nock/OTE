@@ -162,7 +162,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     foreach(const QJsonValue &value, data["active_URL"].toArray()){
         s3s_item::URL *item = new s3s_item::URL;
         json_to_url(value.toObject(), item);
-        m_activeURL_rootItem->appendRow(item);
+        m_activeURL_rootItem->appendRow({item, item->status_code, item->banner, item->content_type});
     }
 
     /* passive subdomainIP */
@@ -415,7 +415,7 @@ QByteArray ProjectModel::getJson(){
     /* active URL */
     for(int i = 0; i < m_activeURL_rootItem->rowCount(); ++i){
         QModelIndex index = m_activeURL_rootItem->child(i, 0)->index();
-        s3s_item::URL *item = static_cast<s3s_item::URL*>(activeURL_model->item(index.row(), index.column()));
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(activeURL_model->item(index.row(), 0));
 
         active_URL_array.append(url_to_json(item));
     }

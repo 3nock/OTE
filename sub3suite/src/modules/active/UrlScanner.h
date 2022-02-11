@@ -31,7 +31,7 @@ struct ScanConfig { // scan configurations
     int timeout = 3000;
 
     bool noDuplicates = false;
-    bool autoSaveToProject = true;
+    bool autoSaveToProject = false;
 };
 
 struct ScanArgs { // scan arguments
@@ -55,7 +55,7 @@ class Scanner : public AbstractScanner{
         void lookupFinished(QNetworkReply *reply);
 
     signals:
-        void next(); // next lookup
+        void next();
         void scanResult(s3s_struct::URL);
 
     private:

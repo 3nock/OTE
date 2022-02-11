@@ -14,7 +14,9 @@ url::Scanner::Scanner(url::ScanArgs *args): AbstractScanner(nullptr),
       m_args(args)
 {
     m_manager = new QNetworkAccessManager(this);
+
     connect(m_manager, &QNetworkAccessManager::finished, this, &url::Scanner::lookupFinished);
+    connect(this, &url::Scanner::next, this, &url::Scanner::lookup);
 }
 url::Scanner::~Scanner(){
     delete m_manager;
