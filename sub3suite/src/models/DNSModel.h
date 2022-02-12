@@ -102,7 +102,7 @@ public:
             this->appendRow(TXT);
             _TXT = true;
         }
-        if(!dns.A.isEmpty() && !_SRV){
+        if(!dns.SRV.isEmpty() && !_SRV){
             this->appendRow(SRV);
             _SRV = true;
         }

@@ -30,6 +30,7 @@ void Dns::onScanResult(s3s_struct::DNS results){
         s3s_item::DNS *item = new s3s_item::DNS;
         item->setValues(results);
         m_resultModel->appendRow(item);
+        m_resultSet.insert(results.dns, item);
     }
 
     m_scanStats->resolved++;
