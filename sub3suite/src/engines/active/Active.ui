@@ -58,7 +58,12 @@
        </item>
        <item>
         <property name="text">
-         <string>Active Service</string>
+         <string>Active PING</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Active PORT</string>
         </property>
        </item>
       </widget>

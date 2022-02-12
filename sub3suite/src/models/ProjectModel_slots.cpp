@@ -7,9 +7,20 @@
 /// active slots...
 ///
 void ProjectModel::addActiveHost(const s3s_struct::HOST &host){
+    if(set_Host.contains(host.host))
+    {
+        s3s_item::HOST *item = set_Host.value(host.host);
+        if(!host.ipv4.isEmpty())
+            item->setValue_ipv4(host.ipv4);
+        if(!host.ipv6.isEmpty())
+            item->setValue_ipv6(host.ipv6);
+        return;
+    }
+
     s3s_item::HOST *item = new s3s_item::HOST;
     item->setValues(host);
     m_activeHost_rootItem->appendRow({item, item->ipv4, item->ipv6});
+    set_Host.insert(host.host, item);
 }
 
 void ProjectModel::addActiveWildcard(const s3s_struct::Wildcard &wildcard){

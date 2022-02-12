@@ -39,12 +39,14 @@ Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
     ui->srvWordlist->setListModel(m_srvWordlitsModel);
 
     /* result model */
-    m_resultModel->setHorizontalHeaderLabels({"Dns Records"});
+    ui->treeViewResults->setHeaderHidden(false);
+    m_resultModel->setHorizontalHeaderLabels({" DNS", " Values"});
     m_resultProxyModel->setSourceModel(m_resultModel);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
     m_resultProxyModel->setFilterKeyColumn(0);
     ui->treeViewResults->setModel(m_resultProxyModel);
+
 
     /* widgets... */
     ui->buttonStop->setDisabled(true);

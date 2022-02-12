@@ -223,6 +223,9 @@ public:
     QStandardItemModel *enumSSL_model;
     QStandardItemModel *enumEmail_model;
 
+    /* sets */
+    QMap<QString, s3s_item::HOST*> set_Host;
+
 private:
     QByteArray getJson();
     QByteArray m_project_hash;

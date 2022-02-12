@@ -19,13 +19,13 @@ void Brute::m_clearResults(){
     case brute::OUTPUT::SUBDOMAIN:
         m_subdomainSet.clear();
         m_resultModelSubdomain->clear();
-        m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomain", "IpAddress"});
+        m_resultModelSubdomain->setHorizontalHeaderLabels({" Subdomain", " Ipv4", " Ipv6"});
         break;
 
     case brute::OUTPUT::TLD:
         m_tldSet.clear();
         m_resultModelTld->clear();
-        m_resultModelTld->setHorizontalHeaderLabels({"TLD", "IpAddress"});
+        m_resultModelTld->setHorizontalHeaderLabels({" TLD", " Ipv4", " Ipv6"});
     }
     ui->labelResultsCount->clear();
 

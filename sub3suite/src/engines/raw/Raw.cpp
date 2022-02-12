@@ -29,6 +29,7 @@ Raw::Raw(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project
 
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
+    ui->labelResultsCountTree->setProperty("dark", true);
 
     /* init... */
     ui->targets->setListName("Targets");
@@ -44,8 +45,9 @@ Raw::Raw(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project
     ui->lineEditTreeFilter->setPlaceholderText("Filter...");
 
     /* results model */
+    ui->treeViewResults->setHeaderHidden(false);
     m_model->setColumnCount(2);
-    m_model->setHorizontalHeaderLabels({"Key", "Value"});
+    m_model->setHorizontalHeaderLabels({" Properties", " Values"});
     ui->treeViewResults->setModel(m_model);
 
     /* ... */

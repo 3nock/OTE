@@ -9,6 +9,7 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
     ui->comboBoxFilter->hide();
 
     ui->treeViewSiteMap->setIndentation(0);
+    ui->treeViewSiteMap->setSortingEnabled(true);
 
     if(parent_index == m_projectModel->project_explorer->index())
         return;
@@ -24,12 +25,13 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->treeViewSiteMap->header()->resizeSection(1, 150);
         }
         if(index == m_projectModel->activeDNS_explorer->index()){
-            m_proxyModel->setSourceModel(m_projectModel->activeDNS_model);
-            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeDNS);
-
             ui->treeViewSiteMap->header()->resizeSection(0, 200);
             ui->treeViewSiteMap->header()->resizeSection(1, 200);
             ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
+            m_proxyModel->setSourceModel(m_projectModel->activeDNS_model);
+            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeDNS);
         }
         if(index == m_projectModel->activeWildcard_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeWildcard_model);
@@ -41,13 +43,14 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
             ui->treeViewSiteMap->header()->resizeSection(1, 150);
         }
         if(index == m_projectModel->activeSSL_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
             m_proxyModel->setSourceModel(m_projectModel->activeSSL_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeSSL);
             ui->comboBoxFilter->addItems({"SSL", "Value"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->activeURL_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeURL_model);
@@ -177,67 +180,74 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
 
     if(parent_index == m_projectModel->enums_explorer->index()){
         if(index == m_projectModel->enumIp_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
             m_proxyModel->setSourceModel(m_projectModel->enumIp_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_IP);
             ui->comboBoxFilter->addItems({"IP", "Value"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumMX_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
             m_proxyModel->setSourceModel(m_projectModel->enumMX_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_MX);
             ui->comboBoxFilter->addItems({"MX", "Value"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumASN_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
             m_proxyModel->setSourceModel(m_projectModel->enumASN_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_ASN);
             ui->comboBoxFilter->addItems({"ASN", "Value"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumCIDR_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
             m_proxyModel->setSourceModel(m_projectModel->enumCIDR_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_CIDR);
             ui->comboBoxFilter->addItems({"CIDR", "Value"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumNS_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
             m_proxyModel->setSourceModel(m_projectModel->enumNS_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_NS);
             ui->comboBoxFilter->addItems({"NS", "Value"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumSSL_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
             m_proxyModel->setSourceModel(m_projectModel->enumSSL_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_SSL);
             ui->comboBoxFilter->addItems({"SSL", "Value"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->setIndentation(15);
         }
         if(index == m_projectModel->enumEmail_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
             m_proxyModel->setSourceModel(m_projectModel->enumEmail_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::enum_Email);
             ui->comboBoxFilter->addItems({"Email", "Value"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->setIndentation(15);
         }
     }
 

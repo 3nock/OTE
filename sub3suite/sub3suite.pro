@@ -114,6 +114,7 @@ SOURCES += \
     src/models/SSLModel.cpp \
     src/models/URLModel.cpp \
     src/models/WildcardModel.cpp \
+    src/modules/active/PortScanner.cpp \
     src/modules/active/UrlScanner.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
@@ -268,6 +269,7 @@ HEADERS += \
     src/models/MXModel.h \
     src/models/URLModel.h \
     src/models/WildcardModel.h \
+    src/modules/active/PortScanner.h \
     src/modules/active/UrlScanner.h \
     src/modules/passive/OsintDefinitions.h \
     src/modules/passive/api/HaveIBeenPawned.h \

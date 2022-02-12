@@ -18,17 +18,17 @@ void Ssl::m_clearResults(){
     case 0: // subdomain
         m_resultModelSubdomain->clear();
         m_subdomainSet.clear();
-        m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomains"});
+        m_resultModelSubdomain->setHorizontalHeaderLabels({" Alternative Names"});
         break;
     case 1: // cert id
         m_resultModelCertId->clear();
         m_certIdSet.clear();
-        m_resultModelCertId->setHorizontalHeaderLabels({"Certificate Hash"});
+        m_resultModelCertId->setHorizontalHeaderLabels({" Certificate Hash"});
         break;
     case 2: // raw cert
         m_resultModelCertInfo->clear();
         m_certInfoSet.clear();
-        m_resultModelCertInfo->setHorizontalHeaderLabels({"Property", "Value"});
+        m_resultModelCertInfo->setHorizontalHeaderLabels({" ASN", " Values"});
     }
 
     /* clear the filter and the result count */

@@ -9,6 +9,7 @@ struct HOST {
     QString host;
     QString ipv4;
     QString ipv6;
+    int ping_time;
 };
 }
 

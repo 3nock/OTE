@@ -408,6 +408,7 @@ void ProjectModel::getRootItems(){
 
 void ProjectModel::clearModels(){
     activeHost_model->clear();
+    set_Host.clear();
     activeWildcard_model->clear();
     activeDNS_model->clear();
     activeA_model->clear();

@@ -832,9 +832,16 @@ QTreeView:disabled {
      <string>Tools</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuFavourite">
+    <property name="title">
+     <string>Favourite</string>
+    </property>
+    <addaction name="actionMassScan"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuConfig"/>
    <addaction name="menuProject"/>
+   <addaction name="menuFavourite"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -914,6 +921,11 @@ QTreeView:disabled {
   <action name="actionTwitter">
    <property name="text">
     <string>Twitter</string>
+   </property>
+  </action>
+  <action name="actionMassScan">
+   <property name="text">
+    <string>MassScan</string>
    </property>
   </action>
  </widget>

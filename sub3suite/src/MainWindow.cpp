@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initActions();
 
     /* build info */
-    QAction* buildInfo = new QAction(tr("%1 (%2)").arg("Feb 01 2022").arg("BETA"), this);
+    QAction* buildInfo = new QAction(tr("(%2)").arg("BETA"), this);
     buildInfo->setEnabled(false);
     ui->menubar->addAction(buildInfo);
 

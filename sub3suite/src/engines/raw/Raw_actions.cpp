@@ -16,7 +16,7 @@ void Raw::m_clearResults(){
     /* clear the results... */
     ui->plainTextEditResults->clear();
     m_model->clear();
-    m_model->setHorizontalHeaderLabels({"Key", "Value"});
+    m_model->setHorizontalHeaderLabels({" Properties", " Values"});
     ui->labelResultsCount->clear();
 
     /* clear the progressbar... */

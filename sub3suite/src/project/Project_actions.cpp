@@ -6,6 +6,7 @@ void Project::action_clear(){
     switch (ui->treeViewSiteMap->property(PROJECT_MODEL_TYPE).toInt()) {
     case ModelType::activeHost:
         m_projectModel->activeHost_model->clear();
+        m_projectModel->set_Host.clear();
         break;
     case ModelType::activeWildcard:
         m_projectModel->activeWildcard_model->clear();

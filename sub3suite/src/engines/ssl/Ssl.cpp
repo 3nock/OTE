@@ -36,9 +36,10 @@ Ssl::Ssl(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project
     ui->targets->setListModel(m_targetListModel);
 
     /* result models */
-    m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomains"});
-    m_resultModelCertId->setHorizontalHeaderLabels({"Certificate Hash"});
-    m_resultModelCertInfo->setHorizontalHeaderLabels({"Property", "Value"});
+    ui->treeViewResults->setHeaderHidden(false);
+    m_resultModelSubdomain->setHorizontalHeaderLabels({" Alternative Names"});
+    m_resultModelCertId->setHorizontalHeaderLabels({" Certificate Hash"});
+    m_resultModelCertInfo->setHorizontalHeaderLabels({" SSL", " Values"});
     m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
