@@ -8,6 +8,8 @@
 #ifndef ACTIVE_H
 #define ACTIVE_H
 
+#include <QMenu>
+#include <QAction>
 #include <QElapsedTimer>
 
 #include "../AbstractEngine.h"
@@ -29,7 +31,8 @@ class Active : public AbstractEngine{
     public slots:
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
-        void onScanResult(s3s_struct::HOST host);
+        void onScanResult_dns(s3s_struct::HOST host);
+        void onScanResult_port(s3s_struct::HOST host);
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */

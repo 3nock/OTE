@@ -2,18 +2,16 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : OSINT Engine, for obtaining different osint info from different input targets.
 */
 
 #ifndef OSINT_H
 #define OSINT_H
 
 #include "../AbstractEngine.h"
-#include "src/utils/utils.h"
-#include "src/dialogs/ApiKeysDialog.h"
-#include "src/dialogs/ActiveConfigDialog.h"
 #include "src/modules/passive/AbstractOsintModule.h"
-#include "src/utils/NotesSyntaxHighlighter.h"
+
+#include <QAction>
 
 
 enum INPUT{
@@ -92,140 +90,61 @@ class Osint : public AbstractEngine{
 
     private:
         Ui::Osint *ui;
-        QStringListModel *m_targetListModelHostname;
-        QStringListModel *m_targetListModelIp;
-        QStringListModel *m_targetListModelAsn;
-        QStringListModel *m_targetListModelCidr;
-        QStringListModel *m_targetListModelCert;
-        QStringListModel *m_targetListModelEmail;
-        /* ... */
-        QStandardItemModel *m_resultModelSubdomainIp;
-        QStandardItemModel *m_resultModelSubdomain;
-        QStandardItemModel *m_resultModelIp;
-        QStandardItemModel *m_resultModelEmail;
-        QStandardItemModel *m_resultModelUrl;
-        QStandardItemModel *m_resultModelAsn;
-        QStandardItemModel *m_resultModelCert;
-        QStandardItemModel *m_resultModelCidr;
-        QSortFilterProxyModel *m_resultProxyModel;
-        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
-        /* ... */
-        QString m_currentPath;
-        QSet<QString> m_subdomainIpSet;
-        QSet<QString> m_subdomainSet;
-        QSet<QString> m_ipSet;
-        QSet<QString> m_emailSet;
-        QSet<QString> m_urlSet;
-        QSet<QString> m_asnSet;
-        QSet<QString> m_sslCertSet;
-        QSet<QString> m_cidrSet;
+        ScanConfig *m_scanConfig;
+        ScanArgs *m_scanArgs;
+        /* target listmodels */
+        QStringListModel *m_targetListModel_host;
+        QStringListModel *m_targetListModel_ip;
+        QStringListModel *m_targetListModel_asn;
+        QStringListModel *m_targetListModel_cidr;
+        QStringListModel *m_targetListModel_ssl;
+        QStringListModel *m_targetListModel_email;
+        /* results models */
+        QStandardItemModel *m_model_subdomainIp;
+        QStandardItemModel *m_model_subdomain;
+        QStandardItemModel *m_model_ip;
+        QStandardItemModel *m_model_email;
+        QStandardItemModel *m_model_url;
+        QStandardItemModel *m_model_asn;
+        QStandardItemModel *m_model_ssl;
+        QStandardItemModel *m_model_cidr;
+        /* results sets */
+        QSet<QString> set_subdomainIP;
+        QSet<QString> set_subdomain;
+        QSet<QString> set_ip;
+        QSet<QString> set_email;
+        QSet<QString> set_url;
+        QSet<QString> set_asn;
+        QSet<QString> set_ssl;
+        QSet<QString> set_cidr;
+        int total_modules;
+        void log(QString log);
         /* for scan */
-        void m_stopScan();
-        void m_startScan();
-        void m_pauseScan();
-        void m_resumeScan();
-        void m_startScanThread(AbstractOsintModule *);
+        void startScan();
+        void startScanThread(AbstractOsintModule*);
         /* ... */
-        void m_initProfiles();
-        void m_initModules();
-        void m_uncheckAllModules();
-        /* ... */
-        void m_infoLog(QString log);
-        void m_errorLog(QString log);
+        void initUI();
+        void initModules();
+        void initProfiles();
+        void uncheckAllModules();
+
 
     /* for context menu */
     private:
-        void m_initActions();
-        /* ... */
-        void m_openInBrowser(QItemSelectionModel*);
-        void m_clearResults();
-        void m_removeResults(QItemSelectionModel*);
-        void m_saveResults(RESULT_TYPE);
-        void m_saveResults(QItemSelectionModel*);
-        void m_copyResults(RESULT_TYPE);
-        void m_copyResults(QItemSelectionModel*);
-        /* sending results to other parts */
-        void m_sendToEngine(ENGINE); // for asn, cidr, email, cert
-        void m_sendSubdomainToEngine(ENGINE);
-        void m_sendIpToEngine(ENGINE);
-        void m_sendSubdomainToTool(TOOL);
-        void m_sendIpToTool(TOOL);
-        void m_sendToTool(TOOL);
-
-        void m_sendToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
-        void m_sendIpToTool(TOOL, QItemSelectionModel*);
-        void m_sendToTool(TOOL, QItemSelectionModel*);
-
-    protected:
-        /* general actions */
-        QAction a_RemoveResults{"Remove"};
-        QAction a_ClearResults{"Clear Results"};
-        QAction a_OpenInBrowser{"Open in Browser"};
-
-        /* for all */
-        QAction a_SendAllIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendAllIpToRaw{"Send Address To Raw"};
-        QAction a_SendAllHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendAllHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendAllHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendAllHostToActive{"Send Hostnames To Active"};
-        QAction a_SendAllHostToDns{"Send Hostnames To Records"};
-        QAction a_SendAllHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendAllEmailToRaw{"Send Emails To Raw"};
-        QAction a_SendAllUrlToRaw{"Send Urls To Raw"};
-        QAction a_SendAllAsnToRaw{"Send ASNs To Raw"};
-        QAction a_SendAllCertToRaw{"Send Cert To Raw"};
-        QAction a_SendAllCidrToRaw{"Send Cidr To Raw"};
-        QAction a_SendAllEmailToOsint{"Send Emails To Osint"};
-        QAction a_SendAllAsnToOsint{"Send ASNs To Osint"};
-        QAction a_SendAllCertToOsint{"Send Cert To Osint"};
-        QAction a_SendAllCidrToOsint{"Send Cidr To Osint"};
-        QAction a_SendAllIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendAllHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendAllHostToDomainTool{"Send Hostnames To DomainTool"};
-        QAction a_SendAllAsnToAsnTool{"Send ASN to ASNTool"};
-        QAction a_SendAllCertToCertTool{"Send Cert To CertTool"};
-        QAction a_SendAllCidrToCidrTool{"Send Cidr To CidrTool"};
-        QAction a_SendAllEmailToEmailTool{"Send Emails To EmailTool"};
-        /* for selected */
-        QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendSelectedIpToRaw{"Send Address To Raw"};
-        QAction a_SendSelectedHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendSelectedHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendSelectedHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendSelectedHostToActive{"Send Hostnames To Active"};
-        QAction a_SendSelectedHostToDns{"Send Hostnames To Records"};
-        QAction a_SendSelectedHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendSelectedEmailToRaw{"Send Emails To Raw"};
-        QAction a_SendSelectedUrlToRaw{"Send Urls To Raw"};
-        QAction a_SendSelectedAsnToRaw{"Send ASNs To Raw"};
-        QAction a_SendSelectedCertToRaw{"Send Cert To Raw"};
-        QAction a_SendSelectedCidrToRaw{"Send Cidr To Raw"};
-        QAction a_SendSelectedEmailToOsint{"Send Emails To Osint"};
-        QAction a_SendSelectedAsnToOsint{"Send ASNs To Osint"};
-        QAction a_SendSelectedCertToOsint{"Send Cert To Osint"};
-        QAction a_SendSelectedCidrToOsint{"Send Cidr To Osint"};
-        QAction a_SendSelectedIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendSelectedHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendSelectedHostToDomainTool{"Send Hostnames To DomainTool"};
-        QAction a_SendSelectedAsnToAsnTool{"Send ASN to ASNTool"};
-        QAction a_SendSelectedCertToCertTool{"Send Cert To CertTool"};
-        QAction a_SendSelectedCidrToCidrTool{"Send Cidr To CidrTool"};
-        QAction a_SendSelectedEmailToEmailTool{"Send Emails To EmailTool"};
-
-        /* save */
-        QAction a_Save{"Save"};
-        QAction a_SaveSubdomainIp{"subdomain | ip"};
-        QAction a_SaveSubdomain{"subdomains"};
-        QAction a_SaveIp{"ip-addresses"};
-        /* copy */
-        QAction a_Copy{"Copy"};
-        QAction a_CopySubdomainIp{"subdomain | ip"};
-        QAction a_CopySubdomain{"subdomains"};
-        QAction a_CopyIp{"ip-addresses"};
+        void clearResults();
+        void openInBrowser();
+        void removeResults();
+        void saveResults(RESULT_TYPE);
+        void saveSelectedResults();
+        void copyResults(RESULT_TYPE);
+        void copySelectedResults();
+        /* sending results */
+        void sendToProject();
+        void sendToEngine(ENGINE, RESULT_TYPE);
+        void sendToEnum(TOOL, RESULT_TYPE);
+        void sendSelectedToProject();
+        void sendSelectedToEngine(ENGINE, RESULT_TYPE);
+        void sendSelectedToEnum(TOOL, RESULT_TYPE);
 };
 
 #endif // OSINT_H

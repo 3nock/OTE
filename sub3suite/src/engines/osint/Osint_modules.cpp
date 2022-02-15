@@ -11,7 +11,7 @@
 #include "src/modules/passive/OsintModulesHeaders.h"
 
 
-void Osint::m_initModules(){
+void Osint::initModules(){
     int INPUT_TYPE = ui->comboBoxInput->currentIndex();
     int OUTPUT_TYPE = ui->comboBoxOutput->currentIndex();
 
@@ -430,10 +430,10 @@ void Osint::m_initModules(){
         ui->moduleBing->hide();
 
     /* uncheck all modules */
-    this->m_uncheckAllModules();
+    this->uncheckAllModules();
 }
 
-void Osint::m_uncheckAllModules(){
+void Osint::uncheckAllModules(){
     ui->moduleAnubis->setChecked(false);
     ui->moduleBgpview->setChecked(false);
     ui->moduleBinaryEdge->setChecked(false);

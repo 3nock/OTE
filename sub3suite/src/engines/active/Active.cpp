@@ -34,7 +34,7 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
     ui->targets->setListModel(m_targetListModel);
 
     /* result model */
-    m_resultModel->setHorizontalHeaderLabels({" Host", " Ipv4", " Ipv6"});
+    m_resultModel->setHorizontalHeaderLabels({" Host", " Ipv4", " Ipv6", " Ports"});
     m_resultProxyModel->setSourceModel(m_resultModel);
     m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_resultProxyModel->setRecursiveFilteringEnabled(true);
@@ -43,6 +43,8 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
 
     ui->tableViewResults->horizontalHeader()->resizeSection(0, 200);
     ui->tableViewResults->horizontalHeader()->resizeSection(1, 100);
+    ui->tableViewResults->horizontalHeader()->resizeSection(2, 200);
+    ui->tableViewResults->horizontalHeader()->resizeSection(3, 100);
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* hiding widgets */

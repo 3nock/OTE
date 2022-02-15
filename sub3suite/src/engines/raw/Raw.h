@@ -8,9 +8,12 @@
 #ifndef RAW_H
 #define RAW_H
 
+#include <QMenu>
+#include <QAction>
 #include <QWidget>
 #include <QTextDocument>
 #include <QStandardItemModel>
+
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/passive/OsintModulesHeaders.h"

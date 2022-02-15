@@ -8,8 +8,11 @@
 #ifndef BRUTE_H
 #define BRUTE_H
 
+#include <QMenu>
+#include <QAction>
 #include <QTime>
 #include <QElapsedTimer>
+
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/active/BruteScanner.h"

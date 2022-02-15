@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
-    <height>562</height>
+    <width>716</width>
+    <height>448</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,7 +46,7 @@
         </font>
        </property>
        <property name="text">
-        <string>In:</string>
+        <string>IN:</string>
        </property>
       </widget>
      </item>
@@ -116,7 +116,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Out:</string>
+        <string>OUT:</string>
        </property>
       </widget>
      </item>
@@ -255,14 +255,14 @@
       <widget class="QProgressBar" name="progressBar">
        <property name="minimumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>16777215</width>
+         <height>16777215</height>
         </size>
        </property>
        <property name="styleSheet">
@@ -657,13 +657,13 @@
          <number>0</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="rightMargin">
          <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>0</number>
+         <number>2</number>
         </property>
         <item>
          <widget class="QPlainTextEdit" name="plainTextEditLogs">
@@ -759,7 +759,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>178</width>
+                <width>159</width>
                 <height>1057</height>
                </rect>
               </property>
@@ -1173,7 +1173,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>177</width>
+                <width>152</width>
                 <height>830</height>
                </rect>
               </property>

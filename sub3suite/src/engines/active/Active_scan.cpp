@@ -11,6 +11,7 @@
 #include <QTime>
 #include <QThread>
 #include "src/dialogs/FailedScansDialog.h"
+#include "src/modules/active/PortScanner.h"
 
 
 void Active::m_startScan(){
@@ -54,25 +55,49 @@ void Active::m_startScan(){
     /* start timer */
     m_timer.start();
 
+    m_scanArgs->ports.clear();
+    m_scanArgs->ports << 80 << 443;
+
     /* loop to create threads for enumeration... */
     for(int i = 0; i < status->activeScanThreads; i++)
     {
-        active::Scanner *scanner = new active::Scanner(m_scanArgs);
-        QThread *cThread = new QThread;
-        scanner->startScan(cThread);
-        scanner->moveToThread(cThread);
-
-        connect(scanner, &active::Scanner::scanResult, this, &Active::onScanResult);
-        connect(scanner, &active::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &active::Scanner::scanLog, this, &Active::onScanLog);
-        connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
-        connect(cThread, &QThread::finished, scanner, &active::Scanner::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &Active::stopScanThread, scanner, &active::Scanner::onStopScan);
-        connect(this, &Active::pauseScanThread, scanner, &active::Scanner::onPauseScan);
-        connect(this, &Active::resumeScanThread, scanner, &active::Scanner::onResumeScan, Qt::DirectConnection);
-
-        cThread->start();
+        switch (ui->comboBoxOption->currentIndex()) {
+        case 0: // ACTIVE DNS
+        {
+            active::Scanner *scanner = new active::Scanner(m_scanArgs);
+            QThread *cThread = new QThread;
+            scanner->startScan(cThread);
+            scanner->moveToThread(cThread);
+            connect(scanner, &active::Scanner::scanResult, this, &Active::onScanResult_dns);
+            connect(scanner, &active::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+            connect(scanner, &active::Scanner::scanLog, this, &Active::onScanLog);
+            connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
+            connect(cThread, &QThread::finished, scanner, &active::Scanner::deleteLater);
+            connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+            connect(this, &Active::stopScanThread, scanner, &active::Scanner::onStopScan);
+            connect(this, &Active::pauseScanThread, scanner, &active::Scanner::onPauseScan);
+            connect(this, &Active::resumeScanThread, scanner, &active::Scanner::onResumeScan, Qt::DirectConnection);
+            cThread->start();
+            break;
+        }
+        case 2: // ACTIVE PORT
+        {
+            port::Scanner *scanner = new port::Scanner(m_scanArgs);
+            QThread *cThread = new QThread;
+            scanner->startScan(cThread);
+            scanner->moveToThread(cThread);
+            connect(scanner, &port::Scanner::scanResult, this, &Active::onScanResult_port);
+            connect(scanner, &port::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+            connect(scanner, &port::Scanner::scanLog, this, &Active::onScanLog);
+            connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
+            connect(cThread, &QThread::finished, scanner, &port::Scanner::deleteLater);
+            connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+            connect(this, &Active::stopScanThread, scanner, &port::Scanner::onStopScan);
+            connect(this, &Active::pauseScanThread, scanner, &port::Scanner::onPauseScan);
+            connect(this, &Active::resumeScanThread, scanner, &port::Scanner::onResumeScan, Qt::DirectConnection);
+            cThread->start();
+        }
+        }
     }
     status->isRunning = true;
 }
@@ -127,22 +152,43 @@ void Active::onReScan(QQueue<QString> targets){
     /* loop to create threads for enumeration... */
     for(int i = 0; i < status->activeScanThreads; i++)
     {
-        active::Scanner *scanner = new active::Scanner(m_scanArgs);
-        QThread *cThread = new QThread;
-        scanner->startScan(cThread);
-        scanner->moveToThread(cThread);
-
-        connect(scanner, &active::Scanner::scanResult, this, &Active::onScanResult);
-        connect(scanner, &active::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &active::Scanner::scanLog, this, &Active::onScanLog);
-        connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
-        connect(cThread, &QThread::finished, scanner, &active::Scanner::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &Active::stopScanThread, scanner, &active::Scanner::onStopScan);
-        connect(this, &Active::pauseScanThread, scanner, &active::Scanner::onPauseScan);
-        connect(this, &Active::resumeScanThread, scanner, &active::Scanner::onResumeScan, Qt::DirectConnection);
-
-        cThread->start();
+        switch (ui->comboBoxOption->currentIndex()) {
+        case 0: // ACTIVE DNS
+        {
+            active::Scanner *scanner = new active::Scanner(m_scanArgs);
+            QThread *cThread = new QThread;
+            scanner->startScan(cThread);
+            scanner->moveToThread(cThread);
+            connect(scanner, &active::Scanner::scanResult, this, &Active::onScanResult_dns);
+            connect(scanner, &active::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+            connect(scanner, &active::Scanner::scanLog, this, &Active::onScanLog);
+            connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
+            connect(cThread, &QThread::finished, scanner, &active::Scanner::deleteLater);
+            connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+            connect(this, &Active::stopScanThread, scanner, &active::Scanner::onStopScan);
+            connect(this, &Active::pauseScanThread, scanner, &active::Scanner::onPauseScan);
+            connect(this, &Active::resumeScanThread, scanner, &active::Scanner::onResumeScan, Qt::DirectConnection);
+            cThread->start();
+            break;
+        }
+        case 2: // ACTIVE PORT
+        {
+            port::Scanner *scanner = new port::Scanner(m_scanArgs);
+            QThread *cThread = new QThread;
+            scanner->startScan(cThread);
+            scanner->moveToThread(cThread);
+            connect(scanner, &port::Scanner::scanResult, this, &Active::onScanResult_port);
+            connect(scanner, &port::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+            connect(scanner, &port::Scanner::scanLog, this, &Active::onScanLog);
+            connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
+            connect(cThread, &QThread::finished, scanner, &port::Scanner::deleteLater);
+            connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+            connect(this, &Active::stopScanThread, scanner, &port::Scanner::onStopScan);
+            connect(this, &Active::pauseScanThread, scanner, &port::Scanner::onPauseScan);
+            connect(this, &Active::resumeScanThread, scanner, &port::Scanner::onResumeScan, Qt::DirectConnection);
+            cThread->start();
+        }
+        }
     }
     status->isRunning = true;
 }

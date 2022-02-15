@@ -59,7 +59,7 @@ void ASNEnum::startScan(){
 
     /* progressbar maximum value */
     ui->progressBar->setMaximum(scanArgs.targets.length());
-    scanArgs.progress = 0;
+    scanArgs.config->progress = 0;
 
     switch(ui->comboBoxOption->currentIndex()){
     case 0: // ASN INFO

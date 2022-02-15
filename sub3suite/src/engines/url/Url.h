@@ -8,7 +8,10 @@
 #ifndef URL_H
 #define URL_H
 
+#include <QMenu>
+#include <QAction>
 #include <QElapsedTimer>
+
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/active/UrlScanner.h"

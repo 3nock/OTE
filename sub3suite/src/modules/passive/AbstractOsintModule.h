@@ -56,12 +56,12 @@ struct ScanConfig{
     int maxPage = 50;
     bool noDuplicates = false;
     bool autosaveToProject = false;
+    int progress = 0;
 };
 
 struct ScanArgs{
     ScanConfig *config;
     QQueue<QString> targets;
-    int progress;
 
     /* input type */
     bool inputIp = false;
@@ -293,8 +293,8 @@ class AbstractOsintModule : public QObject {
                 emit infoLog(log);
 
                 /* scan prohress */
-                args.progress++;
-                emit scanProgress(args.progress);
+                args.config->progress++;
+                emit scanProgress(args.config->progress);
 
                 /* enumerate next target if there are still targets available */
                 if(args.targets.length()){

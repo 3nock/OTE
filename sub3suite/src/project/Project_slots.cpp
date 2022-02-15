@@ -18,11 +18,13 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
         if(index == m_projectModel->activeHost_explorer->index()){
             m_proxyModel->setSourceModel(m_projectModel->activeHost_model);
             ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::activeHost);
-            ui->comboBoxFilter->addItems({"Hostname", "IpV4", "IpV6"});
+            ui->comboBoxFilter->addItems({"Hostname", "IpV4", "IpV6", "Ports"});
             ui->comboBoxFilter->show();
 
-            ui->treeViewSiteMap->header()->resizeSection(0, 300);
-            ui->treeViewSiteMap->header()->resizeSection(1, 150);
+            ui->treeViewSiteMap->header()->resizeSection(0, 200);
+            ui->treeViewSiteMap->header()->resizeSection(1, 100);
+            ui->treeViewSiteMap->header()->resizeSection(2, 150);
+            ui->treeViewSiteMap->header()->resizeSection(3, 100);
         }
         if(index == m_projectModel->activeDNS_explorer->index()){
             ui->treeViewSiteMap->header()->resizeSection(0, 200);

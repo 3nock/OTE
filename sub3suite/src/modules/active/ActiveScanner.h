@@ -18,13 +18,9 @@
 namespace active {
 
 enum OUTPUT { // scan type
-    SUBOMAIN,
-    DNS,
-    HTTP,
-    HTTPS,
-    FTP,
-    SMTP,
-    CUSTOM
+    ACTIVE_DNS,
+    ACTIVE_PING,
+    ACTIVE_PORT
 };
 
 struct ScanStat {  // scan statistics
@@ -54,8 +50,7 @@ struct ScanArgs { // scan arguments
     QHostAddress nameserver;
     int progress;
 
-    quint16 service;
-    bool checkActiveService;
+    QSet<quint16> ports;
 };
 
 
@@ -78,11 +73,9 @@ class Scanner : public AbstractScanner{
     private:
         active::ScanArgs *m_args;
         QDnsLookup *m_dns;
-        QTcpSocket *m_socket;
 };
 
-RETVAL lookupActiveDNS(QDnsLookup *dns, active::ScanArgs *args);
-RETVAL lookupActiveService(active::ScanArgs *args);
+RETVAL getTarget(QDnsLookup *dns, active::ScanArgs *args);
 
 }
 

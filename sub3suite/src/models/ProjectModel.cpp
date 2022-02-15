@@ -322,7 +322,7 @@ ProjectModel::~ProjectModel(){
 }
 
 void ProjectModel::setHeaderLabels(){
-    activeHost_model->setHorizontalHeaderLabels({" Host", " IpV4", " IpV6"});
+    activeHost_model->setHorizontalHeaderLabels({" Host", " IpV4", " IpV6", " Ports"});
     activeWildcard_model->setHorizontalHeaderLabels({" Wildcard", " IpV4", " IpV6"});
     activeDNS_model->setHorizontalHeaderLabels({" DNS Records", " Value", " Value"});
     activeA_model->setHorizontalHeaderLabels({" A DNS Records"});

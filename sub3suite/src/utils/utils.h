@@ -97,7 +97,8 @@ enum class ENGINE{
     ACTIVE,
     OSINT,
     RAW,
-    CERT
+    CERT,
+    URL
 };
 
 enum class TOOL{

@@ -8,6 +8,8 @@
 #ifndef DNS_H
 #define DNS_H
 
+#include <QMenu>
+#include <QAction>
 #include <QMap>
 #include <QQueue>
 #include <QElapsedTimer>

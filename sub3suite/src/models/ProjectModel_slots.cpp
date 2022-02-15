@@ -14,12 +14,14 @@ void ProjectModel::addActiveHost(const s3s_struct::HOST &host){
             item->setValue_ipv4(host.ipv4);
         if(!host.ipv6.isEmpty())
             item->setValue_ipv6(host.ipv6);
+        if(!host.ports.isEmpty())
+            item->setValue_ports(host);
         return;
     }
 
     s3s_item::HOST *item = new s3s_item::HOST;
     item->setValues(host);
-    m_activeHost_rootItem->appendRow({item, item->ipv4, item->ipv6});
+    m_activeHost_rootItem->appendRow({item, item->ipv4, item->ipv6, item->ports});
     set_Host.insert(host.host, item);
 }
 

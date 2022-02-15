@@ -22,7 +22,7 @@ void Active::m_clearResults(){
     /* clear the results... */
     m_resultModel->clear();
     ui->labelResultsCount->clear();
-    m_resultModel->setHorizontalHeaderLabels({" Host", " Ipv4", " Ipv6"});
+    m_resultModel->setHorizontalHeaderLabels({" Host", " Ipv4", " Ipv6", " Ports"});
     m_resultSet.clear();
 
     /* clear the progressbar... */

@@ -8,11 +8,11 @@
 #ifndef ABSTRACTCLASS_H
 #define ABSTRACTCLASS_H
 
-#include <QMenu>
-#include <QMap>
-#include <QAction>
-#include <QStringListModel>
+#include <QWidget>
+#include <QSortFilterProxyModel>
+
 #include "src/utils/utils.h"
+#include "src/utils/Config.h"
 #include "src/widgets/InputWidget.h"
 #include "src/models/ProjectModel.h"
 
@@ -23,20 +23,25 @@ class AbstractEngine : public QWidget{
     public:
         AbstractEngine(QWidget *parent = nullptr, ProjectModel *project = nullptr): QWidget(parent),
               status(new ScanStatus),
-              project(project)
+              project(project),
+              proxyModel(new QSortFilterProxyModel)
         {
+            proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            proxyModel->setRecursiveFilteringEnabled(true);
         }
         ~AbstractEngine(){
+            delete proxyModel;
             delete status;
         }
 
     protected:
         ScanStatus *status;
         ProjectModel *project;
+        QSortFilterProxyModel *proxyModel;
         QItemSelectionModel *selectionModel;
 
     signals:
-        /* signals to scanning threads */
+        /* signals to scanner threads */
         void stopScanThread();
         void pauseScanThread();
         void resumeScanThread();
@@ -44,7 +49,7 @@ class AbstractEngine : public QWidget{
         /* status To mainwindow */
         void sendStatus(QString status);
 
-        /* chage tab to Engine */
+        /* change to Tab */
         void changeTabToOsint();
         void changeTabToRaw();
         void changeTabToBrute();
@@ -52,8 +57,7 @@ class AbstractEngine : public QWidget{
         void changeTabToDns();
         void changeTabToSSL();
         void changeTabToURL();
-        void changeTabToProject();
-        /* change tab To Enum */
+        /* ... */
         void changeTabToIpEnum();
         void changeTabToAsnEnum();
         void changeTabToCidrEnum();
@@ -61,6 +65,8 @@ class AbstractEngine : public QWidget{
         void changeTabToMXEnum();
         void changeTabToSSLEnum();
         void changeTabToEmailEnum();
+        /* ... */
+        void changeTabToProject();
 
         /* sending results to an engine */
         void sendResultsToOsint(QString, RESULT_TYPE);

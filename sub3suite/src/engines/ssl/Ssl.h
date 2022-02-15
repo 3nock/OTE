@@ -8,8 +8,11 @@
 #ifndef SSL_H
 #define SSL_H
 
+#include <QMenu>
+#include <QAction>
 #include <QWidget>
 #include <QElapsedTimer>
+
 #include "../AbstractEngine.h"
 #include "src/modules/active/SSLScanner.h"
 #include "src/utils/NotesSyntaxHighlighter.h"

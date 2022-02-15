@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief :implementation of the Slots to receive results from the scanning osint module threads
 */
 
 #include "Osint.h"
@@ -43,151 +43,174 @@ void Osint::onRateLimitLog(ScanLog log){
 }
 
 void Osint::onResultSubdomainIp(QString subdomain, QString ip){
-    int prevSize = m_subdomainIpSet.count();
-    /* inserting subdomain+ip */
-    m_subdomainIpSet.insert(subdomain+ip);
-    if(m_subdomainIpSet.count() > prevSize && !subdomain.isEmpty()){
-        m_resultModelSubdomainIp->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
+    if(set_subdomainIP.contains(subdomain))
+        return;
+
+    m_model_subdomainIp->appendRow({new QStandardItem(subdomain), new QStandardItem(ip)});
+    set_subdomainIP.insert(subdomain);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveSubdomainIp(subdomain, ip);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultSubdomain(QString subdomain){
-    int prevSize = m_subdomainSet.count();
-    m_subdomainSet.insert(subdomain);
-    if(m_subdomainSet.count() > prevSize && !subdomain.isEmpty()){
-        m_resultModelSubdomain->appendRow(new QStandardItem(subdomain));
+    if(set_subdomain.contains(subdomain))
+        return;
+
+    m_model_subdomain->appendRow(new QStandardItem(subdomain));
+    set_subdomain.insert(subdomain);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveSubdomain(subdomain);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultMightContainWildcards(QString subdomain){
-    int prevSize = m_subdomainSet.count();
-    m_subdomainSet.insert(subdomain);
-    if(m_subdomainSet.count() > prevSize && !subdomain.isEmpty())
-    {
-        m_resultModelSubdomain->appendRow(new QStandardItem(subdomain));
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    if(set_subdomain.contains(subdomain))
+        return;
 
-        /* save as wildcard if starts with *. */
-        if(!subdomain.startsWith("*"))
-            project->addPassiveSubdomain(subdomain);
-    }
+    m_model_subdomain->appendRow(new QStandardItem(subdomain));
+    set_subdomain.insert(subdomain);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
+        project->addPassiveSubdomain(subdomain);
 }
 
 void Osint::onResultIp(QString ip){
-    int prevSize = m_ipSet.count();
-    m_ipSet.insert(ip);
-    if(m_ipSet.count() > prevSize && !ip.isEmpty()){
-        m_resultModelIp->appendRow(new QStandardItem(ip));
+    if(set_ip.contains(ip))
+        return;
+
+    m_model_ip->appendRow(new QStandardItem(ip));
+    set_ip.insert(ip);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveIp(ip);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultEmail(QString email){
-    int prevSize = m_emailSet.count();
-    m_emailSet.insert(email);
-    if(m_emailSet.count() > prevSize && !email.isEmpty()){
-        m_resultModelEmail->appendRow(new QStandardItem(email));
+    if(set_email.contains(email))
+        return;
+
+    m_model_email->appendRow(new QStandardItem(email));
+    set_email.insert(email);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveEMail(email);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultUrl(QString url){
-    int prevSize = m_urlSet.count();
-    m_urlSet.insert(url);
-    if(m_urlSet.count() > prevSize && !url.isEmpty()){
-        m_resultModelUrl->appendRow(new QStandardItem(url));
+    if(set_url.contains(url))
+        return;
+
+    m_model_url->appendRow(new QStandardItem(url));
+    set_url.insert(url);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveUrl(url);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultAsn(QString asn, QString name){
-    int prevSize = m_asnSet.count();
-    m_asnSet.insert(asn);
-    if(m_asnSet.count() > prevSize && !asn.isEmpty()){
-        m_resultModelAsn->appendRow({new QStandardItem(asn), new QStandardItem(name)});
+    if(set_asn.contains(asn))
+        return;
+
+    m_model_asn->appendRow({new QStandardItem(asn), new QStandardItem(name)});
+    set_asn.insert(asn);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveAsn(asn, name);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultCidr(QString cidr){
-    int prevSize = m_cidrSet.count();
-    m_cidrSet.insert(cidr);
-    if(m_cidrSet.count() > prevSize && !cidr.isEmpty()){
-        m_resultModelCidr->appendRow(new QStandardItem(cidr));
+    if(set_cidr.contains(cidr))
+        return;
+
+    m_model_cidr->appendRow(new QStandardItem(cidr));
+    set_cidr.insert(cidr);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveCidr(cidr);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultA(QString A){
-    int prevSize = m_ipSet.count();
-    m_ipSet.insert(A);
-    if(m_ipSet.count() > prevSize && !A.isEmpty()){
-        m_resultModelIp->appendRow(new QStandardItem(A));
+    if(set_ip.contains(A))
+        return;
+
+    m_model_ip->appendRow(new QStandardItem(A));
+    set_ip.insert(A);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveA(A);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultAAAA(QString AAAA){
-    int prevSize = m_ipSet.count();
-    m_ipSet.insert(AAAA);
-    if(m_ipSet.count() > prevSize && !AAAA.isEmpty()){
-        m_resultModelIp->appendRow(new QStandardItem(AAAA));
+    if(set_ip.contains(AAAA))
+        return;
+
+    m_model_ip->appendRow(new QStandardItem(AAAA));
+    set_ip.insert(AAAA);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveAAAA(AAAA);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultCNAME(QString CNAME){
-    int prevSize = m_subdomainSet.count();
-    m_subdomainSet.insert(CNAME);
-    if(m_subdomainSet.count() > prevSize && !CNAME.isEmpty()){
-        m_resultModelSubdomain->appendRow(new QStandardItem(CNAME));
+    if(set_subdomain.contains(CNAME))
+        return;
+
+    m_model_subdomain->appendRow(new QStandardItem(CNAME));
+    set_subdomain.insert(CNAME);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveCNAME(CNAME);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultMX(QString MX){
-    int prevSize = m_subdomainSet.count();
-    m_subdomainSet.insert(MX);
-    if(m_subdomainSet.count() > prevSize && !MX.isEmpty()){
-        m_resultModelSubdomain->appendRow(new QStandardItem(MX));
+    if(set_subdomain.contains(MX))
+        return;
+
+    m_model_subdomain->appendRow(new QStandardItem(MX));
+    set_subdomain.insert(MX);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveMX(MX);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultNS(QString NS){
-    int prevSize = m_subdomainSet.count();
-    m_subdomainSet.insert(NS);
-    if(m_subdomainSet.count() > prevSize && !NS.isEmpty()){
-        m_resultModelSubdomain->appendRow(new QStandardItem(NS));
+    if(set_subdomain.contains(NS))
+        return;
+
+    m_model_subdomain->appendRow(new QStandardItem(NS));
+    set_subdomain.insert(NS);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveNS(NS);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }
 
 void Osint::onResultTXT(QString TXT){
-    if(!TXT.isEmpty())
+    if(!TXT.isEmpty() && m_scanConfig->autosaveToProject)
         project->addPassiveTXT(TXT);
 }
 
 void Osint::onResultSSLCert(QString sha1_or_sha256){
-    int prevSize = m_sslCertSet.count();
-    m_sslCertSet.insert(sha1_or_sha256);
-    if(m_sslCertSet.count() > prevSize && !sha1_or_sha256.isEmpty()){
-        m_resultModelCert->appendRow(new QStandardItem(sha1_or_sha256));
+    if(set_ssl.contains(sha1_or_sha256))
+        return;
+
+    m_model_ssl->appendRow(new QStandardItem(sha1_or_sha256));
+    set_ssl.insert(sha1_or_sha256);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
+    if(m_scanConfig->autosaveToProject)
         project->addPassiveSSL(sha1_or_sha256);
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
-    }
 }

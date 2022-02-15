@@ -2,81 +2,18 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : Creating result's treeview contextmenu & actions to perform on the results.
 */
 
 #include "Osint.h"
 #include "ui_Osint.h"
 
+#include <QMenu>
 
-void Osint::m_initActions(){
-    connect(&a_ClearResults, &QAction::triggered, this, [=](){this->m_clearResults();});
-    connect(&a_RemoveResults, &QAction::triggered, this, [=](){this->m_removeResults(selectionModel);});
-    connect(&a_OpenInBrowser, &QAction::triggered, this, [=](){this->m_openInBrowser(selectionModel);});
-    /* ... */
-    connect(&a_SendAllIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW);});
-    connect(&a_SendAllHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW);});
-    connect(&a_SendAllHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE);});
-    connect(&a_SendAllHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE);});
-    connect(&a_SendAllHostToDns, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS);});
-    connect(&a_SendAllHostToCert, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT);});
-    connect(&a_SendAllEmailToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllUrlToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllAsnToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllCidrToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllCertToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllEmailToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllAsnToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllCidrToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllCertToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllIpToIpTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP);});
-    connect(&a_SendAllHostToCertTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::DOMAINTOOL);});
-    connect(&a_SendAllHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CERT);});
-    connect(&a_SendAllAsnToAsnTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::ASN);});
-    connect(&a_SendAllEmailToEmailTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::EMAIL);});
-    connect(&a_SendAllCidrToCidrTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CIDR);});
-    connect(&a_SendAllCertToCertTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CERT);});
-    /* ... */
-    connect(&a_SendSelectedIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE, selectionModel);});
-    connect(&a_SendSelectedHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE, selectionModel);});
-    connect(&a_SendSelectedHostToDns, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS, selectionModel);});
-    connect(&a_SendSelectedHostToCert, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT, selectionModel);});
-    connect(&a_SendSelectedEmailToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedUrlToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedAsnToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedCidrToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedCertToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedEmailToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedAsnToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedCidrToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedCertToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedIpToIpTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP, selectionModel);});
-    connect(&a_SendSelectedHostToCertTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::DOMAINTOOL, selectionModel);});
-    connect(&a_SendSelectedHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CERT, selectionModel);});
-    connect(&a_SendSelectedAsnToAsnTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::ASN, selectionModel);});
-    connect(&a_SendSelectedEmailToEmailTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::EMAIL, selectionModel);});
-    connect(&a_SendSelectedCidrToCidrTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CIDR, selectionModel);});
-    connect(&a_SendSelectedCertToCertTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CERT, selectionModel);});
-    /* ... */
-    connect(&a_Save, &QAction::triggered, this, [=](){this->m_saveResults(selectionModel);});
-    connect(&a_SaveSubdomainIp, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::SUBDOMAINIP);});
-    connect(&a_SaveSubdomain, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::SUBDOMAIN);});
-    connect(&a_SaveIp, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::IP);});
-    connect(&a_Copy, &QAction::triggered, this, [=](){this->m_copyResults(selectionModel);});
-    connect(&a_CopySubdomainIp, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::SUBDOMAINIP);});
-    connect(&a_CopySubdomain, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::SUBDOMAIN);});
-    connect(&a_CopyIp, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::IP);});
-}
 
 void Osint::on_buttonAction_clicked(){
     /* check if there are results available else dont show the context menu */
-    if(m_resultProxyModel->rowCount() < 1)
+    if(proxyModel->rowCount() < 1)
         return;
 
     /* getting the position of the action button to place the context menu and
@@ -86,104 +23,117 @@ void Osint::on_buttonAction_clicked(){
 
     /* creating the context menu... */
     QMenu menu(this);
-    QMenu saveMenu(this);
-    QMenu copyMenu(this);
-    saveMenu.setTitle("Save");
-    copyMenu.setTitle("Copy");
 
     /* adding actions */
-    menu.addAction(&a_ClearResults);
+    menu.addAction("Clear", this, [=](){this->clearResults();});
     menu.addSeparator();
 
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
-        saveMenu.addAction(&a_SaveSubdomainIp);
-        saveMenu.addAction(&a_SaveSubdomain);
-        saveMenu.addAction(&a_SaveIp);
-        copyMenu.addAction(&a_CopySubdomainIp);
-        copyMenu.addAction(&a_CopySubdomain);
-        copyMenu.addAction(&a_CopyIp);
+    {
+        QMenu saveMenu(this);
+        QMenu copyMenu(this);
+        saveMenu.setTitle(tr("Save"));
+        copyMenu.setTitle(tr("Copy"));
+        saveMenu.addAction(tr("Subdomain,Ip"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAINIP);});
+        saveMenu.addAction(tr("Subdomain"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);});
+        saveMenu.addAction(tr("IpAddress"), this, [=](){this->saveResults(RESULT_TYPE::IP);});
+        copyMenu.addAction(tr("Subdomain,Ip"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAINIP);});
+        copyMenu.addAction(tr("Subdomain"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);});
+        copyMenu.addAction(tr("IpAddress"), this, [=](){this->saveResults(RESULT_TYPE::IP);});
         menu.addMenu(&saveMenu);
         menu.addMenu(&copyMenu);
         menu.addSeparator();
-        menu.addAction(&a_SendAllIpToOsint);
-        menu.addAction(&a_SendAllIpToRaw);
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
         menu.addSeparator();
-        menu.addAction(&a_SendAllHostToOsint);
-        menu.addAction(&a_SendAllHostToRaw);
-        menu.addAction(&a_SendAllHostToBrute);
-        menu.addAction(&a_SendAllHostToActive);
-        menu.addAction(&a_SendAllHostToDns);
-        menu.addAction(&a_SendAllHostToCert);
+        menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
+        menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::IP);});
         menu.addSeparator();
-        menu.addAction(&a_SendAllIpToIpTool);
-        menu.addAction(&a_SendAllHostToCertTool);
-        menu.addAction(&a_SendAllHostToDomainTool);
+        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);});
+        menu.addSeparator();
+        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP, RESULT_TYPE::IP);});
+    }
         break;
     case osint::OUTPUT::SUBDOMAIN:
-        menu.addAction(&a_Save);
-        menu.addAction(&a_Copy);
+        menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Copy"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAIN);});
         menu.addSeparator();
-        menu.addAction(&a_SendAllHostToOsint);
-        menu.addAction(&a_SendAllHostToRaw);
-        menu.addAction(&a_SendAllHostToBrute);
-        menu.addAction(&a_SendAllHostToActive);
-        menu.addAction(&a_SendAllHostToDns);
-        menu.addAction(&a_SendAllHostToCert);
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
         menu.addSeparator();
-        menu.addAction(&a_SendAllHostToCertTool);
-        menu.addAction(&a_SendAllHostToDomainTool);
+        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);});
         break;
     case osint::OUTPUT::IP:
-        menu.addAction(&a_Save);
-        menu.addAction(&a_Copy);
+        menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::IP);});
+        menu.addAction(tr("Copy"), this, [=](){this->copyResults(RESULT_TYPE::IP);});
         menu.addSeparator();
-        menu.addAction(&a_SendAllIpToOsint);
-        menu.addAction(&a_SendAllIpToRaw);
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
         menu.addSeparator();
-        menu.addAction(&a_SendAllIpToIpTool);
+        menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
+        menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::IP);});
+        menu.addSeparator();
+        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP, RESULT_TYPE::IP);});
         break;
     case osint::OUTPUT::EMAIL:
-        menu.addAction(&a_Save);
-        menu.addAction(&a_Copy);
+        menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::EMAIL);});
+        menu.addAction(tr("Copy"), this, [=](){this->copyResults(RESULT_TYPE::EMAIL);});
         menu.addSeparator();
-        menu.addAction(&a_SendAllEmailToOsint);
-        menu.addAction(&a_SendAllEmailToRaw);
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
         menu.addSeparator();
-        menu.addAction(&a_SendAllEmailToEmailTool);
+        menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);});
+        menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);});
+        menu.addSeparator();
+        menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL, RESULT_TYPE::EMAIL);});
         break;
     case osint::OUTPUT::URL:
-        menu.addAction(&a_Save);
-        menu.addAction(&a_Copy);
+        menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::URL);});
+        menu.addAction(tr("Copy"), this, [=](){this->copyResults(RESULT_TYPE::URL);});
         menu.addSeparator();
-        menu.addAction(&a_SendAllUrlToRaw);
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
+        menu.addSeparator();
+        menu.addAction(tr("Send URL to URL"), this, [=](){this->sendToEngine(ENGINE::URL, RESULT_TYPE::URL);});
         break;
     case osint::OUTPUT::ASN:
-        menu.addAction(&a_Save);
-        menu.addAction(&a_Copy);
+        menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::ASN);});
+        menu.addAction(tr("Copy"), this, [=](){this->copyResults(RESULT_TYPE::ASN);});
         menu.addSeparator();
-        menu.addAction(&a_SendAllAsnToOsint);
-        menu.addAction(&a_SendAllAsnToRaw);
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
         menu.addSeparator();
-        menu.addAction(&a_SendAllAsnToAsnTool);
+        menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);});
+        menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);});
+        menu.addSeparator();
+        menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN, RESULT_TYPE::ASN);});
         break;
     case osint::OUTPUT::CERT:
-        menu.addAction(&a_Save);
-        menu.addAction(&a_Copy);
+        menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::CERT_ID);});
+        menu.addAction(tr("Copy"), this, [=](){this->copyResults(RESULT_TYPE::CERT_ID);});
         menu.addSeparator();
-        menu.addAction(&a_SendAllCertToOsint);
-        menu.addAction(&a_SendAllCertToRaw);
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
         menu.addSeparator();
-        menu.addAction(&a_SendAllCertToCertTool);
+        menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);});
+        menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CERT_ID);});
+        menu.addSeparator();
+        menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(TOOL::CERT, RESULT_TYPE::CERT_ID);});
         break;
     case osint::OUTPUT::CIDR:
-        menu.addAction(&a_Save);
-        menu.addAction(&a_Copy);
+        menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::CIDR);});
+        menu.addAction(tr("Copy"), this, [=](){this->copyResults(RESULT_TYPE::CIDR);});
         menu.addSeparator();
-        menu.addAction(&a_SendAllCidrToOsint);
-        menu.addAction(&a_SendAllCidrToRaw);
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
         menu.addSeparator();
-        menu.addAction(&a_SendAllCidrToCidrTool);
+        menu.addAction(tr("Send CIDR to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);});
+        menu.addAction(tr("Send CIDR to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CIDR);});
+        menu.addSeparator();
+        menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(TOOL::CIDR, RESULT_TYPE::CIDR);});
     }
 
     /* showing the context menu... */
@@ -199,78 +149,75 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     }
 
     /* getting the selected items... */
-    selectionModel = ui->tableViewResults->selectionModel();
+     selectionModel = ui->tableViewResults->selectionModel();
 
     /* creating the context menu... */
     QMenu menu(this);
 
     /* adding actions */
-    menu.addAction(&a_Save);
-    menu.addAction(&a_Copy);
+    menu.addAction(tr("Remove"), this, [=](){this->removeResults();});
+    menu.addAction(tr("Open In Browser"), this, [=](){this->openInBrowser();});
     menu.addSeparator();
-    menu.addAction(&a_RemoveResults);
-    menu.addAction(&a_OpenInBrowser);
+    menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();});
+    menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();});
+    menu.addSeparator();
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();});
     menu.addSeparator();
 
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
-        menu.addAction(&a_SendSelectedIpToOsint);
-        menu.addAction(&a_SendSelectedIpToRaw);
+        menu.addAction(tr("Send IpAddress To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
+        menu.addAction(tr("Send IpAddress To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::IP);});
         menu.addSeparator();
-        menu.addAction(&a_SendSelectedHostToOsint);
-        menu.addAction(&a_SendSelectedHostToRaw);
-        menu.addAction(&a_SendSelectedHostToBrute);
-        menu.addAction(&a_SendSelectedHostToActive);
-        menu.addAction(&a_SendSelectedHostToDns);
-        menu.addAction(&a_SendSelectedHostToCert);
+        menu.addAction(tr("Send Hostname To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);});
         menu.addSeparator();
-        menu.addAction(&a_SendSelectedIpToIpTool);
-        menu.addAction(&a_SendSelectedHostToCertTool);
-        menu.addAction(&a_SendSelectedHostToDomainTool);
+        menu.addAction(tr("Send IpAddress To IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP, RESULT_TYPE::IP);});
         break;
     case osint::OUTPUT::SUBDOMAIN:
-        menu.addAction(&a_SendSelectedHostToOsint);
-        menu.addAction(&a_SendSelectedHostToRaw);
-        menu.addAction(&a_SendSelectedHostToBrute);
-        menu.addAction(&a_SendSelectedHostToActive);
-        menu.addAction(&a_SendSelectedHostToDns);
-        menu.addAction(&a_SendSelectedHostToCert);
-        menu.addSeparator();
-        menu.addAction(&a_SendSelectedHostToCertTool);
-        menu.addAction(&a_SendSelectedHostToDomainTool);
+        menu.addAction(tr("Send Hostname To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname To SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);});
         break;
     case osint::OUTPUT::IP:
-        menu.addAction(&a_SendSelectedIpToOsint);
-        menu.addAction(&a_SendSelectedIpToRaw);
+        menu.addAction(tr("Send IpAddress To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
+        menu.addAction(tr("Send IpAddress To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
         menu.addSeparator();
-        menu.addAction(&a_SendSelectedIpToIpTool);
+        menu.addAction(tr("Send IpAddress To IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP, RESULT_TYPE::IP);});
         break;
     case osint::OUTPUT::EMAIL:
-        menu.addAction(&a_SendSelectedEmailToOsint);
-        menu.addAction(&a_SendSelectedEmailToRaw);
+        menu.addAction(tr("Send Email To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);});
+        menu.addAction(tr("Send Email To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);});
         menu.addSeparator();
-        menu.addAction(&a_SendSelectedEmailToEmailTool);
+        menu.addAction(tr("Send Email To EMAIL-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::EMAIL, RESULT_TYPE::EMAIL);});
         break;
     case osint::OUTPUT::URL:
-        menu.addAction(&a_SendSelectedUrlToRaw);
+        menu.addAction(tr("Send URL To URL"), this, [=](){this->sendSelectedToEngine(ENGINE::URL, RESULT_TYPE::URL);});
         break;
     case osint::OUTPUT::ASN:
-        menu.addAction(&a_SendSelectedAsnToOsint);
-        menu.addAction(&a_SendSelectedAsnToRaw);
+        menu.addAction(tr("Send ASN To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);});
+        menu.addAction(tr("Send ASN To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);});
         menu.addSeparator();
-        menu.addAction(&a_SendSelectedAsnToAsnTool);
+        menu.addAction(tr("Send ASN To ASN-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::ASN, RESULT_TYPE::ASN);});
         break;
     case osint::OUTPUT::CERT:
-        menu.addAction(&a_SendSelectedCertToOsint);
-        menu.addAction(&a_SendSelectedCertToRaw);
+        menu.addAction(tr("Send SSL To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);});
+        menu.addAction(tr("Send SSL To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);});
         menu.addSeparator();
-        menu.addAction(&a_SendSelectedCertToCertTool);
+        menu.addAction(tr("Send SSL To SSL-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::CERT, RESULT_TYPE::CERT_ID);});
         break;
     case osint::OUTPUT::CIDR:
-        menu.addAction(&a_SendSelectedCidrToOsint);
-        menu.addAction(&a_SendSelectedCidrToRaw);
+        menu.addAction(tr("Send CIDR To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);});
+        menu.addAction(tr("Send CIDR To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);});
         menu.addSeparator();
-        menu.addAction(&a_SendSelectedCidrToCidrTool);
+        menu.addAction(tr("Send CIDR To CIDR-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::CIDR, RESULT_TYPE::CIDR);});
     }
 
     /* showing the context menu... */

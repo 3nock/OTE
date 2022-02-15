@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : starts the OSINT scanning modules each in own thread
 */
 
 #include "Osint.h"
@@ -11,314 +11,351 @@
 #include "src/modules/passive/OsintModulesHeaders.h"
 
 
-void Osint::m_startScan(){
-    ScanArgs scanArgs;
+void Osint::onScanThreadEnded(){
+    /* check if no active thread */
+    status->activeScanThreads--;
+    if(status->activeScanThreads)
+        return;
+
+    /* set the progress bar to 100% just in case */
+    if(!status->isStopped)
+        ui->progressBar->setValue(ui->progressBar->maximum());
+
+    status->isNotActive = true;
+    status->isPaused = false;
+    status->isStopped = false;
+    status->isRunning = false;
+
+    /* reanabling the widgets... */
+    ui->buttonStart->setEnabled(true);
+    ui->buttonStop->setDisabled(true);
+
+    log("------------------ End ----------------");
+}
+
+void Osint::startScan(){
+    /* ressetting and setting new values */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    ui->progressBar->clearMask();
+    m_scanArgs->targets.clear();
+    m_scanArgs->inputDomain = false;
+    m_scanArgs->inputIp = false;
+    m_scanArgs->inputEmail = false;
+    m_scanArgs->inputUrl = false;
+    m_scanArgs->inputAsn = false;
+    m_scanArgs->inputSSLCert = false;
+    m_scanArgs->inputCidr = false;
+    m_scanArgs->outputSubdomainIp = false;
+    m_scanArgs->outputSubdomain = false;
+    m_scanArgs->outputIp = false;
+    m_scanArgs->outputEmail = false;
+    m_scanArgs->outputUrl = false;
+    m_scanArgs->outputAsn = false;
+    m_scanArgs->outputSSLCert = false;
+    m_scanArgs->outputCidr = false;
+    total_modules = 0;
 
     /* get the targets... */
     if(ui->checkBoxMultipleTargets->isChecked()){
         foreach(const QString &target, ui->targets->getlistModel()->stringList())
-            scanArgs.targets.enqueue(target);
+            m_scanArgs->targets.enqueue(target);
     }else
-        scanArgs.targets.enqueue(ui->lineEditTarget->text());
+        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
 
-    /* getting input type as specified by user... */
+    /* getting input type as specified by user */
     switch(ui->comboBoxInput->currentIndex()){
     case INPUT::HOSTNAME:
-        scanArgs.inputDomain = true;
+        m_scanArgs->inputDomain = true;
         break;
     case INPUT::IP:
-        scanArgs.inputIp = true;
+        m_scanArgs->inputIp = true;
         break;
     case INPUT::EMAIL:
-        scanArgs.inputEmail = true;
+        m_scanArgs->inputEmail = true;
         break;
     case INPUT::URL:
-        scanArgs.inputUrl = true;
+        m_scanArgs->inputUrl = true;
         break;
     case INPUT::ASN:
-        scanArgs.inputAsn = true;
+        m_scanArgs->inputAsn = true;
         break;
     case INPUT::CERT:
-        scanArgs.inputSSLCert = true;
+        m_scanArgs->inputSSLCert = true;
         break;
     case INPUT::CIDR:
-        scanArgs.inputCidr = true;
+        m_scanArgs->inputCidr = true;
         break;
     }
 
-    /* getting output type as specified by user... */
+    /* getting output type as specified by users */
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
-        scanArgs.outputSubdomainIp = true;
+        m_scanArgs->outputSubdomainIp = true;
         break;
     case osint::OUTPUT::SUBDOMAIN:
-        scanArgs.outputSubdomain = true;
+        m_scanArgs->outputSubdomain = true;
         break;
     case osint::OUTPUT::IP:
-        scanArgs.outputIp = true;
+        m_scanArgs->outputIp = true;
         break;
     case osint::OUTPUT::EMAIL:
-        scanArgs.outputEmail = true;
+        m_scanArgs->outputEmail = true;
         break;
     case osint::OUTPUT::URL:
-        scanArgs.outputUrl = true;
+        m_scanArgs->outputUrl = true;
         break;
     case osint::OUTPUT::ASN:
-        scanArgs.outputAsn = true;
+        m_scanArgs->outputAsn = true;
         break;
     case osint::OUTPUT::CERT:
-        scanArgs.outputSSLCert = true;
+        m_scanArgs->outputSSLCert = true;
         break;
     case osint::OUTPUT::CIDR:
-        scanArgs.outputCidr = true;
+        m_scanArgs->outputCidr = true;
         break;
     }
 
-    /****************************************************************************
-                                    APIs
-    *****************************************************************************/
-
+    ///
+    /// APIs...
+    ///
     if(ui->moduleAnubis->isChecked())
-        this->m_startScanThread(new Anubis(scanArgs));
+        this->startScanThread(new Anubis(*m_scanArgs));
 
     if(ui->moduleBgpview->isChecked())
-        this->m_startScanThread(new Bgpview(scanArgs));
+        this->startScanThread(new Bgpview(*m_scanArgs));
 
     if(ui->moduleBinaryEdge->isChecked())
-        this->m_startScanThread(new BinaryEdge(scanArgs));
+        this->startScanThread(new BinaryEdge(*m_scanArgs));
 
     if(ui->moduleC99->isChecked())
-        this->m_startScanThread(new C99(scanArgs));
+        this->startScanThread(new C99(*m_scanArgs));
 
     if(ui->moduleCircl->isChecked())
-        this->m_startScanThread(new Circl(scanArgs));
+        this->startScanThread(new Circl(*m_scanArgs));
 
     if(ui->moduleDnsbufferoverrun->isChecked())
-        this->m_startScanThread(new Dnsbufferoverun(scanArgs));
+        this->startScanThread(new Dnsbufferoverun(*m_scanArgs));
 
     if(ui->moduleGithub->isChecked())
-        this->m_startScanThread(new Github(scanArgs));
+        this->startScanThread(new Github(*m_scanArgs));
 
     if(ui->moduleHackerTargetFree->isChecked())
-        this->m_startScanThread(new HackerTargetFree(scanArgs));
+        this->startScanThread(new HackerTargetFree(*m_scanArgs));
 
     if(ui->moduleHackerTargetPaid->isChecked())
-        this->m_startScanThread(new HackerTargetPaid(scanArgs));
+        this->startScanThread(new HackerTargetPaid(*m_scanArgs));
 
     if(ui->moduleMnemonicFree->isChecked())
-        this->m_startScanThread(new MnemonicFree(scanArgs));
+        this->startScanThread(new MnemonicFree(*m_scanArgs));
 
     if(ui->moduleMnemonicPaid->isChecked())
-        this->m_startScanThread(new MnemonicPaid(scanArgs));
+        this->startScanThread(new MnemonicPaid(*m_scanArgs));
 
     if(ui->moduleOmnisint->isChecked())
-        this->m_startScanThread(new Omnisint(scanArgs));
+        this->startScanThread(new Omnisint(*m_scanArgs));
 
     if(ui->moduleOtxFree->isChecked())
-        this->m_startScanThread(new OtxFree(scanArgs));
+        this->startScanThread(new OtxFree(*m_scanArgs));
 
     if(ui->moduleOtxPaid->isChecked())
-        this->m_startScanThread(new OtxPaid(scanArgs));
+        this->startScanThread(new OtxPaid(*m_scanArgs));
 
     if(ui->moduleProjectdiscovery->isChecked())
-        this->m_startScanThread(new Projectdiscovery(scanArgs));
+        this->startScanThread(new Projectdiscovery(*m_scanArgs));
 
     if(ui->moduleRiskIq->isChecked())
-        this->m_startScanThread(new RiskIq(scanArgs));
+        this->startScanThread(new RiskIq(*m_scanArgs));
 
     if(ui->moduleRobtexFree->isChecked())
-        this->m_startScanThread(new RobtexFree(scanArgs));
+        this->startScanThread(new RobtexFree(*m_scanArgs));
 
     if(ui->moduleRobtexPaid->isChecked())
-        this->m_startScanThread(new RobtexPaid(scanArgs));
+        this->startScanThread(new RobtexPaid(*m_scanArgs));
 
     if(ui->moduleSecuritytrails->isChecked())
-        this->m_startScanThread(new SecurityTrails(scanArgs));
+        this->startScanThread(new SecurityTrails(*m_scanArgs));
 
     if(ui->moduleShodan->isChecked())
-        this->m_startScanThread(new Shodan(scanArgs));
+        this->startScanThread(new Shodan(*m_scanArgs));
 
     if(ui->moduleSpyse->isChecked())
-        this->m_startScanThread(new Spyse(scanArgs));
+        this->startScanThread(new Spyse(*m_scanArgs));
 
     if(ui->moduleSublist3r->isChecked())
-        this->m_startScanThread(new Sublist3r(scanArgs));
+        this->startScanThread(new Sublist3r(*m_scanArgs));
 
     if(ui->moduleThreatBook->isChecked())
-        this->m_startScanThread(new ThreatBook(scanArgs));
+        this->startScanThread(new ThreatBook(*m_scanArgs));
 
     if(ui->moduleThreatcrowd->isChecked())
-        this->m_startScanThread(new Threatcrowd(scanArgs));
+        this->startScanThread(new Threatcrowd(*m_scanArgs));
 
     if(ui->moduleThreatminer->isChecked())
-        this->m_startScanThread(new Threatminer(scanArgs));
+        this->startScanThread(new Threatminer(*m_scanArgs));
 
     if(ui->moduleUrlscan->isChecked())
-        this->m_startScanThread(new Urlscan(scanArgs));
+        this->startScanThread(new Urlscan(*m_scanArgs));
 
     if(ui->moduleViewDns->isChecked())
-        this->m_startScanThread(new ViewDns(scanArgs));
+        this->startScanThread(new ViewDns(*m_scanArgs));
 
     if(ui->moduleVirusTotal->isChecked())
-        this->m_startScanThread(new VirusTotal(scanArgs));
+        this->startScanThread(new VirusTotal(*m_scanArgs));
 
     if(ui->moduleWebResolver->isChecked())
-        this->m_startScanThread(new WebResolver(scanArgs));
+        this->startScanThread(new WebResolver(*m_scanArgs));
 
     if(ui->moduleWhoisXmlApi->isChecked())
-        this->m_startScanThread(new WhoisXmlApi(scanArgs));
+        this->startScanThread(new WhoisXmlApi(*m_scanArgs));
 
     if(ui->moduleZetalytics->isChecked())
-        this->m_startScanThread(new ZETAlytics(scanArgs));
+        this->startScanThread(new ZETAlytics(*m_scanArgs));
 
     if(ui->moduleZoomeye->isChecked())
-        this->m_startScanThread(new ZoomEye(scanArgs));
+        this->startScanThread(new ZoomEye(*m_scanArgs));
 
     if(ui->moduleIpInfo->isChecked())
-        this->m_startScanThread(new IpInfo(scanArgs));
+        this->startScanThread(new IpInfo(*m_scanArgs));
 
     if(ui->moduleDnslytics->isChecked())
-        this->m_startScanThread(new Dnslytics(scanArgs));
+        this->startScanThread(new Dnslytics(*m_scanArgs));
 
     if(ui->moduleDomainTools->isChecked())
-        this->m_startScanThread(new DomainTools(scanArgs));
+        this->startScanThread(new DomainTools(*m_scanArgs));
 
     if(ui->moduleMaltiverseFree->isChecked())
-        this->m_startScanThread(new Maltiverse(scanArgs));
+        this->startScanThread(new Maltiverse(*m_scanArgs));
 
     if(ui->moduleN45HT->isChecked())
-        this->m_startScanThread(new N45HT(scanArgs));
+        this->startScanThread(new N45HT(*m_scanArgs));
 
     if(ui->moduleOnyphe->isChecked())
-        this->m_startScanThread(new Onyphe(scanArgs));
+        this->startScanThread(new Onyphe(*m_scanArgs));
 
     if(ui->moduleRipe->isChecked())
-        this->m_startScanThread(new Ripe(scanArgs));
+        this->startScanThread(new Ripe(*m_scanArgs));
 
     if(ui->moduleFullHunt->isChecked())
-        this->m_startScanThread(new FullHunt(scanArgs));
+        this->startScanThread(new FullHunt(*m_scanArgs));
 
     if(ui->moduleNetworksDB->isChecked())
-        this->m_startScanThread(new NetworksDB(scanArgs));
+        this->startScanThread(new NetworksDB(*m_scanArgs));
 
     if(ui->moduleSpyOnWeb->isChecked())
-        this->m_startScanThread(new SpyOnWeb(scanArgs));
+        this->startScanThread(new SpyOnWeb(*m_scanArgs));
 
-    /****************************************************************************
-                                 ARCHIVES
-    *****************************************************************************/
-
+    ///
+    /// archives...
+    ///
     if(ui->moduleArchiveit->isChecked())
-        this->m_startScanThread(new ArchiveIt(scanArgs));
+        this->startScanThread(new ArchiveIt(*m_scanArgs));
 
     if(ui->moduleArchiveToday->isChecked())
-        this->m_startScanThread(new ArchiveToday(scanArgs));
+        this->startScanThread(new ArchiveToday(*m_scanArgs));
 
     if(ui->moduleArquivo->isChecked())
-        this->m_startScanThread(new Arquivo(scanArgs));
+        this->startScanThread(new Arquivo(*m_scanArgs));
 
     if(ui->moduleCommonCrawl->isChecked())
-        this->m_startScanThread(new CommonCrawl(scanArgs));
+        this->startScanThread(new CommonCrawl(*m_scanArgs));
 
     if(ui->moduleUKWebArchive->isChecked())
-        this->m_startScanThread(new UKWebArchive(scanArgs));
+        this->startScanThread(new UKWebArchive(*m_scanArgs));
 
     if(ui->moduleWaybackmachine->isChecked())
-        this->m_startScanThread(new Waybackmachine(scanArgs));
+        this->startScanThread(new Waybackmachine(*m_scanArgs));
 
-    /****************************************************************************
-                                 CERTS
-    *****************************************************************************/
-
+    ///
+    /// SSL Certs...
+    ///
     if(ui->moduleCensys->isChecked())
-        this->m_startScanThread(new Censys(scanArgs));
+        this->startScanThread(new Censys(*m_scanArgs));
 
     if(ui->moduleCensysFree->isChecked())
-        this->m_startScanThread(new CensysFree(scanArgs));
+        this->startScanThread(new CensysFree(*m_scanArgs));
 
     if(ui->moduleCertspotter->isChecked())
-        this->m_startScanThread(new Certspotter(scanArgs));
+        this->startScanThread(new Certspotter(*m_scanArgs));
 
     if(ui->moduleCertspotterFree->isChecked())
-        this->m_startScanThread(new CertspotterFree(scanArgs));
+        this->startScanThread(new CertspotterFree(*m_scanArgs));
 
     if(ui->moduleCrtsh->isChecked())
-        this->m_startScanThread(new Crtsh(scanArgs));
+        this->startScanThread(new Crtsh(*m_scanArgs));
 
     if(ui->moduleGoogleCert->isChecked())
-        this->m_startScanThread(new GoogleCert(scanArgs));
+        this->startScanThread(new GoogleCert(*m_scanArgs));
 
-    /****************************************************************************
-                                 EMAIL
-    *****************************************************************************/
-
+    ///
+    /// Email...
+    ///
     if(ui->moduleHunter->isChecked())
-        this->m_startScanThread(new Hunter(scanArgs));
+        this->startScanThread(new Hunter(*m_scanArgs));
 
     if(ui->moduleEmailCrawlr->isChecked())
-        this->m_startScanThread(new EmailCrawlr(scanArgs));
+        this->startScanThread(new EmailCrawlr(*m_scanArgs));
 
-    /****************************************************************************
-                                 SITES
-    *****************************************************************************/
-
+    ///
+    /// sites...
+    ///
     if(ui->moduleDnsdumpster->isChecked())
-        this->m_startScanThread(new Dnsdumpster(scanArgs));
+        this->startScanThread(new Dnsdumpster(*m_scanArgs));
 
     if(ui->moduleNetcraft->isChecked())
-        this->m_startScanThread(new Netcraft(scanArgs));
+        this->startScanThread(new Netcraft(*m_scanArgs));
 
     if(ui->modulePagesInventory->isChecked())
-        this->m_startScanThread(new PagesInventory(scanArgs));
+        this->startScanThread(new PagesInventory(*m_scanArgs));
 
     if(ui->modulePkey->isChecked())
-        this->m_startScanThread(new Pkey(scanArgs));
+        this->startScanThread(new Pkey(*m_scanArgs));
 
     if(ui->moduleRapiddns->isChecked())
-        this->m_startScanThread(new Rapiddns(scanArgs));
+        this->startScanThread(new Rapiddns(*m_scanArgs));
 
     if(ui->moduleSitedossier->isChecked())
-        this->m_startScanThread(new SiteDossier(scanArgs));
+        this->startScanThread(new SiteDossier(*m_scanArgs));
 
-    /****************************************************************************
-                                 SCRAPE
-    *****************************************************************************/
-
+    ///
+    /// scrape...
+    ///
     if(ui->moduleAsk->isChecked())
-        this->m_startScanThread(new Ask(scanArgs));
+        this->startScanThread(new Ask(*m_scanArgs));
 
     if(ui->moduleBaidu->isChecked())
-        this->m_startScanThread(new Baidu(scanArgs));
+        this->startScanThread(new Baidu(*m_scanArgs));
 
     if(ui->moduleDogpile->isChecked())
-        this->m_startScanThread(new DogPile(scanArgs));
+        this->startScanThread(new DogPile(*m_scanArgs));
 
     if(ui->moduleDuckduckgo->isChecked())
-        this->m_startScanThread(new DuckDuckGo(scanArgs));
+        this->startScanThread(new DuckDuckGo(*m_scanArgs));
 
     if(ui->moduleExalead->isChecked())
-        this->m_startScanThread(new Exalead(scanArgs));
+        this->startScanThread(new Exalead(*m_scanArgs));
 
     if(ui->moduleYahoo->isChecked())
-        this->m_startScanThread(new Yahoo(scanArgs));
+        this->startScanThread(new Yahoo(*m_scanArgs));
 
     if(ui->moduleBing->isChecked())
-        this->m_startScanThread(new Bing(scanArgs));
+        this->startScanThread(new Bing(*m_scanArgs));
 
     /* after starting all choosen enumerations... */
     if(status->activeScanThreads)
     {
         ui->buttonStart->setDisabled(true);
         ui->buttonStop->setEnabled(true);
-        //...
-        this->m_infoLog("------------------ start --------------");
+        log("------------------ start --------------");
     }
-    else{
-        QMessageBox::warning(this, "Error!", "Please Choose Engine For Enumeration!");
-    }
+    else
+        QMessageBox::warning(this, tr("Error!"), tr("Please Choose Engine For Enumeration!"));
 }
 
-void Osint::m_startScanThread(AbstractOsintModule *module){
+void Osint::startScanThread(AbstractOsintModule *module){
+    total_modules++;
+    ui->progressBar->setMaximum(total_modules*m_scanArgs->targets.length());
+
     QThread *cThread = new QThread(this);
     module->startScan(cThread);
     module->moveToThread(cThread);
@@ -354,13 +391,12 @@ void Osint::m_startScanThread(AbstractOsintModule *module){
         connect(module, &AbstractOsintModule::resultSSL, this, &Osint::onResultSSLCert);
         break;
     }
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::rateLimitLog, this, &Osint::onRateLimitLog);
     connect(module, &AbstractOsintModule::errorLog, this, &Osint::onErrorLog);
     connect(module, &AbstractOsintModule::infoLog, this, &Osint::onInfoLog);
-    /* ... */
     connect(this, &Osint::stopScanThread, module, &AbstractOsintModule::onStop);
     connect(this, &Osint::pauseScanThread, module, &AbstractOsintModule::onPause);
-    /* ... */
     connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

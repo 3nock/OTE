@@ -8,10 +8,9 @@
 #include "ActiveScanner.h"
 
 
-active::Scanner::Scanner(active::ScanArgs *args): AbstractScanner (nullptr),
+active::Scanner::Scanner(active::ScanArgs *args): AbstractScanner(nullptr),
       m_args(args),
-      m_dns(new QDnsLookup(this)),
-      m_socket(new QTcpSocket(this))
+      m_dns(new QDnsLookup(this))
 {
     m_dns->setType(m_args->config->recordType);
     m_dns->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
@@ -20,7 +19,6 @@ active::Scanner::Scanner(active::ScanArgs *args): AbstractScanner (nullptr),
     connect(this, &active::Scanner::next, this, &active::Scanner::lookup);
 }
 active::Scanner::~Scanner(){
-    delete m_socket;
     delete m_dns;
 }
 
@@ -44,6 +42,7 @@ void active::Scanner::lookupFinished(){
             emit scanResult(host);
             break;
         }
+
     default:
         log.message = m_dns->errorString();
         log.target = m_dns->name();
@@ -61,7 +60,7 @@ void active::Scanner::lookupFinished(){
 }
 
 void active::Scanner::lookup(){
-    switch (lookupActiveDNS(m_dns, m_args)) {
+    switch (getTarget(m_dns, m_args)) {
     case RETVAL::LOOKUP:
         m_dns->lookup();
         break;
@@ -73,8 +72,7 @@ void active::Scanner::lookup(){
     }
 }
 
-RETVAL active::lookupActiveDNS(QDnsLookup *dns, active::ScanArgs *args){
-    /* lock */
+RETVAL active::getTarget(QDnsLookup *dns, active::ScanArgs *args){
     QMutexLocker(&args->mutex);
 
     if(!args->targets.isEmpty()){
@@ -83,17 +81,4 @@ RETVAL active::lookupActiveDNS(QDnsLookup *dns, active::ScanArgs *args){
     }
     else
         return RETVAL::QUIT;
-}
-
-RETVAL active::lookupActiveService(active::ScanArgs *args){
-    /* lock
-
-    m_socket->connectToHost(m_dns->name(), m_args->service);
-    if(m_socket->waitForConnected(m_args->config->timeout))
-    {
-        m_socket->close();
-        emit scanResult(m_dns->name(), m_dns->hostAddressRecords()[0].value().toString());
-    }
-    */
-    return RETVAL::QUIT;
 }

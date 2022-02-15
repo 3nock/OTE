@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : OSINT Engine, for obtaining different osint info from different input targets.
 */
 
 #include "Osint.h"
@@ -10,202 +10,131 @@
 
 #include <QDateTime>
 #include <QClipboard>
-#include "src/utils/Config.h"
+
 #include "src/utils/Definitions.h"
+#include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/PassiveConfigDialog.h"
 
 
 Osint::Osint(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project),
     ui(new Ui::Osint),
-    m_targetListModelHostname(new QStringListModel),
-    m_targetListModelIp(new QStringListModel),
-    m_targetListModelAsn(new QStringListModel),
-    m_targetListModelCidr(new QStringListModel),
-    m_targetListModelCert(new QStringListModel),
-    m_targetListModelEmail(new QStringListModel),
-    m_resultModelSubdomainIp(new QStandardItemModel),
-    m_resultModelSubdomain(new QStandardItemModel),
-    m_resultModelIp(new QStandardItemModel),
-    m_resultModelEmail(new QStandardItemModel),
-    m_resultModelUrl(new QStandardItemModel),
-    m_resultModelAsn(new QStandardItemModel),
-    m_resultModelCert(new QStandardItemModel),
-    m_resultModelCidr(new QStandardItemModel),
-    m_resultProxyModel(new QSortFilterProxyModel)
+    m_scanConfig(new ScanConfig),
+    m_scanArgs(new ScanArgs),
+    m_targetListModel_host(new QStringListModel),
+    m_targetListModel_ip(new QStringListModel),
+    m_targetListModel_asn(new QStringListModel),
+    m_targetListModel_cidr(new QStringListModel),
+    m_targetListModel_ssl(new QStringListModel),
+    m_targetListModel_email(new QStringListModel),
+    m_model_subdomainIp(new QStandardItemModel),
+    m_model_subdomain(new QStandardItemModel),
+    m_model_ip(new QStandardItemModel),
+    m_model_email(new QStandardItemModel),
+    m_model_url(new QStandardItemModel),
+    m_model_asn(new QStandardItemModel),
+    m_model_ssl(new QStandardItemModel),
+    m_model_cidr(new QStandardItemModel)
 {
+    this->initUI();
+    this->initModules();
+
+    /* ... */
+    m_scanArgs->config = m_scanConfig;
+
+    /* target models */
+    ui->targets->setListName(tr("Targets"));
+    ui->targets->setListModel(m_targetListModel_host);
+
+    /* results models */
+    m_model_subdomainIp->setHorizontalHeaderLabels({tr(" Subdomains"), tr(" IpAddresses")});
+    m_model_subdomain->setHorizontalHeaderLabels({tr(" Subdomains")});
+    m_model_ip->setHorizontalHeaderLabels({tr(" IpAddresses")});
+    m_model_email->setHorizontalHeaderLabels({tr(" Emails")});
+    m_model_url->setHorizontalHeaderLabels({tr(" URL")});
+    m_model_asn->setHorizontalHeaderLabels({tr(" ASN"), tr(" Name")});
+    m_model_ssl->setHorizontalHeaderLabels({tr(" SSL")});
+    m_model_cidr->setHorizontalHeaderLabels({tr(" CIDR")});
+
+    /* proxy model */
+    proxyModel->setSourceModel(m_model_subdomain);
+    proxyModel->setFilterKeyColumn(0);
+    ui->tableViewResults->setModel(proxyModel);
+}
+Osint::~Osint(){
+    delete m_model_cidr;
+    delete m_model_ssl;
+    delete m_model_asn;
+    delete m_model_url;
+    delete m_model_email;
+    delete m_model_ip;
+    delete m_model_subdomain;
+    delete m_model_subdomainIp;
+    delete m_targetListModel_host;
+    delete m_targetListModel_email;
+    delete m_targetListModel_cidr;
+    delete m_targetListModel_ssl;
+    delete m_targetListModel_asn;
+    delete m_targetListModel_ip;
+    delete ui;
+}
+
+void Osint::initUI(){
     ui->setupUi(this);
 
+    /* setting properties */
     ui->labelIn->setProperty("s3s_color", true);
     ui->labelOut->setProperty("s3s_color", true);
-
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
 
-    /* init... */
-    ui->targets->setListName("Targets");
-    ui->targets->setListModel(m_targetListModelHostname);
+    /* setting placeholdertxt */
+    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
+    ui->lineEditFilter->setPlaceholderText(tr("Filter..."));
 
-    /* results models */
-    m_resultModelSubdomainIp->setHorizontalHeaderLabels({" Subdomains", " IpAddresses"});
-    m_resultModelSubdomain->setHorizontalHeaderLabels({" Subdomains"});
-    m_resultModelIp->setHorizontalHeaderLabels({" IpAddresses"});
-    m_resultModelEmail->setHorizontalHeaderLabels({" Emails"});
-    m_resultModelUrl->setHorizontalHeaderLabels({" Urls"});
-    m_resultModelAsn->setHorizontalHeaderLabels({" Asn", " Name"});
-    m_resultModelCert->setHorizontalHeaderLabels({" SSL-Cert FingerPrint"});
-    m_resultModelCidr->setHorizontalHeaderLabels({" Cidr"});
-    m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
-    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_resultProxyModel->setRecursiveFilteringEnabled(true);
-    m_resultProxyModel->setFilterKeyColumn(0);
-    ui->tableViewResults->setModel(m_resultProxyModel);
-
-    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
-    /* ... */
-    m_currentPath = QApplication::applicationDirPath();
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
-    ui->lineEditFilter->setPlaceholderText("Filter...");
-
-    /* hide widgets... */
+    /* disabling and hiding widgets */
     ui->buttonStop->setDisabled(true);
     ui->progressBar->hide();
     ui->targets->hide();
     ui->comboBoxFilter->hide();
 
-    /* modules */
-    this->m_initModules();
+    /* ... */
+    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-
-    /* initiate all actions for the context menus */
-    this->m_initActions();
-}
-Osint::~Osint(){
-    delete m_resultProxyModel;
-    delete m_resultModelCidr;
-    delete m_resultModelCert;
-    delete m_resultModelAsn;
-    delete m_resultModelUrl;
-    delete m_resultModelEmail;
-    delete m_resultModelIp;
-    delete m_resultModelSubdomain;
-    delete m_resultModelSubdomainIp;
-    delete m_targetListModelHostname;
-    delete m_targetListModelEmail;
-    delete m_targetListModelCidr;
-    delete m_targetListModelCert;
-    delete m_targetListModelAsn;
-    delete m_targetListModelIp;
-    delete ui;
-}
-
-void Osint::m_infoLog(QString log){
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
-}
-
-void Osint::m_errorLog(QString log){
-    QString fontedLog("<font color=\"red\">"+log+"</font>");
-    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
-    ui->plainTextEditLogs->appendHtml("\n"+logTime+fontedLog+"\n");
-}
-
-void Osint::on_buttonStart_clicked(){
-    if(ui->checkBoxMultipleTargets->isChecked() && ui->targets->getlistModel()->rowCount() == 0){
-        QMessageBox::warning(this, "Error!", "Please Target For Enumerations!");
-        return;
-    }
-    if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-        QMessageBox::warning(this, "Error!", "Please Target For Enumerations!");
-        return;
-    }
-
-    this->m_startScan();
 }
 
 void Osint::on_lineEditTarget_returnPressed(){
     on_buttonStart_clicked();
 }
 
+void Osint::on_buttonStart_clicked(){
+    if(ui->checkBoxMultipleTargets->isChecked() && ui->targets->getlistModel()->rowCount() == 0){
+        QMessageBox::warning(this, tr("Error!"), tr("Please Enter Target For Enumerations!"));
+        return;
+    }
+    if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
+        QMessageBox::warning(this, tr("Error!"), tr("Please Enter Targets For Enumerations!"));
+        return;
+    }
+
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
+
+    this->startScan();
+}
+
 void Osint::on_buttonStop_clicked(){
     emit stopScanThread();
+
+    status->isStopped = true;
+    status->isPaused = false;
+    status->isRunning = false;
+    status->isNotActive = false;
 }
-
-void Osint::m_stopScan(){
-
-}
-
-void Osint::m_resumeScan(){
-
-}
-
-void Osint::onScanThreadEnded(){
-    /* check if no active thread... */
-    status->activeScanThreads--;
-    if(status->activeScanThreads)
-        return;
-
-    /* reanabling the widgets... */
-    ui->buttonStart->setEnabled(true);
-    ui->buttonStop->setDisabled(true);
-
-    this->m_infoLog("------------------ End ----------------");
-}
-
-void Osint::m_clearResults(){
-    switch(ui->comboBoxOutput->currentIndex()){
-    case osint::OUTPUT::SUBDOMAINIP:
-        m_subdomainIpSet.clear();
-        m_resultModelSubdomainIp->clear();
-        m_resultModelSubdomainIp->setHorizontalHeaderLabels({"Subdomains", "IpAddresses"});
-        break;
-    case osint::OUTPUT::SUBDOMAIN:
-        m_subdomainSet.clear();
-        m_resultModelSubdomain->clear();
-        m_resultModelSubdomain->setHorizontalHeaderLabels({"Subdomains"});
-        break;
-    case osint::OUTPUT::IP:
-        m_ipSet.clear();
-        m_resultModelIp->clear();
-        m_resultModelIp->setHorizontalHeaderLabels({"IpAddresses"});
-        break;
-    case osint::OUTPUT::EMAIL:
-        m_emailSet.clear();
-        m_resultModelEmail->clear();
-        m_resultModelEmail->setHorizontalHeaderLabels({"Emails"});
-        break;
-    case osint::OUTPUT::URL:
-        m_urlSet.clear();
-        m_resultModelUrl->clear();
-        m_resultModelUrl->setHorizontalHeaderLabels({"Urls"});
-        break;
-    case osint::OUTPUT::ASN:
-        m_asnSet.clear();
-        m_resultModelAsn->clear();
-        m_resultModelAsn->setHorizontalHeaderLabels({"Asn", "Name"});
-        break;
-    case osint::OUTPUT::CERT:
-        m_sslCertSet.clear();
-        m_resultModelCert->clear();
-        m_resultModelCert->setHorizontalHeaderLabels({"Asn", "Name"});
-        break;
-    case osint::OUTPUT::CIDR:
-        m_cidrSet.clear();
-        m_resultModelCert->clear();
-        m_resultModelCert->setHorizontalHeaderLabels({"Cidr"});
-        break;
-    }
-    ui->labelResultsCount->clear();
-
-    /* clear the progressbar... */
-    ui->progressBar->clearMask();
-    ui->progressBar->reset();
-    ui->progressBar->hide();
-}
-
 
 void Osint::on_buttonKeys_clicked(){
     ApiKeysDialog *apiKeysDialog = new ApiKeysDialog(this);
@@ -214,46 +143,47 @@ void Osint::on_buttonKeys_clicked(){
 }
 
 void Osint::on_buttonConfig_clicked(){
-    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this);
+    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this, m_scanConfig);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
+    scanConfig->loadConfig_osint();
     scanConfig->show();
 }
 
 void Osint::on_lineEditFilter_textChanged(const QString &filterKeyword){
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
-        m_resultProxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
-        break;
-    case osint::OUTPUT::SUBDOMAIN:
-        m_resultProxyModel->setFilterKeyColumn(0);
-        break;
-    case osint::OUTPUT::IP:
-        m_resultProxyModel->setFilterKeyColumn(0);
-        break;
-    case osint::OUTPUT::EMAIL:
-        m_resultProxyModel->setFilterKeyColumn(0);
-        break;
-    case osint::OUTPUT::URL:
-        m_resultProxyModel->setFilterKeyColumn(0);
+        proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
         break;
     case osint::OUTPUT::ASN:
-        m_resultProxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+        proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+        break;
+    case osint::OUTPUT::SUBDOMAIN:
+        proxyModel->setFilterKeyColumn(0);
+        break;
+    case osint::OUTPUT::IP:
+        proxyModel->setFilterKeyColumn(0);
+        break;
+    case osint::OUTPUT::EMAIL:
+        proxyModel->setFilterKeyColumn(0);
+        break;
+    case osint::OUTPUT::URL:
+        proxyModel->setFilterKeyColumn(0);
         break;
     case osint::OUTPUT::CERT:
-        m_resultProxyModel->setFilterKeyColumn(0);
+        proxyModel->setFilterKeyColumn(0);
         break;
     case osint::OUTPUT::CIDR:
-        m_resultProxyModel->setFilterKeyColumn(0);
+        proxyModel->setFilterKeyColumn(0);
         break;
     }
 
     if(ui->checkBoxRegex->isChecked())
-        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+        proxyModel->setFilterRegExp(QRegExp(filterKeyword));
     else
-        m_resultProxyModel->setFilterFixedString(filterKeyword);
+        proxyModel->setFilterFixedString(filterKeyword);
 
-    ui->tableViewResults->setModel(m_resultProxyModel);
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->tableViewResults->setModel(proxyModel);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
 void Osint::on_comboBoxInput_currentIndexChanged(int index){
@@ -263,90 +193,92 @@ void Osint::on_comboBoxInput_currentIndexChanged(int index){
     /* setting a respective placeholdertext on the target line edit */
     switch (index) {
     case INPUT::HOSTNAME:
-        ui->targets->setListModel(m_targetListModelHostname);
-        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
+        ui->targets->setListModel(m_targetListModel_host);
+        ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
         break;
     case INPUT::IP:
-        ui->targets->setListModel(m_targetListModelIp);
-        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_IP);
+        ui->targets->setListModel(m_targetListModel_ip);
+        ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_IP));
         break;
     case INPUT::EMAIL:
-        ui->targets->setListModel(m_targetListModelEmail);
-        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_EMAIL);
+        ui->targets->setListModel(m_targetListModel_email);
+        ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_EMAIL));
         break;
     case INPUT::URL:
-        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_URL);
+        ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_URL));
         break;
     case INPUT::ASN:
-        ui->targets->setListModel(m_targetListModelAsn);
-        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_ASN);
+        ui->targets->setListModel(m_targetListModel_asn);
+        ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_ASN));
         break;
     case INPUT::CERT:
-        ui->targets->setListModel(m_targetListModelCert);
-        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_SSLCERT);
+        ui->targets->setListModel(m_targetListModel_ssl);
+        ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_SSLCERT));
         break;
     case INPUT::CIDR:
-        ui->targets->setListModel(m_targetListModelCidr);
-        ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_CIDR);
+        ui->targets->setListModel(m_targetListModel_cidr);
+        ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_CIDR));
         break;
     }
+
     /* only show modules that supports both input-type and output-type */
-    this->m_initModules();
+    this->initModules();
 }
 
 void Osint::on_comboBoxOutput_currentIndexChanged(int index){
     switch(index){
     case osint::OUTPUT::SUBDOMAINIP:
-        m_resultProxyModel->setSourceModel(m_resultModelSubdomainIp);
+        proxyModel->setSourceModel(m_model_subdomainIp);
         ui->comboBoxFilter->clear();
-        ui->comboBoxFilter->addItems({"Subdomain", "Ip"});
+        ui->comboBoxFilter->addItems({tr("Subdomain"), tr("IP")});
         ui->comboBoxFilter->show();
-        ui->labelResultsInfo->setText("Enumerated Subdomains");
+        ui->labelResultsInfo->setText(tr("Enumerated Subdomains"));
         break;
     case osint::OUTPUT::SUBDOMAIN:
-        m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
+        proxyModel->setSourceModel(m_model_subdomain);
         ui->comboBoxFilter->hide();
-        ui->labelResultsInfo->setText("Enumerated Subdomains");
+        ui->labelResultsInfo->setText(tr("Enumerated Subdomains"));
         break;
     case osint::OUTPUT::IP:
-        m_resultProxyModel->setSourceModel(m_resultModelIp);
+        proxyModel->setSourceModel(m_model_ip);
         ui->comboBoxFilter->hide();
-        ui->labelResultsInfo->setText("Enumerated Ip");
+        ui->labelResultsInfo->setText(tr("Enumerated Ip"));
         break;
     case osint::OUTPUT::EMAIL:
-        m_resultProxyModel->setSourceModel(m_resultModelEmail);
+        proxyModel->setSourceModel(m_model_email);
         ui->comboBoxFilter->hide();
-        ui->labelResultsInfo->setText("Enumerated Emails");
+        ui->labelResultsInfo->setText(tr("Enumerated Emails"));
         break;
     case osint::OUTPUT::URL:
-        m_resultProxyModel->setSourceModel(m_resultModelUrl);
+        proxyModel->setSourceModel(m_model_url);
         ui->comboBoxFilter->hide();
-        ui->labelResultsInfo->setText("Enumerated Urls");
+        ui->labelResultsInfo->setText(tr("Enumerated Urls"));
         break;
     case osint::OUTPUT::ASN:
-        m_resultProxyModel->setSourceModel(m_resultModelAsn);
+        proxyModel->setSourceModel(m_model_asn);
         ui->comboBoxFilter->clear();
-        ui->comboBoxFilter->addItems({"ASN", "Name"});
+        ui->comboBoxFilter->addItems({tr("ASN"), tr("Name")});
         ui->comboBoxFilter->show();
-        ui->labelResultsInfo->setText("Enumerated ASNs");
+        ui->labelResultsInfo->setText(tr("Enumerated ASNs"));
         break;
     case osint::OUTPUT::CERT:
-        m_resultProxyModel->setSourceModel(m_resultModelCert);
+        proxyModel->setSourceModel(m_model_ssl);
         ui->comboBoxFilter->clear();
         ui->comboBoxFilter->hide();
-        ui->labelResultsInfo->setText("Enumerated Certificates");
+        ui->labelResultsInfo->setText(tr("Enumerated Certificates"));
         break;
     case osint::OUTPUT::CIDR:
-        m_resultProxyModel->setSourceModel(m_resultModelCidr);
+        proxyModel->setSourceModel(m_model_cidr);
         ui->comboBoxFilter->clear();
         ui->comboBoxFilter->hide();
-        ui->labelResultsInfo->setText("Enumerated Cidr");
+        ui->labelResultsInfo->setText(tr("Enumerated Cidr"));
         break;
     }
 
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+
     /* only show modules that supports both input-type and output-type */
-    this->m_initModules();
+    this->initModules();
 }
 
 void Osint::on_checkBoxMultipleTargets_stateChanged(int state){
@@ -354,4 +286,9 @@ void Osint::on_checkBoxMultipleTargets_stateChanged(int state){
         ui->targets->show();
     else
         ui->targets->hide();
+}
+
+void Osint::log(QString log){
+    QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
+    ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }

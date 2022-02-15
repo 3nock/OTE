@@ -121,7 +121,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     foreach(const QJsonValue &value, data["active_Host"].toArray()){
         s3s_item::HOST *item = new s3s_item::HOST;
         json_to_host(value.toObject(), item);
-        m_activeHost_rootItem->appendRow({item, item->ipv4, item->ipv6});
+        m_activeHost_rootItem->appendRow({item, item->ipv4, item->ipv6, item->ports});
 
         set_Host.insert(item->text(), item);
     }
