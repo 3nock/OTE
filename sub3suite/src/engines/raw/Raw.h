@@ -10,7 +10,6 @@
 
 #include <QMenu>
 #include <QAction>
-#include <QWidget>
 #include <QTextDocument>
 #include <QStandardItemModel>
 
@@ -18,7 +17,6 @@
 #include "src/utils/utils.h"
 #include "src/modules/passive/OsintModulesHeaders.h"
 #include "src/utils/JsonSyntaxHighlighter.h"
-#include "src/utils/NotesSyntaxHighlighter.h"
 
 
 namespace Ui {
@@ -29,20 +27,19 @@ class Raw : public AbstractEngine{
         Q_OBJECT
 
     public:
-        explicit Raw(QWidget *parent = nullptr, ProjectModel *project = nullptr);
+        Raw(QWidget *parent = nullptr, ProjectModel *project = nullptr);
         ~Raw();
 
     signals:
         void stopScanThread();
 
     public slots:
-        void onEnumerationComplete();
+        void onScanThreadEnded();
         void onRateLimitLog(ScanLog log);
         void onErrorLog(ScanLog log);
         void onInfoLog(ScanLog log);
-        //...
-        void onResults(QByteArray); // for Json results
-        void onResultsTxt(QByteArray); // for normal txt results
+        void onResults(s3s_struct::RAW raw); // for Json results
+        void onResultsTxt(s3s_struct::RAW raw); // for normal txt results
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -56,12 +53,12 @@ class Raw : public AbstractEngine{
         void on_buttonActionTree_clicked();
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
 
-        /* for Find... */
+        /* for Find */
         void on_buttonNext_clicked();
         void on_buttonPrev_clicked();
         void on_lineEditFind_textEdited(const QString &arg1);
 
-        /* modules... */
+        /* modules */
         void on_moduleCertspotter_clicked();
         void on_moduleOtx_clicked();
         void on_moduleSublist3r_clicked();
@@ -142,142 +139,60 @@ class Raw : public AbstractEngine{
         void on_moduleHybridAnalysis_clicked();
         void on_moduleIpQualityScore_clicked();
         void on_moduleLeakLookup_clicked();
-
         void on_moduleWappalyzer_clicked();
+        void on_buttonStop_clicked();
+        void on_lineEditTarget_returnPressed();
+        void on_lineEditTreeFilter_textChanged(const QString &arg1);
 
-private:
+    private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
-        //...
         QStringListModel *m_targetListModel;
-        QStringListModel *m_targetListModelHostname;
-        QStringListModel *m_targetListModelIp;
-        QStringListModel *m_targetListModelAsn;
-        QStringListModel *m_targetListModelCidr;
-        QStringListModel *m_targetListModelCert;
-        QStringListModel *m_targetListModelEmail;
-        //...
+        QStringListModel *m_targetListModel_host;
+        QStringListModel *m_targetListModel_ip;
+        QStringListModel *m_targetListModel_asn;
+        QStringListModel *m_targetListModel_cidr;
+        QStringListModel *m_targetListModel_ssl;
+        QStringListModel *m_targetListModel_email;
+        QStringListModel *m_targetListModel_url;
+
+        ScanConfig *m_scanConfig;
+        ScanArgs *m_scanArgs;
         QMap<QString, QStringList> m_optionSet;
         JsonSyntaxHighlighter *m_jsonSyntaxHighlighter;
-        NotesSyntaxHighlighter *m_notesSyntaxHighlighter;
-        //...
         int m_resultsCountJson = 0;
-        int m_resultsCountTree = 0;
-        //...
-        QString m_currentModule;
-        QString m_currentTarget;
-        //...
-        void m_startScan();
-        void m_pauseScan();
-        void m_resumeScan();
-        void m_stopScan();
-        void m_startScanThread(AbstractOsintModule *);
-        //...
-        void setJsonText(QJsonDocument &document);
-        void setJsonTree(QJsonDocument &document);
-        void treeObject(QJsonObject object, QStandardItem *item);
-        void treeArray(QJsonArray array, QStandardItem *item);
-        //...
-        void find(QString, QTextDocument::FindFlags);
-        //...
-        void m_errorLog(QString log);
-        void m_infoLog(QString log);
+
+        void initUI();
+        void initConfigValues();
+
+        void startScan();
+        void startScanThread(AbstractOsintModule *);
+
+        void find(const QString &, QTextDocument::FindFlags);
+        void log(const QString &log);
 
     /* for context menu */
     private:
-        void m_initActions();
-        /* ... */
-        void m_openInBrowser(QItemSelectionModel*);
-        void m_clearResults();
-        void m_expandResults();
-        void m_collapseResults();
-        void m_removeResults(QItemSelectionModel*);
-        void m_saveResultsJson();
-        void m_saveResults(RESULT_TYPE);
-        void m_saveResults(QItemSelectionModel*);
-        void m_copyResultsJson();
-        void m_copyResults(RESULT_TYPE);
-        void m_copyResults(QItemSelectionModel*);
-        /* sending results to other parts */
-        void m_sendToEngine(ENGINE); // for asn, cidr, email, cert
-        void m_sendSubdomainToEngine(ENGINE);
-        void m_sendIpToEngine(ENGINE);
-        void m_sendSubdomainToTool(TOOL);
-        void m_sendIpToTool(TOOL);
-        void m_sendToTool(TOOL);
+        void openInBrowser();
+        void clearResults();
+        void removeResults();
 
-        void m_sendToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
-        void m_sendIpToTool(TOOL, QItemSelectionModel*);
-        void m_sendToTool(TOOL, QItemSelectionModel*);
+        void saveResults();
+        void saveSelectedResults();
 
-    protected:
-        /* general actions */
-        QAction a_RemoveResults{"Remove"};
-        QAction a_ClearResults{"Clear Results"};
-        QAction a_OpenInBrowser{"Open in Browser"};
-        QAction a_ExpandResults{"Expand Results"};
-        QAction a_CollapseResults{"Collapse Results"};
+        void copyResults();
+        void copySelectedResults();
 
-        /* for all */
-        QAction a_SendAllIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendAllIpToRaw{"Send Address To Raw"};
-        QAction a_SendAllHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendAllHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendAllHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendAllHostToActive{"Send Hostnames To Active"};
-        QAction a_SendAllHostToDns{"Send Hostnames To Records"};
-        QAction a_SendAllHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendAllEmailToRaw{"Send Emails To Raw"};
-        QAction a_SendAllUrlToRaw{"Send Urls To Raw"};
-        QAction a_SendAllAsnToRaw{"Send ASNs To Raw"};
-        QAction a_SendAllCertToRaw{"Send Cert To Raw"};
-        QAction a_SendAllCidrToRaw{"Send Cidr To Raw"};
-        QAction a_SendAllEmailToOsint{"Send Emails To Osint"};
-        QAction a_SendAllAsnToOsint{"Send ASNs To Osint"};
-        QAction a_SendAllCertToOsint{"Send Cert To Osint"};
-        QAction a_SendAllCidrToOsint{"Send Cidr To Osint"};
-        QAction a_SendAllIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendAllHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendAllHostToDomainTool{"Send Hostnames To DomainTool"};
-        QAction a_SendAllAsnToAsnTool{"Send ASN to ASNTool"};
-        QAction a_SendAllCertToCertTool{"Send Cert To CertTool"};
-        QAction a_SendAllCidrToCidrTool{"Send Cidr To CidrTool"};
-        QAction a_SendAllEmailToEmailTool{"Send Emails To EmailTool"};
-        /* for selected */
-        QAction a_SendSelectedIpToOsint{"Send Addresses To Osint"};
-        QAction a_SendSelectedIpToRaw{"Send Address To Raw"};
-        QAction a_SendSelectedHostToOsint{"Send Hostnames To Osint"};
-        QAction a_SendSelectedHostToRaw{"Send Hostnames To Raw"};
-        QAction a_SendSelectedHostToBrute{"Send Hostnames To Brute"};
-        QAction a_SendSelectedHostToActive{"Send Hostnames To Active"};
-        QAction a_SendSelectedHostToDns{"Send Hostnames To Records"};
-        QAction a_SendSelectedHostToCert{"Send Hostnames To Cert"};
-        QAction a_SendSelectedEmailToRaw{"Send Emails To Raw"};
-        QAction a_SendSelectedUrlToRaw{"Send Urls To Raw"};
-        QAction a_SendSelectedAsnToRaw{"Send ASNs To Raw"};
-        QAction a_SendSelectedCertToRaw{"Send Cert To Raw"};
-        QAction a_SendSelectedCidrToRaw{"Send Cidr To Raw"};
-        QAction a_SendSelectedEmailToOsint{"Send Emails To Osint"};
-        QAction a_SendSelectedAsnToOsint{"Send ASNs To Osint"};
-        QAction a_SendSelectedCertToOsint{"Send Cert To Osint"};
-        QAction a_SendSelectedCidrToOsint{"Send Cidr To Osint"};
-        QAction a_SendSelectedIpToIpTool{"Send Addresses To IpTool"};
-        QAction a_SendSelectedHostToCertTool{"Send Hostnames To CertTool"};
-        QAction a_SendSelectedHostToDomainTool{"Send Hostnames To DomainTool"};
-        QAction a_SendSelectedAsnToAsnTool{"Send ASN to ASNTool"};
-        QAction a_SendSelectedCertToCertTool{"Send Cert To CertTool"};
-        QAction a_SendSelectedCidrToCidrTool{"Send Cidr To CidrTool"};
-        QAction a_SendSelectedEmailToEmailTool{"Send Emails To EmailTool"};
+        void clearResults_txt();
+        void saveResults_txt();
+        void copyResults_txt();
 
-        /* save */
-        QAction a_Save{"Save"};
-        QAction a_SaveJson{"Save as Json"};
-        /* copy */
-        QAction a_Copy{"Copy"};
-        QAction a_CopyJson{"Copy as Json"};
+        void sendToProject();
+        void sendToEngine();
+        void sendToEnum();
+        void sendSelectedToProject();
+        void sendSelectedToEngine();
+        void sendSelectedToEnum();
 };
 
 #endif // Raw_H

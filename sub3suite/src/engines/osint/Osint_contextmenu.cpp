@@ -25,7 +25,7 @@ void Osint::on_buttonAction_clicked(){
     QMenu menu(this);
 
     /* adding actions */
-    menu.addAction("Clear", this, [=](){this->clearResults();});
+    menu.addAction(tr("Clear"), this, [=](){this->clearResults();});
     menu.addSeparator();
 
     switch(ui->comboBoxOutput->currentIndex()){

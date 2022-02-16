@@ -292,3 +292,9 @@ void Osint::log(QString log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
+
+void Osint::initConfigValues(){
+    m_scanConfig->maxPage = CONFIG_OSINT.value("max_pages").toInt();
+    m_scanConfig->autosaveToProject = CONFIG_OSINT.value("autosave_to_project").toBool();
+    m_scanConfig->noDuplicates = CONFIG_OSINT.value("no_duplicates").toBool();
+}

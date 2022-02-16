@@ -545,6 +545,12 @@ void Osint::onReceiveTargets(QString target, RESULT_TYPE result_type){
     case RESULT_TYPE::CERT_ID:
         ui->comboBoxInput->setCurrentIndex(INPUT::CERT);
         break;
+    case RESULT_TYPE::EMAIL:
+        ui->comboBoxInput->setCurrentIndex(INPUT::EMAIL);
+        break;
+    case RESULT_TYPE::URL:
+        ui->comboBoxInput->setCurrentIndex(INPUT::URL);
+        break;
     default:
         break;
     }

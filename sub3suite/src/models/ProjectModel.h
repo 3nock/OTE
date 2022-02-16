@@ -20,6 +20,7 @@
 #include "src/models/DNSModel.h"
 #include "src/models/URLModel.h"
 #include "src/models/HostModel.h"
+#include "src/models/RawModel.h"
 #include "src/models/WildcardModel.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
@@ -65,7 +66,8 @@ enum ModelType {
     enum_SSL,
     enum_Email,
     enum_URL,
-    custom
+    custom,
+    raw
 };
 
 struct ProjectStruct{
@@ -132,6 +134,9 @@ public:
     void addEnumSSL(const QString &target, const QSslCertificate &ssl);
     void addEnumEmail(const s3s_struct::Email &email);
 
+    /* for raw */
+    void addRaw(const s3s_struct::RAW &raw);
+
 public:
     QStandardItemModel *model_explorer;
     QStandardItem *project_explorer;
@@ -182,6 +187,8 @@ public:
     QStandardItem *enumSSL_explorer;
     QStandardItem *enumEmail_explorer;
 
+    QStandardItem *raw_explorer;
+
     /* active Results Model */
     QStandardItemModel *activeHost_model;
     QStandardItemModel *activeWildcard_model;
@@ -222,6 +229,8 @@ public:
     QStandardItemModel *enumMX_model;
     QStandardItemModel *enumSSL_model;
     QStandardItemModel *enumEmail_model;
+
+    QStandardItemModel *raw_model;
 
     /* sets */
     QMap<QString, s3s_item::HOST*> set_Host;
@@ -270,6 +279,8 @@ private:
     QStandardItem *m_enumMX_rootItem = nullptr;
     QStandardItem *m_enumSSL_rootItem = nullptr;
     QStandardItem *m_enumEmail_rootItem = nullptr;
+
+    QStandardItem *m_raw_rootItem = nullptr;
 };
 
 #endif // PROJECTMODEL_H

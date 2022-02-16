@@ -9,85 +9,82 @@
 #include "ui_Raw.h"
 
 
-void Raw::m_initActions(){
-    connect(&a_ClearResults, &QAction::triggered, this, [=](){this->m_clearResults();});
-    connect(&a_RemoveResults, &QAction::triggered, this, [=](){this->m_removeResults(selectionModel);});
-    connect(&a_ExpandResults, &QAction::triggered, this, [=](){this->m_expandResults();});
-    connect(&a_CollapseResults, &QAction::triggered, this, [=](){this->m_collapseResults();});
-    connect(&a_OpenInBrowser, &QAction::triggered, this, [=](){this->m_openInBrowser(selectionModel);});
-    /* ... */
-    connect(&a_SendAllIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW);});
-    connect(&a_SendAllHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW);});
-    connect(&a_SendAllHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE);});
-    connect(&a_SendAllHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE);});
-    connect(&a_SendAllHostToDns, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS);});
-    connect(&a_SendAllHostToCert, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT);});
-    connect(&a_SendAllEmailToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllUrlToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllAsnToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllCidrToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllCertToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW);});
-    connect(&a_SendAllEmailToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllAsnToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllCidrToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllCertToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllIpToIpTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP);});
-    connect(&a_SendAllHostToCertTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::DOMAINTOOL);});
-    connect(&a_SendAllHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CERT);});
-    connect(&a_SendAllAsnToAsnTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::ASN);});
-    connect(&a_SendAllEmailToEmailTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::EMAIL);});
-    connect(&a_SendAllCidrToCidrTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CIDR);});
-    connect(&a_SendAllCertToCertTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CERT);});
-    /* ... */
-    connect(&a_SendSelectedIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE, selectionModel);});
-    connect(&a_SendSelectedHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE, selectionModel);});
-    connect(&a_SendSelectedHostToDns, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS, selectionModel);});
-    connect(&a_SendSelectedHostToCert, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT, selectionModel);});
-    connect(&a_SendSelectedEmailToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedUrlToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedAsnToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedCidrToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedCertToRaw, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedEmailToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedAsnToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedCidrToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedCertToOsint, &QAction::triggered, this, [=](){this->m_sendToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedIpToIpTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP, selectionModel);});
-    connect(&a_SendSelectedHostToCertTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::DOMAINTOOL, selectionModel);});
-    connect(&a_SendSelectedHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CERT, selectionModel);});
-    connect(&a_SendSelectedAsnToAsnTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::ASN, selectionModel);});
-    connect(&a_SendSelectedEmailToEmailTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::EMAIL, selectionModel);});
-    connect(&a_SendSelectedCidrToCidrTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CIDR, selectionModel);});
-    connect(&a_SendSelectedCertToCertTool, &QAction::triggered, this, [=](){this->m_sendToTool(TOOL::CERT, selectionModel);});
-    /* ... */
-    connect(&a_Save, &QAction::triggered, this, [=](){this->m_saveResults(selectionModel);});
-    connect(&a_SaveJson, &QAction::triggered, this, [=](){this->m_saveResultsJson();});
-    connect(&a_Copy, &QAction::triggered, this, [=](){this->m_copyResults(selectionModel);});
-    connect(&a_CopyJson, &QAction::triggered, this, [=](){this->m_copyResultsJson();});
-}
-
 void Raw::on_buttonActionJson_clicked(){
-    /*
-     nothing yet
-     */
+    /* check if there are results available else dont show the context menu */
+    if(proxyModel->rowCount() < 1)
+        return;
+
+    /* getting the position of the action button to place the context menu and
+       showing the context menu right by the side of the action button... */
+    QPoint pos = ui->buttonActionJson->mapToGlobal(QPoint(0,0));
+    pos = QPoint(pos.x()+65, pos.y());
+
+    /* creating the context menu... */
+    QMenu menu(this);
+
+    /* adding actions */
+    menu.addAction(tr("Clear"), this, [=](){this->clearResults_txt();});
+    menu.addSeparator();
+    menu.addAction(tr("Save"), this, [=](){this->saveResults_txt();});
+    menu.addAction(tr("Copy"), this, [=](){this->copyResults_txt();});
+
+    /* showing the context menu... */
+    menu.exec(pos);
 }
 
 void Raw::on_buttonActionTree_clicked(){
-    /*
-     nothing yet
-     */
+    /* check if there are results available else dont show the context menu */
+    if(proxyModel->rowCount() < 1)
+        return;
+
+    /* getting the position of the action button to place the context menu and
+       showing the context menu right by the side of the action button... */
+    QPoint pos = ui->buttonActionTree->mapToGlobal(QPoint(0,0));
+    pos = QPoint(pos.x()+65, pos.y());
+
+    /* creating the context menu... */
+    QMenu menu(this);
+
+    /* adding actions */
+    menu.addAction(tr("Clear"), this, [=](){this->clearResults();});
+    menu.addAction(tr("Expand"), this, [=](){ui->treeViewResults->expandAll();});
+    menu.addAction(tr("Collapse"), this, [=](){ui->treeViewResults->collapseAll();});
+    menu.addSeparator();
+    menu.addAction(tr("Save"), this, [=](){this->saveResults();});
+    menu.addAction(tr("Copy"), this, [=](){this->copyResults();});
+    menu.addSeparator();
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
+    menu.addAction(tr("Send To Engine"), this, [=](){this->sendToEngine();});
+    menu.addAction(tr("Send To Enum"), this, [=](){this->sendToEnum();});
+
+    /* showing the context menu */
+    menu.exec(pos);
 }
 
 void Raw::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
 
-    /*
-     nothing yet
-     */
+    /* check if user right clicked on items else dont show the context menu... */
+    if(!ui->treeViewResults->selectionModel()->isSelected(ui->treeViewResults->currentIndex()))
+        return;
+
+    /* getting the selected items... */
+     selectionModel = ui->treeViewResults->selectionModel();
+
+    /* creating the context menu... */
+    QMenu menu(this);
+
+    /* adding actions */
+    menu.addAction(tr("Remove"), this, [=](){this->removeResults();});
+    menu.addAction(tr("Open In Browser"), this, [=](){this->openInBrowser();});
+    menu.addSeparator();
+    menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();});
+    menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();});
+    menu.addSeparator();
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();});
+    menu.addAction(tr("Send To Engine"), this, [=](){this->sendSelectedToEngine();});
+    menu.addAction(tr("Send T Enum"), this, [=](){this->sendSelectedToEnum();});
+
+    /* showing the context menu */
+    menu.exec(QCursor::pos());
 }

@@ -20,6 +20,7 @@
 #include "src/models/EmailModel.h"
 #include "src/models/MXModel.h"
 #include "src/models/NSModel.h"
+#include "src/models/RawModel.h"
 
 
 /* input option */
@@ -163,9 +164,9 @@ class AbstractOsintModule : public QObject {
         void resultUrl(QString url);
         void resultASN(QString asn, QString name);
         /* ... */
-        void rawCert(QByteArray cert_in_perm_format);
-        void rawResults(QByteArray reply);
-        void rawResultsTxt(QByteArray reply);
+        void rawCert(QByteArray);
+        void rawResults(s3s_struct::RAW);
+        void rawResultsTxt(s3s_struct::RAW);
         /* ... */
         void infoASN(s3s_struct::ASN);
         void infoCIDR(s3s_struct::CIDR);
@@ -218,6 +219,7 @@ class AbstractOsintModule : public QObject {
                 this->onError(reply);
             else
             {
+
                 /* converting ndjson to json array document */
                 QByteArray byteDocument = reply->readAll();
                 byteDocument = byteDocument.simplified();
@@ -225,7 +227,11 @@ class AbstractOsintModule : public QObject {
                 byteDocument.push_back("]");
                 byteDocument.push_front("[");
 
-                emit rawResults(byteDocument);
+                s3s_struct::RAW raw;
+                raw.module = log.moduleName;
+                raw.target = target;
+                raw.results = byteDocument;
+                emit rawResults(raw);
             }
 
             end(reply);
@@ -235,8 +241,13 @@ class AbstractOsintModule : public QObject {
         {
             if(reply->error())
                 this->onError(reply);
-            else
-                emit rawResults(reply->readAll());
+            else{
+                s3s_struct::RAW raw;
+                raw.module = log.moduleName;
+                raw.target = target;
+                raw.results = reply->readAll();
+                emit rawResults(raw);
+            }
 
             end(reply);
         }
@@ -245,8 +256,13 @@ class AbstractOsintModule : public QObject {
         {
             if(reply->error())
                 this->onError(reply);
-            else
-                emit rawResultsTxt(reply->readAll());
+            else{
+                s3s_struct::RAW raw;
+                raw.module = log.moduleName;
+                raw.target = target;
+                raw.results = reply->readAll();
+                emit rawResultsTxt(raw);
+            }
 
             end(reply);
         }

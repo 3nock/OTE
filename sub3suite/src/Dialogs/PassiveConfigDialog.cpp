@@ -78,6 +78,6 @@ void PassiveConfigDialog::saveConfig_raw(){
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
 
-    CONFIG_OSINT.setValue("autosave_to_project", ui->checkBoxAutosave->isChecked());
-    CONFIG_OSINT.setValue("no_duplicates", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG_RAW.setValue("autosave_to_project", ui->checkBoxAutosave->isChecked());
+    CONFIG_RAW.setValue("no_duplicates", ui->checkBoxNoDuplicates->isChecked());
 }

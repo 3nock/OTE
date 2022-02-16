@@ -104,6 +104,9 @@ void Project::action_clear(){
     case ModelType::enum_SSL:
         m_projectModel->enumSSL_model->clear();
         break;
+    case ModelType::raw:
+        m_projectModel->raw_model->clear();
+        break;
     }
 
     m_projectModel->setHeaderLabels();

@@ -262,7 +262,12 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         json_to_email(value.toObject(), item);
         m_enumEmail_rootItem->appendRow(item);
     }
-    /* custom" */
+    /* raw */
+    foreach(const QJsonValue &value, data["enum_Raw"].toArray()){
+        s3s_item::RAW *item = new s3s_item::RAW;
+        json_to_raw(value.toObject(), item);
+        m_raw_rootItem->appendRow(item);
+    }
 
     qDebug() << "Project " << projectInfo.name << " Opened.";
 }
@@ -299,6 +304,7 @@ QByteArray ProjectModel::getJson(){
     QJsonArray enum_SSL_array;
     QJsonArray enum_Email_array;
     QJsonArray custom_array;
+    QJsonArray raw_array;
 
     /* passive SSL */
     for(int i = 0; i != m_passiveSSL_rootItem->rowCount(); ++i)
@@ -468,6 +474,14 @@ QByteArray ProjectModel::getJson(){
         enum_Email_array.append(email_to_json(item));
     }
 
+    /* raw */
+    for(int i = 0; i < m_raw_rootItem->rowCount(); ++i){
+        QModelIndex index = m_raw_rootItem->child(i, 0)->index();
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(raw_model->item(index.row(), index.column()));
+
+        raw_array.append(raw_to_json(item));
+    }
+
     QJsonObject general;
     general.insert("path", "C:/Users/inner peace/Desktop/sub3suite/MSVC2017_64-Release/projects");
     general.insert("name", "one");
@@ -502,6 +516,7 @@ QByteArray ProjectModel::getJson(){
     data.insert("enum_SSL", enum_SSL_array);
     data.insert("enum_Email", enum_Email_array);
     data.insert("custom", custom_array);
+    data.insert("enum_Raw", raw_array);
 
     QJsonObject mainObj;
     mainObj.insert("general", general);

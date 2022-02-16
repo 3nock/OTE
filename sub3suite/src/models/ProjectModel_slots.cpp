@@ -167,3 +167,9 @@ void ProjectModel::addEnumEmail(const s3s_struct::Email &email){
     item->setValues(email);
     m_enumEmail_rootItem->appendRow(item);
 }
+
+void ProjectModel::addRaw(const s3s_struct::RAW &raw){
+    s3s_item::RAW *item = new s3s_item::RAW;
+    item->setValues(raw);
+    m_raw_rootItem->appendRow(item);
+}

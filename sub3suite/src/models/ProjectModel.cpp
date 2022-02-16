@@ -56,6 +56,8 @@ ProjectModel::ProjectModel():
     enumSSL_explorer(new QStandardItem("SSL")),
     enumEmail_explorer(new QStandardItem("Email")),
 
+    raw_explorer(new QStandardItem("Raw")),
+
     /* active Results Model */
     activeHost_model(new QStandardItemModel),
     activeWildcard_model(new QStandardItemModel),
@@ -95,7 +97,10 @@ ProjectModel::ProjectModel():
     enumNS_model(new QStandardItemModel),
     enumMX_model(new QStandardItemModel),
     enumSSL_model(new QStandardItemModel),
-    enumEmail_model(new QStandardItemModel)
+    enumEmail_model(new QStandardItemModel),
+
+    /* raw */
+    raw_model(new QStandardItemModel)
 {
     this->setHeaderLabels();
     this->getRootItems();
@@ -155,7 +160,7 @@ ProjectModel::ProjectModel():
     enumMX_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     enumSSL_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     enumEmail_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
-
+    raw_explorer->setIcon(QIcon(":/img/res/icons/folder2.png"));
     ///
     /// setting foreground
     ///
@@ -194,6 +199,7 @@ ProjectModel::ProjectModel():
     enumMX_explorer->setForeground(Qt::white);
     enumSSL_explorer->setForeground(Qt::white);
     enumEmail_explorer->setForeground(Qt::white);
+    raw_explorer->setForeground(Qt::white);
 
     ///
     /// appending items...
@@ -233,6 +239,7 @@ ProjectModel::ProjectModel():
     enums_explorer->appendRow(enumNS_explorer);
     enums_explorer->appendRow(enumSSL_explorer);
     enums_explorer->appendRow(enumEmail_explorer);
+    custom_explorer->appendRow(raw_explorer);
 
     ///
     /// append to project explorer....
@@ -361,6 +368,9 @@ void ProjectModel::setHeaderLabels(){
     enumMX_model->setHorizontalHeaderLabels({" MX", " Values"});
     enumSSL_model->setHorizontalHeaderLabels({" SSL Certificate", " Values"});
     enumEmail_model->setHorizontalHeaderLabels({" Email", " Values"});
+
+    /* raw */
+    raw_model->setHorizontalHeaderLabels({" Properties", " Values"});
 }
 
 void ProjectModel::getRootItems(){
@@ -404,6 +414,9 @@ void ProjectModel::getRootItems(){
     m_enumMX_rootItem = enumMX_model->invisibleRootItem();
     m_enumSSL_rootItem = enumSSL_model->invisibleRootItem();
     m_enumEmail_rootItem = enumEmail_model->invisibleRootItem();
+
+    /* raw */
+    m_raw_rootItem = raw_model->invisibleRootItem();
 }
 
 void ProjectModel::clearModels(){
@@ -443,6 +456,7 @@ void ProjectModel::clearModels(){
     enumMX_model->clear();
     enumSSL_model->clear();
     enumEmail_model->clear();
+    raw_model->clear();
 
     this->setHeaderLabels();
     this->getRootItems();

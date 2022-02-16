@@ -10,550 +10,322 @@
 #include <QMessageBox>
 
 
-void Raw::m_pauseScan(){
+void Raw::onScanThreadEnded(){
+    /* check if no active thread */
+    status->activeScanThreads--;
+    if(status->activeScanThreads)
 
+
+    /* set the progress bar to 100% just in case */
+    if(!status->isStopped)
+        ui->progressBar->setValue(ui->progressBar->maximum());
+
+    status->isNotActive = true;
+    status->isPaused = false;
+    status->isStopped = false;
+    status->isRunning = false;
+    status->activeScanThreads = 0;
+
+    /* reanabling the widgets... */
+    ui->buttonStart->setEnabled(true);
+    ui->buttonStop->setDisabled(true);
+
+    log("------------------ End ----------------");
 }
 
-void Raw::m_resumeScan(){
-
-}
-
-void Raw::m_stopScan(){
-
-}
-
-void Raw::m_startScan(){
-    ScanArgs scanArgs;
-    m_currentTarget = ui->lineEditTarget->text();
-
-    /* getting the arguments... */
-    scanArgs.outputRaw = true;
-    scanArgs.rawOption = ui->comboBoxOptions->currentIndex();
+void Raw::startScan(){
+    /* ressetting and setting new values */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    ui->progressBar->clearMask();
+    m_scanArgs->targets.clear();
 
     if(ui->checkBoxMultipleTargets->isChecked()){
-        // for multiple targets...
+        foreach(const QString &target, ui->targets->getlistModel()->stringList())
+            m_scanArgs->targets.enqueue(target);
     }
     else
-        scanArgs.targets.enqueue(ui->lineEditTarget->text());
+        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
+
+    m_scanArgs->outputRaw = true;
+    m_scanArgs->rawOption = ui->comboBoxOptions->currentIndex();
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
 
     /* starting the appropriate scan... */
     if(ui->moduleCertspotter->isChecked())
-    {
-        m_currentModule = "CertSpotter";
-        this->m_startScanThread(new Certspotter(scanArgs));
-        return;
-    }
-    if(ui->moduleCertspotterFree->isChecked())
-    {
-        m_currentModule = "CertspotterFree";
-        this->m_startScanThread(new CertspotterFree(scanArgs));
-        return;
-    }
-    if(ui->moduleOtx->isChecked())
-    {
-        m_currentModule = "Otx";
-        this->m_startScanThread(new OtxFree(scanArgs));
-        return;
-    }
-    if(ui->moduleSublist3r->isChecked())
-    {
-        m_currentModule = "Sublist3r";
-        this->m_startScanThread(new Sublist3r(scanArgs));
-        return;
-    }
-    if(ui->moduleThreatMiner->isChecked())
-    {
-        m_currentModule = "ThreatMiner";
-        this->m_startScanThread(new Threatminer(scanArgs));
-        return;
-    }
-    if(ui->moduleThreatCrowd->isChecked())
-    {
-        m_currentModule = "ThreatCrowd";
-        this->m_startScanThread(new Threatcrowd(scanArgs));
-        return;
-    }
-    if(ui->moduleHackerTargetFree->isChecked())
-    {
-        m_currentModule = "HackerTargetFree";
-        this->m_startScanThread(new HackerTargetFree(scanArgs));
-        return;
-    }
-    if(ui->moduleDnsBufferOverRun->isChecked())
-    {
-        m_currentModule = "DnsBufferOverRun";
-        this->m_startScanThread(new Dnsbufferoverun(scanArgs));
-        return;
-    }
-    if(ui->moduleAnubis->isChecked())
-    {
-        m_currentModule = "Anubis";
-        this->m_startScanThread(new Anubis(scanArgs));
-        return;
-    }
-    if(ui->moduleProjectDiscovery->isChecked())
-    {
-        m_currentModule = "ProjectDiscovery";
-        this->m_startScanThread(new Projectdiscovery(scanArgs));
-        return;
-    }
-    if(ui->moduleSpyse->isChecked())
-    {
-        m_currentModule = "Spyse";
-        this->m_startScanThread(new Spyse(scanArgs));
-        return;
-    }
-    if(ui->moduleGoogleCert->isChecked())
-    {
-        m_currentModule = "GoogleCert";
-        this->m_startScanThread(new GoogleCert(scanArgs));
-        return;
-    }
-    if(ui->moduleOmnisint->isChecked())
-    {
-        m_currentModule = "Ominisint";
-        this->m_startScanThread(new Omnisint(scanArgs));
-        return;
-    }
-    if(ui->moduleRobtexPaid->isChecked())
-    {
-        m_currentModule = "RobtexPaid";
-        this->m_startScanThread(new RobtexPaid(scanArgs));
-        return;
-    }
-    if(ui->moduleVirusTotal->isChecked())
-    {
-        m_currentModule = "VirusTotal";
-        this->m_startScanThread(new VirusTotal(scanArgs));
-        return;
-    }
-    if(ui->moduleUrlScan->isChecked())
-    {
-        m_currentModule = "UrlScan";
-        this->m_startScanThread(new Urlscan(scanArgs));
-        return;
-    }
-    if(ui->moduleWaybackMachine->isChecked())
-    {
-        m_currentModule = "WaybackMachine";
-        this->m_startScanThread(new Waybackmachine(scanArgs));
-        return;
-    }
-    if(ui->moduleArchiveIt->isChecked())
-    {
-        m_currentModule = "ArchiveIt";
-        this->m_startScanThread(new ArchiveIt(scanArgs));
-        return;
-    }
-    if(ui->moduleBgpview->isChecked())
-    {
-        m_currentModule = "Bgpview";
-        this->m_startScanThread(new Bgpview(scanArgs));
-        return;
-    }
-    if(ui->moduleBinaryEdge->isChecked())
-    {
-        m_currentModule = "BinaryEdge";
-        this->m_startScanThread(new BinaryEdge(scanArgs));
-        return;
-    }
-    if(ui->moduleC99->isChecked())
-    {
-        m_currentModule = "C99";
-        this->m_startScanThread(new C99(scanArgs));
-        return;
-    }
-    if(ui->moduleGithub->isChecked())
-    {
-        m_currentModule = "Gtihub";
-        this->m_startScanThread(new Github(scanArgs));
-        return;
-    }
-    if(ui->moduleHunter->isChecked())
-    {
-        m_currentModule = "Hunter";
-        this->m_startScanThread(new Hunter(scanArgs));
-        return;
-    }
-    if(ui->moduleIpInfo->isChecked())
-    {
-        m_currentModule = "IpInfo";
-        this->m_startScanThread(new IpInfo(scanArgs));
-        return;
-    }
-    if(ui->moduleMnemonicFree->isChecked())
-    {
-        m_currentModule = "Mnemonic";
-        this->m_startScanThread(new MnemonicFree(scanArgs));
-        return;
-    }
-    if(ui->moduleRiskIq->isChecked())
-    {
-        m_currentModule = "RiskIq";
-        this->m_startScanThread(new RiskIq(scanArgs));
-        return;
-    }
-    if(ui->moduleRobtex->isChecked())
-    {
-        m_currentModule = "RobtexFree";
-        this->m_startScanThread(new RobtexFree(scanArgs));
-        return;
-    }
-    if(ui->moduleSecurityTrails->isChecked())
-    {
-        m_currentModule = "SecurityTrails";
-        this->m_startScanThread(new SecurityTrails(scanArgs));
-        return;
-    }
-    if(ui->moduleShodan->isChecked())
-    {
-        m_currentModule = "Shodan";
-        this->m_startScanThread(new Shodan(scanArgs));
-        return;
-    }
-    if(ui->moduleThreatBook->isChecked())
-    {
-        m_currentModule = "ThreatBook";
-        this->m_startScanThread(new ThreatBook(scanArgs));
-        return;
-    }
-    if(ui->moduleWhoisXmlApi->isChecked())
-    {
-        m_currentModule = "WhoIsXmlApi";
-        this->m_startScanThread(new WhoisXmlApi(scanArgs));
-        return;
-    }
-    if(ui->moduleZETALytics->isChecked())
-    {
-        m_currentModule = "ZETALytics";
-        this->m_startScanThread(new ZETAlytics(scanArgs));
-        return;
-    }
-    if(ui->moduleZoomEye->isChecked())
-    {
-        m_currentModule = "ZoomEye";
-        this->m_startScanThread(new ZoomEye(scanArgs));
-        return;
-    }
-    if(ui->moduleIpApi->isChecked())
-    {
-        m_currentModule = "IpApi";
-        this->m_startScanThread(new IpApi(scanArgs));
-        return;
-    }
-    if(ui->moduleViewDns->isChecked())
-    {
-        m_currentModule = "ViewDns";
-        this->m_startScanThread(new ViewDns(scanArgs));
-        return;
-    }
-    if(ui->moduleWebResolver->isChecked())
-    {
-        m_currentModule = "WebResolver";
-        this->m_startScanThread(new WebResolver(scanArgs));
-        return;
-    }
-    if(ui->moduleCircl->isChecked())
-    {
-        m_currentModule = "Circl";
-        this->m_startScanThread(new Circl(scanArgs));
-        return;
-    }
-    if(ui->moduleHackerTarget->isChecked())
-    {
-        m_currentModule = "HackerTarget";
-        this->m_startScanThread(new HackerTargetPaid(scanArgs));
-        return;
-    }
-    if(ui->moduleMnemonic->isChecked())
-    {
-        m_currentModule = "Mnemonic";
-        this->m_startScanThread(new MnemonicPaid(scanArgs));
-        return;
-    }
-    if(ui->moduleOtx->isChecked())
-    {
-        m_currentModule = "Otx";
-        this->m_startScanThread(new OtxPaid(scanArgs));
-        return;
-    }
-    if(ui->moduleArin->isChecked())
-    {
-        m_currentModule = "Arin";
-        this->m_startScanThread(new Arin(scanArgs));
-        return;
-    }
-    if(ui->moduleBuiltWith->isChecked())
-    {
-        m_currentModule = "BuiltWith";
-        this->m_startScanThread(new BuiltWith(scanArgs));
-        return;
-    }
-    if(ui->moduleDnslytics->isChecked())
-    {
-        m_currentModule = "DNSlytics";
-        this->m_startScanThread(new Dnslytics(scanArgs));
-        return;
-    }
-    if(ui->moduleDomainTools->isChecked())
-    {
-        m_currentModule = "DomainTools";
-        this->m_startScanThread(new DomainTools(scanArgs));
-        return;
-    }
-    if(ui->moduleMaltiverseFree->isChecked())
-    {
-        m_currentModule = "Maltiverse";
-        this->m_startScanThread(new Maltiverse(scanArgs));
-        return;
-    }
-    if(ui->moduleN45HT->isChecked())
-    {
-        m_currentModule = "N45HT";
-        this->m_startScanThread(new N45HT(scanArgs));
-        return;
-    }
-    if(ui->moduleOnyphe->isChecked())
-    {
-        m_currentModule = "Onyphe";
-        this->m_startScanThread(new Onyphe(scanArgs));
-        return;
-    }
-    if(ui->moduleRipe->isChecked())
-    {
-        m_currentModule = "Ripe";
-        this->m_startScanThread(new Ripe(scanArgs));
-        return;
-    }
-    if(ui->moduleAfrinic->isChecked())
-    {
-        m_currentModule = "Afrinic";
-        this->m_startScanThread(new Afrinic(scanArgs));
-        return;
-    }
-    if(ui->moduleApnic->isChecked())
-    {
-        m_currentModule = "Apnic";
-        this->m_startScanThread(new Apnic(scanArgs));
-        return;
-    }
-    if(ui->moduleFullHunt->isChecked())
-    {
-        m_currentModule = "FullHunt";
-        this->m_startScanThread(new FullHunt(scanArgs));
-        return;
-    }
-    if(ui->moduleSpamHaus->isChecked())
-    {
-        m_currentModule = "SpamHaus";
-        this->m_startScanThread(new SpamHaus(scanArgs));
-        return;
-    }
-    if(ui->moduleDebounce->isChecked())
-    {
-        m_currentModule = "Debounce";
-        this->m_startScanThread(new Debounce(scanArgs));
-        return;
-    }
-    if(ui->moduleHaveIBeenPawned->isChecked())
-    {
-        m_currentModule = "HaveIBeenPawned";
-        this->m_startScanThread(new HaveIBeenPawned(scanArgs));
-        return;
-    }
-    if(ui->moduleHost->isChecked())
-    {
-        m_currentModule = "Host";
-        this->m_startScanThread(new Host(scanArgs));
-        return;
-    }
-    if(ui->moduleJsonWhois->isChecked())
-    {
-        m_currentModule = "JsonWhois";
-        this->m_startScanThread(new JsonWhois(scanArgs));
-        return;
-    }
-    if(ui->moduleLeakIX->isChecked())
-    {
-        m_currentModule = "LeakIX";
-        this->m_startScanThread(new LeakIX(scanArgs));
-        return;
-    }
-    if(ui->moduleNetworksDB->isChecked())
-    {
-        m_currentModule = "NetworksDB";
-        this->m_startScanThread(new NetworksDB(scanArgs));
-        return;
-    }
-    if(ui->moduleNeutrinoApi->isChecked())
-    {
-        m_currentModule = "NeutrinoApi";
-        this->m_startScanThread(new NeutrinoApi(scanArgs));
-        return;
-    }
-    if(ui->moduleSeon->isChecked())
-    {
-        m_currentModule = "Seon";
-        this->m_startScanThread(new Seon(scanArgs));
-        return;
-    }
-    if(ui->moduleSpyOnWeb->isChecked())
-    {
-        m_currentModule = "SpyOnWeb";
-        this->m_startScanThread(new SpyOnWeb(scanArgs));
-        return;
-    }
-    if(ui->moduleWhatcms->isChecked())
-    {
-        m_currentModule = "WhatCMS";
-        this->m_startScanThread(new Whatcms(scanArgs));
-        return;
-    }
-    if(ui->moduleWhoxy->isChecked())
-    {
-        m_currentModule = "Whoxy";
-        this->m_startScanThread(new Whoxy(scanArgs));
-        return;
-    }
-    if(ui->moduleArquivo->isChecked())
-    {
-        m_currentModule = "Arquivo";
-        this->m_startScanThread(new Arquivo(scanArgs));
-        return;
-    }
-    if(ui->moduleUKWebArchive->isChecked())
-    {
-        m_currentModule = "UKWebArchive";
-        this->m_startScanThread(new UKWebArchive(scanArgs));
-        return;
-    }
-    if(ui->moduleCensys->isChecked())
-    {
-        m_currentModule = "Censys";
-        this->m_startScanThread(new Censys(scanArgs));
-        return;
-    }
-    if(ui->moduleEmailCrawlr->isChecked())
-    {
-        m_currentModule = "EmailCrawlr";
-        this->m_startScanThread(new EmailCrawlr(scanArgs));
-        return;
-    }
-    if(ui->moduleEmailFormat->isChecked())
-    {
-        m_currentModule = "EmailFormat";
-        this->m_startScanThread(new EmailFormat(scanArgs));
-        return;
-    }
-    if(ui->moduleEmailRep->isChecked())
-    {
-        m_currentModule = "EmailRep";
-        this->m_startScanThread(new EmailRep(scanArgs));
-        return;
-    }
-    if(ui->moduleSnov->isChecked())
-    {
-        m_currentModule = "Snov";
-        this->m_startScanThread(new Snov(scanArgs));
-        return;
-    }
-    if(ui->moduleTruMail->isChecked())
-    {
-        m_currentModule = "TruMail";
-        this->m_startScanThread(new TruMail(scanArgs));
-        return;
-    }
-    if(ui->moduleIpData->isChecked())
-    {
-        m_currentModule = "IpData";
-        this->m_startScanThread(new IpData(scanArgs));
-        return;
-    }
-    if(ui->moduleIpGeoLocation->isChecked())
-    {
-        m_currentModule = "IpGeoLocation";
-        this->m_startScanThread(new IpGeoLocation(scanArgs));
-        return;
-    }
-    if(ui->moduleIpRegistry->isChecked())
-    {
-        m_currentModule = "IpRegistry";
-        this->m_startScanThread(new IpRegistry(scanArgs));
-        return;
-    }
-    if(ui->moduleIpStack->isChecked())
-    {
-        m_currentModule = "IpStack";
-        this->m_startScanThread(new IpStack(scanArgs));
-        return;
-    }
-    if(ui->moduleAbuseIPDB->isChecked())
-    {
-        m_currentModule = "AbuseIPDB";
-        this->m_startScanThread(new AbuseIPDB(scanArgs));
-        return;
-    }
-    if(ui->moduleBotScout->isChecked())
-    {
-        m_currentModule = "BotScout";
-        this->m_startScanThread(new BotScout(scanArgs));
-        return;
-    }
-    if(ui->moduleFraudGuard->isChecked())
-    {
-        m_currentModule = "FraudGuard";
-        this->m_startScanThread(new FraudGuard(scanArgs));
-        return;
-    }
-    if(ui->moduleHybridAnalysis->isChecked())
-    {
-        m_currentModule = "HybridAnalysis";
-        this->m_startScanThread(new HybridAnalysis(scanArgs));
-        return;
-    }
-    if(ui->moduleIpQualityScore->isChecked())
-    {
-        m_currentModule = "IpQualityScore";
-        this->m_startScanThread(new IpQualityScore(scanArgs));
-        return;
-    }
-    if(ui->moduleLeakLookup->isChecked())
-    {
-        m_currentModule = "Leak-Lookup";
-        this->m_startScanThread(new LeakLookup(scanArgs));
-        return;
-    }
-    if(ui->moduleWappalyzer->isChecked())
-    {
-        m_currentModule = "Wappalyzer";
-        this->m_startScanThread(new Wappalyzer(scanArgs));
-        return;
-    }
+        this->startScanThread(new Certspotter(*m_scanArgs));
 
-    /* if control reaches here means no module was selected... */
-    ui->buttonStart->setEnabled(true);
-    ui->buttonStop->setDisabled(true);
-    QMessageBox::warning(this, "Error", "Please Chooose Osint Engine To Query...");
+    if(ui->moduleCertspotterFree->isChecked())
+        this->startScanThread(new CertspotterFree(*m_scanArgs));
+
+    if(ui->moduleOtx->isChecked())
+        this->startScanThread(new OtxFree(*m_scanArgs));
+
+    if(ui->moduleSublist3r->isChecked())
+        this->startScanThread(new Sublist3r(*m_scanArgs));
+
+    if(ui->moduleThreatMiner->isChecked())
+        this->startScanThread(new Threatminer(*m_scanArgs));
+
+    if(ui->moduleThreatCrowd->isChecked())
+        this->startScanThread(new Threatcrowd(*m_scanArgs));
+
+    if(ui->moduleHackerTargetFree->isChecked())
+        this->startScanThread(new HackerTargetFree(*m_scanArgs));
+
+    if(ui->moduleDnsBufferOverRun->isChecked())
+        this->startScanThread(new Dnsbufferoverun(*m_scanArgs));
+
+    if(ui->moduleAnubis->isChecked())
+        this->startScanThread(new Anubis(*m_scanArgs));
+
+    if(ui->moduleProjectDiscovery->isChecked())
+        this->startScanThread(new Projectdiscovery(*m_scanArgs));
+
+    if(ui->moduleSpyse->isChecked())
+        this->startScanThread(new Spyse(*m_scanArgs));
+
+    if(ui->moduleGoogleCert->isChecked())
+        this->startScanThread(new GoogleCert(*m_scanArgs));
+
+    if(ui->moduleOmnisint->isChecked())
+        this->startScanThread(new Omnisint(*m_scanArgs));
+
+    if(ui->moduleRobtexPaid->isChecked())
+        this->startScanThread(new RobtexPaid(*m_scanArgs));
+
+    if(ui->moduleVirusTotal->isChecked())
+        this->startScanThread(new VirusTotal(*m_scanArgs));
+
+    if(ui->moduleUrlScan->isChecked())
+        this->startScanThread(new Urlscan(*m_scanArgs));
+
+    if(ui->moduleWaybackMachine->isChecked())
+        this->startScanThread(new Waybackmachine(*m_scanArgs));
+
+    if(ui->moduleArchiveIt->isChecked())
+        this->startScanThread(new ArchiveIt(*m_scanArgs));
+
+    if(ui->moduleBgpview->isChecked())
+        this->startScanThread(new Bgpview(*m_scanArgs));
+
+    if(ui->moduleBinaryEdge->isChecked())
+        this->startScanThread(new BinaryEdge(*m_scanArgs));
+
+    if(ui->moduleC99->isChecked())
+        this->startScanThread(new C99(*m_scanArgs));
+
+    if(ui->moduleGithub->isChecked())
+        this->startScanThread(new Github(*m_scanArgs));
+
+    if(ui->moduleHunter->isChecked())
+        this->startScanThread(new Hunter(*m_scanArgs));
+
+    if(ui->moduleIpInfo->isChecked())
+        this->startScanThread(new IpInfo(*m_scanArgs));
+
+    if(ui->moduleMnemonicFree->isChecked())
+        this->startScanThread(new MnemonicFree(*m_scanArgs));
+
+    if(ui->moduleRiskIq->isChecked())
+        this->startScanThread(new RiskIq(*m_scanArgs));
+
+    if(ui->moduleRobtex->isChecked())
+        this->startScanThread(new RobtexFree(*m_scanArgs));
+
+    if(ui->moduleSecurityTrails->isChecked())
+        this->startScanThread(new SecurityTrails(*m_scanArgs));
+
+    if(ui->moduleShodan->isChecked())
+        this->startScanThread(new Shodan(*m_scanArgs));
+
+    if(ui->moduleThreatBook->isChecked())
+        this->startScanThread(new ThreatBook(*m_scanArgs));
+
+    if(ui->moduleWhoisXmlApi->isChecked())
+        this->startScanThread(new WhoisXmlApi(*m_scanArgs));
+
+    if(ui->moduleZETALytics->isChecked())
+        this->startScanThread(new ZETAlytics(*m_scanArgs));
+
+    if(ui->moduleZoomEye->isChecked())
+        this->startScanThread(new ZoomEye(*m_scanArgs));
+
+    if(ui->moduleIpApi->isChecked())
+        this->startScanThread(new IpApi(*m_scanArgs));
+
+    if(ui->moduleViewDns->isChecked())
+        this->startScanThread(new ViewDns(*m_scanArgs));
+
+    if(ui->moduleWebResolver->isChecked())
+        this->startScanThread(new WebResolver(*m_scanArgs));
+
+    if(ui->moduleCircl->isChecked())
+        this->startScanThread(new Circl(*m_scanArgs));
+
+    if(ui->moduleHackerTarget->isChecked())
+        this->startScanThread(new HackerTargetPaid(*m_scanArgs));
+
+    if(ui->moduleMnemonic->isChecked())
+        this->startScanThread(new MnemonicPaid(*m_scanArgs));
+
+    if(ui->moduleOtx->isChecked())
+        this->startScanThread(new OtxPaid(*m_scanArgs));
+
+    if(ui->moduleArin->isChecked())
+        this->startScanThread(new Arin(*m_scanArgs));
+
+    if(ui->moduleBuiltWith->isChecked())
+        this->startScanThread(new BuiltWith(*m_scanArgs));
+
+    if(ui->moduleDnslytics->isChecked())
+        this->startScanThread(new Dnslytics(*m_scanArgs));
+
+    if(ui->moduleDomainTools->isChecked())
+        this->startScanThread(new DomainTools(*m_scanArgs));
+
+    if(ui->moduleMaltiverseFree->isChecked())
+        this->startScanThread(new Maltiverse(*m_scanArgs));
+
+    if(ui->moduleN45HT->isChecked())
+        this->startScanThread(new N45HT(*m_scanArgs));
+
+    if(ui->moduleOnyphe->isChecked())
+        this->startScanThread(new Onyphe(*m_scanArgs));
+
+    if(ui->moduleRipe->isChecked())
+        this->startScanThread(new Ripe(*m_scanArgs));
+
+    if(ui->moduleAfrinic->isChecked())
+        this->startScanThread(new Afrinic(*m_scanArgs));
+
+    if(ui->moduleApnic->isChecked())
+        this->startScanThread(new Apnic(*m_scanArgs));
+
+    if(ui->moduleFullHunt->isChecked())
+        this->startScanThread(new FullHunt(*m_scanArgs));
+
+    if(ui->moduleSpamHaus->isChecked())
+        this->startScanThread(new SpamHaus(*m_scanArgs));
+
+    if(ui->moduleDebounce->isChecked())
+        this->startScanThread(new Debounce(*m_scanArgs));
+
+    if(ui->moduleHaveIBeenPawned->isChecked())
+        this->startScanThread(new HaveIBeenPawned(*m_scanArgs));
+
+    if(ui->moduleHost->isChecked())
+        this->startScanThread(new Host(*m_scanArgs));
+
+    if(ui->moduleJsonWhois->isChecked())
+        this->startScanThread(new JsonWhois(*m_scanArgs));
+
+    if(ui->moduleLeakIX->isChecked())
+        this->startScanThread(new LeakIX(*m_scanArgs));
+
+    if(ui->moduleNetworksDB->isChecked())
+        this->startScanThread(new NetworksDB(*m_scanArgs));
+
+    if(ui->moduleNeutrinoApi->isChecked())
+        this->startScanThread(new NeutrinoApi(*m_scanArgs));
+
+    if(ui->moduleSeon->isChecked())
+        this->startScanThread(new Seon(*m_scanArgs));
+
+    if(ui->moduleSpyOnWeb->isChecked())
+        this->startScanThread(new SpyOnWeb(*m_scanArgs));
+
+    if(ui->moduleWhatcms->isChecked())
+        this->startScanThread(new Whatcms(*m_scanArgs));
+
+    if(ui->moduleWhoxy->isChecked())
+        this->startScanThread(new Whoxy(*m_scanArgs));
+
+    if(ui->moduleArquivo->isChecked())
+        this->startScanThread(new Arquivo(*m_scanArgs));
+
+    if(ui->moduleUKWebArchive->isChecked())
+        this->startScanThread(new UKWebArchive(*m_scanArgs));
+
+    if(ui->moduleCensys->isChecked())
+        this->startScanThread(new Censys(*m_scanArgs));
+
+    if(ui->moduleEmailCrawlr->isChecked())
+        this->startScanThread(new EmailCrawlr(*m_scanArgs));
+
+    if(ui->moduleEmailFormat->isChecked())
+        this->startScanThread(new EmailFormat(*m_scanArgs));
+
+    if(ui->moduleEmailRep->isChecked())
+        this->startScanThread(new EmailRep(*m_scanArgs));
+
+    if(ui->moduleSnov->isChecked())
+        this->startScanThread(new Snov(*m_scanArgs));
+
+    if(ui->moduleTruMail->isChecked())
+        this->startScanThread(new TruMail(*m_scanArgs));
+
+    if(ui->moduleIpData->isChecked())
+        this->startScanThread(new IpData(*m_scanArgs));
+
+    if(ui->moduleIpGeoLocation->isChecked())
+        this->startScanThread(new IpGeoLocation(*m_scanArgs));
+
+    if(ui->moduleIpRegistry->isChecked())
+        this->startScanThread(new IpRegistry(*m_scanArgs));
+
+    if(ui->moduleIpStack->isChecked())
+        this->startScanThread(new IpStack(*m_scanArgs));
+
+    if(ui->moduleAbuseIPDB->isChecked())
+        this->startScanThread(new AbuseIPDB(*m_scanArgs));
+
+    if(ui->moduleBotScout->isChecked())
+        this->startScanThread(new BotScout(*m_scanArgs));
+
+    if(ui->moduleFraudGuard->isChecked())
+        this->startScanThread(new FraudGuard(*m_scanArgs));
+
+    if(ui->moduleHybridAnalysis->isChecked())
+        this->startScanThread(new HybridAnalysis(*m_scanArgs));
+
+    if(ui->moduleIpQualityScore->isChecked())
+
+        this->startScanThread(new IpQualityScore(*m_scanArgs));
+
+    if(ui->moduleLeakLookup->isChecked())
+        this->startScanThread(new LeakLookup(*m_scanArgs));
+
+    if(ui->moduleWappalyzer->isChecked())
+        this->startScanThread(new Wappalyzer(*m_scanArgs));
+
+    /* after starting all choosen enumerations... */
+    if(status->activeScanThreads)
+    {
+        ui->buttonStart->setDisabled(true);
+        ui->buttonStop->setEnabled(true);
+        log("------------------ start --------------");
+    }
+    else
+        QMessageBox::warning(this, tr("Error!"), tr("Please Choose Engine For Enumeration!"));
 }
 
-void Raw::m_startScanThread(AbstractOsintModule *module){
+void Raw::startScanThread(AbstractOsintModule *module){
     QThread *cThread = new QThread(this);
     module->startScan(cThread);
     module->moveToThread(cThread);
 
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::rawResults, this, &Raw::onResults);
     connect(module, &AbstractOsintModule::rawResultsTxt, this, &Raw::onResultsTxt);
-    /* ... */
     connect(module, &AbstractOsintModule::rateLimitLog, this, &Raw::onRateLimitLog);
     connect(module, &AbstractOsintModule::errorLog, this, &Raw::onErrorLog);
     connect(module, &AbstractOsintModule::infoLog, this, &Raw::onInfoLog);
-    /* ... */
     connect(this, &Raw::stopScanThread, module, &AbstractOsintModule::onStop);
-    connect(this, &Raw::pauseScanThread, module, &AbstractOsintModule::onPause);
-    /* ... */
-    connect(cThread, &QThread::finished, this, &Raw::onEnumerationComplete);
+    connect(cThread, &QThread::finished, this, &Raw::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
 
     cThread->start();
+    status->activeScanThreads++;
 }

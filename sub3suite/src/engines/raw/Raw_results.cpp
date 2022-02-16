@@ -41,114 +41,29 @@ void Raw::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
-void Raw::onResults(QByteArray reply){
-    QJsonDocument document = QJsonDocument::fromJson(reply);
-    setJsonText(document);
-    setJsonTree(document);
-}
-
-void Raw::onResultsTxt(QByteArray results){
-    if(!results.isNull() && !results.isEmpty()){
-        ui->plainTextEditResults->appendPlainText(results);
-        m_resultsCountJson++;
-        ui->labelResultsCount->setNum(m_resultsCountJson);
-    }
-}
-
-void Raw::setJsonText(QJsonDocument &results){
-    if(!results.isNull() && !results.isEmpty()){
-        ui->plainTextEditResults->appendPlainText(results.toJson());
-        m_resultsCountJson++;
-        ui->labelResultsCount->setNum(m_resultsCountJson);
-    }
-}
-
-void Raw::setJsonTree(QJsonDocument &results){
-    if(results.isNull() || results.isEmpty())
+void Raw::onResults(s3s_struct::RAW raw){
+    if(raw.results.isEmpty())
         return;
 
-    QStandardItem *item = new QStandardItem(m_currentModule+"("+m_currentTarget+")");
+    s3s_item::RAW *item = new s3s_item::RAW;
+    item->setValues(raw);
+    m_model->appendRow(item);
+    ui->labelResultsCountTree->setNum(proxyModel->rowCount());
 
-    QFont font("Segoe UI", 9, QFont::Bold);
-    item->setFont(font);
-    item->setForeground(QColor(220,220,220));
+    QJsonDocument document = QJsonDocument::fromJson(raw.results);
+    ui->plainTextEditResults->appendPlainText(document.toJson());
+    m_resultsCountJson++;
+    ui->labelResultsCount->setNum(m_resultsCountJson);
 
-    m_model->invisibleRootItem()->appendRow(item);
-
-    if(results.isArray())
-        this->treeArray(results.array(), item);
-    if(results.isObject())
-        this->treeObject(results.object(), item);
-
-    /* results Count... */
-    m_resultsCountTree++;
-    ui->labelResultsCountTree->setNum(m_resultsCountTree);
+    if(m_scanConfig->autosaveToProject)
+        project->addRaw(raw);
 }
 
-void Raw::treeObject(QJsonObject object, QStandardItem *item){
-    QStringList keys = object.keys();
-    item->setIcon(QIcon(":/img/res/icons/obj.png"));
-    foreach(const QString &key, keys)
-    {
-        QJsonValue value = object.value(key);
-        if(value.isUndefined())
-            continue;
+void Raw::onResultsTxt(s3s_struct::RAW raw){
+    if(raw.results.isEmpty())
+        return;
 
-        QStandardItem * objectItem = new QStandardItem(key);
-
-        if(value.isString())
-            item->appendRow({objectItem, new QStandardItem(value.toString())});
-        if(value.isDouble())
-            item->appendRow({objectItem, new QStandardItem(QString::number(value.toDouble()))});
-        if(value.isNull())
-            item->appendRow({objectItem, new QStandardItem("null")});
-        if(value.isBool()){
-            if(value.toBool())
-                item->appendRow({objectItem, new QStandardItem("true")});
-            else
-                item->appendRow({objectItem, new QStandardItem("false")});
-        }
-        if(value.isArray()){
-            item->appendRow(objectItem);
-            this->treeArray(value.toArray(), objectItem);
-        }
-        if(value.isObject()){
-            item->appendRow(objectItem);
-            this->treeObject(value.toObject(), objectItem);
-        }
-    }
-}
-
-void Raw::treeArray(QJsonArray array, QStandardItem *item){
-    int count = 0;
-    item->setIcon(QIcon(":/img/res/icons/array.png"));
-    foreach(const QJsonValue &value, array)
-    {
-        if(value.isUndefined())
-            continue;
-
-        QStandardItem *arrayItem = new QStandardItem(QString::number(count));
-
-        if(value.isString())
-            item->appendRow({arrayItem, new QStandardItem(value.toString())});
-        if(value.isDouble())
-            item->appendRow({arrayItem, new QStandardItem(QString::number(value.toDouble()))});
-        if(value.isNull())
-            item->appendRow({arrayItem, new QStandardItem("null")});
-        if(value.isBool()){
-            if(value.toBool())
-                item->appendRow({arrayItem, new QStandardItem("true")});
-            else
-                item->appendRow({arrayItem, new QStandardItem("false")});
-        }
-        if(value.isArray()){
-            item->appendRow(arrayItem);
-            this->treeArray(value.toArray(), arrayItem);
-        }
-        if(value.isObject()){
-            item->appendRow(arrayItem);
-            this->treeObject(value.toObject(), arrayItem);
-        }
-        count++;
-    }
+    ui->plainTextEditResults->appendPlainText(raw.results);
+    m_resultsCountJson++;
+    ui->labelResultsCount->setNum(m_resultsCountJson);
 }

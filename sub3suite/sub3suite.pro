@@ -111,6 +111,7 @@ SOURCES += \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
     src/models/ProjectModel_slots.cpp \
+    src/models/RawModel.cpp \
     src/models/SSLModel.cpp \
     src/models/URLModel.cpp \
     src/models/WildcardModel.cpp \
@@ -263,6 +264,7 @@ HEADERS += \
     src/models/IPModel.h \
     src/models/NSModel.h \
     src/models/ProjectModel.h \
+    src/models/RawModel.h \
     src/models/SSLModel.h \
     src/models/CIDRModel.h \
     src/models/EmailModel.h \

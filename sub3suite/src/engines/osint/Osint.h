@@ -126,6 +126,7 @@ class Osint : public AbstractEngine{
         void initUI();
         void initModules();
         void initProfiles();
+        void initConfigValues();
         void uncheckAllModules();
 
 

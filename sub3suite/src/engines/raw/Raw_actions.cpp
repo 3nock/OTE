@@ -12,109 +12,210 @@
 #include <QDesktopServices>
 
 
-void Raw::m_clearResults(){
-    /* clear the results... */
-    ui->plainTextEditResults->clear();
-    m_model->clear();
-    m_model->setHorizontalHeaderLabels({" Properties", " Values"});
-    ui->labelResultsCount->clear();
+void Raw::openInBrowser(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
+}
 
-    /* clear the progressbar... */
+void Raw::clearResults(){
+    m_model->clear();
+    m_model->setHorizontalHeaderLabels({tr(" Properties"), tr(" Values")});
+    ui->labelResultsCountTree->clear();
+
+    /* clear the progressbar */
     ui->progressBar->clearMask();
     ui->progressBar->reset();
     ui->progressBar->hide();
 }
 
-void Raw::m_expandResults(){
-    ui->treeViewResults->expandAll();
+void Raw::clearResults_txt(){
+    ui->plainTextEditResults->clear();
+    ui->labelResultsCount->clear();
+    m_resultsCountJson = 0;
 }
 
-void Raw::m_collapseResults(){
-    ui->treeViewResults->collapseAll();
+void Raw::removeResults(){
+    QModelIndex index;
+    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
+        index = proxyModel->mapToSource(proxyIndex);
+        m_model->removeRow(index.row());
+    }
+
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void Raw::m_saveResultsJson(){
+void Raw::saveResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "RAW: Failed to getSaveFileName";
+        return;
+    }
+
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    if(!file.isOpen()){
+        qDebug() << "RAW: Failed to open " << filename << " For saving Results";
+        return;
+    }
+
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
+        file.write(item->json);
+        file.write(NEWLINE);
+    }
+    file.close();
+}
+
+void Raw::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "RAW: Failed to getSaveFileName";
+        return;
+    }
+
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    if(!file.isOpen()){
+        qDebug() << "RAW: Failed to open " << filename << " For saving Results";
+        return;
+    }
+
+    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
+        file.write(item->json);
+        file.write(NEWLINE);
+    }
+    file.close();
+}
+
+void Raw::saveResults_txt(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "RAW: Failed to getSaveFileName";
+        return;
+    }
+
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "RAW: Failed to open " << filename << " For saving Results";
+        return;
+    }
+
+    file.write(ui->plainTextEditResults->toPlainText().toUtf8());
+    file.close();
+}
+
+void Raw::copyResults(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString data;
+
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
+        data.append(item->json);
+        data.append(NEWLINE);
+    }
+
+    clipboard->setText(data.trimmed());
+}
+
+void Raw::copySelectedResults(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString data;
+
+    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
+        data.append(item->json);
+        data.append(NEWLINE);
+    }
+
+    clipboard->setText(data.trimmed());
+}
+
+void Raw::copyResults_txt(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(ui->plainTextEditResults->toPlainText());
+}
+
+///
+/// sending results...
+///
+void Raw::sendToProject(){
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
+        project->addRaw(raw_to_struct(item));
+    }
+}
+
+void Raw::sendToEngine(){
 
 }
 
-void Raw::m_openInBrowser(QItemSelectionModel *selectionModel){
-    Q_UNUSED(selectionModel);
-}
-
-void Raw::m_removeResults(QItemSelectionModel *selectionModel){
-    Q_UNUSED(selectionModel);
-}
-
-void Raw::m_saveResults(RESULT_TYPE resultType){
-    Q_UNUSED(resultType);
-}
-
-void Raw::m_saveResults(QItemSelectionModel *selectionModel){
-    Q_UNUSED(selectionModel);
-}
-
-void Raw::m_copyResultsJson(){
+void Raw::sendToEnum(){
 
 }
 
-
-void Raw::m_copyResults(RESULT_TYPE resultType){
-    Q_UNUSED(resultType);
+void Raw::sendSelectedToProject(){
+    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
+        project->addRaw(raw_to_struct(item));
+    }
 }
 
-void Raw::m_copyResults(QItemSelectionModel *selectionModel){
-    Q_UNUSED(selectionModel);
-}
-
-void Raw::m_sendToEngine(ENGINE){
-
-}
-
-void Raw::m_sendSubdomainToEngine(ENGINE){
+void Raw::sendSelectedToEngine(){
 
 }
 
-void Raw::m_sendIpToEngine(ENGINE){
+void Raw::sendSelectedToEnum(){
 
 }
 
-void Raw::m_sendSubdomainToTool(TOOL){
-
-}
-
-void Raw::m_sendIpToTool(TOOL){
-
-}
-
-void Raw::m_sendToTool(TOOL){
-
-}
-
-void Raw::m_sendToEngine(ENGINE, QItemSelectionModel *){
-
-}
-
-void Raw::m_sendSubdomainToEngine(ENGINE, QItemSelectionModel *){
-
-}
-
-void Raw::m_sendIpToEngine(ENGINE, QItemSelectionModel *){
-
-}
-
-void Raw::m_sendSubdomainToTool(TOOL, QItemSelectionModel *){
-
-}
-
-void Raw::m_sendIpToTool(TOOL, QItemSelectionModel *){
-
-}
-
-void Raw::m_sendToTool(TOOL, QItemSelectionModel *){
-
-}
-
-void Raw::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    Q_UNUSED(target);
-    Q_UNUSED(resultType);
+///
+/// receive targets...
+///
+void Raw::onReceiveTargets(QString target, RESULT_TYPE result_type){
+    switch (result_type) {
+    case RESULT_TYPE::SUBDOMAIN:
+        if(m_targetListModel_host->insertRow(m_targetListModel_host->rowCount()))
+            m_targetListModel_host->setData(m_targetListModel_host->index(m_targetListModel_host->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::IP:
+        if(m_targetListModel_ip->insertRow(m_targetListModel_ip->rowCount()))
+            m_targetListModel_ip->setData(m_targetListModel_ip->index(m_targetListModel_ip->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::ASN:
+        if(m_targetListModel_asn->insertRow(m_targetListModel_asn->rowCount()))
+            m_targetListModel_asn->setData(m_targetListModel_asn->index(m_targetListModel_asn->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::CIDR:
+        if(m_targetListModel_cidr->insertRow(m_targetListModel_cidr->rowCount()))
+            m_targetListModel_cidr->setData(m_targetListModel_cidr->index(m_targetListModel_cidr->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::CERT_ID:
+        if(m_targetListModel_ssl->insertRow(m_targetListModel_ssl->rowCount()))
+            m_targetListModel_ssl->setData(m_targetListModel_ssl->index(m_targetListModel_ssl->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::URL:
+        if(m_targetListModel_url->insertRow(m_targetListModel_url->rowCount()))
+            m_targetListModel_url->setData(m_targetListModel_url->index(m_targetListModel_url->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::EMAIL:
+        if(m_targetListModel_email->insertRow(m_targetListModel_email->rowCount()))
+            m_targetListModel_email->setData(m_targetListModel_email->index(m_targetListModel_email->rowCount()-1, 0), target);
+        break;
+    default:
+        break;
+    }
 }

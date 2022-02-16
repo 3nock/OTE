@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>934</width>
-    <height>505</height>
+    <width>658</width>
+    <height>459</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,23 +29,16 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QComboBox" name="comboBoxModule">
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>21</height>
-        </size>
+      <widget class="QLabel" name="labelTarget">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
-       <item>
-        <property name="text">
-         <string>Auto</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Custom</string>
-        </property>
-       </item>
+       <property name="text">
+        <string>Target:</string>
+       </property>
       </widget>
      </item>
      <item>
@@ -81,18 +74,18 @@
       <widget class="QProgressBar" name="progressBar">
        <property name="minimumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>16777215</width>
+         <height>16777215</height>
         </size>
        </property>
        <property name="value">
-        <number>24</number>
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -129,7 +122,7 @@
       <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>* Scan Config</string>
+         <string>* Scan Configuration</string>
         </property>
        </widget>
       </item>
@@ -321,9 +314,6 @@
         <string>Tree</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
-        <property name="spacing">
-         <number>5</number>
-        </property>
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -334,7 +324,7 @@
          <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>0</number>
+         <number>1</number>
         </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -420,7 +410,38 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEditTreeFilter"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QComboBox" name="comboBoxFilter">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>Properties</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Values</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEditTreeFilter"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRegex">
+            <property name="text">
+             <string>Regex</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -763,7 +784,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>184</width>
+                <width>159</width>
                 <height>617</height>
                </rect>
               </property>
@@ -998,7 +1019,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>184</width>
+                <width>157</width>
                 <height>1501</height>
                </rect>
               </property>

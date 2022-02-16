@@ -253,6 +253,19 @@ void Project::on_treeViewProjectExplorer_clicked(const QModelIndex &index){
         }
     }
 
+    if(parent_index == m_projectModel->custom_explorer->index()){
+        if(index == m_projectModel->raw_explorer->index()){
+            ui->treeViewSiteMap->header()->resizeSection(0, 300);
+            ui->treeViewSiteMap->setIndentation(15);
+            ui->treeViewSiteMap->setSortingEnabled(false);
+
+            m_proxyModel->setSourceModel(m_projectModel->raw_model);
+            ui->treeViewSiteMap->setProperty(PROJECT_MODEL_TYPE, ModelType::raw);
+            ui->comboBoxFilter->addItems({"Property", "Value"});
+            ui->comboBoxFilter->show();
+        }
+    }
+
     ui->comboBoxFilter->setCurrentIndex(0);
     ui->labelCount->setNum(m_proxyModel->rowCount());
 }
