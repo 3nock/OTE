@@ -9,14 +9,15 @@
 #include "ui_WordlistDialog.h"
 
 #include <QMap>
+#include <QQueue>
 #include <algorithm>
+
+#include "src/utils/Config.h"
 
 
 void WordListDialog::m_initGenerate(){
-    ///
-    /// placeholder texts
-    ///
-    ui->lineEditPermutes->setPlaceholderText("No# of permutations e.g. 2");
+    ui->wordlist_generate->setListName("Wordlist");
+    ui->wordlist_generate->setListModel(m_listModel_generate);
 
     /* Range A-Z */
     ui->lineEditAZCombination->setPlaceholderText("No# of combinations e.g. 2");
@@ -32,10 +33,6 @@ void WordListDialog::m_initGenerate(){
     ui->lineEditNumbersTo->setPlaceholderText("e.g. 100");
     ui->lineEditNumbersSkip->setPlaceholderText("e.g. 1");
 
-    ///
-    /// setting validators...
-    ///
-    ui->lineEditPermutes->setValidator(new QIntValidator(1, 10, this));
     /* Range A-Z */
     ui->lineEditAZCombination->setValidator(new QIntValidator(1, 10, this));
     /* Range date */
@@ -46,23 +43,27 @@ void WordListDialog::m_initGenerate(){
     ui->lineEditDateToMonth->setValidator(new QIntValidator(1, 12, this));
     ui->lineEditDateToYear->setValidator(new QIntValidator(0, 3000, this));
 
-    ///
-    /// setting default values...
-    ///
     ui->lineEditAZCombination->setText("1");
+
+    /* setting the substitutes */
+    CONFIG.beginGroup("wordlist_substitutions");
+    QStringList keys(CONFIG.allKeys());
+    foreach(const QString &key, keys){
+        ui->comboBoxSubstituteFrom->addItem(key);
+        ui->comboBoxSubstituteTo->addItem(CONFIG.value(key).toString());
+    }
+    CONFIG.endGroup();
 }
 
 void WordListDialog::on_buttonGenerate_clicked(){
     /* generate respective wordlist */
-    if(ui->groupBoxAZ->isChecked())
+    if(ui->checkBoxAZ->isChecked())
         this->m_generateAZ();
-    if(ui->groupBoxDate->isChecked())
+    if(ui->checkBoxDates->isChecked())
         this->m_generateDate();
-    if(ui->groupBoxNumbers->isChecked())
+    if(ui->checkBoxNumbers->isChecked())
         this->m_generateNumbers();
-    if(ui->groupBoxPermutations->isChecked())
-        this->m_generatePermutations();
-    if(ui->groupBoxSubstitutions->isChecked())
+    if(ui->checkBoxSubstitutions->isChecked())
         this->m_generateSubstitutions();
 
     /* end */
@@ -89,10 +90,6 @@ void WordListDialog::m_generateAZ(){
                 foreach(const QString &letter, alphabet)
                     _combinedList.push_back(combinedList.at(j)+letter);
             }
-
-            /* if not exact combine count needed append the already generated combination */
-            if(!ui->checkBoxExactCombination->isChecked())
-                list.append(combinedList);
 
             combinedList = _combinedList;
         }
@@ -217,79 +214,56 @@ void WordListDialog::m_generateDate(){
     m_wordlistModel->setStringList(list);
 }
 
-void WordListDialog::m_generatePermutations(){
-    int numberOfPermuations = ui->lineEditPermutes->text().toInt();
-    QStringList targets;
+/*
+ * TODO:
+ *      it is poorly implemented for now, later implement well.
+ */
+void WordListDialog::m_generateSubstitutions(){
+    QMap<QString,QString> substitutions;
+    QSet<QString> wordlist;
 
-    /* get the stringList from model */
+
+    /* obtaining the substitutions characters */
+    for(int i = 0; i < ui->comboBoxSubstituteFrom->count(); i++)
+        substitutions.insert(ui->comboBoxSubstituteFrom->itemText(i),
+                             ui->comboBoxSubstituteTo->itemText(i));
+
     QStringList list(m_wordlistModel->stringList());
 
-    do{
-        /* creating the permutated string by appending */
-        QString item("");
-        for(int i = 0; i < numberOfPermuations; i++)
-            item += targets.at(i);
+    /* substitutions */
+    foreach(const QString &word, m_listModel_generate->stringList()){
+        for(int i = 0; i < word.length(); i++)
+        {
+            QString character = word.at(i);
+            if(substitutions.contains(character))
+            {
+                wordlist.insert(word);
+                QString substitute(substitutions.value(character));
 
-        /* append the created string to the list */
-        list.push_back(item);
-    } while (std::next_permutation(targets.begin(), targets.end()));
+                QStringList new_list;
+                QStringList setList = wordlist.toList();
+                for(int j = 0; j < setList.size(); j++){
+                    QString existing_word = setList.at(0);
+                    existing_word = existing_word.replace(i, substitute.length(), substitute);
+                    new_list.append(existing_word);
+                }
+                foreach(const QString &word, new_list)
+                    wordlist.insert(word);
+            }
+        }
+        list.append(wordlist.toList());
+        wordlist.clear();
+    }
 
     /* set the stringList to the model */
+    list.append(wordlist.toList());
     m_wordlistModel->setStringList(list);
 }
 
-void WordListDialog::m_generateSubstitutions(){
-    QMap<QString, QStringList> Homoglyphs{{"a",{"@","à","á","â","ã","ä","å"}},
-                                          {"b",{"8","ß","ʙ","β","В","Ь","Ᏼ","ᛒ","Ｂ","ｂ"}},
-                                          {"c",{"("}},
-                                          {"d",{"Ď","ď","Đ","đ","ԁ","ժ"}},
-                                          {"e",{"3","È","É" ,"Ê","Ë","é","ê","ë","Ē","ē","Ĕ","ĕ","Ė","ė","Ę","Ě","ě"}},
-                                          {"f",{"7"}},
-                                          {"g",{"q"}},
-                                          {"h",{}},
-                                          {"i",{"1","l","1"}},
-                                          {"j",{}},
-                                          {"k",{}},
-                                          {"l",{}},
-                                          {"m",{}},
-                                          {"n",{}},
-                                          {"o",{}},
-                                          {"p",{}},
-                                          {"q",{}},
-                                          {"r",{}},
-                                          {"s",{}},
-                                          {"t",{}},
-                                          {"u",{}},
-                                          {"v",{}},
-                                          {"w",{}},
-                                          {"x",{}},
-                                          {"y",{}},
-                                          {"z",{}}};
+void WordListDialog::on_comboBoxSubstituteFrom_currentIndexChanged(int index){
+    ui->comboBoxSubstituteTo->setCurrentIndex(index);
+}
 
-    QMap<QString, QStringList> Substitutions{{"a",{"@"}},
-                                          {"b",{"8"}},
-                                          {"c",{"("}},
-                                          {"d",{}},
-                                          {"e",{"3"}},
-                                          {"f",{"7"}},
-                                          {"g",{"q"}},
-                                          {"h",{}},
-                                          {"i",{"1","l","1"}},
-                                          {"j",{}},
-                                          {"k",{}},
-                                          {"l",{}},
-                                          {"m",{}},
-                                          {"n",{}},
-                                          {"o",{}},
-                                          {"p",{}},
-                                          {"q",{}},
-                                          {"r",{}},
-                                          {"s",{}},
-                                          {"t",{}},
-                                          {"u",{}},
-                                          {"v",{}},
-                                          {"w",{}},
-                                          {"x",{}},
-                                          {"y",{}},
-                                          {"z",{}}};
+void WordListDialog::on_comboBoxSubstituteTo_currentIndexChanged(int index){
+    ui->comboBoxSubstituteFrom->setCurrentIndex(index);
 }

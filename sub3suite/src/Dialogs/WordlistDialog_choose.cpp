@@ -8,13 +8,13 @@
 #include "WordlistDialog.h"
 #include "ui_WordlistDialog.h"
 
-#include "src/utils/config.h"
+#include "src/utils/Config.h"
 #include <QSpacerItem>
 
 
 void WordListDialog::m_initChoose(){
-    ui->customWordlist->setListName("Custom Wordlist");
-    ui->customWordlist->setListModel(m_customWordlistModel);
+    ui->customWordlist->setListName("Wordlist");
+    ui->customWordlist->setListModel(m_listModel_choose);
     ui->groupBoxCustomWordlist->hide();
 
     ui->lineEditName->setPlaceholderText("Enter custom wordlist Name...");
@@ -123,8 +123,8 @@ void WordListDialog::on_buttonCreate_clicked(){
     QFile file(QApplication::applicationDirPath()+filePath);
     if(file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        for(int i = 0; i != m_customWordlistModel->rowCount(); ++i)
-            file.write((m_customWordlistModel->stringList().at(i)+NEWLINE).toUtf8());
+        for(int i = 0; i != m_listModel_choose->rowCount(); ++i)
+            file.write((m_listModel_choose->stringList().at(i)+NEWLINE).toUtf8());
         file.close();
     }
 

@@ -28,6 +28,7 @@
     </qresource>
     <qresource prefix="/themes">
         <file>res/themes/dark.css</file>
+        <file>res/themes/light.css</file>
     </qresource>
     <qresource prefix="/documentation">
         <file>res/documentation/engines/active.html</file>

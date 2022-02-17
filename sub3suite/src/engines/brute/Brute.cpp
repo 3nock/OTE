@@ -213,7 +213,7 @@ void Brute::on_buttonWordlist_clicked(){
     /* adjust dialog to appear abit up */
     int x = (qApp->desktop()->width()-wordlistDialog->width()) / 2;
     int y = (qApp->desktop()->height()-wordlistDialog->height()) / 2;
-    wordlistDialog->move(x, y-100);
+    wordlistDialog->move(x, y-120);
 
     wordlistDialog->show();
 }

@@ -39,13 +39,18 @@ class WordListDialog : public QDialog{
         /* for generate */
         void on_buttonGenerate_clicked();
 
-    private:
+        void on_comboBoxSubstituteFrom_currentIndexChanged(int index);
+
+        void on_comboBoxSubstituteTo_currentIndexChanged(int index);
+
+private:
         Ui::WordListDialog *ui;
         QStringListModel *m_wordlistModel;
 
         /* for choose */
         void m_initChoose();
-        QStringListModel *m_customWordlistModel;
+        QStringListModel *m_listModel_choose;
+        QStringListModel *m_listModel_generate;
         QString m_defaultWordlist;
         QString m_specialWordlist;
         bool TLD = false;
@@ -56,7 +61,6 @@ class WordListDialog : public QDialog{
         void m_generateAZ();
         void m_generateNumbers();
         void m_generateDate();
-        void m_generatePermutations();
         void m_generateSubstitutions();
 };
 

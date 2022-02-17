@@ -11,6 +11,7 @@
 
 void Osint::onInfoLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"green\">"+log.moduleName+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"green\">"+log.target+"</font>");
     ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"green\">"+QString::number(log.statusCode)+"</font>");
     ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"green\">"+QString::number(log.resultsCount)+"</font>");
     if(!log.message.isEmpty())
@@ -22,6 +23,7 @@ void Osint::onInfoLog(ScanLog log){
 
 void Osint::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"red\">"+log.moduleName+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"red\">"+log.target+"</font>");
     ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"red\">"+QString::number(log.statusCode)+"</font>");
     ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"red\">"+QString::number(log.resultsCount)+"</font>");
     if(!log.message.isEmpty())
@@ -33,6 +35,7 @@ void Osint::onErrorLog(ScanLog log){
 
 void Osint::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"yellow\">"+log.moduleName+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"yellow\">"+log.target+"</font>");
     ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
     ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"yellow\">"+QString::number(log.resultsCount)+"</font>");
     if(!log.message.isEmpty())

@@ -276,6 +276,7 @@ class AbstractOsintModule : public QObject {
         s3sNetworkAccessManager *manager = nullptr;
 
         void  onRateLimit(QNetworkReply *reply){
+            log.target = target;
             log.message = "API rate limit reached";
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             emit rateLimitLog(log);
@@ -288,6 +289,7 @@ class AbstractOsintModule : public QObject {
         }
 
         void onError(QNetworkReply *reply){
+            log.target = target;
             log.message = reply->errorString();
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             emit errorLog(log);
@@ -300,6 +302,7 @@ class AbstractOsintModule : public QObject {
         }
 
         void end(QNetworkReply *reply){
+            log.target = target;
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             reply->deleteLater();
             activeRequests--;

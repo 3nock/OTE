@@ -11,13 +11,10 @@
 
 WordListDialog::WordListDialog(QWidget *parent, QStringListModel *wordlistModel): QDialog(parent), ui(new Ui::WordListDialog),
       m_wordlistModel(wordlistModel),
-      m_customWordlistModel(new QStringListModel)
+      m_listModel_choose(new QStringListModel),
+      m_listModel_generate(new QStringListModel)
 {
     ui->setupUi(this);
-
-    ui->scrollAreaGenerate->setProperty("without_border", true);
-    ui->scrollAreaGenerate->setProperty("s3s_light", true);
-    ui->scrollAreaWidgetContents->setProperty("s3s_light", true);
 
     this->m_initChoose();
     this->m_initGenerate();
@@ -29,7 +26,8 @@ WordListDialog::WordListDialog(QWidget *parent, QStringListModel *wordlistModel)
     this->adjustSize();
 }
 WordListDialog::~WordListDialog(){
-    delete m_customWordlistModel;
+    delete m_listModel_generate;
+    delete m_listModel_choose;
     delete ui;
 }
 

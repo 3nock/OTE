@@ -15,8 +15,10 @@
 
 void Raw::onInfoLog(ScanLog log){
     QString module("<font color=\"green\">"+log.moduleName+"</font>");
+    QString target("<font color=\"green\">"+log.target+"</font>");
     QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
     ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Target]        :"+target);
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendPlainText("");
 }
@@ -24,8 +26,10 @@ void Raw::onInfoLog(ScanLog log){
 void Raw::onErrorLog(ScanLog log){
     QString message("<font color=\"red\">"+log.message+"</font>");
     QString module("<font color=\"red\">"+log.moduleName+"</font>");
+    QString target("<font color=\"red\">"+log.target+"</font>");
     QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
     ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Target]        :"+target);
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
@@ -34,8 +38,10 @@ void Raw::onErrorLog(ScanLog log){
 void Raw::onRateLimitLog(ScanLog log){
     QString message("<font color=\"yellow\">"+log.message+"</font>");
     QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
+    QString target("<font color=\"yellow\">"+log.target+"</font>");
     QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
     ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+    ui->plainTextEditLogs->appendHtml("[Target]        :"+target);
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
