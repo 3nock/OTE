@@ -241,9 +241,17 @@ void Raw::on_lineEditTreeFilter_textChanged(const QString &filterKeyword){
 }
 
 void Raw::on_treeViewResults_doubleClicked(const QModelIndex &index){
+    if(index.column())
+        return;
+
     QModelIndex model_index = proxyModel->mapToSource(index);
+
     if(model_index.parent() == m_model->invisibleRootItem()->index()){
-        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(model_index.row(), 0));
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->itemFromIndex(model_index));
         ui->plainTextEditJson->setPlainText(item->json);
+        return;
     }
+
+    if(m_model->itemFromIndex(model_index)->hasChildren())
+        ui->plainTextEditJson->setPlainText(item_to_json(m_model->itemFromIndex(model_index)));
 }

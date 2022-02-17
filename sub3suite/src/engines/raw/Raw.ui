@@ -37,7 +37,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Target:</string>
+        <string>TARGET:</string>
        </property>
       </widget>
      </item>
@@ -243,6 +243,9 @@
         </item>
         <item>
          <widget class="QPlainTextEdit" name="plainTextEditResults">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="readOnly">
            <bool>true</bool>
           </property>

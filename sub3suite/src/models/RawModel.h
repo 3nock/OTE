@@ -6,6 +6,9 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+#define JSON_ARRAY "arr"
+#define JSON_OBJECT "obj"
+
 
 namespace s3s_struct {
 struct RAW {
@@ -55,6 +58,11 @@ public:
 
     void setObject(const QJsonObject &object, QStandardItem *item){
         QStringList keys = object.keys();
+        if(item != this){
+            item->setWhatsThis(JSON_OBJECT);
+            item->setForeground(Qt::white);
+            item->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        }
         foreach(const QString &key, keys)
         {
             QJsonValue value = object.value(key);
@@ -88,6 +96,11 @@ public:
 
     void setArray(const QJsonArray &array, QStandardItem *item){
         int count = 0;
+        if(item != this){
+            item->setWhatsThis(JSON_ARRAY);
+            item->setForeground(Qt::white);
+            item->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        }
         foreach(const QJsonValue &value, array)
         {
             if(value.isUndefined())
@@ -127,5 +140,12 @@ s3s_struct::RAW raw_to_struct(s3s_item::RAW*);
 QJsonObject raw_to_json(s3s_item::RAW*);
 
 void json_to_raw(const QJsonObject&, s3s_item::RAW*);
+
+
+QJsonObject setObj(QStandardItem *item);
+
+QJsonArray setArr(QStandardItem *item);
+
+QByteArray item_to_json(QStandardItem*);
 
 #endif // RAWMODEL_H
