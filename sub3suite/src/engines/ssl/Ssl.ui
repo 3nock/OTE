@@ -485,6 +485,50 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="tabCert">
+          <attribute name="title">
+           <string>Cert</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>2</number>
+           </property>
+           <item>
+            <widget class="QPlainTextEdit" name="plainTextEditCert"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tabKey">
+          <attribute name="title">
+           <string>Key</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>2</number>
+           </property>
+           <item>
+            <widget class="QPlainTextEdit" name="plainTextEditKey"/>
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="tabLogs">
           <attribute name="title">
            <string>Logs</string>

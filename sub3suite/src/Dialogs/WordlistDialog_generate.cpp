@@ -243,9 +243,8 @@ void WordListDialog::m_generateSubstitutions(){
                 QStringList new_list;
                 QStringList setList = wordlist.toList();
                 for(int j = 0; j < setList.size(); j++){
-                    QString existing_word = setList.at(0);
-                    existing_word = existing_word.replace(i, substitute.length(), substitute);
-                    new_list.append(existing_word);
+                    QString existing_word = setList.at(j);
+                    new_list.append(existing_word.replace(i, substitute.length(), substitute));
                 }
                 foreach(const QString &word, new_list)
                     wordlist.insert(word);
