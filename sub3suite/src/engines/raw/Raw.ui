@@ -172,9 +172,9 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tabJson">
+      <widget class="QWidget" name="tabResult">
        <attribute name="title">
-        <string>Json</string>
+        <string>Result</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="spacing">
@@ -445,6 +445,28 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tabJson">
+       <attribute name="title">
+        <string>Json</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QPlainTextEdit" name="plainTextEditJson"/>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="tabLogs">
        <attribute name="title">
         <string>Logs</string>
@@ -454,13 +476,13 @@
          <number>0</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="rightMargin">
          <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>0</number>
+         <number>2</number>
         </property>
         <item>
          <widget class="QPlainTextEdit" name="plainTextEditLogs">

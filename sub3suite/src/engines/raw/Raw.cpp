@@ -87,7 +87,8 @@ void Raw::initUI(){
     ui->labelApiDoc->setOpenExternalLinks(true);
 
     /* json syntax higlighting */
-    m_jsonSyntaxHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditResults->document());
+    m_resultsHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditResults->document());
+    m_jsonHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditJson->document());
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -237,4 +238,12 @@ void Raw::on_lineEditTreeFilter_textChanged(const QString &filterKeyword){
 
     ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCountTree->setNum(proxyModel->rowCount());
+}
+
+void Raw::on_treeViewResults_doubleClicked(const QModelIndex &index){
+    QModelIndex model_index = proxyModel->mapToSource(index);
+    if(model_index.parent() == m_model->invisibleRootItem()->index()){
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(model_index.row(), 0));
+        ui->plainTextEditJson->setPlainText(item->json);
+    }
 }

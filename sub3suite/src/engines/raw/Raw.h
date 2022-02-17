@@ -144,7 +144,9 @@ class Raw : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_lineEditTreeFilter_textChanged(const QString &arg1);
 
-    private:
+        void on_treeViewResults_doubleClicked(const QModelIndex &index);
+
+private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         QStringListModel *m_targetListModel;
@@ -159,7 +161,8 @@ class Raw : public AbstractEngine{
         ScanConfig *m_scanConfig;
         ScanArgs *m_scanArgs;
         QMap<QString, QStringList> m_optionSet;
-        JsonSyntaxHighlighter *m_jsonSyntaxHighlighter;
+        JsonSyntaxHighlighter *m_resultsHighlighter = nullptr;
+        JsonSyntaxHighlighter *m_jsonHighlighter = nullptr;
         int m_resultsCountJson = 0;
 
         void initUI();
