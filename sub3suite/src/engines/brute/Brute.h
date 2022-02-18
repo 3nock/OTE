@@ -34,6 +34,7 @@ class Brute : public AbstractEngine{
         void onNextLevel();
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
+        void onWildcard(s3s_struct::Wildcard);
         void onResultSubdomain(s3s_struct::HOST host);
         void onResultTLD(s3s_struct::HOST host);
         void onReScan(QQueue<QString> targets);

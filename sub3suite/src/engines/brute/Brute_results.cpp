@@ -20,6 +20,14 @@ void Brute::onScanLog(scan::Log log){
     m_scanStats->failed++;
 }
 
+void Brute::onWildcard(s3s_struct::Wildcard wildcard){
+    /* send the found wildcard to project */
+    project->addActiveWildcard(wildcard);
+
+    /* log the found wildcard */
+    ui->plainTextEditLogs->appendHtml("[Wildcard Found]: <font color=\"white\">"+wildcard.wildcard+"</font>");
+}
+
 void Brute::onResultSubdomain(s3s_struct::HOST host){
     if(m_subdomainSet.contains(host.host)) // for existing entry...
     {

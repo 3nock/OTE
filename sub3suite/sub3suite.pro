@@ -173,7 +173,6 @@ SOURCES += \
     src/modules/passive/mal/LeakLookup.cpp \
     src/modules/active/DNSScanner.cpp \
     src/modules/active/SSLScanner.cpp \
-    src/modules/active/WildcardScanner.cpp \
     src/project/Project.cpp \
     src/enums/asn/ASNEnum.cpp \
     src/enums/email/EmailEnum.cpp \
@@ -332,7 +331,6 @@ HEADERS += \
     src/modules/passive/mal/LeakLookup.h \
     src/modules/active/DNSScanner.h \
     src/modules/active/SSLScanner.h \
-    src/modules/active/WildcardScanner.h \
     src/project/Project.h \
     src/enums/AbstractEnum.h \
     src/enums/asn/ASNEnum.h \

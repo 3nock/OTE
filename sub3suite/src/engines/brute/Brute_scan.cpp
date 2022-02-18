@@ -113,6 +113,7 @@ void Brute::m_startScan(){
         case brute::OUTPUT::TLD:
             connect(scanner, &brute::Scanner::scanResult, this, &Brute::onResultTLD);
         }
+        connect(scanner, &brute::Scanner::wildcard, this, &Brute::onWildcard);
         connect(scanner, &brute::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
         connect(scanner, &brute::Scanner::newProgress, ui->progressBar, &QProgressBar::setMaximum);
         connect(scanner, &brute::Scanner::scanLog, this, &Brute::onScanLog);
