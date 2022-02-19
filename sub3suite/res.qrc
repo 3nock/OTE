@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/img">
-        <file>res/icons/folder2.png</file>
         <file>res/icons/checkBox.png</file>
         <file>res/icons/downArrow.png</file>
         <file>res/icons/down.png</file>
@@ -11,14 +10,53 @@
         <file>res/icons/left_on.png</file>
         <file>res/icons/right_on.png</file>
         <file>res/icons/up_on.png</file>
-        <file>res/icons/folder.png</file>
         <file>res/icons/sub3suite.png</file>
         <file>res/icons/logo.ico</file>
         <file>res/icons/s3s_logo.ico</file>
         <file>res/icons/splash.png</file>
         <file>res/icons/help.png</file>
-        <file>res/icons/setting.png</file>
         <file>res/icons/github.png</file>
+        <file>res/icons/preferences.png</file>
+        <file>res/icons/source.png</file>
+        <file>res/icons/qt.png</file>
+        <file>res/icons/doc.png</file>
+        <file>res/icons/24.png</file>
+        <file>res/icons/dns.png</file>
+        <file>res/icons/email.png</file>
+        <file>res/icons/ssl.png</file>
+        <file>res/icons/url.png</file>
+        <file>res/icons/asn.png</file>
+        <file>res/icons/cidr.png</file>
+        <file>res/icons/ip.png</file>
+        <file>res/icons/ipv4.png</file>
+        <file>res/icons/ipv6.png</file>
+        <file>res/icons/domain.png</file>
+        <file>res/icons/wildcard.png</file>
+        <file>res/icons/srv.png</file>
+        <file>res/icons/txt.png</file>
+        <file>res/icons/cname.png</file>
+        <file>res/icons/hash.png</file>
+        <file>res/icons/mx.png</file>
+        <file>res/icons/ns.png</file>
+        <file>res/icons/raw.png</file>
+        <file>res/icons/lock.png</file>
+        <file>res/icons/active.png</file>
+        <file>res/icons/osint.png</file>
+        <file>res/icons/project.png</file>
+        <file>res/icons/gear.png</file>
+        <file>res/icons/open.png</file>
+        <file>res/icons/recent.png</file>
+        <file>res/icons/folder2.png</file>
+        <file>res/icons/folder.png</file>
+        <file>res/icons/exit.png</file>
+        <file>res/icons/key.png</file>
+        <file>res/icons/about.png</file>
+        <file>res/icons/donate.png</file>
+        <file>res/icons/twitter.png</file>
+        <file>res/icons/website.png</file>
+        <file>res/icons/log.png</file>
+        <file>res/icons/list.png</file>
+        <file>res/icons/error.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>

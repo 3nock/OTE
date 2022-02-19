@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>About sub3suite</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme=":/img/res/icons/about.png"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
     <number>4</number>
@@ -248,13 +251,13 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabFolders">
+     <widget class="QWidget" name="tabDonations">
       <attribute name="title">
-       <string>Folders</string>
+       <string>Donations</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QTableView" name="tableViewFolders">
+        <widget class="QTableView" name="tableViewDonations">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>

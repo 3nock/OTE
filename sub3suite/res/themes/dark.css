@@ -468,9 +468,8 @@ QMenu {
 QMenuBar::item {
     margin-top: 1px;
     color: rgb(250,250,250);
-    spacing: 15px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
     padding-top: 1px;
     padding-bottom: 1px;
     background: transparent;
@@ -496,7 +495,8 @@ QMenu::​separator {
 QMenu::item {
     color: rgb(250,250,250);
     background-color: transparent;
-    padding-left: 20px;
+    margin-left: 5px;
+    padding-left: 22px;
     padding-top: 4px;
     padding-bottom: 4px;
     padding-right: 20px;

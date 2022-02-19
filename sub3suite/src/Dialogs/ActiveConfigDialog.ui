@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>Scan Configuration</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme=":/img/res/icons/gear.png"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_6">
    <item>
     <widget class="QTabWidget" name="tabWidget">

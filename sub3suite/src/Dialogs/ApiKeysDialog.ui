@@ -31,6 +31,9 @@
   <property name="windowTitle">
    <string>Api Keys</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme=":/img/res/icons/key.png"/>
+  </property>
   <property name="styleSheet">
    <string notr="true"/>
   </property>

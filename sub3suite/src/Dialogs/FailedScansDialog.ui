@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Failed Scans</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme=":/img/res/icons/error.png"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTableView" name="tableView">

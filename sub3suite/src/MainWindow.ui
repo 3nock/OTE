@@ -490,9 +490,8 @@ QMenu {
 QMenuBar::item {
     margin-top: 1px;
     color: rgb(250,250,250);
-    spacing: 15px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
     padding-top: 1px;
     padding-bottom: 1px;
     background: transparent;
@@ -518,7 +517,8 @@ QMenu::​separator {
 QMenu::item {
     color: rgb(250,250,250);
     background-color: transparent;
-    padding-left: 20px;
+    margin-left: 5px;
+    padding-left: 22px;
     padding-top: 4px;
     padding-bottom: 4px;
     padding-right: 20px;
@@ -811,9 +811,11 @@ QWidget[lighter=&quot;true&quot;]{
     <addaction name="actionlogViewer"/>
     <addaction name="actionDocumentation"/>
     <addaction name="separator"/>
+    <addaction name="actionDonate"/>
+    <addaction name="separator"/>
     <addaction name="actionBlog"/>
     <addaction name="actionTwitter"/>
-    <addaction name="actioncheck_for_updates"/>
+    <addaction name="actionSourceCode"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
@@ -824,22 +826,16 @@ QWidget[lighter=&quot;true&quot;]{
     </property>
     <addaction name="actionApiKeys"/>
     <addaction name="actionPreferences"/>
+    <addaction name="actionLanguage"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Tools</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuFavourite">
-    <property name="title">
-     <string>Favourite</string>
-    </property>
-    <addaction name="actionMassScan"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuConfig"/>
    <addaction name="menuProject"/>
-   <addaction name="menuFavourite"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -852,78 +848,120 @@ QWidget[lighter=&quot;true&quot;]{
    </property>
   </widget>
   <action name="actionOpenProject">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/open.png"/>
+   </property>
    <property name="text">
     <string>open</string>
    </property>
   </action>
   <action name="actionRecentProjects">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/recent.png"/>
+   </property>
    <property name="text">
     <string>open recent</string>
    </property>
   </action>
   <action name="actionExit">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/exit.png"/>
+   </property>
    <property name="text">
     <string>exit</string>
    </property>
   </action>
   <action name="actionDocumentation">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/doc.png"/>
+   </property>
    <property name="text">
     <string>Documentation</string>
    </property>
   </action>
-  <action name="actionApi_Keys">
-   <property name="text">
-    <string>Api Keys</string>
-   </property>
-  </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/about.png"/>
+   </property>
    <property name="text">
     <string>About</string>
    </property>
   </action>
   <action name="actionAboutQt">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/qt.png"/>
+   </property>
    <property name="text">
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actioncheck_for_updates">
-   <property name="text">
-    <string>Check for Updates</string>
-   </property>
-  </action>
   <action name="actionBlog">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/website.png"/>
+   </property>
    <property name="text">
     <string>Blog</string>
    </property>
   </action>
   <action name="actionApiKeys">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/key.png"/>
+   </property>
    <property name="text">
     <string>API Keys</string>
    </property>
   </action>
   <action name="actionPreferences">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/preferences.png"/>
+   </property>
    <property name="text">
     <string>Preferences</string>
    </property>
   </action>
   <action name="actionlogViewer">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/log.png"/>
+   </property>
    <property name="text">
     <string>Log Viewer</string>
    </property>
   </action>
   <action name="actionConfig">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/preferences.png"/>
+   </property>
    <property name="text">
     <string>Config</string>
    </property>
   </action>
   <action name="actionTwitter">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/twitter.png"/>
+   </property>
    <property name="text">
     <string>Twitter</string>
    </property>
   </action>
-  <action name="actionMassScan">
+  <action name="actionLanguage">
    <property name="text">
-    <string>MassScan</string>
+    <string>Language</string>
+   </property>
+  </action>
+  <action name="actionSourceCode">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/source.png"/>
+   </property>
+   <property name="text">
+    <string>Source Code</string>
+   </property>
+  </action>
+  <action name="actionDonate">
+   <property name="icon">
+    <iconset theme=":/img/res/icons/donate.png"/>
+   </property>
+   <property name="text">
+    <string>Donate</string>
    </property>
   </action>
  </widget>

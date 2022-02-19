@@ -90,7 +90,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
 
     m_foldersModel->setColumnCount(2);
     m_foldersModel->setHorizontalHeaderLabels({"File", "File Location"});
-    ui->tableViewFolders->setModel(m_foldersModel);
+    ui->tableViewDonations->setModel(m_foldersModel);
 
     /* loading the folders... */
     this->m_setFolders();

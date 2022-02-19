@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Log Viewer</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme=":/img/res/icons/log.png"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">

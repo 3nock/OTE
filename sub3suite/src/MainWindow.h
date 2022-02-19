@@ -95,6 +95,10 @@ class MainWindow : public QMainWindow{
 
         void on_actionOpenProject_triggered();
 
+        void on_actionSourceCode_triggered();
+
+        void on_actionDonate_triggered();
+
 protected:
         void closeEvent(QCloseEvent *event) override;
 

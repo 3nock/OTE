@@ -73,22 +73,22 @@ void MainWindow::closeEvent(QCloseEvent *event){
 }
 
 void MainWindow::initActions(){
-    ui->menuTools->addAction("OSINT Engine", this, [=](){this->onChangeTabToOsint();});
-    ui->menuTools->addAction("RAW Engine", this, [=](){this->onChangeTabToRaw();});
+    ui->menuTools->addAction("OSINT Engine", this, [=](){this->onChangeTabToOsint();})->setIcon(QIcon(":/img/res/icons/osint.png"));
+    ui->menuTools->addAction("RAW Engine", this, [=](){this->onChangeTabToRaw();})->setIcon(QIcon(":/img/res/icons/raw.png"));
     ui->menuTools->addSeparator();
-    ui->menuTools->addAction("BRUTE Engine", this, [=](){this->onChangeTabToBrute();});
-    ui->menuTools->addAction("ACTIVE Engine", this, [=](){this->onChangeTabToActive();});
-    ui->menuTools->addAction("DNS Engine", this, [=](){this->onChangeTabToDns();});
-    ui->menuTools->addAction("SSL Engine", this, [=](){this->onChangeTabToSSL();});
-    ui->menuTools->addAction("URL Engine", this, [=](){this->onChangeTabToURL();});
+    ui->menuTools->addAction("BRUTE Engine", this, [=](){this->onChangeTabToBrute();})->setIcon(QIcon(":/img/res/icons/lock.png"));
+    ui->menuTools->addAction("ACTIVE Engine", this, [=](){this->onChangeTabToActive();})->setIcon(QIcon(":/img/res/icons/active.png"));
+    ui->menuTools->addAction("DNS Engine", this, [=](){this->onChangeTabToDns();})->setIcon(QIcon(":/img/res/icons/dns.png"));
+    ui->menuTools->addAction("SSL Engine", this, [=](){this->onChangeTabToSSL();})->setIcon(QIcon(":/img/res/icons/ssl.png"));
+    ui->menuTools->addAction("URL Engine", this, [=](){this->onChangeTabToURL();})->setIcon(QIcon(":/img/res/icons/url.png"));
     ui->menuTools->addSeparator();
-    ui->menuTools->addAction("IP Enumerator", this, [=](){this->onChangeTabToIpEnum();});
-    ui->menuTools->addAction("ASN Enumerator", this, [=](){this->onChangeTabToAsnEnum();});
-    ui->menuTools->addAction("CIDR Enumerator", this, [=](){this->onChangeTabToCidrEnum();});
-    ui->menuTools->addAction("NS Enumerator", this, [=](){this->onChangeTabToNSEnum();});
-    ui->menuTools->addAction("MX Enumerator", this, [=](){this->onChangeTabToMXEnum();});
-    ui->menuTools->addAction("SSL Enumerator", this, [=](){this->onChangeTabToSSLEnum();});
-    ui->menuTools->addAction("Email Enumerator", this, [=](){this->onChangeTabToEmailEnum();});
+    ui->menuTools->addAction("IP Enumerator", this, [=](){this->onChangeTabToIpEnum();})->setIcon(QIcon(":/img/res/icons/ip.png"));
+    ui->menuTools->addAction("ASN Enumerator", this, [=](){this->onChangeTabToAsnEnum();})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    ui->menuTools->addAction("CIDR Enumerator", this, [=](){this->onChangeTabToCidrEnum();})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+    ui->menuTools->addAction("NS Enumerator", this, [=](){this->onChangeTabToNSEnum();})->setIcon(QIcon(":/img/res/icons/ns.png"));
+    ui->menuTools->addAction("MX Enumerator", this, [=](){this->onChangeTabToMXEnum();})->setIcon(QIcon(":/img/res/icons/mx.png"));
+    ui->menuTools->addAction("SSL Enumerator", this, [=](){this->onChangeTabToSSLEnum();})->setIcon(QIcon(":/img/res/icons/ssl.png"));
+    ui->menuTools->addAction("Email Enumerator", this, [=](){this->onChangeTabToEmailEnum();})->setIcon(QIcon(":/img/res/icons/email.png"));
 }
 
 void MainWindow::recents(){
@@ -201,6 +201,56 @@ void MainWindow::m_initEngines(){
     /* main tabwidget */
     ui->tabWidgetMain->insertTab(3, project, "Project");
     ui->tabWidgetMain->setCurrentIndex(0);
+
+    /*
+    ///
+    /// set tab icon property...
+    ///
+    ui->tabWidgetMain->setProperty("has_icon", true);
+    ui->tabWidgetMain->setProperty("has_icon", true);
+    ui->tabWidgetMain->setProperty("has_icon", true);
+    ui->tabWidgetMain->setProperty("has_icon", true);
+    ui->tabWidgetPassive->setProperty("has_icon", true);
+    ui->tabWidgetPassive->setProperty("has_icon", true);
+    ui->tabWidgetActive->setProperty("has_icon", true);
+    ui->tabWidgetActive->setProperty("has_icon", true);
+    ui->tabWidgetActive->setProperty("has_icon", true);
+    ui->tabWidgetActive->setProperty("has_icon", true);
+    ui->tabWidgetActive->setProperty("has_icon", true);
+    ui->tabWidgetEnums->setProperty("has_icon", true);
+    ui->tabWidgetEnums->setProperty("has_icon", true);
+    ui->tabWidgetEnums->setProperty("has_icon", true);
+    ui->tabWidgetEnums->setProperty("has_icon", true);
+    ui->tabWidgetEnums->setProperty("has_icon", true);
+    ui->tabWidgetEnums->setProperty("has_icon", true);
+    ui->tabWidgetEnums->setProperty("has_icon", true);
+    ui->tabWidgetMain->setProperty("has_icon", true);
+    ui->tabWidgetMain->setProperty("has_icon", true);
+    ui->tabWidgetMain->setProperty("has_icon", true);
+    ui->tabWidgetMain->setProperty("has_icon", true);
+
+    ///
+    /// set tab icon...
+    ///
+    ui->tabWidgetMain->setTabIcon(0, QIcon(":/img/res/icons/osint.png"));
+    ui->tabWidgetMain->setTabIcon(1, QIcon(":/img/res/icons/active.png"));
+    ui->tabWidgetMain->setTabIcon(2, QIcon(":/img/res/icons/list.png"));
+    ui->tabWidgetMain->setTabIcon(3, QIcon(":/img/res/icons/project.png"));
+    ui->tabWidgetPassive->setTabIcon(0, QIcon(":/img/res/icons/osint.png"));
+    ui->tabWidgetPassive->setTabIcon(1, QIcon(":/img/res/icons/raw.png"));
+    ui->tabWidgetActive->setTabIcon(0, QIcon(":/img/res/icons/lock.png"));
+    ui->tabWidgetActive->setTabIcon(1, QIcon(":/img/res/icons/active.png"));
+    ui->tabWidgetActive->setTabIcon(2, QIcon(":/img/res/icons/dns.png"));
+    ui->tabWidgetActive->setTabIcon(3, QIcon(":/img/res/icons/ssl.png"));
+    ui->tabWidgetActive->setTabIcon(4, QIcon(":/img/res/icons/dns.png"));
+    ui->tabWidgetEnums->setTabIcon(0, QIcon(":/img/res/icons/ip.png"));
+    ui->tabWidgetEnums->setTabIcon(1, QIcon(":/img/res/icons/asn.png"));
+    ui->tabWidgetEnums->setTabIcon(2, QIcon(":/img/res/icons/cidr.png"));
+    ui->tabWidgetEnums->setTabIcon(3, QIcon(":/img/res/icons/ns.png"));
+    ui->tabWidgetEnums->setTabIcon(4, QIcon(":/img/res/icons/mx.png"));
+    ui->tabWidgetEnums->setTabIcon(5, QIcon(":/img/res/icons/ssl.png"));
+    ui->tabWidgetEnums->setTabIcon(6, QIcon(":/img/res/icons/email.png"));
+    */
 }
 
 void MainWindow::m_connectSignals(AbstractEngine *engine){
@@ -500,4 +550,12 @@ void MainWindow::on_actionOpenProject_triggered(){
         /* opening the project */
         projectModel->openExistingProject(name, filename);
     }
+}
+
+void MainWindow::on_actionSourceCode_triggered(){
+    QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite", QUrl::TolerantMode));
+}
+
+void MainWindow::on_actionDonate_triggered(){
+    QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite", QUrl::TolerantMode));
 }
