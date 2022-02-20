@@ -63,6 +63,7 @@
         <file>res/files/userAgents.txt</file>
         <file>res/files/LICENSE</file>
         <file>res/files/under_development.html</file>
+        <file>res/files/HISTORY</file>
     </qresource>
     <qresource prefix="/themes">
         <file>res/themes/dark.css</file>

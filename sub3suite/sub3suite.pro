@@ -237,6 +237,7 @@ SOURCES += \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/utils/LogsSyntaxHighlighter.cpp \
     src/utils/NotesSyntaxHighlighter.cpp \
+    src/utils/UpdateChecker.cpp \
     src/widgets/InputWidget.cpp \
     src/dialogs/LogViewerDialog.cpp \
     src/dialogs/AboutDialog.cpp \
@@ -400,6 +401,7 @@ HEADERS += \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \
     src/utils/NotesSyntaxHighlighter.h \
+    src/utils/UpdateChecker.h \
     src/utils/models.h \
     src/widgets/InputWidget.h \
     src/dialogs/LogViewerDialog.h \

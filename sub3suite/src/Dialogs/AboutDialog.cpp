@@ -47,7 +47,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     ui->labelLogo->setScaledContents(true);
 
     /* setting up version info */
-    ui->labelVersion->setText("Version 0.1 (BETA)");
+    ui->labelVersion->setText("Version 1.0.0 (BETA)");
 
     /* setting up description */
     ui->textBrowserDescription->setOpenExternalLinks(true);
@@ -56,8 +56,8 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     ui->textBrowserDescription->append("\n");
 
     ui->textBrowserDescription->append("License GPLv3: GNU GPL version 3 or later <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">https://www.gnu.org/licenses/gpl-3.0.html</a>."
-                                  " This is free software; see the source for copying conditions."
-                                  " There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
+                                       " This is free software; see the source for copying conditions."
+                                       " There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
 
     ui->textBrowserDescription->append("\nsub3suite is Open Source Software released under the GNU General Public License.\n");
 
@@ -107,15 +107,27 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     ui->tableViewDonations->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     ///
+    /// version history...
+    ///
+
+    QFile file_history(":/files/res/files/HISTORY");
+    if(file_history.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        /* append HISTORY file content to the plainTextEdit */
+        ui->plainTextEditHistory->setPlainText(file_history.readAll());
+        file_history.close();
+    }
+
+    ///
     /// for LICENSE...
     ///
 
-    QFile file(":/files/res/files/LICENSE");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile file_license(":/files/res/files/LICENSE");
+    if(file_license.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         /* append LICENSE file content to the plainTextEdit */
-        ui->plainTextEditLicense->setPlainText(file.readAll());
-        file.close();
+        ui->plainTextEditLicense->setPlainText(file_license.readAll());
+        file_license.close();
     }
 }
 AboutDialog::~AboutDialog(){

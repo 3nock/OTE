@@ -323,6 +323,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tabHistory">
+      <attribute name="title">
+       <string>History</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEditHistory"/>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tabLicense">
       <attribute name="title">
        <string>License</string>
