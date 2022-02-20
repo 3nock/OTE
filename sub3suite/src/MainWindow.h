@@ -71,6 +71,8 @@ class MainWindow : public QMainWindow{
         void onChangeTabToSSLEnum();
         void onChangeTabToEmailEnum();
 
+        void onSetTabIcons();
+
     private slots:
         /* file menu */
         void on_actionExit_triggered();
@@ -92,14 +94,11 @@ class MainWindow : public QMainWindow{
         void onDocumentation_passive();
         void onDocumentation_tools();
         void on_actionConfig_triggered();
-
         void on_actionOpenProject_triggered();
-
         void on_actionSourceCode_triggered();
-
         void on_actionDonate_triggered();
 
-protected:
+    protected:
         void closeEvent(QCloseEvent *event) override;
 
     private:

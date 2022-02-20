@@ -12,6 +12,7 @@
 PreferenceDialog::PreferenceDialog(QWidget *parent): QDialog(parent), ui(new Ui::PreferenceDialog)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/preferences.png"));
 }
 PreferenceDialog::~PreferenceDialog(){
     delete ui;

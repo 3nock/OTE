@@ -81,7 +81,7 @@ QToolBox QScrollArea {
 }
 
 QToolBox QWidget {
-    background-color:rgb(40,40,40);
+    background-color:rgb(45,45,45);
 }
 
 QToolBox::tab {
@@ -849,7 +849,8 @@ QWidget[lighter=&quot;true&quot;]{
   </widget>
   <action name="actionOpenProject">
    <property name="icon">
-    <iconset theme=":/img/res/icons/open.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>open</string>
@@ -857,7 +858,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionRecentProjects">
    <property name="icon">
-    <iconset theme=":/img/res/icons/recent.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>open recent</string>
@@ -865,7 +867,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset theme=":/img/res/icons/exit.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>exit</string>
@@ -873,7 +876,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionDocumentation">
    <property name="icon">
-    <iconset theme=":/img/res/icons/doc.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Documentation</string>
@@ -881,7 +885,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset theme=":/img/res/icons/about.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>About</string>
@@ -889,7 +894,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionAboutQt">
    <property name="icon">
-    <iconset theme=":/img/res/icons/qt.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>About Qt</string>
@@ -897,7 +903,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionBlog">
    <property name="icon">
-    <iconset theme=":/img/res/icons/website.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Blog</string>
@@ -905,7 +912,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionApiKeys">
    <property name="icon">
-    <iconset theme=":/img/res/icons/key.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>API Keys</string>
@@ -913,7 +921,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionPreferences">
    <property name="icon">
-    <iconset theme=":/img/res/icons/preferences.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Preferences</string>
@@ -921,7 +930,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionlogViewer">
    <property name="icon">
-    <iconset theme=":/img/res/icons/log.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Log Viewer</string>
@@ -929,7 +939,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionConfig">
    <property name="icon">
-    <iconset theme=":/img/res/icons/preferences.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Config</string>
@@ -937,7 +948,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionTwitter">
    <property name="icon">
-    <iconset theme=":/img/res/icons/twitter.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Twitter</string>
@@ -950,7 +962,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionSourceCode">
    <property name="icon">
-    <iconset theme=":/img/res/icons/source.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Source Code</string>
@@ -958,7 +971,8 @@ QWidget[lighter=&quot;true&quot;]{
   </action>
   <action name="actionDonate">
    <property name="icon">
-    <iconset theme=":/img/res/icons/donate.png"/>
+    <iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Donate</string>

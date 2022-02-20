@@ -26,7 +26,8 @@
    <string>Scan Configuration</string>
   </property>
   <property name="windowIcon">
-   <iconset theme=":/img/res/icons/gear.png"/>
+   <iconset>
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_6">
    <item>

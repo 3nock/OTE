@@ -8,9 +8,13 @@
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
 
-#include "src/s3s.h"
 #include <QFile>
+#include <QMenu>
+#include <QClipboard>
 #include <QDesktopServices>
+
+#include "src/s3s.h"
+#include "src/utils/Config.h"
 
 
 AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
@@ -20,6 +24,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     m_foldersModel(new QStandardItemModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/about.png"));
 
     /* github account */
     s3s_ClickableLabel *githubLabel = new s3s_ClickableLabel("", this);
@@ -66,34 +71,40 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for authors...
     ///
 
-    m_authorsModel->setColumnCount(2);
-    m_authorsModel->setHorizontalHeaderLabels({"Author", "Email Contact"});
+    CONFIG.beginGroup("authors");
+    foreach(const QString &author, CONFIG.allKeys())
+        m_authorsModel->appendRow({new QStandardItem(author),
+                                   new QStandardItem(CONFIG.value(author).toString())});
+    CONFIG.endGroup();
+    m_authorsModel->setHorizontalHeaderLabels({" Author", " Contact"});
     ui->tableViewContributors->setModel(m_authorsModel);
-
-    /* loading the authors... */
-    this->m_setAuthors();
+    ui->tableViewContributors->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     ///
     /// for modules...
     ///
 
-    m_modulesModel->setColumnCount(2);
-    m_modulesModel->setHorizontalHeaderLabels({"Module", "Module Source"});
+    CONFIG_OSINT.beginGroup("modules");
+    foreach(const QString &module, CONFIG_OSINT.allKeys())
+        m_modulesModel->appendRow({new QStandardItem(module),
+                                   new QStandardItem(CONFIG_OSINT.value(module).toString())});
+    CONFIG_OSINT.endGroup();
+    m_modulesModel->setHorizontalHeaderLabels({" Module", " Source"});
     ui->tableViewModules->setModel(m_modulesModel);
-
-    /* loading the modules... */
-    this->m_setModules();
+    ui->tableViewModules->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     ///
-    /// for folders...
+    /// for donations...
     ///
 
-    m_foldersModel->setColumnCount(2);
-    m_foldersModel->setHorizontalHeaderLabels({"File", "File Location"});
+    CONFIG.beginGroup("donors");
+    foreach(const QString &donor, CONFIG.allKeys())
+        m_authorsModel->appendRow({new QStandardItem(donor),
+                                   new QStandardItem(CONFIG.value(donor).toString())});
+    CONFIG.endGroup();
+    m_foldersModel->setHorizontalHeaderLabels({" Name", " Contact"});
     ui->tableViewDonations->setModel(m_foldersModel);
-
-    /* loading the folders... */
-    this->m_setFolders();
+    ui->tableViewDonations->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     ///
     /// for LICENSE...
@@ -114,18 +125,66 @@ AboutDialog::~AboutDialog(){
     delete ui;
 }
 
-void AboutDialog::m_setAuthors(){
-    /* for now i am the only author */
-    m_authorsModel->appendRow({new QStandardItem("Enock Nicholaus"), new QStandardItem("3nock@protonmail.com")});
 
-    /* later on store authors in a .ini file and load them */
+void AboutDialog::on_tableViewModules_customContextMenuRequested(const QPoint &pos){
+    Q_UNUSED(pos);
+
+    /* check if user right clicked on items else dont show the context menu... */
+    if(!ui->tableViewModules->selectionModel()->isSelected(ui->tableViewModules->currentIndex()))
+        return;
+
+    if(ui->tableViewModules->currentIndex().column() == 0)
+        return;
+
+    /* creating the context menu... */
+    QMenu menu(this);
+
+    menu.addAction("Copy", this, [=](){
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(ui->tableViewModules->currentIndex().data().toString());
+    });
+    menu.addAction("Open in browser", this, [=](){
+        QDesktopServices::openUrl(QUrl(ui->tableViewModules->currentIndex().data().toString(), QUrl::TolerantMode));
+    });
+
+    /* showing the context menu... */
+    menu.exec(QCursor::pos());
 }
 
-void AboutDialog::m_setModules(){
-    /* nothing yet for now */
+void AboutDialog::on_tableViewContributors_customContextMenuRequested(const QPoint &pos){
+    Q_UNUSED(pos);
+
+    /* check if user right clicked on items else dont show the context menu... */
+    if(!ui->tableViewContributors->selectionModel()->isSelected(ui->tableViewContributors->currentIndex()))
+        return;
+
+    /* creating the context menu... */
+    QMenu menu(this);
+
+    menu.addAction("Copy", this, [=](){
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(ui->tableViewContributors->currentIndex().data().toString());
+    });
+
+    /* showing the context menu... */
+    menu.exec(QCursor::pos());
 }
 
-void AboutDialog::m_setFolders(){
-    /* nothing yet for now */
-}
+void AboutDialog::on_tableViewDonations_customContextMenuRequested(const QPoint &pos){
+    Q_UNUSED(pos);
 
+    /* check if user right clicked on items else dont show the context menu... */
+    if(!ui->tableViewDonations->selectionModel()->isSelected(ui->tableViewDonations->currentIndex()))
+        return;
+
+    /* creating the context menu... */
+    QMenu menu(this);
+
+    menu.addAction("Copy", this, [=](){
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(ui->tableViewDonations->currentIndex().data().toString());
+    });
+
+    /* showing the context menu... */
+    menu.exec(QCursor::pos());
+}

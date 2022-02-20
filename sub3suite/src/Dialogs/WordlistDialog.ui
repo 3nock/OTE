@@ -32,7 +32,8 @@
    <string>Bruteforce Wordlist</string>
   </property>
   <property name="windowIcon">
-   <iconset theme=":/img/res/icons/list.png"/>
+   <iconset>
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>

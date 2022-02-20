@@ -19,6 +19,7 @@ ApiKeysDialog::ApiKeysDialog(QWidget *parent): QDialog(parent),
     ui(new Ui::ApiKeysDialog)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/key.png"));
 
     this->m_loadApiKeys();
 }

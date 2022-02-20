@@ -59,7 +59,7 @@ QToolBox QScrollArea {
 }
 
 QToolBox QWidget {
-    background-color:rgb(40,40,40);
+    background-color:rgb(45,45,45);
 }
 
 QToolBox::tab {

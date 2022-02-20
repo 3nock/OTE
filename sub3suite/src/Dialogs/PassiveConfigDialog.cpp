@@ -19,6 +19,7 @@ PassiveConfigDialog::PassiveConfigDialog(QWidget *parent, ScanConfig *config) : 
     m_config(config)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
     /* adjusting the dialog size... */
     this->adjustSize();

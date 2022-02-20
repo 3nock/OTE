@@ -10,6 +10,7 @@
 
 #include <QMenu>
 #include <QAction>
+#include <QClipboard>
 
 
 FailedScansDialog::FailedScansDialog(QWidget *parent, QMap<QString,QString> targets) :
@@ -18,10 +19,11 @@ FailedScansDialog::FailedScansDialog(QWidget *parent, QMap<QString,QString> targ
     m_model(new QStandardItemModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/error.png"));
 
     // initializing the model
     m_model->setColumnCount(2);
-    m_model->setHorizontalHeaderLabels({"Target", "Error"});
+    m_model->setHorizontalHeaderLabels({" Target", " Error"});
 
     // appending the targets and their errors on the model
     QStringList targetList = targets.keys();
@@ -30,6 +32,8 @@ FailedScansDialog::FailedScansDialog(QWidget *parent, QMap<QString,QString> targ
 
     // model to the tableview
     ui->tableView->setModel(m_model);
+    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
 }
 FailedScansDialog::~FailedScansDialog(){
     delete m_model;
@@ -52,30 +56,43 @@ void FailedScansDialog::on_buttonCancel_clicked(){
 void FailedScansDialog::on_tableView_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
 
-    /* check if user right clicked on items else dont show the context menu */
-    if(!ui->tableView->selectionModel()->isSelected(ui->tableView->currentIndex()))
-        return;
-
-    /* getting the selected items */
     QItemSelectionModel *selectionModel = ui->tableView->selectionModel();
 
-    /* action */
-    QAction remove("Remove");
-    connect(&remove, &QAction::triggered, this, [=](){
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            m_model->removeRow(index.row());
-    });
+    /* check if user right clicked on items else dont show the context menu */
+    if(!selectionModel->isSelected(ui->tableView->currentIndex()))
+        return;
 
     /* creating the context menu */
     QMenu menu(this);
 
-    /* adding to mainMenu */
-    menu.addAction(&remove);
+    /* adding actions */
+    menu.addAction("Copy", this, [=](){
+        QClipboard *clipboard = QGuiApplication::clipboard();
+
+        QString clipboardData;
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column() == 0)
+                clipboardData.append(index.data().toString().append("\n"));
+        }
+
+        clipboard->setText(clipboardData.trimmed());
+    });
+
+    menu.addAction("Remove", this, [=](){
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            m_model->removeRow(index.row());
+    });
 
     /* showing the context menu */
     menu.exec(QCursor::pos());
 }
 
 void FailedScansDialog::on_buttonCopy_clicked(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
 
+    QString clipboardData;
+    for(int i = 0; i != m_model->rowCount(); ++i)
+        clipboardData.append(m_model->index(i,0).data().toString()).append("\n");
+
+    clipboard->setText(clipboardData.trimmed());
 }

@@ -15,6 +15,7 @@ WordListDialog::WordListDialog(QWidget *parent, QStringListModel *wordlistModel)
       m_listModel_generate(new QStringListModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/list.png"));
 
     this->m_initChoose();
     this->m_initGenerate();

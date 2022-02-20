@@ -9,6 +9,7 @@ DocumentationDialog::DocumentationDialog(QWidget *parent) :
     ui(new Ui::DocumentationDialog)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/doc.png"));
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
@@ -23,6 +24,7 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
     ui(new Ui::DocumentationDialog)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/doc.png"));
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);

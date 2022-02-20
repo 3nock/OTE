@@ -7,7 +7,7 @@
 namespace ModuleInfo {
 struct Arin{
     QString name = "Arin";
-    QString url = "https://jldc.me/anubis/";
+    QString url = "https://www.arin.net/";
     QString url_apiDoc = "https://www.arin.net/resources/registry/whois/rws/api/";
     QString summary = "ARIN is a nonprofit, member-based organization that administers IP addresses & ASNs "
                       "in support of the operation and growth of the Internet.";

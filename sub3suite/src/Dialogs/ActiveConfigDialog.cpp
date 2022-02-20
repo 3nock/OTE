@@ -19,6 +19,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, brute::ScanConfig *confi
     m_customNameserverListModel(new QStringListModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
     brute = true;
     this->m_initWidgets();
@@ -36,6 +37,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, active::ScanConfig *conf
     m_customNameserverListModel(new QStringListModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
     active = true;
     this->m_initWidgets();
@@ -53,6 +55,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config)
     m_customNameserverListModel(new QStringListModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
     dns = true;
     this->m_initWidgets();
@@ -75,6 +78,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
     m_customNameserverListModel(new QStringListModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
     ssl = true;
     this->m_initWidgets();
@@ -97,6 +101,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ip::ScanConfig *config) 
     m_customNameserverListModel(new QStringListModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
     ip = true;
     this->m_initWidgets();

@@ -14,7 +14,8 @@
    <string>Project Config</string>
   </property>
   <property name="windowIcon">
-   <iconset theme=":/img/res/icons/preferences.png"/>
+   <iconset>
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

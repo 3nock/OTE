@@ -9,6 +9,7 @@ EnumConfigDialog::EnumConfigDialog(QWidget *parent, ScanConfig *config) : QDialo
     m_config(config)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 }
 EnumConfigDialog::~EnumConfigDialog(){
     delete ui;

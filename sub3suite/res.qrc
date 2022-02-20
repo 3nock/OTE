@@ -24,7 +24,6 @@
         <file>res/icons/dns.png</file>
         <file>res/icons/email.png</file>
         <file>res/icons/ssl.png</file>
-        <file>res/icons/url.png</file>
         <file>res/icons/asn.png</file>
         <file>res/icons/cidr.png</file>
         <file>res/icons/ip.png</file>
@@ -57,6 +56,7 @@
         <file>res/icons/log.png</file>
         <file>res/icons/list.png</file>
         <file>res/icons/error.png</file>
+        <file>res/icons/url.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>

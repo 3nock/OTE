@@ -23,14 +23,18 @@ class AboutDialog : public QDialog{
         explicit AboutDialog(QWidget *parent = nullptr);
         ~AboutDialog();
 
-    private:
+    private slots:
+        void on_tableViewModules_customContextMenuRequested(const QPoint &pos);
+
+        void on_tableViewContributors_customContextMenuRequested(const QPoint &pos);
+
+        void on_tableViewDonations_customContextMenuRequested(const QPoint &pos);
+
+private:
         Ui::AboutDialog *ui;
         QStandardItemModel *m_authorsModel;
         QStandardItemModel *m_modulesModel;
         QStandardItemModel *m_foldersModel;
-        void m_setAuthors();
-        void m_setModules();
-        void m_setFolders();
 };
 
 #endif // ABOUTDIALOG_H

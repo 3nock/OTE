@@ -13,6 +13,7 @@ ProjectConfigDialog::ProjectConfigDialog(ProjectModel *projectModel, QWidget *pa
     m_projectModel(projectModel)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
     /* setting the data */
     ui->lineEditName->setText(m_projectModel->projectInfo.name);

@@ -32,7 +32,8 @@
    <string>Api Keys</string>
   </property>
   <property name="windowIcon">
-   <iconset theme=":/img/res/icons/key.png"/>
+   <iconset>
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>

@@ -16,6 +16,7 @@ LogViewerDialog::LogViewerDialog(QWidget *parent): QDialog(parent),
     ui(new Ui::LogViewerDialog)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/log.png"));
 
     /* loading the current logfile to the editor */
     QString currentFile(QDateTime::currentDateTime().toString("dd-MM-yyyy"));
