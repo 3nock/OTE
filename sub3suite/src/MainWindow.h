@@ -15,6 +15,7 @@
 #include "s3s.h"
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
+#include "src/utils/UpdateChecker.h"
 
 /* engines */
 #include "src/engines/dns/Dns.h"
@@ -98,6 +99,8 @@ class MainWindow : public QMainWindow{
         void on_actionSourceCode_triggered();
         void on_actionDonate_triggered();
 
+        void on_actionCheckUpdates_triggered();
+
     protected:
         void closeEvent(QCloseEvent *event) override;
 
@@ -125,6 +128,7 @@ class MainWindow : public QMainWindow{
         EmailEnum *emailEnum = nullptr;
 
         /* ... */
+        UpdateChecker *m_updateChecker;
         QMenu *m_menuRecents;
         void recents();
         void initActions();

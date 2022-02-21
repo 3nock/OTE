@@ -816,6 +816,7 @@ QWidget[lighter=&quot;true&quot;]{
     <addaction name="actionBlog"/>
     <addaction name="actionTwitter"/>
     <addaction name="actionSourceCode"/>
+    <addaction name="actionCheckUpdates"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
@@ -976,6 +977,11 @@ QWidget[lighter=&quot;true&quot;]{
    </property>
    <property name="text">
     <string>Donate</string>
+   </property>
+  </action>
+  <action name="actionCheckUpdates">
+   <property name="text">
+    <string>Check for Updates</string>
    </property>
   </action>
  </widget>

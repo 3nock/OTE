@@ -21,6 +21,7 @@
 
 #include "src/utils/Config.h"
 
+
 /*
  * TODO:
  *      status from all engines, so as to alert during close event
@@ -39,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->recents();
     this->initActions();
 
+    m_updateChecker = new UpdateChecker(this);
+
     /* build info */
     QAction* buildInfo = new QAction(tr("(%2)").arg("BETA"), this);
     buildInfo->setEnabled(false);
@@ -46,6 +49,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     /* welcome */
     ui->statusbar->showMessage("Welcome!", 5000);
+
+    /* check for updates */
+    m_updateChecker->checkForUpdates_onStart();
+    ui->statusbar->showMessage("Checking For Updates...", 3000);
 }
 MainWindow::~MainWindow(){
     delete ui;
@@ -571,4 +578,9 @@ void MainWindow::on_actionSourceCode_triggered(){
 
 void MainWindow::on_actionDonate_triggered(){
     QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite", QUrl::TolerantMode));
+}
+
+void MainWindow::on_actionCheckUpdates_triggered(){
+    m_updateChecker->checkForUpdates();
+    ui->statusbar->showMessage("Checking For Updates...", 3000);
 }

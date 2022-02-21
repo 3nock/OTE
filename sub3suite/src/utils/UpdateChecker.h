@@ -9,12 +9,14 @@ class UpdateChecker : public QNetworkAccessManager {
     public:
         UpdateChecker(QWidget* parent = nullptr);
         void checkForUpdates();
+        void checkForUpdates_onStart();
 
     private slots:
         void onFinished(QNetworkReply* reply);
 
     private:
         QWidget* m_parent;
+        bool onStart = false;
 
 };
 
