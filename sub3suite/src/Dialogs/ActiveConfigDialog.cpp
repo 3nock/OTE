@@ -67,6 +67,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config)
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
     ui->radioButtonAAAA->hide();
+    ui->radioButtonANY->hide();
     ui->labelRecordType->hide();
 }
 
@@ -89,6 +90,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
     ui->radioButtonAAAA->hide();
+    ui->radioButtonANY->hide();
     ui->labelRecordType->hide();
     ui->tabWidget->removeTab(1);
 }
@@ -163,6 +165,8 @@ void ActiveConfigDialog::m_loadConfigBrute(){
         ui->radioButtonA->setChecked(true);
     if(record == "AAAA")
         ui->radioButtonAAAA->setChecked(true);
+    if(record == "ANY")
+        ui->radioButtonANY->setChecked(true);
 
     QString nsType = CONFIG_BRUTE.value("nameserverType").toString();
     if(nsType == "single")
@@ -197,6 +201,8 @@ void ActiveConfigDialog::m_loadConfigActive(){
         ui->radioButtonA->setChecked(true);
     if(record == "AAAA")
         ui->radioButtonAAAA->setChecked(true);
+    if(record == "ANY")
+        ui->radioButtonANY->setChecked(true);
 
     QString nsType = CONFIG_ACTIVE.value("nameserverType").toString();
     if(nsType == "single")
@@ -267,6 +273,7 @@ void ActiveConfigDialog::m_saveBrute(){
 
     bool recordA = ui->radioButtonA->isChecked();
     bool recordAAAA = ui->radioButtonAAAA->isChecked();
+    bool recordANY = ui->radioButtonANY->isChecked();
 
     bool nsSingle = ui->radioButtonSingleNameserver->isChecked();
     bool nsRandom = ui->radioButtonRandomNameservers->isChecked();
@@ -294,6 +301,8 @@ void ActiveConfigDialog::m_saveBrute(){
         CONFIG_BRUTE.setValue("record", "A");
     if(recordAAAA)
         CONFIG_BRUTE.setValue("record", "AAAA");
+    if(recordANY)
+        CONFIG_BRUTE.setValue("record", "ANY");
 
     CONFIG_BRUTE.beginWriteArray("Custom-Nameservers");
     QStringList customNameservers = m_customNameserverListModel->stringList();
@@ -317,6 +326,8 @@ void ActiveConfigDialog::m_saveBrute(){
         m_configBrute->recordType = QDnsLookup::A;
     if(recordAAAA)
         m_configBrute->recordType = QDnsLookup::AAAA;
+    if(recordANY)
+        m_configBrute->recordType = QDnsLookup::ANY;
 
     if(nsSingle){
         m_configBrute->nameservers.clear();
@@ -362,6 +373,7 @@ void ActiveConfigDialog::m_saveActive(){
 
     bool recordA = ui->radioButtonA->isChecked();
     bool recordAAAA = ui->radioButtonAAAA->isChecked();
+    bool recordANY = ui->radioButtonANY->isChecked();
 
     bool nsSingle = ui->radioButtonSingleNameserver->isChecked();
     bool nsRandom = ui->radioButtonRandomNameservers->isChecked();
@@ -388,6 +400,8 @@ void ActiveConfigDialog::m_saveActive(){
         CONFIG_ACTIVE.setValue("record", "A");
     if(recordAAAA)
         CONFIG_ACTIVE.setValue("record", "AAAA");
+    if(recordANY)
+        CONFIG_ACTIVE.setValue("record", "ANY");
 
     CONFIG_ACTIVE.beginWriteArray("Custom-Nameservers");
     QStringList customNameservers = m_customNameserverListModel->stringList();
@@ -409,6 +423,8 @@ void ActiveConfigDialog::m_saveActive(){
         m_configActive->recordType = QDnsLookup::A;
     if(recordAAAA)
         m_configActive->recordType = QDnsLookup::AAAA;
+    if(recordANY)
+        m_configActive->recordType = QDnsLookup::ANY;
 
     if(nsSingle){
         m_configActive->nameservers.clear();

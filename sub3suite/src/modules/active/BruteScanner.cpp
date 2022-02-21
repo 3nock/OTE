@@ -32,26 +32,52 @@ void brute::Scanner::lookupFinished(){
     case QDnsLookup::NoError:
         if(m_dns->hostAddressRecords().isEmpty())
             break;
-        else
+
+        switch (m_args->config->recordType) {
+        case QDnsLookup::A:
         {
             QString address = m_dns->hostAddressRecords().at(0).value().toString();
-
-            /* check wildcard */
             if(m_args->config->checkWildcard && has_wildcards){
                 if(address == wildcard_ip)
                     break;
             }
-
             s3s_struct::HOST host;
             host.host = m_dns->name();
-            if(m_args->config->recordType == QDnsLookup::A)
-                host.ipv4 = address;
-            else
-                host.ipv6 = address;
-
+            host.ipv4 = address;
             emit scanResult(host);
+        }
+            break;
+        case QDnsLookup::AAAA:
+        {
+            QString address = m_dns->hostAddressRecords().at(0).value().toString();
+            if(m_args->config->checkWildcard && has_wildcards){
+                if(address == wildcard_ip)
+                    break;
+            }
+            s3s_struct::HOST host;
+            host.host = m_dns->name();
+            host.ipv6 = address;
+            emit scanResult(host);
+        }
+            break;
+        case QDnsLookup::ANY:
+        {
+            s3s_struct::HOST host;
+            host.host = m_dns->name();
+            foreach(const QDnsHostAddressRecord &addr, m_dns->hostAddressRecords()){
+                if(addr.value().protocol() == QAbstractSocket::IPv4Protocol)
+                    host.ipv4 = addr.value().toString();
+                if(addr.value().protocol() == QAbstractSocket::IPv6Protocol)
+                    host.ipv6 = addr.value().toString();
+            }
+            emit scanResult(host);
+        }
+            break;
+        default:
             break;
         }
+        break;
+
     default:
         log.message = m_dns->errorString();
         log.target = m_dns->name();
@@ -132,22 +158,19 @@ void brute::Scanner::lookup_wildcard(){
     m_dns_wildcard->setNameserver(m_dns->nameserver());
     m_dns_wildcard->setName(m_args->currentTarget);
     m_dns_wildcard->lookup();
-
-    m_mutex.lock();
-    m_wait.wait(&m_mutex);
-    m_mutex.unlock();
 }
 
 void brute::Scanner::lookupFinished_wildcard(){
-    qDebug() << "wildcard scanner finished...";
-
-    switch(m_dns->error()){
+    switch(m_dns_wildcard->error()){
     case QDnsLookup::NoError:
     {
+        if(m_dns_wildcard->hostAddressRecords().isEmpty())
+            break;
+
         s3s_struct::Wildcard wcard;
         wcard.wildcard = "*."+m_args->currentTarget;
 
-        QString address = m_dns->hostAddressRecords()[0].value().toString();
+        QString address = m_dns_wildcard->hostAddressRecords()[0].value().toString();
         if(m_dns_wildcard->type() == QDnsLookup::A)
             wcard.ipv4 = address;
         else
@@ -163,8 +186,6 @@ void brute::Scanner::lookupFinished_wildcard(){
         has_wildcards = false;
         break;
     }
-    /* continue execution */
-    m_wait.wakeAll();
 }
 
 ///

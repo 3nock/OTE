@@ -46,10 +46,20 @@ void Active::onScanResult_dns(s3s_struct::HOST host){
     if(m_resultSet.contains(host.host)) // for existing entry...
     {
         s3s_item::HOST *item = m_resultSet.value(host.host);
-        if(m_scanConfig->recordType == QDnsLookup::A)
+        switch (m_scanConfig->recordType) {
+        case QDnsLookup::A:
             item->setValue_ipv4(host.ipv4);
-        else
+            break;
+        case QDnsLookup::AAAA:
             item->setValue_ipv6(host.ipv6);
+            break;
+        case QDnsLookup::ANY:
+            item->setValue_ipv4(host.ipv4);
+            item->setValue_ipv6(host.ipv6);
+            break;
+        default:
+            break;
+        }
     }
     else // for new entry...
     {

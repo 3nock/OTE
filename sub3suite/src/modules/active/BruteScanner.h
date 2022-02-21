@@ -12,7 +12,6 @@
 #include <QQueue>
 #include <QDnsLookup>
 #include <QHostAddress>
-#include <QWaitCondition>
 
 #include "AbstractScanner.h"
 #include "src/models/HostModel.h"
@@ -87,8 +86,6 @@ class Scanner : public AbstractScanner{
         brute::ScanArgs *m_args;
         QDnsLookup *m_dns;
         QDnsLookup *m_dns_wildcard;
-        QMutex m_mutex;
-        QWaitCondition m_wait;
 
         /* for wildcards */
         bool has_wildcards = true;

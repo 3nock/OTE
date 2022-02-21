@@ -85,7 +85,7 @@ void MainWindow::initActions(){
     ui->actionAbout->setIcon(QIcon(":/img/res/icons/about.png"));
     ui->actionConfig->setIcon(QIcon(":/img/res/icons/gear.png"));
     ui->actionDonate->setIcon(QIcon(":/img/res/icons/donate.png"));
-    ui->actionAboutQt->setIcon(QIcon(":/img/res/icons/qt.png"));
+    ui->actionAboutQt->setIcon(QIcon(":/img/res/icons/qt-logo.png"));
     ui->actionApiKeys->setIcon(QIcon(":/img/res/icons/key.png"));
     ui->actionTwitter->setIcon(QIcon(":/img/res/icons/twitter.png"));
     /*ui->actionLanguage->setIcon(QIcon(":/img/res/icons/"));*/
@@ -95,6 +95,7 @@ void MainWindow::initActions(){
     ui->actionPreferences->setIcon(QIcon(":/img/res/icons/preferences.png"));
     ui->actionDocumentation->setIcon(QIcon(":/img/res/icons/doc.png"));
     ui->actionRecentProjects->setIcon(QIcon(":/img/res/icons/recent.png"));
+    ui->actionCheckUpdates->setIcon(QIcon(":/img/res/icons/updates.png"));
 
     /* for tools */
     ui->menuTools->addAction("OSINT Engine", this, [=](){this->onChangeTabToOsint();})->setIcon(QIcon(":/img/res/icons/osint.png"));

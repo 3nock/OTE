@@ -47,11 +47,11 @@ void UpdateChecker::onFinished(QNetworkReply* reply){
                     QMessageBox::information(m_parent, tr("New Update!"), info);
                     qDebug() << "New Updates Found!";
                 }else
-                    qDebug() << "UPDATE CHECK: No New Updates...";
+                    qWarning() << "UPDATE CHECK: No New Updates...";
             }else
-                qDebug() << "UPDATE CHECK: Error parsing Server response...";
+                qWarning() << "UPDATE CHECK: Error parsing Server response...";
         }else
-            qDebug() << "UPDATE CHECK: Network Error...";
+            qWarning() << "UPDATE CHECK: Network Error...";
         onStart = false;
     }
     else{

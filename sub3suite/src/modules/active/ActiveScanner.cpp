@@ -30,18 +30,41 @@ void active::Scanner::lookupFinished(){
     case QDnsLookup::NoError:
         if(m_dns->hostAddressRecords().isEmpty())
             break;
-        else
+
+        switch (m_args->config->recordType) {
+        case QDnsLookup::A:
         {
             s3s_struct::HOST host;
             host.host = m_dns->name();
-            if(m_args->config->recordType == QDnsLookup::A)
-                host.ipv4 = m_dns->hostAddressRecords().at(0).value().toString();
-            else
-                host.ipv6 = m_dns->hostAddressRecords().at(0).value().toString();
-
+            host.ipv4 = m_dns->hostAddressRecords().at(0).value().toString();
             emit scanResult(host);
+        }
+            break;
+        case QDnsLookup::AAAA:
+        {
+            s3s_struct::HOST host;
+            host.host = m_dns->name();
+            host.ipv6 = m_dns->hostAddressRecords().at(0).value().toString();
+            emit scanResult(host);
+        }
+            break;
+        case QDnsLookup::ANY:
+        {
+            s3s_struct::HOST host;
+            host.host = m_dns->name();
+            foreach(const QDnsHostAddressRecord &addr, m_dns->hostAddressRecords()){
+                if(addr.value().protocol() == QAbstractSocket::IPv4Protocol)
+                    host.ipv4 = addr.value().toString();
+                if(addr.value().protocol() == QAbstractSocket::IPv6Protocol)
+                    host.ipv6 = addr.value().toString();
+            }
+            emit scanResult(host);
+        }
+            break;
+        default:
             break;
         }
+        break;
 
     default:
         log.message = m_dns->errorString();

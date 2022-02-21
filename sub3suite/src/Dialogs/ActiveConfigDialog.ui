@@ -107,6 +107,13 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonANY">
+              <property name="text">
+               <string>ANY</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>

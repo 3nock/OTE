@@ -256,6 +256,8 @@ void Brute::m_getConfigValues(){
         m_scanArgs->config->recordType = QDnsLookup::A;
     if(record == "AAAA")
         m_scanArgs->config->recordType = QDnsLookup::AAAA;
+    if(record == "ANY")
+        m_scanArgs->config->recordType = QDnsLookup::ANY;
 
     int size = CONFIG_BRUTE.beginReadArray("Nameservers");
     for (int i = 0; i < size; ++i) {

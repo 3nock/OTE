@@ -32,10 +32,20 @@ void Brute::onResultSubdomain(s3s_struct::HOST host){
     if(m_subdomainSet.contains(host.host)) // for existing entry...
     {
         s3s_item::HOST *item = m_subdomainSet.value(host.host);
-        if(m_scanConfig->recordType == QDnsLookup::A)
+        switch (m_scanConfig->recordType) {
+        case QDnsLookup::A:
             item->setValue_ipv4(host.ipv4);
-        else
+            break;
+        case QDnsLookup::AAAA:
             item->setValue_ipv6(host.ipv6);
+            break;
+        case QDnsLookup::ANY:
+            item->setValue_ipv4(host.ipv4);
+            item->setValue_ipv6(host.ipv6);
+            break;
+        default:
+            break;
+        }
     }
     else // for new entry...
     {
@@ -57,10 +67,20 @@ void Brute::onResultTLD(s3s_struct::HOST host){
     if(m_tldSet.contains(host.host)) // for existing entry...
     {
         s3s_item::HOST *item = m_tldSet.value(host.host);
-        if(m_scanConfig->recordType == QDnsLookup::A)
+        switch (m_scanConfig->recordType) {
+        case QDnsLookup::A:
             item->setValue_ipv4(host.ipv4);
-        else
+            break;
+        case QDnsLookup::AAAA:
             item->setValue_ipv6(host.ipv6);
+            break;
+        case QDnsLookup::ANY:
+            item->setValue_ipv4(host.ipv4);
+            item->setValue_ipv6(host.ipv6);
+            break;
+        default:
+            break;
+        }
     }
     else // for new entry...
     {

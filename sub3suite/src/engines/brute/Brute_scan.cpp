@@ -287,6 +287,7 @@ void Brute::m_scanSummary(){
     QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
 
     /* write to log file */
+    ui->plainTextEditLogs->appendPlainText("");
     ui->plainTextEditLogs->appendHtml("<font color=\"white\">  [ Scan Summary ]</font>");
     ui->plainTextEditLogs->appendHtml("[ Resolved ]    : <font color=\"green\">"+QString::number(m_scanStats->resolved)+"</font>");
     ui->plainTextEditLogs->appendHtml("[ Failed ]      : <font color=\"red\">"+QString::number(m_scanStats->failed)+"</font>");

@@ -282,6 +282,7 @@ class AbstractOsintModule : public QObject {
             emit rateLimitLog(log);
 
             /* has its own end */
+            reply->close();
             reply->deleteLater();
             activeRequests--;
             if(activeRequests == 0)
@@ -295,6 +296,7 @@ class AbstractOsintModule : public QObject {
             emit errorLog(log);
 
             /* has its own end */
+            reply->close();
             reply->deleteLater();
             activeRequests--;
             if(activeRequests == 0)
@@ -304,6 +306,7 @@ class AbstractOsintModule : public QObject {
         void end(QNetworkReply *reply){
             log.target = target;
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            reply->close();
             reply->deleteLater();
             activeRequests--;
             if(activeRequests == 0)

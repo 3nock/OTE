@@ -18,9 +18,7 @@
         <file>res/icons/github.png</file>
         <file>res/icons/preferences.png</file>
         <file>res/icons/source.png</file>
-        <file>res/icons/qt.png</file>
         <file>res/icons/doc.png</file>
-        <file>res/icons/24.png</file>
         <file>res/icons/dns.png</file>
         <file>res/icons/email.png</file>
         <file>res/icons/ssl.png</file>
@@ -57,6 +55,8 @@
         <file>res/icons/list.png</file>
         <file>res/icons/error.png</file>
         <file>res/icons/url.png</file>
+        <file>res/icons/updates.png</file>
+        <file>res/icons/qt-logo.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>
