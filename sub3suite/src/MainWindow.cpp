@@ -15,9 +15,9 @@
 #include "src/dialogs/AboutDialog.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/LogViewerDialog.h"
-#include "src/dialogs/PreferenceDialog.h"
 #include "src/dialogs/DocumentationDialog.h"
 #include "src/dialogs/ProjectConfigDialog.h"
+#include "src/dialogs/SaveProjectDialog.h"
 
 #include "src/utils/Config.h"
 
@@ -104,10 +104,11 @@ void MainWindow::initActions(){
     ui->actionlogViewer->setIcon(QIcon(":/img/res/icons/log.png"));
     ui->actionSourceCode->setIcon(QIcon(":/img/res/icons/source.png"));
     ui->actionOpenProject->setIcon(QIcon(":/img/res/icons/open.png"));
-    ui->actionPreferences->setIcon(QIcon(":/img/res/icons/preferences.png"));
+    /*ui->actionPreferences->setIcon(QIcon(":/img/res/icons/preferences.png"));*/
     ui->actionDocumentation->setIcon(QIcon(":/img/res/icons/doc.png"));
     ui->actionRecentProjects->setIcon(QIcon(":/img/res/icons/recent.png"));
     ui->actionCheckUpdates->setIcon(QIcon(":/img/res/icons/updates.png"));
+    ui->actionSaveCopy->setIcon(QIcon(":/img/res/icons/save.png"));
 
     /* for tools */
     ui->menuTools->addAction("OSINT Engine", this, [=](){this->onChangeTabToOsint();})->setIcon(QIcon(":/img/res/icons/osint.png"));
@@ -550,12 +551,6 @@ void MainWindow::on_actionlogViewer_triggered(){
     logViewerDialog->show();
 }
 
-void MainWindow::on_actionPreferences_triggered(){
-    PreferenceDialog *preferenceDialog = new PreferenceDialog(this);
-    preferenceDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-    preferenceDialog->show();
-}
-
 void MainWindow::on_actionDocumentation_triggered(){
     DocumentationDialog *documentationDialog = nullptr;
     documentationDialog = new DocumentationDialog(this);
@@ -596,4 +591,10 @@ void MainWindow::on_actionDonate_triggered(){
 void MainWindow::on_actionCheckUpdates_triggered(){
     m_updateChecker->checkForUpdates();
     ui->statusbar->showMessage("Checking For Updates...", 3000);
+}
+
+void MainWindow::on_actionSaveCopy_triggered(){
+    SaveProjectDialog *saveProjectDialog = new SaveProjectDialog(projectModel, this);
+    saveProjectDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    saveProjectDialog->show();
 }

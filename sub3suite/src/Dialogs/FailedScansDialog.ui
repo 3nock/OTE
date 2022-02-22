@@ -29,6 +29,9 @@
      <property name="editTriggers">
       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
      </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>

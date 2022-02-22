@@ -20,10 +20,9 @@ class ProjectConfigDialog : public QDialog{
     private slots:
         void on_buttonCancel_clicked();
         void on_buttonOk_clicked();
-
         void on_buttonChoosePath_clicked();
 
-private:
+    private:
         Ui::ProjectConfigDialog *ui;
         ProjectModel *m_projectModel;
 };

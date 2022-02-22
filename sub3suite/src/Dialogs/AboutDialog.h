@@ -30,6 +30,8 @@ class AboutDialog : public QDialog{
 
         void on_tableViewDonations_customContextMenuRequested(const QPoint &pos);
 
+        void on_buttonCopy_clicked();
+
 private:
         Ui::AboutDialog *ui;
         QStandardItemModel *m_authorsModel;

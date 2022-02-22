@@ -803,6 +803,7 @@ QWidget[lighter=&quot;true&quot;]{
      <string>Project</string>
     </property>
     <addaction name="actionConfig"/>
+    <addaction name="actionSaveCopy"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -826,7 +827,6 @@ QWidget[lighter=&quot;true&quot;]{
      <string>Options</string>
     </property>
     <addaction name="actionApiKeys"/>
-    <addaction name="actionPreferences"/>
     <addaction name="actionLanguage"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -854,7 +854,7 @@ QWidget[lighter=&quot;true&quot;]{
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>open</string>
+    <string>Open</string>
    </property>
   </action>
   <action name="actionRecentProjects">
@@ -863,7 +863,7 @@ QWidget[lighter=&quot;true&quot;]{
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>open recent</string>
+    <string>Open recent</string>
    </property>
   </action>
   <action name="actionExit">
@@ -872,7 +872,7 @@ QWidget[lighter=&quot;true&quot;]{
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>exit</string>
+    <string>Exit</string>
    </property>
   </action>
   <action name="actionDocumentation">
@@ -918,15 +918,6 @@ QWidget[lighter=&quot;true&quot;]{
    </property>
    <property name="text">
     <string>API Keys</string>
-   </property>
-  </action>
-  <action name="actionPreferences">
-   <property name="icon">
-    <iconset>
-     <normaloff>.</normaloff>.</iconset>
-   </property>
-   <property name="text">
-    <string>Preferences</string>
    </property>
   </action>
   <action name="actionlogViewer">
@@ -982,6 +973,11 @@ QWidget[lighter=&quot;true&quot;]{
   <action name="actionCheckUpdates">
    <property name="text">
     <string>Check for Updates</string>
+   </property>
+  </action>
+  <action name="actionSaveCopy">
+   <property name="text">
+    <string>Save copy</string>
    </property>
   </action>
  </widget>

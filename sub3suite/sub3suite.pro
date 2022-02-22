@@ -33,6 +33,7 @@ SOURCES += \
     src/dialogs/FailedScansDialog.cpp \
     src/dialogs/PassiveConfigDialog.cpp \
     src/dialogs/ProjectConfigDialog.cpp \
+    src/dialogs/SaveProjectDialog.cpp \
     src/dialogs/StartupDialog.cpp \
     src/dialogs/EnumConfigDialog.cpp \
     src/dialogs/PreferenceDialog.cpp \
@@ -252,6 +253,7 @@ HEADERS += \
     src/dialogs/FailedScansDialog.h \
     src/dialogs/PassiveConfigDialog.h \
     src/dialogs/ProjectConfigDialog.h \
+    src/dialogs/SaveProjectDialog.h \
     src/dialogs/StartupDialog.h \
     src/dialogs/EnumConfigDialog.h \
     src/dialogs/PreferenceDialog.h \
@@ -418,6 +420,7 @@ FORMS += \
     src/dialogs/FailedScansDialog.ui \
     src/dialogs/PassiveConfigDialog.ui \
     src/dialogs/ProjectConfigDialog.ui \
+    src/dialogs/SaveProjectDialog.ui \
     src/dialogs/StartupDialog.ui \
     src/dialogs/EnumConfigDialog.ui \
     src/dialogs/PreferenceDialog.ui \

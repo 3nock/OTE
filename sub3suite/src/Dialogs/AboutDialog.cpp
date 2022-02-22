@@ -26,16 +26,6 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/img/res/icons/about.png"));
 
-    /* github account */
-    s3s_ClickableLabel *githubLabel = new s3s_ClickableLabel("", this);
-    QPixmap github_logo(":/img/res/icons/github.png");
-    githubLabel->setPixmap(github_logo);
-    ui->horizontalLayoutGithub->insertWidget(0, githubLabel);
-
-    connect(githubLabel, &s3s_ClickableLabel::clicked, this, [=](){
-        QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite", QUrl::TolerantMode));
-    });
-
     ///
     /// for sub3suite...
     ///
@@ -51,21 +41,21 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
 
     /* setting up description */
     ui->textBrowserDescription->setOpenExternalLinks(true);
-    ui->textBrowserDescription->append("Copyright 2020-2022 © Enock Nicholaus <a href=\"https://twitter.com/3nock_\">@3nock</a> and contributors.");
+    ui->textBrowserDescription->append("Copyright 2020-2022 © Enock Nicholaus <a href=\"https://twitter.com/3nock_\">@3nock_</a> and contributors.");
 
     ui->textBrowserDescription->append("\n");
 
-    ui->textBrowserDescription->append("License GPLv3: GNU GPL version 3 or later <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">https://www.gnu.org/licenses/gpl-3.0.html</a>."
+    ui->textBrowserDescription->append("License GPLv3: GNU GPL version 3 <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">https://www.gnu.org/licenses/gpl-3.0.html</a>."
                                        " This is free software; see the source for copying conditions."
                                        " There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
 
     ui->textBrowserDescription->append("\nsub3suite is Open Source Software released under the GNU General Public License.\n");
 
-    ui->textBrowserDescription->append("visit <a href=\"https://3nock.github.io\">https://3nock.github.io</a> for more information.");
+    ui->textBrowserDescription->append("visit <a href=\"https://3nock.github.io/sub3suite\">https://3nock.github.io</a> for more information.");
 
     ui->textBrowserDescription->append("\n");
 
-    ui->textBrowserDescription->append("follow <a href=\"https://twitter.com/sub3suite\">@sub3suite</a> for more updates on the project.");
+    ui->textBrowserDescription->append("follow <a href=\"https://twitter.com/intent/follow?screen_name=sub3suite&tw_p=followbutton\">@sub3suite</a> for more updates on the project.");
 
     ///
     /// for authors...
@@ -199,4 +189,9 @@ void AboutDialog::on_tableViewDonations_customContextMenuRequested(const QPoint 
 
     /* showing the context menu... */
     menu.exec(QCursor::pos());
+}
+
+void AboutDialog::on_buttonCopy_clicked(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(ui->textBrowserDescription->toPlainText());
 }

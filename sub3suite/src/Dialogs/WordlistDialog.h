@@ -38,9 +38,7 @@ class WordListDialog : public QDialog{
         void on_buttonCreate_clicked();
         /* for generate */
         void on_buttonGenerate_clicked();
-
         void on_comboBoxSubstituteFrom_currentIndexChanged(int index);
-
         void on_comboBoxSubstituteTo_currentIndexChanged(int index);
 
 private:

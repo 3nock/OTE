@@ -80,7 +80,6 @@ class MainWindow : public QMainWindow{
 
         /* options menu */
         void on_actionApiKeys_triggered();
-        void on_actionPreferences_triggered();
 
         /* help menu */
         void on_actionBlog_triggered();
@@ -89,19 +88,20 @@ class MainWindow : public QMainWindow{
         void on_actionlogViewer_triggered();
         void on_actionTwitter_triggered();
         void on_actionDocumentation_triggered();
+        void on_actionConfig_triggered();
+        void on_actionOpenProject_triggered();
+        void on_actionSourceCode_triggered();
+        void on_actionDonate_triggered();
+        void on_actionCheckUpdates_triggered();
 
         /* documentations */
         void onDocumentation_active();
         void onDocumentation_passive();
         void onDocumentation_tools();
-        void on_actionConfig_triggered();
-        void on_actionOpenProject_triggered();
-        void on_actionSourceCode_triggered();
-        void on_actionDonate_triggered();
 
-        void on_actionCheckUpdates_triggered();
+        void on_actionSaveCopy_triggered();
 
-    protected:
+protected:
         void closeEvent(QCloseEvent *event) override;
 
     private:
