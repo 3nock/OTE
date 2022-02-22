@@ -2,60 +2,16 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : Creating result's tableview contextmenu & actions to perform on the results.
 */
 
 #include "Brute.h"
 #include "ui_Brute.h"
 
 
-void Brute::m_initActions(){
-    connect(&a_ClearResults, &QAction::triggered, this, [=](){this->m_clearResults();});
-    connect(&a_RemoveResults, &QAction::triggered, this, [=](){this->m_removeResults(selectionModel);});
-    connect(&a_OpenInBrowser, &QAction::triggered, this, [=](){this->m_openInBrowser(selectionModel);});
-    /* ... */
-    connect(&a_ExtractAll, &QAction::triggered, this, [=](){this->m_extract();});
-    connect(&a_ExtractSelected, &QAction::triggered, this, [=](){this->m_extract(selectionModel);});
-    /* ... */
-    connect(&a_SendAllToProject, &QAction::triggered, this, [=](){this->m_sendToProject();});
-    connect(&a_SendAllIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW);});
-    connect(&a_SendAllHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW);});
-    connect(&a_SendAllHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE);});
-    connect(&a_SendAllHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE);});
-    connect(&a_SendAllHostToDNS, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS);});
-    connect(&a_SendAllHostToSSL, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT);});
-    connect(&a_SendAllIpToIPTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP);});
-    connect(&a_SendAllHostToSSLTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT);});
-    connect(&a_SendAllHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::DOMAINTOOL);});
-    /* ... */
-    connect(&a_SendSelectedToProject, &QAction::triggered, this, [=](){this->m_sendToProject(selectionModel);});
-    connect(&a_SendSelectedIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE, selectionModel);});
-    connect(&a_SendSelectedHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE, selectionModel);});
-    connect(&a_SendSelectedHostToDNS, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS, selectionModel);});
-    connect(&a_SendSelectedHostToSSL, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT, selectionModel);});
-    connect(&a_SendSelectedIpToIPTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP, selectionModel);});
-    connect(&a_SendSelectedHostToSSLTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT, selectionModel);});
-    connect(&a_SendSelectedHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::DOMAINTOOL, selectionModel);});
-    /* ... */
-    connect(&a_Save, &QAction::triggered, this, [=](){this->m_saveResults(selectionModel);});
-    connect(&a_SaveSubdomainIp, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::SUBDOMAINIP);});
-    connect(&a_SaveSubdomain, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::SUBDOMAIN);});
-    connect(&a_SaveIp, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::IP);});
-    connect(&a_Copy, &QAction::triggered, this, [=](){this->m_copyResults(selectionModel);});
-    connect(&a_CopySubdomainIp, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::SUBDOMAINIP);});
-    connect(&a_CopySubdomain, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::SUBDOMAIN);});
-    connect(&a_CopyIp, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::IP);});
-}
-
 void Brute::on_buttonAction_clicked(){
     /* check if there are results available else dont show the context menu */
-    if(m_resultProxyModel->rowCount() < 1)
+    if(proxyModel->rowCount() < 1)
         return;
 
     /* getting the position of the action button to place the context menu and
@@ -67,38 +23,37 @@ void Brute::on_buttonAction_clicked(){
     QMenu menu(this);
     QMenu saveMenu(this);
     QMenu copyMenu(this);
-    saveMenu.setTitle("Save");
-    copyMenu.setTitle("Copy");
+    saveMenu.setTitle(tr("Save"));
+    copyMenu.setTitle(tr("Copy"));
 
     /* adding actions */
-    saveMenu.addAction(&a_SaveSubdomainIp);
-    saveMenu.addAction(&a_SaveSubdomain);
-    saveMenu.addAction(&a_SaveIp);
-    copyMenu.addAction(&a_CopySubdomainIp);
-    copyMenu.addAction(&a_CopySubdomain);
-    copyMenu.addAction(&a_CopyIp);
+    saveMenu.addAction(tr("Subdomain,Ip"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAINIP);});
+    saveMenu.addAction(tr("Subdomain"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);});
+    saveMenu.addAction(tr("Ip"), this, [=](){this->saveResults(RESULT_TYPE::IP);});
+    copyMenu.addAction(tr("Subdomain,Ip"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAINIP);});
+    copyMenu.addAction(tr("Subdomain"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAIN);});
+    copyMenu.addAction(tr("Ip"), this, [=](){this->copyResults(RESULT_TYPE::IP);});
+
     /* adding to mainMenu */
-    menu.addAction(&a_ClearResults);
+    menu.addAction(tr("Clear"), this, [=](){this->clearResults();});
     menu.addSeparator();
     menu.addMenu(&saveMenu);
     menu.addMenu(&copyMenu);
-    menu.addAction(&a_ExtractAll);
+    menu.addAction(tr("Extract subdomain"), this, [=](){this->extract();});
     menu.addSeparator();
-    menu.addAction(&a_SendAllToProject);
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
     menu.addSeparator();
-    menu.addAction(&a_SendAllIpToOsint);
-    menu.addAction(&a_SendAllIpToRaw);
+    menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
+    menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::IP);});
     menu.addSeparator();
-    menu.addAction(&a_SendAllHostToOsint);
-    menu.addAction(&a_SendAllHostToRaw);
-    menu.addAction(&a_SendAllHostToBrute);
-    menu.addAction(&a_SendAllHostToActive);
-    menu.addAction(&a_SendAllHostToDNS);
-    menu.addAction(&a_SendAllHostToSSL);
+    menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});
+    menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);});
+    menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);});
+    menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);});
+    menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);});
+    menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);});
     menu.addSeparator();
-    menu.addAction(&a_SendAllIpToIPTool);
-    menu.addAction(&a_SendAllHostToSSLTool);
-    menu.addAction(&a_SendAllHostToDomainTool);
+    menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP);});
 
     /* showing the context menu... */
     menu.exec(pos);
@@ -118,28 +73,34 @@ void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     QMenu menu(this);
 
     /* adding to mainMenu */
-    menu.addAction(&a_RemoveResults);
-    menu.addAction(&a_OpenInBrowser);
+    menu.addAction(tr("Remove"), this, [=](){this->removeResults();});
+    menu.addAction(tr("Open in Browser"), this, [=](){this->openInBrowser();});
+    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent()))
+        menu.addAction(tr("Extract subdomain"), this, [=](){this->extractSelected();});
     menu.addSeparator();
-    menu.addAction(&a_Save);
-    menu.addAction(&a_Copy);
-    menu.addAction(&a_ExtractSelected);
+    menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();});
+    menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();});
     menu.addSeparator();
-    menu.addAction(&a_SendSelectedToProject);
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();});
     menu.addSeparator();
-    menu.addAction(&a_SendSelectedIpToOsint);
-    menu.addAction(&a_SendSelectedIpToRaw);
-    menu.addSeparator();
-    menu.addAction(&a_SendSelectedHostToOsint);
-    menu.addAction(&a_SendSelectedHostToRaw);
-    menu.addAction(&a_SendSelectedHostToBrute);
-    menu.addAction(&a_SendSelectedHostToActive);
-    menu.addAction(&a_SendSelectedHostToDNS);
-    menu.addAction(&a_SendSelectedHostToSSL);
-    menu.addSeparator();
-    menu.addAction(&a_SendSelectedIpToIPTool);
-    menu.addAction(&a_SendSelectedHostToSSLTool);
-    menu.addAction(&a_SendSelectedHostToDomainTool);
+    if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent()) ||
+       selectionModel->columnIntersectsSelection(2, selectionModel->currentIndex().parent())){
+        menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
+        menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::IP);});
+        menu.addSeparator();
+    }
+    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent())){
+        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);});
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);});
+        menu.addSeparator();
+    }
+    if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent()) ||
+       selectionModel->columnIntersectsSelection(2, selectionModel->currentIndex().parent()))
+        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP);});
 
     /* showing the context menu... */
     menu.exec(QCursor::pos());

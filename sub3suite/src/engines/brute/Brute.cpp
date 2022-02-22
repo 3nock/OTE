@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief :BRUTEFORCE Engine, obtain subdomains & top level domains(TLD) by resolving bruteforced targets.
 */
 
 #include "Brute.h"
@@ -24,40 +24,53 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
     m_scanStats(new brute::ScanStat),
     m_wordlistModel(new QStringListModel),
     m_targetListModel(new QStringListModel),
-    m_resultModelSubdomain(new QStandardItemModel),
-    m_resultModelTld(new QStandardItemModel),
-    m_resultProxyModel(new QSortFilterProxyModel)
+    m_model_subdomain(new QStandardItemModel),
+    m_model_tld(new QStandardItemModel)
 {
-    ui->setupUi(this);
+    this->iniUI();
 
-    ui->frame->setProperty("default_frame", true);
-    ui->labelResultsCount->setProperty("dark", true);
-
-    /* wordlist & target models */
-    ui->targets->setListName("Targets");
-    ui->wordlist->setListName("Wordlist");
+    /* list models */
+    ui->targets->setListName(tr("Targets"));
+    ui->wordlist->setListName(tr("Wordlist"));
     ui->targets->setListModel(m_targetListModel);
     ui->wordlist->setListModel(m_wordlistModel);
 
     /* results models */
-    m_resultModelSubdomain->setHorizontalHeaderLabels({" Subdomain", " Ipv4", " Ipv6"});
-    m_resultModelTld->setHorizontalHeaderLabels({" TLD", " Ipv4", " Ipv6"});
-    /* default is subdomain result model */
-    m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
-    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_resultProxyModel->setRecursiveFilteringEnabled(true);
-    m_resultProxyModel->setFilterKeyColumn(0);
-    ui->tableViewResults->setModel(m_resultProxyModel);
+    m_model_subdomain->setHorizontalHeaderLabels({tr(" Subdomain"), tr(" Ipv4"), tr(" Ipv6")});
+    m_model_tld->setHorizontalHeaderLabels({tr(" TLD"), tr(" Ipv4"), tr(" Ipv6")});
+    proxyModel->setSourceModel(m_model_subdomain);
+    ui->tableViewResults->setModel(proxyModel);
 
     ui->tableViewResults->horizontalHeader()->resizeSection(0, 200);
     ui->tableViewResults->horizontalHeader()->resizeSection(1, 100);
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    /* placeholder texts */
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
-    ui->lineEditFilter->setPlaceholderText("filter...");
+    m_scanArgs->config = m_scanConfig;
+    this->getConfigValues();
+}
+Brute::~Brute(){
+    delete m_model_tld;
+    delete m_model_subdomain;
+    delete m_wordlistModel;
+    delete m_targetListModel;
+    delete m_scanStats;
+    delete m_scanArgs;
+    delete m_scanConfig;
+    delete ui;
+}
 
-    /* ...*/
+void Brute::iniUI(){
+    ui->setupUi(this);
+
+    /* widget properties */
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+
+    /* placeholder texts */
+    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
+    ui->lineEditFilter->setPlaceholderText(tr("filter..."));
+
+    /* hiding and disabling some widgets */
     ui->buttonStop->setDisabled(true);
     ui->targets->hide();
     ui->progressBar->hide();
@@ -65,26 +78,6 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-
-    /* initiate all actions for the context menus */
-    this->m_initActions();
-
-    /* ... */
-    m_scanArgs->config = m_scanConfig;
-
-    /* config values */
-    this->m_getConfigValues();
-}
-Brute::~Brute(){
-    delete m_resultProxyModel;
-    delete m_resultModelTld;
-    delete m_resultModelSubdomain;
-    delete m_wordlistModel;
-    delete m_targetListModel;
-    delete m_scanStats;
-    delete m_scanArgs;
-    delete m_scanConfig;
-    delete ui;
 }
 
 void Brute::on_lineEditTarget_returnPressed(){
@@ -97,20 +90,20 @@ void Brute::on_buttonStart_clicked(){
     ///
     if(status->isNotActive){
         if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-            QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Target for Enumeration!"));
             return;
         }
         if(ui->checkBoxMultipleTargets->isChecked() && m_targetListModel->rowCount() < 1){
-            QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Targets for Enumeration!"));
             return;
         }
         if(m_wordlistModel->rowCount() < 1){
-            QMessageBox::warning(this, "Error!", "Please Enter the Wordlist for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Wordlist for Enumeration!"));
             return;
         }
 
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Pause");
+        ui->buttonStart->setText(tr("Pause"));
 
         status->isRunning = true;
         status->isNotActive = false;
@@ -118,10 +111,10 @@ void Brute::on_buttonStart_clicked(){
         status->isPaused = false;
 
         /* start scan */
-        this->m_startScan();
+        this->startScan();
 
         /* logs */
-        m_log("------------------ start ----------------\n");
+        log("------------------ start ----------------\n");
         qInfo() << "Scan Started";
         return;
     }
@@ -130,7 +123,7 @@ void Brute::on_buttonStart_clicked(){
     ///
     if(status->isRunning){
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Resume");
+        ui->buttonStart->setText(tr("Resume"));
 
         status->isPaused = true;
         status->isRunning = false;
@@ -141,7 +134,7 @@ void Brute::on_buttonStart_clicked(){
         emit pauseScanThread();
 
         /* logs */
-        m_log("------------------ Paused ----------------\n");
+        log("------------------ Paused ----------------\n");
         qInfo() << "Scan Paused";
         return;
     }
@@ -150,7 +143,7 @@ void Brute::on_buttonStart_clicked(){
     ///
     if(status->isPaused){
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Pause");
+        ui->buttonStart->setText(tr("Pause"));
 
         status->isRunning = true;
         status->isPaused = false;
@@ -161,7 +154,7 @@ void Brute::on_buttonStart_clicked(){
         emit resumeScanThread();
 
         /* logs */
-        m_log("------------------ Resumed ----------------\n");
+        log("------------------ Resumed ----------------\n");
         qInfo() << "Scan Resumed";
     }
 }
@@ -179,15 +172,15 @@ void Brute::on_buttonStop_clicked(){
 }
 
 void Brute::on_lineEditFilter_textChanged(const QString &filterKeyword){
-    m_resultProxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+    proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
 
     if(ui->checkBoxRegex->isChecked())
-        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+        proxyModel->setFilterRegExp(QRegExp(filterKeyword));
     else
-        m_resultProxyModel->setFilterFixedString(filterKeyword);
+        proxyModel->setFilterFixedString(filterKeyword);
 
-    ui->tableViewResults->setModel(m_resultProxyModel);
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->tableViewResults->setModel(proxyModel);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
 void Brute::on_buttonConfig_clicked(){
@@ -228,22 +221,21 @@ void Brute::on_checkBoxMultipleTargets_stateChanged(int newState){
 void Brute::on_comboBoxOutput_currentIndexChanged(int index){
     switch (index) {
     case brute::OUTPUT::SUBDOMAIN:
-        m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
+        proxyModel->setSourceModel(m_model_subdomain);
         break;
     case brute::OUTPUT::TLD:
-        m_resultProxyModel->setSourceModel(m_resultModelTld);
+        proxyModel->setSourceModel(m_model_tld);
     }
 
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void Brute::m_log(QString log){
+void Brute::log(const QString &log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
 
-/* get config settings from config file & saving to brute::ScanConfig structure*/
-void Brute::m_getConfigValues(){
+void Brute::getConfigValues(){
     m_scanArgs->config->threads = CONFIG_BRUTE.value("threads").toInt();
     m_scanArgs->config->levels = CONFIG_BRUTE.value("maxLevel").toInt();
     m_scanArgs->config->checkWildcard = CONFIG_BRUTE.value("wildcard").toBool();

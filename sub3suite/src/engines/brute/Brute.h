@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief :BRUTEFORCE Engine, obtain subdomains & top level domains(TLD) by resolving bruteforced targets.
 */
 
 #ifndef BRUTE_H
@@ -16,7 +16,6 @@
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/active/BruteScanner.h"
-#include "src/utils/NotesSyntaxHighlighter.h"
 
 
 namespace Ui {
@@ -56,12 +55,6 @@ class Brute : public AbstractEngine{
 
     private:
         Ui::Brute *ui;
-
-        QMap<QString,QString> m_failedScans;
-
-        QMap<QString, s3s_item::HOST*> m_subdomainSet;
-        QMap<QString, s3s_item::HOST*> m_tldSet;
-
         brute::ScanConfig *m_scanConfig;
         brute::ScanArgs *m_scanArgs;
         brute::ScanStat *m_scanStats;
@@ -70,94 +63,42 @@ class Brute : public AbstractEngine{
         QStringListModel *m_wordlistModel;
         QStringListModel *m_targetListModel;
 
-        QStandardItemModel *m_resultModelSubdomain;
-        QStandardItemModel *m_resultModelTld;
-        QSortFilterProxyModel *m_resultProxyModel;
-        /* ... */
-        void m_log(QString log);
-        void m_getConfigValues();
-        /* ... */
-        void m_startScan();
-        void m_scanSummary();
+        QStandardItemModel *m_model_subdomain;
+        QStandardItemModel *m_model_tld;
 
+        QMap<QString, s3s_item::HOST*> set_subdomain;
+        QMap<QString, s3s_item::HOST*> set_tld;
+        QMap<QString,QString> m_failedScans;
 
-        /* ... */
+        void iniUI();
+        void log(const QString &log);
+        void getConfigValues();
+
+        void startScan();
+        void scanSummary();
+
         QString targetFilterSubdomain(QString target);
         QString targetFilterTLD(QString target);
 
         /* for context menu */
     private:
-        void m_initActions();
-        /* ... */
-        void m_openInBrowser(QItemSelectionModel*);
-        void m_clearResults();
-        void m_removeResults(QItemSelectionModel*);
-        void m_saveResults(RESULT_TYPE);
-        void m_saveResults(QItemSelectionModel*);
-        void m_copyResults(RESULT_TYPE);
-        void m_copyResults(QItemSelectionModel*);
+        void openInBrowser();
+        void clearResults();
+        void removeResults();
+        void saveResults(const RESULT_TYPE&);
+        void saveSelectedResults();
+        void copyResults(const RESULT_TYPE&);
+        void copySelectedResults();
         /* extracting subdomain names */
-        void m_extract();
-        void m_extract(QItemSelectionModel*);
-        /* sending results to other parts */
-        void m_sendToProject();
-        void m_sendSubdomainToEngine(ENGINE);
-        void m_sendIpToEngine(ENGINE);
-        void m_sendSubdomainToTool(TOOL);
-        void m_sendIpToTool(TOOL);
-        void m_sendToProject(QItemSelectionModel*);
-        void m_sendSubdomainToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendIpToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendSubdomainToTool(TOOL, QItemSelectionModel*);
-        void m_sendIpToTool(TOOL, QItemSelectionModel*);
-
-    protected:
-        /* general actions */
-        QAction a_RemoveResults{"Remove"};
-        QAction a_ClearResults{"Clear Results"};
-        QAction a_OpenInBrowser{"Open in Browser"};
-
-        /* subdomain name extraction */
-        QAction a_ExtractAll{"Extract Subdomain Name"};
-        QAction a_ExtractSelected{"Extract Subdomain Name"};
-
-        /* for all */
-        QAction a_SendAllToProject{"Send To Project"};
-        QAction a_SendAllIpToOsint{"Send IpAddress To OSINT"};
-        QAction a_SendAllIpToRaw{"Send IpAddress To RAW"};
-        QAction a_SendAllHostToOsint{"Send Hostname To OSINT"};
-        QAction a_SendAllHostToRaw{"Send Hostname To RAW"};
-        QAction a_SendAllHostToBrute{"Send Hostname To BRUTE"};
-        QAction a_SendAllHostToActive{"Send Hostname To ACTIVE"};
-        QAction a_SendAllHostToDNS{"Send Hostname To DNS"};
-        QAction a_SendAllHostToSSL{"Send Hostname To SSL"};
-        QAction a_SendAllIpToIPTool{"Send IpAddress To IPTool"};
-        QAction a_SendAllHostToSSLTool{"Send Hostname To SSLTool"};
-        QAction a_SendAllHostToDomainTool{"Send Hostname To DomainTool"};
-        /* for selected */
-        QAction a_SendSelectedToProject{"Send To Project"};
-        QAction a_SendSelectedIpToOsint{"Send IpAddress To OSINT"};
-        QAction a_SendSelectedIpToRaw{"Send IpAddress To RAW"};
-        QAction a_SendSelectedHostToOsint{"Send Hostname To OSINT"};
-        QAction a_SendSelectedHostToRaw{"Send Hostname To RAW"};
-        QAction a_SendSelectedHostToBrute{"Send Hostname To BRUTE"};
-        QAction a_SendSelectedHostToActive{"Send Hostname To ACTIVE"};
-        QAction a_SendSelectedHostToDNS{"Send Hostname To DNS"};
-        QAction a_SendSelectedHostToSSL{"Send Hostname To SSL"};
-        QAction a_SendSelectedIpToIPTool{"Send IpAddress To IPTool"};
-        QAction a_SendSelectedHostToSSLTool{"Send Hostname To SSLTool"};
-        QAction a_SendSelectedHostToDomainTool{"Send Hostname To DomainTool"};
-
-        /* save */
-        QAction a_Save{"Save"};
-        QAction a_SaveSubdomainIp{"Subdomain | IP"};
-        QAction a_SaveSubdomain{"Subdomain"};
-        QAction a_SaveIp{"IpAddress"};
-        /* copy */
-        QAction a_Copy{"Copy"};
-        QAction a_CopySubdomainIp{"Subdomain | IP"};
-        QAction a_CopySubdomain{"Subdomain"};
-        QAction a_CopyIp{"IpAddress"};
+        void extract();
+        void extractSelected();
+        /* sending results */
+        void sendToProject();
+        void sendSelectedToProject();
+        void sendToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendToEnum(const TOOL&);
+        void sendSelectedToEnum(const TOOL&);
 };
 
 #endif // BRUTE_H

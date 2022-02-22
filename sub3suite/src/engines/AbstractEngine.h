@@ -28,6 +28,7 @@ class AbstractEngine : public QWidget{
         {
             proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
             proxyModel->setRecursiveFilteringEnabled(true);
+            proxyModel->setFilterKeyColumn(0);
         }
         ~AbstractEngine(){
             delete proxyModel;

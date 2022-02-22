@@ -50,14 +50,23 @@ StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(
     }
     CONFIG.endGroup();
 
-    /* github account */
+    /* github account & twitter */
     s3s_ClickableLabel *githubLabel = new s3s_ClickableLabel("", this);
     QPixmap github_logo(":/img/res/icons/github.png");
-    githubLabel->setPixmap(github_logo);
+    githubLabel->setPixmap(github_logo.scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+    s3s_ClickableLabel *twitterLabel = new s3s_ClickableLabel("", this);
+    QPixmap twitter_logo(":/img/res/icons/twitter.png");
+    twitterLabel->setPixmap(twitter_logo.scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
     ui->horizontalLayout_s3s->insertWidget(0, githubLabel);
+    ui->horizontalLayout_s3s->insertWidget(1, twitterLabel);
 
     connect(githubLabel, &s3s_ClickableLabel::clicked, this, [=](){
         QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite", QUrl::TolerantMode));
+    });
+    connect(twitterLabel, &s3s_ClickableLabel::clicked, this, [=](){
+        QDesktopServices::openUrl(QUrl("https://twitter.com/sub3suite", QUrl::TolerantMode));
     });
 }
 StartupDialog::~StartupDialog(){

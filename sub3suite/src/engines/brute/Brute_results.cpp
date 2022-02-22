@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : slots for receiving resolved subdomains and TLDs from the brute-module.
 */
 
 #include "Brute.h"
@@ -29,9 +29,9 @@ void Brute::onWildcard(s3s_struct::Wildcard wildcard){
 }
 
 void Brute::onResultSubdomain(s3s_struct::HOST host){
-    if(m_subdomainSet.contains(host.host)) // for existing entry...
+    if(set_subdomain.contains(host.host)) // for existing entry...
     {
-        s3s_item::HOST *item = m_subdomainSet.value(host.host);
+        s3s_item::HOST *item = set_subdomain.value(host.host);
         switch (m_scanConfig->recordType) {
         case QDnsLookup::A:
             item->setValue_ipv4(host.ipv4);
@@ -51,10 +51,10 @@ void Brute::onResultSubdomain(s3s_struct::HOST host){
     {
         s3s_item::HOST *item = new s3s_item::HOST;
         item->setValues(host);
-        m_resultModelSubdomain->appendRow({item, item->ipv4, item->ipv6});
-        m_subdomainSet.insert(host.host, item);
+        m_model_subdomain->appendRow({item, item->ipv4, item->ipv6});
+        set_subdomain.insert(host.host, item);
 
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
         m_scanStats->resolved++;
     }
 
@@ -64,9 +64,9 @@ void Brute::onResultSubdomain(s3s_struct::HOST host){
 }
 
 void Brute::onResultTLD(s3s_struct::HOST host){
-    if(m_tldSet.contains(host.host)) // for existing entry...
+    if(set_tld.contains(host.host)) // for existing entry...
     {
-        s3s_item::HOST *item = m_tldSet.value(host.host);
+        s3s_item::HOST *item = set_tld.value(host.host);
         switch (m_scanConfig->recordType) {
         case QDnsLookup::A:
             item->setValue_ipv4(host.ipv4);
@@ -86,10 +86,10 @@ void Brute::onResultTLD(s3s_struct::HOST host){
     {
         s3s_item::HOST *item = new s3s_item::HOST;
         item->setValues(host);
-        m_resultModelTld->appendRow({item, item->ipv4, item->ipv6});
-        m_tldSet.insert(host.host, item);
+        m_model_tld->appendRow({item, item->ipv4, item->ipv6});
+        set_tld.insert(host.host, item);
 
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
         m_scanStats->resolved++;
     }
 

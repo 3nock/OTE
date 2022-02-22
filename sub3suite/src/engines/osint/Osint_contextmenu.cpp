@@ -166,17 +166,22 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
 
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
-        menu.addAction(tr("Send IpAddress To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
-        menu.addAction(tr("Send IpAddress To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::IP);});
-        menu.addSeparator();
-        menu.addAction(tr("Send Hostname To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});
-        menu.addAction(tr("Send Hostname To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);});
-        menu.addAction(tr("Send Hostname To BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);});
-        menu.addAction(tr("Send Hostname To ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);});
-        menu.addAction(tr("Send Hostname To DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);});
-        menu.addAction(tr("Send Hostname To SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);});
-        menu.addSeparator();
-        menu.addAction(tr("Send IpAddress To IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP, RESULT_TYPE::IP);});
+        if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent())){
+            menu.addAction(tr("Send IpAddress To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
+            menu.addAction(tr("Send IpAddress To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::IP);});
+            menu.addSeparator();
+        }
+        if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent())){
+            menu.addAction(tr("Send Hostname To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});
+            menu.addAction(tr("Send Hostname To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);});
+            menu.addAction(tr("Send Hostname To BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);});
+            menu.addAction(tr("Send Hostname To ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);});
+            menu.addAction(tr("Send Hostname To DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);});
+            menu.addAction(tr("Send Hostname To SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);});
+            menu.addSeparator();
+        }
+        if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent()))
+            menu.addAction(tr("Send IpAddress To IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP, RESULT_TYPE::IP);});
         break;
     case osint::OUTPUT::SUBDOMAIN:
         menu.addAction(tr("Send Hostname To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);});

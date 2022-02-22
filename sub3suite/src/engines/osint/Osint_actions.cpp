@@ -340,7 +340,7 @@ void Osint::sendSelectedToEngine(ENGINE engine, RESULT_TYPE result_type){
         break;
     case ENGINE::RAW:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToOsint(index.data().toString(), result_type);
+            emit sendResultsToRaw(index.data().toString(), result_type);
         emit changeTabToRaw();
         break;
     case ENGINE::BRUTE:

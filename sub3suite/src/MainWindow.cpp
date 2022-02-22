@@ -50,6 +50,18 @@ MainWindow::MainWindow(QWidget *parent) :
     /* welcome */
     ui->statusbar->showMessage("Welcome!", 5000);
 
+    /* donate */
+    QWidget *cornerWidget_donate = new QWidget(this);
+    QHBoxLayout *hbox_donate = new QHBoxLayout(cornerWidget_donate);
+    s3s_ClickableLabel *donate = new s3s_ClickableLabel("", this);
+    donate->setPixmap(QPixmap(":/img/res/icons/donate.png").scaled(15, 15, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    hbox_donate->addWidget(donate);
+    hbox_donate->setContentsMargins(0, 0, 15, 2);
+    ui->tabWidgetMain->setCornerWidget(cornerWidget_donate);
+    connect(donate, &s3s_ClickableLabel::clicked, this, [=](){
+        QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite", QUrl::TolerantMode));
+    });
+
     /* check for updates */
     m_updateChecker->checkForUpdates_onStart();
     ui->statusbar->showMessage("Checking For Updates...", 3000);

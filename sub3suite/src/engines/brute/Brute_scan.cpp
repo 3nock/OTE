@@ -2,13 +2,14 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : starts the brute-module on multiple threads to resolve bruteforce targets and emit results.
 */
 
 #include "Brute.h"
 #include "ui_Brute.h"
 
 #include "src/dialogs/FailedScansDialog.h"
+
 
 QString Brute::targetFilterSubdomain(QString target){
     target = target.trimmed();
@@ -33,7 +34,7 @@ QString Brute::targetFilterTLD(QString target){
     return target;
 }
 
-void Brute::m_startScan(){
+void Brute::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -136,7 +137,7 @@ void Brute::onReScan(QQueue<QString> targets){
         return;
 
     ui->buttonStop->setEnabled(true);
-    ui->buttonStart->setText("Pause");
+    ui->buttonStart->setText(tr("Pause"));
 
     status->isRunning = true;
     status->isNotActive = false;
@@ -144,7 +145,7 @@ void Brute::onReScan(QQueue<QString> targets){
     status->isPaused = false;
 
     /* logs */
-    m_log("----------------- Re-Scan ---------------\n");
+    log("----------------- Re-Scan ---------------\n");
     qInfo() << "Scan Started";
 
     /* ressetting and setting new values */
@@ -247,12 +248,12 @@ void Brute::onScanThreadEnded(){
     if(status->activeScanThreads == 0)
     {
         /* display the scan summary on logs */
-        m_scanSummary();
+        this->scanSummary();
 
         if(status->isStopped)
-            m_log("---------------- Stopped ------------\n");
+            log("---------------- Stopped ------------\n");
         else
-            m_log("------------------ End --------------\n");
+            log("------------------ End --------------\n");
 
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)
@@ -282,7 +283,7 @@ void Brute::onScanThreadEnded(){
     }
 }
 
-void Brute::m_scanSummary(){
+void Brute::scanSummary(){
     /* elapsed time */
     QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
 
