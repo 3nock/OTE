@@ -81,15 +81,17 @@ void Project::m_initUI(){
 
 void Project::init_sitemapMenuBar(){
     m_sitemapMenuBar = new QMenuBar(this);
-    m_sitemapMenuBar->addAction("Save", this, [=](){this->action_save();});
-    m_sitemapMenuBar->addAction("Copy", this, [=](){this->action_copy();});
-    m_sitemapMenuBar->addAction("Send", this, [=](){this->action_send();});
-    m_sitemapMenuBar->addAction("Clear", this, [=](){this->action_clear();});
+    m_sitemapMenuBar->addAction("Save", this, [=](){this->action_save();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    m_sitemapMenuBar->addAction("Copy", this, [=](){this->action_copy();})->setIcon(QIcon(":/img/res/icons/copy.png"));
+    m_sitemapMenuBar->addAction("Send", this, [=](){this->action_send();})->setIcon(QIcon(":/img/res/icons/send.png"));
+    m_sitemapMenuBar->addAction("Clear", this, [=](){this->action_clear();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    m_sitemapMenuBar->addAction("Expand", this, [=](){ui->treeViewSiteMap->expandAll();})->setIcon(QIcon(":/img/res/icons/expand.png"));
+    m_sitemapMenuBar->addAction("Collapse", this, [=](){ui->treeViewSiteMap->collapseAll();})->setIcon(QIcon(":/img/res/icons/collapse.png"));
     ui->horizontalLayoutMap->insertWidget(0, m_sitemapMenuBar);
 }
 
 void Project::init_notesMenuBar(){
     m_notesMenuBar = new QMenuBar(this);
-    m_notesMenuBar->addAction("Clear", this, [=](){ui->plainTextEdit->clear();});
+    m_notesMenuBar->addAction("Clear", this, [=](){ui->plainTextEdit->clear();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     ui->horizontalLayoutNotes->insertWidget(0, m_notesMenuBar);
 }

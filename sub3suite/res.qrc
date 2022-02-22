@@ -57,6 +57,14 @@
         <file>res/icons/url.png</file>
         <file>res/icons/updates.png</file>
         <file>res/icons/qt-logo.png</file>
+        <file>res/icons/save.png</file>
+        <file>res/icons/copy.png</file>
+        <file>res/icons/expand.png</file>
+        <file>res/icons/collapse.png</file>
+        <file>res/icons/delete.png</file>
+        <file>res/icons/browser.png</file>
+        <file>res/icons/extract.png</file>
+        <file>res/icons/send.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>
