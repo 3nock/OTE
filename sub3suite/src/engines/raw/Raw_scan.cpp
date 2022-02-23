@@ -31,6 +31,7 @@ void Raw::onScanThreadEnded(){
     ui->buttonStop->setDisabled(true);
 
     log("------------------ End ----------------");
+    qInfo() << "[RAW] Scan Ended";
 }
 
 void Raw::startScan(){
@@ -305,6 +306,7 @@ void Raw::startScan(){
         ui->buttonStart->setDisabled(true);
         ui->buttonStop->setEnabled(true);
         log("------------------ start --------------");
+        qInfo() << "[RAW] Scan Started";
     }
     else
         QMessageBox::warning(this, tr("Error!"), tr("Please Choose Engine For Enumeration!"));

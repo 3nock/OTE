@@ -118,7 +118,7 @@ void Dns::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ start ----------------");
-        qInfo() << "Scan Started";
+        qInfo() << "[DNS] Scan Started";
         return;
     }
     ///
@@ -138,7 +138,7 @@ void Dns::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ Paused ----------------");
-        qInfo() << "Scan Paused";
+        qInfo() << "[DNS] Scan Paused";
         return;
     }
     ///
@@ -158,7 +158,7 @@ void Dns::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ Resumed ----------------");
-        qInfo() << "Scan Resumed";
+        qInfo() << "[DNS] Scan Resumed";
     }
 }
 

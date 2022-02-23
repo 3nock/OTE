@@ -105,7 +105,7 @@ void Dns::onReScan(QQueue<QString> targets){
 
     /* logs */
     m_log("----------------- Re-Scan ---------------\n");
-    qInfo() << "Scan Started";
+    qInfo() << "[DNS] Re-Scan Started";
 
     /* ressetting and setting new values */
     ui->progressBar->show();
@@ -190,6 +190,8 @@ void Dns::onScanThreadEnded(){
             m_log("---------------- Stopped ------------\n");
         else
             m_log("------------------ End --------------\n");
+
+        qInfo() << "[DNS] Scan Ended";
 
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)

@@ -23,10 +23,10 @@ void Raw::on_buttonActionJson_clicked(){
     QMenu menu(this);
 
     /* adding actions */
-    menu.addAction(tr("Clear"), this, [=](){this->clearResults_txt();});
+    menu.addAction(tr("Clear"), this, [=](){this->clearResults_txt();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     menu.addSeparator();
-    menu.addAction(tr("Save"), this, [=](){this->saveResults_txt();});
-    menu.addAction(tr("Copy"), this, [=](){this->copyResults_txt();});
+    menu.addAction(tr("Save"), this, [=](){this->saveResults_txt();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    menu.addAction(tr("Copy"), this, [=](){this->copyResults_txt();})->setIcon(QIcon(":/img/res/icons/copy.png"));
 
     /* showing the context menu... */
     menu.exec(pos);
@@ -46,14 +46,14 @@ void Raw::on_buttonActionTree_clicked(){
     QMenu menu(this);
 
     /* adding actions */
-    menu.addAction(tr("Clear"), this, [=](){this->clearResults();});
-    menu.addAction(tr("Expand"), this, [=](){ui->treeViewResults->expandAll();});
-    menu.addAction(tr("Collapse"), this, [=](){ui->treeViewResults->collapseAll();});
+    menu.addAction(tr("Clear"), this, [=](){this->clearResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    menu.addAction(tr("Expand"), this, [=](){ui->treeViewResults->expandAll();})->setIcon(QIcon(":/img/res/icons/expand.png"));
+    menu.addAction(tr("Collapse"), this, [=](){ui->treeViewResults->collapseAll();})->setIcon(QIcon(":/img/res/icons/collapse.png"));
     menu.addSeparator();
-    menu.addAction(tr("Save"), this, [=](){this->saveResults();});
-    menu.addAction(tr("Copy"), this, [=](){this->copyResults();});
+    menu.addAction(tr("Save"), this, [=](){this->saveResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    menu.addAction(tr("Copy"), this, [=](){this->copyResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
     menu.addSeparator();
-    menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();});
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addAction(tr("Send To Engine"), this, [=](){this->sendToEngine();});
     menu.addAction(tr("Send To Enum"), this, [=](){this->sendToEnum();});
 
@@ -75,13 +75,13 @@ void Raw::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     QMenu menu(this);
 
     /* adding actions */
-    menu.addAction(tr("Remove"), this, [=](){this->removeResults();});
-    menu.addAction(tr("Open In Browser"), this, [=](){this->openInBrowser();});
+    menu.addAction(tr("Remove"), this, [=](){this->removeResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    menu.addAction(tr("Open In Browser"), this, [=](){this->openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
     menu.addSeparator();
-    menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();});
-    menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();});
+    menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
     menu.addSeparator();
-    menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();});
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addAction(tr("Send To Engine"), this, [=](){this->sendSelectedToEngine();});
     menu.addAction(tr("Send T Enum"), this, [=](){this->sendSelectedToEnum();});
 

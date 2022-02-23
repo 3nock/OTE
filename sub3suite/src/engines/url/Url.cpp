@@ -108,7 +108,7 @@ void Url::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ start ----------------");
-        qInfo() << "Scan Started";
+        qInfo() << "[URL] Scan Started";
         return;
     }
     ///
@@ -128,7 +128,7 @@ void Url::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ Paused ----------------");
-        qInfo() << "Scan Paused";
+        qInfo() << "[URL] Scan Paused";
         return;
     }
     ///
@@ -148,7 +148,7 @@ void Url::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ Resumed ----------------");
-        qInfo() << "Scan Resumed";
+        qInfo() << "[URL] Scan Resumed";
     }
 }
 

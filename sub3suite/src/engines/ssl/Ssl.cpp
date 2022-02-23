@@ -111,7 +111,7 @@ void Ssl::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ start ----------------");
-        qInfo() << "Scan Started";
+        qInfo() << "[SSL] Scan Started";
         return;
     }
     ///
@@ -131,7 +131,7 @@ void Ssl::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ Paused ----------------");
-        qInfo() << "Scan Paused";
+        qInfo() << "[SSL] Scan Paused";
         return;
     }
     ///
@@ -151,7 +151,7 @@ void Ssl::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ Resumed ----------------");
-        qInfo() << "Scan Resumed";
+        qInfo() << "[SSL] Scan Resumed";
     }
 }
 

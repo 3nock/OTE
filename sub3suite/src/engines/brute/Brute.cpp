@@ -115,7 +115,7 @@ void Brute::on_buttonStart_clicked(){
 
         /* logs */
         log("------------------ start ----------------\n");
-        qInfo() << "Scan Started";
+        qInfo() << "[BRUTE] Scan Started";
         return;
     }
     ///
@@ -135,7 +135,7 @@ void Brute::on_buttonStart_clicked(){
 
         /* logs */
         log("------------------ Paused ----------------\n");
-        qInfo() << "Scan Paused";
+        qInfo() << "[BRUTE] Scan Paused";
         return;
     }
     ///
@@ -155,7 +155,7 @@ void Brute::on_buttonStart_clicked(){
 
         /* logs */
         log("------------------ Resumed ----------------\n");
-        qInfo() << "Scan Resumed";
+        qInfo() << "[BRUTE] Scan Resumed";
     }
 }
 

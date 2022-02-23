@@ -109,7 +109,7 @@ void Active::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ start ----------------");
-        qInfo() << "Scan Started";
+        qInfo() << "[ACTIVE] Scan Started";
         return;
     }
     ///
@@ -129,7 +129,7 @@ void Active::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ Paused ----------------");
-        qInfo() << "Scan Paused";
+        qInfo() << "[ACTIVE] Scan Paused";
         return;
     }
     ///
@@ -149,7 +149,7 @@ void Active::on_buttonStart_clicked(){
 
         /* logs */
         m_log("------------------ Resumed ----------------");
-        qInfo() << "Scan Resumed";
+        qInfo() << "[ACTIVE] Scan Resumed";
     }
 }
 

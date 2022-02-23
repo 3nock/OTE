@@ -146,7 +146,7 @@ void Brute::onReScan(QQueue<QString> targets){
 
     /* logs */
     log("----------------- Re-Scan ---------------\n");
-    qInfo() << "Scan Started";
+    qInfo() << "[BRUTE] Re-Scan Started";
 
     /* ressetting and setting new values */
     ui->progressBar->show();
@@ -254,6 +254,8 @@ void Brute::onScanThreadEnded(){
             log("---------------- Stopped ------------\n");
         else
             log("------------------ End --------------\n");
+
+        qInfo() << "[BRUTE] Scan Ended";
 
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)

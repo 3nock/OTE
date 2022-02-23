@@ -31,6 +31,7 @@ void Osint::onScanThreadEnded(){
     ui->buttonStop->setDisabled(true);
 
     log("------------------ End ----------------");
+    qInfo() << "[OSINT] Scan Ended";
 }
 
 void Osint::startScan(){
@@ -347,6 +348,7 @@ void Osint::startScan(){
         ui->buttonStart->setDisabled(true);
         ui->buttonStop->setEnabled(true);
         log("------------------ start --------------");
+        qInfo() << "[OSINT] Scan Started";
     }
     else
         QMessageBox::warning(this, tr("Error!"), tr("Please Choose Engine For Enumeration!"));
