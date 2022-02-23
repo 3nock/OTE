@@ -200,7 +200,7 @@ void Dns::m_getConfigValues(){
     int size = CONFIG_DNS.beginReadArray("Nameservers");
     for (int i = 0; i < size; ++i) {
         CONFIG_DNS.setArrayIndex(i);
-        m_scanArgs->config->nameservers.append(CONFIG_DNS.value("value").toString());
+        m_scanArgs->config->nameservers.enqueue(CONFIG_DNS.value("value").toString());
     }
     CONFIG_DNS.endArray();
 }

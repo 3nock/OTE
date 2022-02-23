@@ -254,7 +254,7 @@ void Brute::getConfigValues(){
     int size = CONFIG_BRUTE.beginReadArray("Nameservers");
     for (int i = 0; i < size; ++i) {
         CONFIG_BRUTE.setArrayIndex(i);
-        m_scanArgs->config->nameservers.append(CONFIG_BRUTE.value("value").toString());
+        m_scanArgs->config->nameservers.enqueue(CONFIG_BRUTE.value("value").toString());
     }
     CONFIG_BRUTE.endArray();
 }

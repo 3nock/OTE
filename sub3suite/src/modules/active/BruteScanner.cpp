@@ -13,8 +13,12 @@ brute::Scanner::Scanner(brute::ScanArgs *args): AbstractScanner(nullptr),
     m_dns(new QDnsLookup(this)),
     m_dns_wildcard(new QDnsLookup(this))
 {
-    m_dns->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
     m_dns->setType(m_args->config->recordType);
+
+    /* setting nameserver */
+    QString nameserver = m_args->config->nameservers.dequeue();
+    m_dns->setNameserver(QHostAddress(nameserver));
+    m_args->config->nameservers.enqueue(nameserver);
 
     connect(m_dns_wildcard, &QDnsLookup::finished, this, &brute::Scanner::lookupFinished_wildcard);
     connect(m_dns, &QDnsLookup::finished, this, &brute::Scanner::lookupFinished);

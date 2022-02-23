@@ -79,14 +79,39 @@ void Project::m_initUI(){
                              << static_cast<int>((this->width() * 0.20)));
 }
 
+void Project::initActions(){
+    a_copy.setIcon(QIcon(":/img/res/icons/copy.png"));
+    a_save.setIcon(QIcon(":/img/res/icons/save.png"));
+    a_send.setIcon(QIcon(":/img/res/icons/send.png"));
+    a_clear.setIcon(QIcon(":/img/res/icons/delete.png"));
+    a_expand.setIcon(QIcon(":/img/res/icons/expand.png"));
+    a_collapse.setIcon(QIcon(":/img/res/icons/collapse.png"));
+
+    a_copy.setToolTip("Copy");
+    a_save.setToolTip("Save");
+    a_send.setToolTip("Send");
+    a_clear.setToolTip("Clear");
+    a_expand.setToolTip("Expand");
+    a_collapse.setToolTip("Collapse");
+
+    connect(&a_copy, &QAction::triggered, this, [=](){this->action_copy();});
+    connect(&a_save, &QAction::triggered, this, [=](){this->action_save();});
+    connect(&a_send, &QAction::triggered, this, [=](){this->action_send();});
+    connect(&a_clear, &QAction::triggered, this, [=](){this->action_clear();});
+    connect(&a_expand, &QAction::triggered, this, [=](){ui->treeViewSiteMap->expandAll();});
+    connect(&a_collapse, &QAction::triggered, this, [=](){ui->treeViewSiteMap->collapseAll();});
+}
+
 void Project::init_sitemapMenuBar(){
+    this->initActions();
     m_sitemapMenuBar = new QMenuBar(this);
-    m_sitemapMenuBar->addAction("Save", this, [=](){this->action_save();})->setIcon(QIcon(":/img/res/icons/save.png"));
-    m_sitemapMenuBar->addAction("Copy", this, [=](){this->action_copy();})->setIcon(QIcon(":/img/res/icons/copy.png"));
-    m_sitemapMenuBar->addAction("Send", this, [=](){this->action_send();})->setIcon(QIcon(":/img/res/icons/send.png"));
-    m_sitemapMenuBar->addAction("Clear", this, [=](){this->action_clear();})->setIcon(QIcon(":/img/res/icons/delete.png"));
-    m_sitemapMenuBar->addAction("Expand", this, [=](){ui->treeViewSiteMap->expandAll();})->setIcon(QIcon(":/img/res/icons/expand.png"));
-    m_sitemapMenuBar->addAction("Collapse", this, [=](){ui->treeViewSiteMap->collapseAll();})->setIcon(QIcon(":/img/res/icons/collapse.png"));
+    m_sitemapMenuBar->addAction(&a_save);
+    m_sitemapMenuBar->addAction(&a_copy);
+    m_sitemapMenuBar->addAction(&a_send);
+    m_sitemapMenuBar->addAction(&a_clear);
+    m_sitemapMenuBar->addAction(&a_expand);
+    m_sitemapMenuBar->addAction(&a_collapse);
+    m_sitemapMenuBar->setToolTipDuration(2);
     ui->horizontalLayoutMap->insertWidget(0, m_sitemapMenuBar);
 }
 

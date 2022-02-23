@@ -189,7 +189,7 @@ void Active::m_getConfigValues(){
     int size = CONFIG_ACTIVE.beginReadArray("Nameservers");
     for (int i = 0; i < size; ++i) {
         CONFIG_ACTIVE.setArrayIndex(i);
-        m_scanArgs->config->nameservers.append(CONFIG_ACTIVE.value("value").toString());
+        m_scanArgs->config->nameservers.enqueue(CONFIG_ACTIVE.value("value").toString());
     }
     CONFIG_ACTIVE.endArray();
 }

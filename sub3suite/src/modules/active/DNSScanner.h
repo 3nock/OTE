@@ -36,7 +36,7 @@ struct ScanStat {  // scan statistics
 };
 
 struct ScanConfig { // scan configurations
-    QStringList nameservers;
+    QQueue<QString> nameservers;
     int threads = 50;
 
     bool noDuplicates = false;

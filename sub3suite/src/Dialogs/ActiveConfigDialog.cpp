@@ -329,27 +329,23 @@ void ActiveConfigDialog::m_saveBrute(){
     if(recordANY)
         m_configBrute->recordType = QDnsLookup::ANY;
 
+    m_configBrute->nameservers.clear();
     if(nsSingle){
-        m_configBrute->nameservers.clear();
         CONFIG_BRUTE.beginGroup("Default-Nameservers");
         QString nameserver = CONFIG_BRUTE.value(ui->comboBoxSingleNameserver->currentText()).toString();
-        m_configBrute->nameservers.append(nameserver);
+        m_configBrute->nameservers.enqueue(nameserver);
         CONFIG_BRUTE.endGroup();
     }
     if(nsRandom){
-        m_configBrute->nameservers.clear();
         CONFIG_BRUTE.beginGroup("Default-Nameservers");
         QStringList nameservers = CONFIG_BRUTE.allKeys();
-        foreach(const QString &key, nameservers){
-            QString nameserver = CONFIG_BRUTE.value(key).toString();
-            m_configBrute->nameservers.append(nameserver);
-        }
+        foreach(const QString &key, nameservers)
+            m_configBrute->nameservers.enqueue(CONFIG_BRUTE.value(key).toString());
         CONFIG_BRUTE.endGroup();
     }
     if(nsCustom){
-        m_configBrute->nameservers.clear();
-        QStringList nameservers = m_customNameserverListModel->stringList();
-        m_configBrute->nameservers = nameservers;
+        foreach(const QString &nameserver, m_customNameserverListModel->stringList())
+            m_configBrute->nameservers.enqueue(nameserver);
     }
 
     /* save used nameservers to config file */
@@ -426,27 +422,23 @@ void ActiveConfigDialog::m_saveActive(){
     if(recordANY)
         m_configActive->recordType = QDnsLookup::ANY;
 
+    m_configActive->nameservers.clear();
     if(nsSingle){
-        m_configActive->nameservers.clear();
         CONFIG_ACTIVE.beginGroup("Default-Nameservers");
         QString nameserver = CONFIG_ACTIVE.value(ui->comboBoxSingleNameserver->currentText()).toString();
-        m_configActive->nameservers.append(nameserver);
+        m_configActive->nameservers.enqueue(nameserver);
         CONFIG_ACTIVE.endGroup();
     }
     if(nsRandom){
-        m_configActive->nameservers.clear();
         CONFIG_ACTIVE.beginGroup("Default-Nameservers");
         QStringList nameservers = CONFIG_ACTIVE.allKeys();
-        foreach(const QString &key, nameservers){
-            QString nameserver = CONFIG_ACTIVE.value(key).toString();
-            m_configActive->nameservers.append(nameserver);
-        }
+        foreach(const QString &key, nameservers)
+            m_configActive->nameservers.enqueue(CONFIG_ACTIVE.value(key).toString());
         CONFIG_ACTIVE.endGroup();
     }
     if(nsCustom){
-        m_configActive->nameservers.clear();
-        QStringList nameservers = m_customNameserverListModel->stringList();
-        m_configActive->nameservers = nameservers;
+        foreach(const QString &nameserver, m_customNameserverListModel->stringList())
+            m_configActive->nameservers.enqueue(nameserver);
     }
 
     /* save used nameservers to config file */
@@ -499,27 +491,23 @@ void ActiveConfigDialog::m_saveDns(){
     m_configDns->noDuplicates = noDuplicates;
     m_configDns->autoSaveToProject = autosaveToProject;
 
+    m_configDns->nameservers.clear();
     if(nsSingle){
-        m_configDns->nameservers.clear();
         CONFIG_DNS.beginGroup("Default-Nameservers");
         QString nameserver = CONFIG_DNS.value(ui->comboBoxSingleNameserver->currentText()).toString();
-        m_configDns->nameservers.append(nameserver);
+        m_configDns->nameservers.enqueue(nameserver);
         CONFIG_DNS.endGroup();
     }
     if(nsRandom){
-        m_configDns->nameservers.clear();
         CONFIG_DNS.beginGroup("Default-Nameservers");
         QStringList nameservers = CONFIG_DNS.allKeys();
-        foreach(const QString &key, nameservers){
-            QString nameserver = CONFIG_DNS.value(key).toString();
-            m_configDns->nameservers.append(nameserver);
-        }
+        foreach(const QString &key, nameservers)
+            m_configDns->nameservers.enqueue(CONFIG_DNS.value(key).toString());
         CONFIG_DNS.endGroup();
     }
     if(nsCustom){
-        m_configDns->nameservers.clear();
-        QStringList nameservers = m_customNameserverListModel->stringList();
-        m_configDns->nameservers = nameservers;
+        foreach(const QString &nameserver, m_customNameserverListModel->stringList())
+            m_configDns->nameservers.enqueue(nameserver);
     }
 
     /* save used nameservers to config file */

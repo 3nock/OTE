@@ -26,6 +26,7 @@ class Project : public QWidget{
 
     private:
         void m_initUI();
+        void initActions();
         void init_sitemapMenuBar();
         void init_notesMenuBar();
         Ui::Project *ui;
@@ -40,6 +41,12 @@ class Project : public QWidget{
         void action_send();
         QMenuBar *m_sitemapMenuBar;
         QMenuBar *m_notesMenuBar;
+        QAction a_copy;
+        QAction a_save;
+        QAction a_send;
+        QAction a_clear;
+        QAction a_expand;
+        QAction a_collapse;
 };
 
 #endif // S3SPROJECT_H

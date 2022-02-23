@@ -13,7 +13,11 @@ active::Scanner::Scanner(active::ScanArgs *args): AbstractScanner(nullptr),
       m_dns(new QDnsLookup(this))
 {
     m_dns->setType(m_args->config->recordType);
-    m_dns->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+
+    /* setting nameserver */
+    QString nameserver = m_args->config->nameservers.dequeue();
+    m_dns->setNameserver(QHostAddress(nameserver));
+    m_args->config->nameservers.enqueue(nameserver);
 
     connect(m_dns, &QDnsLookup::finished, this, &active::Scanner::lookupFinished);
     connect(this, &active::Scanner::next, this, &active::Scanner::lookup);

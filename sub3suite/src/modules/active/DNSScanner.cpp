@@ -32,13 +32,16 @@ dns::Scanner::Scanner(dns::ScanArgs *args): AbstractScanner (nullptr),
     m_dns_cname->setType(QDnsLookup::CNAME);
     m_dns_srv->setType(QDnsLookup::SRV);
 
-    m_dns_a->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
-    m_dns_a->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
-    m_dns_mx->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
-    m_dns_ns->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
-    m_dns_txt->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
-    m_dns_cname->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
-    m_dns_srv->setNameserver(QHostAddress(m_args->config->nameservers.at(0)));
+    /* setting nameserver */
+    QString nameserver = m_args->config->nameservers.dequeue();
+    m_dns_a->setNameserver(QHostAddress(nameserver));
+    m_dns_a->setNameserver(QHostAddress(nameserver));
+    m_dns_mx->setNameserver(QHostAddress(nameserver));
+    m_dns_ns->setNameserver(QHostAddress(nameserver));
+    m_dns_txt->setNameserver(QHostAddress(nameserver));
+    m_dns_cname->setNameserver(QHostAddress(nameserver));
+    m_dns_srv->setNameserver(QHostAddress(nameserver));
+    m_args->config->nameservers.enqueue(nameserver);
 
     connect(m_dns_srv, &QDnsLookup::finished, this, &dns::Scanner::srvLookupFinished);
     connect(m_dns_a, &QDnsLookup::finished, this, &dns::Scanner::aLookupFinished);

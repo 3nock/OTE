@@ -33,7 +33,7 @@ struct ScanStat {  // scan statistics
 
 struct ScanConfig { // scan configurations
     QDnsLookup::Type recordType = QDnsLookup::A;
-    QStringList nameservers;
+    QQueue<QString> nameservers;
     int threads = 50;
     int timeout = 3000;
 
