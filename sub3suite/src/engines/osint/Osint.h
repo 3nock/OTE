@@ -135,6 +135,8 @@ class Osint : public AbstractEngine{
         void clearResults();
         void openInBrowser();
         void removeResults();
+        void extract(bool subdomain, bool tld);
+        void extractSelected(bool subdomain, bool tld);
         void saveResults(RESULT_TYPE);
         void saveSelectedResults();
         void copyResults(RESULT_TYPE);

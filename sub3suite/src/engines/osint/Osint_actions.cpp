@@ -113,6 +113,47 @@ void Osint::removeResults(){
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
+void Osint::extract(bool subdomain, bool tld){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> extracts;
+
+    /* extracting and saving to a set to avoid repeatition */
+    for(int i = 0; i != proxyModel->rowCount(); ++i){
+        if(subdomain)
+            extracts.insert(proxyModel->index(i, 0).data().toString().split(".").at(0));
+        if(tld)
+            extracts.insert(proxyModel->index(i, 0).data().toString().split(".").last());
+    }
+
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
+    clipboard->setText(data.trimmed());
+}
+
+void Osint::extractSelected(bool subdomain, bool tld){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> extracts;
+
+    /* extracting and saving to a set to avoid repeatition */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column())
+            continue;
+
+        if(subdomain)
+            extracts.insert(index.data().toString().split(".").at(0));
+        if(tld)
+            extracts.insert(index.data().toString().split(".").last());
+    }
+
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
+    clipboard->setText(data.trimmed());
+}
+
 void Osint::saveResults(RESULT_TYPE result_type){
     QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
     if(filename.isEmpty()){

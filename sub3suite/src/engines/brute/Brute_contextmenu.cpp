@@ -19,29 +19,37 @@ void Brute::on_buttonAction_clicked(){
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
     pos = QPoint(pos.x()+65, pos.y());
 
-    /* creating the context menu... */
-    QMenu menu(this);
+    /* save menu */
     QMenu saveMenu(this);
-    QMenu copyMenu(this);
     saveMenu.setTitle(tr("Save"));
-    copyMenu.setTitle(tr("Copy"));
     saveMenu.setIcon(QIcon(":/img/res/icons/save.png"));
-    copyMenu.setIcon(QIcon(":/img/res/icons/copy.png"));
-
-    /* adding actions */
     saveMenu.addAction(tr("Subdomain,Ip"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAINIP);});
     saveMenu.addAction(tr("Subdomain"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);});
     saveMenu.addAction(tr("Ip"), this, [=](){this->saveResults(RESULT_TYPE::IP);});
+
+    /* copy menu */
+    QMenu copyMenu(this);
+    copyMenu.setTitle(tr("Copy"));
+    copyMenu.setIcon(QIcon(":/img/res/icons/copy.png"));
     copyMenu.addAction(tr("Subdomain,Ip"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAINIP);});
     copyMenu.addAction(tr("Subdomain"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAIN);});
     copyMenu.addAction(tr("Ip"), this, [=](){this->copyResults(RESULT_TYPE::IP);});
 
-    /* adding to mainMenu */
+    /* extract menu */
+    QMenu extractMenu(this);
+    extractMenu.setTitle(tr("Extract"));
+    extractMenu.setIcon(QIcon(":/img/res/icons/extract.png"));
+    extractMenu.addAction(tr("Subdomain(*.)"), this, [=](){this->extract(true, false);});
+    extractMenu.addAction(tr("Top level domain(.*)"), this, [=](){this->extract(false, true);});
+
+    /* main menu */
+    QMenu menu(this);
+
     menu.addAction(tr("Clear"), this, [=](){this->clearResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     menu.addSeparator();
     menu.addMenu(&saveMenu);
     menu.addMenu(&copyMenu);
-    menu.addAction(tr("Extract subdomain"), this, [=](){this->extract();})->setIcon(QIcon(":/img/res/icons/extract.png"));
+    menu.addMenu(&extractMenu);
     menu.addSeparator();
     menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
@@ -71,17 +79,23 @@ void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     /* getting the selected items... */
     selectionModel = ui->tableViewResults->selectionModel();
 
-    /* creating the context menu... */
+    /* extract menu */
+    QMenu extractMenu(this);
+    extractMenu.setTitle(tr("Extract"));
+    extractMenu.setIcon(QIcon(":/img/res/icons/extract.png"));
+    extractMenu.addAction(tr("Subdomain(*.)"), this, [=](){this->extractSelected(true, false);});
+    extractMenu.addAction(tr("Top level domain(.*)"), this, [=](){this->extractSelected(false, true);});
+
+    /* main menu */
     QMenu menu(this);
 
-    /* adding to mainMenu */
     menu.addAction(tr("Remove"), this, [=](){this->removeResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     menu.addAction(tr("Open in Browser"), this, [=](){this->openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
-    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent()))
-        menu.addAction(tr("Extract subdomain"), this, [=](){this->extractSelected();})->setIcon(QIcon(":/img/res/icons/extract.png"));
     menu.addSeparator();
     menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
     menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
+    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent()))
+        menu.addMenu(&extractMenu);
     menu.addSeparator();
     menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();

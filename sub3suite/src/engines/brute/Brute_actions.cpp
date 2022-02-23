@@ -192,31 +192,44 @@ void Brute::copySelectedResults(){
     clipboard->setText(data.trimmed());
 }
 
-void Brute::extract(){
+void Brute::extract(bool subdomain, bool tld){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data;
-    QString item;
+    QSet<QString> extracts;
 
+    /* extracting and saving to a set to avoid repeatition */
     for(int i = 0; i != proxyModel->rowCount(); ++i){
-        item = proxyModel->index(i, 0).data().toString().split(".").at(0);
-        data.append(item.append(NEWLINE));
+        if(subdomain)
+            extracts.insert(proxyModel->index(i, 0).data().toString().split(".").at(0));
+        if(tld)
+            extracts.insert(proxyModel->index(i, 0).data().toString().split(".").last());
     }
 
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
     clipboard->setText(data.trimmed());
 }
 
-void Brute::extractSelected(){
+void Brute::extractSelected(bool subdomain, bool tld){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data;
-    QString item;
+    QSet<QString> extracts;
 
+    /* extracting and saving to a set to avoid repeatition */
     foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
         if(index.column())
             continue;
-        item = index.data().toString().split(".").at(0);
-        data.append(item.append(NEWLINE));
+
+        if(subdomain)
+            extracts.insert(index.data().toString().split(".").at(0));
+        if(tld)
+            extracts.insert(index.data().toString().split(".").last());
     }
 
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
     clipboard->setText(data.trimmed());
 }
 

@@ -90,8 +90,8 @@ class Brute : public AbstractEngine{
         void copyResults(const RESULT_TYPE&);
         void copySelectedResults();
         /* extracting subdomain names */
-        void extract();
-        void extractSelected();
+        void extract(bool subdomain, bool tld);
+        void extractSelected(bool subdomain, bool tld);
         /* sending results */
         void sendToProject();
         void sendSelectedToProject();

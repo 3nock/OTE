@@ -28,6 +28,13 @@ void Osint::on_buttonAction_clicked(){
     menu.addAction(tr("Clear"), this, [=](){this->clearResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     menu.addSeparator();
 
+    /* extract menu */
+    QMenu extractMenu(this);
+    extractMenu.setTitle(tr("Extract"));
+    extractMenu.setIcon(QIcon(":/img/res/icons/extract.png"));
+    extractMenu.addAction(tr("Subdomain(*.)"), this, [=](){this->extract(true, false);});
+    extractMenu.addAction(tr("Top level domain(.*)"), this, [=](){this->extract(false, true);});
+
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
     {
@@ -45,6 +52,7 @@ void Osint::on_buttonAction_clicked(){
         copyMenu.addAction(tr("IpAddress"), this, [=](){this->saveResults(RESULT_TYPE::IP);});
         menu.addMenu(&saveMenu);
         menu.addMenu(&copyMenu);
+        menu.addMenu(&extractMenu);
         menu.addSeparator();
         menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
         menu.addSeparator();
@@ -64,6 +72,7 @@ void Osint::on_buttonAction_clicked(){
     case osint::OUTPUT::SUBDOMAIN:
         menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/save.png"));
         menu.addAction(tr("Copy"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/copy.png"));
+        menu.addMenu(&extractMenu);
         menu.addSeparator();
         menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
         menu.addSeparator();
@@ -156,12 +165,22 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     /* creating the context menu... */
     QMenu menu(this);
 
+    /* extract menu */
+    QMenu extractMenu(this);
+    extractMenu.setTitle(tr("Extract"));
+    extractMenu.setIcon(QIcon(":/img/res/icons/extract.png"));
+    extractMenu.addAction(tr("Subdomain(*.)"), this, [=](){this->extractSelected(true, false);});
+    extractMenu.addAction(tr("Top level domain(.*)"), this, [=](){this->extractSelected(false, true);});
+
     /* adding actions */
     menu.addAction(tr("Remove"), this, [=](){this->removeResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     menu.addAction(tr("Open In Browser"), this, [=](){this->openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
     menu.addSeparator();
     menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
     menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
+    if(ui->comboBoxOutput->currentIndex() == osint::OUTPUT::SUBDOMAINIP ||
+       ui->comboBoxOutput->currentIndex() == osint::OUTPUT::SUBDOMAIN)
+        menu.addMenu(&extractMenu);
     menu.addSeparator();
     menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
