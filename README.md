@@ -1,6 +1,6 @@
 <img src="docs/images/sub3suite.png" width=500/>
 
-[![Telegram](https://img.shields.io/badge/chat-%20on%20Telegram-blue.svg)](https://telegram.me/sub3suite) ![Twitter](https://img.shields.io/twitter/url?style=social&url=sub3suite)
+[![Telegram](https://img.shields.io/badge/chat-%20on%20Telegram-blue.svg)](https://telegram.me/sub3suite) ![Twitter](https://img.shields.io/twitter/url?style=social&url=https://twitter.com/sub3suite)
 
 # Subdomain Enumeration Suite
 sub3 suite is a research-grade suite of tools for subdomain enumeration and general osint information gathering. Supports both
