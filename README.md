@@ -8,13 +8,28 @@
 sub3 suite is a research-grade suite of tools for subdomain enumeration and general osint information gathering. Supports both
 manual and automated analysis on targets with many available feautues. You can find more information on the [blog](https://3nock.github.io/sub3suite)!
 
-# ScreenShots
+## ScreenShots
 <img src="docs/images/screenshot_osint.png"/>
 <img src="docs/images/screenshot_project.png"/>
 
+## Preface
+If you're just getting started with subdomain enumeration & osint information gathering, read [primer guide](PRIMER.md).
+
+## Contributing 
+
+**Are you a developer?**
+
+Check out the [open issues](https://github.com/3nock/sub3suite/issues), [project boards](https://github.com/3nock/sub3suite/projects), and many scattered `TODO` messages throughout the source code.
+
+**Not a developer?** 
+
+You can help by reporting [bugs](https://github.com/3nock/sub3suite), requesting [features](https://github.com/3nock/sub3suite), providing [translations](https://github.com/3nock/sub3suite), and sharing this project.
+
+For More information see [contribution guide](CONTRIBUTING.md).
+
 ## Installation & Usage
 
-1. Download from [GitHub](https://github.com/3nock/sub3suite/releases),
+1. Download from [GitHub](https://github.com/3nock/sub3suite/releases).
 2. Unzip.
 3. Run.
 
