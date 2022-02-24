@@ -137,17 +137,17 @@ class Osint : public AbstractEngine{
         void removeResults();
         void extract(bool subdomain, bool tld);
         void extractSelected(bool subdomain, bool tld);
-        void saveResults(RESULT_TYPE);
+        void saveResults(const RESULT_TYPE&);
         void saveSelectedResults();
-        void copyResults(RESULT_TYPE);
+        void copyResults(const RESULT_TYPE&);
         void copySelectedResults();
         /* sending results */
         void sendToProject();
-        void sendToEngine(ENGINE, RESULT_TYPE);
-        void sendToEnum(TOOL, RESULT_TYPE);
         void sendSelectedToProject();
-        void sendSelectedToEngine(ENGINE, RESULT_TYPE);
-        void sendSelectedToEnum(TOOL, RESULT_TYPE);
+        void sendToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendToEnum(const TOOL&, const RESULT_TYPE&);
+        void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendSelectedToEnum(const TOOL&, const RESULT_TYPE&);
 };
 
 #endif // OSINT_H

@@ -14,7 +14,7 @@
 #include "src/modules/active/PortScanner.h"
 
 
-void Active::m_startScan(){
+void Active::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -116,7 +116,7 @@ void Active::onReScan(QQueue<QString> targets){
     status->isPaused = false;
 
     /* logs */
-    m_log("----------------- Re-Scan ---------------\n");
+    log("----------------- Re-Scan ---------------\n");
     qInfo() << "[ACTIVE] Re-Scan Started";
 
     /* ressetting and setting new values */
@@ -200,12 +200,12 @@ void Active::onScanThreadEnded(){
     if(status->activeScanThreads == 0)
     {
         /* display the scan summary on logs */
-        m_scanSummary();
+        this->scanSummary();
 
         if(status->isStopped)
-            m_log("---------------- Stopped ------------\n");
+            log("---------------- Stopped ------------\n");
         else
-            m_log("------------------ End --------------\n");
+            log("------------------ End --------------\n");
 
         qInfo() << "[ACTIVE] Scan Ended";
 
@@ -234,7 +234,7 @@ void Active::onScanThreadEnded(){
     }
 }
 
-void Active::m_scanSummary(){
+void Active::scanSummary(){
     /* elapsed time */
     QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
 

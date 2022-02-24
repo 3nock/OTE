@@ -21,61 +21,57 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
     m_scanArgs(new active::ScanArgs),
     m_scanStats(new active::ScanStat),
     m_targetListModel(new QStringListModel),
-    m_resultModel(new QStandardItemModel),
-    m_resultProxyModel(new QSortFilterProxyModel)
+    m_model(new QStandardItemModel)
 {
-    ui->setupUi(this);
+    this->initUI();
 
-    ui->frame->setProperty("default_frame", true);
-    ui->labelResultsCount->setProperty("dark", true);
-
-    /* targets */
-    ui->targets->setListName("Targets");
+    /* list model */
+    ui->targets->setListName(tr("Targets"));
     ui->targets->setListModel(m_targetListModel);
 
     /* result model */
-    m_resultModel->setHorizontalHeaderLabels({" Host", " Ipv4", " Ipv6", " Ports"});
-    m_resultProxyModel->setSourceModel(m_resultModel);
-    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_resultProxyModel->setRecursiveFilteringEnabled(true);
-    m_resultProxyModel->setFilterKeyColumn(0);
-    ui->tableViewResults->setModel(m_resultProxyModel);
+    m_model->setHorizontalHeaderLabels({tr(" Host"), tr(" Ipv4"), tr(" Ipv6"), tr(" Ports")});
+    proxyModel->setSourceModel(m_model);
+    ui->tableViewResults->setModel(proxyModel);
 
     ui->tableViewResults->horizontalHeader()->resizeSection(0, 200);
     ui->tableViewResults->horizontalHeader()->resizeSection(1, 100);
-    ui->tableViewResults->horizontalHeader()->resizeSection(2, 200);
+    ui->tableViewResults->horizontalHeader()->resizeSection(2, 150);
     ui->tableViewResults->horizontalHeader()->resizeSection(3, 100);
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
-    /* hiding widgets */
-    ui->progressBar->hide();
-    ui->buttonStop->setDisabled(true);
-
-    /* equally seperate the widgets... */
-    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
-                                        << static_cast<int>((this->width() * 0.50)));
-
-    /* placeholdertext */
-    ui->lineEditFilter->setPlaceholderText("filter...");
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
-
-    /* ... */
-    this->m_initActions();
 
     /* config... */
     m_scanArgs->config = m_scanConfig;
 
-    /* get prev config values */
-    this->m_getConfigValues();
+    this->getConfigValues();
 }
 Active::~Active(){
-    delete m_resultProxyModel;
-    delete m_resultModel;
+    delete m_model;
     delete m_targetListModel;
     delete m_scanStats;
     delete m_scanArgs;
     delete m_scanConfig;
     delete ui;
+}
+
+void Active::initUI(){
+    ui->setupUi(this);
+
+    /* widgets properties */
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+
+    /* hiding widgets */
+    ui->progressBar->hide();
+    ui->buttonStop->setDisabled(true);
+
+    /* placeholdertext */
+    ui->lineEditFilter->setPlaceholderText(tr("filter..."));
+    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
+
+    /* equally seperate the widgets... */
+    ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
+                                        << static_cast<int>((this->width() * 0.50)));
 }
 
 void Active::on_lineEditTarget_returnPressed(){
@@ -88,16 +84,16 @@ void Active::on_buttonStart_clicked(){
     ///
     if(status->isNotActive){
         if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-            QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Target for Enumeration!"));
             return;
         }
         if(ui->checkBoxMultipleTargets->isChecked() && m_targetListModel->rowCount() < 1){
-            QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Targets for Enumeration!"));
             return;
         }
 
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Pause");
+        ui->buttonStart->setText(tr("Pause"));
 
         status->isRunning = true;
         status->isNotActive = false;
@@ -105,10 +101,10 @@ void Active::on_buttonStart_clicked(){
         status->isPaused = false;
 
         /* start scan */
-        this->m_startScan();
+        this->startScan();
 
         /* logs */
-        m_log("------------------ start ----------------");
+        log("------------------ start ----------------");
         qInfo() << "[ACTIVE] Scan Started";
         return;
     }
@@ -117,7 +113,7 @@ void Active::on_buttonStart_clicked(){
     ///
     if(status->isRunning){
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Resume");
+        ui->buttonStart->setText(tr("Resume"));
 
         status->isPaused = true;
         status->isRunning = false;
@@ -128,7 +124,7 @@ void Active::on_buttonStart_clicked(){
         emit pauseScanThread();
 
         /* logs */
-        m_log("------------------ Paused ----------------");
+        log("------------------ Paused ----------------");
         qInfo() << "[ACTIVE] Scan Paused";
         return;
     }
@@ -137,7 +133,7 @@ void Active::on_buttonStart_clicked(){
     ///
     if(status->isPaused){
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Pause");
+        ui->buttonStart->setText(tr("Pause"));
 
         status->isRunning = true;
         status->isPaused = false;
@@ -148,7 +144,7 @@ void Active::on_buttonStart_clicked(){
         emit resumeScanThread();
 
         /* logs */
-        m_log("------------------ Resumed ----------------");
+        log("------------------ Resumed ----------------");
         qInfo() << "[ACTIVE] Scan Resumed";
     }
 }
@@ -171,7 +167,7 @@ void Active::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Active::m_getConfigValues(){
+void Active::getConfigValues(){
     m_scanArgs->config->timeout = CONFIG_ACTIVE.value("timeout").toInt();
     m_scanArgs->config->threads = CONFIG_ACTIVE.value("threads").toInt();
     m_scanArgs->config->checkWildcard = CONFIG_ACTIVE.value("wildcard").toBool();
@@ -194,19 +190,19 @@ void Active::m_getConfigValues(){
     CONFIG_ACTIVE.endArray();
 }
 
-void Active::m_log(QString log){
+void Active::log(QString log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
 
 void Active::on_lineEditFilter_textChanged(const QString &filterKeyword){
-    m_resultProxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
+    proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
 
     if(ui->checkBoxRegex->isChecked())
-        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+        proxyModel->setFilterRegExp(QRegExp(filterKeyword));
     else
-        m_resultProxyModel->setFilterFixedString(filterKeyword);
+        proxyModel->setFilterFixedString(filterKeyword);
 
-    ui->tableViewResults->setModel(m_resultProxyModel);
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->tableViewResults->setModel(proxyModel);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }

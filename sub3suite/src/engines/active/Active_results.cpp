@@ -21,19 +21,19 @@ void Active::onScanLog(scan::Log log){
 }
 
 void Active::onScanResult_port(s3s_struct::HOST host){
-    if(m_resultSet.contains(host.host)) // for existing entry...
+    if(set_subdomain.contains(host.host)) // for existing entry...
     {
-        s3s_item::HOST *item = m_resultSet.value(host.host);
+        s3s_item::HOST *item = set_subdomain.value(host.host);
         item->setValue_ports(host);
     }
     else // for new entry...
     {
         s3s_item::HOST *item = new s3s_item::HOST;
         item->setValue_ports(host);
-        m_resultModel->appendRow({item, item->ipv4, item->ipv6, item->ports});
-        m_resultSet.insert(host.host, item);
+        m_model->appendRow({item, item->ipv4, item->ipv6, item->ports});
+        set_subdomain.insert(host.host, item);
 
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
         m_scanStats->resolved++;
     }
 
@@ -43,9 +43,9 @@ void Active::onScanResult_port(s3s_struct::HOST host){
 }
 
 void Active::onScanResult_dns(s3s_struct::HOST host){
-    if(m_resultSet.contains(host.host)) // for existing entry...
+    if(set_subdomain.contains(host.host)) // for existing entry...
     {
-        s3s_item::HOST *item = m_resultSet.value(host.host);
+        s3s_item::HOST *item = set_subdomain.value(host.host);
         switch (m_scanConfig->recordType) {
         case QDnsLookup::A:
             item->setValue_ipv4(host.ipv4);
@@ -65,10 +65,10 @@ void Active::onScanResult_dns(s3s_struct::HOST host){
     {
         s3s_item::HOST *item = new s3s_item::HOST;
         item->setValues(host);
-        m_resultModel->appendRow({item, item->ipv4, item->ipv6, item->ports});
-        m_resultSet.insert(host.host, item);
+        m_model->appendRow({item, item->ipv4, item->ipv6, item->ports});
+        set_subdomain.insert(host.host, item);
 
-        ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
         m_scanStats->resolved++;
     }
 

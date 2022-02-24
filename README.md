@@ -13,7 +13,7 @@ manual and automated analysis on targets with many available feautues. You can f
 <img src="docs/images/screenshot_project.png"/>
 
 ## Preface
-If you're just getting started with subdomain enumeration & osint information gathering, read [primer guide](PRIMER.md).
+If you're just getting started with subdomain enumeration, osint information gathering & attack surface mapping, read [primer guide](PRIMER.md).
 
 ## Contributing 
 
@@ -23,7 +23,7 @@ Check out the [open issues](https://github.com/3nock/sub3suite/issues), [project
 
 **Not a developer?** 
 
-You can help by reporting [bugs](https://github.com/3nock/sub3suite), requesting [features](https://github.com/3nock/sub3suite), providing [translations](https://github.com/3nock/sub3suite), and sharing this project.
+You can help by reporting [bugs](https://github.com/3nock/sub3suite), requesting [features](https://github.com/3nock/sub3suite), providing [translations](https://github.com/3nock/sub3suite) and sharing this project.
 
 For More information see [contribution guide](CONTRIBUTING.md).
 

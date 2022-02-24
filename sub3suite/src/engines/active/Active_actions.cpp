@@ -13,17 +13,18 @@
 #include <QDesktopServices>
 
 
-void Active::m_openInBrowser(QItemSelectionModel *selectionModel){
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
-}
-
-void Active::m_clearResults(){
+void Active::clearResults(){
     /* clear the results... */
-    m_resultModel->clear();
+    m_model->clear();
     ui->labelResultsCount->clear();
-    m_resultModel->setHorizontalHeaderLabels({" Host", " Ipv4", " Ipv6", " Ports"});
-    m_resultSet.clear();
+    m_model->setHorizontalHeaderLabels({tr(" Host"), tr(" Ipv4"), tr(" Ipv6"), tr(" Ports")});
+    set_subdomain.clear();
+
+    ui->tableViewResults->horizontalHeader()->resizeSection(0, 200);
+    ui->tableViewResults->horizontalHeader()->resizeSection(1, 100);
+    ui->tableViewResults->horizontalHeader()->resizeSection(2, 150);
+    ui->tableViewResults->horizontalHeader()->resizeSection(3, 100);
+    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* clear the progressbar... */
     ui->progressBar->clearMask();
@@ -31,52 +32,63 @@ void Active::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void Active::m_removeResults(QItemSelectionModel *selectionModel){
-    QModelIndex index;
-    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        index = m_resultProxyModel->mapToSource(proxyIndex);
-        m_resultSet.remove(index.data().toString());
-        m_resultModel->removeRow(index.row());
-    }
-
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+void Active::openInBrowser(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
 }
 
-void Active::m_saveResults(RESULT_TYPE resultType){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void Active::removeResults(){
+    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
+        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+        set_subdomain.remove(index.data().toString());
+        m_model->removeRow(index.row());
+    }
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+}
+
+void Active::saveResults(const RESULT_TYPE &result_type){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "ACTIVE: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if(!file.isOpen())
+    if(!file.isOpen()){
+        qDebug() << "ACTIVE: Failed to open " << filename << " For saving Results";
         return;
+    }
 
-    /* writing to file */
-    QString item;
-    switch(resultType){
+    switch(result_type){
     case RESULT_TYPE::SUBDOMAIN:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
-        {
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
-        }
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            file.write(proxyModel->index(i, 0).data().toString().append(NEWLINE).toUtf8());
         break;
 
     case RESULT_TYPE::IP:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
-        {
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QString ipv4(proxyModel->index(i, 1).data().toString());
+            QString ipv6(proxyModel->index(i, 2).data().toString());
+            if(!ipv4.isEmpty())
+                file.write(ipv4.append(NEWLINE).toUtf8());
+            if(!ipv6.isEmpty())
+                file.write(ipv6.append(NEWLINE).toUtf8());
         }
         break;
 
     case RESULT_TYPE::SUBDOMAINIP:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
-        {
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString()+":"+m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
-            file.write(item.toUtf8());
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QString host(proxyModel->index(i, 0).data().toString());
+            QString ipv4(proxyModel->index(i, 1).data().toString());
+            QString ipv6(proxyModel->index(i, 2).data().toString());
+
+            if(!ipv4.isEmpty())
+                host.append(",").append(ipv4);
+            if(!ipv6.isEmpty())
+                host.append(",").append(ipv6);
+
+            file.write(host.append(NEWLINE).toUtf8());
         }
         break;
 
@@ -87,56 +99,62 @@ void Active::m_saveResults(RESULT_TYPE resultType){
     file.close();
 }
 
-void Active::m_saveResults(QItemSelectionModel *selectionModel){
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void Active::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "ACTIVE: Failed to getSaveFileName";
         return;
+    }
 
-    /* saving to file */
-    QString data;
-    QString item;
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if(file.isOpen())
-    {
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            item = index.data().toString();
-            data.append(item.append(NEWLINE));
-        }
-        file.write(data.toUtf8());
-        file.close();
+    if(!file.isOpen()){
+        qDebug() << "ACTIVE: Failed to open " << filename << " For saving Results";
+        return;
     }
+
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        file.write(index.data().toString().append(NEWLINE).toUtf8());
+
+    file.close();
 }
 
 
-void Active::m_copyResults(RESULT_TYPE resultType){
+void Active::copyResults(const RESULT_TYPE &result_type){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString clipboardData;
-    QString item;
 
-    /* copying result type */
-    switch(resultType){
+    switch(result_type){
     case RESULT_TYPE::SUBDOMAIN:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
-        {
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
-            clipboardData.append(item);
-        }
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            clipboardData.append(proxyModel->index(i, 0).data().toString()).append(NEWLINE);
         break;
 
     case RESULT_TYPE::IP:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
         {
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString().append(NEWLINE);
-            clipboardData.append(item);
+            QString ipv4(proxyModel->index(i, 1).data().toString());
+            QString ipv6(proxyModel->index(i, 2).data().toString());
+            if(!ipv4.isEmpty())
+                clipboardData.append(ipv4).append(NEWLINE);
+            if(!ipv6.isEmpty())
+                clipboardData.append(ipv6).append(NEWLINE);
         }
         break;
 
     case RESULT_TYPE::SUBDOMAINIP:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
         {
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString()+"|"+m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString().append(NEWLINE);
-            clipboardData.append(item);
+            QString host(proxyModel->index(i, 0).data().toString());
+            QString ipv4(proxyModel->index(i, 1).data().toString());
+            QString ipv6(proxyModel->index(i, 2).data().toString());
+
+            if(!ipv4.isEmpty())
+                host.append(",").append(ipv4);
+            if(!ipv6.isEmpty())
+                host.append(",").append(ipv6);
+
+            clipboardData.append(host).append(NEWLINE);
         }
         break;
 
@@ -147,251 +165,258 @@ void Active::m_copyResults(RESULT_TYPE resultType){
     clipboard->setText(clipboardData.trimmed());
 }
 
-void Active::m_copyResults(QItemSelectionModel *selectionModel){
+void Active::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString data;
-    QString item;
 
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-    {
-        item = index.data().toString();
-        data.append(item.append(NEWLINE));
-    }
+        data.append(index.data().toString().append(NEWLINE));
 
     clipboard->setText(data.trimmed());
 }
 
-void Active::m_extract(){
+void Active::extract(bool subdomain, bool tld){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data;
-    QString item;
+    QSet<QString> extracts;
 
-    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-        item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().split(".").at(0);
-        data.append(item.append(NEWLINE));
+    /* extracting and saving to a set to avoid repeatition */
+    for(int i = 0; i != proxyModel->rowCount(); ++i){
+        if(subdomain)
+            extracts.insert(proxyModel->index(i, 0).data().toString().split(".").at(0));
+        if(tld)
+            extracts.insert(proxyModel->index(i, 0).data().toString().split(".").last());
     }
 
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
     clipboard->setText(data.trimmed());
 }
 
-void Active::m_extract(QItemSelectionModel *selectionModel){
+void Active::extractSelected(bool subdomain, bool tld){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data;
-    QString item;
+    QSet<QString> extracts;
+
+    /* extracting and saving to a set to avoid repeatition */
     foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
         if(index.column())
             continue;
-        item = index.data().toString().split(".").at(0);
-        data.append(item.append(NEWLINE));
+
+        if(subdomain)
+            extracts.insert(index.data().toString().split(".").at(0));
+        if(tld)
+            extracts.insert(index.data().toString().split(".").last());
     }
 
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
     clipboard->setText(data.trimmed());
 }
 
-void Active::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::SUBDOMAIN){
-        ui->targets->add(target);
+///
+/// sending results...
+///
+
+void Active::sendToProject(){
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model->itemFromIndex(index));
+        project->addActiveHost(host_to_struct(item));
     }
+}
+
+void Active::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column())
+            continue;
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model->itemFromIndex(model_index));
+        project->addActiveHost(host_to_struct(item));
+    }
+}
+
+void Active::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    switch (engine) {
+    case ENGINE::OSINT:
+        switch (result_type) {
+        case RESULT_TYPE::SUBDOMAIN:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                emit sendResultsToOsint(proxyModel->index(i, 0).data().toString(), result_type);
+            emit changeTabToOsint();
+            break;
+        case RESULT_TYPE::IP:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+                if(!ipv4.isEmpty())
+                    emit sendResultsToOsint(ipv4, result_type);
+                if(!ipv6.isEmpty())
+                    emit sendResultsToOsint(ipv6, result_type);
+            }
+            emit changeTabToOsint();
+            break;
+        default:
+            break;
+        }
+        break;
+    case ENGINE::RAW:
+        switch (result_type) {
+        case RESULT_TYPE::SUBDOMAIN:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                emit sendResultsToRaw(proxyModel->index(i, 0).data().toString(), result_type);
+            emit changeTabToRaw();
+            break;
+        case RESULT_TYPE::IP:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+                if(!ipv4.isEmpty())
+                    emit sendResultsToRaw(ipv4, result_type);
+                if(!ipv6.isEmpty())
+                    emit sendResultsToRaw(ipv6, result_type);
+            }
+            emit changeTabToRaw();
+            break;
+        default:
+            break;
+        }
+        break;
+    case ENGINE::BRUTE:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            emit sendResultsToBrute(proxyModel->index(i, 0).data().toString(), result_type);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            emit sendResultsToActive(proxyModel->index(i, 0).data().toString(), result_type);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            emit sendResultsToDns(proxyModel->index(i, 0).data().toString(), result_type);
+        emit changeTabToDns();
+        break;
+    case ENGINE::CERT:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            emit sendResultsToCert(proxyModel->index(i, 0).data().toString(), result_type);
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
+    }
+}
+
+void Active::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    switch (engine) {
+    case ENGINE::OSINT:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(result_type == RESULT_TYPE::SUBDOMAIN){
+                if(index.column() == 0)
+                    emit sendResultsToOsint(index.data().toString(), result_type);
+            }
+            else{
+                if(index.column())
+                    emit sendResultsToOsint(index.data().toString(), result_type);
+            }
+        }
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(result_type == RESULT_TYPE::SUBDOMAIN){
+                if(index.column() == 0)
+                    emit sendResultsToRaw(index.data().toString(), result_type);
+            }
+            else{
+                if(index.column())
+                    emit sendResultsToRaw(index.data().toString(), result_type);
+            }
+        }
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                continue;
+            emit sendResultsToBrute(index.data().toString(), result_type);
+        }
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                continue;
+            emit sendResultsToActive(index.data().toString(), result_type);
+        }
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                continue;
+            emit sendResultsToDns(index.data().toString(), result_type);
+        }
+        emit changeTabToDns();
+        break;
+    case ENGINE::CERT:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                continue;
+            emit sendResultsToCert(index.data().toString(), result_type);
+        }
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
+    }
+}
+
+void Active::sendToEnum(const TOOL &tool){
+    switch (tool) {
+    case TOOL::IP:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QString ipv4(proxyModel->index(i, 1).data().toString());
+            QString ipv6(proxyModel->index(i, 2).data().toString());
+
+            if(!ipv4.isEmpty())
+                emit sendResultsToIpEnum(ipv4, RESULT_TYPE::IP);
+            if(!ipv6.isEmpty())
+                emit sendResultsToIpEnum(ipv6, RESULT_TYPE::IP);
+        }
+        emit changeTabToIpEnum();
+        break;
+    default:
+        break;
+    }
+}
+
+void Active::sendSelectedToEnum(const TOOL &tool){
+    switch (tool) {
+    case TOOL::IP:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToIpEnum(index.data().toString(), RESULT_TYPE::IP);
+        }
+        emit changeTabToIpEnum();
+        break;
+    default:
+        break;
+    }
+
+}
+
+///
+/// receiving targets...
+///
+
+void Active::onReceiveTargets(QString target, RESULT_TYPE resultType){
+    if(resultType == RESULT_TYPE::SUBDOMAIN)
+        ui->targets->add(target);
 
     /* set multiple targets checkbox checked */
     ui->checkBoxMultipleTargets->setChecked(true);
-}
-
-/*****************************************************************************
-                            SENDING RESULTS
-******************************************************************************/
-void Active::m_sendToProject(){
-    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
-    {
-        QModelIndex index = m_resultProxyModel->mapToSource(m_resultProxyModel->index(i ,0));
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_resultModel->item(index.row(), index.column()));
-        project->addActiveHost(host_to_struct(item));
-    }
-}
-
-void Active::m_sendToProject(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = m_resultProxyModel->mapToSource(index);
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_resultModel->item(model_index.row(), model_index.column()));
-        project->addActiveHost(host_to_struct(item));
-    }
-}
-
-void Active::m_sendSubdomainToEngine(ENGINE engine){
-    QString item;
-    switch (engine) {
-    case ENGINE::OSINT:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-            emit sendResultsToOsint(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToRaw();
-        break;
-    case ENGINE::BRUTE:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-            emit sendResultsToBrute(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToBrute();
-        break;
-    case ENGINE::ACTIVE:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-            emit sendResultsToActive(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToActive();
-        break;
-    case ENGINE::DNS:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-            emit sendResultsToDns(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToDns();
-        break;
-    case ENGINE::CERT:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-            emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToSSL();
-        break;
-    default:
-        break;
-    }
-}
-
-void Active::m_sendIpToEngine(ENGINE engine){
-    QString item;
-
-    switch (engine) {
-    case ENGINE::OSINT:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
-            emit sendResultsToOsint(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-            item = m_resultProxyModel->data(m_resultProxyModel->index(i, 1)).toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToRaw();
-        break;
-
-    default:
-        break;
-    }
-}
-
-void Active::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selection){
-    QString item;
-    switch (engine) {
-    case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToOsint(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToRaw();
-        break;
-    case ENGINE::BRUTE:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToBrute(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToBrute();
-        break;
-    case ENGINE::ACTIVE:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToActive(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToActive();
-        break;
-    case ENGINE::DNS:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToDns(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToDns();
-        break;
-    case ENGINE::CERT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToSSL();
-        break;
-    default:
-        break;
-    }
-}
-
-void Active::m_sendIpToEngine(ENGINE engine, QItemSelectionModel *selection){
-    QString item;
-    switch (engine) {
-    case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(!index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToOsint(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            if(!index.column())
-                continue;
-            item = index.data().toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToRaw();
-        break;
-
-    default:
-        break;
-    }
-}
-
-void Active::m_sendSubdomainToTool(TOOL){
-    /* not yet */
-}
-
-void Active::m_sendIpToTool(TOOL){
-    /* not yet */
-}
-
-void Active::m_sendSubdomainToTool(TOOL, QItemSelectionModel *){
-    /* not yet */
-}
-
-void Active::m_sendIpToTool(TOOL, QItemSelectionModel *){
-    /* not yet */
 }

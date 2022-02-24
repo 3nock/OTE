@@ -154,7 +154,7 @@ void Osint::extractSelected(bool subdomain, bool tld){
     clipboard->setText(data.trimmed());
 }
 
-void Osint::saveResults(RESULT_TYPE result_type){
+void Osint::saveResults(const RESULT_TYPE& result_type){
     QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
     if(filename.isEmpty()){
         qDebug() << "OSINT: Failed to getSaveFileName";
@@ -229,7 +229,7 @@ void Osint::saveSelectedResults(){
 }
 
 
-void Osint::copyResults(RESULT_TYPE result_type){
+void Osint::copyResults(const RESULT_TYPE &result_type){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString clipboardData;
 
@@ -326,7 +326,7 @@ void Osint::sendToProject(){
 ///
 /// Sending results...
 ///
-void Osint::sendToEngine(ENGINE engine, RESULT_TYPE result_type){
+void Osint::sendToEngine(const ENGINE &engine, const RESULT_TYPE  &result_type){
     int column = 0;
     if(result_type == RESULT_TYPE::IP && ui->comboBoxOutput->currentIndex() == 1)
         column = 1;
@@ -372,7 +372,7 @@ void Osint::sendToEngine(ENGINE engine, RESULT_TYPE result_type){
     }
 }
 
-void Osint::sendSelectedToEngine(ENGINE engine, RESULT_TYPE result_type){
+void Osint::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
     switch (engine) {
     case ENGINE::OSINT:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes())
@@ -414,7 +414,7 @@ void Osint::sendSelectedToEngine(ENGINE engine, RESULT_TYPE result_type){
     }
 }
 
-void Osint::sendToEnum(TOOL tool, RESULT_TYPE result_type){
+void Osint::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
     int column = 0;
     if(result_type == RESULT_TYPE::IP && ui->comboBoxOutput->currentIndex() == 1)
         column = 1;
@@ -524,7 +524,7 @@ void Osint::sendSelectedToProject(){
     emit changeTabToProject();
 }
 
-void Osint::sendSelectedToEnum(TOOL tool , RESULT_TYPE result_type){
+void Osint::sendSelectedToEnum(const TOOL &tool , const RESULT_TYPE &result_type){
     switch (tool) {
     case TOOL::IP:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes())
