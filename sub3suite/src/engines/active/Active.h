@@ -17,6 +17,7 @@
 #include "src/modules/active/ActiveScanner.h"
 #include "src/utils/NotesSyntaxHighlighter.h"
 
+
 namespace Ui {
     class Active;
 }
