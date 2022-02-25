@@ -10,10 +10,6 @@
         <file>res/icons/left_on.png</file>
         <file>res/icons/right_on.png</file>
         <file>res/icons/up_on.png</file>
-        <file>res/icons/sub3suite.png</file>
-        <file>res/icons/logo.ico</file>
-        <file>res/icons/s3s_logo.ico</file>
-        <file>res/icons/splash.png</file>
         <file>res/icons/help.png</file>
         <file>res/icons/github.png</file>
         <file>res/icons/preferences.png</file>
@@ -65,6 +61,9 @@
         <file>res/icons/browser.png</file>
         <file>res/icons/extract.png</file>
         <file>res/icons/send.png</file>
+        <file>res/icons/sub3suite.png</file>
+        <file>res/icons/splash.png</file>
+        <file>res/icons/main_logo.ico</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>
