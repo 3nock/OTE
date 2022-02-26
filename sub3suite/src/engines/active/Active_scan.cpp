@@ -55,8 +55,25 @@ void Active::startScan(){
     /* start timer */
     m_timer.start();
 
-    m_scanArgs->ports.clear();
-    m_scanArgs->ports << 80 << 443;
+    /* getting ports for port-scan */
+    if(ui->comboBoxOption->currentIndex()){
+        m_scanArgs->ports.clear();
+
+        if(ui->radioButtonDefault->isChecked())
+            m_scanArgs->ports << 80 << 443 << 21 << 990 << 22 << 25 << 465 << 587 << 2525 ;
+
+        if(ui->radioButtonCustom->isChecked()){
+            foreach(const QString &port, ui->lineEditCustom->text().split(","))
+                m_scanArgs->ports << port.toUShort();
+        }
+
+        if(ui->radioButtonRange->isChecked()){
+            ushort from = ui->lineEditFrom->text().toUShort();
+            ushort to = ui->lineEditTo->text().toUShort();
+            for(ushort i = from; i < to; i++)
+                m_scanArgs->ports << i;
+        }
+    }
 
     /* loop to create threads for enumeration... */
     for(int i = 0; i < status->activeScanThreads; i++)
@@ -80,7 +97,7 @@ void Active::startScan(){
             cThread->start();
             break;
         }
-        case 2: // ACTIVE PORT
+        case 1: // ACTIVE PORT
         {
             port::Scanner *scanner = new port::Scanner(m_scanArgs);
             QThread *cThread = new QThread;
@@ -171,7 +188,7 @@ void Active::onReScan(QQueue<QString> targets){
             cThread->start();
             break;
         }
-        case 2: // ACTIVE PORT
+        case 1: // ACTIVE PORT
         {
             port::Scanner *scanner = new port::Scanner(m_scanArgs);
             QThread *cThread = new QThread;

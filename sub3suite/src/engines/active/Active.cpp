@@ -59,15 +59,21 @@ void Active::initUI(){
 
     /* widgets properties */
     ui->frame->setProperty("default_frame", true);
+    ui->framePort->setProperty("dark_frame",true);
     ui->labelResultsCount->setProperty("dark", true);
 
     /* hiding widgets */
+    ui->framePort->hide();
     ui->progressBar->hide();
     ui->buttonStop->setDisabled(true);
 
     /* placeholdertext */
     ui->lineEditFilter->setPlaceholderText(tr("filter..."));
     ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
+
+    ui->lineEditCustom->setPlaceholderText(tr("e.g. 80,443,21"));
+    ui->lineEditFrom->setPlaceholderText(tr("e.g. 1"));
+    ui->lineEditTo->setPlaceholderText(tr("e.g. 1023"));
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -205,4 +211,15 @@ void Active::on_lineEditFilter_textChanged(const QString &filterKeyword){
 
     ui->tableViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
+}
+
+void Active::on_comboBoxOption_currentIndexChanged(int index){
+    switch (index) {
+    case 0: // ACTIVE DNS
+        ui->framePort->hide();
+        break;
+    case 1: // ACTIVE PORT
+        ui->framePort->show();
+        break;
+    }
 }

@@ -271,6 +271,10 @@ QFrame[default_frame="true"] {
     background-color: rgb(40, 40, 40);
 }
 
+QFrame[dark_frame="true"] {
+    background-color: rgb(40, 40, 40);
+}
+
 QLabel[dark="true"] {
     border-style: outset;
     border-style: solid;

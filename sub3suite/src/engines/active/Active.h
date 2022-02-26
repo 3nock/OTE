@@ -48,7 +48,9 @@ class Active : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_lineEditFilter_textChanged(const QString &arg1);
 
-    private:
+        void on_comboBoxOption_currentIndexChanged(int index);
+
+private:
         Ui::Active *ui;
         QElapsedTimer m_timer;
         QMap<QString,QString> m_failedScans;
