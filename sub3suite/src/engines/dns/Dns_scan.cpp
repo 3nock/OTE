@@ -12,7 +12,7 @@
 #include "src/dialogs/FailedScansDialog.h"
 
 
-void Dns::m_startScan(){
+void Dns::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -63,6 +63,7 @@ void Dns::m_startScan(){
     m_scanArgs->RecordType_txt = ui->checkBoxTXT->isChecked();
     m_scanArgs->RecordType_cname = ui->checkBoxCNAME->isChecked();
     m_scanArgs->RecordType_srv = ui->checkBoxSRV->isChecked();
+    m_scanArgs->RecordType_any = ui->checkBoxANY->isChecked();
 
     /* start timer */
     m_timer.start();
@@ -104,7 +105,7 @@ void Dns::onReScan(QQueue<QString> targets){
     status->isPaused = false;
 
     /* logs */
-    m_log("----------------- Re-Scan ---------------\n");
+    log("----------------- Re-Scan ---------------\n");
     qInfo() << "[DNS] Re-Scan Started";
 
     /* ressetting and setting new values */
@@ -150,6 +151,7 @@ void Dns::onReScan(QQueue<QString> targets){
     m_scanArgs->RecordType_txt = ui->checkBoxTXT->isChecked();
     m_scanArgs->RecordType_cname = ui->checkBoxCNAME->isChecked();
     m_scanArgs->RecordType_srv = ui->checkBoxSRV->isChecked();
+    m_scanArgs->RecordType_any = ui->checkBoxANY->isChecked();
 
     /* start timer */
     m_timer.start();
@@ -184,12 +186,12 @@ void Dns::onScanThreadEnded(){
     if(status->activeScanThreads == 0)
     {
         /* display the scan summary on logs */
-        m_scanSummary();
+        this->scanSummary();
 
         if(status->isStopped)
-            m_log("---------------- Stopped ------------\n");
+            log("---------------- Stopped ------------\n");
         else
-            m_log("------------------ End --------------\n");
+            log("------------------ End --------------\n");
 
         qInfo() << "[DNS] Scan Ended";
 
@@ -218,7 +220,7 @@ void Dns::onScanThreadEnded(){
     }
 }
 
-void Dns::m_scanSummary(){
+void Dns::scanSummary(){
     /* elapsed time */
     QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
 

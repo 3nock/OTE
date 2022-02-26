@@ -21,17 +21,20 @@ void Dns::onScanLog(scan::Log log){
     m_scanStats->failed++;
 }
 
-void Dns::onScanResult(s3s_struct::DNS results){
-    if(m_resultSet.contains(results.dns)){
-        s3s_item::DNS *item = m_resultSet.value(results.dns);
-        item->setValues(results);
+void Dns::onScanResult(s3s_struct::DNS dns){
+    if(m_resultSet.contains(dns.dns)){
+        s3s_item::DNS *item = m_resultSet.value(dns.dns);
+        item->setValues(dns);
+        return;
     }
-    else{
-        s3s_item::DNS *item = new s3s_item::DNS;
-        item->setValues(results);
-        m_resultModel->appendRow(item);
-        m_resultSet.insert(results.dns, item);
-    }
+
+    s3s_item::DNS *item = new s3s_item::DNS;
+    item->setValues(dns);
+    m_model->appendRow(item);
+    m_resultSet.insert(dns.dns, item);
+
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveDNS(dns);
 
     m_scanStats->resolved++;
 }

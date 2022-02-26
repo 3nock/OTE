@@ -14,9 +14,7 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Definitions.h"
 
-/*
- * save targets as json
- */
+
 Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, project),
     ui(new Ui::Dns),
     m_scanConfig(new dns::ScanConfig),
@@ -24,31 +22,45 @@ Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
     m_scanStats(new dns::ScanStat),
     m_targetListModel(new QStringListModel),
     m_srvWordlitsModel(new QStringListModel),
-    m_resultModel(new QStandardItemModel),
-    m_resultProxyModel(new QSortFilterProxyModel)
+    m_model(new QStandardItemModel)
 {
-    ui->setupUi(this);
+    this->initUI();
 
-    ui->frame->setProperty("default_frame", true);
-    ui->labelResultsCount->setProperty("dark", true);
-
-    /* init... */
-    ui->targets->setListName("Targets");
-    ui->srvWordlist->setListName("SRV");
+    /* list model */
+    ui->targets->setListName(tr("Targets"));
+    ui->srvWordlist->setListName(tr("SRV"));
     ui->targets->setListModel(m_targetListModel);
     ui->srvWordlist->setListModel(m_srvWordlitsModel);
 
     /* result model */
     ui->treeViewResults->setHeaderHidden(false);
-    m_resultModel->setHorizontalHeaderLabels({" DNS", " Values"});
-    m_resultProxyModel->setSourceModel(m_resultModel);
-    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_resultProxyModel->setRecursiveFilteringEnabled(true);
-    m_resultProxyModel->setFilterKeyColumn(0);
-    ui->treeViewResults->setModel(m_resultProxyModel);
+    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Values")});
+    proxyModel->setSourceModel(m_model);
+    ui->treeViewResults->setModel(proxyModel);
 
+    m_scanArgs->config = m_scanConfig;
 
-    /* widgets... */
+    this->loadSrvWordlist();
+    this->getConfigValues();
+}
+Dns::~Dns(){
+    delete m_model;
+    delete m_srvWordlitsModel;
+    delete m_targetListModel;
+    delete m_scanArgs;
+    delete m_scanStats;
+    delete m_scanConfig;
+    delete ui;
+}
+
+void Dns::initUI(){
+    ui->setupUi(this);
+
+    /* setting widget's properties */
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
+
+    /* hiddin & disabling widgets */
     ui->buttonStop->setDisabled(true);
     ui->srvWordlist->hide();
     ui->progressBar->hide();
@@ -57,26 +69,9 @@ Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
     ui->lineEditFilter->setPlaceholderText("filter...");
     ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
 
-    /* equally seperate the widgets... */
+    /* equally seperate the widgets */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-
-    m_scanArgs->config = m_scanConfig;
-
-    /* init */
-    this->m_initActions();
-    this->m_loadSrvWordlist();
-    this->m_getConfigValues();
-}
-Dns::~Dns(){
-    delete m_resultProxyModel;
-    delete m_resultModel;
-    delete m_srvWordlitsModel;
-    delete m_targetListModel;
-    delete m_scanArgs;
-    delete m_scanStats;
-    delete m_scanConfig;
-    delete ui;
 }
 
 void Dns::on_lineEditTarget_returnPressed(){
@@ -89,24 +84,24 @@ void Dns::on_buttonStart_clicked(){
     ///
     if(status->isNotActive){
         if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-            QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Target for Enumeration!"));
             return;
         }
         if(ui->checkBoxMultipleTargets->isChecked() && m_targetListModel->rowCount() < 1){
-            QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Targets for Enumeration!"));
             return;
         }
         if((!ui->checkBoxSRV->isChecked()) && (!ui->checkBoxA->isChecked() && !ui->checkBoxAAAA->isChecked() && !ui->checkBoxMX->isChecked() && !ui->checkBoxNS->isChecked() && !ui->checkBoxTXT->isChecked() && !ui->checkBoxCNAME->isChecked())){
-            QMessageBox::warning(this, "Error!", "Please Choose DNS Record To Enumerate!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Choose DNS Record To Enumerate!"));
             return;
         }
         if((ui->checkBoxSRV->isChecked())&& (m_srvWordlitsModel->rowCount() < 1)){
-            QMessageBox::warning(this, "Error!", "Please Enter SRV Wordlist For Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter SRV Wordlist For Enumeration!"));
             return;
         }
 
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Pause");
+        ui->buttonStart->setText(tr("Pause"));
 
         status->isRunning = true;
         status->isNotActive = false;
@@ -114,10 +109,10 @@ void Dns::on_buttonStart_clicked(){
         status->isPaused = false;
 
         /* start scan */
-        this->m_startScan();
+        this->startScan();
 
         /* logs */
-        m_log("------------------ start ----------------");
+        log("------------------ start ----------------");
         qInfo() << "[DNS] Scan Started";
         return;
     }
@@ -126,7 +121,7 @@ void Dns::on_buttonStart_clicked(){
     ///
     if(status->isRunning){
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Resume");
+        ui->buttonStart->setText(tr("Resume"));
 
         status->isPaused = true;
         status->isRunning = false;
@@ -137,7 +132,7 @@ void Dns::on_buttonStart_clicked(){
         emit pauseScanThread();
 
         /* logs */
-        m_log("------------------ Paused ----------------");
+        log("------------------ Paused ----------------");
         qInfo() << "[DNS] Scan Paused";
         return;
     }
@@ -146,7 +141,7 @@ void Dns::on_buttonStart_clicked(){
     ///
     if(status->isPaused){
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Pause");
+        ui->buttonStart->setText(tr("Pause"));
 
         status->isRunning = true;
         status->isPaused = false;
@@ -157,7 +152,7 @@ void Dns::on_buttonStart_clicked(){
         emit resumeScanThread();
 
         /* logs */
-        m_log("------------------ Resumed ----------------");
+        log("------------------ Resumed ----------------");
         qInfo() << "[DNS] Scan Resumed";
     }
 }
@@ -174,7 +169,7 @@ void Dns::on_buttonStop_clicked(){
     status->isNotActive = false;
 }
 
-void Dns::m_loadSrvWordlist(){
+void Dns::loadSrvWordlist(){
     QFile file(":/files/res/files/srv.txt");
     ui->srvWordlist->add(file);
 }
@@ -192,7 +187,7 @@ void Dns::on_checkBoxSRV_clicked(bool checked){
         ui->srvWordlist->hide();
 }
 
-void Dns::m_getConfigValues(){
+void Dns::getConfigValues(){
     m_scanArgs->config->threads = CONFIG_DNS.value("threads").toInt();
     m_scanArgs->config->noDuplicates = CONFIG_DNS.value("noDuplicates").toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG_DNS.value("autosaveToProject").toBool();
@@ -205,17 +200,17 @@ void Dns::m_getConfigValues(){
     CONFIG_DNS.endArray();
 }
 
-void Dns::m_log(QString log){
+void Dns::log(QString log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
 
 void Dns::on_lineEditFilter_textChanged(const QString &filterKeyword){
     if(ui->checkBoxRegex->isChecked())
-        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+        proxyModel->setFilterRegExp(QRegExp(filterKeyword));
     else
-        m_resultProxyModel->setFilterFixedString(filterKeyword);
+        proxyModel->setFilterFixedString(filterKeyword);
 
-    ui->treeViewResults->setModel(m_resultProxyModel);
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->treeViewResults->setModel(proxyModel);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }

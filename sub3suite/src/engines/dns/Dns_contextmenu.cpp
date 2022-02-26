@@ -9,66 +9,9 @@
 #include "ui_Dns.h"
 
 
-void Dns::m_initActions(){
-    connect(&a_ClearResults, &QAction::triggered, this, [=](){this->m_clearResults();});
-    connect(&a_RemoveResults, &QAction::triggered, this, [=](){this->m_removeResults(selectionModel);});
-    connect(&a_ExpandResults, &QAction::triggered, this, [=](){this->m_expandResults();});
-    connect(&a_CollapseResults, &QAction::triggered, this, [=](){this->m_collapseResults();});
-    connect(&a_OpenInBrowser, &QAction::triggered, this, [=](){this->m_openInBrowser(selectionModel);});
-    /* ... */
-    connect(&a_SendIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT);});
-    connect(&a_SendIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW);});
-    connect(&a_SendHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT);});
-    connect(&a_SendHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW);});
-    connect(&a_SendHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE);});
-    connect(&a_SendHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE);});
-    connect(&a_SendHostToDns, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS);});
-    connect(&a_SendHostToCert, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT);});
-    connect(&a_SendIpToIpTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP);});
-    connect(&a_SendHostToCertTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT);});
-    connect(&a_SendHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::DOMAINTOOL);});
-    connect(&a_SendNSToNSTool, &QAction::triggered, this, [=](){this->m_sendNSToTool(TOOL::NS);});
-    connect(&a_SendMXToMXTool, &QAction::triggered, this, [=](){this->m_sendMXToTool(TOOL::MX);});
-    /* ... */
-    connect(&a_SendSelectedIpToOsint, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedIpToRaw, &QAction::triggered, this, [=](){this->m_sendIpToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedHostToOsint, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedHostToRaw, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedHostToBrute, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::BRUTE, selectionModel);});
-    connect(&a_SendSelectedHostToActive, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::ACTIVE, selectionModel);});
-    connect(&a_SendSelectedHostToDns, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::DNS, selectionModel);});
-    connect(&a_SendSelectedHostToCert, &QAction::triggered, this, [=](){this->m_sendSubdomainToEngine(ENGINE::CERT, selectionModel);});
-    connect(&a_SendSelectedIpToIpTool, &QAction::triggered, this, [=](){this->m_sendIpToTool(TOOL::IP, selectionModel);});
-    connect(&a_SendSelectedHostToCertTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::CERT, selectionModel);});
-    connect(&a_SendSelectedHostToDomainTool, &QAction::triggered, this, [=](){this->m_sendSubdomainToTool(TOOL::DOMAINTOOL, selectionModel);});
-    connect(&a_SendSelectedNSToNSTool, &QAction::triggered, this, [=](){this->m_sendNSToTool(TOOL::NS, selectionModel);});
-    connect(&a_SendSelectedMXToMXTool, &QAction::triggered, this, [=](){this->m_sendMXToTool(TOOL::MX, selectionModel);});
-    /* ... */
-    connect(&a_SaveAll, &QAction::triggered, this, [=](){this->m_saveResultsAll();});
-    connect(&a_Save, &QAction::triggered, this, [=](){this->m_saveResults(selectionModel);});
-    connect(&a_SaveIp, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::IP);});
-    connect(&a_SaveHostnames, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::SUBDOMAIN);});
-    connect(&a_SaveA, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::A);});
-    connect(&a_SaveAAAA, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::AAAA);});
-    connect(&a_SaveCNAME, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::CNAME);});
-    connect(&a_SaveNS, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::NS);});
-    connect(&a_SaveMX, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::MX);});
-    connect(&a_SaveTXT, &QAction::triggered, this, [=](){this->m_saveResults(RESULT_TYPE::TXT);});
-    connect(&a_CopyAll, &QAction::triggered, this, [=](){this->m_copyResultsAll();});
-    connect(&a_Copy, &QAction::triggered, this, [=](){this->m_copyResults(selectionModel);});
-    connect(&a_CopyIp, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::IP);});
-    connect(&a_CopyHostnames, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::SUBDOMAIN);});
-    connect(&a_CopyA, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::A);});
-    connect(&a_CopyAAAA, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::AAAA);});
-    connect(&a_CopyCNAME, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::CNAME);});
-    connect(&a_CopyNS, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::NS);});
-    connect(&a_CopyMX, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::MX);});
-    connect(&a_CopyTXT, &QAction::triggered, this, [=](){this->m_copyResults(RESULT_TYPE::TXT);});
-}
-
 void Dns::on_buttonAction_clicked(){
     /* check if there are results available else dont show the context menu */
-    if(m_resultProxyModel->rowCount() < 1)
+    if(proxyModel->rowCount() < 1)
         return;
 
     /* getting the position of the action button to place the context menu and
@@ -76,58 +19,64 @@ void Dns::on_buttonAction_clicked(){
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
     pos = QPoint(pos.x()+65, pos.y());
 
-    /* creating the context menu... */
-    QMenu menu(this);
+    /* save menu */
     QMenu saveMenu(this);
-    QMenu copyMenu(this);
-    saveMenu.setTitle("Save");
-    copyMenu.setTitle("Copy");
-
-    /* adding actions */
-    saveMenu.addAction(&a_SaveAll);
-    saveMenu.addAction(&a_SaveHostnames);
-    saveMenu.addAction(&a_SaveIp);
+    saveMenu.setTitle(tr("Save"));
+    saveMenu.setIcon(QIcon(":/img/res/icons/save.png"));
+    saveMenu.addAction(tr("DNS"), this, [=](){this->saveResults(RESULT_TYPE::DNS);});
     saveMenu.addSeparator();
-    saveMenu.addAction(&a_SaveA);
-    saveMenu.addAction(&a_SaveAAAA);
-    saveMenu.addAction(&a_SaveCNAME);
-    saveMenu.addAction(&a_SaveMX);
-    saveMenu.addAction(&a_SaveNS);
-    saveMenu.addAction(&a_SaveTXT);
-    copyMenu.addAction(&a_CopyAll);
-    copyMenu.addAction(&a_CopyHostnames);
-    copyMenu.addAction(&a_CopyIp);
+    saveMenu.addAction(tr("A"), this, [=](){this->saveResults(RESULT_TYPE::A);});
+    saveMenu.addAction(tr("AAAA"), this, [=](){this->saveResults(RESULT_TYPE::AAAA);});
+    saveMenu.addAction(tr("MX"), this, [=](){this->saveResults(RESULT_TYPE::MX);});
+    saveMenu.addAction(tr("NS"), this, [=](){this->saveResults(RESULT_TYPE::NS);});
+    saveMenu.addAction(tr("CNAME"), this, [=](){this->saveResults(RESULT_TYPE::CNAME);});
+    saveMenu.addAction(tr("TXT"), this, [=](){this->saveResults(RESULT_TYPE::TXT);});
+    saveMenu.addAction(tr("SRV"), this, [=](){this->saveResults(RESULT_TYPE::SRV);});
+    saveMenu.addSeparator();
+    saveMenu.addAction(tr("Hostnames"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);});
+    saveMenu.addAction(tr("IpAddresses"), this, [=](){this->saveResults(RESULT_TYPE::IP);});
+    /* copy menu */
+    QMenu copyMenu(this);
+    copyMenu.setTitle(tr("Copy"));
+    copyMenu.setIcon(QIcon(":/img/res/icons/copy.png"));
+    copyMenu.addAction(tr("DNS"), this, [=](){this->copyResults(RESULT_TYPE::DNS);});
     copyMenu.addSeparator();
-    copyMenu.addAction(&a_CopyA);
-    copyMenu.addAction(&a_CopyAAAA);
-    copyMenu.addAction(&a_CopyCNAME);
-    copyMenu.addAction(&a_CopyMX);
-    copyMenu.addAction(&a_CopyNS);
-    copyMenu.addAction(&a_CopyTXT);
+    copyMenu.addAction(tr("A"), this, [=](){this->copyResults(RESULT_TYPE::A);});
+    copyMenu.addAction(tr("AAAA"), this, [=](){this->copyResults(RESULT_TYPE::AAAA);});
+    copyMenu.addAction(tr("MX"), this, [=](){this->copyResults(RESULT_TYPE::MX);});
+    copyMenu.addAction(tr("NS"), this, [=](){this->copyResults(RESULT_TYPE::NS);});
+    copyMenu.addAction(tr("CNAME"), this, [=](){this->copyResults(RESULT_TYPE::CNAME);});
+    copyMenu.addAction(tr("TXT"), this, [=](){this->copyResults(RESULT_TYPE::TXT);});
+    copyMenu.addAction(tr("SRV"), this, [=](){this->copyResults(RESULT_TYPE::SRV);});
+    copyMenu.addSeparator();
+    copyMenu.addAction(tr("Hostnames"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAIN);});
+    copyMenu.addAction(tr("IpAddresses"), this, [=](){this->copyResults(RESULT_TYPE::IP);});
 
-    /* adding to mainMenu */
-    menu.addAction(&a_ClearResults);
-    menu.addAction(&a_ExpandResults);
-    menu.addAction(&a_CollapseResults);
+    /* main menu */
+    QMenu menu(this);
+
+    menu.addAction(tr("Clear"), this, [=](){this->clearResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    menu.addAction(tr("Expand"), this, [=](){ui->treeViewResults->expandAll();})->setIcon(QIcon(":/img/res/icons/expand.png"));
+    menu.addAction(tr("Collapse"), this, [=](){ui->treeViewResults->collapseAll();})->setIcon(QIcon(":/img/res/icons/collapse.png"));
     menu.addSeparator();
     menu.addMenu(&saveMenu);
     menu.addMenu(&copyMenu);
     menu.addSeparator();
-    menu.addAction(&a_SendIpToOsint);
-    menu.addAction(&a_SendIpToRaw);
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendHostToOsint);
-    menu.addAction(&a_SendHostToRaw);
-    menu.addAction(&a_SendHostToBrute);
-    menu.addAction(&a_SendHostToActive);
-    menu.addAction(&a_SendHostToDns);
-    menu.addAction(&a_SendHostToCert);
+    menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+    menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendNSToNSTool);
-    menu.addAction(&a_SendMXToMXTool);
-    menu.addAction(&a_SendIpToIpTool);
-    menu.addAction(&a_SendHostToCertTool);
-    menu.addAction(&a_SendHostToDomainTool);
+    menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addSeparator();
+    menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+    menu.addAction(tr("Send NS to NS-Enum"), this, [=](){this->sendToEnum(TOOL::NS);})->setIcon(QIcon(":/img/res/icons/ns.png"));
+    menu.addAction(tr("Send MX to MX-Enum"), this, [=](){this->sendToEnum(TOOL::MX);})->setIcon(QIcon(":/img/res/icons/mx.png"));
 
     /* showing the context menu... */
     menu.exec(pos);
@@ -143,31 +92,30 @@ void Dns::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     /* getting the selected items... */
     selectionModel = ui->treeViewResults->selectionModel();
 
-    /* creating the context menu... */
+    /* main menu */
     QMenu menu(this);
 
-    /* adding to mainMenu */
-    menu.addAction(&a_RemoveResults);
-    menu.addAction(&a_OpenInBrowser);
+    menu.addAction(tr("Remove"), this, [=](){this->removeResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    menu.addAction(tr("Open in Browser"), this, [=](){this->openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
     menu.addSeparator();
-    menu.addAction(&a_Save);
-    menu.addAction(&a_Copy);
+    menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendSelectedIpToOsint);
-    menu.addAction(&a_SendSelectedIpToRaw);
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendSelectedHostToOsint);
-    menu.addAction(&a_SendSelectedHostToRaw);
-    menu.addAction(&a_SendSelectedHostToBrute);
-    menu.addAction(&a_SendSelectedHostToActive);
-    menu.addAction(&a_SendSelectedHostToDns);
-    menu.addAction(&a_SendSelectedHostToCert);
+    menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+    menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendSelectedNSToNSTool);
-    menu.addAction(&a_SendSelectedMXToMXTool);
-    menu.addAction(&a_SendSelectedIpToIpTool);
-    menu.addAction(&a_SendSelectedHostToCertTool);
-    menu.addAction(&a_SendSelectedHostToDomainTool);
+    menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addSeparator();
+    menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+    menu.addAction(tr("Send MX to MX-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::MX);})->setIcon(QIcon(":/img/res/icons/mx.png"));
+    menu.addAction(tr("Send NS to NS-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::NS);})->setIcon(QIcon(":/img/res/icons/ns.png"));
 
     /* showing the context menu... */
     menu.exec(QCursor::pos());

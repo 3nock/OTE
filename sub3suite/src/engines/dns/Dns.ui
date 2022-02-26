@@ -134,6 +134,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBoxANY">
+       <property name="text">
+        <string>ANY</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QCheckBox" name="checkBoxSRV">
        <property name="text">
         <string>SRV</string>
@@ -446,7 +453,7 @@
               <bool>false</bool>
              </property>
              <attribute name="headerVisible">
-              <bool>true</bool>
+              <bool>false</bool>
              </attribute>
              <attribute name="headerCascadingSectionResizes">
               <bool>true</bool>

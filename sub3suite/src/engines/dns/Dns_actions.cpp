@@ -12,10 +12,10 @@
 #include <QDesktopServices>
 
 
-void Dns::m_clearResults(){
+void Dns::clearResults(){
     /* clear the results... */
-    m_resultModel->clear();
-    m_resultModel->setHorizontalHeaderLabels({" DNS", " Values"});
+    m_model->clear();
+    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Values")});
     ui->labelResultsCount->clear();
     m_resultSet.clear();
 
@@ -25,484 +25,565 @@ void Dns::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void Dns::m_expandResults(){
-    ui->treeViewResults->expandAll();
-}
-
-void Dns::m_collapseResults(){
-    ui->treeViewResults->collapseAll();
-}
-
-void Dns::m_openInBrowser(QItemSelectionModel *selectionModel){
+void Dns::openInBrowser(){
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
 }
 
-void Dns::m_removeResults(QItemSelectionModel *selectionModel){
-    QModelIndex index;
+void Dns::removeResults(){
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        index = m_resultProxyModel->mapToSource(proxyIndex);
+        QModelIndex index = proxyModel->mapToSource(proxyIndex);
         m_resultSet.remove(index.data().toString());
-        m_resultModel->removeRow(index.row());
+        m_model->removeRow(index.row());
     }
-
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void Dns::m_saveResultsAll(){
-    /* save as json */
-}
-
-void Dns::m_saveResults(RESULT_TYPE resultType){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void Dns::saveResults(const RESULT_TYPE &result_type){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "ACTIVE: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if(!file.isOpen())
+    if(!file.isOpen()){
+        qDebug() << "ACTIVE: Failed to open " << filename << " For saving Results";
         return;
+    }
 
-    /* getting the types */
-    QStringList choosenTypes;
-    switch(resultType){
+    switch(result_type){
+    case RESULT_TYPE::DNS:
+    {
+        QJsonDocument document;
+        QJsonArray dns_array;
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+            dns_array.append(dns_to_json(item));
+        }
+        document.setArray(dns_array);
+        file.write(document.toJson());
+    }
+        break;
+
     case RESULT_TYPE::SUBDOMAIN:
-        choosenTypes.append({"CNAME", "MX", "NS"});
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                file.write(item->CNAME->child(j, 1)->text().append(NEWLINE).toUtf8());
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                file.write(item->NS->child(j, 1)->text().append(NEWLINE).toUtf8());
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                file.write(item->MX->child(j, 1)->text().append(NEWLINE).toUtf8());
+        }
         break;
+
     case RESULT_TYPE::IP:
-        choosenTypes.append({"A", "AAAA"});
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->A->rowCount(); j++)
+                file.write(item->A->child(j, 1)->text().append(NEWLINE).toUtf8());
+            for(int j = 0; j < item->AAAA->rowCount(); j++)
+                file.write(item->AAAA->child(j, 1)->text().append(NEWLINE).toUtf8());
+        }
         break;
+
     case RESULT_TYPE::A:
-        choosenTypes.append("A");
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->A->rowCount(); j++)
+                file.write(item->A->child(j, 1)->text().append(NEWLINE).toUtf8());
+        }
         break;
+
     case RESULT_TYPE::AAAA:
-        choosenTypes.append("AAAA");
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->AAAA->rowCount(); j++)
+                file.write(item->AAAA->child(j, 1)->text().append(NEWLINE).toUtf8());
+        }
         break;
-    case RESULT_TYPE::CNAME:
-        choosenTypes.append("CNAME");
-        break;
-    case RESULT_TYPE::TXT:
-        choosenTypes.append("TXT");
-        break;
+
     case RESULT_TYPE::NS:
-        choosenTypes.append("NS");
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                file.write(item->NS->child(j, 1)->text().append(NEWLINE).toUtf8());
+        }
         break;
+
     case RESULT_TYPE::MX:
-        choosenTypes.append("MX");
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                file.write(item->MX->child(j, 1)->text().append(NEWLINE).toUtf8());
+        }
+        break;
+
+    case RESULT_TYPE::CNAME:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                file.write(item->CNAME->child(j, 1)->text().append(NEWLINE).toUtf8());
+        }
+        break;
+
+    case RESULT_TYPE::TXT:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->TXT->rowCount(); j++)
+                file.write(item->TXT->child(j, 1)->text().append(NEWLINE).toUtf8());
+        }
         break;
 
     default:
         break;
     }
 
-    /* writing to file */
-    QModelIndexList domains;
-    for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-        domains << m_resultProxyModel->index( i, 0 );
-
-    for ( int i = 0; i < domains.size(); ++i )
-    {
-        for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j )
-        {
-            QString type = domains[i].child(j, 0).data().toString();
-            if(choosenTypes.contains(type))
-            {
-                for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++)
-                {
-                    QString domain = domains[i].child(j, 0).child(k, 0).data().toString();
-                    file.write(domain.toUtf8());
-                }
-            }
-        }
-    }
-
-    /* finished */
     file.close();
 }
 
-void Dns::m_saveResults(QItemSelectionModel *selectionModel){
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void Dns::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "ACTIVE: Failed to getSaveFileName";
         return;
+    }
 
-    /* saving to file */
-    QString data;
-    QString item;
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if(file.isOpen())
-    {
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            item = index.data().toString();
-            data.append(item.append(NEWLINE));
-        }
-        file.write(data.toUtf8());
-        file.close();
+    if(!file.isOpen()){
+        qDebug() << "ACTIVE: Failed to open " << filename << " For saving Results";
+        return;
     }
+
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        file.write(index.data().toString().append(NEWLINE).toUtf8());
+
+    file.close();
 }
 
-void Dns::m_copyResultsAll(){
-    /* copy as json */
-}
 
-
-void Dns::m_copyResults(RESULT_TYPE resultType){
+void Dns::copyResults(const RESULT_TYPE &result_type){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString clipboardData;
 
-    /* getting the types */
-    QStringList choosenTypes;
-    switch(resultType){
+    switch(result_type){
+    case RESULT_TYPE::DNS:
+    {
+        QJsonDocument document;
+        QJsonArray dns_array;
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+            dns_array.append(dns_to_json(item));
+        }
+        document.setArray(dns_array);
+        clipboardData.append(document.toJson());
+    }
+        break;
+
     case RESULT_TYPE::SUBDOMAIN:
-        choosenTypes.append({"CNAME", "MX", "NS"});
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                clipboardData.append(item->CNAME->child(j, 1)->text().append(NEWLINE));
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                clipboardData.append(item->NS->child(j, 1)->text().append(NEWLINE));
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                clipboardData.append(item->MX->child(j, 1)->text().append(NEWLINE));
+        }
         break;
+
     case RESULT_TYPE::IP:
-        choosenTypes.append({"A", "AAAA"});
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->A->rowCount(); j++)
+                clipboardData.append(item->A->child(j, 1)->text().append(NEWLINE));
+            for(int j = 0; j < item->AAAA->rowCount(); j++)
+                clipboardData.append(item->AAAA->child(j, 1)->text().append(NEWLINE));
+        }
         break;
+
     case RESULT_TYPE::A:
-        choosenTypes.append("A");
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->A->rowCount(); j++)
+                clipboardData.append(item->A->child(j, 1)->text().append(NEWLINE));
+        }
         break;
+
     case RESULT_TYPE::AAAA:
-        choosenTypes.append("AAAA");
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->AAAA->rowCount(); j++)
+                clipboardData.append(item->AAAA->child(j, 1)->text().append(NEWLINE));
+        }
         break;
-    case RESULT_TYPE::CNAME:
-        choosenTypes.append("CNAME");
-        break;
-    case RESULT_TYPE::TXT:
-        choosenTypes.append("TXT");
-        break;
+
     case RESULT_TYPE::NS:
-        choosenTypes.append("NS");
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                clipboardData.append(item->NS->child(j, 1)->text().append(NEWLINE));
+        }
         break;
+
     case RESULT_TYPE::MX:
-        choosenTypes.append("MX");
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                clipboardData.append(item->MX->child(j, 1)->text().append(NEWLINE));
+        }
+        break;
+
+    case RESULT_TYPE::CNAME:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                clipboardData.append(item->CNAME->child(j, 1)->text().append(NEWLINE));
+        }
+        break;
+
+    case RESULT_TYPE::TXT:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->TXT->rowCount(); j++)
+                clipboardData.append(item->TXT->child(j, 1)->text().append(NEWLINE));
+        }
         break;
 
     default:
         break;
-    }
-
-    /* writing to file */
-    QModelIndexList domains;
-    for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-        domains << m_resultProxyModel->index( i, 0 );
-
-    for ( int i = 0; i < domains.size(); ++i )
-    {
-        for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j )
-        {
-            QString type = domains[i].child(j, 0).data().toString();
-            if(choosenTypes.contains(type))
-            {
-                for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++)
-                {
-                    QString domain = domains[i].child(j, 0).child(k, 0).data().toString();
-                    clipboardData.append(domain);
-                }
-            }
-        }
     }
 
     clipboard->setText(clipboardData.trimmed());
 }
 
-void Dns::m_copyResults(QItemSelectionModel *selectionModel){
+void Dns::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString data;
-    QString item;
 
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        item = index.data().toString();
-        data.append(item.append(NEWLINE));
-    }
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        data.append(index.data().toString().append(NEWLINE));
 
     clipboard->setText(data.trimmed());
 }
 
-void Dns::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::SUBDOMAIN){
-        ui->targets->add(target);
+///
+/// sending results...
+///
+
+void Dns::sendToProject(){
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+        s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+        project->addActiveDNS(dns_to_struct(item));
     }
+}
+
+void Dns::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(!(index.parent() == m_model->invisibleRootItem()->index()))
+            continue;
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
+        project->addActiveDNS(dns_to_struct(item));
+    }
+}
+
+void Dns::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    switch (engine) {
+    case ENGINE::OSINT:
+        if(result_type == RESULT_TYPE::IP) {
+            for(int i = 0; i < proxyModel->rowCount(); i++){
+                QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+                s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+                for(int j = 0; j < item->A->rowCount(); j++)
+                    emit sendResultsToOsint(item->A->child(j, 1)->text(), result_type);
+                for(int j = 0; j < item->AAAA->rowCount(); j++)
+                    emit sendResultsToOsint(item->AAAA->child(j, 1)->text(), result_type);
+            }
+            emit changeTabToOsint();
+        }
+        if(result_type == RESULT_TYPE::SUBDOMAIN) {
+            for(int i = 0; i < proxyModel->rowCount(); i++){
+                QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+                s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+                for(int j = 0; j < item->CNAME->rowCount(); j++)
+                    emit sendResultsToOsint(item->CNAME->child(j, 1)->text(), result_type);
+                for(int j = 0; j < item->NS->rowCount(); j++)
+                    emit sendResultsToOsint(item->NS->child(j, 1)->text(), result_type);
+                for(int j = 0; j < item->MX->rowCount(); j++)
+                    emit sendResultsToOsint(item->MX->child(j, 1)->text(), result_type);
+            }
+            emit changeTabToOsint();
+        }
+        break;
+    case ENGINE::RAW:
+        if(result_type == RESULT_TYPE::IP) {
+            for(int i = 0; i < proxyModel->rowCount(); i++){
+                QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+                s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+                for(int j = 0; j < item->A->rowCount(); j++)
+                    emit sendResultsToRaw(item->A->child(j, 1)->text(), result_type);
+                for(int j = 0; j < item->AAAA->rowCount(); j++)
+                    emit sendResultsToRaw(item->AAAA->child(j, 1)->text(), result_type);
+            }
+            emit changeTabToRaw();
+        }
+        if(result_type == RESULT_TYPE::SUBDOMAIN) {
+            for(int i = 0; i < proxyModel->rowCount(); i++){
+                QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+                s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+                for(int j = 0; j < item->CNAME->rowCount(); j++)
+                    emit sendResultsToRaw(item->CNAME->child(j, 1)->text(), result_type);
+                for(int j = 0; j < item->NS->rowCount(); j++)
+                    emit sendResultsToRaw(item->NS->child(j, 1)->text(), result_type);
+                for(int j = 0; j < item->MX->rowCount(); j++)
+                    emit sendResultsToRaw(item->MX->child(j, 1)->text(), result_type);
+            }
+            emit changeTabToRaw();
+        }
+        break;
+
+    case ENGINE::BRUTE:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                emit sendResultsToBrute(item->CNAME->child(j, 1)->text(), result_type);
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                emit sendResultsToBrute(item->NS->child(j, 1)->text(), result_type);
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                emit sendResultsToBrute(item->MX->child(j, 1)->text(), result_type);
+        }
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                emit sendResultsToActive(item->CNAME->child(j, 1)->text(), result_type);
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                emit sendResultsToActive(item->NS->child(j, 1)->text(), result_type);
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                emit sendResultsToActive(item->MX->child(j, 1)->text(), result_type);
+        }
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                emit sendResultsToDns(item->CNAME->child(j, 1)->text(), result_type);
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                emit sendResultsToDns(item->NS->child(j, 1)->text(), result_type);
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                emit sendResultsToDns(item->MX->child(j, 1)->text(), result_type);
+        }
+        emit changeTabToDns();
+        break;
+    case ENGINE::CERT:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                emit sendResultsToCert(item->CNAME->child(j, 1)->text(), result_type);
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                emit sendResultsToCert(item->NS->child(j, 1)->text(), result_type);
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                emit sendResultsToCert(item->MX->child(j, 1)->text(), result_type);
+        }
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
+    }
+}
+
+void Dns::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    switch (engine) {
+    case ENGINE::OSINT:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToOsint(index.data().toString(), result_type);
+        }
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(!index.column())
+                emit sendResultsToRaw(index.data().toString(), result_type);
+        }
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToBrute(index.data().toString(), result_type);
+        }
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToActive(index.data().toString(), result_type);
+        }
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToDns(index.data().toString(), result_type);
+        }
+        emit changeTabToDns();
+        break;
+    case ENGINE::CERT:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToCert(index.data().toString(), result_type);
+        }
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
+    }
+}
+
+void Dns::sendToEnum(const TOOL &tool){
+    switch (tool) {
+    case TOOL::IP:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < item->A->rowCount(); j++)
+                emit sendResultsToIpEnum(item->A->child(j, 1)->text(), RESULT_TYPE::IP);
+            for(int j = 0; j < item->AAAA->rowCount(); j++)
+                emit sendResultsToIpEnum(item->AAAA->child(j, 1)->text(), RESULT_TYPE::IP);
+        }
+        emit changeTabToIpEnum();
+        break;
+    case TOOL::NS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                emit sendResultsToNSEnum(item->NS->child(j, 1)->text(), RESULT_TYPE::NS);
+        }
+        emit changeTabToNSEnum();
+        break;
+    case TOOL::MX:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                emit sendResultsToMXEnum(item->MX->child(j, 1)->text(), RESULT_TYPE::MX);
+        }
+        emit changeTabToMXEnum();
+        break;
+    default:
+        break;
+    }
+}
+
+void Dns::sendSelectedToEnum(const TOOL &tool){
+    switch (tool) {
+    case TOOL::IP:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToIpEnum(index.data().toString(), RESULT_TYPE::IP);
+        }
+        emit changeTabToIpEnum();
+        break;
+    case TOOL::NS:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToNSEnum(index.data().toString(), RESULT_TYPE::NS);
+        }
+        emit changeTabToNSEnum();
+        break;
+    case TOOL::MX:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                emit sendResultsToMXEnum(index.data().toString(), RESULT_TYPE::MX);
+        }
+        emit changeTabToMXEnum();
+        break;
+    default:
+        break;
+    }
+
+}
+
+///
+/// receiving targets...
+///
+
+void Dns::onReceiveTargets(QString target, RESULT_TYPE resultType){
+    if(resultType == RESULT_TYPE::SUBDOMAIN)
+        ui->targets->add(target);
 
     /* set multiple targets checkbox checked */
     ui->checkBoxMultipleTargets->setChecked(true);
-}
-
-/*****************************************************************************
-                            SENDING RESULTS
-******************************************************************************/
-void Dns::m_sendSubdomainToEngine(ENGINE engine){
-    QString item;
-    switch (engine) {
-    case ENGINE::OSINT:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "NS" || type == "MX" || type == "CNAME"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToOsint(item, RESULT_TYPE::SUBDOMAIN);
-                    }
-                }
-            }
-        }
-        emit changeTabToOsint();
-    }
-        break;
-    case ENGINE::RAW:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "NS" || type == "MX" || type == "CNAME"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToRaw(item, RESULT_TYPE::SUBDOMAIN);
-                    }
-                }
-            }
-        }
-        emit changeTabToRaw();
-    }
-        break;
-    case ENGINE::BRUTE:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "NS" || type == "MX" || type == "CNAME"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToBrute(item, RESULT_TYPE::SUBDOMAIN);
-                    }
-                }
-            }
-        }
-        emit changeTabToBrute();
-    }
-        break;
-    case ENGINE::ACTIVE:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "NS" || type == "MX" || type == "CNAME"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToActive(item, RESULT_TYPE::SUBDOMAIN);
-                    }
-                }
-            }
-        }
-        emit changeTabToActive();
-    }
-        break;
-    case ENGINE::DNS:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "NS" || type == "MX" || type == "CNAME"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToDns(item, RESULT_TYPE::SUBDOMAIN);
-                    }
-                }
-            }
-        }
-        emit changeTabToDns();
-    }
-        break;
-    case ENGINE::CERT:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "NS" || type == "MX" || type == "CNAME"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
-                    }
-                }
-            }
-        }
-        emit changeTabToSSL();
-    }
-        break;
-    default:
-        break;
-    }
-}
-
-void Dns::m_sendIpToEngine(ENGINE engine){
-    QString item;
-
-    switch (engine) {
-    case ENGINE::OSINT:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "A" || type == "AAAA"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToOsint(item, RESULT_TYPE::IP);
-                    }
-                }
-            }
-        }
-        emit changeTabToOsint();
-    }
-        break;
-    case ENGINE::RAW:
-    {
-        QModelIndexList domains;
-        for(int i = 0; i < m_resultProxyModel->rowCount(); ++i)
-            domains << m_resultProxyModel->index( i, 0 );
-        for ( int i = 0; i < domains.size(); ++i ){
-            for ( int j = 0; j < m_resultProxyModel->rowCount( domains[i] ); ++j ){
-                QString type = domains[i].child(j, 0).data().toString();
-                if(type == "A" || type == "AAAA"){
-                    for(int k = 0; k < m_resultProxyModel->rowCount(domains[i].child(j, 0)); k++){
-                        QString item = domains[i].child(j, 0).child(k, 0).data().toString();
-                        emit sendResultsToRaw(item, RESULT_TYPE::IP);
-                    }
-                }
-            }
-        }
-        emit changeTabToRaw();
-    }
-        break;
-
-    default:
-        break;
-    }
-}
-
-void Dns::m_sendSubdomainToEngine(ENGINE engine, QItemSelectionModel *selection){
-    QString item;
-    switch (engine) {
-    case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToOsint(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToRaw();
-        break;
-    case ENGINE::BRUTE:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToBrute(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToBrute();
-        break;
-    case ENGINE::ACTIVE:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToActive(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToActive();
-        break;
-    case ENGINE::DNS:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToDns(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToDns();
-        break;
-    case ENGINE::CERT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToCert(item, RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToSSL();
-        break;
-    default:
-        break;
-    }
-}
-
-void Dns::m_sendIpToEngine(ENGINE engine, QItemSelectionModel *selection){
-    QString item;
-    switch (engine) {
-    case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToOsint(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            item = index.data().toString();
-            emit sendResultsToRaw(item, RESULT_TYPE::IP);
-        }
-        emit changeTabToRaw();
-        break;
-
-    default:
-        break;
-    }
-}
-
-void Dns::m_sendSubdomainToTool(TOOL){
-    /* not yet */
-}
-
-void Dns::m_sendIpToTool(TOOL){
-    /* not yet */
-}
-
-void Dns::m_sendNSToTool(TOOL){
-    /* not yet */
-}
-
-void Dns::m_sendMXToTool(TOOL){
-    /* not yet */
-}
-
-void Dns::m_sendSubdomainToTool(TOOL, QItemSelectionModel *){
-    /* not yet */
-}
-
-void Dns::m_sendIpToTool(TOOL, QItemSelectionModel *){
-    /* not yet */
-}
-
-void Dns::m_sendNSToTool(TOOL, QItemSelectionModel *){
-    /* not yet */
-}
-
-void Dns::m_sendMXToTool(TOOL, QItemSelectionModel *){
-    /* not yet */
 }

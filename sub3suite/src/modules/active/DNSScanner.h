@@ -24,7 +24,8 @@ enum OUTPUT { // scan type
     NS,
     CNAME,
     TXT,
-    SRV
+    SRV,
+    ANY
 };
 
 struct ScanStat {  // scan statistics
@@ -57,6 +58,7 @@ struct ScanArgs {   // scan arguments
     bool RecordType_txt;
     bool RecordType_cname;
     bool RecordType_srv;
+    bool RecordType_any;
 };
 
 class Scanner: public AbstractScanner {

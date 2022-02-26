@@ -74,6 +74,7 @@ enum class RESULT_TYPE{
     SUBDOMAIN,
     TLD,
     IP,
+    DNS,
     SRV,
     CNAME,
     TXT,
