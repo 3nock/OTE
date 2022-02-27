@@ -469,12 +469,17 @@
                </property>
                <item>
                 <property name="text">
-                 <string>Subdomains</string>
+                 <string>Hostname</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Ip</string>
+                 <string>IPv4</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>IPv6</string>
                 </property>
                </item>
               </widget>

@@ -71,14 +71,15 @@ class Brute : public AbstractEngine{
         QMap<QString,QString> m_failedScans;
 
         void iniUI();
-        void log(const QString &log);
-        void getConfigValues();
+        void initConfigValues();
 
         void startScan();
         void scanSummary();
 
         QString targetFilterSubdomain(QString target);
         QString targetFilterTLD(QString target);
+
+        void log(const QString &log);
 
         /* for context menu */
     private:

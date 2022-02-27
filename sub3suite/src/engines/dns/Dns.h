@@ -50,7 +50,9 @@ class Dns : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_lineEditFilter_textChanged(const QString &arg1);
 
-    private:
+        void on_comboBoxFilter_currentIndexChanged(int index);
+
+private:
         Ui::Dns *ui;
         dns::ScanConfig *m_scanConfig;
         dns::ScanArgs *m_scanArgs;
@@ -61,12 +63,15 @@ class Dns : public AbstractEngine{
         QMap<QString, s3s_item::DNS*> m_resultSet;
         QMap<QString, QString> m_failedScans;
         QElapsedTimer m_timer;
-        void getConfigValues();
-        void loadSrvWordlist();
+
+        void initUI();
+        void initConfigValues();
+        void initSrvWordlist();
+
         void startScan();
         void scanSummary();
+
         void log(QString log);
-        void initUI();
 
     /* for context menu */
     private:

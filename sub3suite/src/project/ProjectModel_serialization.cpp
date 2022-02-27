@@ -8,8 +8,8 @@
 #include <QGuiApplication>
 
 #include "src/utils/Config.h"
-#include "src/models/SSLModel.h"
-#include "src/models/ASNModel.h"
+#include "src/items/SSLItem.h"
+#include "src/items/ASNItem.h"
 
 
 void ProjectModel::openExistingProject(QString name, QString path){

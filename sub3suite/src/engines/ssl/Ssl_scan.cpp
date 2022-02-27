@@ -12,7 +12,7 @@
 #include "src/modules/active/SSLScanner.h"
 
 
-void Ssl::m_startScan(){
+void Ssl::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -132,7 +132,7 @@ void Ssl::onReScan(QQueue<QString> targets){
         return;
 
     ui->buttonStop->setEnabled(true);
-    ui->buttonStart->setText("Pause");
+    ui->buttonStart->setText(tr("Pause"));
 
     status->isRunning = true;
     status->isNotActive = false;
@@ -140,7 +140,7 @@ void Ssl::onReScan(QQueue<QString> targets){
     status->isPaused = false;
 
     /* logs */
-    m_log("----------------- Re-Scan ---------------\n");
+    log("----------------- Re-Scan ---------------\n");
     qInfo() << "[SSL] Re-Scan Started";
 
     /* ressetting and setting new values */
@@ -258,12 +258,12 @@ void Ssl::onScanThreadEnded(){
     if(status->activeScanThreads == 0)
     {
         /* display the scan summary on logs */
-        m_scanSummary();
+        this->scanSummary();
 
         if(status->isStopped)
-            m_log("---------------- Stopped ------------\n");
+            log("---------------- Stopped ------------\n");
         else
-            m_log("------------------ End --------------\n");
+            log("------------------ End --------------\n");
 
         qInfo() << "[SSL] Scan Ended";
 
@@ -292,7 +292,7 @@ void Ssl::onScanThreadEnded(){
     }
 }
 
-void Ssl::m_scanSummary(){
+void Ssl::scanSummary(){
     /* elapsed time */
     QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
 

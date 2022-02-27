@@ -43,7 +43,7 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
     /* config... */
     m_scanArgs->config = m_scanConfig;
 
-    this->getConfigValues();
+    this->initConfigValues();
 }
 Active::~Active(){
     delete m_model;
@@ -173,7 +173,7 @@ void Active::on_buttonConfig_clicked(){
     configDialog->show();
 }
 
-void Active::getConfigValues(){
+void Active::initConfigValues(){
     m_scanArgs->config->timeout = CONFIG_ACTIVE.value("timeout").toInt();
     m_scanArgs->config->threads = CONFIG_ACTIVE.value("threads").toInt();
     m_scanArgs->config->checkWildcard = CONFIG_ACTIVE.value("wildcard").toBool();

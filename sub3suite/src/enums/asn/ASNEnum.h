@@ -9,7 +9,7 @@
 #define ASNENUM_H
 
 #include "../AbstractEnum.h"
-#include "src/models/ASNModel.h"
+#include "src/items/ASNItem.h"
 #include "src/modules/passive/OsintModulesHeaders.h"
 
 #include <QAction>

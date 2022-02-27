@@ -14,7 +14,10 @@
 #include "src/utils/Definitions.h"
 #include "src/dialogs/ActiveConfigDialog.h"
 
-
+/*
+ * TODO:
+ *      insert the send/copy/save targets to set before appending to clipboard or file
+ */
 Url::Url(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, project),
     ui(new Ui::Url),
     m_scanConfig(new url::ScanConfig),

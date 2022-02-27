@@ -12,7 +12,6 @@
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Config.h"
 #include "src/utils/Definitions.h"
-#include "src/models/SSLModel.h"
 #include "src/modules/active/SSLScanner.h"
 
 
@@ -21,30 +20,45 @@ Ssl::Ssl(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project
     m_scanArgs(new ssl::ScanArgs),
     m_scanStats(new ssl::ScanStat),
     m_targetListModel(new QStringListModel),
-    m_resultModelSubdomain(new QStandardItemModel),
-    m_resultModelCertId(new QStandardItemModel),
-    m_resultModelCertInfo(new QStandardItemModel),
-    m_resultProxyModel(new QSortFilterProxyModel)
+    m_model_subdomain(new QStandardItemModel),
+    m_model_hash(new QStandardItemModel),
+    m_model_ssl(new QStandardItemModel)
 {
-    ui->setupUi(this);
+    this->initUI();
 
-    ui->frame->setProperty("default_frame", true);
-    ui->labelResultsCount->setProperty("dark", true);
-
-    /* init */
+    /* list models */
     ui->targets->setListName("Targets");
     ui->targets->setListModel(m_targetListModel);
 
     /* result models */
     ui->treeViewResults->setHeaderHidden(false);
-    m_resultModelSubdomain->setHorizontalHeaderLabels({" Alternative Names"});
-    m_resultModelCertId->setHorizontalHeaderLabels({" Certificate Hash"});
-    m_resultModelCertInfo->setHorizontalHeaderLabels({" SSL", " Values"});
-    m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
-    m_resultProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_resultProxyModel->setRecursiveFilteringEnabled(true);
-    m_resultProxyModel->setFilterKeyColumn(0);
-    ui->treeViewResults->setModel(m_resultProxyModel);
+    m_model_subdomain->setHorizontalHeaderLabels({tr(" Alternative Names")});
+    m_model_hash->setHorizontalHeaderLabels({tr(" Certificate Hash")});
+    m_model_ssl->setHorizontalHeaderLabels({tr(" SSL"), tr(" Values")});
+    proxyModel->setSourceModel(m_model_subdomain);
+    ui->treeViewResults->setModel(proxyModel);
+
+    m_scanArgs->config = m_scanConfig;
+
+    this->initConfigValues();
+}
+Ssl::~Ssl(){
+    delete m_model_hash;
+    delete m_model_ssl;
+    delete m_model_subdomain;
+    delete m_targetListModel;
+    delete m_scanStats;
+    delete m_scanArgs;
+    delete m_scanConfig;
+    delete ui;
+}
+
+void Ssl::initUI(){
+    ui->setupUi(this);
+
+    /* setting widget's properties */
+    ui->frame->setProperty("default_frame", true);
+    ui->labelResultsCount->setProperty("dark", true);
 
     /* enabling and disabling widgets */
     ui->progressBar->hide();
@@ -52,32 +66,12 @@ Ssl::Ssl(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project
     ui->buttonStop->setDisabled(true);
 
     /* placeholdertxt */
-    ui->lineEditFilter->setPlaceholderText("filter...");
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_DOMAIN);
+    ui->lineEditFilter->setPlaceholderText(tr("filter..."));
+    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
 
-    /* equally seperate the widgets... */
+    /* equally seperate the widgets */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                                         << static_cast<int>((this->width() * 0.50)));
-
-    /* initiate all actions for the context menus */
-    this->m_initActions();
-
-    /* ... */
-    m_scanArgs->config = m_scanConfig;
-
-    /* ... */
-    this->m_getConfigValues();
-}
-Ssl::~Ssl(){
-    delete m_resultProxyModel;
-    delete m_resultModelCertId;
-    delete m_resultModelCertInfo;
-    delete m_resultModelSubdomain;
-    delete m_targetListModel;
-    delete m_scanStats;
-    delete m_scanArgs;
-    delete m_scanConfig;
-    delete ui;
 }
 
 void Ssl::on_lineEditTarget_returnPressed(){
@@ -90,16 +84,16 @@ void Ssl::on_buttonStart_clicked(){
     ///
     if(status->isNotActive){
         if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-            QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Target for Enumeration!"));
             return;
         }
         if(ui->checkBoxMultipleTargets->isChecked() && m_targetListModel->rowCount() < 1){
-            QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Targets for Enumeration!"));
             return;
         }
 
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Pause");
+        ui->buttonStart->setText(tr("Pause"));
 
         status->isRunning = true;
         status->isNotActive = false;
@@ -107,10 +101,10 @@ void Ssl::on_buttonStart_clicked(){
         status->isPaused = false;
 
         /* start scan */
-        this->m_startScan();
+        this->startScan();
 
         /* logs */
-        m_log("------------------ start ----------------");
+        log("------------------ start ----------------");
         qInfo() << "[SSL] Scan Started";
         return;
     }
@@ -119,7 +113,7 @@ void Ssl::on_buttonStart_clicked(){
     ///
     if(status->isRunning){
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Resume");
+        ui->buttonStart->setText(tr("Resume"));
 
         status->isPaused = true;
         status->isRunning = false;
@@ -130,7 +124,7 @@ void Ssl::on_buttonStart_clicked(){
         emit pauseScanThread();
 
         /* logs */
-        m_log("------------------ Paused ----------------");
+        log("------------------ Paused ----------------");
         qInfo() << "[SSL] Scan Paused";
         return;
     }
@@ -139,7 +133,7 @@ void Ssl::on_buttonStart_clicked(){
     ///
     if(status->isPaused){
         ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText("Pause");
+        ui->buttonStart->setText(tr("Pause"));
 
         status->isRunning = true;
         status->isPaused = false;
@@ -150,7 +144,7 @@ void Ssl::on_buttonStart_clicked(){
         emit resumeScanThread();
 
         /* logs */
-        m_log("------------------ Resumed ----------------");
+        log("------------------ Resumed ----------------");
         qInfo() << "[SSL] Scan Resumed";
     }
 }
@@ -170,26 +164,26 @@ void Ssl::on_buttonStop_clicked(){
 void Ssl::on_comboBoxOutput_currentIndexChanged(int index){
     switch (index) {
     case 0: // subdomain
-        m_resultProxyModel->setSourceModel(m_resultModelSubdomain);
+        proxyModel->setSourceModel(m_model_subdomain);
         ui->comboBoxOption->hide();
-        ui->labelInfo->setText("Enumerated Subdomains:");
+        ui->labelInfo->setText(tr("Enumerated Subdomains:"));
         ui->treeViewResults->setIndentation(0);
         break;
-    case 1: // cert id
-        m_resultProxyModel->setSourceModel(m_resultModelCertId);
+    case 1: // cert hash
+        proxyModel->setSourceModel(m_model_hash);
         ui->comboBoxOption->show();
-        ui->labelInfo->setText("Enumerated Certificates:");
+        ui->labelInfo->setText(tr("Enumerated Certificates:"));
         ui->treeViewResults->setIndentation(0);
         break;
-    case 2: // raw cert
-        m_resultProxyModel->setSourceModel(m_resultModelCertInfo);
+    case 2: // ssl cert
+        proxyModel->setSourceModel(m_model_ssl);
         ui->comboBoxOption->hide();
-        ui->labelInfo->setText("Enumerated Certificates:");
+        ui->labelInfo->setText(tr("Enumerated Certificates:"));
         ui->treeViewResults->setIndentation(20);
         break;
     }
 
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
 void Ssl::on_buttonConfig_clicked(){
@@ -200,22 +194,22 @@ void Ssl::on_buttonConfig_clicked(){
 
 void Ssl::on_lineEditFilter_textChanged(const QString &filterKeyword){
     if(ui->checkBoxRegex->isChecked())
-        m_resultProxyModel->setFilterRegExp(QRegExp(filterKeyword));
+        proxyModel->setFilterRegExp(QRegExp(filterKeyword));
     else
-        m_resultProxyModel->setFilterFixedString(filterKeyword);
+        proxyModel->setFilterFixedString(filterKeyword);
 
-    ui->treeViewResults->setModel(m_resultProxyModel);
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->treeViewResults->setModel(proxyModel);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void Ssl::m_getConfigValues(){
+void Ssl::initConfigValues(){
     m_scanArgs->config->timeout = CONFIG_SSL.value("timeout").toInt();
     m_scanArgs->config->threads = CONFIG_SSL.value("threads").toInt();
     m_scanArgs->config->noDuplicates = CONFIG_SSL.value("noDuplicates").toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG_SSL.value("autosaveToProject").toBool();
 }
 
-void Ssl::m_log(QString log){
+void Ssl::log(const QString &log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }

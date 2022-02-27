@@ -422,6 +422,21 @@
                  <string>URLs</string>
                 </property>
                </item>
+               <item>
+                <property name="text">
+                 <string>Status</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Server</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Content Type</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>

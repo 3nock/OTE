@@ -1,4 +1,4 @@
-#include "DNSModel.h"
+#include "DNSItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

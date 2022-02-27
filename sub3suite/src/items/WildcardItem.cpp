@@ -1,4 +1,4 @@
-#include "WildcardModel.h"
+#include "WildcardItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

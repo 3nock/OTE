@@ -14,8 +14,8 @@
 #include <QHostAddress>
 
 #include "AbstractScanner.h"
-#include "src/models/HostModel.h"
-#include "src/models/WildcardModel.h"
+#include "src/items/HostItem.h"
+#include "src/items/WildcardItem.h"
 
 
 namespace brute {

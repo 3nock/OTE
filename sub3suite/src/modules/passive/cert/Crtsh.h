@@ -2,7 +2,7 @@
 #define CRTSH_H
 
 #include "../AbstractOsintModule.h"
-#include "src/models/SSLModel.h"
+#include "src/items/SSLItem.h"
 
 
 namespace ModuleInfo {

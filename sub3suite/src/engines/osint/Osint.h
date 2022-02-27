@@ -118,16 +118,17 @@ class Osint : public AbstractEngine{
         QSet<QString> set_ssl;
         QSet<QString> set_cidr;
         int total_modules;
-        void log(QString log);
-        /* for scan */
-        void startScan();
-        void startScanThread(AbstractOsintModule*);
-        /* ... */
+
         void initUI();
         void initModules();
         void initProfiles();
         void initConfigValues();
         void uncheckAllModules();
+
+        void startScan();
+        void startScanThread(AbstractOsintModule*);
+
+        void log(QString log);
 
 
     /* for context menu */

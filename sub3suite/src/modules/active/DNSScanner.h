@@ -12,7 +12,7 @@
 #include <QQueue>
 
 #include "AbstractScanner.h"
-#include "src/models/DNSModel.h"
+#include "src/items/DNSItem.h"
 
 
 namespace dns {

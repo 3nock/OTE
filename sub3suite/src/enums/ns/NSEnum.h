@@ -9,7 +9,7 @@
 #define NSENUM_H
 
 #include "../AbstractEnum.h"
-#include "src/models/NSModel.h"
+#include "src/items/NSItem.h"
 #include "src/modules/passive/OsintModulesHeaders.h"
 
 #include <QAction>

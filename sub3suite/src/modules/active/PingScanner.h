@@ -2,7 +2,7 @@
 #define PINGSCANNER_H
 
 #include "AbstractScanner.h"
-#include "src/models/HostModel.h"
+#include "src/items/HostModel.h"
 
 #include <QMutex>
 #include <QQueue>

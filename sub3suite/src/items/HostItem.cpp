@@ -1,4 +1,4 @@
-#include "HostModel.h"
+#include "HostItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

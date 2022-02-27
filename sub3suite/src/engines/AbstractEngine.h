@@ -14,7 +14,7 @@
 #include "src/utils/utils.h"
 #include "src/utils/Config.h"
 #include "src/widgets/InputWidget.h"
-#include "src/models/ProjectModel.h"
+#include "src/project/ProjectModel.h"
 
 
 class AbstractEngine : public QWidget{

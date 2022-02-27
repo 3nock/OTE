@@ -87,7 +87,9 @@ enum class RESULT_TYPE{
     CERT_ID,
     CERT_INFO,
     URL,
-    EMAIL
+    EMAIL,
+    JSON,
+    CSV
 };
 
 enum class ENGINE{

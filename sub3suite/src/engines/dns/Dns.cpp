@@ -40,8 +40,8 @@ Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
 
     m_scanArgs->config = m_scanConfig;
 
-    this->loadSrvWordlist();
-    this->getConfigValues();
+    this->initSrvWordlist();
+    this->initConfigValues();
 }
 Dns::~Dns(){
     delete m_model;
@@ -169,7 +169,7 @@ void Dns::on_buttonStop_clicked(){
     status->isNotActive = false;
 }
 
-void Dns::loadSrvWordlist(){
+void Dns::initSrvWordlist(){
     QFile file(":/files/res/files/srv.txt");
     ui->srvWordlist->add(file);
 }
@@ -187,7 +187,7 @@ void Dns::on_checkBoxSRV_clicked(bool checked){
         ui->srvWordlist->hide();
 }
 
-void Dns::getConfigValues(){
+void Dns::initConfigValues(){
     m_scanArgs->config->threads = CONFIG_DNS.value("threads").toInt();
     m_scanArgs->config->noDuplicates = CONFIG_DNS.value("noDuplicates").toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG_DNS.value("autosaveToProject").toBool();
@@ -213,4 +213,8 @@ void Dns::on_lineEditFilter_textChanged(const QString &filterKeyword){
 
     ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
+}
+
+void Dns::on_comboBoxFilter_currentIndexChanged(int index){
+
 }

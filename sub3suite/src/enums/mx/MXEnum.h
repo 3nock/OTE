@@ -9,7 +9,7 @@
 #define MXENUM_H
 
 #include "../AbstractEnum.h"
-#include "src/models/MXModel.h"
+#include "src/items/MXItem.h"
 #include "src/modules/passive/OsintModulesHeaders.h"
 
 #include <QAction>

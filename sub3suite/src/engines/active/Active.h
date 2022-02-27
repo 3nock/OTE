@@ -47,10 +47,9 @@ class Active : public AbstractEngine{
         void on_tableViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditTarget_returnPressed();
         void on_lineEditFilter_textChanged(const QString &arg1);
-
         void on_comboBoxOption_currentIndexChanged(int index);
 
-private:
+    private:
         Ui::Active *ui;
         QElapsedTimer m_timer;
         QMap<QString,QString> m_failedScans;
@@ -60,11 +59,14 @@ private:
         active::ScanStat *m_scanStats;
         QStringListModel *m_targetListModel;
         QStandardItemModel *m_model;
-        void getConfigValues();
-        void startScan();
-        void log(QString log);
-        void scanSummary();
+
         void initUI();
+        void initConfigValues();
+
+        void startScan();
+        void scanSummary();
+
+        void log(QString log);
 
     /* for context menu */
     private:

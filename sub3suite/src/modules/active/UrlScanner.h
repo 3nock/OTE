@@ -10,7 +10,7 @@
 
 
 #include "AbstractScanner.h"
-#include "src/models/URLModel.h"
+#include "src/items/URLItem.h"
 
 #include <QNetworkAccessManager>
 #include <QMutex>

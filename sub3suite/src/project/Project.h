@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QMenuBar>
 
-#include "src/models/ProjectModel.h"
+#include "src/project/ProjectModel.h"
 
 #define PROJECT_MODEL_TYPE "pmt"
 

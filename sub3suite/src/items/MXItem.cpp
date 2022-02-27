@@ -1,4 +1,4 @@
-#include "MXModel.h"
+#include "MXItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

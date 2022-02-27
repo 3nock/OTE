@@ -13,14 +13,14 @@
 #include "src/utils/Definitions.h"
 #include "gumbo-parser/src/gumbo.h"
 /* ... */
-#include "src/models/IPModel.h"
-#include "src/models/ASNModel.h"
-#include "src/models/CIDRModel.h"
-#include "src/models/SSLModel.h"
-#include "src/models/EmailModel.h"
-#include "src/models/MXModel.h"
-#include "src/models/NSModel.h"
-#include "src/models/RawModel.h"
+#include "src/items/IPItem.h"
+#include "src/items/ASNItem.h"
+#include "src/items/CIDRItem.h"
+#include "src/items/SSLItem.h"
+#include "src/items/EmailItem.h"
+#include "src/items/MXItem.h"
+#include "src/items/NSItem.h"
+#include "src/items/RawItem.h"
 
 
 /* input option */

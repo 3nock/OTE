@@ -11,7 +11,10 @@
 #include <QClipboard>
 #include <QDesktopServices>
 
-
+/*
+ * TODO:
+ *      insert the send/copy/save targets to set before appending to clipboard or file
+ */
 void Osint::openInBrowser(){
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));

@@ -11,7 +11,10 @@
 #include <QClipboard>
 #include <QDesktopServices>
 
-
+/*
+ * TODO:
+ *      insert the send/copy/save targets to set before appending to clipboard or file
+ */
 void Dns::clearResults(){
     /* clear the results... */
     m_model->clear();
@@ -53,6 +56,7 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
         return;
     }
 
+    QSet<QString> set;
     switch(result_type){
     case RESULT_TYPE::DNS:
     {
@@ -66,8 +70,9 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
         }
         document.setArray(dns_array);
         file.write(document.toJson());
+        file.close();
     }
-        break;
+        return;
 
     case RESULT_TYPE::SUBDOMAIN:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
@@ -76,11 +81,11 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                file.write(item->CNAME->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->CNAME->child(j, 1)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                file.write(item->NS->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->NS->child(j, 1)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                file.write(item->MX->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->MX->child(j, 1)->text());
         }
         break;
 
@@ -91,9 +96,9 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                file.write(item->A->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->A->child(j, 1)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                file.write(item->AAAA->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->AAAA->child(j, 1)->text());
         }
         break;
 
@@ -103,7 +108,7 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                file.write(item->A->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->A->child(j, 1)->text());
         }
         break;
 
@@ -113,7 +118,7 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                file.write(item->AAAA->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->AAAA->child(j, 1)->text());
         }
         break;
 
@@ -123,7 +128,7 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->NS->rowCount(); j++)
-                file.write(item->NS->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->NS->child(j, 1)->text());
         }
         break;
 
@@ -134,7 +139,7 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->MX->rowCount(); j++)
-                file.write(item->MX->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->MX->child(j, 1)->text());
         }
         break;
 
@@ -145,7 +150,7 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                file.write(item->CNAME->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->CNAME->child(j, 1)->text());
         }
         break;
 
@@ -156,13 +161,20 @@ void Dns::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->TXT->rowCount(); j++)
-                file.write(item->TXT->child(j, 1)->text().append(NEWLINE).toUtf8());
+                set.insert(item->TXT->child(j, 1)->text());
         }
         break;
 
     default:
         break;
     }
+
+    /* saving list to file */
+    if(set.count()){
+        foreach(const QString &target, set)
+            file.write(target.toUtf8().append(NEWLINE));
+    }else
+        QMessageBox::warning(this, tr("Warning!"), tr("Nothing to save!"));
 
     file.close();
 }
@@ -181,8 +193,16 @@ void Dns::saveSelectedResults(){
         return;
     }
 
+    QSet<QString> set;
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-        file.write(index.data().toString().append(NEWLINE).toUtf8());
+        set.insert(index.data().toString());
+
+    /* saving list to file */
+    if(set.count()){
+        foreach(const QString &target, set)
+            file.write(target.toUtf8().append(NEWLINE));
+    }else
+        QMessageBox::warning(this, tr("Warning!"), tr("Nothing to save!"));
 
     file.close();
 }
@@ -190,8 +210,8 @@ void Dns::saveSelectedResults(){
 
 void Dns::copyResults(const RESULT_TYPE &result_type){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString clipboardData;
 
+    QSet<QString> set;
     switch(result_type){
     case RESULT_TYPE::DNS:
     {
@@ -204,9 +224,9 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             dns_array.append(dns_to_json(item));
         }
         document.setArray(dns_array);
-        clipboardData.append(document.toJson());
+        clipboard->setText(document.toJson());
     }
-        break;
+        return;
 
     case RESULT_TYPE::SUBDOMAIN:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
@@ -215,11 +235,11 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                clipboardData.append(item->CNAME->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->CNAME->child(j, 1)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                clipboardData.append(item->NS->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->NS->child(j, 1)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                clipboardData.append(item->MX->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->MX->child(j, 1)->text());
         }
         break;
 
@@ -230,9 +250,9 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                clipboardData.append(item->A->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->A->child(j, 1)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                clipboardData.append(item->AAAA->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->AAAA->child(j, 1)->text());
         }
         break;
 
@@ -242,7 +262,7 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                clipboardData.append(item->A->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->A->child(j, 1)->text());
         }
         break;
 
@@ -252,7 +272,7 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                clipboardData.append(item->AAAA->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->AAAA->child(j, 1)->text());
         }
         break;
 
@@ -262,7 +282,7 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->NS->rowCount(); j++)
-                clipboardData.append(item->NS->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->NS->child(j, 1)->text());
         }
         break;
 
@@ -273,7 +293,7 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->MX->rowCount(); j++)
-                clipboardData.append(item->MX->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->MX->child(j, 1)->text());
         }
         break;
 
@@ -284,7 +304,7 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                clipboardData.append(item->CNAME->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->CNAME->child(j, 1)->text());
         }
         break;
 
@@ -295,7 +315,7 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->TXT->rowCount(); j++)
-                clipboardData.append(item->TXT->child(j, 1)->text().append(NEWLINE));
+                set.insert(item->TXT->child(j, 1)->text());
         }
         break;
 
@@ -303,17 +323,27 @@ void Dns::copyResults(const RESULT_TYPE &result_type){
         break;
     }
 
+    /* setting targets to clipdoard */
+    QString clipboardData;
+    foreach(const QString &target, set)
+        clipboardData.append(target+NEWLINE);
+
     clipboard->setText(clipboardData.trimmed());
 }
 
 void Dns::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data;
 
+    QSet<QString> set;
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-        data.append(index.data().toString().append(NEWLINE));
+        set.insert(index.data().toString());
 
-    clipboard->setText(data.trimmed());
+    /* setting targets to clipdoard */
+    QString clipboardData;
+    foreach(const QString &target, set)
+        clipboardData.append(target+NEWLINE);
+
+    clipboard->setText(clipboardData.trimmed());
 }
 
 ///

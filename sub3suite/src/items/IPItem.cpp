@@ -1,4 +1,4 @@
-#include "IPModel.h"
+#include "IPItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

@@ -1,4 +1,4 @@
-#include "URLModel.h"
+#include "URLItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

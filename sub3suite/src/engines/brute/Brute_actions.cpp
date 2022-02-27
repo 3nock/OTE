@@ -12,7 +12,10 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 
-
+/*
+ * TODO:
+ *      insert the send/copy/save targets to set before appending to clipboard or file
+ */
 void Brute::clearResults(){
     /* clear all containers containing results */
     switch (ui->comboBoxOutput->currentIndex()) {

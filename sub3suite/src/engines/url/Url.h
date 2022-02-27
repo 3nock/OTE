@@ -16,6 +16,7 @@
 #include "src/utils/utils.h"
 #include "src/modules/active/UrlScanner.h"
 
+
 namespace Ui {
     class Url;
 }
@@ -54,37 +55,30 @@ class Url : public AbstractEngine{
         url::ScanArgs *m_scanArgs;
         url::ScanStat *m_scanStats;
         QStringListModel *m_targetListModel;
-        QStandardItemModel *m_resultModel;
-        QSortFilterProxyModel *m_resultProxyModel;
-        void m_getConfigValues();
-        void m_startScan();
-        void m_log(QString log);
-        void m_scanSummary();
+        QStandardItemModel *m_model;
+        QMap<QString, s3s_item::URL*> set_results;
+
+        void initConfigValues();
+        void initUI();
+
+        void startScan();
+        void log(const QString &log);
+        void scanSummary();
 
     /* for context menu */
     private:
-        void m_initActions();
-        /* ... */
-        void m_openInBrowser(QItemSelectionModel*);
-        void m_clearResults();
-        void m_removeResults(QItemSelectionModel*);
-        void m_saveResults();
-        void m_saveResults(QItemSelectionModel*);
-        void m_copyResults();
-        void m_copyResults(QItemSelectionModel*);
-        /* ... */
-        void m_sendToProject();
-        void m_sendToProject(QItemSelectionModel*);
-
-    protected:
-        /* general actions */
-        QAction a_RemoveResults{"Remove"};
-        QAction a_ClearResults{"Clear Results"};
-        QAction a_OpenInBrowser{"Open in Browser"};
-        QAction a_SendAllToProject{"Send To Project"};
-        QAction a_SendSelectedToProject{"Send To Project"};
-        QAction a_Save{"Save"};
-        QAction a_Copy{"Copy"};
+        void openInBrowser();
+        void clearResults();
+        void removeResults();
+        void saveResults();
+        void saveSelectedResults();
+        void copyResults();
+        void copySelectedResults();
+        /* sending results */
+        void sendToProject();
+        void sendSelectedToProject();
+        void sendToEngine(const ENGINE&);
+        void sendSelectedToEngine(const ENGINE&);
 };
 
 #endif // URL_H

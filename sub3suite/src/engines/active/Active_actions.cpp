@@ -12,7 +12,10 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 
-
+/*
+ * TODO:
+ *      insert the send/copy/save targets to set before appending to clipboard or file
+ */
 void Active::clearResults(){
     /* clear the results... */
     m_model->clear();
@@ -77,7 +80,7 @@ void Active::saveResults(const RESULT_TYPE &result_type){
         }
         break;
 
-    case RESULT_TYPE::SUBDOMAINIP:
+    case RESULT_TYPE::CSV:
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QString host(proxyModel->index(i, 0).data().toString());
             QString ipv4(proxyModel->index(i, 1).data().toString());
@@ -91,6 +94,20 @@ void Active::saveResults(const RESULT_TYPE &result_type){
             file.write(host.append(NEWLINE).toUtf8());
         }
         break;
+
+    case RESULT_TYPE::JSON:
+    {
+        QJsonDocument document;
+        QJsonArray array;
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model->itemFromIndex(model_index));
+            array.append(host_to_json(item));
+        }
+        document.setArray(array);
+        file.write(document.toJson());
+        break;
+    }
 
     default:
         break;
@@ -142,7 +159,7 @@ void Active::copyResults(const RESULT_TYPE &result_type){
         }
         break;
 
-    case RESULT_TYPE::SUBDOMAINIP:
+    case RESULT_TYPE::CSV:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
         {
             QString host(proxyModel->index(i, 0).data().toString());
@@ -156,6 +173,20 @@ void Active::copyResults(const RESULT_TYPE &result_type){
 
             clipboardData.append(host).append(NEWLINE);
         }
+        break;
+
+    case RESULT_TYPE::JSON:
+    {
+        QJsonDocument document;
+        QJsonArray array;
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model->itemFromIndex(model_index));
+            array.append(host_to_json(item));
+        }
+        document.setArray(array);
+        clipboardData.append(document.toJson());
+    }
         break;
 
     default:

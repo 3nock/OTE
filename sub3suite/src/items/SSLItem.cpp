@@ -1,4 +1,4 @@
-#include "SSLModel.h"
+#include "SSLItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

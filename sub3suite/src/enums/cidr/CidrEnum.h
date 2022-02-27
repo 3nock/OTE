@@ -9,7 +9,7 @@
 #define CIDRENUM_H
 
 #include "../AbstractEnum.h"
-#include "src/models/CIDRModel.h"
+#include "src/items/CIDRItem.h"
 #include "src/modules/passive/OsintModulesHeaders.h"
 
 #include <QAction>

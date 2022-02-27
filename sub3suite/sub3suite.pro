@@ -101,21 +101,21 @@ SOURCES += \
     src/enums/ssl/SSLEnum_contextmenu.cpp \
     src/enums/ssl/SSLEnum_results.cpp \
     src/enums/ssl/SSLEnum_scan.cpp \
-    src/models/ASNModel.cpp \
-    src/models/CIDRModel.cpp \
-    src/models/DNSModel.cpp \
-    src/models/EmailModel.cpp \
-    src/models/HostModel.cpp \
-    src/models/IPModel.cpp \
-    src/models/MXModel.cpp \
-    src/models/NSModel.cpp \
-    src/models/ProjectModel.cpp \
-    src/models/ProjectModel_serialization.cpp \
-    src/models/ProjectModel_slots.cpp \
-    src/models/RawModel.cpp \
-    src/models/SSLModel.cpp \
-    src/models/URLModel.cpp \
-    src/models/WildcardModel.cpp \
+    src/items/ASNItem.cpp \
+    src/items/CIDRItem.cpp \
+    src/items/DNSItem.cpp \
+    src/items/EmailItem.cpp \
+    src/items/HostItem.cpp \
+    src/items/IPItem.cpp \
+    src/items/MXItem.cpp \
+    src/items/NSItem.cpp \
+    src/project/ProjectModel.cpp \
+    src/project/ProjectModel_serialization.cpp \
+    src/project/ProjectModel_slots.cpp \
+    src/items/RawItem.cpp \
+    src/items/SSLItem.cpp \
+    src/items/URLItem.cpp \
+    src/items/WildcardItem.cpp \
     src/modules/active/PortScanner.cpp \
     src/modules/active/UrlScanner.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
@@ -260,19 +260,19 @@ HEADERS += \
     src/engines/url/Url.h \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
-    src/models/ASNModel.h \
-    src/models/DNSModel.h \
-    src/models/HostModel.h \
-    src/models/IPModel.h \
-    src/models/NSModel.h \
-    src/models/ProjectModel.h \
-    src/models/RawModel.h \
-    src/models/SSLModel.h \
-    src/models/CIDRModel.h \
-    src/models/EmailModel.h \
-    src/models/MXModel.h \
-    src/models/URLModel.h \
-    src/models/WildcardModel.h \
+    src/items/ASNItem.h \
+    src/items/CIDRItem.h \
+    src/items/DNSItem.h \
+    src/items/EmailItem.h \
+    src/items/HostItem.h \
+    src/items/IPItem.h \
+    src/items/MXItem.h \
+    src/items/NSItem.h \
+    src/project/ProjectModel.h \
+    src/items/RawItem.h \
+    src/items/SSLItem.h \
+    src/items/URLItem.h \
+    src/items/WildcardItem.h \
     src/modules/active/PortScanner.h \
     src/modules/active/UrlScanner.h \
     src/modules/passive/OsintDefinitions.h \

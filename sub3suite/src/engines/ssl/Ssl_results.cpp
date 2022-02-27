@@ -9,7 +9,7 @@
 #include "ui_Ssl.h"
 
 #include <QSslKey>
-#include "src/models/SSLModel.h"
+#include "src/items/SSLItem.h"
 
 
 void Ssl::onScanLog(scan::Log log){
@@ -23,53 +23,63 @@ void Ssl::onScanLog(scan::Log log){
 }
 
 void Ssl::onScanResultSHA1(QString sha1){
-    m_resultModelCertId->appendRow(new QStandardItem(sha1));
-    ui->labelResultsCount->setNum(m_resultModelCertId->rowCount());
-    m_scanStats->resolved++;
+    if(set_hash.contains(sha1))
+        return;
+
+    m_model_hash->appendRow(new QStandardItem(sha1));
+    set_hash.insert(sha1);
 
     if(m_scanConfig->autoSaveToProject)
         project->addActiveSSL_sha1(sha1);
+
+    ui->labelResultsCount->setNum(m_model_hash->rowCount());
+    m_scanStats->resolved++;
 }
 
 void Ssl::onScanResultSHA256(QString sha256){
-    m_resultModelCertId->appendRow(new QStandardItem(sha256));
-    ui->labelResultsCount->setNum(m_resultModelCertId->rowCount());
-    m_scanStats->resolved++;
+    if(set_hash.contains(sha256))
+        return;
+
+    m_model_hash->appendRow(new QStandardItem(sha256));
+    set_hash.insert(sha256);
 
     if(m_scanConfig->autoSaveToProject)
         project->addActiveSSL_sha256(sha256);
+
+    ui->labelResultsCount->setNum(m_model_hash->rowCount());
+    m_scanStats->resolved++;
 }
 
 void Ssl::onScanResultRaw(QString target, QSslCertificate ssl){
+    if(set_ssl.contains(target))
+        return;
+
     s3s_item::SSL *item = new s3s_item::SSL;
     item->setValues(target, ssl);
 
-    m_resultModelCertInfo->invisibleRootItem()->appendRow(item);
-
-    ui->labelResultsCount->setNum(m_resultModelCertInfo->rowCount());
-    m_scanStats->resolved++;
+    m_model_ssl->invisibleRootItem()->appendRow(item);
+    set_ssl.insert(target, item);
 
     if(m_scanConfig->autoSaveToProject)
         project->addActiveSSL(target, ssl);
+
+    ui->labelResultsCount->setNum(m_model_ssl->rowCount());
+    m_scanStats->resolved++;
 }
 
-void Ssl::onScanResultSubdomain(QString target, QStringList subdomains){
-    /*
-    QStandardItem *targetItem = new QStandardItem(target);
+void Ssl::onScanResultSubdomain(QStringList subdomains){
     foreach(const QString &subdomain, subdomains)
-        targetItem->appendRow(new QStandardItem(subdomain));
+    {
+        if(set_subdomain.contains(subdomain))
+            continue;
 
-    m_resultModelSubdomain->appendRow(targetItem);
-    ui->labelResultsCount->setNum(m_resultModelSubdomain->rowCount());
-    m_scanStats->resolved++;
-    */
-    Q_UNUSED(target);
+        m_model_subdomain->appendRow(new QStandardItem(subdomain));
+        set_subdomain.insert(subdomain);
 
-    foreach(const QString &subdomain, subdomains){
-        m_resultModelSubdomain->appendRow(new QStandardItem(subdomain));
-        project->addActiveSSL_altNames(subdomain);
+        if(m_scanConfig->autoSaveToProject)
+            project->addActiveSSL_altNames(subdomain);
     }
 
-    ui->labelResultsCount->setNum(m_resultModelSubdomain->rowCount());
+    ui->labelResultsCount->setNum(m_model_subdomain->rowCount());
     m_scanStats->resolved++;
 }

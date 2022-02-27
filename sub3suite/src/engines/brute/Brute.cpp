@@ -46,7 +46,7 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     m_scanArgs->config = m_scanConfig;
-    this->getConfigValues();
+    this->initConfigValues();
 }
 Brute::~Brute(){
     delete m_model_tld;
@@ -235,7 +235,7 @@ void Brute::log(const QString &log){
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
 
-void Brute::getConfigValues(){
+void Brute::initConfigValues(){
     m_scanArgs->config->threads = CONFIG_BRUTE.value("threads").toInt();
     m_scanArgs->config->levels = CONFIG_BRUTE.value("maxLevel").toInt();
     m_scanArgs->config->checkWildcard = CONFIG_BRUTE.value("wildcard").toBool();

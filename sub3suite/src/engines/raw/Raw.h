@@ -52,6 +52,10 @@ class Raw : public AbstractEngine{
         void on_buttonActionJson_clicked();
         void on_buttonActionTree_clicked();
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
+        void on_buttonStop_clicked();
+        void on_lineEditTarget_returnPressed();
+        void on_lineEditTreeFilter_textChanged(const QString &arg1);
+        void on_treeViewResults_doubleClicked(const QModelIndex &index);
 
         /* for Find */
         void on_buttonNext_clicked();
@@ -140,13 +144,8 @@ class Raw : public AbstractEngine{
         void on_moduleIpQualityScore_clicked();
         void on_moduleLeakLookup_clicked();
         void on_moduleWappalyzer_clicked();
-        void on_buttonStop_clicked();
-        void on_lineEditTarget_returnPressed();
-        void on_lineEditTreeFilter_textChanged(const QString &arg1);
 
-        void on_treeViewResults_doubleClicked(const QModelIndex &index);
-
-private:
+    private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         QStringListModel *m_targetListModel;

@@ -11,17 +11,17 @@
 #include <QSet>
 #include <QStandardItemModel>
 
-#include "src/models/ASNModel.h"
-#include "src/models/CIDRModel.h"
-#include "src/models/IPModel.h"
-#include "src/models/MXModel.h"
-#include "src/models/NSModel.h"
-#include "src/models/EmailModel.h"
-#include "src/models/DNSModel.h"
-#include "src/models/URLModel.h"
-#include "src/models/HostModel.h"
-#include "src/models/RawModel.h"
-#include "src/models/WildcardModel.h"
+#include "src/items/ASNItem.h"
+#include "src/items/CIDRItem.h"
+#include "src/items/IPItem.h"
+#include "src/items/MXItem.h"
+#include "src/items/NSItem.h"
+#include "src/items/EmailItem.h"
+#include "src/items/DNSItem.h"
+#include "src/items/URLItem.h"
+#include "src/items/HostItem.h"
+#include "src/items/RawItem.h"
+#include "src/items/WildcardItem.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 

@@ -12,7 +12,7 @@
 #include <QMutex>
 #include <QQueue>
 #include "AbstractScanner.h"
-#include "src/models/HostModel.h"
+#include "src/items/HostItem.h"
 
 
 namespace active {

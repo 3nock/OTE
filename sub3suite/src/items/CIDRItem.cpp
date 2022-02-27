@@ -1,4 +1,4 @@
-#include "CIDRModel.h"
+#include "CIDRItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

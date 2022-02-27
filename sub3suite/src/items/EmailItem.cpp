@@ -1,4 +1,4 @@
-#include "EmailModel.h"
+#include "EmailItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>

@@ -1,4 +1,4 @@
-#include "NSModel.h"
+#include "NSItem.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
