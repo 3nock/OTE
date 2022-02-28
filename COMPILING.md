@@ -10,8 +10,11 @@ The Steps are easy since the project doesn't have many dependancies for now & on
 3. Clone the repository (`main or dev branch`) to your local drive. Make sure to include the submodules in your clone command!
 
  **For main-branch (stable)**
+ 
 `git clone --recurse-submodules -b main https://github.com/3nock/sub3suite.git`
+
  **For dev-branch (development)**
+ 
 `git clone --recurse-submodules -b dev https://github.com/3nock/sub3suite.git`
 
 ## Project
