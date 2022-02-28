@@ -213,3 +213,14 @@ void Ssl::log(const QString &log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
+
+void Ssl::on_treeViewResults_clicked(const QModelIndex &index){
+    if(ui->comboBoxOutput->currentIndex() == 2){
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == m_model_ssl->invisibleRootItem()->index()){
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model_ssl->itemFromIndex(model_index));
+            ui->plainTextEditCert->setPlainText(item->raw);
+            ui->plainTextEditKey->setPlainText(item->raw_key);
+        }
+    }
+}

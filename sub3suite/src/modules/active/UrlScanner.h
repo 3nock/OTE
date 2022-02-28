@@ -28,7 +28,7 @@ struct ScanStat {  // scan statistics
 
 struct ScanConfig { // scan configurations
     int threads = 50;
-    int timeout = 3000;
+    int timeout = 1000;
 
     bool noDuplicates = false;
     bool autoSaveToProject = false;

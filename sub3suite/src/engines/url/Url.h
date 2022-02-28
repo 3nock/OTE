@@ -49,7 +49,6 @@ class Url : public AbstractEngine{
     private:
         Ui::Url *ui;
         QElapsedTimer m_timer;
-        QSet<QString> m_activeDns;
         QMap<QString,QString> m_failedScans;
         url::ScanConfig *m_scanConfig;
         url::ScanArgs *m_scanArgs;
@@ -70,6 +69,8 @@ class Url : public AbstractEngine{
         void openInBrowser();
         void clearResults();
         void removeResults();
+        void extract();
+        void extractSelected();
         void saveResults();
         void saveSelectedResults();
         void copyResults();

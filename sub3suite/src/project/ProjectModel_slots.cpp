@@ -37,6 +37,18 @@ void ProjectModel::addActiveSSL(const QString &target, const QSslCertificate &ss
     m_activeSSL_rootItem->appendRow(item);
 }
 
+void ProjectModel::addActiveSSL(const QByteArray &cert){
+
+}
+
+void ProjectModel::addActiveSSL_hash(const QString &hash){
+    if(hash.length() == 40)
+        m_activeSSL_sha1_rootItem->appendRow(new QStandardItem(hash));
+
+    if(hash.length() == 64)
+        m_activeSSL_sha256_rootItem->appendRow(new QStandardItem(hash));
+}
+
 void ProjectModel::addActiveSSL_sha1(const QString &sha1){
     m_activeSSL_sha1_rootItem->appendRow(new QStandardItem(sha1));
 }

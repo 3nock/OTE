@@ -105,6 +105,8 @@ public:
     void addActiveDNS(const s3s_struct::DNS &dns);
     void addActiveURL(const s3s_struct::URL &url);
     void addActiveSSL(const QString &target, const QSslCertificate &cert);
+    void addActiveSSL(const QByteArray &cert);
+    void addActiveSSL_hash(const QString &hash);
     void addActiveSSL_sha1(const QString &sha1);
     void addActiveSSL_sha256(const QString &sha256);
     void addActiveSSL_altNames(const QString &alternative_names);

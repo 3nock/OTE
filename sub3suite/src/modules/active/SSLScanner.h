@@ -82,7 +82,7 @@ class Scanner : public AbstractScanner{
     signals:
         void resultSHA1(QString sha1);
         void resultSHA256(QString sha256);
-        void resultSubdomain(QString target, QStringList subdomain);
+        void resultSubdomain(QStringList subdomain);
         void resultRaw(QString target, QSslCertificate certificate);
 
     public slots:

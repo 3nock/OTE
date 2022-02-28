@@ -20,6 +20,7 @@
 #define CONFIG_ACTIVE Config::active()
 #define CONFIG_DNS Config::dns()
 #define CONFIG_SSL Config::ssl()
+#define CONFIG_URL Config::ssl()
 #define CONFIG_IP Config::ip()
 #define CONFIG_PROJECT Config::project()
 
@@ -80,6 +81,10 @@ class Config
         }
         static QSettings &ssl(){
             static QSettings settings("config/ssl.ini", QSettings::IniFormat);
+            return settings;
+        }
+        static QSettings &url(){
+            static QSettings settings("config/url.ini", QSettings::IniFormat);
             return settings;
         }
         static QSettings &ip(){

@@ -54,7 +54,9 @@ class Ssl : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_buttonConfig_clicked();
 
-    private:
+        void on_treeViewResults_clicked(const QModelIndex &index);
+
+private:
         Ui::Ssl *ui;
         QElapsedTimer m_timer;
         ssl::ScanConfig *m_scanConfig;

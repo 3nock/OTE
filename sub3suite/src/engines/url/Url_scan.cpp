@@ -13,7 +13,7 @@
 #include "src/dialogs/FailedScansDialog.h"
 
 
-void Url::m_startScan(){
+void Url::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -90,7 +90,7 @@ void Url::onReScan(QQueue<QString> targets){
     status->isPaused = false;
 
     /* logs */
-    m_log("----------------- Re-Scan ---------------\n");
+    log("----------------- Re-Scan ---------------\n");
     qInfo() << "[URL] Re-Scan Started";
 
     /* ressetting and setting new values */
@@ -152,12 +152,12 @@ void Url::onScanThreadEnded(){
     if(status->activeScanThreads == 0)
     {
         /* display the scan summary on logs */
-        m_scanSummary();
+        scanSummary();
 
         if(status->isStopped)
-            m_log("---------------- Stopped ------------\n");
+            log("---------------- Stopped ------------\n");
         else
-            m_log("------------------ End --------------\n");
+            log("------------------ End --------------\n");
 
         qInfo() << "[URL] Scan Ended";
 
@@ -172,7 +172,7 @@ void Url::onScanThreadEnded(){
         status->isStopped = false;
         status->isRunning = false;
 
-        ui->buttonStart->setText("Start");
+        ui->buttonStart->setText(tr("Start"));
         ui->buttonStop->setDisabled(true);
 
         // launching the failed scans dialog if there were failed scans
@@ -186,7 +186,7 @@ void Url::onScanThreadEnded(){
     }
 }
 
-void Url::m_scanSummary(){
+void Url::scanSummary(){
     /* elapsed time */
     QTime time = QTime::fromMSecsSinceStartOfDay(m_timer.elapsed());
 

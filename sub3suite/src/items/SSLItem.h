@@ -148,6 +148,10 @@ public:
     QStandardItem *key_type;
     QStandardItem *key_algorithm;
 
+    /* raw certificate */
+    QByteArray raw;
+    QByteArray raw_key;
+
     void setValues(const QString &target, const QSslCertificate &cert){
         this->setText(target);
 
@@ -211,6 +215,9 @@ public:
                                         new QStandardItem(value)});
             count++;
         }
+
+        raw = cert.toPem();
+        raw_key = cert.publicKey().toPem();
     }
 };
 }

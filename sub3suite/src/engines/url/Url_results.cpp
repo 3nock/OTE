@@ -20,12 +20,21 @@ void Url::onScanLog(scan::Log log){
 }
 
 void Url::onScanResult(s3s_struct::URL url){
+    if(set_results.contains(url.url))
+    {
+        s3s_item::URL *item = set_results.value(url.url);
+        item->setValues(url);
+        return;
+    }
+
     s3s_item::URL *item = new s3s_item::URL;
     item->setValues(url);
-    m_resultModel->appendRow({item, item->status_code, item->banner, item->content_type});
+    m_model->appendRow({item, item->status_code, item->banner, item->content_type});
+    set_results.insert(url.url, item);
 
-    project->addActiveURL(url);
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveURL(url);
 
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
 }

@@ -90,7 +90,7 @@ void ssl::Scanner::lookup(){
                     QStringList subdomains;
                     foreach(const QString &domain, certificate.subjectAlternativeNames())
                         subdomains.append(domain);
-                    emit resultSubdomain(target, subdomains);
+                    emit resultSubdomain(subdomains);
                     break;
                 }
             }

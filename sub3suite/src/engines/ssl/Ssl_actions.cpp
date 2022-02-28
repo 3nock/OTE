@@ -37,6 +37,8 @@ void Ssl::clearResults(){
     /* clear the filter and the result count */
     ui->lineEditFilter->clear();
     ui->labelResultsCount->clear();
+    ui->plainTextEditCert->clear();
+    ui->plainTextEditKey->clear();
 
     /* clear the progressbar */
     ui->progressBar->clearMask();
@@ -258,7 +260,7 @@ void Ssl::sendToProject(){
         {
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model_ssl->itemFromIndex(model_index));
-            project->addActiveSSL(ssl_to_struct(item));
+            project->addActiveSSL(item->raw);
         }
         break;
     }
@@ -280,7 +282,7 @@ void Ssl::sendSelectedToProject(){
             if(index.parent() == m_model_ssl->invisibleRootItem()->index()){
                 QModelIndex model_index = proxyModel->mapToSource(index);
                 s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model_ssl->itemFromIndex(model_index));
-                project->addActiveSSL(ssl_to_struct(item));
+                project->addActiveSSL(item->raw);
             }
         }
         break;

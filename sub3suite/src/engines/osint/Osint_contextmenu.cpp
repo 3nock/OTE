@@ -112,6 +112,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
         menu.addSeparator();
         menu.addAction(tr("Send URL to URL"), this, [=](){this->sendToEngine(ENGINE::URL, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
+        menu.addAction(tr("Send URL to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
         break;
     case osint::OUTPUT::ASN:
         menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/save.png"));
@@ -226,6 +227,7 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         break;
     case osint::OUTPUT::URL:
         menu.addAction(tr("Send URL To URL"), this, [=](){this->sendSelectedToEngine(ENGINE::URL, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
+        menu.addAction(tr("Send URL To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
         break;
     case osint::OUTPUT::ASN:
         menu.addAction(tr("Send ASN To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));

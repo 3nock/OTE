@@ -13,18 +13,22 @@
 #include <QDesktopServices>
 
 
-void Url::m_openInBrowser(QItemSelectionModel *selectionModel){
+void Url::openInBrowser(){
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
         QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
 }
 
-void Url::m_clearResults(){
-    /* clear the results... */
-    m_resultModel->clear();
+void Url::clearResults(){
+    /* clear the results */
+    m_model->clear();
     ui->labelResultsCount->clear();
-    //m_resultModel->setHorizontalHeaderLabels({"    URLs", "    Values"});
-    m_resultModel->setHorizontalHeaderLabels({"    URL", "    Status code", "    banner", "    Content type"});
-    m_activeDns.clear();
+    m_model->setHorizontalHeaderLabels({"    URL", "    Status code", "    banner", "    Content type"});
+    set_results.clear();
+
+    ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->tableViewResults->horizontalHeader()->resizeSection(0, 230);
+    ui->tableViewResults->horizontalHeader()->resizeSection(1, 10);
+    ui->tableViewResults->horizontalHeader()->resizeSection(2, 120);
 
     /* clear the progressbar... */
     ui->progressBar->clearMask();
@@ -32,115 +36,235 @@ void Url::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void Url::m_removeResults(QItemSelectionModel *selectionModel){
-    QModelIndex index;
-    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        index = m_resultProxyModel->mapToSource(proxyIndex);
-        m_activeDns.remove(index.data().toString());
-        m_resultModel->removeRow(index.row());
+void Url::extract(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> extracts;
+
+    /* extracting and saving to a set to avoid repeatition */
+    for(int i = 0; i != proxyModel->rowCount(); ++i){
+        QString url(proxyModel->index(i, 0).data().toString());
+        QString domain = url.remove("https://").remove("http://").split("/").at(0);
+        extracts.insert(domain);
     }
 
-    ui->labelResultsCount->setNum(m_resultProxyModel->rowCount());
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
+    clipboard->setText(data.trimmed());
 }
 
-void Url::m_saveResults(){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void Url::extractSelected(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QSet<QString> extracts;
+
+    /* extracting and saving to a set to avoid repeatition */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column())
+            continue;
+
+        QString url(index.data().toString());
+        QString domain = url.remove("https://").remove("http://").split("/").at(0);
+        extracts.insert(domain);
+    }
+
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
+    clipboard->setText(data.trimmed());
+}
+
+void Url::removeResults(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        set_results.remove(model_index.data().toString());
+        m_model->removeRow(model_index.row());
+    }
+
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+}
+
+void Url::saveResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "URL: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if(!file.isOpen())
+    if(!file.isOpen()){
+        qDebug() << "URL: Failed to open " << filename << " For saving Results";
         return;
-
-    /* writing to file */
-    QString item;
-    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
-    {
-        item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
-        file.write(item.toUtf8());
     }
+
+    QJsonArray array;
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(m_model->itemFromIndex(model_index));
+        array.append(url_to_json(item));
+    }
+
+    QJsonDocument document;
+    document.setArray(array);
+    file.write(document.toJson());
 
     file.close();
 }
 
-void Url::m_saveResults(QItemSelectionModel *selectionModel){
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void Url::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "URL: Failed to getSaveFileName";
         return;
+    }
 
-    /* saving to file */
-    QString data;
-    QString item;
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if(file.isOpen())
-    {
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            item = index.data().toString();
-            data.append(item.append(NEWLINE));
-        }
-        file.write(data.toUtf8());
-        file.close();
+    if(!file.isOpen()){
+        qDebug() << "URL: Failed to open " << filename << " For saving Results";
+        return;
     }
-}
 
-
-void Url::m_copyResults(){
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    QString clipboardData;
-    QString item;
-
-    /* copying result type */
-    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i)
-    {
-        item = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString().append(NEWLINE);
-        clipboardData.append(item);
-    }
-    clipboard->setText(clipboardData.trimmed());
-}
-
-void Url::m_copyResults(QItemSelectionModel *selectionModel){
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    QString data;
-    QString item;
-
+    QJsonArray array;
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
-        item = index.data().toString();
-        data.append(item.append(NEWLINE));
+        if(index.column()){
+            file.write(index.data().toString().append(NEWLINE).toUtf8());
+            continue;
+        }
+
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(m_model->itemFromIndex(model_index));
+        array.append(url_to_json(item));
     }
 
-    clipboard->setText(data.trimmed());
+    if(!array.isEmpty()){
+        QJsonDocument document;
+        document.setArray(array);
+        file.write(document.toJson());
+    }
+    file.close();
 }
 
-void Url::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::URL){
-        ui->targets->add(target);
+
+void Url::copyResults(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+
+    QJsonArray array;
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(m_model->itemFromIndex(model_index));
+        array.append(url_to_json(item));
     }
+
+    QJsonDocument document;
+    document.setArray(array);
+    clipboard->setText(document.toJson());
+}
+
+void Url::copySelectedResults(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+
+    QJsonArray array;
+    QString clipboardData;
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column()){
+            clipboardData.append(index.data().toString().append(NEWLINE));
+            continue;
+        }
+
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(m_model->itemFromIndex(model_index));
+        array.append(url_to_json(item));
+    }
+
+    if(!array.isEmpty()){
+        QJsonDocument document;
+        document.setArray(array);
+        clipboard->setText(document.toJson());
+    }
+    else
+        clipboard->setText(clipboardData.trimmed());
+}
+
+///
+/// sending results
+///
+
+void Url::sendToProject(){
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(m_model->itemFromIndex(model_index));
+        project->addActiveURL(url_to_struct(item));
+    }
+}
+
+void Url::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column())
+            continue;
+
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(m_model->itemFromIndex(model_index));
+        project->addActiveURL(url_to_struct(item));
+    }
+}
+
+void Url::sendToEngine(const ENGINE &engine){
+    switch (engine) {
+    case ENGINE::URL:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            emit sendResultsToUrl(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::URL);
+        emit changeTabToURL();
+        break;
+    case ENGINE::RAW:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            emit sendResultsToRaw(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::URL);
+        emit changeTabToRaw();
+        break;
+    default:
+        break;
+    }
+}
+
+void Url::sendSelectedToEngine(const ENGINE &engine){
+    switch (engine) {
+    case ENGINE::URL:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                continue;
+            emit sendResultsToUrl(index.data().toString(), RESULT_TYPE::URL);
+        }
+        emit changeTabToURL();
+        break;
+    case ENGINE::RAW:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                continue;
+            emit sendResultsToRaw(index.data().toString(), RESULT_TYPE::URL);
+        }
+        emit changeTabToRaw();
+        break;
+    default:
+        break;
+    }
+}
+
+///
+/// receiving targets
+///
+
+void Url::onReceiveTargets(QString target, RESULT_TYPE resultType){
+    if(resultType == RESULT_TYPE::URL)
+        ui->targets->add(target);
 
     /* set multiple targets checkbox checked */
     ui->checkBoxMultipleTargets->setChecked(true);
-}
-
-/*****************************************************************************
-                            SENDING RESULTS
-******************************************************************************/
-void Url::m_sendToProject(){
-    QString url;
-    for(int i = 0; i != m_resultProxyModel->rowCount(); ++i){
-        url = m_resultProxyModel->data(m_resultProxyModel->index(i, 0)).toString();
-        /*project->addActiveURL(url);*/
-    }
-}
-
-void Url::m_sendToProject(QItemSelectionModel *selection){
-    QString url;
-    QModelIndexList indexList(selection->selectedIndexes());
-
-    for(int i = 0; i < indexList.size();){
-        url = indexList.at(i).data().toString();
-        /*project->addActiveURL(url);*/
-    }
 }
