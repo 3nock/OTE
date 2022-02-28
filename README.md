@@ -33,7 +33,7 @@ For More information see [contribution guide](CONTRIBUTING.md).
 2. Unzip.
 3. Run.
 
-You can also [compile](https://github.com/3nock/sub3suite/wiki/Compiling-the-whole-project) sub3suite yourself with a few easy steps!
+You can also [compile](COMPILING.md) sub3suite yourself with a few easy steps!
 
 ## Credits
 
