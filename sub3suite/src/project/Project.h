@@ -4,9 +4,10 @@
 #include <QWidget>
 #include <QMenuBar>
 
-#include "src/project/ProjectModel.h"
+#include "model/ProjectModel.h"
 
-#define PROJECT_MODEL_TYPE "pmt"
+
+#define SITEMAP_TYPE "smt"
 
 
 namespace Ui {
@@ -25,14 +26,16 @@ class Project : public QWidget{
         void on_lineEditFilter_textChanged(const QString &arg1);
 
     private:
-        void m_initUI();
+        void initUI();
         void initActions();
         void init_sitemapMenuBar();
         void init_notesMenuBar();
         Ui::Project *ui;
+
+        ProjectModel *model;
+        QSortFilterProxyModel *proxyModel;
+
         QString m_projectFile;
-        ProjectModel *m_projectModel;
-        QSortFilterProxyModel *m_proxyModel;
 
         /* menu bars */
         void action_save();

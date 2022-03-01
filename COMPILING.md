@@ -1,12 +1,12 @@
 # Compiling The Project
 
 This is just a simple instruction on compiling the project. More details will be added later.
-The Steps are easy since the project doesn't have many dependancies for now & only uses Qt Creator for the whole build process.
+The Steps are easy since the project doesn't have many dependancies for now & only uses Qt-Creator/qmake for the whole build process.
 
 ## Prerequisites
 
-1. Download [Qt5.13.0](https://download.qt.io/archive/qt/5.13/5.13.0), & install.(not a must to use version 5.13.0).
-2. Download [Qt Creator 4.9.1](https://www.qt.io/offline-installers), & install.(not a must to use version 4.9.1).
+1. Download [Qt5.13.0](https://download.qt.io/archive/qt/5.13/5.13.0) & install. (not a must to use version 5.13.0).
+2. Download [Qt Creator 4.9.1](https://www.qt.io/offline-installers) & install. (not a must to use version 4.9.1).
 3. Clone the repository (`main or dev branch`) to your local drive. Make sure to include the submodules in your clone command!
 
  **For main-branch (stable)**
@@ -19,8 +19,8 @@ The Steps are easy since the project doesn't have many dependancies for now & on
 
 ## Project
 
-If you are familiar with Qt.
-1. Load the sub3suite.pro project into the Qt creator.
+If you are familiar with Qt-Creator.
+1. Load the `sub3suite.pro` project into the Qt creator.
 2. Choose the compiler and build path for the project.
 
 ## Minor adjustment
@@ -28,12 +28,13 @@ If you are familiar with Qt.
 Minor adjustment to the GumboParser submodule. 
 1. Copy the `strings.h` file from `sub3suite/include/gumbo-parser/visualc/include/`
 2. Paste it to `sub3suite/include/gumbo-parser/src/`
-3. Include the header file `#include "strings.h"` to the following files
+3. Change the Include header file `#include <strings.h>` to `#include "strings.h"` for the following files;
 	- attribute.c
 	- parser.c
 	- string_buffer.c
 	- string_piece.c
 	- utf8.c
+	- util.c
 	- vector.c
 	
 ## Build
@@ -44,14 +45,14 @@ Minor adjustment to the GumboParser submodule.
 - Linux
 ``` bash
 mkdir build && cd build
-qmake sub3suite.pro CONFIG+=release ../sub3suite
+qmake CONFIG+=release ../sub3suite/sub3suite
 make
 ```
 
 - MacOS
 ``` bash
 mkdir build && cd build
-qmake sub3suite.pro CONFIG+=release ../sub3suite
+qmake CONFIG+=release ../sub3suite/sub3suite
 make
 macdeployqt sub3suite.app
 ```
@@ -59,9 +60,9 @@ macdeployqt sub3suite.app
 - Windows
 ``` bash
 mkdir build && cd build
-qmake sub3suite.pro CONFIG+=release ../sub3suite
-nmake
-windeployqt release\sub3suite.exe
+qmake CONFIG+=release ../sub3suite/sub3suite
+make
+windeployqt release/sub3suite.exe
 ```
 
 ## Run

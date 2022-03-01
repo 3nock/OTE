@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "src/project/ProjectModel.h"
+#include "src/project/model/ProjectModel.h"
 
 
 namespace Ui {

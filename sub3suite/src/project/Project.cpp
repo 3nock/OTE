@@ -9,10 +9,10 @@
 
 Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     ui(new Ui::Project),
-    m_projectModel(projectModel),
-    m_proxyModel(new QSortFilterProxyModel)
+    model(projectModel),
+    proxyModel(new QSortFilterProxyModel)
 {
-    this->m_initUI();
+    this->initUI();
 
     /* underdevelopment txt */
     QFile file(":/files/res/files/under_development.html");
@@ -36,13 +36,13 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     ui->textBrowserAnalysis->setOpenExternalLinks(true);
 
     /* data models */
-    ui->treeViewProjectExplorer->setModel(m_projectModel->model_explorer);
-    ui->treeViewProjectExplorer->expand(m_projectModel->project_explorer->index());
+    ui->treeViewProjectExplorer->setModel(model->explorer);
+    ui->treeViewProjectExplorer->expand(model->explorer->project->index());
 
-    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModel->setRecursiveFilteringEnabled(true);
-    m_proxyModel->setFilterKeyColumn(0);
-    ui->treeViewSiteMap->setModel(m_proxyModel);
+    proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    proxyModel->setRecursiveFilteringEnabled(true);
+    proxyModel->setFilterKeyColumn(0);
+    ui->treeViewSiteMap->setModel(proxyModel);
 
     this->init_notesMenuBar();
     this->init_sitemapMenuBar();
@@ -50,19 +50,18 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
 Project::~Project(){
     delete m_sitemapMenuBar;
     delete m_notesMenuBar;
-    delete m_proxyModel;
+    delete proxyModel;
     delete ui;
 }
 
 
-void Project::m_initUI(){
+void Project::initUI(){
     /* setup ui */
     ui->setupUi(this);
 
     /* setting widgets special properties for diff stylesheets */
     ui->labelCount->setProperty("s3s_color", true);
     ui->treeViewProjectExplorer->setProperty("no_item_border", true);
-    ui->treeViewSummary->setProperty("no_item_border", true);
     ui->tabWidget->setProperty("upside", true);
 
     /* hiding un-used widgets */
@@ -70,6 +69,7 @@ void Project::m_initUI(){
 
     /* placeholder texts */
     ui->lineEditFilter->setPlaceholderText("Filter...");
+    ui->plainTextEdit_item_comment->setPlaceholderText("comment on item...");
 
     /* resizing */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.22))

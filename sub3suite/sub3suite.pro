@@ -109,9 +109,10 @@ SOURCES += \
     src/items/IPItem.cpp \
     src/items/MXItem.cpp \
     src/items/NSItem.cpp \
-    src/project/ProjectModel.cpp \
-    src/project/ProjectModel_serialization.cpp \
-    src/project/ProjectModel_slots.cpp \
+    src/project/model/Explorer.cpp \
+    src/project/model/ProjectModel.cpp \
+    src/project/model/ProjectModel_serialization.cpp \
+    src/project/model/ProjectModel_slots.cpp \
     src/items/RawItem.cpp \
     src/items/SSLItem.cpp \
     src/items/URLItem.cpp \
@@ -268,7 +269,8 @@ HEADERS += \
     src/items/IPItem.h \
     src/items/MXItem.h \
     src/items/NSItem.h \
-    src/project/ProjectModel.h \
+    src/project/model/Explorer.h \
+    src/project/model/ProjectModel.h \
     src/items/RawItem.h \
     src/items/SSLItem.h \
     src/items/URLItem.h \
@@ -314,7 +316,6 @@ HEADERS += \
     src/modules/passive/api/Onyphe.h \
     src/modules/passive/api/OtxFree.h \
     src/modules/passive/api/OtxPaid.h \
-    src/modules/passive/api/Quake.h \
     src/modules/passive/iana/Ripe.h \
     src/modules/passive/api/RobtexFree.h \
     src/modules/passive/api/RobtexPaid.h \
@@ -404,7 +405,6 @@ HEADERS += \
     src/utils/LogsSyntaxHighlighter.h \
     src/utils/NotesSyntaxHighlighter.h \
     src/utils/UpdateChecker.h \
-    src/utils/models.h \
     src/widgets/InputWidget.h \
     src/dialogs/LogViewerDialog.h \
     src/dialogs/AboutDialog.h \

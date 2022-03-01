@@ -53,7 +53,7 @@ void ProjectConfigDialog::on_buttonOk_clicked(){
     m_projectModel->projectInfo.isConfigured = true;
 
     /* checks */
-    m_projectModel->project_explorer->setText(m_projectModel->projectInfo.name);
+    m_projectModel->explorer->project->setText(m_projectModel->projectInfo.name);
     accept();
 }
 
