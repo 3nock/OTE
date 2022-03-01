@@ -11,6 +11,7 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QJsonObject>
+#include <QDate>
 
 
 namespace s3s_struct {
@@ -57,6 +58,10 @@ public:
     QStandardItem *free;
     QStandardItem *disposable;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::Email &email){
         this->setText(email.email);
 
@@ -72,6 +77,9 @@ public:
             disposable->setText("true");
         else
             disposable->setText("false");
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 }

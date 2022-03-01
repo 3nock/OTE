@@ -78,8 +78,8 @@ MainWindow::~MainWindow(){
 
 void MainWindow::closeEvent(QCloseEvent *event){
     /* check if project is configured, if not prompt to save project */
-    if(projectModel->projectInfo.isNew ||  projectModel->projectInfo.isTemporary){
-        if(!projectModel->projectInfo.isConfigured)
+    if(projectModel->info.isNew ||  projectModel->info.isTemporary){
+        if(!projectModel->info.isConfigured)
         {
             /* configure project */
             ProjectConfigDialog projectConfigDialog(projectModel, this);
@@ -89,7 +89,7 @@ void MainWindow::closeEvent(QCloseEvent *event){
         /* then save the project */
         projectModel->saveProject();
     }
-    if(projectModel->projectInfo.isExisting){
+    if(projectModel->info.isExisting){
         /* save project */
         projectModel->closeProject();
     }
@@ -160,9 +160,10 @@ void MainWindow::recents(){
     CONFIG.endGroup();
 }
 
-void MainWindow::initProject(ProjectStruct projectInfo){
+void MainWindow::initProject(ProjectStruct info){
     ui->statusbar->showMessage("Opening Project....", 6000);
-    projectModel->openProject(projectInfo);
+    projectModel->openProject(info);
+    project->initProject();
 }
 
 void MainWindow::m_registerMetaTypes(){

@@ -6,6 +6,10 @@
 
 
 QJsonObject ssl_to_json(s3s_item::SSL *item){
+    QJsonObject item_info;
+    item_info.insert("last_modified", item->last_modified);
+    item_info.insert("comment", item->comment);
+
     QJsonObject ssl;
 
     ssl.insert("target", item->text());
@@ -43,6 +47,8 @@ QJsonObject ssl_to_json(s3s_item::SSL *item){
     for(int i = 0; i < item->subjectAltNames->rowCount(); i++)
         alt_names.append(item->subjectAltNames->child(i, 1)->text());
     ssl.insert("alt_names", alt_names);
+
+    ssl.insert("item_info", item_info);
 
     return ssl;
 }
@@ -86,4 +92,8 @@ void json_to_ssl(const QJsonObject &ssl, s3s_item::SSL *item){
                                           new QStandardItem(value.toString())});
         count++;
     }
+
+    QJsonObject item_info = ssl.value("item_info").toObject();
+    item->comment = item_info["comment"].toString();
+    item->last_modified = item_info["last_modified"].toString();
 }

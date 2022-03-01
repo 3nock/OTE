@@ -20,6 +20,10 @@ s3s_struct::NS ns_to_struct(s3s_item::NS *item){
 }
 
 QJsonObject ns_to_json(s3s_item::NS *item){
+    QJsonObject item_info;
+    item_info.insert("last_modified", item->last_modified);
+    item_info.insert("comment", item->comment);
+
     QJsonObject ns;
 
     /* info */
@@ -31,6 +35,8 @@ QJsonObject ns_to_json(s3s_item::NS *item){
     for(int i = 0; i < item->domains->rowCount(); i++)
         domains.append(item->domains->child(i, 1)->text());
     ns.insert("domains", domains);
+
+    ns.insert("item_info", item_info);
 
     return ns;
 }
@@ -49,4 +55,8 @@ void json_to_ns(const QJsonObject &ns, s3s_item::NS *item){
                                   new QStandardItem(value.toString())});
         count++;
     }
+
+    QJsonObject item_info = ns.value("item_info").toObject();
+    item->comment = item_info["comment"].toString();
+    item->last_modified = item_info["last_modified"].toString();
 }

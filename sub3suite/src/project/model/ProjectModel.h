@@ -34,6 +34,8 @@
 struct ProjectStruct{
     QString name;
     QString path;
+    QString date_created;
+    QString last_modified;
     bool isNew = false;
     bool isExisting = false;
     bool isTemporary = false;
@@ -56,9 +58,10 @@ public:
 
     /* actions */
     void clearModels();
+    int getItemsCount();
     void setHeaderLabels();
 
-    ProjectStruct projectInfo;
+    ProjectStruct info;
 
     /* for active results */
     void addActiveHost(const s3s_struct::HOST &host);
@@ -71,7 +74,6 @@ public:
     void addActiveSSL_sha1(const QString &sha1);
     void addActiveSSL_sha256(const QString &sha256);
     void addActiveSSL_altNames(const QString &alternative_names);
-
     /* for passive results */
     void addPassiveSubdomainIp(const QString &subdomain, const QString &ip);
     void addPassiveSubdomain(const QString &subdomain);
@@ -87,7 +89,6 @@ public:
     void addPassiveUrl(const QString &url);
     void addPassiveAsn(const QString &asn, const QString &name);
     void addPassiveSSL(const QString &ssl);
-
     /* for enum */
     void addEnumASN(const s3s_struct::ASN &asn);
     void addEnumCIDR(const s3s_struct::CIDR &cidr);
@@ -96,7 +97,6 @@ public:
     void addEnumMX(const s3s_struct::MX &xm);
     void addEnumSSL(const QString &target, const QSslCertificate &ssl);
     void addEnumEmail(const s3s_struct::Email &email);
-
     /* for raw */
     void addRaw(const s3s_struct::RAW &raw);
 
@@ -118,7 +118,6 @@ public:
     QStandardItemModel *activeSSL_sha256;
     QStandardItemModel *activeSSL_altNames;
     QStandardItemModel *activeURL;
-
     /* passive results model */
     QStandardItemModel *passiveSubdomainIp;
     QStandardItemModel *passiveSubdomain;
@@ -133,7 +132,6 @@ public:
     QStandardItemModel *passiveUrl;
     QStandardItemModel *passiveAsn;
     QStandardItemModel *passiveSSL;
-
     /* enum Results model */
     QStandardItemModel *enumIp;
     QStandardItemModel *enumASN;
@@ -142,7 +140,7 @@ public:
     QStandardItemModel *enumMX;
     QStandardItemModel *enumSSL;
     QStandardItemModel *enumEmail;
-
+    /* custom models */
     QStandardItemModel *raw;
 
     /* sets */

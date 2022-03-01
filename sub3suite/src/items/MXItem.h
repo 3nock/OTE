@@ -9,6 +9,7 @@
 #define MXMODEL_H
 
 #include <QStandardItem>
+#include <QDate>
 #include <QSet>
 
 
@@ -56,6 +57,10 @@ public:
     QStandardItem *info_mx;
     QStandardItem *info_ip;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::MX &mx){
         this->setText(mx.info_mx);
 
@@ -70,6 +75,9 @@ public:
                                 new QStandardItem(domain)});
             count++;
         }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 

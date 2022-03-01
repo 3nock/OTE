@@ -2,6 +2,7 @@
 #define HOSTMODEL_H
 
 #include <QStandardItem>
+#include <QDate>
 #include <QMap>
 
 
@@ -35,10 +36,10 @@ public:
     QStandardItem *ipv6;
     QStandardItem *ports;
 
-    /* item summary */
+    /* summary */
     QList<quint16> open_ports;
     QString last_modified;
-    QString notes;
+    QString comment;
 
     void setValues(const s3s_struct::HOST &host){
         this->setText(host.host);
@@ -56,14 +57,23 @@ public:
             port_list.chop(1);
             ports->setText(port_list);
         }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 
     void setValue_ipv4(const QString &_ipv4){
         ipv4->setText(_ipv4);
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 
     void setValue_ipv6(const QString &_ipv6){
         ipv6->setText(_ipv6);
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 
     void setValue_ports(const s3s_struct::HOST &host){
@@ -78,6 +88,9 @@ public:
         }
         port_list.chop(1);
         ports->setText(port_list);
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 }

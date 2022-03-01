@@ -35,7 +35,7 @@ connected to the internet and contain an interface to share this data e.g `API`.
 - [sub3suite](https://github.com/3nock/sub3suite) has an OSINT tool that can be used for passive subdomain enumeration able to pull data from 50+ osint source in a matter of seconds & gives users the ability to manipulate this data to their liking.
 
 <img src="docs/images/screenshot_osint.png"/>
-Sub3suite's OSINT Tool.
+Sub3Suite's OSINT Tool.
 
 ### Active Subdomain Enumeration
 
@@ -46,7 +46,7 @@ In active subdomain enumeration, the adversary or tester gathers the information
 - [sub3suite](https://github.com/3nock/sub3suite) has `BRUTEFORCE`, `ACTIVE` & `DNS` tools that can be used for active subdomain enumeration using multiple techniques & features that are highly efficient and with a low barrier of entry to get started with active subdomain enumeration.
 
 <img src="docs/images/screenshot_brute.png"/>
-Sub3suite's BRUTE Tool.
+Sub3Suite's BRUTE Tool.
 
 ### Open-source Intelligence (OSINT)
 
@@ -67,7 +67,7 @@ different data types are used for mapping the target such as domains, ip-address
 - [sub3suite](https://github.com/3nock/sub3suite) also has the tools for this purpose though still in early development phase at this time but you can use multiple tools at its disposal to achieve this goal.
 
 <img src="docs/images/screenshot_project.png"/>
-Sub3suite's Project map
+Sub3Suite's Project map
 
 ### Summary
 

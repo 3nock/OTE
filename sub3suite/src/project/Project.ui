@@ -62,7 +62,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>222</width>
+          <width>216</width>
           <height>440</height>
          </rect>
         </property>
@@ -83,7 +83,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QTreeView" name="treeViewProjectExplorer">
+          <widget class="QTreeView" name="treeViewExplorer">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -105,9 +105,9 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
-       <widget class="QWidget" name="tabSiteMap">
+       <widget class="QWidget" name="tabTree">
         <attribute name="title">
-         <string>Site map</string>
+         <string>Tree</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
@@ -163,7 +163,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QTreeView" name="treeViewSiteMap">
+          <widget class="QTreeView" name="treeViewTree">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -313,7 +313,7 @@
        </widget>
       </widget>
      </widget>
-     <widget class="QToolBox" name="toolBoxAction">
+     <widget class="QToolBox" name="toolBoxActions">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -340,7 +340,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>224</width>
+         <width>236</width>
          <height>440</height>
         </rect>
        </property>
@@ -382,6 +382,12 @@
                  <height>0</height>
                 </size>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>70</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Name:</string>
                </property>
@@ -408,7 +414,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>16777215</width>
+                 <width>70</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -438,7 +444,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>16777215</width>
+                 <width>70</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -468,7 +474,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>16777215</width>
+                 <width>70</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -483,6 +489,26 @@
                 <string/>
                </property>
               </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_summary_project">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </item>

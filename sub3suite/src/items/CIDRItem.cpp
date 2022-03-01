@@ -64,6 +64,10 @@ QJsonObject cidr_to_json(s3s_item::CIDR *item){
     for(int i = 0; i < item->asns->rowCount(); i++)
         asns.append(item->asns->child(i, 1)->text());
 
+    QJsonObject item_info;
+    item_info.insert("last_modified", item->last_modified);
+    item_info.insert("comment", item->comment);
+
     QJsonObject cidrObj;
     cidrObj.insert("cidr", item->text());
     cidrObj.insert("info", info);
@@ -72,13 +76,15 @@ QJsonObject cidr_to_json(s3s_item::CIDR *item){
     cidrObj.insert("abuse_contacts", abuseContacts);
     cidrObj.insert("asns", asns);
 
+    cidrObj.insert("item_info", item_info);
+
     return cidrObj;
 }
 
-void json_to_cidr(const QJsonObject &jsonObj, s3s_item::CIDR *item){
-    item->setText(jsonObj.value("cidr").toString());
+void json_to_cidr(const QJsonObject &cidr, s3s_item::CIDR *item){
+    item->setText(cidr.value("cidr").toString());
 
-    QJsonObject info = jsonObj.value("info").toObject();
+    QJsonObject info = cidr.value("info").toObject();
     item->info_prefix->setText(info.value("prefix").toString());
     item->info_ip->setText(info.value("ip").toString());
     item->info_cidr->setText(info.value("cidr").toString());
@@ -88,13 +94,13 @@ void json_to_cidr(const QJsonObject &jsonObj, s3s_item::CIDR *item){
     item->info_website->setText(info.value("website").toString());
     item->info_ownerAddress->setText(info.value("ownerAddress").toString());
 
-    QJsonObject rir = jsonObj.value("rir").toObject();
+    QJsonObject rir = cidr.value("rir").toObject();
     item->rir_name->setText(rir.value("name").toString());
     item->rir_country->setText(rir.value("country").toString());
     item->rir_dateAllocated->setText(rir.value("dateAllocated").toString());
 
     int count = 0;
-    QJsonArray emailContacts = jsonObj.value("email_contacts").toArray();
+    QJsonArray emailContacts = cidr.value("email_contacts").toArray();
     foreach(const QJsonValue &value, emailContacts){
         item->emailContacts->appendRow({new QStandardItem(QString::number(count)),
                                             new QStandardItem(value.toString())});
@@ -102,7 +108,7 @@ void json_to_cidr(const QJsonObject &jsonObj, s3s_item::CIDR *item){
     }
 
     count = 0;
-    QJsonArray abuseContacts = jsonObj.value("abuse_contacts").toArray();
+    QJsonArray abuseContacts = cidr.value("abuse_contacts").toArray();
     foreach(const QJsonValue &value, abuseContacts){
         item->abuseContacts->appendRow({new QStandardItem(QString::number(count)),
                                             new QStandardItem(value.toString())});
@@ -110,10 +116,14 @@ void json_to_cidr(const QJsonObject &jsonObj, s3s_item::CIDR *item){
     }
 
     count = 0;
-    QJsonArray asns = jsonObj.value("asns").toArray();
+    QJsonArray asns = cidr.value("asns").toArray();
     foreach(const QJsonValue &value, asns){
         item->asns->appendRow({new QStandardItem(QString::number(count)),
                                             new QStandardItem(value.toString())});
         count++;
     }
+
+    QJsonObject item_info = cidr.value("item_info").toObject();
+    item->comment = item_info["comment"].toString();
+    item->last_modified = item_info["last_modified"].toString();
 }

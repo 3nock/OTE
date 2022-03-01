@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 #include <QGuiApplication>
+#include <QDate>
 
 #include "src/utils/Config.h"
 #include "src/items/SSLItem.h"
@@ -28,9 +29,9 @@ void ProjectModel::openExistingProject(QString name, QString path){
 }
 
 void ProjectModel::saveProject(){
-    qDebug() << "Saving the Project To: " << projectInfo.path;
+    qDebug() << "Saving the Project To: " << info.path;
 
-    QFile file(projectInfo.path);
+    QFile file(info.path);
     if(file.open(QIODevice::WriteOnly))
     {
         /* compress the data then save */
@@ -38,7 +39,7 @@ void ProjectModel::saveProject(){
         file.close();
 
         CONFIG.beginGroup("recent_projects");
-        CONFIG.setValue(projectInfo.name, projectInfo.path);
+        CONFIG.setValue(info.name, info.path);
         CONFIG.endGroup();
     }
     else{
@@ -61,31 +62,35 @@ void ProjectModel::closeProject(){
 }
 
 void ProjectModel::openProject(ProjectStruct projectStruct){
-    projectInfo = projectStruct;
+    info = projectStruct;
 
-    if(projectInfo.isTemporary){
-        projectInfo.name = "Temp";
-        projectInfo.path = QGuiApplication::applicationDirPath()+"/projects/";
+    if(info.isTemporary){
+        info.name = "Temp";
+        info.path = QGuiApplication::applicationDirPath()+"/projects/";
 
         /* set project name on the project explorer */
-        explorer->project->setText(projectInfo.name);
+        explorer->project->setText(info.name);
+        info.date_created = QDate::currentDate().toString();
+        info.last_modified = QDate::currentDate().toString();
         return;
     }
 
-    if(projectInfo.isNew){
+    if(info.isNew){
         /* set project name on the project explorer */
-        explorer->project->setText(projectInfo.name);
+        explorer->project->setText(info.name);
+        info.date_created = QDate::currentDate().toString();
+        info.last_modified = QDate::currentDate().toString();
         return;
     }
 
     /* if it is an existing project */
     /* set project name on the project explorer */
-    explorer->project->setText(projectInfo.name);
+    explorer->project->setText(info.name);
 
     /* opening the the project */
-    qDebug() << "Opening Project: " << projectInfo.path;
+    qDebug() << "Opening Project: " << info.path;
 
-    QFile file(projectInfo.path);
+    QFile file(info.path);
     if(!file.open(QIODevice::ReadOnly)){
         qWarning() << "Failed To Open Project File.";
         return;
@@ -108,12 +113,13 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     QJsonObject mainObj = document.object();
 
     ///
-    /// Project Information
+    /// project info
     ///
-    QJsonObject info = mainObj["general"].toObject();
+    info.date_created = mainObj["info"].toObject()["date_created"].toString();
+    info.last_modified = mainObj["info"].toObject()["last_modified"].toString();
 
     ///
-    /// Project Data
+    /// project data
     ///
     QJsonObject data = mainObj["data"].toObject();
 
@@ -121,7 +127,10 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     foreach(const QJsonValue &value, data["active_Host"].toArray()){
         s3s_item::HOST *item = new s3s_item::HOST;
         json_to_host(value.toObject(), item);
-        activeHost->appendRow({item, item->ipv4, item->ipv6, item->ports});
+        activeHost->appendRow({item,
+                               item->ipv4,
+                               item->ipv6,
+                               item->ports});
 
         set_Host.insert(item->text(), item);
     }
@@ -130,7 +139,9 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     foreach(const QJsonValue &value, data["active_wildcard"].toArray()){
         s3s_item::Wildcard *item = new s3s_item::Wildcard;
         json_to_wildcard(value.toObject(), item);
-        activeWildcard->appendRow({item, item->ipv4, item->ipv6});
+        activeWildcard->appendRow({item,
+                                   item->ipv4,
+                                   item->ipv6});
     }
 
     /* active dns */
@@ -163,18 +174,21 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     foreach(const QJsonValue &value, data["active_URL"].toArray()){
         s3s_item::URL *item = new s3s_item::URL;
         json_to_url(value.toObject(), item);
-        activeURL->appendRow({item, item->status_code, item->banner, item->content_type});
+        activeURL->appendRow({item,
+                              item->status_code,
+                              item->banner,
+                              item->content_type});
     }
 
     /* passive subdomainIP */
     foreach(const QJsonValue &value, data["passive_subdomainIP"].toArray())
         passiveSubdomainIp->appendRow({new QStandardItem(value.toArray()[0].toString()),
-                                                 new QStandardItem(value.toArray()[1].toString())});
+                                       new QStandardItem(value.toArray()[1].toString())});
 
     /* passive ASN */
     foreach(const QJsonValue &value, data["passive_ASN"].toArray())
         passiveAsn->appendRow({new QStandardItem(value.toArray()[0].toString()),
-                                                 new QStandardItem(value.toArray()[1].toString())});
+                               new QStandardItem(value.toArray()[1].toString())});
 
     /* passive Subdomain */
     foreach(const QJsonValue &value, data["passive_subdomain"].toArray())
@@ -269,7 +283,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         raw->appendRow(item);
     }
 
-    qDebug() << "Project " << projectInfo.name << " Opened.";
+    qDebug() << "Project " << info.name << " Opened.";
 }
 
 QByteArray ProjectModel::getJson(){
@@ -307,184 +321,154 @@ QByteArray ProjectModel::getJson(){
     QJsonArray raw_array;
 
     /* passive SSL */
-    for(int i = 0; i != passiveSSL->rowCount(); ++i)
-        passive_SSL_array.append (passiveSSL->index(i, 0).data().toString());
+    for(int i = 0; i < passiveSSL->rowCount(); ++i)
+        passive_SSL_array.append(passiveSSL->index(i, 0).data().toString());
 
     /* passive URL */
-    for(int i = 0; i != passiveUrl->rowCount(); ++i)
-        passive_URL_array.append (passiveUrl->index(i, 0).data().toString());
+    for(int i = 0; i < passiveUrl->rowCount(); ++i)
+        passive_URL_array.append(passiveUrl->index(i, 0).data().toString());
 
     /* passive Email */
-    for(int i = 0; i != passiveEmail->rowCount(); ++i)
-        passive_Email_array.append (passiveEmail->index(i, 0).data().toString());
+    for(int i = 0; i < passiveEmail->rowCount(); ++i)
+        passive_Email_array.append(passiveEmail->index(i, 0).data().toString());
 
     /* passive CNAME */
-    for(int i = 0; i != passiveCNAME->rowCount(); ++i)
-        passive_CNAME_array.append (passiveCNAME->index(i, 0).data().toString());
+    for(int i = 0; i < passiveCNAME->rowCount(); ++i)
+        passive_CNAME_array.append(passiveCNAME->index(i, 0).data().toString());
 
     /* passive TXT */
-    for(int i = 0; i != passiveTXT->rowCount(); ++i)
-        passive_TXT_array.append (passiveTXT->index(i, 0).data().toString());
+    for(int i = 0; i < passiveTXT->rowCount(); ++i)
+        passive_TXT_array.append(passiveTXT->index(i, 0).data().toString());
 
     /* passive NS */
-    for(int i = 0; i != passiveNS->rowCount(); ++i)
-        passive_NS_array.append (passiveNS->index(i, 0).data().toString());
+    for(int i = 0; i < passiveNS->rowCount(); ++i)
+        passive_NS_array.append(passiveNS->index(i, 0).data().toString());
 
     /* passive MX */
-    for(int i = 0; i != passiveMX->rowCount(); ++i)
-        passive_MX_array.append (passiveMX->index(i, 0).data().toString());
+    for(int i = 0; i < passiveMX->rowCount(); ++i)
+        passive_MX_array.append(passiveMX->index(i, 0).data().toString());
 
     /* passive CIDR */
-    for(int i = 0; i != passiveCidr->rowCount(); ++i)
-        passive_CIDR_array.append (passiveCidr->index(i, 0).data().toString());
+    for(int i = 0; i < passiveCidr->rowCount(); ++i)
+        passive_CIDR_array.append(passiveCidr->index(i, 0).data().toString());
 
     /* passive A */
-    for(int i = 0; i != passiveA->rowCount(); ++i)
-        passive_A_array.append (passiveA->index(i, 0).data().toString());
+    for(int i = 0; i < passiveA->rowCount(); ++i)
+        passive_A_array.append(passiveA->index(i, 0).data().toString());
 
     /* passive AAAA */
-    for(int i = 0; i != passiveAAAA->rowCount(); ++i)
-        passive_AAAA_array.append (passiveAAAA->index(i, 0).data().toString());
+    for(int i = 0; i < passiveAAAA->rowCount(); ++i)
+        passive_AAAA_array.append(passiveAAAA->index(i, 0).data().toString());
 
     /* passive Subdomain */
-    for(int i = 0; i != passiveSubdomain->rowCount(); ++i)
-        passive_Subdomain_array.append (passiveSubdomain->index(i, 0).data().toString());
+    for(int i = 0; i < passiveSubdomain->rowCount(); ++i)
+        passive_Subdomain_array.append(passiveSubdomain->index(i, 0).data().toString());
 
     /* passive ASN */
-    for(int i = 0; i != passiveAsn->rowCount(); ++i){
+    for(int i = 0; i < passiveAsn->rowCount(); ++i){
         QJsonArray asn;
-        asn.append (passiveAsn->index(i, 0).data().toString());
-        asn.append (passiveAsn->index(i, 1).data().toString());
+        asn.append(passiveAsn->index(i, 0).data().toString());
+        asn.append(passiveAsn->index(i, 1).data().toString());
         passive_ASN_array.append(asn);
     }
 
     /* passive subdomainIP */
-    for(int i = 0; i != passiveSubdomainIp->rowCount(); ++i){
+    for(int i = 0; i < passiveSubdomainIp->rowCount(); ++i){
         QJsonArray subdomainIp;
-        subdomainIp.append (passiveSubdomainIp->index(i, 0).data().toString());
-        subdomainIp.append (passiveSubdomainIp->index(i, 1).data().toString());
+        subdomainIp.append(passiveSubdomainIp->index(i, 0).data().toString());
+        subdomainIp.append(passiveSubdomainIp->index(i, 1).data().toString());
         passive_SubdomainIp_array.append(subdomainIp);
     }
 
     /* active SSL sha1 */
-    for(int i = 0; i != activeSSL_sha1->rowCount(); ++i)
-        active_SSL_sha1_array.append (activeSSL_sha1->index(i, 0).data().toString());
+    for(int i = 0; i < activeSSL_sha1->rowCount(); ++i)
+        active_SSL_sha1_array.append(activeSSL_sha1->index(i, 0).data().toString());
 
     /* active SSL sha256 */
-    for(int i = 0; i != activeSSL_sha256->rowCount(); ++i)
-        active_SSL_sha256_array.append (activeSSL_sha256->index(i, 0).data().toString());
+    for(int i = 0; i < activeSSL_sha256->rowCount(); ++i)
+        active_SSL_sha256_array.append(activeSSL_sha256->index(i, 0).data().toString());
 
     /* active SSL alternative names */
-    for(int i = 0; i != activeSSL_altNames->rowCount(); ++i)
-        active_SSL_altNames_array.append (activeSSL_altNames->index(i, 0).data().toString());
+    for(int i = 0; i < activeSSL_altNames->rowCount(); ++i)
+        active_SSL_altNames_array.append(activeSSL_altNames->index(i, 0).data().toString());
 
     /* active Host */
-    for(int i = 0; i != activeHost->rowCount(); ++i){
-        QModelIndex index = activeHost->index(i, 1);
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(activeHost->item(index.row(), 0));
-
+    for(int i = 0; i < activeHost->rowCount(); ++i){
+        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(activeHost->itemFromIndex(activeHost->index(i, 0)));
         active_Host_array.append(host_to_json(item));
     }
 
     /* active Wildcard */
-    for(int i = 0; i != activeWildcard->rowCount(); ++i){
-        QModelIndex index = activeWildcard->index(i, 1);
-        s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(activeHost->item(index.row(), 0));
-
+    for(int i = 0; i < activeWildcard->rowCount(); ++i){
+        s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(activeWildcard->itemFromIndex(activeWildcard->index(i, 0)));
         active_wildcard_array.append(wildcard_to_json(item));
     }
 
     /* active DNS */
     for(int i = 0; i < activeDNS->rowCount(); ++i){
-        QModelIndex index = activeDNS->index(i, 1);
-        s3s_item::DNS *item = static_cast<s3s_item::DNS*>(activeDNS->itemFromIndex(index));
-
+        s3s_item::DNS *item = static_cast<s3s_item::DNS*>(activeDNS->itemFromIndex(activeDNS->index(i, 0)));
         active_DNS_array.append(dns_to_json(item));
     }
 
     /* active SSL */
     for(int i = 0; i < activeSSL->rowCount(); ++i){
-        QModelIndex index = activeSSL->index(i, 1);
-        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(activeSSL->itemFromIndex(index));
-
+        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(activeSSL->itemFromIndex(activeSSL->index(i, 0)));
         active_SSL_array.append(ssl_to_json(item));
     }
 
     /* active URL */
     for(int i = 0; i < activeURL->rowCount(); ++i){
-        QModelIndex index = activeURL->index(i, 1);
-        s3s_item::URL *item = static_cast<s3s_item::URL*>(activeURL->item(index.row(), 0));
-
+        s3s_item::URL *item = static_cast<s3s_item::URL*>(activeURL->itemFromIndex(activeURL->index(i, 0)));
         active_URL_array.append(url_to_json(item));
     }
 
     /* enum ASN */
     for(int i = 0; i < enumASN->rowCount(); ++i){
-        QModelIndex index = enumASN->index(i, 1);
-        s3s_item::ASN *item = static_cast<s3s_item::ASN*>(enumASN->itemFromIndex(index));
-
+        s3s_item::ASN *item = static_cast<s3s_item::ASN*>(enumASN->itemFromIndex(enumASN->index(i, 0)));
         enum_ASN_array.append(asn_to_json(item));
     }
 
     /* enum CIDR */
     for(int i = 0; i < enumCIDR->rowCount(); ++i){
-        QModelIndex index = enumCIDR->index(i, 1);
-        s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(enumCIDR->itemFromIndex(index));
-
+        s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(enumCIDR->itemFromIndex(enumCIDR->index(i, 0)));
         enum_CIDR_array.append(cidr_to_json(item));
     }
 
     /* enum IP */
     for(int i = 0; i < enumIp->rowCount(); ++i){
-        QModelIndex index = enumIp->index(i, 1);
-        s3s_item::IP *item = static_cast<s3s_item::IP*>(enumIp->itemFromIndex(index));
-
+        s3s_item::IP *item = static_cast<s3s_item::IP*>(enumIp->itemFromIndex(enumIp->index(i, 0)));
         enum_IP_array.append(ip_to_json(item));
     }
 
     /* enum MX */
     for(int i = 0; i < enumMX->rowCount(); ++i){
-        QModelIndex index = enumMX->index(i, 1);
-        s3s_item::MX *item = static_cast<s3s_item::MX*>(enumMX->itemFromIndex(index));
-
+        s3s_item::MX *item = static_cast<s3s_item::MX*>(enumMX->itemFromIndex(enumMX->index(i, 0)));
         enum_MX_array.append(mx_to_json(item));
     }
 
     /* enum NS */
     for(int i = 0; i < enumNS->rowCount(); ++i){
-        QModelIndex index = enumNS->index(i, 1);
-        s3s_item::NS *item = static_cast<s3s_item::NS*>(enumNS->itemFromIndex(index));
-
+        s3s_item::NS *item = static_cast<s3s_item::NS*>(enumNS->itemFromIndex(enumNS->index(i, 0)));
         enum_NS_array.append(ns_to_json(item));
     }
 
     /* enum SSL */
     for(int i = 0; i < enumSSL->rowCount(); ++i){
-        QModelIndex index = enumSSL->index(i, 1);
-        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(enumSSL->itemFromIndex(index));
-
+        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(enumSSL->itemFromIndex(enumSSL->index(i, 0)));
         enum_SSL_array.append(ssl_to_json(item));
     }
 
     /* enum Email */
     for(int i = 0; i < enumEmail->rowCount(); ++i){
-        QModelIndex index = enumEmail->index(i, 1);
-        s3s_item::Email *item = static_cast<s3s_item::Email*>(enumEmail->itemFromIndex(index));
-
+        s3s_item::Email *item = static_cast<s3s_item::Email*>(enumEmail->itemFromIndex(enumEmail->index(i, 0)));
         enum_Email_array.append(email_to_json(item));
     }
 
     /* raw */
     for(int i = 0; i < raw->rowCount(); ++i){
-        QModelIndex index = raw->index(i, 1);
-        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(raw->itemFromIndex(index));
-
+        s3s_item::RAW *item = static_cast<s3s_item::RAW*>(raw->itemFromIndex(raw->index(i, 0)));
         raw_array.append(raw_to_json(item));
     }
-
-    QJsonObject general;
-    general.insert("path", "C:/Users/inner peace/Desktop/sub3suite/MSVC2017_64-Release/projects");
-    general.insert("name", "one");
 
     QJsonObject data;
     data.insert("active_Host", active_Host_array);
@@ -518,9 +502,14 @@ QByteArray ProjectModel::getJson(){
     data.insert("custom", custom_array);
     data.insert("enum_Raw", raw_array);
 
+    /* project info */
+    QJsonObject info_json;
+    info_json.insert("last_modified", QDate::currentDate().toString());
+    info_json.insert("date_created", info.date_created);
+
     QJsonObject mainObj;
-    mainObj.insert("general", general);
     mainObj.insert("data", data);
+    mainObj.insert("info", info_json);
 
     QJsonDocument document;
     document.setObject(mainObj);

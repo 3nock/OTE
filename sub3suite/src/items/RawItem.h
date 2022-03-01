@@ -5,6 +5,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QDate>
 
 #define JSON_ARRAY "arr"
 #define JSON_OBJECT "obj"
@@ -35,6 +36,10 @@ public:
     QString target;
     QByteArray json;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::RAW &raw){
         this->setText(QString("%1(%2)").arg(raw.module).arg(raw.target));
         json = raw.results;
@@ -46,6 +51,9 @@ public:
             this->setArray(document.array(), this);
         if(document.isObject())
             this->setObject(document.object(), this);
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 
     void setValues(const QByteArray &json){
@@ -54,6 +62,9 @@ public:
             this->setArray(document.array(), this);
         if(document.isObject())
             this->setObject(document.object(), this);
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 
     void setObject(const QJsonObject &object, QStandardItem *item){

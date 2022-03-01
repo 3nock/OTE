@@ -9,6 +9,7 @@
 #define IPMODEL_H
 
 #include <QStandardItem>
+#include <QDate>
 #include <QSet>
 
 
@@ -234,6 +235,10 @@ public:
     QStandardItem *abuseInfo_network;
     QStandardItem *abuseInfo_phone;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::IP &ip){
         this->setText(ip.ip);
 
@@ -286,6 +291,9 @@ public:
                                 new QStandardItem(domain)});
             count++;
         }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 

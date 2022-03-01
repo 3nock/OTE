@@ -20,6 +20,10 @@ s3s_struct::MX mx_to_struct(s3s_item::MX *item){
 }
 
 QJsonObject mx_to_json(s3s_item::MX *item){
+    QJsonObject item_info;
+    item_info.insert("last_modified", item->last_modified);
+    item_info.insert("comment", item->comment);
+
     QJsonObject mx;
 
     /* info */
@@ -31,6 +35,8 @@ QJsonObject mx_to_json(s3s_item::MX *item){
     for(int i = 0; i < item->domains->rowCount(); i++)
         domains.append(item->domains->child(i, 1)->text());
     mx.insert("domains", domains);
+
+    mx.insert("item_info", item_info);
 
     return mx;
 }
@@ -49,4 +55,8 @@ void json_to_mx(const QJsonObject &mx, s3s_item::MX *item){
                                   new QStandardItem(value.toString())});
         count++;
     }
+
+    QJsonObject item_info = mx.value("item_info").toObject();
+    item->comment = item_info["comment"].toString();
+    item->last_modified = item_info["last_modified"].toString();
 }

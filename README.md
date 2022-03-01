@@ -19,7 +19,7 @@ If you're just getting started with subdomain enumeration, osint information gat
 
 **Are you a developer?**
 
-Check out the [open issues](https://github.com/3nock/sub3suite/issues), [project boards](https://github.com/3nock/sub3suite/projects), and many scattered `TODO` messages throughout the source code.
+Check out the [open issues](https://github.com/3nock/sub3suite/issues) and many scattered `TODO` messages throughout the source code.
 
 **Not a developer?** 
 

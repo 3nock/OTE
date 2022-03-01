@@ -60,6 +60,10 @@ s3s_struct::IP ip_to_struct(s3s_item::IP *item){
 }
 
 QJsonObject ip_to_json(s3s_item::IP *item){
+    QJsonObject item_info;
+    item_info.insert("last_modified", item->last_modified);
+    item_info.insert("comment", item->comment);
+
     QJsonObject ip;
 
     /* info */
@@ -109,6 +113,8 @@ QJsonObject ip_to_json(s3s_item::IP *item){
     for(int i = 0; i < item->domains->rowCount(); i++)
         domains.append(item->domains->child(i, 1)->text());
     ip.insert("domains", domains);
+
+    ip.insert("item_info", item_info);
 
     return ip;
 }
@@ -163,4 +169,8 @@ void json_to_ip(const QJsonObject &ip, s3s_item::IP *item){
                                   new QStandardItem(value.toString())});
         count++;
     }
+
+    QJsonObject item_info = ip.value("item_info").toObject();
+    item->comment = item_info["comment"].toString();
+    item->last_modified = item_info["last_modified"].toString();
 }

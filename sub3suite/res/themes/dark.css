@@ -338,6 +338,15 @@ QPlainTextEdit {
     border-width: 1px;
 }
 
+QPlainTextEdit[text_edit="true"] {
+    background-color: rgb(25, 25, 25);
+    alternate-background-color: rgb(30, 30, 30);
+    color: rgb(180, 180, 140);
+    border-style: solid;
+    border-color: rgb(20,20,20);
+    border-width: 1px;
+}
+
 QTreeView::item{
     border-style: solid;
     border-color: rgb(15,15,15);

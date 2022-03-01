@@ -16,12 +16,12 @@ ProjectConfigDialog::ProjectConfigDialog(ProjectModel *projectModel, QWidget *pa
     this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
     /* setting the data */
-    ui->lineEditName->setText(m_projectModel->projectInfo.name);
+    ui->lineEditName->setText(m_projectModel->info.name);
 
-    if(m_projectModel->projectInfo.path.isEmpty())
+    if(m_projectModel->info.path.isEmpty())
         ui->lineEditFile->setText(CONFIG.value("projects_path").toString());
     else{
-        QString path = m_projectModel->projectInfo.path.remove(m_projectModel->projectInfo.name+".s3s");
+        QString path = m_projectModel->info.path.remove(m_projectModel->info.name+".s3s");
         ui->lineEditFile->setText(path);
     }
 }
@@ -48,12 +48,12 @@ void ProjectConfigDialog::on_buttonOk_clicked(){
         return;
     }
 
-    m_projectModel->projectInfo.name = name;
-    m_projectModel->projectInfo.path = path+"/"+name+".s3s";
-    m_projectModel->projectInfo.isConfigured = true;
+    m_projectModel->info.name = name;
+    m_projectModel->info.path = path+"/"+name+".s3s";
+    m_projectModel->info.isConfigured = true;
 
     /* checks */
-    m_projectModel->explorer->project->setText(m_projectModel->projectInfo.name);
+    m_projectModel->explorer->project->setText(m_projectModel->info.name);
     accept();
 }
 

@@ -5,6 +5,7 @@
 #include <QStandardItem>
 #include <QJsonObject>
 #include <QString>
+#include <QDate>
 
 
 namespace s3s_struct {
@@ -35,11 +36,18 @@ public:
     QStandardItem *content_type;
     QStandardItem *status_code;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::URL &url){
         this->setText(url.url);
         banner->setText(url.banner);
         content_type->setText(url.content_type);
         status_code->setText(QString::number(url.status_code));
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 }

@@ -10,6 +10,7 @@
 
 #include <QStandardItem>
 #include <QJsonObject>
+#include <QDate>
 #include <QSet>
 
 
@@ -128,6 +129,10 @@ public:
     QStandardItem *rir_country;
     QStandardItem *rir_dateAllocated;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::ASN &asn){
         this->setText(asn.asn);
 
@@ -175,6 +180,9 @@ public:
                                  new QStandardItem(prefix)});
             count++;
         }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 
     void setPeers(const QSet<QString> &peersList){
@@ -184,6 +192,9 @@ public:
                               new QStandardItem(peer)});
             count++;
         }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 
     void setPrefixes(const QSet<QString> &prefixList){
@@ -193,6 +204,9 @@ public:
                                  new QStandardItem(prefix)});
             count++;
         }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 

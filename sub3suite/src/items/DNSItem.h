@@ -3,6 +3,7 @@
 
 #include <QStandardItem>
 #include <QJsonObject>
+#include <QDate>
 #include <QSet>
 
 /*
@@ -75,6 +76,10 @@ public:
     bool _MX = false;
     bool _TXT = false;
     bool _SRV = false;
+
+    /* summary */
+    QString last_modified;
+    QString comment;
 
     void setValues(const s3s_struct::DNS &dns){
         /* append to DNS item */
@@ -150,6 +155,9 @@ public:
             SRV->appendRow({new QStandardItem(srv.at(0)),
                            new QStandardItem(srv.at(1)),
                            new QStandardItem(srv.at(2))});
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 }

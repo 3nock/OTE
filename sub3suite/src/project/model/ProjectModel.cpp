@@ -92,6 +92,7 @@ ProjectModel::~ProjectModel(){
     delete enumMX;
     delete enumSSL;
     delete enumEmail;
+    delete explorer;
 }
 
 void ProjectModel::setHeaderLabels(){
@@ -179,4 +180,43 @@ void ProjectModel::clearModels(){
     raw->clear();
 
     this->setHeaderLabels();
+}
+
+int ProjectModel::getItemsCount(){
+    return  activeHost->rowCount()+
+            activeWildcard->rowCount()+
+            activeDNS->rowCount()+
+            activeA->rowCount()+
+            activeAAAA->rowCount()+
+            activeNS->rowCount()+
+            activeMX->rowCount()+
+            activeTXT->rowCount()+
+            activeCNAME->rowCount()+
+            activeSRV->rowCount()+
+            activeSSL->rowCount()+
+            activeSSL_sha1->rowCount()+
+            activeSSL_sha256->rowCount()+
+            activeSSL_altNames->rowCount()+
+            activeURL->rowCount()+
+            passiveSubdomainIp->rowCount()+
+            passiveSubdomain->rowCount()+
+            passiveA->rowCount()+
+            passiveAAAA->rowCount()+
+            passiveCidr->rowCount()+
+            passiveNS->rowCount()+
+            passiveMX->rowCount()+
+            passiveTXT->rowCount()+
+            passiveCNAME->rowCount()+
+            passiveEmail->rowCount()+
+            passiveUrl->rowCount()+
+            passiveAsn->rowCount()+
+            passiveSSL->rowCount()+
+            enumIp->rowCount()+
+            enumASN->rowCount()+
+            enumCIDR->rowCount()+
+            enumNS->rowCount()+
+            enumMX->rowCount()+
+            enumSSL->rowCount()+
+            enumEmail->rowCount()+
+            raw->rowCount();
 }

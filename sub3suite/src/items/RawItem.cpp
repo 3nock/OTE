@@ -10,11 +10,16 @@ s3s_struct::RAW raw_to_struct(s3s_item::RAW *item){
 }
 
 QJsonObject raw_to_json(s3s_item::RAW *item){
+    QJsonObject item_info;
+    item_info.insert("last_modified", item->last_modified);
+    item_info.insert("comment", item->comment);
+
     QJsonObject raw;
     raw.insert("raw", item->text());
     raw.insert("target", item->target);
     raw.insert("module", item->module);
     raw.insert("json", QString::fromUtf8(item->json));
+    raw.insert("item_info", item_info);
     return raw;
 }
 
@@ -24,6 +29,10 @@ void json_to_raw(const QJsonObject &raw, s3s_item::RAW *item){
     item->module = raw.value("module").toString();
     item->json = raw.value("json").toString().toUtf8();
     item->setValues(item->json);
+
+    QJsonObject item_info = raw.value("item_info").toObject();
+    item->comment = item_info["comment"].toString();
+    item->last_modified = item_info["last_modified"].toString();
 }
 
 QByteArray item_to_json(QStandardItem *item){

@@ -58,6 +58,10 @@ QJsonObject dns_to_json(s3s_item::DNS *item){
         SRV.append(srv);
     }
 
+    QJsonObject item_info;
+    item_info.insert("last_modified", item->last_modified);
+    item_info.insert("comment", item->comment);
+
     QJsonObject dns;
     dns.insert("dns", item->text());
     dns.insert("A", A);
@@ -67,6 +71,7 @@ QJsonObject dns_to_json(s3s_item::DNS *item){
     dns.insert("MX", MX);
     dns.insert("TXT", TXT);
     dns.insert("SRV", SRV);
+    dns.insert("item_info", item_info);
 
     return dns;
 }
@@ -121,4 +126,8 @@ void json_to_dns(const QJsonObject &dns, s3s_item::DNS *item){
                               new QStandardItem(srv.at(1).toString()),
                               new QStandardItem(srv.at(2).toString())});
     }
+
+    QJsonObject item_info = dns.value("item_info").toObject();
+    item->comment = item_info["comment"].toString();
+    item->last_modified = item_info["last_modified"].toString();
 }

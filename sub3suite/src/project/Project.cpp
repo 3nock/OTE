@@ -36,16 +36,17 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     ui->textBrowserAnalysis->setOpenExternalLinks(true);
 
     /* data models */
-    ui->treeViewProjectExplorer->setModel(model->explorer);
-    ui->treeViewProjectExplorer->expand(model->explorer->project->index());
+    ui->treeViewExplorer->setModel(model->explorer);
+    ui->treeViewExplorer->expand(model->explorer->project->index());
 
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setRecursiveFilteringEnabled(true);
     proxyModel->setFilterKeyColumn(0);
-    ui->treeViewSiteMap->setModel(proxyModel);
+    ui->treeViewTree->setModel(proxyModel);
 
     this->init_notesMenuBar();
     this->init_sitemapMenuBar();
+    this->initMenuBar_project();
 }
 Project::~Project(){
     delete m_sitemapMenuBar;
@@ -54,6 +55,12 @@ Project::~Project(){
     delete ui;
 }
 
+void Project::initProject(){
+    ui->label_project_name->setText(model->info.name);
+    ui->label_project_created->setText(model->info.date_created);
+    ui->label_project_modified->setText(model->info.last_modified);
+    ui->label_project_items->setNum(model->getItemsCount());
+}
 
 void Project::initUI(){
     /* setup ui */
@@ -61,8 +68,13 @@ void Project::initUI(){
 
     /* setting widgets special properties for diff stylesheets */
     ui->labelCount->setProperty("s3s_color", true);
-    ui->treeViewProjectExplorer->setProperty("no_item_border", true);
+    ui->treeViewExplorer->setProperty("no_item_border", true);
     ui->tabWidget->setProperty("upside", true);
+    ui->label_project_name->setProperty("s3s_color", true);
+    ui->label_project_created->setProperty("s3s_color", true);
+    ui->label_project_modified->setProperty("s3s_color", true);
+    ui->label_project_items->setProperty("s3s_color", true);
+    ui->plainTextEdit_item_comment->setProperty("text_edit", true);
 
     /* hiding un-used widgets */
     ui->comboBoxFilter->hide();
@@ -98,8 +110,8 @@ void Project::initActions(){
     connect(&a_save, &QAction::triggered, this, [=](){this->action_save();});
     connect(&a_send, &QAction::triggered, this, [=](){this->action_send();});
     connect(&a_clear, &QAction::triggered, this, [=](){this->action_clear();});
-    connect(&a_expand, &QAction::triggered, this, [=](){ui->treeViewSiteMap->expandAll();});
-    connect(&a_collapse, &QAction::triggered, this, [=](){ui->treeViewSiteMap->collapseAll();});
+    connect(&a_expand, &QAction::triggered, this, [=](){ui->treeViewTree->expandAll();});
+    connect(&a_collapse, &QAction::triggered, this, [=](){ui->treeViewTree->collapseAll();});
 }
 
 void Project::init_sitemapMenuBar(){
@@ -119,4 +131,11 @@ void Project::init_notesMenuBar(){
     m_notesMenuBar = new QMenuBar(this);
     m_notesMenuBar->addAction("Clear", this, [=](){ui->plainTextEdit->clear();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     ui->horizontalLayoutNotes->insertWidget(0, m_notesMenuBar);
+}
+
+void Project::initMenuBar_project(){
+    m_menuBar_project = new QMenuBar(this);
+    m_menuBar_project->addAction("Save", this, [=](){model->saveProject();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    m_menuBar_project->addAction("Clear", this, [=](){model->clearModels();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    ui->horizontalLayout_summary_project->insertWidget(0, m_menuBar_project);
 }

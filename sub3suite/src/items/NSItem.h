@@ -9,6 +9,7 @@
 #define NSMODEL_H
 
 #include <QStandardItem>
+#include <QDate>
 #include <QSet>
 
 
@@ -58,6 +59,10 @@ public:
     QStandardItem *info_ns;
     QStandardItem *info_ip;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::NS &ns){
         this->setText(ns.info_ns);
 
@@ -72,6 +77,9 @@ public:
                                 new QStandardItem(domain)});
             count++;
         }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 

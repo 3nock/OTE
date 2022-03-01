@@ -9,6 +9,7 @@
 #define CIDRMODEL_H
 
 #include <QStandardItem>
+#include <QDate>
 #include <QSet>
 
 
@@ -131,6 +132,10 @@ public:
     QStandardItem *rir_country;
     QStandardItem *rir_dateAllocated;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::CIDR &cidr){
         this->setText(cidr.cidr);
 
@@ -173,6 +178,9 @@ public:
                              new QStandardItem(asn)});
             count++;
         }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 

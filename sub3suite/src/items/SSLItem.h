@@ -10,6 +10,7 @@
 
 #include <QStandardItem>
 #include <QSslCertificate>
+#include <QDate>
 #include <QSslKey>
 
 
@@ -152,6 +153,10 @@ public:
     QByteArray raw;
     QByteArray raw_key;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const QString &target, const QSslCertificate &cert){
         this->setText(target);
 
@@ -218,6 +223,9 @@ public:
 
         raw = cert.toPem();
         raw_key = cert.publicKey().toPem();
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 }

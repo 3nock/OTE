@@ -25,13 +25,17 @@ s3s_struct::Email email_to_struct(s3s_item::Email *item){
 }
 
 QJsonObject email_to_json(s3s_item::Email *item){
-    QJsonObject email;
+    QJsonObject item_info;
+    item_info.insert("last_modified", item->last_modified);
+    item_info.insert("comment", item->comment);
 
+    QJsonObject email;
     email.insert("email", item->text());
     email.insert("domain", item->domain->text());
     email.insert("address", item->address->text());
     email.insert("free", item->free->text());
     email.insert("disposable", item->disposable->text());
+    email.insert("item_info", item_info);
 
     return email;
 }
@@ -42,4 +46,8 @@ void json_to_email(const QJsonObject &email, s3s_item::Email *item){
     item->address->setText(email.value("address").toString());
     item->free->setText(email.value("free").toString());
     item->disposable->setText(email.value("disposable").toString());
+
+    QJsonObject item_info = email.value("item_info").toObject();
+    item->comment = item_info["comment"].toString();
+    item->last_modified = item_info["last_modified"].toString();
 }

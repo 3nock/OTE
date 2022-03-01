@@ -2,6 +2,7 @@
 #define WILDCARDMODEL_H
 
 #include <QStandardItem>
+#include <QDate>
 
 
 namespace s3s_struct {
@@ -28,10 +29,17 @@ public:
     QStandardItem *ipv4;
     QStandardItem *ipv6;
 
+    /* summary */
+    QString last_modified;
+    QString comment;
+
     void setValues(const s3s_struct::Wildcard &host){
         this->setText(host.wildcard);
         ipv4->setText(host.ipv4);
         ipv6->setText(host.ipv6);
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
     }
 };
 }

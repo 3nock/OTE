@@ -3,7 +3,7 @@
 
 
 void Project::action_clear(){
-    switch (ui->treeViewSiteMap->property(SITEMAP_TYPE).toInt()) {
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::activeHost:
         model->activeHost->clear();
         model->set_Host.clear();
