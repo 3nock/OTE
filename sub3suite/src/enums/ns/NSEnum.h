@@ -12,8 +12,6 @@
 #include "src/items/NSItem.h"
 #include "src/modules/passive/OsintModulesHeaders.h"
 
-#include <QAction>
-
 
 namespace Ui {
 class NSEnum;

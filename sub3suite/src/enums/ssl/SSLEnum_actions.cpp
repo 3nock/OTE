@@ -1,21 +1,18 @@
 #include "SSLEnum.h"
 #include "ui_SSLEnum.h"
 
+#include <QDesktopServices>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QClipboard>
 
 
-/* TODO:
- *     validate if selected index is ip...
- */
-
-void SSLEnum::m_clearResults(){
+void SSLEnum::clearResults(){
     /* clear the results... */
     m_model->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({"    SSL", "    Value"});
+    m_model->setHorizontalHeaderLabels({tr(" SSL"), tr(" Value")});
     m_resultsSet.clear();
 
     /* clear the progressbar... */
@@ -24,141 +21,163 @@ void SSLEnum::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void SSLEnum::m_removeResults(QItemSelectionModel *selectionModel){
-    /* loop to delete all selected items */
-    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
-    {
-        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+void SSLEnum::openInBrowser(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
+}
 
-        /* remove entire ssl */
-        if(index.parent() == m_model->invisibleRootItem()->index()){
-            m_resultsSet.remove(index.data().toString());
-            m_model->removeRow(index.row());
-        }
-        /* remove a certain row in the ssl item */
-        else{
-            m_model->removeRow(index.row());
-        }
+void SSLEnum::removeResults(){
+    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
+        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+        m_resultsSet.remove(index.data().toString());
+        m_model->removeRow(index.row());
     }
+
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void SSLEnum::m_saveResults(){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void SSLEnum::saveResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "SSL-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "SSL-Enum: Failed to open " << filename << " For saving Results";
         return;
-
-    QJsonArray ssl_array;
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
-    {
-        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::SSL *ssl = static_cast<s3s_item::SSL*>(m_model->item(index.row(), index.column()));
-
-        ssl_array.append(ssl_to_json(ssl));
     }
 
     QJsonDocument document;
-    document.setArray(ssl_array);
-
-    qDebug() << "Saving SSL results to File: " << file.fileName();
+    QJsonArray array;
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
+        array.append(ssl_to_json(item));
+    }
+    document.setArray(array);
     file.write(document.toJson());
+
     file.close();
 }
 
-void SSLEnum::m_saveResults(QItemSelectionModel *selection){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void SSLEnum::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "SSL-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "SSL-Enum: Failed to open " << filename << " For saving Results";
         return;
-
-    QJsonArray ssl_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::SSL *ssl = static_cast<s3s_item::SSL*>(m_model->item(model_index.row(), model_index.column()));
-
-        ssl_array.append(ssl_to_json(ssl));
     }
 
     QJsonDocument document;
-    document.setArray(ssl_array);
+    QJsonArray array;
 
-    qDebug() << "Saving SSL results to File: " << file.fileName();
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.parent() == m_model->invisibleRootItem()->index()){
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
+            array.append(ssl_to_json(item));
+        }
+        else
+            file.write(index.data().toString().append(NEWLINE).toUtf8());
+    }
+    document.setArray(array);
     file.write(document.toJson());
+
     file.close();
 }
 
-void SSLEnum::m_copyResults(){
+
+void SSLEnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
-
-    QJsonArray ssl_array;
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
-    {
-        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::SSL *ssl = static_cast<s3s_item::SSL*>(m_model->item(index.row(), index.column()));
-
-        ssl_array.append(ssl_to_json(ssl));
-    }
+    QString clipboardData;
 
     QJsonDocument document;
-    document.setArray(ssl_array);
-
-    qDebug() << "Copying SSL results to clipboard...";
-    clipboard->setText(document.toJson());
-}
-
-void SSLEnum::m_copyResults(QItemSelectionModel *selection){
-    QClipboard *clipboard = QGuiApplication::clipboard();
-
-    QJsonArray ssl_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::SSL *ssl = static_cast<s3s_item::SSL*>(m_model->item(model_index.row(), model_index.column()));
-
-        ssl_array.append(ssl_to_json(ssl));
-    }
-
-    QJsonDocument document;
-    document.setArray(ssl_array);
-
-    qDebug() << "Copying SSL results to clipboard...";
-    clipboard->setText(document.toJson());
-}
-
-///
-/// send all...
-///
-
-void SSLEnum::m_sendToProject(){
+    QJsonArray array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
-        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->item(index.row(), index.column()));
-        /*project->addEnumSSL(ssl_to_struct(item));*/
+        QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
+        array.append(ssl_to_json(item));
     }
+    if(!array.isEmpty()){
+        document.setArray(array);
+        clipboardData.append(document.toJson());
+    }
+
+    clipboard->setText(clipboardData.trimmed());
+}
+
+void SSLEnum::copySelectedResults(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString clipboardData;
+
+    QJsonDocument document;
+    QJsonArray array;
+
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.parent() == m_model->invisibleRootItem()->index()){
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
+            array.append(ssl_to_json(item));
+        }
+        else
+            clipboardData.append(index.data().toString().append(NEWLINE).toUtf8());
+    }
+    if(!array.isEmpty()){
+        document.setArray(array);
+        clipboardData.append(document.toJson());
+    }
+
+    clipboard->setText(clipboardData.trimmed());
 }
 
 ///
-/// send selected...
+/// sending results...
 ///
 
-void SSLEnum::m_sendToProject(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::SSL *ssl = static_cast<s3s_item::SSL*>(m_model->item(model_index.row(), model_index.column()));
-        /*project->addEnumSSL(ssl_to_struct(ssl));*/
+void SSLEnum::sendToProject(){
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    {
+        QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
+        project->addActiveSSL(item->raw);
     }
 }
+
+void SSLEnum::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.parent() == m_model->invisibleRootItem()->index()){
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
+            project->addActiveSSL(item->raw);
+        }
+    }
+}
+
+void SSLEnum::sendToEngine(const ENGINE &engine){
+
+}
+
+void SSLEnum::sendSelectedToEngine(const ENGINE &engine){
+
+}
+
+///
+/// receiving targets...
+///
 
 void SSLEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::CERT_ID)

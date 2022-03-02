@@ -31,7 +31,7 @@
      <item>
       <widget class="QLabel" name="labelModule">
        <property name="text">
-        <string>Module:</string>
+        <string>MODULE:</string>
        </property>
       </widget>
      </item>
@@ -227,7 +227,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QTreeView" name="treeResults">
+         <widget class="QTreeView" name="treeViewResults">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
           </property>

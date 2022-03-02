@@ -17,6 +17,8 @@ void SSLEnum::onScanThreadEnded(){
         else
             this->log("------------------ End --------------\n");
 
+        qInfo() << "[SSL-Enum] Scan Ended";
+
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)
             ui->progressBar->setValue(ui->progressBar->maximum());
@@ -33,6 +35,7 @@ void SSLEnum::onScanThreadEnded(){
 
 void SSLEnum::startScan(){
     ScanArgs scanArgs;
+    scanArgs.config = m_scanConfig;
 
     /* resetting */
     ui->progressBar->show();
