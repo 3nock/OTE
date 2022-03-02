@@ -11,12 +11,16 @@
 
 void IpEnum::onResult(s3s_struct::IP results){
     if(m_resultsSet.contains(results.ip))
-        return;
-
-    s3s_item::IP *item = new s3s_item::IP;
-    item->setValues(results);
-    m_model->appendRow(item);
-    m_resultsSet.insert(results.ip, item);
+    {
+        s3s_item::IP *item = m_resultsSet.value(results.ip);
+        item->setValues(results);
+    }else {
+        s3s_item::IP *item = new s3s_item::IP;
+        item->setValues(results);
+        m_model->appendRow(item);
+        m_resultsSet.insert(results.ip, item);
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
+    }
 
     if(m_scanConfig->autosaveToProject)
         project->addEnumIP(results);

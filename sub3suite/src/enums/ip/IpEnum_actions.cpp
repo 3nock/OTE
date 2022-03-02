@@ -7,15 +7,11 @@
 #include <QClipboard>
 
 
-/* TODO:
- *     validate if selected index is ip...
- */
-
-void IpEnum::m_clearResults(){
+void IpEnum::clearResults(){
     /* clear the results... */
     m_model->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({"    IP", "    Value"});
+    m_model->setHorizontalHeaderLabels({tr(" IP"), tr(" Value")});
     m_resultsSet.clear();
 
     /* clear the progressbar... */
@@ -24,142 +20,165 @@ void IpEnum::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void IpEnum::m_removeResults(QItemSelectionModel *selectionModel){
+void IpEnum::removeResults(){
     /* loop to delete all selected items */
-    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
-        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+        QModelIndex model_index = proxyModel->mapToSource(index);
 
         /* remove entire ip */
-        if(index.parent() == m_model->invisibleRootItem()->index()){
-            m_resultsSet.remove(index.data().toString());
-            m_model->removeRow(index.row());
+        if(model_index.parent() == m_model->invisibleRootItem()->index()){
+            m_resultsSet.remove(model_index.data().toString());
+            m_model->removeRow(model_index.row());
         }
         /* remove a certain row in the ip item */
         else{
-            m_model->removeRow(index.row());
+            m_model->removeRow(model_index.row());
         }
     }
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void IpEnum::m_saveResults(){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void IpEnum::saveResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "IP-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "IP-Enum: Failed to open " << filename << " For saving Results";
         return;
+    }
 
     QJsonArray ip_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->itemFromIndex(index));
         ip_array.append(ip_to_json(ip));
     }
 
     QJsonDocument document;
     document.setArray(ip_array);
-
-    qDebug() << "Saving IP results to File: " << file.fileName();
     file.write(document.toJson());
     file.close();
 }
 
-void IpEnum::m_saveResults(QItemSelectionModel *selection){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void IpEnum::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "IP-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "IP-Enum: Failed to open " << filename << " For saving Results";
         return;
-
-    QJsonArray ip_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->item(model_index.row(), model_index.column()));
-
-        ip_array.append(ip_to_json(ip));
     }
 
-    QJsonDocument document;
-    document.setArray(ip_array);
+    QJsonArray ip_array;
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column())
+            file.write(index.data().toString().append(NEWLINE).toUtf8());
+        else {
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->itemFromIndex(model_index));
+                ip_array.append(ip_to_json(ip));
+            }
+        }
 
-    qDebug() << "Saving IP results to File: " << file.fileName();
-    file.write(document.toJson());
+    }
+
+    if(!ip_array.isEmpty()){
+        QJsonDocument document;
+        document.setArray(ip_array);
+        file.write(document.toJson());
+    }
     file.close();
 }
 
-void IpEnum::m_copyResults(){
+void IpEnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     QJsonArray ip_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->itemFromIndex(index));
         ip_array.append(ip_to_json(ip));
     }
 
+    qDebug() << "Copying IP results to clipboard...";
+
     QJsonDocument document;
     document.setArray(ip_array);
-
-    qDebug() << "Copying IP results to clipboard...";
     clipboard->setText(document.toJson());
 }
 
-void IpEnum::m_copyResults(QItemSelectionModel *selection){
+void IpEnum::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
-
+    QString clipboardData;
     QJsonArray ip_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->item(model_index.row(), model_index.column()));
 
-        ip_array.append(ip_to_json(ip));
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column())
+            clipboardData.append(index.data().toString().append(NEWLINE));
+        else {
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->itemFromIndex(model_index));
+                ip_array.append(ip_to_json(ip));
+            }
+        }
+
     }
 
-    QJsonDocument document;
-    document.setArray(ip_array);
+    qDebug() << "[IP-Enum] Copying IP results to clipboard...";
 
-    qDebug() << "Copying IP results to clipboard...";
-    clipboard->setText(document.toJson());
+    if(ip_array.isEmpty())
+        clipboard->setText(clipboardData.trimmed());
+    else {
+        QJsonDocument document;
+        document.setArray(ip_array);
+        clipboard->setText(document.toJson());
+    }
 }
 
 ///
-/// send all...
+/// sending results
 ///
 
-void IpEnum::m_sendToProject(){
+void IpEnum::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::IP *item = static_cast<s3s_item::IP*>(m_model->item(index.row(), index.column()));
+        s3s_item::IP *item = static_cast<s3s_item::IP*>(m_model->itemFromIndex(index));
         project->addEnumIP(ip_to_struct(item));
     }
 }
 
-///
-/// send selected...
-///
-
-void IpEnum::m_sendToProject(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
+void IpEnum::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
         QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->item(model_index.row(), model_index.column()));
-
-        project->addEnumIP(ip_to_struct(ip));
+        if(model_index.parent() == m_model->invisibleRootItem()->index()){
+            s3s_item::IP *ip = static_cast<s3s_item::IP*>(m_model->itemFromIndex(model_index));
+            project->addEnumIP(ip_to_struct(ip));
+        }
     }
 }
+
+///
+/// receiving targets
+///
 
 void IpEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::IP)

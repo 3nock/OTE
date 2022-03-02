@@ -31,7 +31,7 @@
      <item>
       <widget class="QLabel" name="labelOut">
        <property name="text">
-        <string>Out:</string>
+        <string>OUT:</string>
        </property>
       </widget>
      </item>
@@ -48,17 +48,12 @@
          <string>IP Info</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Reverse IP</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="labelModule">
        <property name="text">
-        <string>Module:</string>
+        <string>MODULE:</string>
        </property>
       </widget>
      </item>
@@ -260,7 +255,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QTreeView" name="treeResults">
+         <widget class="QTreeView" name="treeViewResults">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
           </property>
