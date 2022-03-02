@@ -17,6 +17,8 @@ void ASNEnum::onScanThreadEnded(){
         else
             this->log("------------------ End --------------\n");
 
+        qInfo() << "[ASN-Enum] Scan Ended";
+
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)
             ui->progressBar->setValue(ui->progressBar->maximum());

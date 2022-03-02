@@ -3,13 +3,17 @@
 
 
 void ASNEnum::onResultsAsn(s3s_struct::ASN results){
-    if(m_resultsSet.contains(results.asn))
-        return;
-
-    s3s_item::ASN *item = new s3s_item::ASN;
-    item->setValues(results);
-    m_model->appendRow(item);
-    m_resultsSet.insert(results.asn, item);
+    if(m_resultsSet.contains(results.asn)){
+        s3s_item::ASN *item = m_resultsSet.value(results.asn);
+        item->setValues(results);
+    }
+    else{
+        s3s_item::ASN *item = new s3s_item::ASN;
+        item->setValues(results);
+        m_model->appendRow(item);
+        m_resultsSet.insert(results.asn, item);
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
+    }
 
     if(m_scanConfig->autosaveToProject)
         project->addEnumASN(results);
@@ -25,6 +29,7 @@ void ASNEnum::onResultsAsnPeers(s3s_struct::ASN results){
         item->setValues(results);
         m_model->appendRow(item);
         m_resultsSet.insert(results.asn, item);
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
     }
 
     if(m_scanConfig->autosaveToProject)
@@ -41,6 +46,7 @@ void ASNEnum::onResultsAsnPrefixes(s3s_struct::ASN results){
         item->setValues(results);
         m_model->appendRow(item);
         m_resultsSet.insert(results.asn, item);
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
     }
 
     if(m_scanConfig->autosaveToProject)

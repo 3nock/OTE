@@ -7,15 +7,11 @@
 #include <QClipboard>
 
 
-/* TODO:
- *     validate if selected index is asn...
- */
-
-void ASNEnum::m_clearResults(){
+void ASNEnum::clearResults(){
     /* clear the results... */
     m_model->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({"    ASN", "    Value"});
+    m_model->setHorizontalHeaderLabels({tr(" ASN"), tr(" Value")});
     m_resultsSet.clear();
 
     /* clear the progressbar... */
@@ -24,7 +20,7 @@ void ASNEnum::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void ASNEnum::m_removeResults(QItemSelectionModel *selectionModel){
+void ASNEnum::removeResults(){
     /* loop to delete all selected items */
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
     {
@@ -43,122 +39,160 @@ void ASNEnum::m_removeResults(QItemSelectionModel *selectionModel){
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void ASNEnum::m_saveResults(){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void ASNEnum::saveResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "ASN-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "ASN-Enum: Failed to open " << filename << " For saving Results";
         return;
+    }
 
     QJsonArray asn_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
         asn_array.append(asn_to_json(asn));
     }
 
     QJsonDocument document;
     document.setArray(asn_array);
 
-    qDebug() << "Saving ASN results to File: " << file.fileName();
     file.write(document.toJson());
     file.close();
 }
 
-void ASNEnum::m_saveResults(QItemSelectionModel *selection){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void ASNEnum::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "ASN-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "ASN-Enum: Failed to open " << filename << " For saving Results";
         return;
-
-    QJsonArray asn_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-        asn_array.append(asn_to_json(asn));
     }
 
-    QJsonDocument document;
-    document.setArray(asn_array);
+    QJsonArray asn_array;
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column() == 0){
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(model_index));
+                asn_array.append(asn_to_json(asn));
+            }
+        }else
+            file.write(index.data().toString().append(NEWLINE).toUtf8());
+    }
 
-    qDebug() << "Saving ASN results to File: " << file.fileName();
-    file.write(document.toJson());
+    if(!asn_array.isEmpty()){
+        QJsonDocument document;
+        document.setArray(asn_array);
+        file.write(document.toJson());
+    }
     file.close();
 }
 
-void ASNEnum::m_copyResults(){
+void ASNEnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     QJsonArray asn_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
         asn_array.append(asn_to_json(asn));
     }
 
     QJsonDocument document;
     document.setArray(asn_array);
 
-    qDebug() << "Copying ASN results to clipboard...";
+    qDebug() << "ASN-Enum: Copying ASN results to clipboard...";
     clipboard->setText(document.toJson());
 }
 
-void ASNEnum::m_copyResults(QItemSelectionModel *selection){
+void ASNEnum::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
-
+    QString clipboardData;
     QJsonArray asn_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-        asn_array.append(asn_to_json(asn));
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column() == 0){
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(model_index));
+                asn_array.append(asn_to_json(asn));
+            }
+        }else
+            clipboardData.append(index.data().toString().append(NEWLINE));
     }
 
-    QJsonDocument document;
-    document.setArray(asn_array);
+    qDebug() << "ASN-Enum: Copying ASN results to clipboard...";
 
-    qDebug() << "Copying ASN results to clipboard...";
-    clipboard->setText(document.toJson());
+    if(asn_array.isEmpty())
+        clipboard->setText(clipboardData.trimmed());
+    else {
+        QJsonDocument document;
+        document.setArray(asn_array);
+        clipboard->setText(document.toJson());
+    }
 }
 
 ///
-/// send all...
+/// Sending Results
 ///
 
-void ASNEnum::m_sendToProject(){
+void ASNEnum::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::ASN *asn_item = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
-        s3s_struct::ASN asn_struct = asn_to_struct(asn_item);
-        project->addEnumASN(asn_struct);
+        s3s_item::ASN *asn_item = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
+        project->addEnumASN(asn_to_struct(asn_item));
     }
 }
 
-void ASNEnum::m_sendASNToEngine(ENGINE engine){
+void ASNEnum::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == m_model->invisibleRootItem()->index()){
+            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(model_index));
+            project->addEnumASN(asn_to_struct(asn));
+        }
+    }
+}
+
+void ASNEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
     switch (engine) {
     case ENGINE::OSINT:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
         {
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
+            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
-            for(int j = 0; j < asn->peers->rowCount(); j++)
-                emit sendResultsToOsint(asn->peers->child(j, 1)->text(), RESULT_TYPE::ASN);
+            if(result_type == RESULT_TYPE::ASN){
+                for(int j = 0; j < asn->peers->rowCount(); j++)
+                    emit sendResultsToOsint(asn->peers->child(j, 1)->text(), result_type);
+            }
+            if(result_type == RESULT_TYPE::CIDR){
+                for(int j = 0; j < asn->prefixes->rowCount(); j++)
+                    emit sendResultsToOsint(asn->prefixes->child(j, 1)->text(), result_type);
+            }
+            if(result_type == RESULT_TYPE::EMAIL){
+                for(int j = 0; j < asn->emailContacts->rowCount(); j++)
+                    emit sendResultsToOsint(asn->emailContacts->child(j, 1)->text(), result_type);
+                for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
+                    emit sendResultsToOsint(asn->abuseContacts->child(j, 1)->text(), result_type);
+            }
         }
         emit changeTabToOsint();
         break;
@@ -166,10 +200,22 @@ void ASNEnum::m_sendASNToEngine(ENGINE engine){
         for(int i = 0; i != proxyModel->rowCount(); ++i)
         {
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
+            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
-            for(int j = 0; j < asn->peers->rowCount(); j++)
-                emit sendResultsToRaw(asn->peers->child(j, 1)->text(), RESULT_TYPE::ASN);
+            if(result_type == RESULT_TYPE::ASN){
+                for(int j = 0; j < asn->peers->rowCount(); j++)
+                    emit sendResultsToRaw(asn->peers->child(j, 1)->text(), result_type);
+            }
+            if(result_type == RESULT_TYPE::CIDR){
+                for(int j = 0; j < asn->prefixes->rowCount(); j++)
+                    emit sendResultsToRaw(asn->prefixes->child(j, 1)->text(), result_type);
+            }
+            if(result_type == RESULT_TYPE::EMAIL){
+                for(int j = 0; j < asn->emailContacts->rowCount(); j++)
+                    emit sendResultsToRaw(asn->emailContacts->child(j, 1)->text(), result_type);
+                for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
+                    emit sendResultsToRaw(asn->abuseContacts->child(j, 1)->text(), result_type);
+            }
         }
         emit changeTabToRaw();
         break;
@@ -178,28 +224,16 @@ void ASNEnum::m_sendASNToEngine(ENGINE engine){
     }
 }
 
-void ASNEnum::m_sendCIDRToEngine(ENGINE engine){
+void ASNEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
     switch (engine) {
     case ENGINE::OSINT:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
-
-            for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                emit sendResultsToOsint(asn->prefixes->child(j, 1)->text(), RESULT_TYPE::CIDR);
-        }
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToOsint(index.data().toString(), result_type);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
-
-            for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                emit sendResultsToRaw(asn->prefixes->child(j, 1)->text(), RESULT_TYPE::CIDR);
-        }
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToRaw(index.data().toString(), result_type);
         emit changeTabToRaw();
         break;
     default:
@@ -207,120 +241,74 @@ void ASNEnum::m_sendCIDRToEngine(ENGINE engine){
     }
 }
 
-void ASNEnum::m_sendASNToEnum(){
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
-    {
-        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
+void ASNEnum::sendToEnum(const TOOL &tool){
+    switch (tool) {
+    case TOOL::ASN:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
-        for(int j = 0; j < asn->peers->rowCount(); j++)
-            emit sendResultsToAsnEnum(asn->peers->child(j, 1)->text(), RESULT_TYPE::ASN);
+            for(int j = 0; j < asn->peers->rowCount(); j++)
+                emit sendResultsToAsnEnum(asn->peers->child(j, 1)->text(), RESULT_TYPE::ASN);
+        }
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::CIDR:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < asn->prefixes->rowCount(); j++)
+                emit sendResultsToCidrEnum(asn->prefixes->child(j, 1)->text(), RESULT_TYPE::CIDR);
+        }
+        emit changeTabToCidrEnum();
+        break;
+    case TOOL::EMAIL:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < asn->emailContacts->rowCount(); j++)
+                emit sendResultsToEmailEnum(asn->emailContacts->child(j, 1)->text(), RESULT_TYPE::EMAIL);
+            for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
+                emit sendResultsToEmailEnum(asn->abuseContacts->child(j, 1)->text(), RESULT_TYPE::EMAIL);
+        }
+        emit changeTabToEmailEnum();
+        break;
+    default:
+        break;
     }
-    emit changeTabToAsnEnum();
+
 }
 
-void ASNEnum::m_sendCIDRToEnum(){
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
-    {
-        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(index.row(), index.column()));
-
-        for(int j = 0; j < asn->prefixes->rowCount(); j++)
-            emit sendResultsToCidrEnum(asn->prefixes->child(j, 1)->text(), RESULT_TYPE::CIDR);
+void ASNEnum::sendSelectedToEnum(const TOOL &tool){
+    switch (tool) {
+    case TOOL::ASN:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToAsnEnum(index.data().toString(), RESULT_TYPE::ASN);
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::CIDR:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToCidrEnum(index.data().toString(), RESULT_TYPE::CIDR);
+        emit changeTabToCidrEnum();
+        break;
+    case TOOL::EMAIL:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToEmailEnum(index.data().toString(), RESULT_TYPE::EMAIL);
+        emit changeTabToEmailEnum();
+        break;
+    default:
+        break;
     }
-    emit changeTabToCidrEnum();
 }
 
 ///
-/// send selected...
+/// Receiving Targets
 ///
-
-void ASNEnum::m_sendToProject(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-        project->addEnumASN(asn_to_struct(asn));
-    }
-}
-
-void ASNEnum::m_sendASNToEngine(ENGINE engine, QItemSelectionModel *selection){
-    switch (engine) {
-    case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            QModelIndex model_index = proxyModel->mapToSource(index);
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-            for(int j = 0; j < asn->peers->rowCount(); j++)
-                emit sendResultsToOsint(asn->peers->child(j, 1)->text(), RESULT_TYPE::ASN);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            QModelIndex model_index = proxyModel->mapToSource(index);
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-            for(int j = 0; j < asn->peers->rowCount(); j++)
-                emit sendResultsToRaw(asn->peers->child(j, 1)->text(), RESULT_TYPE::ASN);
-        }
-        emit changeTabToRaw();
-        break;
-
-    default:
-        break;
-    }
-}
-
-void ASNEnum::m_sendCIDRToEngine(ENGINE engine, QItemSelectionModel *selection){
-    switch (engine) {
-    case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            QModelIndex model_index = proxyModel->mapToSource(index);
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-            for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                emit sendResultsToOsint(asn->prefixes->child(j, 1)->text(), RESULT_TYPE::CIDR);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            QModelIndex model_index = proxyModel->mapToSource(index);
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-            for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                emit sendResultsToRaw(asn->prefixes->child(j, 1)->text(), RESULT_TYPE::CIDR);
-        }
-        emit changeTabToRaw();
-        break;
-
-    default:
-        break;
-    }
-}
-
-void ASNEnum::m_sendASNToEnum(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-        for(int j = 0; j < asn->peers->rowCount(); j++)
-            emit sendResultsToAsnEnum(asn->peers->child(j, 1)->text(), RESULT_TYPE::ASN);
-    }
-    emit changeTabToAsnEnum();
-}
-
-void ASNEnum::m_sendCIDRToEnum(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->item(model_index.row(), model_index.column()));
-
-        for(int j = 0; j < asn->prefixes->rowCount(); j++)
-            emit sendResultsToCidrEnum(asn->prefixes->child(j, 1)->text(), RESULT_TYPE::CIDR);
-    }
-    emit changeTabToCidrEnum();
-}
 
 void ASNEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::ASN)

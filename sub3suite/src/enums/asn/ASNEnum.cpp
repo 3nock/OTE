@@ -21,7 +21,6 @@ ASNEnum::ASNEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, 
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
-    this->initActions();
     this->initConfigValues();
 
     /* setting targets model */
@@ -29,9 +28,9 @@ ASNEnum::ASNEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, 
     ui->targets->setListModel(m_targetsListModel);
 
     /* setting model with tableView... */
-    m_model->setHorizontalHeaderLabels({"    ASN", "    Values"});
+    m_model->setHorizontalHeaderLabels({tr(" ASN"), tr(" Values")});
     proxyModel->setSourceModel(m_model);
-    ui->treeResults->setModel(proxyModel);
+    ui->treeViewResults->setModel(proxyModel);
 
     /* scan arguments */
     m_scanArgs->config = m_scanConfig;
@@ -51,11 +50,11 @@ void ASNEnum::on_lineEditTarget_returnPressed(){
 void ASNEnum::on_buttonStart_clicked(){
     /* checks */
     if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-        QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+        QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Target for Enumeration!"));
         return;
     }
     if(ui->checkBoxMultipleTargets->isChecked() && m_targetsListModel->rowCount() < 1){
-        QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+        QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Targets for Enumeration!"));
         return;
     }
 
@@ -74,7 +73,7 @@ void ASNEnum::on_buttonStart_clicked(){
 
     /* logs */
     this->log("------------------ start ----------------");
-    qInfo() << "Scan Started";
+    qInfo() << "[ASN-Enum] Scan Started";
 }
 
 void ASNEnum::on_buttonStop_clicked(){
@@ -107,8 +106,8 @@ void ASNEnum::initUI(){
     ui->labelModule->setProperty("s3s_color", true);
 
     /* placeholder texts... */
-    ui->lineEditFilter->setPlaceholderText("Filter...");
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_ASN);
+    ui->lineEditFilter->setPlaceholderText(tr("Filter..."));
+    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_ASN));
 
     /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -133,6 +132,6 @@ void ASNEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
     else
         proxyModel->setFilterFixedString(filterKeyword);
 
-    ui->treeResults->setModel(proxyModel);
+    ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }

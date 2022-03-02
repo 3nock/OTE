@@ -12,8 +12,6 @@
 #include "src/items/ASNItem.h"
 #include "src/modules/passive/OsintModulesHeaders.h"
 
-#include <QAction>
-
 
 namespace Ui {
 class ASNEnum;
@@ -44,7 +42,7 @@ class ASNEnum : public AbstractEnum{
         void on_buttonStop_clicked();
         void on_lineEditFilter_textChanged(const QString &arg1);
         void on_buttonAction_clicked();
-        void on_treeResults_customContextMenuRequested(const QPoint &pos);
+        void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditTarget_returnPressed();
 
     private:
@@ -63,49 +61,19 @@ class ASNEnum : public AbstractEnum{
 
         /* for context menu */
     private:
-        void initActions();
-        /* ... */
-        void m_clearResults();
-        void m_removeResults(QItemSelectionModel*);
-        void m_saveResults();
-        void m_saveResults(QItemSelectionModel*);
-        void m_copyResults();
-        void m_copyResults(QItemSelectionModel*);
+        void clearResults();
+        void removeResults();
+        void saveResults();
+        void saveSelectedResults();
+        void copyResults();
+        void copySelectedResults();
         /* sending results to other tools */
-        void m_sendToProject();
-        void m_sendASNToEngine(ENGINE);
-        void m_sendCIDRToEngine(ENGINE);
-        void m_sendASNToEnum();
-        void m_sendCIDRToEnum();
-        void m_sendToProject(QItemSelectionModel*);
-        void m_sendASNToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendCIDRToEngine(ENGINE, QItemSelectionModel*);
-        void m_sendASNToEnum(QItemSelectionModel*);
-        void m_sendCIDRToEnum(QItemSelectionModel*);
-
-    protected:
-        QAction a_RemoveResults{"Remove"};
-        QAction a_ClearResults{"Clear Results"};
-        QAction a_ExpandResults{"Expand"};
-        QAction a_CollapseResults{"Collapse"};
-        QAction a_Save{"Save as Json"};
-        QAction a_Copy{"Copy as Json"};
-        /* for all */
-        QAction a_SendAllToProject{"Send To Project"};
-        QAction a_SendAllASNToOsint{"Send ASNs To OSINT"};
-        QAction a_SendAllASNToRaw{"Send ASNs To RAW"};
-        QAction a_SendAllCIDRToOsint{"Send CIDRs To OSINT"};
-        QAction a_SendAllCIDRToRaw{"Send CIDRs To RAW"};
-        QAction a_SendAllASNToASNEnum{"Send ASNs To ASNEnum"};
-        QAction a_SendAllCIDRToCIDREnum{"Send CIDRs To CIDREnum"};
-        /* for selected */
-        QAction a_SendSelectedToProject{"Send To Project"};
-        QAction a_SendSelectedASNToOsint{"Send ASNs To OSINT"};
-        QAction a_SendSelectedASNToRaw{"Send ASNs To RAW"};
-        QAction a_SendSelectedCIDRToOsint{"Send CIDRs To OSINT"};
-        QAction a_SendSelectedCIDRToRaw{"Send CIDRs To RAW"};
-        QAction a_SendSelectedASNToASNEnum{"Send ASNs To ASNEnum"};
-        QAction a_SendSelectedCIDRToCIDREnum{"Send CIDRs To CIDREnum"};
+        void sendToProject();
+        void sendSelectedToProject();
+        void sendToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendToEnum(const TOOL&);
+        void sendSelectedToEnum(const TOOL&);
 };
 
 #endif // ASNENUM_H

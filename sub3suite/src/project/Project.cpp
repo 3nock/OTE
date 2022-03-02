@@ -74,6 +74,8 @@ void Project::initUI(){
     ui->label_project_created->setProperty("s3s_color", true);
     ui->label_project_modified->setProperty("s3s_color", true);
     ui->label_project_items->setProperty("s3s_color", true);
+    ui->label_item_type->setProperty("s3s_color", true);
+    ui->label_item_modified->setProperty("s3s_color", true);
     ui->plainTextEdit_item_comment->setProperty("text_edit", true);
 
     /* hiding un-used widgets */
@@ -81,7 +83,7 @@ void Project::initUI(){
 
     /* placeholder texts */
     ui->lineEditFilter->setPlaceholderText("Filter...");
-    ui->plainTextEdit_item_comment->setPlaceholderText("comment on item...");
+    ui->plainTextEdit_item_comment->setPlaceholderText("comment...");
 
     /* resizing */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.22))

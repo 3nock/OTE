@@ -31,7 +31,7 @@
      <item>
       <widget class="QLabel" name="labelOut">
        <property name="text">
-        <string>Out:</string>
+        <string>OUT:</string>
        </property>
       </widget>
      </item>
@@ -63,7 +63,7 @@
      <item>
       <widget class="QLabel" name="labelModule">
        <property name="text">
-        <string>Module:</string>
+        <string>MODULE:</string>
        </property>
       </widget>
      </item>
@@ -248,7 +248,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QTreeView" name="treeResults">
+         <widget class="QTreeView" name="treeViewResults">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
           </property>
@@ -260,6 +260,9 @@
           </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectItems</enum>
           </property>
           <attribute name="headerCascadingSectionResizes">
            <bool>true</bool>
@@ -320,7 +323,7 @@
          <number>1</number>
         </property>
         <property name="topMargin">
-         <number>6</number>
+         <number>2</number>
         </property>
         <property name="rightMargin">
          <number>1</number>

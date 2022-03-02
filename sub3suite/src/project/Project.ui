@@ -531,6 +531,12 @@
                  <height>0</height>
                 </size>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>70</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Type:</string>
                </property>
@@ -549,6 +555,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <item>
               <widget class="QLabel" name="label_7">
+               <property name="maximumSize">
+                <size>
+                 <width>70</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Last Modified:</string>
                </property>
@@ -562,13 +574,6 @@
               </widget>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_8">
-             <property name="text">
-              <string>Comment:</string>
-             </property>
-            </widget>
            </item>
            <item>
             <widget class="QPlainTextEdit" name="plainTextEdit_item_comment">
@@ -586,7 +591,7 @@
              </property>
              <property name="font">
               <font>
-               <italic>true</italic>
+               <italic>false</italic>
               </font>
              </property>
             </widget>

@@ -37,8 +37,8 @@ struct ASN {
     QString rir_country;
     QString rir_dateallocated;
 };
-
 }
+
 
 namespace s3s_item {
 
