@@ -17,6 +17,8 @@ void NSEnum::onScanThreadEnded(){
         else
             this->log("------------------ End --------------\n");
 
+        qInfo() << "[NS-Enum] Scan Ended";
+
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)
             ui->progressBar->setValue(ui->progressBar->maximum());

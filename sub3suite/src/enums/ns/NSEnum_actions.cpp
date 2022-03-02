@@ -7,15 +7,11 @@
 #include <QClipboard>
 
 
-/* TODO:
- *     validate if selected index is ip...
- */
-
-void NSEnum::m_clearResults(){
+void NSEnum::clearResults(){
     /* clear the results... */
     m_model->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({"    NS", "    Value"});
+    m_model->setHorizontalHeaderLabels({tr(" NS"), tr(" Value")});
     m_resultsSet.clear();
 
     /* clear the progressbar... */
@@ -24,142 +20,277 @@ void NSEnum::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void NSEnum::m_removeResults(QItemSelectionModel *selectionModel){
+void NSEnum::removeResults(){
     /* loop to delete all selected items */
-    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
-        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+        QModelIndex model_index = proxyModel->mapToSource(index);
 
         /* remove entire ns */
-        if(index.parent() == m_model->invisibleRootItem()->index()){
-            m_resultsSet.remove(index.data().toString());
-            m_model->removeRow(index.row());
+        if(model_index.parent() == m_model->invisibleRootItem()->index()){
+            m_resultsSet.remove(model_index.data().toString());
+            m_model->removeRow(model_index.row());
         }
         /* remove a certain row in the ns item */
         else{
-            m_model->removeRow(index.row());
+            m_model->removeRow(model_index.row());
         }
     }
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void NSEnum::m_saveResults(){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void NSEnum::saveResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "NS-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "NS-Enum: Failed to open " << filename << " For saving Results";
         return;
+    }
 
     QJsonArray ns_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->itemFromIndex(index));
         ns_array.append(ns_to_json(ns));
     }
 
     QJsonDocument document;
     document.setArray(ns_array);
-
-    qDebug() << "Saving NS results to File: " << file.fileName();
     file.write(document.toJson());
     file.close();
 }
 
-void NSEnum::m_saveResults(QItemSelectionModel *selection){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void NSEnum::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "NS-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "NS-Enum: Failed to open " << filename << " For saving Results";
         return;
-
-    QJsonArray ns_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(model_index.row(), model_index.column()));
-
-        ns_array.append(ns_to_json(ns));
     }
 
-    QJsonDocument document;
-    document.setArray(ns_array);
+    QJsonArray ns_array;
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column())
+            file.write(index.data().toString().append(NEWLINE).toUtf8());
+        else {
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+                ns_array.append(ns_to_json(ns));
+            }
+        }
 
-    qDebug() << "Saving NS results to File: " << file.fileName();
-    file.write(document.toJson());
+    }
+
+    if(!ns_array.isEmpty()){
+        QJsonDocument document;
+        document.setArray(ns_array);
+        file.write(document.toJson());
+    }
     file.close();
 }
 
-void NSEnum::m_copyResults(){
+void NSEnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     QJsonArray ns_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->itemFromIndex(index));
         ns_array.append(ns_to_json(ns));
     }
 
+    qDebug() << "Copying Email results to clipboard...";
+
     QJsonDocument document;
     document.setArray(ns_array);
-
-    qDebug() << "Copying NS results to clipboard...";
     clipboard->setText(document.toJson());
 }
 
-void NSEnum::m_copyResults(QItemSelectionModel *selection){
+void NSEnum::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
-
+    QString clipboardData;
     QJsonArray ns_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(model_index.row(), model_index.column()));
 
-        ns_array.append(ns_to_json(ns));
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column())
+            clipboardData.append(index.data().toString().append(NEWLINE));
+        else {
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+                ns_array.append(ns_to_json(ns));
+            }
+        }
+
     }
 
-    QJsonDocument document;
-    document.setArray(ns_array);
+    qDebug() << "[NS-Enum] Copying NS results to clipboard...";
 
-    qDebug() << "Copying NS results to clipboard...";
-    clipboard->setText(document.toJson());
+    if(ns_array.isEmpty())
+        clipboard->setText(clipboardData.trimmed());
+    else {
+        QJsonDocument document;
+        document.setArray(ns_array);
+        clipboard->setText(document.toJson());
+    }
 }
 
 ///
-/// send all...
+/// sending results
 ///
 
-void NSEnum::m_sendToProject(){
+void NSEnum::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->item(index.row(), index.column()));
+        s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(index));
         project->addEnumNS(ns_to_struct(item));
     }
 }
 
-///
-/// send selected...
-///
-
-void NSEnum::m_sendToProject(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
+void NSEnum::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
         QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->item(model_index.row(), model_index.column()));
-
-        project->addEnumNS(ns_to_struct(ns));
+        if(model_index.parent() == m_model->invisibleRootItem()->index()){
+            s3s_item::NS *ns = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+            project->addEnumNS(ns_to_struct(ns));
+        }
     }
 }
+
+void NSEnum::sendToEngine(const ENGINE &engine){
+    switch (engine) {
+    case ENGINE::OSINT:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                emit sendResultsToOsint(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
+        }
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                emit sendResultsToRaw(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
+        }
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                emit sendResultsToBrute(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
+        }
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                emit sendResultsToActive(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
+        }
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                emit sendResultsToDns(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
+        }
+        emit changeTabToDns();
+        break;
+    case ENGINE::CERT:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                emit sendResultsToCert(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
+        }
+        emit changeTabToSSL();
+        break;
+    case ENGINE::URL:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                emit sendResultsToUrl(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
+        }
+        emit changeTabToURL();
+        break;
+    default:
+        break;
+    }
+}
+
+void NSEnum::sendSelectedToEngine(const ENGINE &engine){
+    switch (engine) {
+    case ENGINE::OSINT:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToOsint(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToRaw(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToBrute(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToActive(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToDns(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToDns();
+        break;
+    case ENGINE::CERT:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToCert(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToSSL();
+        break;
+    case ENGINE::URL:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToUrl(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToURL();
+        break;
+    default:
+        break;
+    }
+}
+
+///
+/// receiving targets
+///
 
 void NSEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::NS)

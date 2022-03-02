@@ -11,12 +11,16 @@
 
 void MXEnum::onResult(s3s_struct::MX results){
     if(m_resultsSet.contains(results.info_mx))
-        return;
-
-    s3s_item::MX *item = new s3s_item::MX;
-    item->setValues(results);
-    m_model->appendRow(item);
-    m_resultsSet.insert(results.info_mx, item);
+    {
+        s3s_item::MX *item = m_resultsSet.value(results.info_mx);
+        item->setValues(results);
+    }else {
+        s3s_item::MX *item = new s3s_item::MX;
+        item->setValues(results);
+        m_model->appendRow(item);
+        m_resultsSet.insert(results.info_mx, item);
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
+    }
 
     if(m_scanConfig->autosaveToProject)
         project->addEnumMX(results);

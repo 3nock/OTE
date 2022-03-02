@@ -11,12 +11,16 @@
 
 void NSEnum::onResult(s3s_struct::NS results){
     if(m_resultsSet.contains(results.info_ns))
-        return;
-
-    s3s_item::NS *item = new s3s_item::NS;
-    item->setValues(results);
-    m_model->appendRow(item);
-    m_resultsSet.insert(results.info_ns, item);
+    {
+        s3s_item::NS *item = m_resultsSet.value(results.info_ns);
+        item->setValues(results);
+    }else {
+        s3s_item::NS *item = new s3s_item::NS;
+        item->setValues(results);
+        m_model->appendRow(item);
+        m_resultsSet.insert(results.info_ns, item);
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
+    }
 
     if(m_scanConfig->autosaveToProject)
         project->addEnumNS(results);

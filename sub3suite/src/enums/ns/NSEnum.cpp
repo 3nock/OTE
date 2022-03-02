@@ -20,7 +20,6 @@ NSEnum::NSEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
-    this->initActions();
     this->initConfigValues();
 
     /* setting targets model */
@@ -28,9 +27,9 @@ NSEnum::NSEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
     ui->targets->setListModel(m_targetsListModel);
 
     /* setting model with tableView... */
-    m_model->setHorizontalHeaderLabels({"    NS", "    Values"});
+    m_model->setHorizontalHeaderLabels({tr(" NS"), tr(" Values")});
     proxyModel->setSourceModel(m_model);
-    ui->treeResults->setModel(proxyModel);
+    ui->treeViewResults->setModel(proxyModel);
 
     /* scan arguments */
     m_scanArgs->config = m_scanConfig;
@@ -50,11 +49,11 @@ void NSEnum::on_lineEditTarget_returnPressed(){
 void NSEnum::on_buttonStart_clicked(){
     /* checks */
     if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-        QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+        QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Target for Enumeration!"));
         return;
     }
     if(ui->checkBoxMultipleTargets->isChecked() && m_targetsListModel->rowCount() < 1){
-        QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+        QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Targets for Enumeration!"));
         return;
     }
 
@@ -73,7 +72,7 @@ void NSEnum::on_buttonStart_clicked(){
 
     /* logs */
     this->log("------------------ start ----------------");
-    qInfo() << "Scan Started";
+    qInfo() << "[NS-Enum] Scan Started";
 }
 
 void NSEnum::on_buttonStop_clicked(){
@@ -106,8 +105,8 @@ void NSEnum::initUI(){
     ui->labelModule->setProperty("s3s_color", true);
 
     /* placeholder texts... */
-    ui->lineEditFilter->setPlaceholderText("Filter...");
-    ui->lineEditTarget->setPlaceholderText(PLACEHOLDERTEXT_NS);
+    ui->lineEditFilter->setPlaceholderText(tr("Filter..."));
+    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_NS));
 
     /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -132,6 +131,6 @@ void NSEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
     else
         proxyModel->setFilterFixedString(filterKeyword);
 
-    ui->treeResults->setModel(proxyModel);
+    ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
