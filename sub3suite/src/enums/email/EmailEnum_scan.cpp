@@ -19,6 +19,8 @@ void EmailEnum::onScanThreadEnded(){
         else
             this->log("------------------ End --------------\n");
 
+        qInfo() << "[Email-Enum] Scan Ended";
+
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)
             ui->progressBar->setValue(ui->progressBar->maximum());
@@ -35,6 +37,7 @@ void EmailEnum::onScanThreadEnded(){
 
 void EmailEnum::startScan(){
     ScanArgs scanArgs;
+    scanArgs.config = m_scanConfig;
 
     /* resetting */
     ui->progressBar->show();

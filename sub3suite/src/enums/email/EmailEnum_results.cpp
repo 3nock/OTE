@@ -10,13 +10,17 @@
 
 
 void EmailEnum::onResult(s3s_struct::Email results){
-    if(m_resultsSet.contains(results.email))
-        return;
-
-    s3s_item::Email *item = new s3s_item::Email;
-    item->setValues(results);
-    m_model->appendRow(item);
-    m_resultsSet.insert(results.email, item);
+    if(m_resultsSet.contains(results.email)){
+        s3s_item::Email *item = m_resultsSet.value(results.email);
+        item->setValues(results);
+    }
+    else{
+        s3s_item::Email *item = new s3s_item::Email;
+        item->setValues(results);
+        m_model->appendRow(item);
+        m_resultsSet.insert(results.email, item);
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
+    }
 
     if(m_scanConfig->autosaveToProject)
         project->addEnumEmail(results);

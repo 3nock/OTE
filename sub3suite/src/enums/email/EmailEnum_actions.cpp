@@ -7,15 +7,11 @@
 #include <QClipboard>
 
 
-/* TODO:
- *     validate if selected index is ip...
- */
-
-void EmailEnum::m_clearResults(){
+void EmailEnum::clearResults(){
     /* clear the results... */
     m_model->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({"    Email", "    Value"});
+    m_model->setHorizontalHeaderLabels({tr(" Email"), tr(" Value")});
     m_resultsSet.clear();
 
     /* clear the progressbar... */
@@ -24,142 +20,165 @@ void EmailEnum::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void EmailEnum::m_removeResults(QItemSelectionModel *selectionModel){
+void EmailEnum::removeResults(){
     /* loop to delete all selected items */
-    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
-        QModelIndex index = proxyModel->mapToSource(proxyIndex);
+        QModelIndex model_index = proxyModel->mapToSource(index);
 
         /* remove entire email */
-        if(index.parent() == m_model->invisibleRootItem()->index()){
-            m_resultsSet.remove(index.data().toString());
-            m_model->removeRow(index.row());
+        if(model_index.parent() == m_model->invisibleRootItem()->index()){
+            m_resultsSet.remove(model_index.data().toString());
+            m_model->removeRow(model_index.row());
         }
         /* remove a certain row in the email item */
         else{
-            m_model->removeRow(index.row());
+            m_model->removeRow(model_index.row());
         }
     }
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void EmailEnum::m_saveResults(){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void EmailEnum::saveResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "Email-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "Email-Enum: Failed to open " << filename << " For saving Results";
         return;
+    }
 
     QJsonArray email_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->itemFromIndex(index));
         email_array.append(email_to_json(email));
     }
 
     QJsonDocument document;
     document.setArray(email_array);
-
-    qDebug() << "Saving Email results to File: " << file.fileName();
     file.write(document.toJson());
     file.close();
 }
 
-void EmailEnum::m_saveResults(QItemSelectionModel *selection){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void EmailEnum::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "Email-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "Email-Enum: Failed to open " << filename << " For saving Results";
         return;
-
-    QJsonArray email_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->item(model_index.row(), model_index.column()));
-
-        email_array.append(email_to_json(email));
     }
 
-    QJsonDocument document;
-    document.setArray(email_array);
+    QJsonArray email_array;
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column())
+            file.write(index.data().toString().append(NEWLINE).toUtf8());
+        else {
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->itemFromIndex(model_index));
+                email_array.append(email_to_json(email));
+            }
+        }
 
-    qDebug() << "Saving Email results to File: " << file.fileName();
-    file.write(document.toJson());
+    }
+
+    if(!email_array.isEmpty()){
+        QJsonDocument document;
+        document.setArray(email_array);
+        file.write(document.toJson());
+    }
     file.close();
 }
 
-void EmailEnum::m_copyResults(){
+void EmailEnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     QJsonArray email_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->itemFromIndex(index));
         email_array.append(email_to_json(email));
     }
 
+    qDebug() << "Copying Email results to clipboard...";
+
     QJsonDocument document;
     document.setArray(email_array);
-
-    qDebug() << "Copying Email results to clipboard...";
     clipboard->setText(document.toJson());
 }
 
-void EmailEnum::m_copyResults(QItemSelectionModel *selection){
+void EmailEnum::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
-
+    QString clipboardData;
     QJsonArray email_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->item(model_index.row(), model_index.column()));
 
-        email_array.append(email_to_json(email));
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column())
+            clipboardData.append(index.data().toString().append(NEWLINE));
+        else {
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->itemFromIndex(model_index));
+                email_array.append(email_to_json(email));
+            }
+        }
+
     }
 
-    QJsonDocument document;
-    document.setArray(email_array);
+    qDebug() << "[Email-Enum] Copying Emails results to clipboard...";
 
-    qDebug() << "Copying Email results to clipboard...";
-    clipboard->setText(document.toJson());
+    if(email_array.isEmpty())
+        clipboard->setText(clipboardData.trimmed());
+    else {
+        QJsonDocument document;
+        document.setArray(email_array);
+        clipboard->setText(document.toJson());
+    }
 }
 
 ///
-/// send all...
+/// sending results
 ///
 
-void EmailEnum::m_sendToProject(){
+void EmailEnum::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::Email *item = static_cast<s3s_item::Email*>(m_model->item(index.row(), index.column()));
+        s3s_item::Email *item = static_cast<s3s_item::Email*>(m_model->itemFromIndex(index));
         project->addEnumEmail(email_to_struct(item));
     }
 }
 
-///
-/// send selected...
-///
-
-void EmailEnum::m_sendToProject(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
+void EmailEnum::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
         QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->item(model_index.row(), model_index.column()));
-
-        project->addEnumEmail(email_to_struct(email));
+        if(model_index.parent() == m_model->invisibleRootItem()->index()){
+            s3s_item::Email *email = static_cast<s3s_item::Email*>(m_model->itemFromIndex(model_index));
+            project->addEnumEmail(email_to_struct(email));
+        }
     }
 }
+
+///
+/// receiving targets
+///
 
 void EmailEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::EMAIL)

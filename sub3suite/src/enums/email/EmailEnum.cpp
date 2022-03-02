@@ -20,17 +20,16 @@ EmailEnum::EmailEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(pare
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
-    this->initActions();
     this->initConfigValues();
 
     /* setting targets model */
-    ui->targets->setListName("Targets");
+    ui->targets->setListName(tr("Targets"));
     ui->targets->setListModel(m_targetsListModel);
 
     /* setting model with tableView... */
-    m_model->setHorizontalHeaderLabels({"    Email", "    Values"});
+    m_model->setHorizontalHeaderLabels({tr(" Email"), tr(" Values")});
     proxyModel->setSourceModel(m_model);
-    ui->treeResults->setModel(proxyModel);
+    ui->treeViewResults->setModel(proxyModel);
 
     /* scan arguments */
     m_scanArgs->config = m_scanConfig;
@@ -50,11 +49,11 @@ void EmailEnum::on_lineEditTarget_returnPressed(){
 void EmailEnum::on_buttonStart_clicked(){
     /* checks */
     if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-        QMessageBox::warning(this, "Error!", "Please Enter the Target for Enumeration!");
+        QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Target for Enumeration!"));
         return;
     }
     if(ui->checkBoxMultipleTargets->isChecked() && m_targetsListModel->rowCount() < 1){
-        QMessageBox::warning(this, "Error!", "Please Enter the Targets for Enumeration!");
+        QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Targets for Enumeration!"));
         return;
     }
 
@@ -73,7 +72,7 @@ void EmailEnum::on_buttonStart_clicked(){
 
     /* logs */
     this->log("------------------ start ----------------");
-    qInfo() << "Scan Started";
+    qInfo() << "[Email-Enum] Scan Started";
 }
 
 void EmailEnum::on_buttonStop_clicked(){
@@ -131,6 +130,6 @@ void EmailEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
     else
         proxyModel->setFilterFixedString(filterKeyword);
 
-    ui->treeResults->setModel(proxyModel);
+    ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }

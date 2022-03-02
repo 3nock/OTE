@@ -64,7 +64,7 @@ class CidrEnum : public AbstractEnum {
         void saveSelectedResults();
         void copyResults();
         void copySelectedResults();
-        /* sending results to other tools */
+        /* sending results */
         void sendToProject();
         void sendSelectedToProject();
         void sendToEngine(const ENGINE&, const RESULT_TYPE&);

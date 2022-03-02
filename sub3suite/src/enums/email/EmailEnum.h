@@ -11,8 +11,6 @@
 #include "../AbstractEnum.h"
 #include "src/modules/passive/AbstractOsintModule.h"
 
-#include <QAction>
-
 
 namespace Ui {
 class EmailEnum;
@@ -40,7 +38,7 @@ class EmailEnum : public AbstractEnum {
         void on_lineEditTarget_returnPressed();
         void on_buttonStop_clicked();
         void on_buttonAction_clicked();
-        void on_treeResults_customContextMenuRequested(const QPoint &pos);
+        void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditFilter_textChanged(const QString &arg1);
 
     private:
@@ -59,29 +57,15 @@ class EmailEnum : public AbstractEnum {
 
         /* for context menu */
     private:
-        void initActions();
-        /* ... */
-        void m_clearResults();
-        void m_removeResults(QItemSelectionModel*);
-        void m_saveResults();
-        void m_saveResults(QItemSelectionModel*);
-        void m_copyResults();
-        void m_copyResults(QItemSelectionModel*);
+        void clearResults();
+        void removeResults();
+        void saveResults();
+        void saveSelectedResults();
+        void copyResults();
+        void copySelectedResults();
         /* sending results */
-        void m_sendToProject();
-        void m_sendToProject(QItemSelectionModel*);
-
-    protected:
-        QAction a_RemoveResults{"Remove"};
-        QAction a_ClearResults{"Clear Results"};
-        QAction a_ExpandResults{"Expand"};
-        QAction a_CollapseResults{"Collapse"};
-        QAction a_Save{"Save as Json"};
-        QAction a_Copy{"Copy as Json"};
-        /* for all */
-        QAction a_SendAllToProject{"Send To Project"};
-        /* for selected */
-        QAction a_SendSelectedToProject{"Send To Project"};
+        void sendToProject();
+        void sendSelectedToProject();
 };
 
 #endif // EMAILENUM_H
