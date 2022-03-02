@@ -114,12 +114,25 @@ void Raw::on_buttonStart_clicked(){
         return;
     }
 
-    status->isRunning = true;
-    status->isNotActive = false;
-    status->isStopped = false;
-    status->isPaused = false;
+    /* getting the targets */
+    if(ui->checkBoxMultipleTargets->isChecked()){
+        foreach(const QString &target, ui->targets->getlistModel()->stringList())
+            m_scanArgs->targets.enqueue(target);
+    }else
+        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
 
+    /* starting the scan */
     this->startScan();
+
+    /* after starting all choosen modules */
+    if(status->activeScanThreads){
+        ui->buttonStart->setDisabled(true);
+        ui->buttonStop->setEnabled(true);
+        log("------------------ start --------------");
+        qInfo() << "[RAW] Scan Started";
+    }
+    else
+        QMessageBox::warning(this, tr("Error!"), tr("Please Choose Engine For Enumeration!"));
 }
 
 void Raw::on_buttonStop_clicked(){

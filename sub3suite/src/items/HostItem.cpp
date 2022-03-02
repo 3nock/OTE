@@ -1,5 +1,6 @@
 #include "HostItem.h"
 
+#include <QString>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -11,7 +12,8 @@ s3s_struct::HOST host_to_struct(s3s_item::HOST *item){
     host.host = item->text();
     host.ipv4 = item->ipv4->text();
     host.ipv6 = item->ipv6->text();
-    host.ports = item->open_ports;
+    foreach(const quint16 &port, item->open_ports)
+        host.ports.append(port);
 
     return host;
 }
@@ -36,6 +38,9 @@ void json_to_host(const QJsonObject &host, s3s_item::HOST *item){
     item->ipv4->setText(host.value("ipv4").toString());
     item->ipv6->setText(host.value("ipv6").toString());
     item->ports->setText(host.value("ports").toString());
+
+    foreach(const QString &port, item->ports->text().split(","))
+        item->open_ports.insert(port.toUShort());
 
     QJsonObject item_info = host.value("item_info").toObject();
     item->comment = item_info["comment"].toString();

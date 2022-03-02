@@ -50,13 +50,15 @@ void ASNEnum::startScan(){
     ui->progressBar->reset();
     ui->progressBar->clearMask();
 
-    /* getting targets */
-    if(ui->checkBoxMultipleTargets->isChecked()){
-        foreach(const QString &target, m_targetsListModel->stringList())
-            m_scanArgs->targets.enqueue(target);
-    }else{
-        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
-    }
+    /* enabling/disabling widgets... */
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setDisabled(true);
+
+    /* setting status */
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
 
     /* progressbar maximum value */
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
@@ -115,69 +117,11 @@ void ASNEnum::onReScan(QQueue<QString> targets){
     if(targets.isEmpty())
         return;
 
-    status->isRunning = true;
-    status->isNotActive = false;
-    status->isStopped = false;
-    status->isPaused = false;
-
-    /* resetting */
-    ui->progressBar->show();
-    ui->progressBar->reset();
-    ui->progressBar->clearMask();
-
+    /* getting targets */
     m_scanArgs->targets = targets;
 
-    /* progressbar maximum value */
-    ui->progressBar->setMaximum(m_scanArgs->targets.length());
-    m_scanArgs->config->progress = 0;
-
-    switch(ui->comboBoxOption->currentIndex()){
-    case 0: // ASN INFO
-        m_scanArgs->outputInfoAsn = true;
-        m_scanArgs->outputInfoAsnPeers = false;
-        m_scanArgs->outputInfoAsnPrefixes = false;
-        break;
-    case 1: // ASN PEERS
-        m_scanArgs->outputInfoAsn = false;
-        m_scanArgs->outputInfoAsnPeers = true;
-        m_scanArgs->outputInfoAsnPrefixes = false;
-        break;
-    case 2: // ASN PREFIXES
-        m_scanArgs->outputInfoAsn = false;
-        m_scanArgs->outputInfoAsnPeers = false;
-        m_scanArgs->outputInfoAsnPrefixes = true;
-        break;
-    }
-
-    switch (ui->comboBoxEngine->currentIndex()) {
-    case 0: // Bgpview
-        QThread *cThread = new QThread;
-        Bgpview *bgpview = new Bgpview(*m_scanArgs);
-        bgpview->startScan(cThread);
-        bgpview->moveToThread(cThread);
-
-        switch(ui->comboBoxOption->currentIndex()){
-        case 0:
-            connect(bgpview, &Bgpview::infoASN, this, &ASNEnum::onResultsAsn);
-            break;
-        case 1:
-            connect(bgpview, &Bgpview::infoASN, this, &ASNEnum::onResultsAsnPeers);
-            break;
-        case 2:
-            connect(bgpview, &Bgpview::infoASN, this, &ASNEnum::onResultsAsnPrefixes);
-            break;
-        }
-        connect(bgpview, &Bgpview::infoLog, this, &ASNEnum::onInfoLog);
-        connect(bgpview, &Bgpview::errorLog, this, &ASNEnum::onErrorLog);
-        connect(bgpview, &Bgpview::rateLimitLog, this, &ASNEnum::onRateLimitLog);
-        connect(bgpview, &Bgpview::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(this, &ASNEnum::stopScanThread, bgpview, &AbstractOsintModule::onStop);
-        connect(cThread, &QThread::finished, this, &ASNEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
-    }
+    /* start scan */
+    this->startScan();
 
     /* logs */
     this->log("------------------ Re-Scan ----------------");

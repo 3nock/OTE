@@ -61,15 +61,13 @@ void IpEnum::on_buttonStart_clicked(){
         return;
     }
 
-    /* enabling/disabling widgets... */
-    ui->buttonStop->setEnabled(true);
-    ui->buttonStart->setDisabled(true);
-
-    /* setting status */
-    status->isRunning = true;
-    status->isNotActive = false;
-    status->isStopped = false;
-    status->isPaused = false;
+    /* getting targets */
+    if(ui->checkBoxMultipleTargets->isChecked()){
+        foreach(const QString &target, m_targetsListModel->stringList())
+            m_scanArgs->targets.enqueue(target);
+    }else{
+        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
+    }
 
     /* start scan */
     this->startScan();

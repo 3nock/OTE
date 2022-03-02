@@ -4,6 +4,7 @@
 #include <QStandardItem>
 #include <QDate>
 #include <QMap>
+#include <QSet>
 
 
 namespace s3s_struct {
@@ -37,7 +38,7 @@ public:
     QStandardItem *ports;
 
     /* summary */
-    QList<quint16> open_ports;
+    QSet<quint16> open_ports;
     QString last_modified;
     QString comment;
 
@@ -47,15 +48,10 @@ public:
         ipv6->setText(host.ipv6);
 
         if(!host.ports.isEmpty()){
-            QString port_list(ports->text());
             foreach(const quint16 &port, host.ports)
-            {
-                port_list.append(QString::number(port));
-                port_list.append(",");
-                open_ports.append(port);
-            }
-            port_list.chop(1);
-            ports->setText(port_list);
+                open_ports.insert(port);
+
+            this->update_ports();
         }
 
         /* last modified */
@@ -79,18 +75,22 @@ public:
     void setValue_ports(const s3s_struct::HOST &host){
         this->setText(host.host);
 
-        QString port_list(ports->text());
         foreach(const quint16 &port, host.ports)
-        {
-            port_list.append(QString::number(port));
-            port_list.append(",");
-            open_ports.append(port);
-        }
-        port_list.chop(1);
-        ports->setText(port_list);
+            open_ports.insert(port);
+
+        this->update_ports();
 
         /* last modified */
         last_modified = QDate::currentDate().toString();
+    }
+
+    void update_ports(){
+        QString port_list;
+        foreach(const quint16 &port, open_ports)
+            port_list.append(QString::number(port)).append(",");
+
+        port_list.chop(1);
+        ports->setText(port_list);
     }
 };
 }

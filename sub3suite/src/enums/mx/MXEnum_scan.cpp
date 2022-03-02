@@ -50,13 +50,15 @@ void MXEnum::startScan(){
     ui->progressBar->reset();
     ui->progressBar->clearMask();
 
-    /* getting targets */
-    if(ui->checkBoxMultipleTargets->isChecked()){
-        foreach(const QString &target, m_targetsListModel->stringList())
-            m_scanArgs->targets.enqueue(target);
-    }else{
-        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
-    }
+    /* enabling/disabling widgets... */
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setDisabled(true);
+
+    /* setting status */
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
 
     /* progressbar maximum value */
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
@@ -86,41 +88,11 @@ void MXEnum::onReScan(QQueue<QString> targets){
     if(targets.isEmpty())
         return;
 
-    status->isRunning = true;
-    status->isNotActive = false;
-    status->isStopped = false;
-    status->isPaused = false;
-
-    /* resetting */
-    ui->progressBar->show();
-    ui->progressBar->reset();
-    ui->progressBar->clearMask();
-
     /* getting targets */
     m_scanArgs->targets = targets;
 
-    /* progressbar maximum value */
-    ui->progressBar->setMaximum(m_scanArgs->targets.length());
-    m_scanArgs->config->progress = 0;
-
-    m_scanArgs->outputInfoMX = true;
-
-    QThread *cThread = new QThread;
-    switch (ui->comboBoxEngine->currentIndex()) {
-    case 0: // DNSLytics
-        Dnslytics *dnslytics = new Dnslytics(*m_scanArgs);
-        dnslytics->startScan(cThread);
-        dnslytics->moveToThread(cThread);
-        connect(dnslytics, &Dnslytics::infoMX, this, &MXEnum::onResult);
-        connect(dnslytics, &Dnslytics::infoLog, this, &MXEnum::onInfoLog);
-        connect(dnslytics, &Dnslytics::errorLog, this, &MXEnum::onErrorLog);
-        connect(dnslytics, &Dnslytics::rateLimitLog, this, &MXEnum::onRateLimitLog);
-        connect(cThread, &QThread::finished, this, &MXEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
-    }
+    /* start scan */
+    this->startScan();
 
     /* logs */
     this->log("------------------ Re-Scan ----------------");

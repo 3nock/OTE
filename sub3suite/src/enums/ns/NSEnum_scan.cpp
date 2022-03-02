@@ -10,10 +10,6 @@ void NSEnum::onScanThreadEnded(){
     /* if all Scan Threads have finished... */
     if(status->activeScanThreads == 0)
     {
-        /* display the scan summary on logs
-        m_scanSummary();
-        */
-
         if(status->isStopped)
             this->log("---------------- Stopped ------------\n");
         else
@@ -50,13 +46,15 @@ void NSEnum::startScan(){
     ui->progressBar->reset();
     ui->progressBar->clearMask();
 
-    /* getting targets */
-    if(ui->checkBoxMultipleTargets->isChecked()){
-        foreach(const QString &target, m_targetsListModel->stringList())
-            m_scanArgs->targets.enqueue(target);
-    }else{
-        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
-    }
+    /* enabling/disabling widgets... */
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setDisabled(true);
+
+    /* setting status */
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
 
     /* progressbar maximum value */
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
@@ -86,41 +84,11 @@ void NSEnum::onReScan(QQueue<QString> targets){
     if(targets.isEmpty())
         return;
 
-    status->isRunning = true;
-    status->isNotActive = false;
-    status->isStopped = false;
-    status->isPaused = false;
-
-    /* resetting */
-    ui->progressBar->show();
-    ui->progressBar->reset();
-    ui->progressBar->clearMask();
-
     /* getting targets */
     m_scanArgs->targets = targets;
 
-    /* progressbar maximum value */
-    ui->progressBar->setMaximum(m_scanArgs->targets.length());
-    m_scanArgs->config->progress = 0;
-
-    m_scanArgs->outputInfoNS = true;
-
-    QThread *cThread = new QThread;
-    switch (ui->comboBoxEngine->currentIndex()) {
-    case 0: // DNSLytics
-        Dnslytics *dnslytics = new Dnslytics(*m_scanArgs);
-        dnslytics->startScan(cThread);
-        dnslytics->moveToThread(cThread);
-        connect(dnslytics, &Dnslytics::infoNS, this, &NSEnum::onResult);
-        connect(dnslytics, &Dnslytics::infoLog, this, &NSEnum::onInfoLog);
-        connect(dnslytics, &Dnslytics::errorLog, this, &NSEnum::onErrorLog);
-        connect(dnslytics, &Dnslytics::rateLimitLog, this, &NSEnum::onRateLimitLog);
-        connect(cThread, &QThread::finished, this, &NSEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
-    }
+    /* start scan */
+    this->startScan();
 
     /* logs */
     this->log("------------------ Re-Scan ----------------");

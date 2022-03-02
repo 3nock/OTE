@@ -50,13 +50,15 @@ void CidrEnum::startScan(){
     ui->progressBar->reset();
     ui->progressBar->clearMask();
 
-    /* getting targets */
-    if(ui->checkBoxMultipleTargets->isChecked()){
-        foreach(const QString &target, m_targetsListModel->stringList())
-            m_scanArgs->targets.enqueue(target);
-    }else{
-        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
-    }
+    /* enabling/disabling widgets... */
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setDisabled(true);
+
+    /* setting status */
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
 
     /* progressbar maximum value */
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
@@ -87,42 +89,11 @@ void CidrEnum::onReScan(QQueue<QString> targets){
     if(targets.isEmpty())
         return;
 
-    status->isRunning = true;
-    status->isNotActive = false;
-    status->isStopped = false;
-    status->isPaused = false;
-
-    /* resetting */
-    ui->progressBar->show();
-    ui->progressBar->reset();
-    ui->progressBar->clearMask();
-
     /* getting targets */
     m_scanArgs->targets = targets;
 
-    /* progressbar maximum value */
-    ui->progressBar->setMaximum(m_scanArgs->targets.length());
-    m_scanArgs->config->progress = 0;
-
-    m_scanArgs->outputInfoCidr = true;
-
-    switch (ui->comboBoxEngine->currentIndex()) {
-    case 0: // Bgpview
-        QThread *cThread = new QThread;
-        Bgpview *bgpview = new Bgpview(*m_scanArgs);
-        bgpview->startScan(cThread);
-        bgpview->moveToThread(cThread);
-        connect(bgpview, &IpInfo::infoCIDR, this, &CidrEnum::onResult);
-        connect(bgpview, &IpInfo::infoLog, this, &CidrEnum::onInfoLog);
-        connect(bgpview, &IpInfo::errorLog, this, &CidrEnum::onErrorLog);
-        connect(bgpview, &IpInfo::rateLimitLog, this, &CidrEnum::onRateLimitLog);
-        connect(this, &CidrEnum::stopScanThread, bgpview, &Bgpview::onStop);
-        connect(cThread, &QThread::finished, this, &CidrEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
-    }
+    /* start scan */
+    this->startScan();
 
     /* logs */
     this->log("------------------ Re-Scan ----------------");
