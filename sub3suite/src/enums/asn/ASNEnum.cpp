@@ -12,7 +12,10 @@
 #include "src/utils/Definitions.h"
 #include "src/dialogs/EnumConfigDialog.h"
 
-
+/*
+ * TODO:
+ *      use m_scanArgs instead of creating a new ScanArgs object on scanning
+ */
 ASNEnum::ASNEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
     ui(new Ui::ASNEnum),
     m_model(new QStandardItemModel),

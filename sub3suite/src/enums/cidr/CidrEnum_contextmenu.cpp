@@ -4,25 +4,6 @@
 #include <QMenu>
 
 
-void CidrEnum::initActions(){
-    connect(&a_RemoveResults, &QAction::triggered, this, [=](){this->m_removeResults(selectionModel);});
-    connect(&a_ClearResults, &QAction::triggered, this, [=](){this->m_clearResults();});
-    connect(&a_ExpandResults, &QAction::triggered, this, [=](){ui->treeResults->expandAll();});
-    connect(&a_CollapseResults, &QAction::triggered, this, [=](){ui->treeResults->collapseAll();});
-    connect(&a_Save, &QAction::triggered, this, [=](){this->m_saveResults();});
-    connect(&a_Copy, &QAction::triggered, this, [=](){this->m_copyResults();});
-    /* for all */
-    connect(&a_SendAllToProject, &QAction::triggered, this, [=](){this->m_sendToProject();});
-    connect(&a_SendAllASNToOsint, &QAction::triggered, this, [=](){this->m_sendASNToEngine(ENGINE::OSINT);});
-    connect(&a_SendAllASNToRaw, &QAction::triggered, this, [=](){this->m_sendASNToEngine(ENGINE::RAW);});
-    connect(&a_SendAllASNToASNEnum, &QAction::triggered, this, [=](){this->m_sendASNToEnum();});
-    /* for selected */
-    connect(&a_SendSelectedToProject, &QAction::triggered, this, [=](){this->m_sendToProject(selectionModel);});
-    connect(&a_SendSelectedASNToOsint, &QAction::triggered, this, [=](){this->m_sendASNToEngine(ENGINE::OSINT, selectionModel);});
-    connect(&a_SendSelectedASNToRaw, &QAction::triggered, this, [=](){this->m_sendASNToEngine(ENGINE::RAW, selectionModel);});
-    connect(&a_SendSelectedASNToASNEnum, &QAction::triggered, this, [=](){this->m_sendASNToEnum(selectionModel);});
-}
-
 void CidrEnum::on_buttonAction_clicked(){
     /* check if there are results available else dont show the context menu */
     if(proxyModel->rowCount() < 1)
@@ -35,50 +16,55 @@ void CidrEnum::on_buttonAction_clicked(){
 
     /* creating the context menu... */
     QMenu menu(this);
-    /* adding to mainMenu */
-    menu.addAction(&a_ClearResults);
-    menu.addAction(&a_ExpandResults);
-    menu.addAction(&a_CollapseResults);
+    menu.addAction(tr("Clear"), this, [=](){this->clearResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    menu.addAction(tr("Expand"), this, [=](){ui->treeViewResults->expandAll();})->setIcon(QIcon(":/img/res/icons/expand.png"));
+    menu.addAction(tr("Collapse"), this, [=](){ui->treeViewResults->collapseAll();})->setIcon(QIcon(":/img/res/icons/collapse.png"));
     menu.addSeparator();
-    menu.addAction(&a_Save);
-    menu.addAction(&a_Copy);
+    menu.addAction(tr("Save"), this, [=](){this->saveResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    menu.addAction(tr("Copy"), this, [=](){this->copyResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendAllToProject);
+    menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendAllASNToOsint);
-    menu.addAction(&a_SendAllASNToRaw);
+    menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+    menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendAllASNToASNEnum);
+    menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
 
     /* showing the context menu... */
     menu.exec(pos);
 }
 
-void CidrEnum::on_treeResults_customContextMenuRequested(const QPoint &pos){
+void CidrEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
 
     /* check if user right clicked on items else dont show the context menu... */
-    if(!ui->treeResults->selectionModel()->isSelected(ui->treeResults->currentIndex()))
+    if(!ui->treeViewResults->selectionModel()->isSelected(ui->treeViewResults->currentIndex()))
         return;
 
     /* getting the selected items... */
-    selectionModel = ui->treeResults->selectionModel();
+    selectionModel = ui->treeViewResults->selectionModel();
 
     /* creating the context menu... */
     QMenu menu(this);
-
-    /* adding to mainMenu */
-    menu.addAction(&a_RemoveResults);
+    menu.addAction(tr("Remove"), this, [=](){this->clearResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     menu.addSeparator();
-    menu.addAction(&a_Save);
-    menu.addAction(&a_Copy);
+    menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
     menu.addSeparator();
-    menu.addAction(&a_SendSelectedToProject);
-    menu.addSeparator();
-    menu.addAction(&a_SendSelectedASNToOsint);
-    menu.addAction(&a_SendSelectedASNToRaw);
-    menu.addSeparator();
-    menu.addAction(&a_SendSelectedASNToASNEnum);
+    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent()))
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
+    if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent())){
+        menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addSeparator();
+        menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+    }
 
     /* showing the context menu... */
     menu.exec(QCursor::pos());

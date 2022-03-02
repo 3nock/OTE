@@ -11,11 +11,11 @@
  *     validate if selected index is cidr...
  */
 
-void CidrEnum::m_clearResults(){
+void CidrEnum::clearResults(){
     /* clear the results... */
     m_model->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({"    CIDR", "    Value"});
+    m_model->setHorizontalHeaderLabels({tr(" CIDR"), tr(" Value")});
     m_resultsSet.clear();
 
     /* clear the progressbar... */
@@ -24,7 +24,7 @@ void CidrEnum::m_clearResults(){
     ui->progressBar->hide();
 }
 
-void CidrEnum::m_removeResults(QItemSelectionModel *selectionModel){
+void CidrEnum::removeResults(){
     /* loop to delete all selected items */
     foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes())
     {
@@ -43,203 +43,252 @@ void CidrEnum::m_removeResults(QItemSelectionModel *selectionModel){
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void CidrEnum::m_saveResults(){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void CidrEnum::saveResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "CIDR-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "CIDR-Enum: Failed to open " << filename << " For saving Results";
         return;
+    }
 
     QJsonArray cidr_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
         cidr_array.append(cidr_to_json(cidr));
     }
 
     QJsonDocument document;
     document.setArray(cidr_array);
 
-    qDebug() << "Saving CIDR results to File: " << file.fileName();
     file.write(document.toJson());
     file.close();
 }
 
-void CidrEnum::m_saveResults(QItemSelectionModel *selection){
-    /* checks... */
-    QString filename = QFileDialog::getSaveFileName(this, "Save To File", "./");
-    if(filename.isEmpty())
+void CidrEnum::saveSelectedResults(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qDebug() << "CIDR-Enum: Failed to getSaveFileName";
         return;
+    }
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-    if(!file.isOpen())
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qDebug() << "CIDR-Enum: Failed to open " << filename << " For saving Results";
         return;
-
-    QJsonArray cidr_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(model_index.row(), model_index.column()));
-
-        cidr_array.append(cidr_to_json(cidr));
     }
 
-    QJsonDocument document;
-    document.setArray(cidr_array);
+    QJsonArray cidr_array;
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column() == 0){
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(model_index));
+                cidr_array.append(cidr_to_json(cidr));
+            }
+        }else
+            file.write(index.data().toString().append(NEWLINE).toUtf8());
+    }
 
-    qDebug() << "Saving CIDR results to File: " << file.fileName();
-    file.write(document.toJson());
+    if(!cidr_array.isEmpty()){
+        QJsonDocument document;
+        document.setArray(cidr_array);
+        file.write(document.toJson());
+    }
     file.close();
 }
 
-void CidrEnum::m_copyResults(){
+void CidrEnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     QJsonArray cidr_array;
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(index.row(), index.column()));
-
+        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
         cidr_array.append(cidr_to_json(cidr));
     }
 
     QJsonDocument document;
     document.setArray(cidr_array);
 
-    qDebug() << "Copying CIDR results to clipboard...";
+    qDebug() << "CIDR-Enum: Copying CIDR results to clipboard...";
     clipboard->setText(document.toJson());
 }
 
-void CidrEnum::m_copyResults(QItemSelectionModel *selection){
+void CidrEnum::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
-
+    QString clipboardData;
     QJsonArray cidr_array;
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(model_index.row(), model_index.column()));
-
-        cidr_array.append(cidr_to_json(cidr));
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        if(index.column() == 0){
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            if(model_index.parent() == m_model->invisibleRootItem()->index()){
+                s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(model_index));
+                cidr_array.append(cidr_to_json(cidr));
+            }
+        }else
+            clipboardData.append(index.data().toString().append(NEWLINE));
     }
 
-    QJsonDocument document;
-    document.setArray(cidr_array);
+    qDebug() << "CIDR-Enum: Copying CIDR results to clipboard...";
 
-    qDebug() << "Copying CIDR results to clipboard...";
-    clipboard->setText(document.toJson());
+    if(cidr_array.isEmpty())
+        clipboard->setText(clipboardData.trimmed());
+    else {
+        QJsonDocument document;
+        document.setArray(cidr_array);
+        clipboard->setText(document.toJson());
+    }
 }
 
 ///
-/// send all...
+/// Sending Results
 ///
 
-void CidrEnum::m_sendToProject(){
+void CidrEnum::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(m_model->item(index.row(), index.column()));
-        project->addEnumCIDR(cidr_to_struct(item));
-    }
-}
-
-void CidrEnum::m_sendASNToEngine(ENGINE engine){
-    switch (engine) {
-    case ENGINE::OSINT:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(index.row(), index.column()));
-
-            for(int j = 0; j < cidr->asns->rowCount(); j++)
-                emit sendResultsToOsint(cidr->asns->child(j, 1)->text(), RESULT_TYPE::ASN);
-        }
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(index.row(), index.column()));
-
-            for(int j = 0; j < cidr->asns->rowCount(); j++)
-                emit sendResultsToRaw(cidr->asns->child(j, 1)->text(), RESULT_TYPE::ASN);
-        }
-        emit changeTabToRaw();
-        break;
-    default:
-        break;
-    }
-}
-
-void CidrEnum::m_sendASNToEnum(){
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
-    {
-        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(index.row(), index.column()));
-
-        for(int j = 0; j < cidr->asns->rowCount(); j++)
-            emit sendResultsToAsnEnum(cidr->asns->child(j, 1)->text(), RESULT_TYPE::ASN);
-    }
-    emit changeTabToAsnEnum();
-}
-
-///
-/// send selected...
-///
-
-void CidrEnum::m_sendToProject(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(model_index.row(), model_index.column()));
-
+        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
         project->addEnumCIDR(cidr_to_struct(cidr));
     }
 }
 
-void CidrEnum::m_sendASNToEngine(ENGINE engine, QItemSelectionModel *selection){
+void CidrEnum::sendSelectedToProject(){
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == m_model->invisibleRootItem()->index()){
+            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(model_index));
+            project->addEnumCIDR(cidr_to_struct(cidr));
+        }
+    }
+}
+
+void CidrEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
     switch (engine) {
     case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            QModelIndex model_index = proxyModel->mapToSource(index);
-            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(model_index.row(), model_index.column()));
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
-            for(int j = 0; j < cidr->asns->rowCount(); j++)
-                emit sendResultsToOsint(cidr->asns->child(j, 1)->text(), RESULT_TYPE::ASN);
+            if(result_type == RESULT_TYPE::ASN){
+                for(int j = 0; j < cidr->asns->rowCount(); j++)
+                    emit sendResultsToOsint(cidr->asns->child(j, 1)->text(), result_type);
+            }
+            if(result_type == RESULT_TYPE::EMAIL){
+                for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
+                    emit sendResultsToOsint(cidr->emailContacts->child(j, 1)->text(), result_type);
+                for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
+                    emit sendResultsToOsint(cidr->abuseContacts->child(j, 1)->text(), result_type);
+            }
         }
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        foreach(const QModelIndex &index, selection->selectedIndexes()){
-            QModelIndex model_index = proxyModel->mapToSource(index);
-            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(model_index.row(), model_index.column()));
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
-            for(int j = 0; j < cidr->asns->rowCount(); j++)
-                emit sendResultsToRaw(cidr->asns->child(j, 1)->text(), RESULT_TYPE::ASN);
+            if(result_type == RESULT_TYPE::ASN){
+                for(int j = 0; j < cidr->asns->rowCount(); j++)
+                    emit sendResultsToRaw(cidr->asns->child(j, 1)->text(), result_type);
+            }
+            if(result_type == RESULT_TYPE::EMAIL){
+                for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
+                    emit sendResultsToRaw(cidr->emailContacts->child(j, 1)->text(), result_type);
+                for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
+                    emit sendResultsToRaw(cidr->abuseContacts->child(j, 1)->text(), result_type);
+            }
         }
         emit changeTabToRaw();
         break;
-
     default:
         break;
     }
 }
 
-void CidrEnum::m_sendASNToEnum(QItemSelectionModel *selection){
-    foreach(const QModelIndex &index, selection->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->item(model_index.row(), model_index.column()));
-
-        for(int j = 0; j < cidr->asns->rowCount(); j++)
-            emit sendResultsToAsnEnum(cidr->asns->child(j, 1)->text(), RESULT_TYPE::ASN);
+void CidrEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    switch (engine) {
+    case ENGINE::OSINT:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToOsint(index.data().toString(), result_type);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToRaw(index.data().toString(), result_type);
+        emit changeTabToRaw();
+        break;
+    default:
+        break;
     }
-    emit changeTabToAsnEnum();
 }
+
+void CidrEnum::sendToEnum(const TOOL &tool){
+    switch (tool) {
+    case TOOL::ASN:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < cidr->asns->rowCount(); j++)
+                emit sendResultsToAsnEnum(cidr->asns->child(j, 1)->text(), RESULT_TYPE::ASN);
+        }
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::EMAIL:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        {
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
+                emit sendResultsToEmailEnum(cidr->emailContacts->child(j, 1)->text(), RESULT_TYPE::EMAIL);
+            for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
+                emit sendResultsToEmailEnum(cidr->abuseContacts->child(j, 1)->text(), RESULT_TYPE::EMAIL);
+        }
+        emit changeTabToEmailEnum();
+        break;
+    default:
+        break;
+    }
+
+}
+
+void CidrEnum::sendSelectedToEnum(const TOOL &tool){
+    switch (tool) {
+    case TOOL::ASN:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToAsnEnum(index.data().toString(), RESULT_TYPE::ASN);
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::EMAIL:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            emit sendResultsToEmailEnum(index.data().toString(), RESULT_TYPE::EMAIL);
+        emit changeTabToEmailEnum();
+        break;
+    default:
+        break;
+    }
+}
+
+///
+/// Receiving Targets
+///
 
 void CidrEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::CIDR)

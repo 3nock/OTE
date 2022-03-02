@@ -17,6 +17,8 @@ void CidrEnum::onScanThreadEnded(){
         else
             this->log("------------------ End --------------\n");
 
+        qInfo() << "[CIDR-Enum] Scan Ended";
+
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)
             ui->progressBar->setValue(ui->progressBar->maximum());
@@ -33,6 +35,7 @@ void CidrEnum::onScanThreadEnded(){
 
 void CidrEnum::startScan(){
     ScanArgs scanArgs;
+    scanArgs.config = m_scanConfig;
 
     /* resetting */
     ui->progressBar->show();
@@ -63,8 +66,7 @@ void CidrEnum::startScan(){
         connect(bgpview, &IpInfo::infoLog, this, &CidrEnum::onInfoLog);
         connect(bgpview, &IpInfo::errorLog, this, &CidrEnum::onErrorLog);
         connect(bgpview, &IpInfo::rateLimitLog, this, &CidrEnum::onRateLimitLog);
-        connect(this, &CidrEnum::stopScanThread, bgpview, &AbstractOsintModule::onStop);
-        connect(this, &CidrEnum::pauseScanThread, bgpview, &AbstractOsintModule::onPause);
+        connect(this, &CidrEnum::stopScanThread, bgpview, &Bgpview::onStop);
         connect(cThread, &QThread::finished, this, &CidrEnum::onScanThreadEnded);
         connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

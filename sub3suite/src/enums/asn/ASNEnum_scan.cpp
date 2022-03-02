@@ -45,6 +45,7 @@ void ASNEnum::onScanThreadEnded(){
 
 void ASNEnum::startScan(){
     ScanArgs scanArgs;
+    scanArgs.config = m_scanConfig;
 
     /* resetting */
     ui->progressBar->show();
