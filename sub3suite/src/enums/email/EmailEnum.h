@@ -25,10 +25,12 @@ class EmailEnum : public AbstractEnum {
 
     public slots:
         void onResult(s3s_struct::Email results);
+
         void onScanThreadEnded();
         void onInfoLog(ScanLog log);
         void onErrorLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
+        void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QString, RESULT_TYPE);
 
@@ -43,9 +45,13 @@ class EmailEnum : public AbstractEnum {
 
     private:
         Ui::EmailEnum *ui;
+
         QStandardItemModel *m_model;
         QStringListModel *m_targetsListModel;
+
+        QMap<QString,QString> m_failedScans;
         QMap<QString, s3s_item::Email*> m_resultsSet;
+
         ScanConfig *m_scanConfig;
         ScanArgs *m_scanArgs;
 

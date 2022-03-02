@@ -2,6 +2,25 @@
 #include "ui_SSLEnum.h"
 
 
+void SSLEnum::onResult(QByteArray rawCert){
+    foreach(const QSslCertificate &cert, QSslCertificate::fromData(rawCert, QSsl::Pem))
+    {
+        QString hash(cert.digest(QCryptographicHash::Sha1));
+        if(m_resultsSet.contains(hash))
+            continue;
+
+        s3s_item::SSL *item = new s3s_item::SSL;
+        item->setValues(hash, cert);
+        m_model->appendRow(item);
+        m_resultsSet.insert(hash, item);
+
+        if(m_scanConfig->autosaveToProject)
+            project->addEnumSSL(hash, cert);
+    }
+
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+}
+
 void SSLEnum::onErrorLog(ScanLog log){
     QString message("<font color=\"red\">"+log.message+"</font>");
     QString module("<font color=\"red\">"+log.moduleName+"</font>");
@@ -10,6 +29,8 @@ void SSLEnum::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }
 
 void SSLEnum::onInfoLog(ScanLog log){
@@ -28,23 +49,6 @@ void SSLEnum::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
-}
 
-void SSLEnum::onResult(QByteArray rawCert){
-    foreach(const QSslCertificate &cert, QSslCertificate::fromData(rawCert, QSsl::Pem))
-    {
-        QString hash(cert.digest(QCryptographicHash::Sha1));
-        if(m_resultsSet.contains(hash))
-            continue;
-
-        s3s_item::SSL *item = new s3s_item::SSL;
-        item->setValues(hash, cert);
-        m_model->appendRow(item);
-        m_resultsSet.insert(hash, item);
-
-        if(m_scanConfig->autosaveToProject)
-            project->addEnumSSL(hash, cert);
-    }
-
-    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_failedScans.insert(log.target, log.message);
 }

@@ -34,6 +34,8 @@ void MXEnum::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }
 
 void MXEnum::onInfoLog(ScanLog log){
@@ -52,4 +54,6 @@ void MXEnum::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }

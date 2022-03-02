@@ -40,6 +40,7 @@ class Raw : public AbstractEngine{
         void onInfoLog(ScanLog log);
         void onResults(s3s_struct::RAW raw); // for Json results
         void onResultsTxt(s3s_struct::RAW raw); // for normal txt results
+        void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
@@ -159,6 +160,7 @@ class Raw : public AbstractEngine{
 
         ScanConfig *m_scanConfig;
         ScanArgs *m_scanArgs;
+        QMap<QString,QString> m_failedScans;
         QMap<QString, QStringList> m_optionSet;
         JsonSyntaxHighlighter *m_resultsHighlighter = nullptr;
         JsonSyntaxHighlighter *m_jsonHighlighter = nullptr;

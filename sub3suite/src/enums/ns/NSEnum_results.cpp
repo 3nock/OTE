@@ -34,6 +34,8 @@ void NSEnum::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }
 
 void NSEnum::onInfoLog(ScanLog log){
@@ -52,4 +54,6 @@ void NSEnum::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }

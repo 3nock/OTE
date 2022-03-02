@@ -33,6 +33,7 @@ class ASNEnum : public AbstractEnum{
         void onInfoLog(ScanLog log);
         void onErrorLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
+        void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QString, RESULT_TYPE);
 
@@ -49,7 +50,10 @@ class ASNEnum : public AbstractEnum{
         Ui::ASNEnum *ui;
         QStandardItemModel *m_model;
         QStringListModel *m_targetsListModel;
+
+        QMap<QString,QString> m_failedScans;
         QMap<QString, s3s_item::ASN*> m_resultsSet;
+
         ScanConfig *m_scanConfig;
         ScanArgs *m_scanArgs;
 

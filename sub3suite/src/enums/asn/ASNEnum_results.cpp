@@ -61,6 +61,8 @@ void ASNEnum::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }
 
 void ASNEnum::onInfoLog(ScanLog log){
@@ -79,4 +81,6 @@ void ASNEnum::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }

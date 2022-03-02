@@ -26,10 +26,12 @@ class CidrEnum : public AbstractEnum {
 
     public slots:
         void onResult(s3s_struct::CIDR);
+
         void onScanThreadEnded();
         void onErrorLog(ScanLog log);
         void onInfoLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
+        void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QString, RESULT_TYPE);
 
@@ -44,9 +46,13 @@ class CidrEnum : public AbstractEnum {
 
     private:
         Ui::CidrEnum *ui;
+
         QStandardItemModel *m_model;
         QStringListModel *m_targetsListModel;
+
+        QMap<QString,QString> m_failedScans;
         QMap<QString, s3s_item::CIDR*> m_resultsSet;
+
         ScanConfig *m_scanConfig;
         ScanArgs *m_scanArgs;
 

@@ -34,6 +34,8 @@ void IpEnum::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }
 
 void IpEnum::onInfoLog(ScanLog log){
@@ -52,4 +54,6 @@ void IpEnum::onRateLimitLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
     ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
 }

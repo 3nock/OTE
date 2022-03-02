@@ -24,11 +24,13 @@ class SSLEnum : public AbstractEnum {
         ~SSLEnum();
 
     public slots:
-        void onResult(QByteArray rawSSL);
+        void onResult(QByteArray);
+
         void onScanThreadEnded();
         void onInfoLog(ScanLog log);
         void onErrorLog(ScanLog log);
         void onRateLimitLog(ScanLog log);
+        void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QString, RESULT_TYPE);
 
@@ -41,11 +43,17 @@ class SSLEnum : public AbstractEnum {
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditFilter_textChanged(const QString &arg1);
 
-    private:
+        void on_treeViewResults_clicked(const QModelIndex &index);
+
+private:
         Ui::SSLEnum *ui;
+
         QStandardItemModel *m_model;
         QStringListModel *m_targetsListModel;
+
+        QMap<QString,QString> m_failedScans;
         QMap<QString, s3s_item::SSL*> m_resultsSet;
+
         ScanConfig *m_scanConfig;
         ScanArgs *m_scanArgs;
 

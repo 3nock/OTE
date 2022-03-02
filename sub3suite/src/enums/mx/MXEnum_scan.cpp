@@ -1,6 +1,8 @@
 #include "MXEnum.h"
 #include "ui_MXEnum.h"
 
+#include "src/dialogs/FailedScansDialog.h"
+
 
 void MXEnum::onScanThreadEnded(){
     status->activeScanThreads--;
@@ -30,12 +32,19 @@ void MXEnum::onScanThreadEnded(){
 
         ui->buttonStart->setEnabled(true);
         ui->buttonStop->setDisabled(true);
+
+        /* launching the failed scans dialog if there were failed scans */
+        if(!m_failedScans.isEmpty()){
+            FailedScansDialog *failedScansDialog = new FailedScansDialog(this, m_failedScans);
+            failedScansDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+
+            connect(failedScansDialog, &FailedScansDialog::reScan, this, &MXEnum::onReScan);
+            failedScansDialog->show();
+        }
     }
 }
 
 void MXEnum::startScan(){
-    ScanArgs scanArgs;
-
     /* resetting */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -44,21 +53,21 @@ void MXEnum::startScan(){
     /* getting targets */
     if(ui->checkBoxMultipleTargets->isChecked()){
         foreach(const QString &target, m_targetsListModel->stringList())
-            scanArgs.targets.enqueue(target);
+            m_scanArgs->targets.enqueue(target);
     }else{
-        scanArgs.targets.enqueue(ui->lineEditTarget->text());
+        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
     }
 
     /* progressbar maximum value */
-    ui->progressBar->setMaximum(scanArgs.targets.length());
-    scanArgs.config->progress = 0;
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
+    m_scanArgs->config->progress = 0;
 
-    scanArgs.outputInfoMX = true;
+    m_scanArgs->outputInfoMX = true;
 
     QThread *cThread = new QThread;
     switch (ui->comboBoxEngine->currentIndex()) {
     case 0: // DNSLytics
-        Dnslytics *dnslytics = new Dnslytics(scanArgs);
+        Dnslytics *dnslytics = new Dnslytics(*m_scanArgs);
         dnslytics->startScan(cThread);
         dnslytics->moveToThread(cThread);
         connect(dnslytics, &Dnslytics::infoMX, this, &MXEnum::onResult);
@@ -71,4 +80,49 @@ void MXEnum::startScan(){
         cThread->start();
         status->activeScanThreads++;
     }
+}
+
+void MXEnum::onReScan(QQueue<QString> targets){
+    if(targets.isEmpty())
+        return;
+
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
+
+    /* resetting */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    ui->progressBar->clearMask();
+
+    /* getting targets */
+    m_scanArgs->targets = targets;
+
+    /* progressbar maximum value */
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
+    m_scanArgs->config->progress = 0;
+
+    m_scanArgs->outputInfoMX = true;
+
+    QThread *cThread = new QThread;
+    switch (ui->comboBoxEngine->currentIndex()) {
+    case 0: // DNSLytics
+        Dnslytics *dnslytics = new Dnslytics(*m_scanArgs);
+        dnslytics->startScan(cThread);
+        dnslytics->moveToThread(cThread);
+        connect(dnslytics, &Dnslytics::infoMX, this, &MXEnum::onResult);
+        connect(dnslytics, &Dnslytics::infoLog, this, &MXEnum::onInfoLog);
+        connect(dnslytics, &Dnslytics::errorLog, this, &MXEnum::onErrorLog);
+        connect(dnslytics, &Dnslytics::rateLimitLog, this, &MXEnum::onRateLimitLog);
+        connect(cThread, &QThread::finished, this, &MXEnum::onScanThreadEnded);
+        connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        cThread->start();
+        status->activeScanThreads++;
+    }
+
+    /* logs */
+    this->log("------------------ Re-Scan ----------------");
+    qInfo() << "[MX-Enum] Re-Scan Started";
 }

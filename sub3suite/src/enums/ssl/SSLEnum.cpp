@@ -133,3 +133,12 @@ void SSLEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
     ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
+
+void SSLEnum::on_treeViewResults_clicked(const QModelIndex &index){
+    QModelIndex model_index = proxyModel->mapToSource(index);
+    if(model_index.parent() == m_model->invisibleRootItem()->index()){
+        s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
+        ui->plainTextEditRawCert->setPlainText(item->raw);
+        ui->plainTextEditRawKey->setPlainText(item->raw_key);
+    }
+}

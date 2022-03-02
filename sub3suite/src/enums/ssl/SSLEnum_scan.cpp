@@ -1,6 +1,8 @@
 #include "SSLEnum.h"
 #include "ui_SSLEnum.h"
 
+#include "src/dialogs/FailedScansDialog.h"
+
 
 void SSLEnum::onScanThreadEnded(){
     status->activeScanThreads--;
@@ -30,13 +32,23 @@ void SSLEnum::onScanThreadEnded(){
 
         ui->buttonStart->setEnabled(true);
         ui->buttonStop->setDisabled(true);
+
+        /* launching the failed scans dialog if there were failed scans */
+        if(!m_failedScans.isEmpty()){
+            FailedScansDialog *failedScansDialog = new FailedScansDialog(this, m_failedScans);
+            failedScansDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+
+            connect(failedScansDialog, &FailedScansDialog::reScan, this, &SSLEnum::onReScan);
+            failedScansDialog->show();
+        }
     }
+
+    /* logs */
+    this->log("------------------ Re-Scan ----------------");
+    qInfo() << "[SSL-Enum] Re-Scan Started";
 }
 
 void SSLEnum::startScan(){
-    ScanArgs scanArgs;
-    scanArgs.config = m_scanConfig;
-
     /* resetting */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -45,21 +57,63 @@ void SSLEnum::startScan(){
     /* getting targets */
     if(ui->checkBoxMultipleTargets->isChecked()){
         foreach(const QString &target, m_targetsListModel->stringList())
-            scanArgs.targets.enqueue(target);
+            m_scanArgs->targets.enqueue(target);
     }else{
-        scanArgs.targets.enqueue(ui->lineEditTarget->text());
+        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
     }
 
     /* progressbar maximum value */
-    ui->progressBar->setMaximum(scanArgs.targets.length());
-    scanArgs.config->progress = 0;
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
+    m_scanArgs->config->progress = 0;
 
-    scanArgs.outputInfoSSLCert = true;
+    m_scanArgs->outputInfoSSLCert = true;
 
     QThread *cThread = new QThread;
     switch (ui->comboBoxModule->currentIndex()) {
     case 0: // crt.sh
-        Crtsh *crtsh = new Crtsh(scanArgs);
+        Crtsh *crtsh = new Crtsh(*m_scanArgs);
+        crtsh->startScan(cThread);
+        crtsh->moveToThread(cThread);
+        connect(crtsh, &Crtsh::rawCert, this, &SSLEnum::onResult);
+        connect(crtsh, &Crtsh::infoLog, this, &SSLEnum::onInfoLog);
+        connect(crtsh, &Crtsh::errorLog, this, &SSLEnum::onErrorLog);
+        connect(crtsh, &Crtsh::rateLimitLog, this, &SSLEnum::onRateLimitLog);
+        connect(this, &SSLEnum::stopScanThread, crtsh, &AbstractOsintModule::onStop);
+        connect(cThread, &QThread::finished, this, &SSLEnum::onScanThreadEnded);
+        connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);
+        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+        cThread->start();
+        status->activeScanThreads++;
+    }
+}
+
+void SSLEnum::onReScan(QQueue<QString> targets){
+    if(targets.isEmpty())
+        return;
+
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
+
+    /* resetting */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    ui->progressBar->clearMask();
+
+    /* getting targets */
+    m_scanArgs->targets = targets;
+
+    /* progressbar maximum value */
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
+    m_scanArgs->config->progress = 0;
+
+    m_scanArgs->outputInfoSSLCert = true;
+
+    QThread *cThread = new QThread;
+    switch (ui->comboBoxModule->currentIndex()) {
+    case 0: // crt.sh
+        Crtsh *crtsh = new Crtsh(*m_scanArgs);
         crtsh->startScan(cThread);
         crtsh->moveToThread(cThread);
         connect(crtsh, &Crtsh::rawCert, this, &SSLEnum::onResult);
