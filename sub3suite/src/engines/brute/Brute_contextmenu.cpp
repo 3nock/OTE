@@ -23,7 +23,9 @@ void Brute::on_buttonAction_clicked(){
     QMenu saveMenu(this);
     saveMenu.setTitle(tr("Save"));
     saveMenu.setIcon(QIcon(":/img/res/icons/save.png"));
-    saveMenu.addAction(tr("Subdomain,Ip"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAINIP);});
+    saveMenu.addAction(tr("as CSV"), this, [=](){this->saveResults(RESULT_TYPE::CSV);});
+    saveMenu.addAction(tr("as JSON"), this, [=](){this->saveResults(RESULT_TYPE::JSON);});
+    saveMenu.addSeparator();
     saveMenu.addAction(tr("Subdomain"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);});
     saveMenu.addAction(tr("Ip"), this, [=](){this->saveResults(RESULT_TYPE::IP);});
 
@@ -31,7 +33,9 @@ void Brute::on_buttonAction_clicked(){
     QMenu copyMenu(this);
     copyMenu.setTitle(tr("Copy"));
     copyMenu.setIcon(QIcon(":/img/res/icons/copy.png"));
-    copyMenu.addAction(tr("Subdomain,Ip"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAINIP);});
+    copyMenu.addAction(tr("as CSV"), this, [=](){this->copyResults(RESULT_TYPE::CSV);});
+    copyMenu.addAction(tr("as JSON"), this, [=](){this->copyResults(RESULT_TYPE::JSON);});
+    copyMenu.addSeparator();
     copyMenu.addAction(tr("Subdomain"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAIN);});
     copyMenu.addAction(tr("Ip"), this, [=](){this->copyResults(RESULT_TYPE::IP);});
 

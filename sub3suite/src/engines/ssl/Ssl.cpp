@@ -59,6 +59,7 @@ void Ssl::initUI(){
     /* setting widget's properties */
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
+    ui->labelOUT->setProperty("s3s_color", true);
 
     /* enabling and disabling widgets */
     ui->progressBar->hide();

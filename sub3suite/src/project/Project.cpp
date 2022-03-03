@@ -44,13 +44,11 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     proxyModel->setFilterKeyColumn(0);
     ui->treeViewTree->setModel(proxyModel);
 
-    this->init_notesMenuBar();
-    this->init_sitemapMenuBar();
-    this->initMenuBar_project();
+    this->init_menubar_tree();
+    this->init_menubar_notes();
+    this->init_menubar_project();
 }
 Project::~Project(){
-    delete m_sitemapMenuBar;
-    delete m_notesMenuBar;
     delete proxyModel;
     delete ui;
 }
@@ -93,51 +91,55 @@ void Project::initUI(){
                              << static_cast<int>((this->width() * 0.20)));
 }
 
-void Project::initActions(){
-    a_copy.setIcon(QIcon(":/img/res/icons/copy.png"));
-    a_save.setIcon(QIcon(":/img/res/icons/save.png"));
-    a_send.setIcon(QIcon(":/img/res/icons/send.png"));
-    a_clear.setIcon(QIcon(":/img/res/icons/delete.png"));
-    a_expand.setIcon(QIcon(":/img/res/icons/expand.png"));
-    a_collapse.setIcon(QIcon(":/img/res/icons/collapse.png"));
+void Project::init_menubar_tree(){
+    QAction copy;
+    QAction save;
+    QAction send;
+    QAction clear;
+    QAction expand;
+    QAction collapse;
 
-    a_copy.setToolTip("Copy");
-    a_save.setToolTip("Save");
-    a_send.setToolTip("Send");
-    a_clear.setToolTip("Clear");
-    a_expand.setToolTip("Expand");
-    a_collapse.setToolTip("Collapse");
+    copy.setIcon(QIcon(":/img/res/icons/copy.png"));
+    save.setIcon(QIcon(":/img/res/icons/save.png"));
+    send.setIcon(QIcon(":/img/res/icons/send.png"));
+    clear.setIcon(QIcon(":/img/res/icons/delete.png"));
+    expand.setIcon(QIcon(":/img/res/icons/expand.png"));
+    collapse.setIcon(QIcon(":/img/res/icons/collapse.png"));
 
-    connect(&a_copy, &QAction::triggered, this, [=](){this->action_copy();});
-    connect(&a_save, &QAction::triggered, this, [=](){this->action_save();});
-    connect(&a_send, &QAction::triggered, this, [=](){this->action_send();});
-    connect(&a_clear, &QAction::triggered, this, [=](){this->action_clear();});
-    connect(&a_expand, &QAction::triggered, this, [=](){ui->treeViewTree->expandAll();});
-    connect(&a_collapse, &QAction::triggered, this, [=](){ui->treeViewTree->collapseAll();});
+    copy.setToolTip("Copy");
+    save.setToolTip("Save");
+    send.setToolTip("Send");
+    clear.setToolTip("Clear");
+    expand.setToolTip("Expand");
+    collapse.setToolTip("Collapse");
+
+    connect(&copy, &QAction::triggered, this, [=](){this->action_copy();});
+    connect(&save, &QAction::triggered, this, [=](){this->action_save();});
+    connect(&send, &QAction::triggered, this, [=](){this->action_send();});
+    connect(&clear, &QAction::triggered, this, [=](){this->action_clear();});
+    connect(&expand, &QAction::triggered, this, [=](){ui->treeViewTree->expandAll();});
+    connect(&collapse, &QAction::triggered, this, [=](){ui->treeViewTree->collapseAll();});
+
+    menubar_tree = new QMenuBar(this);
+    menubar_tree->addAction(&save);
+    menubar_tree->addAction(&copy);
+    menubar_tree->addAction(&send);
+    menubar_tree->addAction(&clear);
+    menubar_tree->addAction(&expand);
+    menubar_tree->addAction(&collapse);
+    menubar_tree->setToolTipDuration(2);
+    ui->horizontalLayoutMap->insertWidget(0, menubar_tree);
 }
 
-void Project::init_sitemapMenuBar(){
-    this->initActions();
-    m_sitemapMenuBar = new QMenuBar(this);
-    m_sitemapMenuBar->addAction(&a_save);
-    m_sitemapMenuBar->addAction(&a_copy);
-    m_sitemapMenuBar->addAction(&a_send);
-    m_sitemapMenuBar->addAction(&a_clear);
-    m_sitemapMenuBar->addAction(&a_expand);
-    m_sitemapMenuBar->addAction(&a_collapse);
-    m_sitemapMenuBar->setToolTipDuration(2);
-    ui->horizontalLayoutMap->insertWidget(0, m_sitemapMenuBar);
+void Project::init_menubar_notes(){
+    menubar_notes = new QMenuBar(this);
+    menubar_notes->addAction("Clear", this, [=](){ui->plainTextEdit->clear();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    ui->horizontalLayoutNotes->insertWidget(0, menubar_notes);
 }
 
-void Project::init_notesMenuBar(){
-    m_notesMenuBar = new QMenuBar(this);
-    m_notesMenuBar->addAction("Clear", this, [=](){ui->plainTextEdit->clear();})->setIcon(QIcon(":/img/res/icons/delete.png"));
-    ui->horizontalLayoutNotes->insertWidget(0, m_notesMenuBar);
-}
-
-void Project::initMenuBar_project(){
-    m_menuBar_project = new QMenuBar(this);
-    m_menuBar_project->addAction("Save", this, [=](){model->saveProject();})->setIcon(QIcon(":/img/res/icons/save.png"));
-    m_menuBar_project->addAction("Clear", this, [=](){model->clearModels();})->setIcon(QIcon(":/img/res/icons/delete.png"));
-    ui->horizontalLayout_summary_project->insertWidget(0, m_menuBar_project);
+void Project::init_menubar_project(){
+    menubar_project = new QMenuBar(this);
+    menubar_project->addAction("Save", this, [=](){model->saveProject();})->setIcon(QIcon(":/img/res/icons/save.png"));
+    menubar_project->addAction("Clear", this, [=](){model->clearModels();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    ui->horizontalLayout_summary_project->insertWidget(0, menubar_project);
 }

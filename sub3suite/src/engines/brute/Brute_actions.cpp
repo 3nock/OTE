@@ -97,7 +97,7 @@ void Brute::saveResults(const RESULT_TYPE &result_type){
         }
         break;
 
-    case RESULT_TYPE::SUBDOMAINIP:
+    case RESULT_TYPE::CSV:
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QString host(proxyModel->index(i, 0).data().toString());
             QString ipv4(proxyModel->index(i, 1).data().toString());
@@ -110,6 +110,24 @@ void Brute::saveResults(const RESULT_TYPE &result_type){
 
             file.write(host.append(NEWLINE).toUtf8());
         }
+        break;
+
+    case RESULT_TYPE::JSON:
+    {
+        QJsonArray array;
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QJsonArray ip_array;
+            ip_array.append(proxyModel->index(i, 1).data().toString());
+            ip_array.append(proxyModel->index(i, 2).data().toString());
+
+            QJsonObject object;
+            object.insert(proxyModel->index(i, 0).data().toString(), ip_array);
+            array.append(object);
+        }
+        QJsonDocument document;
+        document.setArray(array);
+        file.write(document.toJson());
+    }
         break;
 
     default:
@@ -162,7 +180,7 @@ void Brute::copyResults(const RESULT_TYPE &result_type){
         }
         break;
 
-    case RESULT_TYPE::SUBDOMAINIP:
+    case RESULT_TYPE::CSV:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
         {
             QString host(proxyModel->index(i, 0).data().toString());
@@ -176,6 +194,24 @@ void Brute::copyResults(const RESULT_TYPE &result_type){
 
             clipboardData.append(host).append(NEWLINE);
         }
+        break;
+
+    case RESULT_TYPE::JSON:
+    {
+        QJsonArray array;
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QJsonArray ip_array;
+            ip_array.append(proxyModel->index(i, 1).data().toString());
+            ip_array.append(proxyModel->index(i, 2).data().toString());
+
+            QJsonObject object;
+            object.insert(proxyModel->index(i, 0).data().toString(), ip_array);
+            array.append(object);
+        }
+        QJsonDocument document;
+        document.setArray(array);
+        clipboardData.append(document.toJson());
+    }
         break;
 
     default:

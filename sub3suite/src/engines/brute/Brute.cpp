@@ -65,6 +65,7 @@ void Brute::iniUI(){
     /* widget properties */
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
+    ui->labelOUT->setProperty("s3s_color", true);
 
     /* placeholder texts */
     ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));

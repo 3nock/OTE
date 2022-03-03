@@ -16,12 +16,12 @@ SaveProjectDialog::SaveProjectDialog(ProjectModel *projectModel, QWidget *parent
     this->setWindowIcon(QIcon(":/img/res/icons/save.png"));
 
     /* setting the data */
-    ui->lineEditName->setText(m_projectModel->projectInfo.name);
+    ui->lineEditName->setText(m_projectModel->info.name);
 
-    if(m_projectModel->projectInfo.path.isEmpty())
+    if(m_projectModel->info.path.isEmpty())
         ui->lineEditPath->setText(CONFIG.value("projects_path").toString());
     else{
-        QString path = m_projectModel->projectInfo.path.remove(m_projectModel->projectInfo.name+".s3s");
+        QString path = m_projectModel->info.path.remove(m_projectModel->info.name+".s3s");
         ui->lineEditPath->setText(path);
     }
 }
@@ -44,20 +44,20 @@ void SaveProjectDialog::on_buttonSave_clicked(){
         return;
     }
 
-    QString prev_name = m_projectModel->projectInfo.name;
-    QString prev_path = m_projectModel->projectInfo.path;
+    QString prev_name = m_projectModel->info.name;
+    QString prev_path = m_projectModel->info.path;
 
     /* setting new copy details */
-    m_projectModel->projectInfo.name = name;
-    m_projectModel->projectInfo.path = path+"/"+name+".s3s";
+    m_projectModel->info.name = name;
+    m_projectModel->info.path = path+"/"+name+".s3s";
 
-    qDebug() << "Saving a project copy: " << m_projectModel->projectInfo.path;
+    qDebug() << "Saving a project copy: " << m_projectModel->info.path;
     m_projectModel->saveProject();
     qDebug() << "Saving project copy done!";
 
     /* restoring default details */
-    m_projectModel->projectInfo.name = prev_name;
-    m_projectModel->projectInfo.path = prev_path;
+    m_projectModel->info.name = prev_name;
+    m_projectModel->info.path = prev_path;
 
     accept();
 }

@@ -61,6 +61,7 @@ void Active::initUI(){
     ui->frame->setProperty("default_frame", true);
     ui->framePort->setProperty("dark_frame",true);
     ui->labelResultsCount->setProperty("dark", true);
+    ui->labelOUT->setProperty("s3s_color", true);
 
     /* hiding widgets */
     ui->framePort->hide();

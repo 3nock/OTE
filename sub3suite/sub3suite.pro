@@ -109,6 +109,7 @@ SOURCES += \
     src/items/IPItem.cpp \
     src/items/MXItem.cpp \
     src/items/NSItem.cpp \
+    src/project/Project_contextmenu.cpp \
     src/project/model/Explorer.cpp \
     src/project/model/ProjectModel.cpp \
     src/project/model/ProjectModel_serialization.cpp \
