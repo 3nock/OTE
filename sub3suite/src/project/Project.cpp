@@ -45,7 +45,6 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     ui->treeViewTree->setModel(proxyModel);
 
     this->init_menubar_tree();
-    this->init_menubar_notes();
     this->init_menubar_project();
 }
 Project::~Project(){
@@ -92,49 +91,43 @@ void Project::initUI(){
 }
 
 void Project::init_menubar_tree(){
-    QAction copy;
-    QAction save;
-    QAction send;
-    QAction clear;
-    QAction expand;
-    QAction collapse;
+    a_copy.setIcon(QIcon(":/img/res/icons/copy.png"));
+    a_save.setIcon(QIcon(":/img/res/icons/save.png"));
+    a_send.setIcon(QIcon(":/img/res/icons/send.png"));
+    a_clear.setIcon(QIcon(":/img/res/icons/delete.png"));
+    a_expand.setIcon(QIcon(":/img/res/icons/expand.png"));
+    a_collapse.setIcon(QIcon(":/img/res/icons/collapse.png"));
 
-    copy.setIcon(QIcon(":/img/res/icons/copy.png"));
-    save.setIcon(QIcon(":/img/res/icons/save.png"));
-    send.setIcon(QIcon(":/img/res/icons/send.png"));
-    clear.setIcon(QIcon(":/img/res/icons/delete.png"));
-    expand.setIcon(QIcon(":/img/res/icons/expand.png"));
-    collapse.setIcon(QIcon(":/img/res/icons/collapse.png"));
+    a_copy.setToolTip("Copy");
+    a_save.setToolTip("Save");
+    a_send.setToolTip("Send");
+    a_clear.setToolTip("Clear");
+    a_expand.setToolTip("Expand");
+    a_collapse.setToolTip("Collapse");
 
-    copy.setToolTip("Copy");
-    save.setToolTip("Save");
-    send.setToolTip("Send");
-    clear.setToolTip("Clear");
-    expand.setToolTip("Expand");
-    collapse.setToolTip("Collapse");
-
-    connect(&copy, &QAction::triggered, this, [=](){this->action_copy();});
-    connect(&save, &QAction::triggered, this, [=](){this->action_save();});
-    connect(&send, &QAction::triggered, this, [=](){this->action_send();});
-    connect(&clear, &QAction::triggered, this, [=](){this->action_clear();});
-    connect(&expand, &QAction::triggered, this, [=](){ui->treeViewTree->expandAll();});
-    connect(&collapse, &QAction::triggered, this, [=](){ui->treeViewTree->collapseAll();});
+    connect(&a_copy, &QAction::triggered, this, [=](){this->action_copy();});
+    connect(&a_save, &QAction::triggered, this, [=](){this->action_save();});
+    connect(&a_send, &QAction::triggered, this, [=](){this->action_send();});
+    connect(&a_clear, &QAction::triggered, this, [=](){this->action_clear();});
+    connect(&a_expand, &QAction::triggered, this, [=](){ui->treeViewTree->expandAll();});
+    connect(&a_collapse, &QAction::triggered, this, [=](){ui->treeViewTree->collapseAll();});
 
     menubar_tree = new QMenuBar(this);
-    menubar_tree->addAction(&save);
-    menubar_tree->addAction(&copy);
-    menubar_tree->addAction(&send);
-    menubar_tree->addAction(&clear);
-    menubar_tree->addAction(&expand);
-    menubar_tree->addAction(&collapse);
+    menubar_tree->addAction(&a_save);
+    menubar_tree->addAction(&a_copy);
+    menubar_tree->addAction(&a_send);
+    menubar_tree->addAction(&a_clear);
+    menubar_tree->addAction(&a_expand);
+    menubar_tree->addAction(&a_collapse);
     menubar_tree->setToolTipDuration(2);
     ui->horizontalLayoutMap->insertWidget(0, menubar_tree);
-}
 
-void Project::init_menubar_notes(){
-    menubar_notes = new QMenuBar(this);
-    menubar_notes->addAction("Clear", this, [=](){ui->plainTextEdit->clear();})->setIcon(QIcon(":/img/res/icons/delete.png"));
-    ui->horizontalLayoutNotes->insertWidget(0, menubar_notes);
+    a_save.setDisabled(true);
+    a_copy.setDisabled(true);
+    a_send.setDisabled(true);
+    a_clear.setDisabled(true);
+    a_expand.setDisabled(true);
+    a_collapse.setDisabled(true);
 }
 
 void Project::init_menubar_project(){

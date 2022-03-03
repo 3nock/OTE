@@ -41,9 +41,16 @@ class Project : public QWidget{
         QMenuBar *menubar_notes;
         QMenuBar *menubar_project;
 
+        /* main actions */
+        QAction a_copy;
+        QAction a_save;
+        QAction a_send;
+        QAction a_clear;
+        QAction a_expand;
+        QAction a_collapse;
+
         void initUI();
         void init_menubar_tree();
-        void init_menubar_notes();
         void init_menubar_project();
 
         /* menu bar's actions */

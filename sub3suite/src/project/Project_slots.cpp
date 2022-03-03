@@ -18,12 +18,22 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     if(parent_index == model->explorer->project->index())
         return;
 
+    a_copy.setEnabled(true);
+    a_save.setEnabled(true);
+    a_clear.setEnabled(true);
+    a_send.setEnabled(true);
+    a_expand.setEnabled(true);
+    a_collapse.setEnabled(true);
+
     if(parent_index == model->explorer->active->index()){
         if(index == model->explorer->activeHost->index()){
             proxyModel->setSourceModel(model->activeHost);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeHost);
             ui->comboBoxFilter->addItems({"Hostname", "IpV4", "IpV6", "Ports"});
             ui->comboBoxFilter->show();
+
+            a_expand.setDisabled(true);
+            a_collapse.setDisabled(true);
 
             ui->treeViewTree->header()->resizeSection(0, 200);
             ui->treeViewTree->header()->resizeSection(1, 100);
@@ -45,6 +55,9 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->addItems({"Wildcard", "IpV4", "IpV6"});
             ui->comboBoxFilter->show();
 
+            a_expand.setDisabled(true);
+            a_collapse.setDisabled(true);
+
             ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->header()->resizeSection(1, 150);
         }
@@ -64,6 +77,9 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->addItems({"URL", "Value"});
             ui->comboBoxFilter->show();
 
+            a_expand.setDisabled(true);
+            a_collapse.setDisabled(true);
+
             ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->header()->resizeSection(1, 10);
             ui->treeViewTree->header()->resizeSection(2, 120);
@@ -71,6 +87,9 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     }
 
     if(parent_index == model->explorer->activeDNS->index()){
+        a_expand.setDisabled(true);
+        a_collapse.setDisabled(true);
+
         if(index == model->explorer->activeA->index()){
             proxyModel->setSourceModel(model->activeA);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeDNS_A);
@@ -90,6 +109,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->activeTXT->index()){
             proxyModel->setSourceModel(model->activeTXT);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeDNS_TXT);
+            a_send.setDisabled(true);
         }
         if(index == model->explorer->activeCNAME->index()){
             proxyModel->setSourceModel(model->activeCNAME);
@@ -107,6 +127,9 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     }
 
     if(parent_index == model->explorer->activeSSL->index()){
+        a_expand.setDisabled(true);
+        a_collapse.setDisabled(true);
+
         if(index == model->explorer->activeSSL_sha1->index()){
             proxyModel->setSourceModel(model->activeSSL_sha1);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeSSL_sha1);
@@ -122,6 +145,9 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     }
 
     if(parent_index == model->explorer->passive->index()){
+        a_expand.setDisabled(true);
+        a_collapse.setDisabled(true);
+
         if(index == model->explorer->passiveSubdomainIp->index()){
             proxyModel->setSourceModel(model->passiveSubdomainIp);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_subdomainIp);
@@ -262,6 +288,8 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
+
+            a_send.setDisabled(true);
 
             proxyModel->setSourceModel(model->raw);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::raw);

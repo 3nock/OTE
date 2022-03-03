@@ -239,7 +239,6 @@ SOURCES += \
     src/project/Project_slots.cpp \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/utils/LogsSyntaxHighlighter.cpp \
-    src/utils/NotesSyntaxHighlighter.cpp \
     src/utils/UpdateChecker.cpp \
     src/widgets/InputWidget.cpp \
     src/dialogs/LogViewerDialog.cpp \
@@ -404,7 +403,6 @@ HEADERS += \
     src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \
-    src/utils/NotesSyntaxHighlighter.h \
     src/utils/UpdateChecker.h \
     src/widgets/InputWidget.h \
     src/dialogs/LogViewerDialog.h \
