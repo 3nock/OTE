@@ -54,7 +54,7 @@ void ASNEnum::saveResults(){
     }
 
     QJsonArray asn_array;
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    for(int i = 0; i < proxyModel->rowCount(); i++)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
@@ -106,7 +106,7 @@ void ASNEnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     QJsonArray asn_array;
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    for(int i = 0; i < proxyModel->rowCount(); i++)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
@@ -152,9 +152,9 @@ void ASNEnum::copySelectedResults(){
 ///
 
 void ASNEnum::sendToProject(){
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
+    for(int i = 0; i < proxyModel->rowCount(); i++)
     {
-        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i, 0));
         s3s_item::ASN *asn_item = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
         project->addEnumASN(asn_to_struct(asn_item));
     }
@@ -174,7 +174,7 @@ void ASNEnum::sendSelectedToProject(){
 void ASNEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
     switch (engine) {
     case ENGINE::OSINT:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        for(int i = 0; i < proxyModel->rowCount(); i++)
         {
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
@@ -197,7 +197,7 @@ void ASNEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type)
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        for(int i = 0; i < proxyModel->rowCount(); i++)
         {
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
@@ -244,7 +244,7 @@ void ASNEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &resu
 void ASNEnum::sendToEnum(const TOOL &tool){
     switch (tool) {
     case TOOL::ASN:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        for(int i = 0; i < proxyModel->rowCount(); i++)
         {
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
@@ -255,7 +255,7 @@ void ASNEnum::sendToEnum(const TOOL &tool){
         emit changeTabToAsnEnum();
         break;
     case TOOL::CIDR:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        for(int i = 0; i < proxyModel->rowCount(); i++)
         {
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
@@ -266,7 +266,7 @@ void ASNEnum::sendToEnum(const TOOL &tool){
         emit changeTabToCidrEnum();
         break;
     case TOOL::EMAIL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
+        for(int i = 0; i < proxyModel->rowCount(); i++)
         {
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));

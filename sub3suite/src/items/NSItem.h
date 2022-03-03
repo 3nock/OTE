@@ -12,6 +12,8 @@
 #include <QDate>
 #include <QSet>
 
+#define JSON_ARRAY "arr"
+#define JSON_OBJECT "obj"
 
 namespace s3s_struct {
 struct NS {
@@ -37,6 +39,9 @@ public:
 
         info->setForeground(Qt::white);
         domains->setForeground(Qt::white);
+
+        info->setWhatsThis(JSON_OBJECT);
+        domains->setWhatsThis(JSON_ARRAY);
 
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
         domains->setIcon(QIcon(":/img/res/icons/folder2.png"));

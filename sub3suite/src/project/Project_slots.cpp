@@ -18,6 +18,9 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     if(parent_index == model->explorer->project->index())
         return;
 
+    if(parent_index == model->explorer->invisibleRootItem()->index())
+        return;
+
     a_copy.setEnabled(true);
     a_save.setEnabled(true);
     a_clear.setEnabled(true);
@@ -444,6 +447,190 @@ void Project::on_treeViewTree_clicked(const QModelIndex &index){
         ui->label_item_modified->setText(item->last_modified);
         ui->plainTextEdit_item_comment->setPlainText(item->comment);
         item_comment = &item->comment;
+    }
+        break;
+    }
+}
+
+void Project::on_treeViewTree_doubleClicked(const QModelIndex &index){
+    ui->plainTextEditJson->clear();
+
+    if(index.column())
+        return;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeHost:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->activeHost->invisibleRootItem()->index()){
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(model->activeHost->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(host_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+    }
+        break;
+    case ExplorerType::activeWildcard:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->activeWildcard->invisibleRootItem()->index()){
+            s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(model->activeWildcard->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(wildcard_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+    }
+        break;
+    case ExplorerType::activeURL:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->activeURL->invisibleRootItem()->index()){
+            s3s_item::URL *item = static_cast<s3s_item::URL*>(model->activeURL->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(url_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+    }
+        break;
+    case ExplorerType::activeDNS:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->activeDNS->invisibleRootItem()->index()){
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(dns_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->activeDNS->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->activeDNS->itemFromIndex(model_index)));
+    }
+        break;
+    case ExplorerType::activeSSL:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->activeSSL->invisibleRootItem()->index()){
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->activeSSL->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(ssl_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->activeSSL->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->activeSSL->itemFromIndex(model_index)));
+    }
+        break;
+    case ExplorerType::enum_IP:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->enumIp->invisibleRootItem()->index()){
+            s3s_item::IP *item = static_cast<s3s_item::IP*>(model->enumIp->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(ip_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->enumIp->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->enumIp->itemFromIndex(model_index)));
+    }
+        break;
+    case ExplorerType::enum_ASN:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->enumASN->invisibleRootItem()->index()){
+            s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(asn_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->enumASN->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->enumASN->itemFromIndex(model_index)));
+    }
+        break;
+    case ExplorerType::enum_CIDR:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->enumCIDR->invisibleRootItem()->index()){
+            s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(cidr_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->enumCIDR->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->enumCIDR->itemFromIndex(model_index)));
+    }
+        break;
+    case ExplorerType::enum_NS:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->enumNS->invisibleRootItem()->index()){
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(model->enumNS->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(ns_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->enumNS->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->enumNS->itemFromIndex(model_index)));
+    }
+        break;
+    case ExplorerType::enum_MX:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->enumMX->invisibleRootItem()->index()){
+            s3s_item::MX *item = static_cast<s3s_item::MX*>(model->enumMX->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(mx_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->enumMX->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->enumMX->itemFromIndex(model_index)));
+    }
+        break;
+    case ExplorerType::enum_Email:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->enumEmail->invisibleRootItem()->index()){
+            s3s_item::Email *item = static_cast<s3s_item::Email*>(model->enumEmail->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(email_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+    }
+        break;
+    case ExplorerType::enum_SSL:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->enumSSL->invisibleRootItem()->index()){
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->enumSSL->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(ssl_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->enumSSL->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->enumSSL->itemFromIndex(model_index)));
+    }
+        break;
+    case ExplorerType::raw:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->raw->invisibleRootItem()->index()){
+            s3s_item::RAW *item = static_cast<s3s_item::RAW*>(model->raw->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(raw_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+        if(model->raw->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->raw->itemFromIndex(model_index)));
     }
         break;
     }

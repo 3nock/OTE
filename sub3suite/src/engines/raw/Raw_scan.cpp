@@ -50,7 +50,6 @@ void Raw::startScan(){
     ui->progressBar->show();
     ui->progressBar->reset();
     ui->progressBar->clearMask();
-    m_scanArgs->targets.clear();
 
     /* setting status */
     status->isRunning = true;
@@ -301,7 +300,6 @@ void Raw::startScan(){
         this->startScanThread(new HybridAnalysis(*m_scanArgs));
 
     if(ui->moduleIpQualityScore->isChecked())
-
         this->startScanThread(new IpQualityScore(*m_scanArgs));
 
     if(ui->moduleLeakLookup->isChecked())

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>727</width>
+    <width>776</width>
     <height>469</height>
    </rect>
   </property>
@@ -62,7 +62,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>216</width>
+          <width>231</width>
           <height>440</height>
          </rect>
         </property>
@@ -225,6 +225,28 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="tabJson">
+        <attribute name="title">
+         <string>Json</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>2</number>
+         </property>
+         <item>
+          <widget class="QPlainTextEdit" name="plainTextEditJson"/>
+         </item>
+        </layout>
+       </widget>
        <widget class="QWidget" name="tabGraph">
         <attribute name="title">
          <string>Graph</string>
@@ -323,7 +345,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>236</width>
+         <width>252</width>
          <height>440</height>
         </rect>
        </property>

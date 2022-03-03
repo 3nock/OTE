@@ -13,6 +13,8 @@
 #include <QDate>
 #include <QSslKey>
 
+#define JSON_ARRAY "arr"
+#define JSON_OBJECT "obj"
 
 namespace s3s_item {
 
@@ -62,6 +64,14 @@ public:
         subject->setForeground(Qt::white);
         key->setForeground(Qt::white);
         subjectAltNames->setForeground(Qt::white);
+
+        info->setWhatsThis(JSON_OBJECT);
+        fingerprint->setWhatsThis(JSON_OBJECT);
+        issuer->setWhatsThis(JSON_OBJECT);
+        validity->setWhatsThis(JSON_OBJECT);
+        subject->setWhatsThis(JSON_OBJECT);
+        key->setWhatsThis(JSON_OBJECT);
+        subjectAltNames->setWhatsThis(JSON_ARRAY);
 
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
         fingerprint->setIcon(QIcon(":/img/res/icons/folder2.png"));

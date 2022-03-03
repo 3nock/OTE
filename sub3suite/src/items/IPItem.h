@@ -12,6 +12,8 @@
 #include <QDate>
 #include <QSet>
 
+#define JSON_ARRAY "arr"
+#define JSON_OBJECT "obj"
 
 namespace s3s_struct {
 struct IP {
@@ -129,6 +131,13 @@ public:
         privacyInfo->setForeground(Qt::white);
         abuseInfo->setForeground(Qt::white);
         domains->setForeground(Qt::white);
+
+        info->setWhatsThis(JSON_OBJECT);
+        asnInfo->setWhatsThis(JSON_OBJECT);
+        companyInfo->setWhatsThis(JSON_OBJECT);
+        privacyInfo->setWhatsThis(JSON_OBJECT);
+        abuseInfo->setWhatsThis(JSON_OBJECT);
+        domains->setWhatsThis(JSON_ARRAY);
 
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
         asnInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));

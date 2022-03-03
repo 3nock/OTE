@@ -58,6 +58,7 @@ void SSLEnum::on_buttonStart_clicked(){
     }
 
     /* getting targets */
+    m_scanArgs->targets.clear();
     if(ui->checkBoxMultipleTargets->isChecked()){
         foreach(const QString &target, m_targetsListModel->stringList())
             m_scanArgs->targets.enqueue(target);

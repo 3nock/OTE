@@ -29,7 +29,6 @@ Raw::Raw(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
-    this->initConfigValues();
 
     /* targets model */
     ui->targets->setListName(tr("Targets"));
@@ -44,6 +43,7 @@ Raw::Raw(QWidget *parent, ProjectModel *project): AbstractEngine(parent, project
 
     /* ... */
     m_scanArgs->config = m_scanConfig;
+    this->initConfigValues();
 }
 Raw::~Raw(){
     delete m_scanConfig;
@@ -74,9 +74,9 @@ void Raw::initUI(){
     ui->labelTarget->setProperty("s3s_color", true);
 
     /* placeholder texts */
-    ui->lineEditTarget->setPlaceholderText("Enter target...");
-    ui->lineEditFind->setPlaceholderText("Find...");
-    ui->lineEditTreeFilter->setPlaceholderText("Filter...");
+    ui->lineEditTarget->setPlaceholderText(tr("Enter target..."));
+    ui->lineEditFind->setPlaceholderText(tr("Find..."));
+    ui->lineEditTreeFilter->setPlaceholderText(tr("Filter..."));
 
     /* ... */
     ui->labelUrl->setTextFormat(Qt::RichText);
@@ -115,6 +115,7 @@ void Raw::on_buttonStart_clicked(){
     }
 
     /* getting the targets */
+    m_scanArgs->targets.clear();
     if(ui->checkBoxMultipleTargets->isChecked()){
         foreach(const QString &target, ui->targets->getlistModel()->stringList())
             m_scanArgs->targets.enqueue(target);

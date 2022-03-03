@@ -17,7 +17,6 @@
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
 #include "src/modules/active/DNSScanner.h"
-#include "src/utils/NotesSyntaxHighlighter.h"
 
 
 namespace Ui {

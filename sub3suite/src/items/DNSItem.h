@@ -6,6 +6,9 @@
 #include <QDate>
 #include <QSet>
 
+#define JSON_ARRAY "arr"
+#define JSON_OBJECT "obj"
+
 /*
  * TODO:
  *      for now it is poorly designed
@@ -48,6 +51,14 @@ public:
         MX->setForeground(Qt::white);
         TXT->setForeground(Qt::white);
         SRV->setForeground(Qt::white);
+
+        A->setWhatsThis(JSON_ARRAY);
+        AAAA->setWhatsThis(JSON_ARRAY);
+        CNAME->setWhatsThis(JSON_ARRAY);
+        NS->setWhatsThis(JSON_ARRAY);
+        MX->setWhatsThis(JSON_ARRAY);
+        TXT->setWhatsThis(JSON_ARRAY);
+        SRV->setWhatsThis(JSON_ARRAY);
 
         A->setIcon(QIcon(":/img/res/icons/folder2.png"));
         AAAA->setIcon(QIcon(":/img/res/icons/folder2.png"));

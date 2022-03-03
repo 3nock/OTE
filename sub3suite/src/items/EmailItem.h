@@ -13,6 +13,8 @@
 #include <QJsonObject>
 #include <QDate>
 
+#define JSON_ARRAY "arr"
+#define JSON_OBJECT "obj"
 
 namespace s3s_struct {
 struct Email {

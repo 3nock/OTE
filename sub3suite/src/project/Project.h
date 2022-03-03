@@ -5,6 +5,7 @@
 #include <QMenuBar>
 
 #include "model/ProjectModel.h"
+#include "src/utils/JsonSyntaxHighlighter.h"
 
 
 #define SITEMAP_TYPE "smt"
@@ -28,8 +29,12 @@ class Project : public QWidget{
         void on_lineEditFilter_textChanged(const QString &arg1);
         void on_treeViewTree_clicked(const QModelIndex &index);
 
-    private:
+        void on_treeViewTree_doubleClicked(const QModelIndex &index);
+
+private:
         Ui::Project *ui;
+
+        JsonSyntaxHighlighter *m_jsonHighlighter;
 
         ProjectModel *model;
         QSortFilterProxyModel *proxyModel;

@@ -12,6 +12,8 @@
 #include <QDate>
 #include <QSet>
 
+#define JSON_ARRAY "arr"
+#define JSON_OBJECT "obj"
 
 namespace s3s_struct {
 struct CIDR {
@@ -76,6 +78,12 @@ public:
         abuseContacts->setForeground(Qt::white);
         rir->setForeground(Qt::white);
         asns->setForeground(Qt::white);
+
+        info->setWhatsThis(JSON_OBJECT);
+        emailContacts->setWhatsThis(JSON_ARRAY);
+        abuseContacts->setWhatsThis(JSON_ARRAY);
+        rir->setWhatsThis(JSON_OBJECT);
+        asns->setWhatsThis(JSON_ARRAY);
 
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
         emailContacts->setIcon(QIcon(":/img/res/icons/folder2.png"));

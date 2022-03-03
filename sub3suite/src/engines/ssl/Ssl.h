@@ -16,7 +16,6 @@
 #include "../AbstractEngine.h"
 #include "src/items/SSLItem.h"
 #include "src/modules/active/SSLScanner.h"
-#include "src/utils/NotesSyntaxHighlighter.h"
 
 
 namespace Ui {

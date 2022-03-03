@@ -48,6 +48,7 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     this->init_menubar_project();
 }
 Project::~Project(){
+    delete m_jsonHighlighter;
     delete proxyModel;
     delete ui;
 }
@@ -88,6 +89,8 @@ void Project::initUI(){
 
     ui->splitter_2->setSizes(QList<int>() << static_cast<int>((this->width() * 0.80))
                              << static_cast<int>((this->width() * 0.20)));
+
+    m_jsonHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditJson->document());
 }
 
 void Project::init_menubar_tree(){
