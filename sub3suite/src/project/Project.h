@@ -62,7 +62,21 @@ private:
         void action_save();
         void action_clear();
         void action_copy();
-        void action_send();
+        void action_send_host(const ENGINE&);
+        void action_send_ip(const ENGINE&);
+        void action_send_url(const ENGINE&);
+        void action_send_email(const ENGINE&);
+        void action_send_asn(const ENGINE&);
+        void action_send_cidr(const ENGINE&);
+        void action_send_ssl(const ENGINE&);
+        void action_send_ns(const ENGINE&);
+        void action_send_mx(const ENGINE&);
+
+        void action_openInBrowser();
+        void action_save_selected();
+        void action_copy_selected();
+        void action_send_selected();
+        void action_remove_selected();
 };
 
 #endif // S3SPROJECT_H

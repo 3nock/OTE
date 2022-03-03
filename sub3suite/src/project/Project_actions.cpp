@@ -593,75 +593,273 @@ void Project::action_copy(){
     clipboard->setText(clipboardData.trimmed());
 }
 
-void Project::action_send(){
+void Project::action_send_host(const ENGINE &engine){
+    QSet<QString> hostnames;
+
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::activeHost:
-        break;
-    case ExplorerType::activeWildcard:
+    case ExplorerType::activeDNS_NS:
+    case ExplorerType::activeDNS_MX:
+    case ExplorerType::activeDNS_CNAME:
+    case ExplorerType::activeSSL_altNames:
+    case ExplorerType::passive_subdomainIp:
+    case ExplorerType::passive_subdomain:
+    case ExplorerType::passive_NS:
+    case ExplorerType::passive_MX:
+    case ExplorerType::passive_CNAME:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            hostnames.insert(proxyModel->index(i,0).data().toString());
         break;
     case ExplorerType::activeDNS:
-        break;
-    case ExplorerType::activeDNS_A:
-        break;
-    case ExplorerType::activeDNS_AAAA:
-        break;
-    case ExplorerType::activeDNS_NS:
-        break;
-    case ExplorerType::activeDNS_MX:
-        break;
-    case ExplorerType::activeDNS_TXT:
-        break;
-    case ExplorerType::activeDNS_CNAME:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                hostnames.insert(item->CNAME->child(i, 1)->text());
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                hostnames.insert(item->NS->child(i, 1)->text());
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                hostnames.insert(item->MX->child(i, 1)->text());
+        }
         break;
     case ExplorerType::activeSSL:
-        break;
-    case ExplorerType::activeSSL_sha1:
-        break;
-    case ExplorerType::activeSSL_sha256:
-        break;
-    case ExplorerType::activeSSL_altNames:
-        break;
-    case ExplorerType::activeURL:
-        break;
-    case ExplorerType::passive_subdomainIp:
-        break;
-    case ExplorerType::passive_subdomain:
-        break;
-    case ExplorerType::passive_A:
-        break;
-    case ExplorerType::passive_AAAA:
-        break;
-    case ExplorerType::passive_NS:
-        break;
-    case ExplorerType::passive_MX:
-        break;
-    case ExplorerType::passive_TXT:
-        break;
-    case ExplorerType::passive_CNAME:
-        break;
-    case ExplorerType::passive_Email:
-        break;
-    case ExplorerType::passive_URL:
-        break;
-    case ExplorerType::passive_ASN:
-        break;
-    case ExplorerType::passive_SSL:
-        break;
-    case ExplorerType::enum_IP:
-        break;
-    case ExplorerType::enum_ASN:
-        break;
-    case ExplorerType::enum_CIDR:
-        break;
-    case ExplorerType::enum_NS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->activeSSL->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
+                hostnames.insert(item->subjectAltNames->child(i, 1)->text());
+        }
         break;
     case ExplorerType::enum_MX:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::MX *item = static_cast<s3s_item::MX*>(model->enumMX->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                hostnames.insert(item->domains->child(i, 1)->text());
+        }
         break;
-    case ExplorerType::enum_Email:
+    case ExplorerType::enum_NS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(model->enumNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                hostnames.insert(item->domains->child(i, 1)->text());
+        }
         break;
     case ExplorerType::enum_SSL:
-        break;
-    case ExplorerType::raw:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->enumSSL->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
+                hostnames.insert(item->subjectAltNames->child(i, 1)->text());
+        }
         break;
     }
+}
+
+void Project::action_send_ip(const ENGINE &engine){
+    QSet<QString> ip;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeDNS_A:
+    case ExplorerType::activeDNS_AAAA:
+    case ExplorerType::passive_A:
+    case ExplorerType::passive_AAAA:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            ip.insert(proxyModel->index(i, 0).data().toString());
+        break;
+    case ExplorerType::activeHost:
+    case ExplorerType::activeWildcard:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            ip.insert(proxyModel->index(i, 0).data().toString());
+            ip.insert(proxyModel->index(i, 1).data().toString());
+        }
+        break;
+    case ExplorerType::passive_subdomainIp:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            ip.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::activeDNS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->A->rowCount(); j++)
+                ip.insert(item->A->child(i, 1)->text());
+            for(int j = 0; j < item->AAAA->rowCount(); j++)
+                ip.insert(item->AAAA->child(i, 1)->text());
+        }
+        break;
+    }
+}
+
+void Project::action_send_url(const ENGINE &engine){
+    QSet<QString> url;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeURL:
+    case ExplorerType::passive_URL:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            url.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    }
+}
+
+void Project::action_send_email(const ENGINE &engine){
+    QSet<QString> emails;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::passive_Email:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            emails.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::enum_ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->abuseContacts->rowCount(); j++)
+                emails.insert(item->abuseContacts->child(i, 1)->text());
+            for(int j = 0; j < item->emailContacts->rowCount(); j++)
+                emails.insert(item->emailContacts->child(i, 1)->text());
+        }
+        break;
+    case ExplorerType::enum_CIDR:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->abuseContacts->rowCount(); j++)
+                emails.insert(item->abuseContacts->child(i, 1)->text());
+            for(int j = 0; j < item->emailContacts->rowCount(); j++)
+                emails.insert(item->emailContacts->child(i, 1)->text());
+        }
+        break;
+    }
+}
+
+void Project::action_send_asn(const ENGINE &engine){
+    QSet<QString> asn;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::passive_ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            asn.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::enum_ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->peers->rowCount(); j++)
+                asn.insert(item->peers->child(i, 1)->text());
+        }
+        break;
+    case ExplorerType::enum_CIDR:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->asns->rowCount(); j++)
+                asn.insert(item->asns->child(i, 1)->text());
+        }
+        break;
+    }
+}
+
+void Project::action_send_cidr(const ENGINE &engine){
+    QSet<QString> cidr;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::passive_CIDR:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            cidr.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::enum_NS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->prefixes->rowCount(); j++)
+                cidr.insert(item->prefixes->child(i, 1)->text());
+        }
+        break;
+    }
+}
+
+void Project::action_send_ssl(const ENGINE &engine){
+    QSet<QString> ssl;
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::passive_SSL:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            ssl.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    }
+}
+
+void Project::action_send_ns(const ENGINE &engine){
+    QSet<QString> ns;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeDNS_NS:
+    case ExplorerType::passive_NS:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            ns.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::activeDNS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                ns.insert(item->NS->child(i, 1)->text());
+        }
+        break;
+    }
+}
+
+void Project::action_send_mx(const ENGINE &engine){
+    QSet<QString> mx;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeDNS_MX:
+    case ExplorerType::passive_MX:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            mx.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::activeDNS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                mx.insert(item->MX->child(i, 1)->text());
+        }
+        break;
+    }
+}
+
+void Project::action_openInBrowser(){
+
+}
+
+void Project::action_save_selected(){
+
+}
+
+void Project::action_copy_selected(){
+
+}
+
+void Project::action_send_selected(){
+
+}
+
+void Project::action_remove_selected(){
+
 }

@@ -110,7 +110,7 @@ void Project::init_menubar_tree(){
 
     connect(&a_copy, &QAction::triggered, this, [=](){this->action_copy();});
     connect(&a_save, &QAction::triggered, this, [=](){this->action_save();});
-    connect(&a_send, &QAction::triggered, this, [=](){this->action_send();});
+    /*connect(&a_send, &QAction::triggered, this, [=](){this->action_send();});*/
     connect(&a_clear, &QAction::triggered, this, [=](){this->action_clear();});
     connect(&a_expand, &QAction::triggered, this, [=](){ui->treeViewTree->expandAll();});
     connect(&a_collapse, &QAction::triggered, this, [=](){ui->treeViewTree->collapseAll();});
