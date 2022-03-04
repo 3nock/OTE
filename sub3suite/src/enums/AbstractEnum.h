@@ -68,7 +68,7 @@ class AbstractEnum : public QWidget{
         void sendResultsToBrute(QString, RESULT_TYPE);
         void sendResultsToActive(QString, RESULT_TYPE);
         void sendResultsToDns(QString, RESULT_TYPE);
-        void sendResultsToCert(QString, RESULT_TYPE);
+        void sendResultsToSsl(QString, RESULT_TYPE);
         void sendResultsToUrl(QString, RESULT_TYPE);
         /* sending results to an Enumerator */
         void sendResultsToIpEnum(QString, RESULT_TYPE);

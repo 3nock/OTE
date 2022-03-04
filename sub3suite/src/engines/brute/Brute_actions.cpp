@@ -379,9 +379,9 @@ void Brute::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
             emit sendResultsToDns(proxyModel->index(i, 0).data().toString(), result_type);
         emit changeTabToDns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToCert(proxyModel->index(i, 0).data().toString(), result_type);
+            emit sendResultsToSsl(proxyModel->index(i, 0).data().toString(), result_type);
         emit changeTabToSSL();
         break;
     default:
@@ -441,11 +441,11 @@ void Brute::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result
         }
         emit changeTabToDns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
             if(index.column())
                 continue;
-            emit sendResultsToCert(index.data().toString(), result_type);
+            emit sendResultsToSsl(index.data().toString(), result_type);
         }
         emit changeTabToSSL();
         break;

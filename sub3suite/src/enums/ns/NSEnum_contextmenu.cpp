@@ -37,7 +37,7 @@ void NSEnum::on_buttonAction_clicked(){
     menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-    menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::CERT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL);})->setIcon(QIcon(":/img/res/icons/domain.png"));
 
     /* showing the context menu... */
     menu.exec(pos);
@@ -69,7 +69,7 @@ void NSEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::SSL);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     }
 
     /* showing the context menu... */

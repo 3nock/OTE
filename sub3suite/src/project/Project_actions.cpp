@@ -1,6 +1,7 @@
 #include "Project.h"
 #include "ui_Project.h"
 
+#include <QDesktopServices>
 #include <QFileDialog>
 #include <QClipboard>
 #include "src/items/SSLItem.h"
@@ -660,6 +661,35 @@ void Project::action_send_host(const ENGINE &engine){
         }
         break;
     }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(hostnames, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(hostnames, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(hostnames, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(hostnames, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(hostnames, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(hostnames, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
+    }
 }
 
 void Project::action_send_ip(const ENGINE &engine){
@@ -696,6 +726,19 @@ void Project::action_send_ip(const ENGINE &engine){
         }
         break;
     }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(ip, RESULT_TYPE::IP);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(ip, RESULT_TYPE::IP);
+        emit changeTabToRaw();
+        break;
+    default:
+        break;
+    }
 }
 
 void Project::action_send_url(const ENGINE &engine){
@@ -706,6 +749,23 @@ void Project::action_send_url(const ENGINE &engine){
     case ExplorerType::passive_URL:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             url.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(url, RESULT_TYPE::URL);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(url, RESULT_TYPE::URL);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::URL:
+        emit sendToUrl(url, RESULT_TYPE::URL);
+        emit changeTabToURL();
+        break;
+    default:
         break;
     }
 }
@@ -741,6 +801,19 @@ void Project::action_send_email(const ENGINE &engine){
         }
         break;
     }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(emails, RESULT_TYPE::EMAIL);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(emails, RESULT_TYPE::EMAIL);
+        emit changeTabToRaw();
+        break;
+    default:
+        break;
+    }
 }
 
 void Project::action_send_asn(const ENGINE &engine){
@@ -770,6 +843,19 @@ void Project::action_send_asn(const ENGINE &engine){
         }
         break;
     }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(asn, RESULT_TYPE::ASN);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(asn, RESULT_TYPE::ASN);
+        emit changeTabToRaw();
+        break;
+    default:
+        break;
+    }
 }
 
 void Project::action_send_cidr(const ENGINE &engine){
@@ -790,6 +876,19 @@ void Project::action_send_cidr(const ENGINE &engine){
         }
         break;
     }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(cidr, RESULT_TYPE::CIDR);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(cidr, RESULT_TYPE::CIDR);
+        emit changeTabToRaw();
+        break;
+    default:
+        break;
+    }
 }
 
 void Project::action_send_ssl(const ENGINE &engine){
@@ -798,6 +897,19 @@ void Project::action_send_ssl(const ENGINE &engine){
     case ExplorerType::passive_SSL:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             ssl.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(ssl, RESULT_TYPE::CERT_ID);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(ssl, RESULT_TYPE::CERT_ID);
+        emit changeTabToRaw();
+        break;
+    default:
         break;
     }
 }
@@ -821,6 +933,35 @@ void Project::action_send_ns(const ENGINE &engine){
         }
         break;
     }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(ns, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(ns, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(ns, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(ns, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(ns, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(ns, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
+    }
 }
 
 void Project::action_send_mx(const ENGINE &engine){
@@ -842,24 +983,662 @@ void Project::action_send_mx(const ENGINE &engine){
         }
         break;
     }
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(mx, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(mx, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(mx, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(mx, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(mx, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(mx, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
+    }
+}
+
+void Project::action_send_ip(){
+    QSet<QString> ip;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeDNS_A:
+    case ExplorerType::activeDNS_AAAA:
+    case ExplorerType::passive_A:
+    case ExplorerType::passive_AAAA:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            ip.insert(proxyModel->index(i, 0).data().toString());
+        break;
+    case ExplorerType::activeHost:
+    case ExplorerType::activeWildcard:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            ip.insert(proxyModel->index(i, 0).data().toString());
+            ip.insert(proxyModel->index(i, 1).data().toString());
+        }
+        break;
+    case ExplorerType::passive_subdomainIp:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            ip.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::activeDNS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->A->rowCount(); j++)
+                ip.insert(item->A->child(i, 1)->text());
+            for(int j = 0; j < item->AAAA->rowCount(); j++)
+                ip.insert(item->AAAA->child(i, 1)->text());
+        }
+        break;
+    }
+
+    emit sendToIpEnum(ip);
+    emit changeTabToIpEnum();
+}
+
+void Project::action_send_email(){
+    QSet<QString> emails;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::passive_Email:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            emails.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::enum_ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->abuseContacts->rowCount(); j++)
+                emails.insert(item->abuseContacts->child(i, 1)->text());
+            for(int j = 0; j < item->emailContacts->rowCount(); j++)
+                emails.insert(item->emailContacts->child(i, 1)->text());
+        }
+        break;
+    case ExplorerType::enum_CIDR:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->abuseContacts->rowCount(); j++)
+                emails.insert(item->abuseContacts->child(i, 1)->text());
+            for(int j = 0; j < item->emailContacts->rowCount(); j++)
+                emails.insert(item->emailContacts->child(i, 1)->text());
+        }
+        break;
+    }
+
+    emit sendToEmailEnum(emails);
+    emit changeTabToEmailEnum();
+}
+
+void Project::action_send_asn(){
+    QSet<QString> asn;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::passive_ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            asn.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::enum_ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->peers->rowCount(); j++)
+                asn.insert(item->peers->child(i, 1)->text());
+        }
+        break;
+    case ExplorerType::enum_CIDR:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->asns->rowCount(); j++)
+                asn.insert(item->asns->child(i, 1)->text());
+        }
+        break;
+    }
+
+    emit sendToAsnEnum(asn);
+    emit changeTabToAsnEnum();
+}
+
+void Project::action_send_cidr(){
+    QSet<QString> cidr;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::passive_CIDR:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            cidr.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::enum_NS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->prefixes->rowCount(); j++)
+                cidr.insert(item->prefixes->child(i, 1)->text());
+        }
+        break;
+    }
+
+    emit sendToCidrEnum(cidr);
+    emit changeTabToCidrEnum();
+}
+
+void Project::action_send_ssl(){
+    QSet<QString> ssl;
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::passive_SSL:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            ssl.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    }
+
+    emit sendToSSLEnum(ssl);
+    emit changeTabToSSLEnum();
+}
+
+void Project::action_send_ns(){
+    QSet<QString> ns;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeDNS_NS:
+    case ExplorerType::passive_NS:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            ns.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::activeDNS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                ns.insert(item->NS->child(i, 1)->text());
+        }
+        break;
+    }
+
+    emit sendToNSEnum(ns);
+    emit changeTabToNSEnum();
+}
+
+void Project::action_send_mx(){
+    QSet<QString> mx;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeDNS_MX:
+    case ExplorerType::passive_MX:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            mx.insert(proxyModel->index(i, 1).data().toString());
+        break;
+    case ExplorerType::activeDNS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                mx.insert(item->MX->child(i, 1)->text());
+        }
+        break;
+    }
+
+    emit sendToMXEnum(mx);
+    emit changeTabToMXEnum();
 }
 
 void Project::action_openInBrowser(){
-
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeURL:
+    case ExplorerType::passive_URL:
+        foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
+            QDesktopServices::openUrl(QUrl(index.data().toString(), QUrl::TolerantMode));
+        break;
+    default:
+        foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
+            QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
+        break;
+    }
 }
 
 void Project::action_save_selected(){
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
+    if(filename.isEmpty()){
+        qWarning() << "PROJECT: Failed to getSaveFileName";
+        return;
+    }
 
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(!file.isOpen()){
+        qWarning() << "PROJECT: Failed to open " << filename << " For saving Results";
+        return;
+    }
+
+    foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
+        file.write(index.data().toString().append(NEWLINE).toUtf8());
+    file.close();
 }
 
 void Project::action_copy_selected(){
+    QString clipboardData;
+    foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
+        clipboardData.append(index.data().toString().append(NEWLINE));
 
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(clipboardData.trimmed());
 }
 
-void Project::action_send_selected(){
+void Project::action_send_selected_toEnum(const TOOL &tool){
+    QSet<QString> targets;
+    foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
+        targets.insert(index.data().toString());
 
+    switch (tool) {
+    case TOOL::IP:
+        emit sendToIpEnum(targets);
+        emit changeTabToIpEnum();
+        break;
+    case TOOL::ASN:
+        emit sendToAsnEnum(targets);
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::CIDR:
+        emit sendToCidrEnum(targets);
+        emit changeTabToCidrEnum();
+        break;
+    case TOOL::NS:
+        emit sendToNSEnum(targets);
+        emit changeTabToNSEnum();
+        break;
+    case TOOL::MX:
+        emit sendToMXEnum(targets);
+        emit changeTabToMXEnum();
+        break;
+    case TOOL::SSL:
+        emit sendToSSLEnum(targets);
+        emit changeTabToSSLEnum();
+        break;
+    case TOOL::EMAIL:
+        emit sendToEmailEnum(targets);
+        emit changeTabToEmailEnum();
+        break;
+    }
+}
+
+void Project::action_send_selected_toEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+    foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
+        targets.insert(index.data().toString());
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(targets, result_type);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(targets, result_type);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(targets, result_type);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(targets, result_type);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(targets, result_type);
+        emit changeTabToSSL();
+        break;
+    case ENGINE::URL:
+        emit sendToUrl(targets, result_type);
+        emit changeTabToURL();
+        break;
+    default:
+        break;
+    }
 }
 
 void Project::action_remove_selected(){
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeHost:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeHost->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeWildcard:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeWildcard->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeDNS:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeDNS->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeDNS_A:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeA->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeDNS_AAAA:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeAAAA->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeDNS_NS:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeNS->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeDNS_MX:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeHost->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeDNS_TXT:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeTXT->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeDNS_CNAME:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeCNAME->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeSSL:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeSSL->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeSSL_sha1:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeSSL_sha1->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeSSL_sha256:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeSSL_sha256->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeSSL_altNames:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeSSL_altNames->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::activeURL:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->activeURL->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_subdomainIp:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveSubdomainIp->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_subdomain:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveSubdomain->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_A:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveA->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_AAAA:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveAAAA->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_NS:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveNS->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_MX:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveMX->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_TXT:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveTXT->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_CNAME:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveCNAME->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_Email:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveEmail->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_URL:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveUrl->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_ASN:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveAsn->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::passive_SSL:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->passiveSSL->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::enum_IP:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->enumIp->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::enum_ASN:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->enumASN->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::enum_CIDR:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->enumCIDR->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::enum_NS:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->enumNS->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::enum_MX:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->enumMX->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::enum_Email:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->enumEmail->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::enum_SSL:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->enumSSL->removeRow(index.row());
+        }
+        break;
+    case ExplorerType::raw:
+        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            QModelIndex index = proxyModel->mapToSource(proxyIndex);
+            model->raw->removeRow(index.row());
+        }
+        break;
+    }
 
+    ui->labelCount->setNum(proxyModel->rowCount());
+}
+
+void Project::action_extract(bool subdomain, bool tld){
+    QSet<QString> hostnames;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeHost:
+    case ExplorerType::activeDNS_NS:
+    case ExplorerType::activeDNS_MX:
+    case ExplorerType::activeDNS_CNAME:
+    case ExplorerType::activeSSL_altNames:
+    case ExplorerType::passive_subdomainIp:
+    case ExplorerType::passive_subdomain:
+    case ExplorerType::passive_NS:
+    case ExplorerType::passive_MX:
+    case ExplorerType::passive_CNAME:
+        for(int i = 0; i < proxyModel->rowCount(); i++)
+            hostnames.insert(proxyModel->index(i,0).data().toString());
+        break;
+    case ExplorerType::activeDNS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->CNAME->rowCount(); j++)
+                hostnames.insert(item->CNAME->child(i, 1)->text());
+            for(int j = 0; j < item->NS->rowCount(); j++)
+                hostnames.insert(item->NS->child(i, 1)->text());
+            for(int j = 0; j < item->MX->rowCount(); j++)
+                hostnames.insert(item->MX->child(i, 1)->text());
+        }
+        break;
+    case ExplorerType::activeSSL:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->activeSSL->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
+                hostnames.insert(item->subjectAltNames->child(i, 1)->text());
+        }
+        break;
+    case ExplorerType::enum_MX:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::MX *item = static_cast<s3s_item::MX*>(model->enumMX->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                hostnames.insert(item->domains->child(i, 1)->text());
+        }
+        break;
+    case ExplorerType::enum_NS:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::NS *item = static_cast<s3s_item::NS*>(model->enumNS->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->domains->rowCount(); j++)
+                hostnames.insert(item->domains->child(i, 1)->text());
+        }
+        break;
+    case ExplorerType::enum_SSL:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->enumSSL->itemFromIndex(model_index));
+
+            for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
+                hostnames.insert(item->subjectAltNames->child(i, 1)->text());
+        }
+        break;
+    }
+
+    /* extracting and saving to a set to avoid repeatition */
+    QSet<QString> extracts;
+    foreach(const QString &hostname, hostnames){
+        if(subdomain)
+            extracts.insert(hostname.split(".").at(0));
+        if(tld)
+            extracts.insert(hostname.split(".").last());
+    }
+
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
+
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(data.trimmed());
+}
+
+void Project::action_extract_selected(bool subdomain, bool tld){
+    QSet<QString> hostnames;
+    foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes())
+        hostnames.insert(proxyIndex.data().toString());
+
+    /* extracting and saving to a set to avoid repeatition */
+    QSet<QString> extracts;
+    foreach(const QString &hostname, hostnames){
+        if(subdomain)
+            extracts.insert(hostname.split(".").at(0));
+        if(tld)
+            extracts.insert(hostname.split(".").last());
+    }
+
+    /* setting the data to clipboard */
+    QString data;
+    foreach(const QString &extract, extracts)
+        data.append(extract).append(NEWLINE);
+
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(data.trimmed());
 }

@@ -254,7 +254,7 @@ void MainWindow::m_connectSignals(AbstractEngine *engine){
     connect(engine, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), active, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendResultsToSsl(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(engine, SIGNAL(sendResultsToUrl(QString, RESULT_TYPE)), url, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     /* sending results enum */
@@ -290,7 +290,7 @@ void MainWindow::m_connectSignals(AbstractEnum *enumerator){
     connect(enumerator, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), active, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(enumerator, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(enumerator, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToCert(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendResultsToSsl(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(enumerator, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     connect(enumerator, SIGNAL(sendResultsToUrl(QString, RESULT_TYPE)), url, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
     /* sending results enum */
@@ -515,7 +515,7 @@ void MainWindow::onDocumentation_active(){
         documentationDialog = new DocumentationDialog(ENGINE::DNS, this);
         break;
     case 3:
-        documentationDialog = new DocumentationDialog(ENGINE::CERT, this);
+        documentationDialog = new DocumentationDialog(ENGINE::SSL, this);
         break;
     case 4:
         return;

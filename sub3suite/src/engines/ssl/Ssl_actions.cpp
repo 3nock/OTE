@@ -317,9 +317,9 @@ void Ssl::sendToEngine(const ENGINE &engine){
                 emit sendResultsToDns(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
             emit changeTabToDns();
             break;
-        case ENGINE::CERT:
+        case ENGINE::SSL:
             for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToCert(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
+                emit sendResultsToSsl(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
             emit changeTabToSSL();
             break;
         case ENGINE::URL:
@@ -378,9 +378,9 @@ void Ssl::sendSelectedToEngine(const ENGINE &engine){
                 emit sendResultsToDns(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
             emit changeTabToDns();
             break;
-        case ENGINE::CERT:
+        case ENGINE::SSL:
             foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToCert(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+                emit sendResultsToSsl(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
             emit changeTabToSSL();
             break;
         case ENGINE::URL:

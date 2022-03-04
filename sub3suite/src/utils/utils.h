@@ -100,20 +100,18 @@ enum class ENGINE{
     ACTIVE,
     OSINT,
     RAW,
-    CERT,
+    SSL,
     URL
 };
 
 enum class TOOL{
-    DOMAINTOOL,
     MX,
     NS,
     CIDR,
     ASN,
     IP,
     EMAIL,
-    CERT,
-    BANNER
+    SSL
 };
 
 #endif // UTILS_H

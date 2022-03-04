@@ -16,8 +16,16 @@
  *      insert the send/copy/save targets to set before appending to clipboard or file
  */
 void Osint::openInBrowser(){
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
+    switch(ui->comboBoxOutput->currentIndex()){
+    case osint::OUTPUT::URL:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            QDesktopServices::openUrl(QUrl(index.data().toString(), QUrl::TolerantMode));
+        break;
+    default:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
+        break;
+    }
 }
 
 void Osint::clearResults(){
@@ -360,9 +368,9 @@ void Osint::sendToEngine(const ENGINE &engine, const RESULT_TYPE  &result_type){
             emit sendResultsToDns(proxyModel->index(i, column).data().toString(), result_type);
         emit changeTabToDns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToCert(proxyModel->index(i, column).data().toString(), result_type);
+            emit sendResultsToSsl(proxyModel->index(i, column).data().toString(), result_type);
         emit changeTabToSSL();
         break;
     case ENGINE::URL:
@@ -402,9 +410,9 @@ void Osint::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result
             emit sendResultsToDns(index.data().toString(), result_type);
         emit changeTabToDns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToCert(index.data().toString(), result_type);
+            emit sendResultsToSsl(index.data().toString(), result_type);
         emit changeTabToSSL();
         break;
     case ENGINE::URL:
@@ -448,7 +456,7 @@ void Osint::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
             emit sendResultsToMXEnum(proxyModel->index(i, column).data().toString(), result_type);
         emit changeTabToMXEnum();
         break;
-    case TOOL::CERT:
+    case TOOL::SSL:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
             emit sendResultsToSSLEnum(proxyModel->index(i, column).data().toString(), result_type);
         emit changeTabToSSLEnum();
@@ -554,7 +562,7 @@ void Osint::sendSelectedToEnum(const TOOL &tool , const RESULT_TYPE &result_type
             emit sendResultsToMXEnum(index.data().toString(), result_type);
         emit changeTabToMXEnum();
         break;
-    case TOOL::CERT:
+    case TOOL::SSL:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes())
             emit sendResultsToSSLEnum(index.data().toString(), result_type);
         emit changeTabToSSLEnum();

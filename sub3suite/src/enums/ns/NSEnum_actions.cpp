@@ -223,12 +223,12 @@ void NSEnum::sendToEngine(const ENGINE &engine){
         }
         emit changeTabToDns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
             for(int j = 0; j < item->domains->rowCount(); j++)
-                emit sendResultsToCert(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
+                emit sendResultsToSsl(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
         }
         emit changeTabToSSL();
         break;
@@ -273,9 +273,9 @@ void NSEnum::sendSelectedToEngine(const ENGINE &engine){
             emit sendResultsToDns(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
         emit changeTabToDns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToCert(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+            emit sendResultsToSsl(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
         emit changeTabToSSL();
         break;
     case ENGINE::URL:

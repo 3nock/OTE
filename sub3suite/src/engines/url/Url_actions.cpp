@@ -15,14 +15,14 @@
 
 void Url::openInBrowser(){
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-        QDesktopServices::openUrl(QUrl("https://"+index.data().toString(), QUrl::TolerantMode));
+        QDesktopServices::openUrl(QUrl(index.data().toString(), QUrl::TolerantMode));
 }
 
 void Url::clearResults(){
     /* clear the results */
     m_model->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({"    URL", "    Status code", "    banner", "    Content type"});
+    m_model->setHorizontalHeaderLabels({tr(" URL"), tr(" Status code"), tr(" banner"), tr(" Content type")});
     set_results.clear();
 
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);

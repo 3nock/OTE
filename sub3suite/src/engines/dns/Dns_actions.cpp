@@ -470,17 +470,17 @@ void Dns::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
         }
         emit changeTabToDns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                emit sendResultsToCert(item->CNAME->child(j, 1)->text(), result_type);
+                emit sendResultsToSsl(item->CNAME->child(j, 1)->text(), result_type);
             for(int j = 0; j < item->NS->rowCount(); j++)
-                emit sendResultsToCert(item->NS->child(j, 1)->text(), result_type);
+                emit sendResultsToSsl(item->NS->child(j, 1)->text(), result_type);
             for(int j = 0; j < item->MX->rowCount(); j++)
-                emit sendResultsToCert(item->MX->child(j, 1)->text(), result_type);
+                emit sendResultsToSsl(item->MX->child(j, 1)->text(), result_type);
         }
         emit changeTabToSSL();
         break;
@@ -526,10 +526,10 @@ void Dns::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_t
         }
         emit changeTabToDns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
             if(index.column())
-                emit sendResultsToCert(index.data().toString(), result_type);
+                emit sendResultsToSsl(index.data().toString(), result_type);
         }
         emit changeTabToSSL();
         break;

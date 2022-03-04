@@ -47,7 +47,7 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
     case ENGINE::DNS:
         this->about_dns();
         break;
-    case ENGINE::CERT:
+    case ENGINE::SSL:
         this->about_ssl();
         break;
     default:

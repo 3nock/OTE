@@ -64,7 +64,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addSeparator();
         menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
     }
@@ -81,7 +81,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         break;
     case osint::OUTPUT::IP:
         menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/save.png"));
@@ -134,7 +134,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(TOOL::CERT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
+        menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(TOOL::SSL, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         break;
     case osint::OUTPUT::CIDR:
         menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/save.png"));
@@ -199,7 +199,7 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
             menu.addAction(tr("Send Hostname To BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
             menu.addAction(tr("Send Hostname To ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
             menu.addAction(tr("Send Hostname To DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-            menu.addAction(tr("Send Hostname To SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+            menu.addAction(tr("Send Hostname To SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
             menu.addSeparator();
         }
         if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent()))
@@ -211,7 +211,7 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send Hostname To BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname To ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname To DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname To SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::CERT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname To SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         break;
     case osint::OUTPUT::IP:
         menu.addAction(tr("Send IpAddress To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
@@ -239,7 +239,7 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send SSL To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         menu.addAction(tr("Send SSL To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL To SSL-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::CERT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
+        menu.addAction(tr("Send SSL To SSL-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::SSL, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         break;
     case osint::OUTPUT::CIDR:
         menu.addAction(tr("Send CIDR To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
