@@ -49,6 +49,18 @@ void InputWidget::add(const QString& item){
     ui->labelCount->setNum(m_listModel->rowCount());
 }
 
+void InputWidget::add(const QSet<QString> &targets){
+    if(targets.isEmpty())
+        return;
+
+    foreach(const QString &target, targets){
+        if(m_listModel->insertRow(m_listModel->rowCount()))
+            m_listModel->setData(m_listModel->index(m_listModel->rowCount()-1, 0), target);
+    }
+
+    ui->labelCount->setNum(m_listModel->rowCount());
+}
+
 void InputWidget::add(QFile& file){
     /* get the stringList from model */
     QStringList list(m_listModel->stringList());

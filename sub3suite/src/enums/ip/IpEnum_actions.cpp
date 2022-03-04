@@ -187,3 +187,11 @@ void IpEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     /* set multiple targets checkbox checked */
     ui->checkBoxMultipleTargets->setChecked(true);
 }
+
+void IpEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
+    if(resultType == RESULT_TYPE::IP)
+        ui->targets->add(targets);
+
+    /* set multiple targets checkbox checked */
+    ui->checkBoxMultipleTargets->setChecked(true);
+}

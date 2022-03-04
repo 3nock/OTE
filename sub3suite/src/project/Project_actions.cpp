@@ -1340,7 +1340,8 @@ void Project::action_remove_selected(){
     case ExplorerType::activeDNS:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeDNS->removeRow(index.row());
+            if(index.parent() == model->activeDNS->invisibleRootItem()->index())
+                model->activeDNS->removeRow(index.row());
         }
         break;
     case ExplorerType::activeDNS_A:
@@ -1382,7 +1383,8 @@ void Project::action_remove_selected(){
     case ExplorerType::activeSSL:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeSSL->removeRow(index.row());
+            if(index.parent() == model->activeSSL->invisibleRootItem()->index())
+                model->activeSSL->removeRow(index.row());
         }
         break;
     case ExplorerType::activeSSL_sha1:
@@ -1484,49 +1486,57 @@ void Project::action_remove_selected(){
     case ExplorerType::enum_IP:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->enumIp->removeRow(index.row());
+            if(index.parent() == model->enumIp->invisibleRootItem()->index())
+                model->enumIp->removeRow(index.row());
         }
         break;
     case ExplorerType::enum_ASN:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->enumASN->removeRow(index.row());
+            if(index.parent() == model->enumASN->invisibleRootItem()->index())
+                model->enumASN->removeRow(index.row());
         }
         break;
     case ExplorerType::enum_CIDR:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->enumCIDR->removeRow(index.row());
+            if(index.parent() == model->enumCIDR->invisibleRootItem()->index())
+                model->enumCIDR->removeRow(index.row());
         }
         break;
     case ExplorerType::enum_NS:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->enumNS->removeRow(index.row());
+            if(index.parent() == model->enumNS->invisibleRootItem()->index())
+                model->enumNS->removeRow(index.row());
         }
         break;
     case ExplorerType::enum_MX:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->enumMX->removeRow(index.row());
+            if(index.parent() == model->enumMX->invisibleRootItem()->index())
+                model->enumMX->removeRow(index.row());
         }
         break;
     case ExplorerType::enum_Email:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->enumEmail->removeRow(index.row());
+            if(index.parent() == model->enumEmail->invisibleRootItem()->index())
+                model->enumEmail->removeRow(index.row());
         }
         break;
     case ExplorerType::enum_SSL:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->enumSSL->removeRow(index.row());
+            if(index.parent() == model->enumSSL->invisibleRootItem()->index())
+                model->enumSSL->removeRow(index.row());
         }
         break;
     case ExplorerType::raw:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->raw->removeRow(index.row());
+            if(index.parent() == model->raw->invisibleRootItem()->index())
+                model->raw->removeRow(index.row());
         }
         break;
     }

@@ -33,6 +33,7 @@ class SSLEnum : public AbstractEnum {
         void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QString, RESULT_TYPE);
+        void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:
         void on_buttonStart_clicked();

@@ -137,6 +137,7 @@ protected:
         void m_registerMetaTypes();
         void m_connectSignals(AbstractEngine *engine);
         void m_connectSignals(AbstractEnum *enumerator);
+        void m_connectSignals();
 };
 
 #endif // MAINWINDOW_H

@@ -42,6 +42,7 @@ class Ssl : public AbstractEngine{
 
         /* receiving targets from other engines */
         void onReceiveTargets(QString, RESULT_TYPE);
+        void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:
         void on_buttonStart_clicked();

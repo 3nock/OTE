@@ -222,3 +222,40 @@ void Raw::onReceiveTargets(QString target, RESULT_TYPE result_type){
         break;
     }
 }
+
+void Raw::onReceiveTargets(QSet<QString> targets, RESULT_TYPE result_type){
+    foreach(const QString &target, targets){
+    switch (result_type) {
+    case RESULT_TYPE::SUBDOMAIN:
+        if(m_targetListModel_host->insertRow(m_targetListModel_host->rowCount()))
+            m_targetListModel_host->setData(m_targetListModel_host->index(m_targetListModel_host->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::IP:
+        if(m_targetListModel_ip->insertRow(m_targetListModel_ip->rowCount()))
+            m_targetListModel_ip->setData(m_targetListModel_ip->index(m_targetListModel_ip->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::ASN:
+        if(m_targetListModel_asn->insertRow(m_targetListModel_asn->rowCount()))
+            m_targetListModel_asn->setData(m_targetListModel_asn->index(m_targetListModel_asn->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::CIDR:
+        if(m_targetListModel_cidr->insertRow(m_targetListModel_cidr->rowCount()))
+            m_targetListModel_cidr->setData(m_targetListModel_cidr->index(m_targetListModel_cidr->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::CERT_ID:
+        if(m_targetListModel_ssl->insertRow(m_targetListModel_ssl->rowCount()))
+            m_targetListModel_ssl->setData(m_targetListModel_ssl->index(m_targetListModel_ssl->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::URL:
+        if(m_targetListModel_url->insertRow(m_targetListModel_url->rowCount()))
+            m_targetListModel_url->setData(m_targetListModel_url->index(m_targetListModel_url->rowCount()-1, 0), target);
+        break;
+    case RESULT_TYPE::EMAIL:
+        if(m_targetListModel_email->insertRow(m_targetListModel_email->rowCount()))
+            m_targetListModel_email->setData(m_targetListModel_email->index(m_targetListModel_email->rowCount()-1, 0), target);
+        break;
+    default:
+        break;
+    }
+    }
+}

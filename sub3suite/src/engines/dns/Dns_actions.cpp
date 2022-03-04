@@ -617,3 +617,11 @@ void Dns::onReceiveTargets(QString target, RESULT_TYPE resultType){
     /* set multiple targets checkbox checked */
     ui->checkBoxMultipleTargets->setChecked(true);
 }
+
+void Dns::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
+    if(resultType == RESULT_TYPE::SUBDOMAIN)
+        ui->targets->add(targets);
+
+    /* set multiple targets checkbox checked */
+    ui->checkBoxMultipleTargets->setChecked(true);
+}

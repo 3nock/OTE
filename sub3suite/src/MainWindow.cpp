@@ -207,7 +207,7 @@ void MainWindow::m_initEngines(){
     sslEnum = new SSLEnum(this, projectModel);
     emailEnum = new EmailEnum(this, projectModel);
 
-    /* connecting signals and slots */
+    /* connecting signals from engines */
     this->m_connectSignals(osint);
     this->m_connectSignals(brute);
     this->m_connectSignals(active);
@@ -216,6 +216,7 @@ void MainWindow::m_initEngines(){
     this->m_connectSignals(raw);
     this->m_connectSignals(url);
 
+    /* connecting signals from enumerators */
     this->m_connectSignals(ipEnum);
     this->m_connectSignals(asnEnum);
     this->m_connectSignals(cidrEnum);
@@ -223,6 +224,9 @@ void MainWindow::m_initEngines(){
     this->m_connectSignals(mxEnum);
     this->m_connectSignals(sslEnum);
     this->m_connectSignals(emailEnum);
+
+    /* connecting signals from project */
+    this->m_connectSignals();
 
     /* passive tabwidget */
     ui->tabWidgetPassive->insertTab(0, osint, "OSINT");
@@ -318,6 +322,42 @@ void MainWindow::m_connectSignals(AbstractEnum *enumerator){
     connect(enumerator, SIGNAL(changeTabToMXEnum()), this, SLOT(onChangeTabToMXEnum()));
     connect(enumerator, SIGNAL(changeTabToSSLEnum()), this, SLOT(onChangeTabToSSLEnum()));
     connect(enumerator, SIGNAL(changeTabToEmailEnum()), this, SLOT(onChangeTabToEmailEnum()));
+}
+
+void MainWindow::m_connectSignals(){
+    /* sending to engine */
+    connect(project, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToActive(QSet<QString>, RESULT_TYPE)), active, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), url, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    /* sending enum */
+    connect(project, SIGNAL(sendToAsnEnum(QSet<QString>, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToCidrEnum(QSet<QString>, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToIpEnum(QSet<QString>, RESULT_TYPE)), ipEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToNSEnum(QSet<QString>, RESULT_TYPE)), nsEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToMXEnum(QSet<QString>, RESULT_TYPE)), mxEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToEmailEnum(QSet<QString>, RESULT_TYPE)), emailEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToSSLEnum(QSet<QString>, RESULT_TYPE)), sslEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+
+    /* change tab to Engine */
+    connect(project, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
+    connect(project, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
+    connect(project, SIGNAL(changeTabToBrute()), this, SLOT(onChangeTabToBrute()));
+    connect(project, SIGNAL(changeTabToDns()), this, SLOT(onChangeTabToDns()));
+    connect(project, SIGNAL(changeTabToRaw()), this, SLOT(onChangeTabToRaw()));
+    connect(project, SIGNAL(changeTabToSSL()), this, SLOT(onChangeTabToSSL()));
+    connect(project, SIGNAL(changeTabToURL()), this, SLOT(onChangeTabToURL()));
+    /* change tab to Enumerator */
+    connect(project, SIGNAL(changeTabToIpEnum()), this, SLOT(onChangeTabToIpEnum()));
+    connect(project, SIGNAL(changeTabToAsnEnum()), this, SLOT(onChangeTabToAsnEnum()));
+    connect(project, SIGNAL(changeTabToCidrEnum()), this, SLOT(onChangeTabToCidrEnum()));
+    connect(project, SIGNAL(changeTabToNSEnum()), this, SLOT(onChangeTabToNSEnum()));
+    connect(project, SIGNAL(changeTabToMXEnum()), this, SLOT(onChangeTabToMXEnum()));
+    connect(project, SIGNAL(changeTabToSSLEnum()), this, SLOT(onChangeTabToSSLEnum()));
+    connect(project, SIGNAL(changeTabToEmailEnum()), this, SLOT(onChangeTabToEmailEnum()));
 }
 
 void MainWindow::m_documentation(){

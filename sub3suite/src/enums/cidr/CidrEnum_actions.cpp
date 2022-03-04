@@ -297,3 +297,11 @@ void CidrEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     /* set multiple targets checkbox checked */
     ui->checkBoxMultipleTargets->setChecked(true);
 }
+
+void CidrEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
+    if(resultType == RESULT_TYPE::CIDR)
+        ui->targets->add(targets);
+
+    /* set multiple targets checkbox checked */
+    ui->checkBoxMultipleTargets->setChecked(true);
+}

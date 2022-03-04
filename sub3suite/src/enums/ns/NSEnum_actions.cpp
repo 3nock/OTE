@@ -299,3 +299,11 @@ void NSEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
     /* set multiple targets checkbox checked */
     ui->checkBoxMultipleTargets->setChecked(true);
 }
+
+void NSEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
+    if(resultType == RESULT_TYPE::NS)
+        ui->targets->add(targets);
+
+    /* set multiple targets checkbox checked */
+    ui->checkBoxMultipleTargets->setChecked(true);
+}

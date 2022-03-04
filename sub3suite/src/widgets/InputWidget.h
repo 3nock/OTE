@@ -37,8 +37,9 @@ class InputWidget : public QWidget{
         QStringListModel* getlistModel();
         void setListModel(QStringListModel *listModel);
         void setListName(const QString& listName);
-        void add(const QString& item);
-        void add(QFile& file);
+        void add(const QString&);
+        void add(const QSet<QString>&);
+        void add(QFile&);
         void updateSize();
 
     private slots:
