@@ -44,7 +44,7 @@ class AbstractEnum : public QWidget{
         /* status To mainwindow */
         void sendStatus(QString status);
 
-        /* chage tab to Engine */
+        /* change Tab */
         void changeTabToOsint();
         void changeTabToRaw();
         void changeTabToBrute();
@@ -52,8 +52,6 @@ class AbstractEnum : public QWidget{
         void changeTabToDns();
         void changeTabToSSL();
         void changeTabToURL();
-        void changeTabToProject();
-        /* change tab To Enum */
         void changeTabToIpEnum();
         void changeTabToAsnEnum();
         void changeTabToCidrEnum();
@@ -61,23 +59,24 @@ class AbstractEnum : public QWidget{
         void changeTabToMXEnum();
         void changeTabToSSLEnum();
         void changeTabToEmailEnum();
+        void changeTabToProject();
 
-        /* sending results to an engine */
-        void sendResultsToOsint(QString, RESULT_TYPE);
-        void sendResultsToRaw(QString, RESULT_TYPE);
-        void sendResultsToBrute(QString, RESULT_TYPE);
-        void sendResultsToActive(QString, RESULT_TYPE);
-        void sendResultsToDns(QString, RESULT_TYPE);
-        void sendResultsToSsl(QString, RESULT_TYPE);
-        void sendResultsToUrl(QString, RESULT_TYPE);
-        /* sending results to an Enumerator */
-        void sendResultsToIpEnum(QString, RESULT_TYPE);
-        void sendResultsToAsnEnum(QString, RESULT_TYPE);
-        void sendResultsToCidrEnum(QString, RESULT_TYPE);
-        void sendResultsToNSEnum(QString, RESULT_TYPE);
-        void sendResultsToMXEnum(QString, RESULT_TYPE);
-        void sendResultsToSSLEnum(QString, RESULT_TYPE);
-        void sendResultsToEmailEnum(QString, RESULT_TYPE);
+        /* sending to an engine */
+        void sendToOsint(QSet<QString>, RESULT_TYPE);
+        void sendToRaw(QSet<QString>, RESULT_TYPE);
+        void sendToBrute(QSet<QString>, RESULT_TYPE);
+        void sendToActive(QSet<QString>, RESULT_TYPE);
+        void sendToDns(QSet<QString>, RESULT_TYPE);
+        void sendToSsl(QSet<QString>, RESULT_TYPE);
+        void sendToUrl(QSet<QString>, RESULT_TYPE);
+        /* sending to an Enumerator */
+        void sendToIpEnum(QSet<QString>, RESULT_TYPE);
+        void sendToAsnEnum(QSet<QString>, RESULT_TYPE);
+        void sendToCidrEnum(QSet<QString>, RESULT_TYPE);
+        void sendToNSEnum(QSet<QString>, RESULT_TYPE);
+        void sendToMXEnum(QSet<QString>, RESULT_TYPE);
+        void sendToSSLEnum(QSet<QString>, RESULT_TYPE);
+        void sendToEmailEnum(QSet<QString>, RESULT_TYPE);
 };
 
 #endif // ABSTRACTENUM_H

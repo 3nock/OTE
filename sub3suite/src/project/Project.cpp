@@ -82,6 +82,7 @@ void Project::initUI(){
     /* placeholder texts */
     ui->lineEditFilter->setPlaceholderText("Filter...");
     ui->plainTextEdit_item_comment->setPlaceholderText("comment...");
+    ui->plainTextEditJson->setPlaceholderText("Double-click on an item (fist column) on Tree-tab to view it in json...");
 
     /* resizing */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.22))

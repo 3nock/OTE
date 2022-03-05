@@ -32,7 +32,6 @@ class EmailEnum : public AbstractEnum {
         void onRateLimitLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
-        void onReceiveTargets(QString, RESULT_TYPE);
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:

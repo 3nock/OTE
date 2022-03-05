@@ -41,7 +41,6 @@ class Ssl : public AbstractEngine{
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
-        void onReceiveTargets(QString, RESULT_TYPE);
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:
@@ -53,10 +52,9 @@ class Ssl : public AbstractEngine{
         void on_lineEditFilter_textChanged(const QString &arg1);
         void on_lineEditTarget_returnPressed();
         void on_buttonConfig_clicked();
-
         void on_treeViewResults_clicked(const QModelIndex &index);
 
-private:
+    private:
         Ui::Ssl *ui;
         QElapsedTimer m_timer;
         ssl::ScanConfig *m_scanConfig;
@@ -91,8 +89,8 @@ private:
         /* sending results */
         void sendToProject();
         void sendSelectedToProject();
-        void sendToEngine(const ENGINE&);
-        void sendSelectedToEngine(const ENGINE&);
+        void sendToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
         void sendToEnum(const TOOL&);
         void sendSelectedToEnum(const TOOL&);
 };

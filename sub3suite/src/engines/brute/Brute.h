@@ -39,7 +39,6 @@ class Brute : public AbstractEngine{
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
-        void onReceiveTargets(QString, RESULT_TYPE);
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:

@@ -12,10 +12,7 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 
-/*
- * TODO:
- *      insert the send/copy/save targets to set before appending to clipboard or file
- */
+
 void Brute::clearResults(){
     /* clear all containers containing results */
     switch (ui->comboBoxOutput->currentIndex()) {
@@ -319,69 +316,48 @@ void Brute::sendSelectedToProject(){
 }
 
 void Brute::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting the targets */
+    switch (result_type) {
+    case RESULT_TYPE::SUBDOMAIN:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            targets.insert(proxyModel->index(i, 0).data().toString());
+        break;
+    case RESULT_TYPE::IP:
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            targets.insert(proxyModel->index(i, 1).data().toString());
+            targets.insert(proxyModel->index(i, 2).data().toString());
+        }
+        break;
+    default:
+        break;
+    }
+
+    /* sending the targets */
     switch (engine) {
     case ENGINE::OSINT:
-        switch (result_type) {
-        case RESULT_TYPE::SUBDOMAIN:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToOsint(proxyModel->index(i, 0).data().toString(), result_type);
-            emit changeTabToOsint();
-            break;
-        case RESULT_TYPE::IP:
-            for(int i = 0; i != proxyModel->rowCount(); ++i){
-                QString ipv4(proxyModel->index(i, 1).data().toString());
-                QString ipv6(proxyModel->index(i, 2).data().toString());
-                if(!ipv4.isEmpty())
-                    emit sendResultsToOsint(ipv4, result_type);
-                if(!ipv6.isEmpty())
-                    emit sendResultsToOsint(ipv6, result_type);
-            }
-            emit changeTabToOsint();
-            break;
-        default:
-            break;
-        }
+        emit sendToOsint(targets, result_type);
+        emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        switch (result_type) {
-        case RESULT_TYPE::SUBDOMAIN:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToRaw(proxyModel->index(i, 0).data().toString(), result_type);
-            emit changeTabToRaw();
-            break;
-        case RESULT_TYPE::IP:
-            for(int i = 0; i != proxyModel->rowCount(); ++i){
-                QString ipv4(proxyModel->index(i, 1).data().toString());
-                QString ipv6(proxyModel->index(i, 2).data().toString());
-                if(!ipv4.isEmpty())
-                    emit sendResultsToRaw(ipv4, result_type);
-                if(!ipv6.isEmpty())
-                    emit sendResultsToRaw(ipv6, result_type);
-            }
-            emit changeTabToRaw();
-            break;
-        default:
-            break;
-        }
+        emit sendToRaw(targets, result_type);
+        emit changeTabToRaw();
         break;
     case ENGINE::BRUTE:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToBrute(proxyModel->index(i, 0).data().toString(), result_type);
+        emit sendToBrute(targets, result_type);
         emit changeTabToBrute();
         break;
     case ENGINE::ACTIVE:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToActive(proxyModel->index(i, 0).data().toString(), result_type);
+        emit sendToActive(targets, result_type);
         emit changeTabToActive();
         break;
     case ENGINE::DNS:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToDns(proxyModel->index(i, 0).data().toString(), result_type);
+        emit sendToDns(targets, result_type);
         emit changeTabToDns();
         break;
     case ENGINE::SSL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToSsl(proxyModel->index(i, 0).data().toString(), result_type);
+        emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
         break;
     default:
@@ -390,63 +366,50 @@ void Brute::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
 }
 
 void Brute::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting the targets */
+    switch (result_type) {
+    case RESULT_TYPE::SUBDOMAIN:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column() == 0)
+                targets.insert(index.data().toString());
+        }
+        break;
+    case RESULT_TYPE::IP:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                targets.insert(index.data().toString());
+        }
+        break;
+    default:
+        break;
+    }
+
+    /* sending the targets */
     switch (engine) {
     case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(result_type == RESULT_TYPE::SUBDOMAIN){
-                if(index.column() == 0)
-                    emit sendResultsToOsint(index.data().toString(), result_type);
-            }
-            else{
-                if(index.column())
-                    emit sendResultsToOsint(index.data().toString(), result_type);
-            }
-        }
+        emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(result_type == RESULT_TYPE::SUBDOMAIN){
-                if(index.column() == 0)
-                    emit sendResultsToRaw(index.data().toString(), result_type);
-            }
-            else{
-                if(index.column())
-                    emit sendResultsToRaw(index.data().toString(), result_type);
-            }
-        }
+        emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
     case ENGINE::BRUTE:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                continue;
-            emit sendResultsToBrute(index.data().toString(), result_type);
-        }
+        emit sendToBrute(targets, result_type);
         emit changeTabToBrute();
         break;
     case ENGINE::ACTIVE:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                continue;
-            emit sendResultsToActive(index.data().toString(), result_type);
-        }
+        emit sendToActive(targets, result_type);
         emit changeTabToActive();
         break;
     case ENGINE::DNS:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                continue;
-            emit sendResultsToDns(index.data().toString(), result_type);
-        }
+        emit sendToDns(targets, result_type);
         emit changeTabToDns();
         break;
     case ENGINE::SSL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                continue;
-            emit sendResultsToSsl(index.data().toString(), result_type);
-        }
+        emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
         break;
     default:
@@ -455,17 +418,18 @@ void Brute::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result
 }
 
 void Brute::sendToEnum(const TOOL &tool){
+    QSet<QString> targets;
+
+    /* getting the targets */
+    for(int i = 0; i != proxyModel->rowCount(); ++i){
+        targets.insert(proxyModel->index(i, 1).data().toString());
+        targets.insert(proxyModel->index(i, 2).data().toString());
+    }
+
+    /* sending the targets */
     switch (tool) {
     case TOOL::IP:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QString ipv4(proxyModel->index(i, 1).data().toString());
-            QString ipv6(proxyModel->index(i, 2).data().toString());
-
-            if(!ipv4.isEmpty())
-                emit sendResultsToIpEnum(ipv4, RESULT_TYPE::IP);
-            if(!ipv6.isEmpty())
-                emit sendResultsToIpEnum(ipv6, RESULT_TYPE::IP);
-        }
+        emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
     default:
@@ -474,12 +438,18 @@ void Brute::sendToEnum(const TOOL &tool){
 }
 
 void Brute::sendSelectedToEnum(const TOOL &tool){
+    QSet<QString> targets;
+
+    /* getting the targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column())
+            targets.insert(index.data().toString());
+    }
+
+    /* sending the targets */
     switch (tool) {
     case TOOL::IP:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToIpEnum(index.data().toString(), RESULT_TYPE::IP);
-        }
+        emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
     default:
@@ -491,14 +461,6 @@ void Brute::sendSelectedToEnum(const TOOL &tool){
 ///
 /// receiving targets...
 ///
-
-void Brute::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::SUBDOMAIN)
-        ui->targets->add(target);
-
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
 
 void Brute::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::SUBDOMAIN)

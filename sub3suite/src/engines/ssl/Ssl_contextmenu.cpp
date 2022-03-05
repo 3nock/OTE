@@ -37,20 +37,20 @@ void Ssl::on_buttonAction_clicked(){
     case 0: // subdomain
         menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         break;
     case 1: // cert hash
         menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/hash.png"));
-        menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/hash.png"));
+        menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/hash.png"));
+        menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendToEnum(TOOL::SSL);})->setIcon(QIcon(":/img/res/icons/hash.png"));
+        menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(TOOL::SSL);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         break;
     case 2: // ssl
         menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
@@ -87,18 +87,18 @@ void Ssl::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     case 0: // subdomain
         menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::SSL);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         break;
     case 1: // cert hash
         menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/hash.png"));
-        menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/hash.png"));
+        menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/hash.png"));
+        menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         menu.addSeparator();
         menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendSelectedToEnum(TOOL::SSL);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         break;

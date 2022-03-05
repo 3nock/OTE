@@ -11,10 +11,7 @@
 #include <QClipboard>
 #include <QDesktopServices>
 
-/*
- * TODO:
- *      insert the send/copy/save targets to set before appending to clipboard or file
- */
+
 void Dns::clearResults(){
     /* clear the results... */
     m_model->clear();
@@ -370,118 +367,62 @@ void Dns::sendSelectedToProject(){
 }
 
 void Dns::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
-    switch (engine) {
-    case ENGINE::OSINT:
-        if(result_type == RESULT_TYPE::IP) {
-            for(int i = 0; i < proxyModel->rowCount(); i++){
-                QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-                s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+    QSet<QString> targets;
 
-                for(int j = 0; j < item->A->rowCount(); j++)
-                    emit sendResultsToOsint(item->A->child(j, 1)->text(), result_type);
-                for(int j = 0; j < item->AAAA->rowCount(); j++)
-                    emit sendResultsToOsint(item->AAAA->child(j, 1)->text(), result_type);
-            }
-            emit changeTabToOsint();
-        }
-        if(result_type == RESULT_TYPE::SUBDOMAIN) {
-            for(int i = 0; i < proxyModel->rowCount(); i++){
-                QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-                s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::IP:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
-                for(int j = 0; j < item->CNAME->rowCount(); j++)
-                    emit sendResultsToOsint(item->CNAME->child(j, 1)->text(), result_type);
-                for(int j = 0; j < item->NS->rowCount(); j++)
-                    emit sendResultsToOsint(item->NS->child(j, 1)->text(), result_type);
-                for(int j = 0; j < item->MX->rowCount(); j++)
-                    emit sendResultsToOsint(item->MX->child(j, 1)->text(), result_type);
-            }
-            emit changeTabToOsint();
+            for(int j = 0; j < item->A->rowCount(); j++)
+                targets.insert(item->A->child(j, 1)->text());
+            for(int j = 0; j < item->AAAA->rowCount(); j++)
+                targets.insert(item->A->child(j, 1)->text());
         }
         break;
-    case ENGINE::RAW:
-        if(result_type == RESULT_TYPE::IP) {
-            for(int i = 0; i < proxyModel->rowCount(); i++){
-                QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-                s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
-
-                for(int j = 0; j < item->A->rowCount(); j++)
-                    emit sendResultsToRaw(item->A->child(j, 1)->text(), result_type);
-                for(int j = 0; j < item->AAAA->rowCount(); j++)
-                    emit sendResultsToRaw(item->AAAA->child(j, 1)->text(), result_type);
-            }
-            emit changeTabToRaw();
-        }
-        if(result_type == RESULT_TYPE::SUBDOMAIN) {
-            for(int i = 0; i < proxyModel->rowCount(); i++){
-                QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-                s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
-
-                for(int j = 0; j < item->CNAME->rowCount(); j++)
-                    emit sendResultsToRaw(item->CNAME->child(j, 1)->text(), result_type);
-                for(int j = 0; j < item->NS->rowCount(); j++)
-                    emit sendResultsToRaw(item->NS->child(j, 1)->text(), result_type);
-                for(int j = 0; j < item->MX->rowCount(); j++)
-                    emit sendResultsToRaw(item->MX->child(j, 1)->text(), result_type);
-            }
-            emit changeTabToRaw();
-        }
-        break;
-
-    case ENGINE::BRUTE:
+    case RESULT_TYPE::SUBDOMAIN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                emit sendResultsToBrute(item->CNAME->child(j, 1)->text(), result_type);
+                targets.insert(item->CNAME->child(j, 1)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                emit sendResultsToBrute(item->NS->child(j, 1)->text(), result_type);
+                targets.insert(item->NS->child(j, 1)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                emit sendResultsToBrute(item->MX->child(j, 1)->text(), result_type);
+                targets.insert(item->MX->child(j, 1)->text());
         }
+        break;
+    default:
+        break;
+    }
+
+    /* sending the targets */
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(targets, result_type);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(targets, result_type);
         emit changeTabToBrute();
         break;
     case ENGINE::ACTIVE:
-        for(int i = 0; i < proxyModel->rowCount(); i++){
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
-
-            for(int j = 0; j < item->CNAME->rowCount(); j++)
-                emit sendResultsToActive(item->CNAME->child(j, 1)->text(), result_type);
-            for(int j = 0; j < item->NS->rowCount(); j++)
-                emit sendResultsToActive(item->NS->child(j, 1)->text(), result_type);
-            for(int j = 0; j < item->MX->rowCount(); j++)
-                emit sendResultsToActive(item->MX->child(j, 1)->text(), result_type);
-        }
+        emit sendToActive(targets, result_type);
         emit changeTabToActive();
         break;
     case ENGINE::DNS:
-        for(int i = 0; i < proxyModel->rowCount(); i++){
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
-
-            for(int j = 0; j < item->CNAME->rowCount(); j++)
-                emit sendResultsToDns(item->CNAME->child(j, 1)->text(), result_type);
-            for(int j = 0; j < item->NS->rowCount(); j++)
-                emit sendResultsToDns(item->NS->child(j, 1)->text(), result_type);
-            for(int j = 0; j < item->MX->rowCount(); j++)
-                emit sendResultsToDns(item->MX->child(j, 1)->text(), result_type);
-        }
+        emit sendToDns(targets, result_type);
         emit changeTabToDns();
         break;
     case ENGINE::SSL:
-        for(int i = 0; i < proxyModel->rowCount(); i++){
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
-
-            for(int j = 0; j < item->CNAME->rowCount(); j++)
-                emit sendResultsToSsl(item->CNAME->child(j, 1)->text(), result_type);
-            for(int j = 0; j < item->NS->rowCount(); j++)
-                emit sendResultsToSsl(item->NS->child(j, 1)->text(), result_type);
-            for(int j = 0; j < item->MX->rowCount(); j++)
-                emit sendResultsToSsl(item->MX->child(j, 1)->text(), result_type);
-        }
+        emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
         break;
     default:
@@ -490,47 +431,38 @@ void Dns::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
 }
 
 void Dns::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column())
+            targets.insert(index.data().toString());
+    }
+
+    /* sending the targets */
     switch (engine) {
     case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToOsint(index.data().toString(), result_type);
-        }
+        emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(!index.column())
-                emit sendResultsToRaw(index.data().toString(), result_type);
-        }
+        emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
     case ENGINE::BRUTE:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToBrute(index.data().toString(), result_type);
-        }
+        emit sendToBrute(targets, result_type);
         emit changeTabToBrute();
         break;
     case ENGINE::ACTIVE:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToActive(index.data().toString(), result_type);
-        }
+        emit sendToActive(targets, result_type);
         emit changeTabToActive();
         break;
     case ENGINE::DNS:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToDns(index.data().toString(), result_type);
-        }
+        emit sendToDns(targets, result_type);
         emit changeTabToDns();
         break;
     case ENGINE::SSL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToSsl(index.data().toString(), result_type);
-        }
+        emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
         break;
     default:
@@ -539,6 +471,9 @@ void Dns::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_t
 }
 
 void Dns::sendToEnum(const TOOL &tool){
+    QSet<QString> targets;
+
+    /* getting & sending targets */
     switch (tool) {
     case TOOL::IP:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -546,77 +481,74 @@ void Dns::sendToEnum(const TOOL &tool){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                emit sendResultsToIpEnum(item->A->child(j, 1)->text(), RESULT_TYPE::IP);
+                targets.insert(item->A->child(j, 1)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                emit sendResultsToIpEnum(item->AAAA->child(j, 1)->text(), RESULT_TYPE::IP);
+                targets.insert(item->AAAA->child(j, 1)->text());
         }
+        emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
+
     case TOOL::NS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->NS->rowCount(); j++)
-                emit sendResultsToNSEnum(item->NS->child(j, 1)->text(), RESULT_TYPE::NS);
+                targets.insert(item->NS->child(j, 1)->text());
         }
+        emit sendToNSEnum(targets, RESULT_TYPE::NS);
         emit changeTabToNSEnum();
         break;
+
     case TOOL::MX:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->MX->rowCount(); j++)
-                emit sendResultsToMXEnum(item->MX->child(j, 1)->text(), RESULT_TYPE::MX);
+                targets.insert(item->MX->child(j, 1)->text());
         }
+        emit sendToMXEnum(targets, RESULT_TYPE::MX);
         emit changeTabToMXEnum();
         break;
+
     default:
         break;
     }
 }
 
 void Dns::sendSelectedToEnum(const TOOL &tool){
+    QSet<QString> targets;
+
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column())
+            targets.insert(index.data().toString());
+    }
+
+    /* sending targets */
     switch (tool) {
     case TOOL::IP:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToIpEnum(index.data().toString(), RESULT_TYPE::IP);
-        }
+        emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
     case TOOL::NS:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToNSEnum(index.data().toString(), RESULT_TYPE::NS);
-        }
+        emit sendToNSEnum(targets, RESULT_TYPE::NS);
         emit changeTabToNSEnum();
         break;
     case TOOL::MX:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                emit sendResultsToMXEnum(index.data().toString(), RESULT_TYPE::MX);
-        }
+        emit sendToMXEnum(targets, RESULT_TYPE::MX);
         emit changeTabToMXEnum();
         break;
     default:
         break;
     }
-
 }
 
 ///
 /// receiving targets...
 ///
-
-void Dns::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::SUBDOMAIN)
-        ui->targets->add(target);
-
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
 
 void Dns::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::SUBDOMAIN)

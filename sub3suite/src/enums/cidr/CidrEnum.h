@@ -33,7 +33,6 @@ class CidrEnum : public AbstractEnum {
         void onRateLimitLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
-        void onReceiveTargets(QString, RESULT_TYPE);
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:
@@ -76,8 +75,8 @@ class CidrEnum : public AbstractEnum {
         void sendSelectedToProject();
         void sendToEngine(const ENGINE&, const RESULT_TYPE&);
         void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
-        void sendToEnum(const TOOL&);
-        void sendSelectedToEnum(const TOOL&);
+        void sendToEnum(const TOOL&, const RESULT_TYPE&);
+        void sendSelectedToEnum(const TOOL&, const RESULT_TYPE&);
 };
 
 #endif // CIDRENUM_H

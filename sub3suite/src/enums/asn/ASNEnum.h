@@ -35,7 +35,6 @@ class ASNEnum : public AbstractEnum{
         void onRateLimitLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
-        void onReceiveTargets(QString, RESULT_TYPE);
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:
@@ -77,8 +76,8 @@ class ASNEnum : public AbstractEnum{
         void sendSelectedToProject();
         void sendToEngine(const ENGINE&, const RESULT_TYPE&);
         void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
-        void sendToEnum(const TOOL&);
-        void sendSelectedToEnum(const TOOL&);
+        void sendToEnum(const TOOL&, const RESULT_TYPE&);
+        void sendSelectedToEnum(const TOOL&, const RESULT_TYPE&);
 };
 
 #endif // ASNENUM_H

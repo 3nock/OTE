@@ -37,7 +37,6 @@ class Dns : public AbstractEngine{
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
-        void onReceiveTargets(QString, RESULT_TYPE);
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:
@@ -49,10 +48,9 @@ class Dns : public AbstractEngine{
         void on_checkBoxSRV_clicked(bool checked);
         void on_lineEditTarget_returnPressed();
         void on_lineEditFilter_textChanged(const QString &arg1);
-
         void on_comboBoxFilter_currentIndexChanged(int index);
 
-private:
+    private:
         Ui::Dns *ui;
         dns::ScanConfig *m_scanConfig;
         dns::ScanArgs *m_scanArgs;

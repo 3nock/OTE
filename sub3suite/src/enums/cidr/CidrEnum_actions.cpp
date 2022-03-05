@@ -176,43 +176,42 @@ void CidrEnum::sendSelectedToProject(){
 }
 
 void CidrEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
-    switch (engine) {
-    case ENGINE::OSINT:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
+    QSet<QString> targets;
+
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
-            if(result_type == RESULT_TYPE::ASN){
-                for(int j = 0; j < cidr->asns->rowCount(); j++)
-                    emit sendResultsToOsint(cidr->asns->child(j, 1)->text(), result_type);
-            }
-            if(result_type == RESULT_TYPE::EMAIL){
-                for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
-                    emit sendResultsToOsint(cidr->emailContacts->child(j, 1)->text(), result_type);
-                for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
-                    emit sendResultsToOsint(cidr->abuseContacts->child(j, 1)->text(), result_type);
-            }
+            for(int j = 0; j < cidr->asns->rowCount(); j++)
+                targets.insert(cidr->asns->child(j, 1)->text());
         }
+        break;
+    case RESULT_TYPE::EMAIL:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
+                targets.insert(cidr->emailContacts->child(j, 1)->text());
+            for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
+                targets.insert(cidr->abuseContacts->child(j, 1)->text());
+        }
+        break;
+    default:
+        break;
+    }
+
+    /* sending targets */
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
-
-            if(result_type == RESULT_TYPE::ASN){
-                for(int j = 0; j < cidr->asns->rowCount(); j++)
-                    emit sendResultsToRaw(cidr->asns->child(j, 1)->text(), result_type);
-            }
-            if(result_type == RESULT_TYPE::EMAIL){
-                for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
-                    emit sendResultsToRaw(cidr->emailContacts->child(j, 1)->text(), result_type);
-                for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
-                    emit sendResultsToRaw(cidr->abuseContacts->child(j, 1)->text(), result_type);
-            }
-        }
+        emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
     default:
@@ -221,15 +220,21 @@ void CidrEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type
 }
 
 void CidrEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        if(index.column())
+            targets.insert(index.data().toString());
+
+    /* sending targets */
     switch (engine) {
     case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToOsint(index.data().toString(), result_type);
+        emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToRaw(index.data().toString(), result_type);
+        emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
     default:
@@ -237,48 +242,66 @@ void CidrEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &res
     }
 }
 
-void CidrEnum::sendToEnum(const TOOL &tool){
-    switch (tool) {
-    case TOOL::ASN:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
+void CidrEnum::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < cidr->asns->rowCount(); j++)
-                emit sendResultsToAsnEnum(cidr->asns->child(j, 1)->text(), RESULT_TYPE::ASN);
+                targets.insert(cidr->asns->child(j, 1)->text());
         }
-        emit changeTabToAsnEnum();
         break;
-    case TOOL::EMAIL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
+    case RESULT_TYPE::EMAIL:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
-                emit sendResultsToEmailEnum(cidr->emailContacts->child(j, 1)->text(), RESULT_TYPE::EMAIL);
+                targets.insert(cidr->emailContacts->child(j, 1)->text());
             for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
-                emit sendResultsToEmailEnum(cidr->abuseContacts->child(j, 1)->text(), RESULT_TYPE::EMAIL);
+                targets.insert(cidr->abuseContacts->child(j, 1)->text());
         }
-        emit changeTabToEmailEnum();
         break;
     default:
         break;
     }
 
-}
-
-void CidrEnum::sendSelectedToEnum(const TOOL &tool){
+    /* sending targets */
     switch (tool) {
     case TOOL::ASN:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToAsnEnum(index.data().toString(), RESULT_TYPE::ASN);
+        emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
     case TOOL::EMAIL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToEmailEnum(index.data().toString(), RESULT_TYPE::EMAIL);
+        emit sendToEmailEnum(targets, result_type);
+        emit changeTabToEmailEnum();
+        break;
+    default:
+        break;
+    }
+}
+
+void CidrEnum::sendSelectedToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        if(index.column())
+            targets.insert(index.data().toString());
+
+    /* sending targets */
+    switch (tool) {
+    case TOOL::ASN:
+        emit sendToAsnEnum(targets, result_type);
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::EMAIL:
+        emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;
     default:
@@ -289,14 +312,6 @@ void CidrEnum::sendSelectedToEnum(const TOOL &tool){
 ///
 /// Receiving Targets
 ///
-
-void CidrEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::CIDR)
-        ui->targets->add(target);
-
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
 
 void CidrEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::CIDR)

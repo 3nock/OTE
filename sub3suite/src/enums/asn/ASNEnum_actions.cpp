@@ -172,51 +172,51 @@ void ASNEnum::sendSelectedToProject(){
 }
 
 void ASNEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
-    switch (engine) {
-    case ENGINE::OSINT:
-        for(int i = 0; i < proxyModel->rowCount(); i++)
-        {
+    QSet<QString> targets;
+
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
-            if(result_type == RESULT_TYPE::ASN){
-                for(int j = 0; j < asn->peers->rowCount(); j++)
-                    emit sendResultsToOsint(asn->peers->child(j, 1)->text(), result_type);
-            }
-            if(result_type == RESULT_TYPE::CIDR){
-                for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                    emit sendResultsToOsint(asn->prefixes->child(j, 1)->text(), result_type);
-            }
-            if(result_type == RESULT_TYPE::EMAIL){
-                for(int j = 0; j < asn->emailContacts->rowCount(); j++)
-                    emit sendResultsToOsint(asn->emailContacts->child(j, 1)->text(), result_type);
-                for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
-                    emit sendResultsToOsint(asn->abuseContacts->child(j, 1)->text(), result_type);
-            }
+            for(int j = 0; j < asn->peers->rowCount(); j++)
+                targets.insert(asn->peers->child(j, 1)->text());
         }
+        break;
+    case RESULT_TYPE::CIDR:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < asn->prefixes->rowCount(); j++)
+                targets.insert(asn->prefixes->child(j, 1)->text());
+        }
+        break;
+    case RESULT_TYPE::EMAIL:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
+
+            for(int j = 0; j < asn->emailContacts->rowCount(); j++)
+                targets.insert(asn->emailContacts->child(j, 1)->text());
+            for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
+                targets.insert(asn->abuseContacts->child(j, 1)->text());
+        }
+        break;
+    default:
+        break;
+    }
+
+    /* sending targets */
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        for(int i = 0; i < proxyModel->rowCount(); i++)
-        {
-            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-            s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
-
-            if(result_type == RESULT_TYPE::ASN){
-                for(int j = 0; j < asn->peers->rowCount(); j++)
-                    emit sendResultsToRaw(asn->peers->child(j, 1)->text(), result_type);
-            }
-            if(result_type == RESULT_TYPE::CIDR){
-                for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                    emit sendResultsToRaw(asn->prefixes->child(j, 1)->text(), result_type);
-            }
-            if(result_type == RESULT_TYPE::EMAIL){
-                for(int j = 0; j < asn->emailContacts->rowCount(); j++)
-                    emit sendResultsToRaw(asn->emailContacts->child(j, 1)->text(), result_type);
-                for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
-                    emit sendResultsToRaw(asn->abuseContacts->child(j, 1)->text(), result_type);
-            }
-        }
+        emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
     default:
@@ -225,15 +225,21 @@ void ASNEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type)
 }
 
 void ASNEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        if(index.column())
+            targets.insert(index.data().toString());
+
+    /* sending targets */
     switch (engine) {
     case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToOsint(index.data().toString(), result_type);
+        emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToRaw(index.data().toString(), result_type);
+        emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
     default:
@@ -241,64 +247,83 @@ void ASNEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &resu
     }
 }
 
-void ASNEnum::sendToEnum(const TOOL &tool){
-    switch (tool) {
-    case TOOL::ASN:
-        for(int i = 0; i < proxyModel->rowCount(); i++)
-        {
+void ASNEnum::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::ASN:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->peers->rowCount(); j++)
-                emit sendResultsToAsnEnum(asn->peers->child(j, 1)->text(), RESULT_TYPE::ASN);
+                targets.insert(asn->peers->child(j, 1)->text());
         }
-        emit changeTabToAsnEnum();
         break;
-    case TOOL::CIDR:
-        for(int i = 0; i < proxyModel->rowCount(); i++)
-        {
+    case RESULT_TYPE::CIDR:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                emit sendResultsToCidrEnum(asn->prefixes->child(j, 1)->text(), RESULT_TYPE::CIDR);
+                targets.insert(asn->prefixes->child(j, 1)->text());
         }
-        emit changeTabToCidrEnum();
         break;
-    case TOOL::EMAIL:
-        for(int i = 0; i < proxyModel->rowCount(); i++)
-        {
+    case RESULT_TYPE::EMAIL:
+        for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->emailContacts->rowCount(); j++)
-                emit sendResultsToEmailEnum(asn->emailContacts->child(j, 1)->text(), RESULT_TYPE::EMAIL);
+                targets.insert(asn->emailContacts->child(j, 1)->text());
             for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
-                emit sendResultsToEmailEnum(asn->abuseContacts->child(j, 1)->text(), RESULT_TYPE::EMAIL);
+                targets.insert(asn->abuseContacts->child(j, 1)->text());
         }
-        emit changeTabToEmailEnum();
         break;
     default:
         break;
     }
 
-}
-
-void ASNEnum::sendSelectedToEnum(const TOOL &tool){
+    /* sending targets */
     switch (tool) {
     case TOOL::ASN:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToAsnEnum(index.data().toString(), RESULT_TYPE::ASN);
+        emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
     case TOOL::CIDR:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToCidrEnum(index.data().toString(), RESULT_TYPE::CIDR);
+        emit sendToCidrEnum(targets, result_type);
         emit changeTabToCidrEnum();
         break;
     case TOOL::EMAIL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToEmailEnum(index.data().toString(), RESULT_TYPE::EMAIL);
+        emit sendToEmailEnum(targets, result_type);
+        emit changeTabToEmailEnum();
+        break;
+    default:
+        break;
+    }
+}
+
+void ASNEnum::sendSelectedToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        if(index.column())
+            targets.insert(index.data().toString());
+
+    /* sending targets */
+    switch (tool) {
+    case TOOL::ASN:
+        emit sendToAsnEnum(targets, result_type);
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::CIDR:
+        emit sendToCidrEnum(targets, result_type);
+        emit changeTabToCidrEnum();
+        break;
+    case TOOL::EMAIL:
+        emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;
     default:
@@ -309,14 +334,6 @@ void ASNEnum::sendSelectedToEnum(const TOOL &tool){
 ///
 /// Receiving Targets
 ///
-
-void ASNEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::ASN)
-        ui->targets->add(target);
-
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
 
 void ASNEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::ASN)

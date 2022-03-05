@@ -48,13 +48,13 @@ class Project : public QWidget{
         void sendToSsl(QSet<QString>, RESULT_TYPE);
         void sendToUrl(QSet<QString>, RESULT_TYPE);
         /* sending to an Enumerator */
-        void sendToIpEnum(QSet<QString>);
-        void sendToAsnEnum(QSet<QString>);
-        void sendToCidrEnum(QSet<QString>);
-        void sendToNSEnum(QSet<QString>);
-        void sendToMXEnum(QSet<QString>);
-        void sendToSSLEnum(QSet<QString>);
-        void sendToEmailEnum(QSet<QString>);
+        void sendToIpEnum(QSet<QString>, RESULT_TYPE);
+        void sendToAsnEnum(QSet<QString>, RESULT_TYPE);
+        void sendToCidrEnum(QSet<QString>, RESULT_TYPE);
+        void sendToNSEnum(QSet<QString>, RESULT_TYPE);
+        void sendToMXEnum(QSet<QString>, RESULT_TYPE);
+        void sendToSSLEnum(QSet<QString>, RESULT_TYPE);
+        void sendToEmailEnum(QSet<QString>, RESULT_TYPE);
 
     private slots:
         void on_treeViewExplorer_clicked(const QModelIndex &index);

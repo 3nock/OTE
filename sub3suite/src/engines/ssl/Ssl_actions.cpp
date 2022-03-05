@@ -11,10 +11,7 @@
 #include <QClipboard>
 #include <QDesktopServices>
 
-/*
- * TODO:
- *      insert the send/copy/save targets to set before appending to clipboard or file
- */
+
 void Ssl::clearResults(){
     /* clear appropriate model */
     switch (ui->comboBoxOutput->currentIndex()) {
@@ -289,159 +286,117 @@ void Ssl::sendSelectedToProject(){
     }
 }
 
-void Ssl::sendToEngine(const ENGINE &engine){
-    if(ui->comboBoxOutput->currentIndex() == 0){
-        switch (engine) {
-        case ENGINE::OSINT:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToOsint(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToOsint();
-            break;
-        case ENGINE::RAW:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToRaw(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToRaw();
-            break;
-        case ENGINE::BRUTE:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToBrute(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToBrute();
-            break;
-        case ENGINE::ACTIVE:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToActive(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToActive();
-            break;
-        case ENGINE::DNS:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToDns(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToDns();
-            break;
-        case ENGINE::SSL:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToSsl(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToSSL();
-            break;
-        case ENGINE::URL:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToUrl(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToURL();
-            break;
-        default:
-            break;
-        }
-    }
+void Ssl::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
 
-    if(ui->comboBoxOutput->currentIndex() == 1){
-        switch (engine) {
-        case ENGINE::OSINT:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToOsint(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::CERT_ID);
-            emit changeTabToOsint();
-            break;
-        case ENGINE::RAW:
-            for(int i = 0; i != proxyModel->rowCount(); ++i)
-                emit sendResultsToRaw(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::CERT_ID);
-            emit changeTabToRaw();
-            break;
-        default:
-            break;
-        }
+    /* getting targets */
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+        targets.insert(proxyModel->index(i, 0).data().toString());
+
+    /* sending the targets */
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(targets, result_type);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(targets, result_type);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(targets, result_type);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(targets, result_type);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(targets, result_type);
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
     }
 }
 
-void Ssl::sendSelectedToEngine(const ENGINE &engine){
-    if(ui->comboBoxOutput->currentIndex() == 0){
-        switch (engine) {
-        case ENGINE::OSINT:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToOsint(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToOsint();
-            break;
-        case ENGINE::RAW:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToRaw(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToRaw();
-            break;
-        case ENGINE::BRUTE:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToBrute(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToBrute();
-            break;
-        case ENGINE::ACTIVE:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToActive(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToActive();
-            break;
-        case ENGINE::DNS:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToDns(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToDns();
-            break;
-        case ENGINE::SSL:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToSsl(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToSSL();
-            break;
-        case ENGINE::URL:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToUrl(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
-            emit changeTabToURL();
-            break;
-        default:
-            break;
-        }
-    }
+void Ssl::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
 
-    if(ui->comboBoxOutput->currentIndex() == 1){
-        switch (engine) {
-        case ENGINE::OSINT:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToOsint(index.data().toString(), RESULT_TYPE::CERT_ID);
-            emit changeTabToOsint();
-            break;
-        case ENGINE::RAW:
-            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-                emit sendResultsToRaw(index.data().toString(), RESULT_TYPE::CERT_ID);
-            emit changeTabToRaw();
-            break;
-        default:
-            break;
-        }
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        targets.insert(index.data().toString());
+
+    /* sending the targets */
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(targets, result_type);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(targets, result_type);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(targets, result_type);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(targets, result_type);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(targets, result_type);
+        emit changeTabToSSL();
+        break;
+    default:
+        break;
     }
 }
 
 void Ssl::sendToEnum(const TOOL &tool){
-    Q_UNUSED(tool);
-    if(!(ui->comboBoxOutput->currentIndex() == 1))
-        return;
+    QSet<QString> targets;
 
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
-        emit sendResultsToSSLEnum(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::CERT_ID);
-    emit changeTabToSSLEnum();
+    /* getting targets */
+    if(ui->comboBoxOutput->currentIndex() == 1){
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            targets.insert(proxyModel->index(i, 0).data().toString());
+    }
+
+    /* sending targets */
+    if(tool == TOOL::SSL){
+        emit sendToSSLEnum(targets, RESULT_TYPE::CERT_ID);
+        emit changeTabToSSLEnum();
+    }
 }
 
 void Ssl::sendSelectedToEnum(const TOOL &tool){
-    Q_UNUSED(tool);
-    if(!(ui->comboBoxOutput->currentIndex() == 1))
-        return;
+    QSet<QString> targets;
 
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-        emit sendResultsToSSLEnum(index.data().toString(), RESULT_TYPE::CERT_ID);
-    emit changeTabToSSLEnum();
+    /* getting targets */
+    if(ui->comboBoxOutput->currentIndex() == 1){
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            targets.insert(index.data().toString());
+    }
+
+    /* sending targets */
+    if(tool == TOOL::SSL){
+        emit sendToSSLEnum(targets, RESULT_TYPE::CERT_ID);
+        emit changeTabToSSLEnum();
+    }
 }
 
 ///
 /// receiving targets...
 ///
-
-void Ssl::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::SUBDOMAIN)
-        ui->targets->add(target);
-
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
 
 void Ssl::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::SUBDOMAIN)

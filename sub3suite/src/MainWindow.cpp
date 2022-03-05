@@ -254,21 +254,21 @@ void MainWindow::m_initEngines(){
 
 void MainWindow::m_connectSignals(AbstractEngine *engine){
     /* sending results */
-    connect(engine, SIGNAL(sendResultsToOsint(QString, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), active, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToSsl(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToUrl(QString, RESULT_TYPE)), url, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToActive(QSet<QString>, RESULT_TYPE)), active, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), url, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
     /* sending results enum */
-    connect(engine, SIGNAL(sendResultsToAsnEnum(QString, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToCidrEnum(QString, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToIpEnum(QString, RESULT_TYPE)), ipEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToNSEnum(QString, RESULT_TYPE)), nsEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToMXEnum(QString, RESULT_TYPE)), mxEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToEmailEnum(QString, RESULT_TYPE)), emailEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendResultsToSSLEnum(QString, RESULT_TYPE)), sslEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToAsnEnum(QSet<QString>, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToCidrEnum(QSet<QString>, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToIpEnum(QSet<QString>, RESULT_TYPE)), ipEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToNSEnum(QSet<QString>, RESULT_TYPE)), nsEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToMXEnum(QSet<QString>, RESULT_TYPE)), mxEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToEmailEnum(QSet<QString>, RESULT_TYPE)), emailEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToSSLEnum(QSet<QString>, RESULT_TYPE)), sslEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
 
     /* change tab to Engine */
     connect(engine, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
@@ -290,21 +290,21 @@ void MainWindow::m_connectSignals(AbstractEngine *engine){
 
 void MainWindow::m_connectSignals(AbstractEnum *enumerator){
     /* sending results to engine */
-    connect(enumerator, SIGNAL(sendResultsToOsint(QString, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToActive(QString, RESULT_TYPE)), active, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToBrute(QString, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToDns(QString, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToSsl(QString, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToRaw(QString, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToUrl(QString, RESULT_TYPE)), url, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToActive(QSet<QString>, RESULT_TYPE)), active, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), url, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
     /* sending results enum */
-    connect(enumerator, SIGNAL(sendResultsToAsnEnum(QString, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToCidrEnum(QString, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToIpEnum(QString, RESULT_TYPE)), ipEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToNSEnum(QString, RESULT_TYPE)), nsEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToMXEnum(QString, RESULT_TYPE)), mxEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToEmailEnum(QString, RESULT_TYPE)), emailEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendResultsToSSLEnum(QString, RESULT_TYPE)), sslEnum, SLOT(onReceiveTargets(QString, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToAsnEnum(QSet<QString>, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToCidrEnum(QSet<QString>, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToIpEnum(QSet<QString>, RESULT_TYPE)), ipEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToNSEnum(QSet<QString>, RESULT_TYPE)), nsEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToMXEnum(QSet<QString>, RESULT_TYPE)), mxEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToEmailEnum(QSet<QString>, RESULT_TYPE)), emailEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToSSLEnum(QSet<QString>, RESULT_TYPE)), sslEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
 
     /* change tab to Engine */
     connect(enumerator, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));

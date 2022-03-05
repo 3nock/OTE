@@ -49,8 +49,8 @@ struct ScanLog{
     QString moduleName;
     QString message;
     QString target;
-    int statusCode;
-    unsigned int resultsCount;
+    int statusCode = 0;
+    unsigned int resultsCount = 0;
 };
 
 struct ScanConfig{

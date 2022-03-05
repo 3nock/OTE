@@ -54,8 +54,6 @@ void Raw::on_buttonActionTree_clicked(){
     menu.addAction(tr("Copy"), this, [=](){this->copyResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
     menu.addSeparator();
     menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
-    menu.addAction(tr("Send To Engine"), this, [=](){this->sendToEngine();});
-    menu.addAction(tr("Send To Enum"), this, [=](){this->sendToEnum();});
 
     /* showing the context menu */
     menu.exec(pos);
@@ -82,8 +80,8 @@ void Raw::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
     menu.addSeparator();
     menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
-    menu.addAction(tr("Send To Engine"), this, [=](){this->sendSelectedToEngine();});
-    menu.addAction(tr("Send T Enum"), this, [=](){this->sendSelectedToEnum();});
+    menu.addAction(tr("Send To Engine"), this, [=](){this->sendToEngine();});
+    menu.addAction(tr("Send To Enum"), this, [=](){this->sendToEnum();});
 
     /* showing the context menu */
     menu.exec(QCursor::pos());

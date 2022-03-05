@@ -32,9 +32,9 @@ void ASNEnum::on_buttonAction_clicked(){
     menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
     menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
     menu.addSeparator();
-    menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-    menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(TOOL::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
-    menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+    menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(TOOL::CIDR, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+    menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
 
     /* showing the context menu... */
     menu.exec(pos);
@@ -67,9 +67,9 @@ void ASNEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-        menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(TOOL::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
-        menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(TOOL::CIDR, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+        menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
     }
 
     /* showing the context menu... */

@@ -179,14 +179,6 @@ void SSLEnum::sendSelectedToEngine(const ENGINE &engine){
 /// receiving targets...
 ///
 
-void SSLEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::CERT_ID)
-        ui->targets->add(target);
-
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
-
 void SSLEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::CERT_ID)
         ui->targets->add(targets);

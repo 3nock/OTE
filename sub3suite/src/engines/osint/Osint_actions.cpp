@@ -11,10 +11,7 @@
 #include <QClipboard>
 #include <QDesktopServices>
 
-/*
- * TODO:
- *      insert the send/copy/save targets to set before appending to clipboard or file
- */
+
 void Osint::openInBrowser(){
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::URL:
@@ -294,6 +291,10 @@ void Osint::copySelectedResults(){
     clipboard->setText(data.trimmed());
 }
 
+///
+/// Sending results...
+///
+
 void Osint::sendToProject(){
     switch (ui->comboBoxOutput->currentIndex()) {
     case osint::OUTPUT::SUBDOMAINIP:
@@ -332,143 +333,6 @@ void Osint::sendToProject(){
         break;
     }
     emit changeTabToProject();
-}
-
-///
-/// Sending results...
-///
-void Osint::sendToEngine(const ENGINE &engine, const RESULT_TYPE  &result_type){
-    int column = 0;
-    if(result_type == RESULT_TYPE::IP && ui->comboBoxOutput->currentIndex() == 1)
-        column = 1;
-
-    switch (engine) {
-    case ENGINE::OSINT:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToOsint(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToRaw(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToRaw();
-        break;
-    case ENGINE::BRUTE:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToBrute(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToBrute();
-        break;
-    case ENGINE::ACTIVE:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToActive(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToActive();
-        break;
-    case ENGINE::DNS:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToDns(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToDns();
-        break;
-    case ENGINE::SSL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToSsl(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToSSL();
-        break;
-    case ENGINE::URL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToUrl(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToURL();
-        break;
-    default:
-        break;
-    }
-}
-
-void Osint::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
-    switch (engine) {
-    case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToOsint(index.data().toString(), result_type);
-        emit changeTabToOsint();
-        break;
-    case ENGINE::RAW:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToRaw(index.data().toString(), result_type);
-        emit changeTabToRaw();
-        break;
-    case ENGINE::BRUTE:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToBrute(index.data().toString(), result_type);
-        emit changeTabToBrute();
-        break;
-    case ENGINE::ACTIVE:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToActive(index.data().toString(), result_type);
-        emit changeTabToActive();
-        break;
-    case ENGINE::DNS:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToDns(index.data().toString(), result_type);
-        emit changeTabToDns();
-        break;
-    case ENGINE::SSL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToSsl(index.data().toString(), result_type);
-        emit changeTabToSSL();
-        break;
-    case ENGINE::URL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToUrl(index.data().toString(), result_type);
-        emit changeTabToURL();
-        break;
-    default:
-        break;
-    }
-}
-
-void Osint::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
-    int column = 0;
-    if(result_type == RESULT_TYPE::IP && ui->comboBoxOutput->currentIndex() == 1)
-        column = 1;
-
-    switch (tool) {
-    case TOOL::IP:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToIpEnum(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToIpEnum();
-        break;
-    case TOOL::ASN:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToAsnEnum(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToAsnEnum();
-        break;
-    case TOOL::CIDR:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToCidrEnum(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToCidrEnum();
-        break;
-    case TOOL::NS:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToNSEnum(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToNSEnum();
-        break;
-    case TOOL::MX:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToMXEnum(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToMXEnum();
-        break;
-    case TOOL::SSL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToSSLEnum(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToSSLEnum();
-        break;
-    case TOOL::EMAIL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToEmailEnum(proxyModel->index(i, column).data().toString(), result_type);
-        emit changeTabToEmailEnum();
-        break;
-    default:
-        break;
-    }
 }
 
 void Osint::sendSelectedToProject(){
@@ -535,44 +399,224 @@ void Osint::sendSelectedToProject(){
     emit changeTabToProject();
 }
 
-void Osint::sendSelectedToEnum(const TOOL &tool , const RESULT_TYPE &result_type){
+void Osint::sendToEngine(const ENGINE &engine, const RESULT_TYPE  &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::IP:
+        if(ui->comboBoxOutput->currentIndex() == 1){ // subdomain_ip
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                targets.insert(proxyModel->index(i, 1).data().toString());
+        }else {
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                targets.insert(proxyModel->index(i, 0).data().toString());
+        }
+        break;
+
+    default:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            targets.insert(proxyModel->index(i, 0).data().toString());
+        break;
+    }
+
+    /* sending the targets */
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(targets, result_type);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(targets, result_type);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(targets, result_type);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(targets, result_type);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(targets, result_type);
+        emit changeTabToSSL();
+        break;
+    case ENGINE::URL:
+        emit sendToUrl(targets, result_type);
+        emit changeTabToURL();
+        break;
+    default:
+        break;
+    }
+}
+
+void Osint::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::IP:
+        if(ui->comboBoxOutput->currentIndex() == 1){ // subdomain_ip
+            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+                if(index.column())
+                    targets.insert(index.data().toString());
+        }else {
+            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+                targets.insert(index.data().toString());
+        }
+        break;
+
+    default:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            targets.insert(index.data().toString());
+        break;
+    }
+
+    /* sending the targets */
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(targets, result_type);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(targets, result_type);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(targets, result_type);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(targets, result_type);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(targets, result_type);
+        emit changeTabToSSL();
+        break;
+    case ENGINE::URL:
+        emit sendToUrl(targets, result_type);
+        emit changeTabToURL();
+        break;
+    default:
+        break;
+    }
+}
+
+void Osint::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::IP:
+        if(ui->comboBoxOutput->currentIndex() == 1){ // subdomain_ip
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                targets.insert(proxyModel->index(i, 1).data().toString());
+        }else {
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                targets.insert(proxyModel->index(i, 0).data().toString());
+        }
+        break;
+
+    default:
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            targets.insert(proxyModel->index(i, 0).data().toString());
+        break;
+    }
+
+    /* sending targets */
     switch (tool) {
     case TOOL::IP:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToIpEnum(index.data().toString(), result_type);
+        emit sendToIpEnum(targets, result_type);
         emit changeTabToIpEnum();
         break;
     case TOOL::ASN:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToAsnEnum(index.data().toString(), result_type);
+        emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
     case TOOL::CIDR:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToCidrEnum(index.data().toString(), result_type);
+        emit sendToCidrEnum(targets, result_type);
         emit changeTabToCidrEnum();
         break;
     case TOOL::NS:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToNSEnum(index.data().toString(), result_type);
+        emit sendToNSEnum(targets, result_type);
         emit changeTabToNSEnum();
         break;
     case TOOL::MX:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToMXEnum(index.data().toString(), result_type);
+        emit sendToMXEnum(targets, result_type);
         emit changeTabToMXEnum();
         break;
     case TOOL::SSL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToSSLEnum(index.data().toString(), result_type);
+        emit sendToSSLEnum(targets, result_type);
         emit changeTabToSSLEnum();
         break;
     case TOOL::EMAIL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToEmailEnum(index.data().toString(), result_type);
+        emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;
+    }
+}
+
+void Osint::sendSelectedToEnum(const TOOL &tool , const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+
+    /* getting targets */
+    switch (result_type) {
+    case RESULT_TYPE::IP:
+        if(ui->comboBoxOutput->currentIndex() == 1){ // subdomain_ip
+            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+                if(index.column())
+                    targets.insert(index.data().toString());
+        }else {
+            foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+                targets.insert(index.data().toString());
+        }
+        break;
+
     default:
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+            targets.insert(index.data().toString());
+        break;
+    }
+
+    /* sending targets */
+    switch (tool) {
+    case TOOL::IP:
+        emit sendToIpEnum(targets, result_type);
+        emit changeTabToIpEnum();
+        break;
+    case TOOL::ASN:
+        emit sendToAsnEnum(targets, result_type);
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::CIDR:
+        emit sendToCidrEnum(targets, result_type);
+        emit changeTabToCidrEnum();
+        break;
+    case TOOL::NS:
+        emit sendToNSEnum(targets, result_type);
+        emit changeTabToNSEnum();
+        break;
+    case TOOL::MX:
+        emit sendToMXEnum(targets, result_type);
+        emit changeTabToMXEnum();
+        break;
+    case TOOL::SSL:
+        emit sendToSSLEnum(targets, result_type);
+        emit changeTabToSSLEnum();
+        break;
+    case TOOL::EMAIL:
+        emit sendToEmailEnum(targets, result_type);
+        emit changeTabToEmailEnum();
         break;
     }
 }
@@ -580,37 +624,6 @@ void Osint::sendSelectedToEnum(const TOOL &tool , const RESULT_TYPE &result_type
 ///
 /// receive targets...
 ///
-void Osint::onReceiveTargets(QString target, RESULT_TYPE result_type){
-    switch (result_type) {
-    case RESULT_TYPE::SUBDOMAIN:
-        ui->comboBoxInput->setCurrentIndex(INPUT::HOSTNAME);
-        break;
-    case RESULT_TYPE::IP:
-        ui->comboBoxInput->setCurrentIndex(INPUT::IP);
-        break;
-    case RESULT_TYPE::ASN:
-        ui->comboBoxInput->setCurrentIndex(INPUT::ASN);
-        break;
-    case RESULT_TYPE::CIDR:
-        ui->comboBoxInput->setCurrentIndex(INPUT::CIDR);
-        break;
-    case RESULT_TYPE::CERT_ID:
-        ui->comboBoxInput->setCurrentIndex(INPUT::CERT);
-        break;
-    case RESULT_TYPE::EMAIL:
-        ui->comboBoxInput->setCurrentIndex(INPUT::EMAIL);
-        break;
-    case RESULT_TYPE::URL:
-        ui->comboBoxInput->setCurrentIndex(INPUT::URL);
-        break;
-    default:
-        break;
-    }
-
-    ui->targets->add(target);
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
 
 void Osint::onReceiveTargets(QSet<QString> targets, RESULT_TYPE result_type){
     switch (result_type) {
@@ -640,6 +653,7 @@ void Osint::onReceiveTargets(QSet<QString> targets, RESULT_TYPE result_type){
     }
 
     ui->targets->add(targets);
+
     /* set multiple targets checkbox checked */
     ui->checkBoxMultipleTargets->setChecked(true);
 }

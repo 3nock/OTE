@@ -218,15 +218,20 @@ void Url::sendSelectedToProject(){
 }
 
 void Url::sendToEngine(const ENGINE &engine){
+    QSet<QString> targets;
+
+    /* getting targets */
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+        targets.insert(proxyModel->index(i, 0).data().toString());
+
+    /* sending targets */
     switch (engine) {
     case ENGINE::URL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToUrl(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::URL);
+        emit sendToUrl(targets, RESULT_TYPE::URL);
         emit changeTabToURL();
         break;
     case ENGINE::RAW:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-            emit sendResultsToRaw(proxyModel->index(i, 0).data().toString(), RESULT_TYPE::URL);
+        emit sendToRaw(targets, RESULT_TYPE::URL);
         emit changeTabToRaw();
         break;
     default:
@@ -235,21 +240,23 @@ void Url::sendToEngine(const ENGINE &engine){
 }
 
 void Url::sendSelectedToEngine(const ENGINE &engine){
+    QSet<QString> targets;
+
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+        if(index.column())
+            continue;
+        targets.insert(index.data().toString());
+    }
+
+    /* sending targets */
     switch (engine) {
     case ENGINE::URL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                continue;
-            emit sendResultsToUrl(index.data().toString(), RESULT_TYPE::URL);
-        }
+        emit sendToUrl(targets, RESULT_TYPE::URL);
         emit changeTabToURL();
         break;
     case ENGINE::RAW:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
-                continue;
-            emit sendResultsToRaw(index.data().toString(), RESULT_TYPE::URL);
-        }
+        emit sendToRaw(targets, RESULT_TYPE::URL);
         emit changeTabToRaw();
         break;
     default:
@@ -260,14 +267,6 @@ void Url::sendSelectedToEngine(const ENGINE &engine){
 ///
 /// receiving targets
 ///
-
-void Url::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::URL)
-        ui->targets->add(target);
-
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
 
 void Url::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::URL)

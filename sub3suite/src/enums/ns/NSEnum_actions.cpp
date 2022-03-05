@@ -177,69 +177,42 @@ void NSEnum::sendSelectedToProject(){
 }
 
 void NSEnum::sendToEngine(const ENGINE &engine){
+    QSet<QString> targets;
+
+    /* getting targets */
+    for(int i = 0; i != proxyModel->rowCount(); ++i){
+        QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+        s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
+
+        for(int j = 0; j < item->domains->rowCount(); j++)
+            targets.insert(item->domains->child(j, 1)->text());
+    }
+
+    /* sending the targets */
     switch (engine) {
     case ENGINE::OSINT:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
-            for(int j = 0; j < item->domains->rowCount(); j++)
-                emit sendResultsToOsint(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
-        }
+        emit sendToOsint(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
-            for(int j = 0; j < item->domains->rowCount(); j++)
-                emit sendResultsToRaw(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
-        }
+        emit sendToRaw(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToRaw();
         break;
     case ENGINE::BRUTE:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
-            for(int j = 0; j < item->domains->rowCount(); j++)
-                emit sendResultsToBrute(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
-        }
+        emit sendToBrute(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToBrute();
         break;
     case ENGINE::ACTIVE:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
-            for(int j = 0; j < item->domains->rowCount(); j++)
-                emit sendResultsToActive(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
-        }
+        emit sendToActive(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToActive();
         break;
     case ENGINE::DNS:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
-            for(int j = 0; j < item->domains->rowCount(); j++)
-                emit sendResultsToDns(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
-        }
+        emit sendToDns(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToDns();
         break;
     case ENGINE::SSL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
-            for(int j = 0; j < item->domains->rowCount(); j++)
-                emit sendResultsToSsl(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
-        }
+        emit sendToSsl(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToSSL();
-        break;
-    case ENGINE::URL:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
-            for(int j = 0; j < item->domains->rowCount(); j++)
-                emit sendResultsToUrl(item->domains->child(j, 0)->text(), RESULT_TYPE::SUBDOMAIN);
-        }
-        emit changeTabToURL();
         break;
     default:
         break;
@@ -247,41 +220,38 @@ void NSEnum::sendToEngine(const ENGINE &engine){
 }
 
 void NSEnum::sendSelectedToEngine(const ENGINE &engine){
+    QSet<QString> targets;
+
+    /* getting targets */
+    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
+        if(index.column())
+            targets.insert(index.data().toString());
+
+    /* sending the targets */
     switch (engine) {
     case ENGINE::OSINT:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToOsint(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit sendToOsint(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToOsint();
         break;
     case ENGINE::RAW:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToRaw(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit sendToRaw(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToRaw();
         break;
     case ENGINE::BRUTE:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToBrute(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit sendToBrute(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToBrute();
         break;
     case ENGINE::ACTIVE:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToActive(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit sendToActive(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToActive();
         break;
     case ENGINE::DNS:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToDns(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit sendToDns(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToDns();
         break;
     case ENGINE::SSL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToSsl(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
+        emit sendToSsl(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToSSL();
-        break;
-    case ENGINE::URL:
-        foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-            emit sendResultsToUrl(index.data().toString(), RESULT_TYPE::SUBDOMAIN);
-        emit changeTabToURL();
         break;
     default:
         break;
@@ -291,14 +261,6 @@ void NSEnum::sendSelectedToEngine(const ENGINE &engine){
 ///
 /// receiving targets
 ///
-
-void NSEnum::onReceiveTargets(QString target, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::NS)
-        ui->targets->add(target);
-
-    /* set multiple targets checkbox checked */
-    ui->checkBoxMultipleTargets->setChecked(true);
-}
 
 void NSEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::NS)

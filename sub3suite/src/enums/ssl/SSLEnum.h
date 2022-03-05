@@ -32,7 +32,6 @@ class SSLEnum : public AbstractEnum {
         void onRateLimitLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
-        void onReceiveTargets(QString, RESULT_TYPE);
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);
 
     private slots:
@@ -43,10 +42,9 @@ class SSLEnum : public AbstractEnum {
         void on_buttonAction_clicked();
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditFilter_textChanged(const QString &arg1);
-
         void on_treeViewResults_clicked(const QModelIndex &index);
 
-private:
+    private:
         Ui::SSLEnum *ui;
 
         QStandardItemModel *m_model;

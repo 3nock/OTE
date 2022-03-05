@@ -1049,7 +1049,7 @@ void Project::action_send_ip(){
         break;
     }
 
-    emit sendToIpEnum(ip);
+    emit sendToIpEnum(ip, RESULT_TYPE::IP);
     emit changeTabToIpEnum();
 }
 
@@ -1085,7 +1085,7 @@ void Project::action_send_email(){
         break;
     }
 
-    emit sendToEmailEnum(emails);
+    emit sendToEmailEnum(emails, RESULT_TYPE::EMAIL);
     emit changeTabToEmailEnum();
 }
 
@@ -1117,7 +1117,7 @@ void Project::action_send_asn(){
         break;
     }
 
-    emit sendToAsnEnum(asn);
+    emit sendToAsnEnum(asn, RESULT_TYPE::ASN);
     emit changeTabToAsnEnum();
 }
 
@@ -1140,7 +1140,7 @@ void Project::action_send_cidr(){
         break;
     }
 
-    emit sendToCidrEnum(cidr);
+    emit sendToCidrEnum(cidr, RESULT_TYPE::CIDR);
     emit changeTabToCidrEnum();
 }
 
@@ -1153,7 +1153,7 @@ void Project::action_send_ssl(){
         break;
     }
 
-    emit sendToSSLEnum(ssl);
+    emit sendToSSLEnum(ssl, RESULT_TYPE::CERT_ID);
     emit changeTabToSSLEnum();
 }
 
@@ -1177,7 +1177,7 @@ void Project::action_send_ns(){
         break;
     }
 
-    emit sendToNSEnum(ns);
+    emit sendToNSEnum(ns, RESULT_TYPE::NS);
     emit changeTabToNSEnum();
 }
 
@@ -1201,7 +1201,7 @@ void Project::action_send_mx(){
         break;
     }
 
-    emit sendToMXEnum(mx);
+    emit sendToMXEnum(mx, RESULT_TYPE::MX);
     emit changeTabToMXEnum();
 }
 
@@ -1254,31 +1254,31 @@ void Project::action_send_selected_toEnum(const TOOL &tool){
 
     switch (tool) {
     case TOOL::IP:
-        emit sendToIpEnum(targets);
+        emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
     case TOOL::ASN:
-        emit sendToAsnEnum(targets);
+        emit sendToAsnEnum(targets, RESULT_TYPE::ASN);
         emit changeTabToAsnEnum();
         break;
     case TOOL::CIDR:
-        emit sendToCidrEnum(targets);
+        emit sendToCidrEnum(targets, RESULT_TYPE::CIDR);
         emit changeTabToCidrEnum();
         break;
     case TOOL::NS:
-        emit sendToNSEnum(targets);
+        emit sendToNSEnum(targets, RESULT_TYPE::NS);
         emit changeTabToNSEnum();
         break;
     case TOOL::MX:
-        emit sendToMXEnum(targets);
+        emit sendToMXEnum(targets, RESULT_TYPE::MX);
         emit changeTabToMXEnum();
         break;
     case TOOL::SSL:
-        emit sendToSSLEnum(targets);
+        emit sendToSSLEnum(targets, RESULT_TYPE::CERT_ID);
         emit changeTabToSSLEnum();
         break;
     case TOOL::EMAIL:
-        emit sendToEmailEnum(targets);
+        emit sendToEmailEnum(targets, RESULT_TYPE::EMAIL);
         emit changeTabToEmailEnum();
         break;
     }
