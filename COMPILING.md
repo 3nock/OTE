@@ -5,7 +5,7 @@ The Steps are easy since the project doesn't have many dependancies for now & on
 
 ## Prerequisites
 
-1. Download [Qt5.13.0](https://download.qt.io/archive/qt/5.13/5.13.0) & install. (not a must to use version 5.13.0).
+1. Download [Qt5.13.0](https://download.qt.io/archive/qt/5.13/5.13.0) & install. (other versions can be used but you have make minor adjustments here & there).
 2. Download [Qt Creator 4.9.1](https://www.qt.io/offline-installers) & install. (not a must to use version 4.9.1).
 3. Clone the repository (`main or dev branch`) to your local drive. Make sure to include the submodules in your clone command!
 
@@ -26,7 +26,7 @@ If you are familiar with Qt-Creator.
 ## Minor adjustment
 
 Minor adjustment to the GumboParser submodule. 
-1. Copy the `strings.h` file from `sub3suite/include/gumbo-parser/visualc/include/`
+1. Copy the `strings.h` file from `sub3suite/include/`
 2. Paste it to `sub3suite/include/gumbo-parser/src/`
 3. Change the Include header file `#include <strings.h>` to `#include "strings.h"` for the following files;
 	- attribute.c

@@ -1,5 +1,5 @@
-#ifndef HOSTMODEL_H
-#define HOSTMODEL_H
+#ifndef HOSTITEM_H
+#define HOSTITEM_H
 
 #include <QStandardItem>
 #include <QDate>
@@ -101,4 +101,4 @@ QJsonObject host_to_json(s3s_item::HOST*);
 
 void json_to_host(const QJsonObject&, s3s_item::HOST*);
 
-#endif // HOSTMODEL_H
+#endif // HOSTITEM_H

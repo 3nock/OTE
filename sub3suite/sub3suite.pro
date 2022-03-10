@@ -1,8 +1,10 @@
-#-------------------------------------------------
+#---------------------------------------------------------------------------------
 #
-# Project created by QtCreator 2020-12-07T00:44:51
+#                Project created by QtCreator 2020-12-07T00:44:51
 #
-#-------------------------------------------------
+# Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+#
+#----------------------------------------------------------------------------------
 
 QT       += core gui
 QT       += network
@@ -12,17 +14,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = sub3suite
 TEMPLATE = app
 
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which has been marked as deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
+# show deprecated functions warnings
 DEFINES += QT_DEPRECATED_WARNINGS
 
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables subdomainIp the APIs deprecated before Qt 6.0.0
-
+# adding compiler versions to be used. c99 for compiling gumbo-parser &
+# c++11 for compiling the rest of the project
+CONFIG += c99
 CONFIG += c++11
 
 include(../include/gumbo-parser.pri)
@@ -269,6 +266,7 @@ HEADERS += \
     src/items/IPItem.h \
     src/items/MXItem.h \
     src/items/NSItem.h \
+    src/modules/passive/scrape/Extractors.h \
     src/project/model/Explorer.h \
     src/project/model/ProjectModel.h \
     src/items/RawItem.h \
@@ -399,7 +397,7 @@ HEADERS += \
     src/engines/brute/Brute.h \
     src/engines/osint/Osint.h \
     src/engines/AbstractEngine.h \
-    src/s3s.h \
+    src/utils/s3s.h \
     src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \
@@ -445,15 +443,15 @@ FORMS += \
     src/dialogs/ApiKeysDialog.ui \
     src/MainWindow.ui
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
-
 RESOURCES += \
     res.qrc
+
+DISTFILES +=
 
 # setting the icon...
 RC_ICONS = res/icons/main_logo.ico
 
-DISTFILES +=
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target

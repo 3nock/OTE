@@ -303,6 +303,10 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
 
     ui->comboBoxFilter->setCurrentIndex(0);
     ui->labelCount->setNum(proxyModel->rowCount());
+
+    this->init_action_copy();
+    this->init_action_save();
+    this->init_action_send();
 }
 
 void Project::on_lineEditFilter_textChanged(const QString &filterKeyword){

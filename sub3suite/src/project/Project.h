@@ -76,8 +76,11 @@ class Project : public QWidget{
         QString *item_comment = nullptr;
 
         QMenuBar *menubar_tree;
-        QMenuBar *menubar_notes;
         QMenuBar *menubar_project;
+
+        QMenu *menu_send;
+        QMenu *menu_copy;
+        QMenu *menu_save;
 
         /* main actions */
         QAction a_copy;
@@ -91,12 +94,15 @@ class Project : public QWidget{
         void init_menubar_tree();
         void init_menubar_project();
 
+        void init_action_save();
+        void init_action_copy();
         void init_action_send();
 
         /* menu bar's actions */
-        void action_save();
         void action_clear();
-        void action_copy();
+
+        void action_copy(const RESULT_TYPE&);
+        void action_save(const RESULT_TYPE&);
 
         void action_send_host(const ENGINE&);
         void action_send_ip(const ENGINE&);

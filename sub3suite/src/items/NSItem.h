@@ -5,8 +5,8 @@
  @brief :
 */
 
-#ifndef NSMODEL_H
-#define NSMODEL_H
+#ifndef NSITEM_H
+#define NSITEM_H
 
 #include <QStandardItem>
 #include <QDate>
@@ -96,4 +96,4 @@ QJsonObject ns_to_json(s3s_item::NS*);
 
 void json_to_ns(const QJsonObject&, s3s_item::NS*);
 
-#endif // NSMODEL_H
+#endif // NSITEM_H

@@ -95,6 +95,10 @@ void Project::initUI(){
 }
 
 void Project::init_menubar_tree(){
+    menu_send = new QMenu(this);
+    menu_copy = new QMenu(this);
+    menu_save = new QMenu(this);
+
     a_copy.setIcon(QIcon(":/img/res/icons/copy.png"));
     a_save.setIcon(QIcon(":/img/res/icons/save.png"));
     a_send.setIcon(QIcon(":/img/res/icons/send.png"));
@@ -102,19 +106,13 @@ void Project::init_menubar_tree(){
     a_expand.setIcon(QIcon(":/img/res/icons/expand.png"));
     a_collapse.setIcon(QIcon(":/img/res/icons/collapse.png"));
 
-    a_copy.setToolTip("Copy");
-    a_save.setToolTip("Save");
-    a_send.setToolTip("Send");
-    a_clear.setToolTip("Clear");
-    a_expand.setToolTip("Expand");
-    a_collapse.setToolTip("Collapse");
-
-    connect(&a_copy, &QAction::triggered, this, [=](){this->action_copy();});
-    connect(&a_save, &QAction::triggered, this, [=](){this->action_save();});
-    /*connect(&a_send, &QAction::triggered, this, [=](){this->action_send();});*/
     connect(&a_clear, &QAction::triggered, this, [=](){this->action_clear();});
     connect(&a_expand, &QAction::triggered, this, [=](){ui->treeViewTree->expandAll();});
     connect(&a_collapse, &QAction::triggered, this, [=](){ui->treeViewTree->collapseAll();});
+
+    a_send.setMenu(menu_send);
+    a_save.setMenu(menu_save);
+    a_copy.setMenu(menu_copy);
 
     menubar_tree = new QMenuBar(this);
     menubar_tree->addAction(&a_save);

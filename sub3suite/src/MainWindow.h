@@ -12,7 +12,7 @@
 #include <QSettings>
 #include <QLabel>
 
-#include "s3s.h"
+#include "src/utils/s3s.h"
 #include "src/utils/utils.h"
 #include "src/project/Project.h"
 #include "src/utils/UpdateChecker.h"
@@ -93,15 +93,14 @@ class MainWindow : public QMainWindow{
         void on_actionSourceCode_triggered();
         void on_actionDonate_triggered();
         void on_actionCheckUpdates_triggered();
+        void on_actionSaveCopy_triggered();
 
         /* documentations */
         void onDocumentation_active();
         void onDocumentation_passive();
         void onDocumentation_tools();
 
-        void on_actionSaveCopy_triggered();
-
-protected:
+    protected:
         void closeEvent(QCloseEvent *event) override;
 
     private:

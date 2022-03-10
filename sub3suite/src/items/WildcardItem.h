@@ -1,5 +1,5 @@
-#ifndef WILDCARDMODEL_H
-#define WILDCARDMODEL_H
+#ifndef WILDCARDITEM_H
+#define WILDCARDITEM_H
 
 #include <QStandardItem>
 #include <QDate>
@@ -50,4 +50,4 @@ QJsonObject wildcard_to_json(s3s_item::Wildcard*);
 
 void json_to_wildcard(const QJsonObject&, s3s_item::Wildcard*);
 
-#endif // WILDCARDMODEL_H
+#endif // WILDCARDITEM_H

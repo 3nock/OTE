@@ -5,8 +5,8 @@
  @brief :
 */
 
-#ifndef ASNMODEL_H
-#define ASNMODEL_H
+#ifndef ASNITEM_H
+#define ASNITEM_H
 
 #include <QStandardItem>
 #include <QJsonObject>
@@ -228,4 +228,4 @@ QJsonObject asn_to_json(s3s_item::ASN*);
 
 void json_to_asn(const QJsonObject&, s3s_item::ASN*);
 
-#endif // ASNMODEL_H
+#endif // ASNITEM_H

@@ -5,8 +5,8 @@
  @brief :
 */
 
-#ifndef CIDRMODEL_H
-#define CIDRMODEL_H
+#ifndef CIDRITEM_H
+#define CIDRITEM_H
 
 #include <QStandardItem>
 #include <QDate>
@@ -200,4 +200,4 @@ QJsonObject cidr_to_json(s3s_item::CIDR*);
 
 void json_to_cidr(const QJsonObject&, s3s_item::CIDR*);
 
-#endif // CIDRMODEL_H
+#endif // CIDRITEM_H

@@ -1,5 +1,5 @@
-#ifndef DNSMODEL_H
-#define DNSMODEL_H
+#ifndef DNSITEM_H
+#define DNSITEM_H
 
 #include <QStandardItem>
 #include <QJsonObject>
@@ -179,4 +179,4 @@ QJsonObject dns_to_json(s3s_item::DNS*);
 
 void json_to_dns(const QJsonObject&, s3s_item::DNS*);
 
-#endif // DNSMODEL_H
+#endif // DNSITEM_H

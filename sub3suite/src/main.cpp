@@ -14,8 +14,11 @@
 #include <QDesktopWidget>
 #include <QSplashScreen>
 
+#include "src/utils/s3s.h"
 
-/* a custom messagehandler for logging messages to log file */
+///
+/// a custom messagehandler for logging messages to log file
+///
 void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QString & msg)
 {
     QString log;
@@ -58,32 +61,6 @@ void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
 
     mutex.unlock();
 }
-
-/* a custom QApplication with exceptions handling */
-class s3s_Application final: public QApplication
-{
-public:
-    s3s_Application(int &argc, char **argv) : QApplication(argc, argv) {}
-
-    bool notify(QObject* receiver, QEvent* event) override
-    {
-        try {
-            return QApplication::notify(receiver, event);
-        }
-        catch (std::exception &e) {
-            qFatal("Error %s sending event %s to object %s (%s)",
-                e.what(), typeid(*event).name(), qPrintable(receiver->objectName()),
-                typeid(*receiver).name());
-        }
-        catch (...) {
-            qFatal("Error <unknown> sending event %s to object %s (%s)",
-                typeid(*event).name(), qPrintable(receiver->objectName()),
-                typeid(*receiver).name());
-        }
-         return false;
-    }
-};
-
 
 int main(int argc, char *argv[])
 {
@@ -133,7 +110,8 @@ int main(int argc, char *argv[])
     /* start startupDialog */
     startupDialog.exec();
 
-    if(project.isNew || project.isExisting || project.isTemporary){
+    if(project.isNew || project.isExisting || project.isTemporary)
+    {
         /* creating the main window */
         MainWindow w;
 

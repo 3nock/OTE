@@ -1,5 +1,5 @@
-#ifndef URLMODEL_H
-#define URLMODEL_H
+#ifndef URLITEM_H
+#define URLITEM_H
 
 
 #include <QStandardItem>
@@ -58,4 +58,4 @@ QJsonObject url_to_json(s3s_item::URL*);
 
 void json_to_url(const QJsonObject&, s3s_item::URL*);
 
-#endif // URLMODEL_H
+#endif // URLITEM_H

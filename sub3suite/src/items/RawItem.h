@@ -1,5 +1,5 @@
-#ifndef RAWMODEL_H
-#define RAWMODEL_H
+#ifndef RAWITEM_H
+#define RAWITEM_H
 
 #include <QStandardItem>
 #include <QJsonArray>
@@ -159,4 +159,4 @@ QJsonArray setArr(QStandardItem *item);
 
 QByteArray item_to_json(QStandardItem*);
 
-#endif // RAWMODEL_H
+#endif // RAWITEM_H

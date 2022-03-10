@@ -8,8 +8,11 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
+#include <QBasicTimer>
+#include <QTimerEvent>
 /* ... */
 #include "OsintDefinitions.h"
+#include "src/utils/s3s.h"
 #include "src/utils/Definitions.h"
 #include "gumbo-parser/src/gumbo.h"
 /* ... */
@@ -41,9 +44,6 @@
 #define OUT_ASN 5
 #define OUT_SSLCERT 6
 #define OUT_CIDR 7
-
-/* ... */
-#define REQUEST_TYPE "type"
 
 struct ScanLog{
     QString moduleName;
@@ -100,21 +100,6 @@ struct ScanArgs{
     /* for raw output */
     int rawOption = 0;
     QMap<int, QString> rawParameters;
-};
-
-class s3sNetworkAccessManager: public QNetworkAccessManager {
-    public:
-        s3sNetworkAccessManager(QObject *parent = nullptr): QNetworkAccessManager(parent)
-        {
-        }
-
-    protected:
-        QNetworkReply* createRequest(Operation op, const QNetworkRequest &request, QIODevice *data = nullptr)
-        {
-            QNetworkReply *reply = QNetworkAccessManager::createRequest(op, request, data);
-            reply->setProperty(REQUEST_TYPE, request.attribute(QNetworkRequest::User));
-            return reply;
-        }
 };
 
 

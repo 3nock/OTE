@@ -71,7 +71,6 @@ void Raw::initUI(){
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
     ui->labelResultsCountTree->setProperty("dark", true);
-    ui->labelTarget->setProperty("s3s_color", true);
 
     /* placeholder texts */
     ui->lineEditTarget->setPlaceholderText(tr("Enter target..."));

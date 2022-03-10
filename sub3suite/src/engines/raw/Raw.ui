@@ -29,16 +29,18 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="labelTarget">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
+      <widget class="QComboBox" name="comboBox">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
        </property>
-       <property name="text">
-        <string>TARGET:</string>
-       </property>
+       <item>
+        <property name="text">
+         <string>Target</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -652,7 +654,7 @@
                  <bool>true</bool>
                 </property>
                 <property name="placeholderText">
-                 <string>The Osint Engine Description...</string>
+                 <string>The Osint Module Description...</string>
                 </property>
                </widget>
               </item>
@@ -703,7 +705,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Query Options:</string>
+                   <string>Query Option:</string>
                   </property>
                  </widget>
                 </item>

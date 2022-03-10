@@ -37,6 +37,14 @@ void Ask::start(){
             m_firstRequest = true;
             activeRequests++;
         }
+
+        if(args.outputEmail){
+            QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+            request.setUrl(url);
+            manager->get(request);
+            m_firstRequest = true;
+            activeRequests++;
+        }
     }
 }
 

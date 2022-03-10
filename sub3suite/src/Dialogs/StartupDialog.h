@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QStandardItemModel>
 
-#include "src/s3s.h"
+#include "src/utils/s3s.h"
 #include "src/project/model/ProjectModel.h"
 
 

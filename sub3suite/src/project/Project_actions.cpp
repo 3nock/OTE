@@ -118,7 +118,7 @@ void Project::action_clear(){
     ui->labelCount->setNum(proxyModel->rowCount());
 }
 
-void Project::action_save(){
+void Project::action_save(const RESULT_TYPE &result_type){
     if(proxyModel->rowCount() == 0){
         qWarning() << "PROJECT:  Nothing to save";
         return;
@@ -163,14 +163,28 @@ void Project::action_save(){
         break;
 
     case ExplorerType::passive_subdomainIp:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QString host(proxyModel->index(i, 0).data().toString());
-            QString ip(proxyModel->index(i, 1).data().toString());
+        switch (result_type) {
+        case RESULT_TYPE::CSV:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString host(proxyModel->index(i, 0).data().toString());
+                QString ip(proxyModel->index(i, 1).data().toString());
 
-            if(!ip.isEmpty())
-                host.append(",").append(ip);
+                if(!ip.isEmpty())
+                    host.append(",").append(ip);
 
-            file.write(host.append(NEWLINE).toUtf8());
+                file.write(host.append(NEWLINE).toUtf8());
+            }
+            break;
+        case RESULT_TYPE::SUBDOMAIN:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                file.write(proxyModel->index(i, 0).data().toString().append(NEWLINE).toUtf8());
+            break;
+        case RESULT_TYPE::IP:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                file.write(proxyModel->index(i, 1).data().toString().append(NEWLINE).toUtf8());
+            break;
+        default:
+            break;
         }
         break;
     case ExplorerType::activeDNS_SRV:
@@ -188,30 +202,119 @@ void Project::action_save(){
         }
         break;
     case ExplorerType::activeHost:
-    {
-        QJsonArray array;
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(model->activeHost->itemFromIndex(model_index));
-            array.append(host_to_json(item));
+        switch (result_type) {
+        case RESULT_TYPE::JSON:
+        {
+            QJsonArray array;
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+                s3s_item::HOST *item = static_cast<s3s_item::HOST*>(model->activeHost->itemFromIndex(model_index));
+                array.append(host_to_json(item));
+            }
+            QJsonDocument document;
+            document.setArray(array);
+            file.write(document.toJson());
         }
-        QJsonDocument document;
-        document.setArray(array);
-        file.write(document.toJson());
-    }
+            break;
+        case RESULT_TYPE::CSV:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString host(proxyModel->index(i, 0).data().toString());
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+                QString port(proxyModel->index(i, 3).data().toString());
+
+                if(!ipv4.isEmpty())
+                    host.append(",").append(ipv4);
+                if(!ipv6.isEmpty())
+                    host.append(",").append(ipv6);
+                if(!port.isEmpty())
+                    host.append(",").append(port);
+
+                file.write(host.append(NEWLINE).toUtf8());
+            }
+            break;
+        case RESULT_TYPE::IP:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+
+                if(!ipv4.isEmpty())
+                    file.write(ipv4.append(NEWLINE).toUtf8());
+                if(!ipv6.isEmpty())
+                    file.write(ipv6.append(NEWLINE).toUtf8());
+            }
+            break;
+        case RESULT_TYPE::SUBDOMAIN:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                file.write(proxyModel->index(i, 0).data().toString().append(NEWLINE).toUtf8());
+            break;
+        case RESULT_TYPE::IPV4:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                file.write(proxyModel->index(i, 1).data().toString().append(NEWLINE).toUtf8());
+            break;
+        case RESULT_TYPE::IPV6:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                file.write(proxyModel->index(i, 2).data().toString().append(NEWLINE).toUtf8());
+            break;
+        default:
+            break;
+        }
         break;
     case ExplorerType::activeWildcard:
-    {
-        QJsonArray array;
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(model->activeWildcard->itemFromIndex(model_index));
-            array.append(wildcard_to_json(item));
+        switch (result_type) {
+        case RESULT_TYPE::JSON:
+        {
+            QJsonArray array;
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+                s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(model->activeWildcard->itemFromIndex(model_index));
+                array.append(wildcard_to_json(item));
+            }
+            QJsonDocument document;
+            document.setArray(array);
+            file.write(document.toJson());
         }
-        QJsonDocument document;
-        document.setArray(array);
-        file.write(document.toJson());
-    }
+            break;
+        case RESULT_TYPE::CSV:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString host(proxyModel->index(i, 0).data().toString());
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+
+                if(!ipv4.isEmpty())
+                    host.append(",").append(ipv4);
+                if(!ipv6.isEmpty())
+                    host.append(",").append(ipv6);
+
+                file.write(host.append(NEWLINE).toUtf8());
+            }
+            break;
+        case RESULT_TYPE::IP:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+
+                if(!ipv4.isEmpty())
+                    file.write(ipv4.append(NEWLINE).toUtf8());
+                if(!ipv6.isEmpty())
+                    file.write(ipv6.append(NEWLINE).toUtf8());
+            }
+            break;
+        case RESULT_TYPE::SUBDOMAIN:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                file.write(proxyModel->index(i, 0).data().toString().append(NEWLINE).toUtf8());
+            break;
+        case RESULT_TYPE::IPV4:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                file.write(proxyModel->index(i, 1).data().toString().append(NEWLINE).toUtf8());
+            break;
+        case RESULT_TYPE::IPV6:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                file.write(proxyModel->index(i, 2).data().toString().append(NEWLINE).toUtf8());
+            break;
+        default:
+            break;
+        }
         break;
     case ExplorerType::activeDNS:
     {
@@ -361,7 +464,7 @@ void Project::action_save(){
     file.close();
 }
 
-void Project::action_copy(){
+void Project::action_copy(const RESULT_TYPE &result_type){
     if(proxyModel->rowCount() == 0){
         qWarning() << "PROJECT:  Nothing to copy";
         return;
@@ -395,14 +498,28 @@ void Project::action_copy(){
         break;
 
     case ExplorerType::passive_subdomainIp:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QString host(proxyModel->index(i, 0).data().toString());
-            QString ip(proxyModel->index(i, 1).data().toString());
+        switch (result_type) {
+        case RESULT_TYPE::CSV:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString host(proxyModel->index(i, 0).data().toString());
+                QString ip(proxyModel->index(i, 1).data().toString());
 
-            if(!ip.isEmpty())
-                host.append(",").append(ip);
+                if(!ip.isEmpty())
+                    host.append(",").append(ip);
 
-            clipboardData.append(host.append(NEWLINE));
+                clipboardData.append(host.append(NEWLINE));
+            }
+            break;
+        case RESULT_TYPE::SUBDOMAIN:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                clipboardData.append(proxyModel->index(i, 0).data().toString().append(NEWLINE));
+            break;
+        case RESULT_TYPE::IP:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                clipboardData.append(proxyModel->index(i, 1).data().toString().append(NEWLINE));
+            break;
+        default:
+            break;
         }
         break;
     case ExplorerType::activeDNS_SRV:
@@ -420,30 +537,119 @@ void Project::action_copy(){
         }
         break;
     case ExplorerType::activeHost:
-    {
-        QJsonArray array;
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(model->activeHost->itemFromIndex(model_index));
-            array.append(host_to_json(item));
+        switch (result_type) {
+        case RESULT_TYPE::JSON:
+        {
+            QJsonArray array;
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+                s3s_item::HOST *item = static_cast<s3s_item::HOST*>(model->activeHost->itemFromIndex(model_index));
+                array.append(host_to_json(item));
+            }
+            QJsonDocument document;
+            document.setArray(array);
+            clipboardData.append(document.toJson());
         }
-        QJsonDocument document;
-        document.setArray(array);
-        clipboardData.append(document.toJson());
-    }
+            break;
+        case RESULT_TYPE::CSV:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString host(proxyModel->index(i, 0).data().toString());
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+                QString port(proxyModel->index(i, 3).data().toString());
+
+                if(!ipv4.isEmpty())
+                    host.append(",").append(ipv4);
+                if(!ipv6.isEmpty())
+                    host.append(",").append(ipv6);
+                if(!port.isEmpty())
+                    host.append(",").append(port);
+
+                clipboardData.append(host.append(NEWLINE));
+            }
+            break;
+        case RESULT_TYPE::IP:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+
+                if(!ipv4.isEmpty())
+                    clipboardData.append(ipv4.append(NEWLINE));
+                if(!ipv6.isEmpty())
+                    clipboardData.append(ipv6.append(NEWLINE));
+            }
+            break;
+        case RESULT_TYPE::SUBDOMAIN:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                clipboardData.append(proxyModel->index(i, 0).data().toString().append(NEWLINE));
+            break;
+        case RESULT_TYPE::IPV4:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                clipboardData.append(proxyModel->index(i, 1).data().toString().append(NEWLINE));
+            break;
+        case RESULT_TYPE::IPV6:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                clipboardData.append(proxyModel->index(i, 2).data().toString().append(NEWLINE));
+            break;
+        default:
+            break;
+        }
         break;
     case ExplorerType::activeWildcard:
-    {
-        QJsonArray array;
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(model->activeWildcard->itemFromIndex(model_index));
-            array.append(wildcard_to_json(item));
+        switch (result_type) {
+        case RESULT_TYPE::JSON:
+        {
+            QJsonArray array;
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+                s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(model->activeWildcard->itemFromIndex(model_index));
+                array.append(wildcard_to_json(item));
+            }
+            QJsonDocument document;
+            document.setArray(array);
+            clipboardData.append(document.toJson());
         }
-        QJsonDocument document;
-        document.setArray(array);
-        clipboardData.append(document.toJson());
-    }
+            break;
+        case RESULT_TYPE::CSV:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString host(proxyModel->index(i, 0).data().toString());
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+
+                if(!ipv4.isEmpty())
+                    host.append(",").append(ipv4);
+                if(!ipv6.isEmpty())
+                    host.append(",").append(ipv6);
+
+                clipboardData.append(host.append(NEWLINE));
+            }
+            break;
+        case RESULT_TYPE::IP:
+            for(int i = 0; i != proxyModel->rowCount(); ++i){
+                QString ipv4(proxyModel->index(i, 1).data().toString());
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+
+                if(!ipv4.isEmpty())
+                    clipboardData.append(ipv4.append(NEWLINE));
+                if(!ipv6.isEmpty())
+                    clipboardData.append(ipv6.append(NEWLINE));
+            }
+            break;
+        case RESULT_TYPE::SUBDOMAIN:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                clipboardData.append(proxyModel->index(i, 0).data().toString().append(NEWLINE));
+            break;
+        case RESULT_TYPE::IPV4:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                clipboardData.append(proxyModel->index(i, 1).data().toString().append(NEWLINE));
+            break;
+        case RESULT_TYPE::IPV6:
+            for(int i = 0; i != proxyModel->rowCount(); ++i)
+                clipboardData.append(proxyModel->index(i, 2).data().toString().append(NEWLINE));
+            break;
+        default:
+            break;
+        }
         break;
     case ExplorerType::activeDNS:
     {
@@ -706,8 +912,8 @@ void Project::action_send_ip(const ENGINE &engine){
     case ExplorerType::activeHost:
     case ExplorerType::activeWildcard:
         for(int i = 0; i < proxyModel->rowCount(); i++){
-            ip.insert(proxyModel->index(i, 0).data().toString());
             ip.insert(proxyModel->index(i, 1).data().toString());
+            ip.insert(proxyModel->index(i, 2).data().toString());
         }
         break;
     case ExplorerType::passive_subdomainIp:
@@ -1028,8 +1234,8 @@ void Project::action_send_ip(){
     case ExplorerType::activeHost:
     case ExplorerType::activeWildcard:
         for(int i = 0; i < proxyModel->rowCount(); i++){
-            ip.insert(proxyModel->index(i, 0).data().toString());
             ip.insert(proxyModel->index(i, 1).data().toString());
+            ip.insert(proxyModel->index(i, 2).data().toString());
         }
         break;
     case ExplorerType::passive_subdomainIp:

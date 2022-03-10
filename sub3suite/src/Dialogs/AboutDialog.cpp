@@ -13,7 +13,7 @@
 #include <QClipboard>
 #include <QDesktopServices>
 
-#include "src/s3s.h"
+#include "src/utils/s3s.h"
 #include "src/utils/Config.h"
 
 

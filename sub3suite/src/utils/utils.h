@@ -89,7 +89,10 @@ enum class RESULT_TYPE{
     URL,
     EMAIL,
     JSON,
-    CSV
+    CSV,
+    ITEM,
+    IPV4,
+    IPV6
 };
 
 enum class ENGINE{

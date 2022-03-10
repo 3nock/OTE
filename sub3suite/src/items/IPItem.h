@@ -5,8 +5,8 @@
  @brief :
 */
 
-#ifndef IPMODEL_H
-#define IPMODEL_H
+#ifndef IPITEM_H
+#define IPITEM_H
 
 #include <QStandardItem>
 #include <QDate>
@@ -314,4 +314,4 @@ QJsonObject ip_to_json(s3s_item::IP*);
 
 void json_to_ip(const QJsonObject&, s3s_item::IP*);
 
-#endif // IPMODEL_H
+#endif // IPITEM_H

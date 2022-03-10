@@ -5,8 +5,8 @@
  @brief :
 */
 
-#ifndef CERTMODEL_H
-#define CERTMODEL_H
+#ifndef CERTITEM_H
+#define CERTITEM_H
 
 #include <QStandardItem>
 #include <QSslCertificate>
@@ -244,4 +244,4 @@ QJsonObject ssl_to_json(s3s_item::SSL*);
 
 void json_to_ssl(const QJsonObject&, s3s_item::SSL*);
 
-#endif // CERTMODEL_H
+#endif // CERTITEM_H

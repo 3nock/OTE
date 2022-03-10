@@ -5,8 +5,8 @@
  @brief :
 */
 
-#ifndef MXMODEL_H
-#define MXMODEL_H
+#ifndef MXITEM_H
+#define MXITEM_H
 
 #include <QStandardItem>
 #include <QDate>
@@ -94,4 +94,4 @@ QJsonObject mx_to_json(s3s_item::MX*);
 
 void json_to_mx(const QJsonObject&, s3s_item::MX*);
 
-#endif // MXMODEL_H
+#endif // MXITEM_H

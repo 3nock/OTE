@@ -25,14 +25,11 @@ class AboutDialog : public QDialog{
 
     private slots:
         void on_tableViewModules_customContextMenuRequested(const QPoint &pos);
-
         void on_tableViewContributors_customContextMenuRequested(const QPoint &pos);
-
         void on_tableViewDonations_customContextMenuRequested(const QPoint &pos);
-
         void on_buttonCopy_clicked();
 
-private:
+    private:
         Ui::AboutDialog *ui;
         QStandardItemModel *m_authorsModel;
         QStandardItemModel *m_modulesModel;

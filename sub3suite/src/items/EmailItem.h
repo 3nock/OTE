@@ -5,8 +5,8 @@
  @brief :
 */
 
-#ifndef EMAILMODEL_H
-#define EMAILMODEL_H
+#ifndef EMAILITEM_H
+#define EMAILITEM_H
 
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -92,4 +92,4 @@ QJsonObject email_to_json(s3s_item::Email*);
 
 void json_to_email(const QJsonObject&, s3s_item::Email*);
 
-#endif // EMAILMODEL_H
+#endif // EMAILITEM_H
