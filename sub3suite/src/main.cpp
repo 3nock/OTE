@@ -83,9 +83,10 @@ int main(int argc, char *argv[])
     s3s_Application s3s_app(argc, argv);
 
     /* setting stylesheets */
-    QFile file(":/themes/res/themes/dark.css");
-    if(file.open(QFile::ReadOnly) || QIODevice::Text){
-        qApp->setStyleSheet(QLatin1String(file.readAll()));
+    QFile stylesheet(":/themes/res/themes/default.css");
+    if(stylesheet.open(QFile::ReadOnly) || QIODevice::Text){
+        qApp->setStyleSheet(QLatin1String(stylesheet.readAll()));
+        stylesheet.close();
     }
 
     /* splash screen */
