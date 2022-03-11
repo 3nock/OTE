@@ -12,7 +12,7 @@
 #include <QDateTime>
 #include <QDesktopWidget>
 #include "src/utils/Config.h"
-#include "src/utils/Definitions.h"
+#include "src/utils/utils.h"
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/dialogs/WordlistDialog.h"
 
@@ -237,14 +237,16 @@ void Brute::log(const QString &log){
 }
 
 void Brute::initConfigValues(){
-    m_scanArgs->config->threads = CONFIG_BRUTE.value("threads").toInt();
-    m_scanArgs->config->levels = CONFIG_BRUTE.value("maxLevel").toInt();
-    m_scanArgs->config->checkWildcard = CONFIG_BRUTE.value("wildcard").toBool();
-    m_scanArgs->config->multiLevelScan = CONFIG_BRUTE.value("useLevel").toInt();
-    m_scanArgs->config->noDuplicates = CONFIG_BRUTE.value("noDuplicates").toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG_BRUTE.value("autosaveToProject").toBool();
+    CONFIG.beginGroup(CFG_BRUTE);
+    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
+    m_scanArgs->config->levels = CONFIG.value(CFG_VAL_MAXLEVEL).toInt();
+    m_scanArgs->config->checkWildcard = CONFIG.value(CFG_VAL_WILDCARD).toBool();
+    m_scanArgs->config->multiLevelScan = CONFIG.value(CFG_VAL_LEVEL).toInt();
+    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
+    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
+    QString record = CONFIG.value(CFG_VAL_RECORD).toString();
+    CONFIG.endGroup();
 
-    QString record = CONFIG_BRUTE.value("record").toString();
     if(record == "A")
         m_scanArgs->config->recordType = QDnsLookup::A;
     if(record == "AAAA")
@@ -252,10 +254,10 @@ void Brute::initConfigValues(){
     if(record == "ANY")
         m_scanArgs->config->recordType = QDnsLookup::ANY;
 
-    int size = CONFIG_BRUTE.beginReadArray("Nameservers");
+    int size = CONFIG.beginReadArray(CFG_ARR_NAMESERVERS);
     for (int i = 0; i < size; ++i) {
-        CONFIG_BRUTE.setArrayIndex(i);
-        m_scanArgs->config->nameservers.enqueue(CONFIG_BRUTE.value("value").toString());
+        CONFIG.setArrayIndex(i);
+        m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());
     }
-    CONFIG_BRUTE.endArray();
+    CONFIG.endArray();
 }

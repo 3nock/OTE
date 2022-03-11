@@ -4,7 +4,7 @@
 
 Pkey::Pkey(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "PKey";
 
     if(args.outputSubdomainIp)

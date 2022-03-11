@@ -398,7 +398,6 @@ HEADERS += \
     src/engines/osint/Osint.h \
     src/engines/AbstractEngine.h \
     src/utils/s3s.h \
-    src/utils/Definitions.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \
     src/utils/UpdateChecker.h \

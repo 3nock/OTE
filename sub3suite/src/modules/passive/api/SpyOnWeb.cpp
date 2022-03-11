@@ -17,7 +17,7 @@
  */
 SpyOnWeb::SpyOnWeb(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "SpyOnWeb";
 
     if(args.outputRaw)

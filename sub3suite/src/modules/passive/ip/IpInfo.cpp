@@ -14,7 +14,7 @@
  */
 IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "IpInfo";
 
     if(args.outputRaw)

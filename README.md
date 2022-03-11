@@ -29,7 +29,7 @@ For More information see [contribution guide](CONTRIBUTING.md).
 
 ## Installation & Usage
 
-1. Download from [GitHub](https://github.com/3nock/sub3suite/releases).
+1. Download from [releases](https://github.com/3nock/sub3suite/releases).
 2. Unzip.
 3. Run.
 

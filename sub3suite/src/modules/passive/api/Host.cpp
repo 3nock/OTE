@@ -8,7 +8,7 @@
 
 Host::Host(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Host";
 
     if(args.outputRaw)

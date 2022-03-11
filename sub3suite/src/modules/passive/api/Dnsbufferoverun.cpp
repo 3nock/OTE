@@ -9,7 +9,7 @@
 
 Dnsbufferoverun::Dnsbufferoverun(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_DNSBUFFEROVERRUN;
 
     if(args.outputRaw)

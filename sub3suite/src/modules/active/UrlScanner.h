@@ -10,9 +10,9 @@
 
 
 #include "AbstractScanner.h"
+#include "src/utils/s3s.h"
 #include "src/items/URLItem.h"
 
-#include <QNetworkAccessManager>
 #include <QMutex>
 #include <QQueue>
 
@@ -41,6 +41,27 @@ struct ScanArgs { // scan arguments
     int progress;
 };
 
+class NetworkAccessManager: public QNetworkAccessManager {
+    public:
+        NetworkAccessManager(QObject *parent = nullptr, int timeout = 1000): QNetworkAccessManager(parent),
+            m_timeout(timeout)
+        {
+        }
+
+    protected:
+        QNetworkReply* createRequest(Operation op, const QNetworkRequest &request, QIODevice *data = nullptr)
+        {
+            QNetworkReply *reply = QNetworkAccessManager::createRequest(op, request, data);
+
+            /* set timeout */
+            s3s_ReplyTimeout::set(reply, m_timeout);
+
+            return reply;
+        }
+
+    private:
+        int m_timeout;
+};
 
 class Scanner : public AbstractScanner{
     Q_OBJECT
@@ -60,7 +81,7 @@ class Scanner : public AbstractScanner{
 
     private:
         url::ScanArgs *m_args;
-        QNetworkAccessManager *m_manager;
+        NetworkAccessManager *m_manager;
 };
 
 RETVAL getTarget(url::ScanArgs *args, QUrl &url);

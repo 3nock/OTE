@@ -112,8 +112,11 @@ void SSLEnum::initUI(){
 }
 
 void SSLEnum::initConfigValues(){
-    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_ssl").toBool();
-    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_ssl").toBool();
+    CONFIG.beginGroup(CFG_ENUM);
+    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_ssl").toBool();
+    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_ssl").toBool();
+    m_scanConfig->timeout = CONFIG.value("timeout_ssl").toInt();
+    CONFIG.endGroup();
 }
 
 void SSLEnum::log(QString log){

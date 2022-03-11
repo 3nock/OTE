@@ -29,7 +29,7 @@
 /* website contacts */
 WhoisXmlApi::WhoisXmlApi(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "WhoisXmlApi";
 
     if(args.outputRaw)

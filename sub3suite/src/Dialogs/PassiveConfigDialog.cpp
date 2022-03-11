@@ -25,6 +25,7 @@ PassiveConfigDialog::PassiveConfigDialog(QWidget *parent, ScanConfig *config) : 
     this->adjustSize();
 
     /* setting placeholder texts.. */
+    ui->lineEditTimeout->setPlaceholderText("e.g. 1000");
     ui->lineEditMaxPages->setPlaceholderText("e.g. 100");
 
     /* validators... */
@@ -35,16 +36,22 @@ PassiveConfigDialog::~PassiveConfigDialog(){
 }
 
 void PassiveConfigDialog::loadConfig_osint(){
-    ui->lineEditMaxPages->setText(CONFIG_OSINT.value("max_pages").toString());
-    ui->checkBoxAutosave->setChecked(CONFIG_OSINT.value("autosave_to_project").toBool());
-    ui->checkBoxNoDuplicates->setChecked(CONFIG_OSINT.value("no_duplicates").toBool());
+    CONFIG.beginGroup(CFG_OSINT);
+    ui->lineEditTimeout->setText(CONFIG.value(CFG_VAL_TIMEOUT).toString());
+    ui->lineEditMaxPages->setText(CONFIG.value(CFG_VAL_MAXPAGES).toString());
+    ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    CONFIG.endGroup();
     osint = true;
 }
 
 void PassiveConfigDialog::loadConfig_raw(){
     ui->groupBoxScan->hide();
-    ui->checkBoxAutosave->setChecked(CONFIG_RAW.value("autosave_to_project").toBool());
-    ui->checkBoxNoDuplicates->setChecked(CONFIG_RAW.value("no_duplicates").toBool());
+    CONFIG.beginGroup(CFG_RAW);
+    ui->lineEditTimeout->setText(CONFIG.value(CFG_VAL_TIMEOUT).toString());
+    ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    CONFIG.endGroup();
     raw = true;
 }
 
@@ -66,19 +73,27 @@ void PassiveConfigDialog::on_buttonCancel_clicked(){
 }
 
 void PassiveConfigDialog::saveConfig_osint(){
+    m_config->timeout = ui->lineEditTimeout->text().toInt();
     m_config->maxPage = ui->lineEditMaxPages->text().toInt();
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
 
-    CONFIG_OSINT.setValue("max_pages", ui->lineEditMaxPages->text());
-    CONFIG_OSINT.setValue("autosave_to_project", ui->checkBoxAutosave->isChecked());
-    CONFIG_OSINT.setValue("no_duplicates", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.beginGroup(CFG_OSINT);
+    CONFIG.setValue(CFG_VAL_TIMEOUT, ui->lineEditTimeout->text());
+    CONFIG.setValue(CFG_VAL_MAXPAGES, ui->lineEditMaxPages->text());
+    CONFIG.setValue(CFG_VAL_AUTOSAVE, ui->checkBoxAutosave->isChecked());
+    CONFIG.setValue(CFG_VAL_DUPLICATES, ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.endGroup();
 }
 
 void PassiveConfigDialog::saveConfig_raw(){
+    m_config->timeout = ui->lineEditTimeout->text().toInt();
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
 
-    CONFIG_RAW.setValue("autosave_to_project", ui->checkBoxAutosave->isChecked());
-    CONFIG_RAW.setValue("no_duplicates", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.beginGroup(CFG_RAW);
+    CONFIG.setValue(CFG_VAL_TIMEOUT, ui->lineEditTimeout->text());
+    CONFIG.setValue(CFG_VAL_AUTOSAVE, ui->checkBoxAutosave->isChecked());
+    CONFIG.setValue(CFG_VAL_DUPLICATES, ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.endGroup();
 }

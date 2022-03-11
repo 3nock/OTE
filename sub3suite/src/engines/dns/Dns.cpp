@@ -12,7 +12,7 @@
 #include <QClipboard>
 #include "src/utils/Config.h"
 #include "src/dialogs/ActiveConfigDialog.h"
-#include "src/utils/Definitions.h"
+#include "src/utils/utils.h"
 
 
 Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, project),
@@ -188,16 +188,18 @@ void Dns::on_checkBoxSRV_clicked(bool checked){
 }
 
 void Dns::initConfigValues(){
-    m_scanArgs->config->threads = CONFIG_DNS.value("threads").toInt();
-    m_scanArgs->config->noDuplicates = CONFIG_DNS.value("noDuplicates").toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG_DNS.value("autosaveToProject").toBool();
+    CONFIG.beginGroup(CFG_DNS);
+    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
+    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
+    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
+    CONFIG.endGroup();
 
-    int size = CONFIG_DNS.beginReadArray("Nameservers");
+    int size = CONFIG.beginReadArray(CFG_ARR_NAMESERVERS);
     for (int i = 0; i < size; ++i) {
-        CONFIG_DNS.setArrayIndex(i);
-        m_scanArgs->config->nameservers.enqueue(CONFIG_DNS.value("value").toString());
+        CONFIG.setArrayIndex(i);
+        m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());
     }
-    CONFIG_DNS.endArray();
+    CONFIG.endArray();
 }
 
 void Dns::log(QString log){

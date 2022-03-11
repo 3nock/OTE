@@ -31,7 +31,6 @@ class ActiveConfigDialog : public QDialog{
         ActiveConfigDialog(QWidget *parent = nullptr, active::ScanConfig *config = nullptr);
         ActiveConfigDialog(QWidget *parent = nullptr, dns::ScanConfig *config = nullptr);
         ActiveConfigDialog(QWidget *parent = nullptr, ssl::ScanConfig *config = nullptr);
-        ActiveConfigDialog(QWidget *parent = nullptr, ip::ScanConfig *config = nullptr);
         ActiveConfigDialog(QWidget *parent = nullptr, url::ScanConfig *config = nullptr);
         ~ActiveConfigDialog();
 
@@ -41,33 +40,32 @@ class ActiveConfigDialog : public QDialog{
 
     private:
         Ui::ActiveConfigDialog *ui;
+
         bool brute = false;
         bool active = false;
         bool dns = false;
         bool ssl = false;
-        bool ip = false;
         bool url = false;
+
         brute::ScanConfig *m_configBrute = nullptr;
         active::ScanConfig *m_configActive = nullptr;
         dns::ScanConfig *m_configDns = nullptr;
         ssl::ScanConfig *m_configSSL = nullptr;
-        ip::ScanConfig *m_configIp = nullptr;
         url::ScanConfig *m_configURL = nullptr;
-        /* ... */
+
         QStringListModel *m_customNameserverListModel;
-        /* ... */
+
         void m_initWidgets();
         void m_loadConfigBrute();
         void m_loadConfigActive();
         void m_loadConfigDns();
         void m_loadConfigSSL();
         void m_loadConfigURL();
-        /* ... */
+
         void m_saveBrute();
         void m_saveActive();
         void m_saveDns();
         void m_saveSSL();
-        void m_saveIp();
         void m_saveURL();
 
 };

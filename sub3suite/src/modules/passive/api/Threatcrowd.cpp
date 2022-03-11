@@ -12,7 +12,7 @@
 /*  limit all requests to no more than one request every ten seconds */
 Threatcrowd::Threatcrowd(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "ThreatCrowd";
 
     if(args.outputRaw)

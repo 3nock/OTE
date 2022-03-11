@@ -9,7 +9,7 @@
 #include "ui_ASNEnum.h"
 
 #include "src/utils/Config.h"
-#include "src/utils/Definitions.h"
+#include "src/utils/utils.h"
 #include "src/dialogs/EnumConfigDialog.h"
 
 
@@ -114,8 +114,11 @@ void ASNEnum::initUI(){
 }
 
 void ASNEnum::initConfigValues(){
-    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_asn").toBool();
-    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_asn").toBool();
+    CONFIG.beginGroup(CFG_ENUM);
+    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_asn").toBool();
+    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_asn").toBool();
+    m_scanConfig->timeout = CONFIG.value("timeout_asn").toInt();
+    CONFIG.endGroup();
 }
 
 void ASNEnum::log(QString log){

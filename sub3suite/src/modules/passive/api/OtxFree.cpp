@@ -35,7 +35,7 @@
 /* 1k per hour unauthenticated, and 10k authed*/
 OtxFree::OtxFree(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "otx";
 
     if(args.outputRaw)

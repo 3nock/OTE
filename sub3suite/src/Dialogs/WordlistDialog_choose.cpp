@@ -21,43 +21,43 @@ void WordListDialog::m_initChoose(){
 }
 
 void WordListDialog::initTLDWordlist(){
-    m_defaultWordlist = "TLD-Wordlist";
-    m_specialWordlist = "TLD-SpecialWordlist";
+    m_defaultWordlist = CFG_WL_TLD;
+    m_specialWordlist = CFG_WL_TLD_SPECIAL;
 
     /* loading the worldists names to the comboBox... */
     QStringList keys;
-    CONFIG_BRUTE.beginGroup(m_defaultWordlist);
-    keys = CONFIG_BRUTE.allKeys();
+    CONFIG.beginGroup(m_defaultWordlist);
+    keys = CONFIG.allKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxDefaultWordlist->addItem(keys.at(i));
-    CONFIG_BRUTE.endGroup();
+    CONFIG.endGroup();
 
-    CONFIG_BRUTE.beginGroup(m_specialWordlist);
-    keys = CONFIG_BRUTE.allKeys();
+    CONFIG.beginGroup(m_specialWordlist);
+    keys = CONFIG.allKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxSpecialWordlist->addItem(keys.at(i));
-    CONFIG_BRUTE.endGroup();
+    CONFIG.endGroup();
 
     TLD = true;
 }
 
 void WordListDialog::initSubdomainWordlist(){
-    m_defaultWordlist = "Subdomain-Wordlist";
-    m_specialWordlist = "Subdomain-SpecialWordlist";
+    m_defaultWordlist = CFG_WL_SUBDOMAIN;
+    m_specialWordlist = CFG_WL_SUBDOMAIN_SPECIAL;
 
     /* loading the worldists names to the comboBox... */
     QStringList keys;
-    CONFIG_BRUTE.beginGroup(m_defaultWordlist);
-    keys = CONFIG_BRUTE.allKeys();
+    CONFIG.beginGroup(m_defaultWordlist);
+    keys = CONFIG.allKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxDefaultWordlist->addItem(keys.at(i));
-    CONFIG_BRUTE.endGroup();
+    CONFIG.endGroup();
 
-    CONFIG_BRUTE.beginGroup(m_specialWordlist);
-    keys = CONFIG_BRUTE.allKeys();
+    CONFIG.beginGroup(m_specialWordlist);
+    keys = CONFIG.allKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxSpecialWordlist->addItem(keys.at(i));
-    CONFIG_BRUTE.endGroup();
+    CONFIG.endGroup();
 
     Subdomain = true;
 }
@@ -78,14 +78,14 @@ void WordListDialog::on_buttonLoadChoosen_clicked(){
     QString choosenWordlistfFile;
 
     if(ui->radioButtonDefaultWordlist->isChecked()){
-        CONFIG_BRUTE.beginGroup(m_defaultWordlist);
-        choosenWordlistfFile = QApplication::applicationDirPath()+CONFIG_BRUTE.value(ui->comboBoxDefaultWordlist->currentText()).toString();
-        CONFIG_BRUTE.endGroup();
+        CONFIG.beginGroup(m_defaultWordlist);
+        choosenWordlistfFile = QApplication::applicationDirPath()+CONFIG.value(ui->comboBoxDefaultWordlist->currentText()).toString();
+        CONFIG.endGroup();
     }
     if(ui->radioButtonSpecialWordlist->isChecked()){
-        CONFIG_BRUTE.beginGroup(m_specialWordlist);
-        choosenWordlistfFile = QApplication::applicationDirPath()+CONFIG_BRUTE.value(ui->comboBoxSpecialWordlist->currentText()).toString();
-        CONFIG_BRUTE.endGroup();
+        CONFIG.beginGroup(m_specialWordlist);
+        choosenWordlistfFile = QApplication::applicationDirPath()+CONFIG.value(ui->comboBoxSpecialWordlist->currentText()).toString();
+        CONFIG.endGroup();
     }
 
     /* get the stringList from model */
@@ -129,9 +129,9 @@ void WordListDialog::on_buttonCreate_clicked(){
     }
 
     /* saving the name of the new special wordlist profile... */
-    CONFIG_BRUTE.beginGroup(m_specialWordlist);
-    CONFIG_BRUTE.setValue(name, filePath);
-    CONFIG_BRUTE.endGroup();
+    CONFIG.beginGroup(m_specialWordlist);
+    CONFIG.setValue(name, filePath);
+    CONFIG.endGroup();
     ui->comboBoxSpecialWordlist->addItem(name);
     ui->lineEditName->clear();
 }

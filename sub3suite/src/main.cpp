@@ -114,11 +114,7 @@ int main(int argc, char *argv[])
     {
         /* creating the main window */
         MainWindow w;
-
-        /* setting the app to the center of Screen on start */
-        int x = (s3s_app.desktop()->width()-w.width()) / 2;
-        int y = (s3s_app.desktop()->height()-w.height()) / 2;
-        w.move(x, y-35);
+        w.setWindowState(Qt::WindowMaximized);
         w.show();
 
         /* opening the project */

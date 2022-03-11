@@ -117,8 +117,11 @@ void IpEnum::initUI(){
 }
 
 void IpEnum::initConfigValues(){
-    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_ip").toBool();
-    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_ip").toBool();
+    CONFIG.beginGroup(CFG_ENUM);
+    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_ip").toBool();
+    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_ip").toBool();
+    m_scanConfig->timeout = CONFIG.value("timeout_ip").toInt();
+    CONFIG.endGroup();
 }
 
 void IpEnum::log(QString log){

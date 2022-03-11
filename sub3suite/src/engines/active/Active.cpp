@@ -11,7 +11,7 @@
 #include <QThread>
 #include <QDateTime>
 #include "src/utils/Config.h"
-#include "src/utils/Definitions.h"
+#include "src/utils/utils.h"
 #include "src/dialogs/ActiveConfigDialog.h"
 
 
@@ -175,13 +175,15 @@ void Active::on_buttonConfig_clicked(){
 }
 
 void Active::initConfigValues(){
-    m_scanArgs->config->timeout = CONFIG_ACTIVE.value("timeout").toInt();
-    m_scanArgs->config->threads = CONFIG_ACTIVE.value("threads").toInt();
-    m_scanArgs->config->checkWildcard = CONFIG_ACTIVE.value("wildcard").toBool();
-    m_scanArgs->config->noDuplicates = CONFIG_ACTIVE.value("noDuplicates").toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG_ACTIVE.value("autosaveToProject").toBool();
+    CONFIG.beginGroup(CFG_ACTIVE);
+    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
+    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
+    m_scanArgs->config->checkWildcard = CONFIG.value(CFG_VAL_WILDCARD).toBool();
+    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
+    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
+    QString record = CONFIG.value(CFG_VAL_RECORD).toString();
+    CONFIG.endGroup();
 
-    QString record = CONFIG_ACTIVE.value("record").toString();
     if(record == "A")
         m_scanArgs->config->recordType = QDnsLookup::A;
     if(record == "AAAA")
@@ -189,12 +191,12 @@ void Active::initConfigValues(){
     if(record == "ANY")
         m_scanArgs->config->recordType = QDnsLookup::ANY;
 
-    int size = CONFIG_ACTIVE.beginReadArray("Nameservers");
+    int size = CONFIG.beginReadArray(CFG_ARR_NAMESERVERS);
     for (int i = 0; i < size; ++i) {
-        CONFIG_ACTIVE.setArrayIndex(i);
-        m_scanArgs->config->nameservers.enqueue(CONFIG_ACTIVE.value("value").toString());
+        CONFIG.setArrayIndex(i);
+        m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());
     }
-    CONFIG_ACTIVE.endArray();
+    CONFIG.endArray();
 }
 
 void Active::log(QString log){

@@ -7,7 +7,7 @@
  */
 ArchiveToday::ArchiveToday(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Archive";
 
     if(args.outputUrl)

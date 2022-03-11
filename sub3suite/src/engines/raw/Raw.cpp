@@ -95,8 +95,11 @@ void Raw::initUI(){
 }
 
 void Raw::initConfigValues(){
-    m_scanConfig->autosaveToProject = CONFIG_RAW.value("autosave_to_project").toBool();
-    m_scanConfig->noDuplicates = CONFIG_RAW.value("no_duplicates").toBool();
+    CONFIG.beginGroup(CFG_RAW);
+    m_scanConfig->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
+    m_scanConfig->autosaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
+    m_scanConfig->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
+    CONFIG.endGroup();
 }
 
 void Raw::on_lineEditTarget_returnPressed(){

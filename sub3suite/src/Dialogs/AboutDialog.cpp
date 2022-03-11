@@ -61,12 +61,12 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for authors...
     ///
 
-    CONFIG.beginGroup("authors");
+    CONFIG.beginGroup(CFG_GRP_AUTHORS);
     foreach(const QString &author, CONFIG.allKeys())
         m_authorsModel->appendRow({new QStandardItem(author),
                                    new QStandardItem(CONFIG.value(author).toString())});
     CONFIG.endGroup();
-    m_authorsModel->setHorizontalHeaderLabels({" Author", " Contact"});
+    m_authorsModel->setHorizontalHeaderLabels({tr(" Author"), tr(" Contact")});
     ui->tableViewContributors->setModel(m_authorsModel);
     ui->tableViewContributors->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -74,12 +74,12 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for modules...
     ///
 
-    CONFIG_OSINT.beginGroup("modules");
-    foreach(const QString &module, CONFIG_OSINT.allKeys())
+    CONFIG.beginGroup(CFG_GRP_MODULES);
+    foreach(const QString &module, CONFIG.allKeys())
         m_modulesModel->appendRow({new QStandardItem(module),
-                                   new QStandardItem(CONFIG_OSINT.value(module).toString())});
-    CONFIG_OSINT.endGroup();
-    m_modulesModel->setHorizontalHeaderLabels({" Module", " Source"});
+                                   new QStandardItem(CONFIG.value(module).toString())});
+    CONFIG.endGroup();
+    m_modulesModel->setHorizontalHeaderLabels({tr(" Module"), tr(" Source")});
     ui->tableViewModules->setModel(m_modulesModel);
     ui->tableViewModules->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -87,12 +87,12 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for donations...
     ///
 
-    CONFIG.beginGroup("donors");
+    CONFIG.beginGroup(CFG_GRP_DONORS);
     foreach(const QString &donor, CONFIG.allKeys())
         m_authorsModel->appendRow({new QStandardItem(donor),
                                    new QStandardItem(CONFIG.value(donor).toString())});
     CONFIG.endGroup();
-    m_foldersModel->setHorizontalHeaderLabels({" Name", " Contact"});
+    m_foldersModel->setHorizontalHeaderLabels({tr(" Name"), tr(" Contact")});
     ui->tableViewDonations->setModel(m_foldersModel);
     ui->tableViewDonations->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 

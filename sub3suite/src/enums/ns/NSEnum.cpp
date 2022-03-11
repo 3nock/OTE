@@ -113,8 +113,11 @@ void NSEnum::initUI(){
 }
 
 void NSEnum::initConfigValues(){
-    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_ns").toBool();
-    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_ns").toBool();
+    CONFIG.beginGroup(CFG_ENUM);
+    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_ns").toBool();
+    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_ns").toBool();
+    m_scanConfig->timeout = CONFIG.value("timeout_ns").toInt();
+    CONFIG.endGroup();
 }
 
 void NSEnum::log(QString log){

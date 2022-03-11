@@ -14,7 +14,7 @@
 /* has some problems... */
 ThreatBook::ThreatBook(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "ThreatBook";
 
     if(args.outputRaw)

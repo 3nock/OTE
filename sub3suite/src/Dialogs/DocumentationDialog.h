@@ -19,10 +19,9 @@ class DocumentationDialog : public QDialog{
 
     private slots:
         void on_buttonOk_clicked();
-
         void on_buttonBack_clicked();
 
-private:
+    private:
         Ui::DocumentationDialog *ui;
         void general_documentation();
         void about_osint();

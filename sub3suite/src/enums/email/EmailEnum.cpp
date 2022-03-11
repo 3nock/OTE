@@ -112,8 +112,11 @@ void EmailEnum::initUI(){
 }
 
 void EmailEnum::initConfigValues(){
-    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_email").toBool();
-    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_email").toBool();
+    CONFIG.beginGroup(CFG_ENUM);
+    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_email").toBool();
+    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_email").toBool();
+    m_scanConfig->timeout = CONFIG.value("timeout_email").toInt();
+    CONFIG.endGroup();
 }
 
 void EmailEnum::log(QString log){

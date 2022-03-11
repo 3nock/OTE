@@ -26,7 +26,7 @@
  */
 ViewDns::ViewDns(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "ViewDns";
 
     if(args.outputRaw)

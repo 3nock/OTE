@@ -5,7 +5,7 @@
 
 Sublist3r::Sublist3r(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Sublist3r";
 
     if(args.outputRaw)

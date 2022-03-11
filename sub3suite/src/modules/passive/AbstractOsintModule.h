@@ -13,7 +13,7 @@
 /* ... */
 #include "OsintDefinitions.h"
 #include "src/utils/s3s.h"
-#include "src/utils/Definitions.h"
+#include "src/utils/utils.h"
 #include "gumbo-parser/src/gumbo.h"
 /* ... */
 #include "src/items/IPItem.h"
@@ -57,6 +57,7 @@ struct ScanConfig{
     int maxPage = 50;
     bool noDuplicates = false;
     bool autosaveToProject = false;
+    int timeout = 2000;
     int progress = 0;
 };
 

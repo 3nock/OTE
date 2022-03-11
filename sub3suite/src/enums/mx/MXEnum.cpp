@@ -113,8 +113,11 @@ void MXEnum::initUI(){
 }
 
 void MXEnum::initConfigValues(){
-    m_scanConfig->autosaveToProject = CONFIG_ENUM.value("autosave_to_Project_mx").toBool();
-    m_scanConfig->noDuplicates = CONFIG_ENUM.value("no_duplicates_mx").toBool();
+    CONFIG.beginGroup(CFG_ENUM);
+    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_mx").toBool();
+    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_mx").toBool();
+    m_scanConfig->timeout = CONFIG.value("timeout_mx").toInt();
+    CONFIG.endGroup();
 }
 
 void MXEnum::log(QString log){

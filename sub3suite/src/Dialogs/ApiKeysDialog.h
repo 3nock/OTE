@@ -87,10 +87,9 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetHybridAnalysis_clicked();
         void on_buttonGetIpQualityScore_clicked();
         void on_buttonGetLeakLookup_clicked();
-
         void on_buttonGetWappalyzer_clicked();
 
-private:
+    private:
         Ui::ApiKeysDialog *ui;
         void m_loadApiKeys();
 };

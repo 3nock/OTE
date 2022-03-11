@@ -28,7 +28,7 @@
 /* has api v2 and v3 */
 VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "VirusTotal";
 
     if(args.outputRaw)

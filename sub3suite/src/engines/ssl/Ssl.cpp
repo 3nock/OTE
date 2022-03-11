@@ -11,7 +11,7 @@
 #include <QSslKey>
 #include "src/dialogs/ActiveConfigDialog.h"
 #include "src/utils/Config.h"
-#include "src/utils/Definitions.h"
+#include "src/utils/utils.h"
 #include "src/modules/active/SSLScanner.h"
 
 
@@ -204,10 +204,12 @@ void Ssl::on_lineEditFilter_textChanged(const QString &filterKeyword){
 }
 
 void Ssl::initConfigValues(){
-    m_scanArgs->config->timeout = CONFIG_SSL.value("timeout").toInt();
-    m_scanArgs->config->threads = CONFIG_SSL.value("threads").toInt();
-    m_scanArgs->config->noDuplicates = CONFIG_SSL.value("noDuplicates").toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG_SSL.value("autosaveToProject").toBool();
+    CONFIG.beginGroup(CFG_SSL);
+    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
+    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
+    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
+    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
+    CONFIG.endGroup();
 }
 
 void Ssl::log(const QString &log){

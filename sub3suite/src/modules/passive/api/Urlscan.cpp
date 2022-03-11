@@ -9,7 +9,7 @@
  */
 Urlscan::Urlscan(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "UrlScan";
 
     if(args.outputRaw)

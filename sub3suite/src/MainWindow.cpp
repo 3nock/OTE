@@ -141,18 +141,12 @@ void MainWindow::recents(){
     CONFIG.beginGroup("recent_projects");
     QStringList recentList =  CONFIG.allKeys();
 
-
     if(recentList.count() < 1)
         return;
 
-    /* append the projects to the recents menu */
-    QString projectName;
-    QString projectPath;
-    for(int i = 0; i < recentList.count(); i++){
-        projectName = recentList.at(i);
-        projectPath = CONFIG.value(projectName).toString();
-        QString name = projectName.remove("recent_projects/");
-        m_menuRecents->addAction(name, this, [=](){projectModel->openExistingProject(name, projectPath);});
+    foreach(const QString &project_name, CONFIG.allKeys()){
+        QString project_path = CONFIG.value(project_name).toString();
+        m_menuRecents->addAction(project_name, this, [=](){projectModel->openExistingProject(project_name, project_path);});
     }
 
     /* set the menu */

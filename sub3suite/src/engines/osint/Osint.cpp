@@ -11,7 +11,7 @@
 #include <QDateTime>
 #include <QClipboard>
 
-#include "src/utils/Definitions.h"
+#include "src/utils/utils.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/PassiveConfigDialog.h"
 
@@ -294,7 +294,10 @@ void Osint::log(QString log){
 }
 
 void Osint::initConfigValues(){
-    m_scanConfig->maxPage = CONFIG_OSINT.value("max_pages").toInt();
-    m_scanConfig->autosaveToProject = CONFIG_OSINT.value("autosave_to_project").toBool();
-    m_scanConfig->noDuplicates = CONFIG_OSINT.value("no_duplicates").toBool();
+    CONFIG.beginGroup(CFG_OSINT);
+    m_scanConfig->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
+    m_scanConfig->maxPage = CONFIG.value(CFG_VAL_MAXPAGES).toInt();
+    m_scanConfig->autosaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
+    m_scanConfig->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
+    CONFIG.endGroup();
 }

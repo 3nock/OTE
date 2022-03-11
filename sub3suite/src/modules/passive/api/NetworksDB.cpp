@@ -20,7 +20,7 @@
  */
 NetworksDB::NetworksDB(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "NetworksDB";
 
     if(args.outputRaw)
