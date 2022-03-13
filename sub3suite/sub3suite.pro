@@ -33,7 +33,6 @@ SOURCES += \
     src/dialogs/SaveProjectDialog.cpp \
     src/dialogs/StartupDialog.cpp \
     src/dialogs/EnumConfigDialog.cpp \
-    src/dialogs/PreferenceDialog.cpp \
     src/dialogs/WordlistDialog_choose.cpp \
     src/dialogs/WordlistDialog_generate.cpp \
     src/engines/url/Url.cpp \
@@ -254,7 +253,6 @@ HEADERS += \
     src/dialogs/SaveProjectDialog.h \
     src/dialogs/StartupDialog.h \
     src/dialogs/EnumConfigDialog.h \
-    src/dialogs/PreferenceDialog.h \
     src/engines/url/Url.h \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
@@ -266,7 +264,6 @@ HEADERS += \
     src/items/IPItem.h \
     src/items/MXItem.h \
     src/items/NSItem.h \
-    src/modules/passive/scrape/Extractors.h \
     src/project/model/Explorer.h \
     src/project/model/ProjectModel.h \
     src/items/RawItem.h \
@@ -419,7 +416,6 @@ FORMS += \
     src/dialogs/SaveProjectDialog.ui \
     src/dialogs/StartupDialog.ui \
     src/dialogs/EnumConfigDialog.ui \
-    src/dialogs/PreferenceDialog.ui \
     src/engines/url/Url.ui \
     src/engines/ssl/Ssl.ui \
     src/project/Project.ui \

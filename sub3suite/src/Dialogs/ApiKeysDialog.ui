@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>568</width>
+    <width>656</width>
     <height>570</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>560</width>
-    <height>550</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -64,7 +64,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>532</width>
+        <width>619</width>
         <height>2542</height>
        </rect>
       </property>
@@ -133,14 +133,14 @@
          <item>
           <widget class="QLineEdit" name="lineEditCensysId">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -154,22 +154,6 @@
             <string notr="true"/>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>62</width>
-             <height>19</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -203,15 +187,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditCensysSecret">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -234,22 +218,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -298,27 +266,11 @@
           <widget class="QLineEdit" name="lineEditCirclUser">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_29">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>62</width>
-             <height>19</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -341,7 +293,7 @@
           <widget class="QLineEdit" name="lineEditCirclPwd">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -353,19 +305,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_30">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -414,27 +353,11 @@
           <widget class="QLineEdit" name="lineEditDomainToolsUsername">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_36">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>62</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -457,7 +380,7 @@
           <widget class="QLineEdit" name="lineEditDomainToolsKey">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -469,19 +392,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_37">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -530,27 +440,11 @@
           <widget class="QLineEdit" name="lineEditFraudGuardUser">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_62">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>62</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -573,7 +467,7 @@
           <widget class="QLineEdit" name="lineEditFraudGuardPass">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -585,19 +479,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_63">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -646,27 +527,11 @@
           <widget class="QLineEdit" name="lineEditNeutrinoApiUID">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_48">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>62</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -689,7 +554,7 @@
           <widget class="QLineEdit" name="lineEditNeutrinoApiKey">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -701,19 +566,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_47">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -773,43 +625,27 @@
          <item>
           <widget class="QLineEdit" name="lineEditRiskIqUsername">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="styleSheet">
             <string notr="true"/>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_17">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>62</width>
-             <height>19</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -843,21 +679,21 @@
          <item>
           <widget class="QLineEdit" name="lineEditRiskIqKey">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -874,19 +710,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_18">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -922,7 +745,7 @@
           <widget class="QLineEdit" name="lineEditAbuseIPDB">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -934,19 +757,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_61">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -982,8 +792,8 @@
           <widget class="QLineEdit" name="lineEditBinaryEdge">
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
           </widget>
@@ -994,19 +804,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1053,15 +850,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditBing">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -1084,22 +881,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1135,7 +916,7 @@
           <widget class="QLineEdit" name="lineEditBuiltWith">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1147,19 +928,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_34">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1195,7 +963,7 @@
           <widget class="QLineEdit" name="lineEditC99">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1207,19 +975,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_19">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1266,15 +1021,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditCertspotter">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -1291,22 +1046,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1353,15 +1092,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditCloudflare">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -1384,22 +1123,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_6">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1435,7 +1158,7 @@
           <widget class="QLineEdit" name="lineEditDebounce">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1447,19 +1170,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_41">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1495,7 +1205,7 @@
           <widget class="QLineEdit" name="lineEditDnslytics">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1507,19 +1217,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_35">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1555,7 +1252,7 @@
           <widget class="QLineEdit" name="lineEditEmailCrawlr">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1567,19 +1264,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_53">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>17</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1615,7 +1299,7 @@
           <widget class="QLineEdit" name="lineEditEmailFormat">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1627,19 +1311,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_54">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1675,7 +1346,7 @@
           <widget class="QLineEdit" name="lineEditEmailRep">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1687,19 +1358,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_55">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1735,7 +1393,7 @@
           <widget class="QLineEdit" name="lineEditFullHunt">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1747,19 +1405,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_39">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1806,15 +1451,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditGithub">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -1837,22 +1482,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1899,15 +1528,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditGoogle">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -1930,22 +1559,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_8">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1981,7 +1594,7 @@
           <widget class="QLineEdit" name="lineEditHackerTarget">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -1993,19 +1606,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_27">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2041,7 +1641,7 @@
           <widget class="QLineEdit" name="lineEditHaveIBeenPawned">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2053,19 +1653,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_42">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2101,7 +1688,7 @@
           <widget class="QLineEdit" name="lineEditHost">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2113,19 +1700,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_43">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2172,15 +1746,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditHunter">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -2197,22 +1771,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_9">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2248,7 +1806,7 @@
           <widget class="QLineEdit" name="lineEditHybridAnalysis">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2260,19 +1818,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_64">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2319,15 +1864,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditIntelX">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -2350,22 +1895,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_10">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2401,7 +1930,7 @@
           <widget class="QLineEdit" name="lineEditIpApi">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2413,19 +1942,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_25">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2461,7 +1977,7 @@
           <widget class="QLineEdit" name="lineEditIpData">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2473,19 +1989,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_57">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2521,7 +2024,7 @@
           <widget class="QLineEdit" name="lineEditIpGeoLocation">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2533,19 +2036,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_58">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2581,7 +2071,7 @@
           <widget class="QLineEdit" name="lineEditIpInfo">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2593,19 +2083,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_20">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2641,7 +2118,7 @@
           <widget class="QLineEdit" name="lineEditIpRegistry">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2653,19 +2130,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_59">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2701,7 +2165,7 @@
           <widget class="QLineEdit" name="lineEditIpStack">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2713,19 +2177,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_60">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2761,7 +2212,7 @@
           <widget class="QLineEdit" name="lineEditIpQualityScore">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2773,19 +2224,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_65">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2821,7 +2259,7 @@
           <widget class="QLineEdit" name="lineEditJsonWhois">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2833,19 +2271,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_44">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2881,7 +2306,7 @@
           <widget class="QLineEdit" name="lineEditLeakIX">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2893,19 +2318,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_45">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -2941,7 +2353,7 @@
           <widget class="QLineEdit" name="lineEditLeakLookup">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -2953,19 +2365,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_66">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3001,7 +2400,7 @@
           <widget class="QLineEdit" name="lineEditMnemonic">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3013,19 +2412,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_31">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3061,7 +2447,7 @@
           <widget class="QLineEdit" name="lineEditNetworksDB">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3073,19 +2459,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_46">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3121,7 +2494,7 @@
           <widget class="QLineEdit" name="lineEditOnyphe">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3133,19 +2506,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_38">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3181,7 +2541,7 @@
           <widget class="QLineEdit" name="lineEditOtx">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3193,19 +2553,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_33">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3252,21 +2599,21 @@
          <item>
           <widget class="QLineEdit" name="lineEditPentestTools">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -3283,19 +2630,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_16">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3342,21 +2676,21 @@
          <item>
           <widget class="QLineEdit" name="lineEditProjectDiscovery">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -3373,19 +2707,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_15">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3421,7 +2742,7 @@
           <widget class="QLineEdit" name="lineEditRobtex">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3433,19 +2754,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_32">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3492,15 +2800,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditSecurityTrails">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -3523,22 +2831,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_11">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>0</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3574,7 +2866,7 @@
           <widget class="QLineEdit" name="lineEditSeon">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3586,19 +2878,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_49">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3645,15 +2924,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditShodan">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -3676,22 +2955,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_12">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>0</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3727,7 +2990,7 @@
           <widget class="QLineEdit" name="lineEditSnov">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3739,19 +3002,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_56">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3787,7 +3037,7 @@
           <widget class="QLineEdit" name="lineEditSpamHaus">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3799,19 +3049,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_40">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3847,7 +3084,7 @@
           <widget class="QLineEdit" name="lineEditSpyOnWeb">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -3859,19 +3096,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_50">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -3918,15 +3142,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditSpyse">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -3949,22 +3173,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_13">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>0</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4000,7 +3208,7 @@
           <widget class="QLineEdit" name="lineEditThreatBook">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4012,19 +3220,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_21">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4060,7 +3255,7 @@
           <widget class="QLineEdit" name="lineEditViewDns">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4072,19 +3267,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_26">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4131,15 +3313,15 @@
          <item>
           <widget class="QLineEdit" name="lineEditVirusTotal">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>350</width>
-             <height>20</height>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -4156,22 +3338,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_14">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>0</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4207,7 +3373,7 @@
           <widget class="QLineEdit" name="lineEditWappalyzer">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4219,19 +3385,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_68">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4267,7 +3420,7 @@
           <widget class="QLineEdit" name="lineEditWebResolver">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4279,19 +3432,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_28">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4327,7 +3467,7 @@
           <widget class="QLineEdit" name="lineEditWhatcms">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4339,19 +3479,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_51">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4393,7 +3520,7 @@
           <widget class="QLineEdit" name="lineEditWhoisXmlApi">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4405,19 +3532,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_22">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4453,7 +3567,7 @@
           <widget class="QLineEdit" name="lineEditWhoxy">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4465,19 +3579,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_52">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4525,7 +3626,7 @@
           <widget class="QLineEdit" name="lineEditZETAlytics">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4537,19 +3638,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_23">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -4591,7 +3679,7 @@
           <widget class="QLineEdit" name="lineEditZoomEye">
            <property name="minimumSize">
             <size>
-             <width>350</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -4603,19 +3691,6 @@
             <string>Get...</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_24">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>

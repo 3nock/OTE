@@ -31,8 +31,12 @@ StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(
 
     /* load recent projects */
     CONFIG.beginGroup("recent_projects");
-    QStringList keys = CONFIG.allKeys();
+    QStringList keys = CONFIG.childKeys();
+
     foreach(const QString &key, keys){
+        if(key == "none")
+            continue;
+
         QString projectfile = CONFIG.value(key).toString();
 
         /* check if project file exists if it doesnt delete in recents */
@@ -139,22 +143,40 @@ void StartupDialog::on_buttonAbout_clicked(){
     aboutDialog->show();
 }
 
+void StartupDialog::on_buttonChooseNew_clicked(){
+    ui->radioButtonNewProject->setChecked(true);
+    QString filename = QFileDialog::getOpenFileName(this, "Open", ui->lineEditLocation->text(), "*.s3s");
+    if(filename.isEmpty())
+        return;
+}
+
+void StartupDialog::on_buttonChooseExisting_clicked(){
+    ui->radioButtonExistingProject->setChecked(true);
+    QString filename = QFileDialog::getOpenFileName(this, "Open", ui->lineEditExisting->text(), "*.s3s");
+    if(filename.isEmpty())
+        return;
+}
+
 void StartupDialog::on_tableViewProjects_pressed(const QModelIndex &index){
     Q_UNUSED(index);
 
     ui->radioButtonExistingProject->setChecked(true);
 }
 
-void StartupDialog::on_buttonChooseNew_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, "Open", ui->lineEditLocation->text(), "*.s3s");
-    if(filename.isEmpty()){
-        return;
-    }
+void StartupDialog::on_lineEditExisting_textChanged(const QString &arg1){
+    Q_UNUSED(arg1);
+
+    ui->radioButtonExistingProject->setChecked(true);
 }
 
-void StartupDialog::on_buttonChooseExisting_clicked(){
-    QString filename = QFileDialog::getOpenFileName(this, "Open", ui->lineEditExisting->text(), "*.s3s");
-    if(filename.isEmpty()){
-        return;
-    }
+void StartupDialog::on_lineEditName_textChanged(const QString &arg1){
+    Q_UNUSED(arg1);
+
+    ui->radioButtonNewProject->setChecked(true);
+}
+
+void StartupDialog::on_lineEditLocation_textChanged(const QString &arg1){
+    Q_UNUSED(arg1);
+
+    ui->radioButtonNewProject->setChecked(true);
 }

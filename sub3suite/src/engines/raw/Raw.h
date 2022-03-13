@@ -146,7 +146,9 @@ class Raw : public AbstractEngine{
         void on_moduleLeakLookup_clicked();
         void on_moduleWappalyzer_clicked();
 
-    private:
+        void on_tabWidgetInput_currentChanged(int index);
+
+private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         QStringListModel *m_targetListModel;

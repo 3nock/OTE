@@ -14,6 +14,8 @@
 #include <QDesktopWidget>
 #include <QSplashScreen>
 
+#include <QPaintDevice>
+
 #include "src/utils/s3s.h"
 
 ///
@@ -113,8 +115,22 @@ int main(int argc, char *argv[])
 
     if(project.isNew || project.isExisting || project.isTemporary)
     {
+        /* get dpi values */
+        qDebug() << "dpi value X: " << qApp->desktop()->logicalDpiX();
+        qDebug() << "dpi value Y: " << qApp->desktop()->logicalDpiY();
+        qDebug() << "dpi value Ratio: " << qApp->desktop()->devicePixelRatio();
+        qDebug() << "dpi value Ratio FScale: " << qApp->desktop()->devicePixelRatioFScale();
+
+        /* getting saved dimensions */
+        CONFIG.beginGroup(CFG_GRP_DIMENSIONS);
+        int height = CONFIG.value("height").toInt();
+        int width = CONFIG.value("width").toInt();
+        CONFIG.endGroup();
+
         /* creating the main window */
         MainWindow w;
+        w.setMinimumWidth(width);
+        w.setMinimumHeight(height);
         w.setWindowState(Qt::WindowMaximized);
         w.show();
 

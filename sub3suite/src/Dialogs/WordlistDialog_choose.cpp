@@ -27,13 +27,13 @@ void WordListDialog::initTLDWordlist(){
     /* loading the worldists names to the comboBox... */
     QStringList keys;
     CONFIG.beginGroup(m_defaultWordlist);
-    keys = CONFIG.allKeys();
+    keys = CONFIG.childKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxDefaultWordlist->addItem(keys.at(i));
     CONFIG.endGroup();
 
     CONFIG.beginGroup(m_specialWordlist);
-    keys = CONFIG.allKeys();
+    keys = CONFIG.childKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxSpecialWordlist->addItem(keys.at(i));
     CONFIG.endGroup();
@@ -48,13 +48,13 @@ void WordListDialog::initSubdomainWordlist(){
     /* loading the worldists names to the comboBox... */
     QStringList keys;
     CONFIG.beginGroup(m_defaultWordlist);
-    keys = CONFIG.allKeys();
+    keys = CONFIG.childKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxDefaultWordlist->addItem(keys.at(i));
     CONFIG.endGroup();
 
     CONFIG.beginGroup(m_specialWordlist);
-    keys = CONFIG.allKeys();
+    keys = CONFIG.childKeys();
     for(int i = 0; i < keys.count(); i++)
         ui->comboBoxSpecialWordlist->addItem(keys.at(i));
     CONFIG.endGroup();

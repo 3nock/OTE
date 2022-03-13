@@ -92,6 +92,9 @@ void Raw::initUI(){
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                            << static_cast<int>((this->width() * 0.50)));
+
+    ui->targets->hide();
+    ui->tabWidgetInput->adjustSize();
 }
 
 void Raw::initConfigValues(){
@@ -270,4 +273,13 @@ void Raw::on_treeViewResults_doubleClicked(const QModelIndex &index){
 
     if(m_model->itemFromIndex(model_index)->hasChildren())
         ui->plainTextEditJson->setPlainText(item_to_json(m_model->itemFromIndex(model_index)));
+}
+
+void Raw::on_tabWidgetInput_currentChanged(int index){
+    if(index)
+        ui->targets->show();
+    else
+        ui->targets->hide();
+
+    ui->tabWidgetInput->adjustSize();
 }

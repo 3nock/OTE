@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>563</width>
-    <height>503</height>
+    <width>647</width>
+    <height>543</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>About sub3suite</string>
@@ -191,7 +197,7 @@
           <enum>QAbstractItemView::SingleSelection</enum>
          </property>
          <property name="showGrid">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <attribute name="horizontalHeaderCascadingSectionResizes">
           <bool>false</bool>
@@ -247,7 +253,7 @@
           <enum>QAbstractItemView::SingleSelection</enum>
          </property>
          <property name="showGrid">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <attribute name="horizontalHeaderMinimumSectionSize">
           <number>200</number>
@@ -298,6 +304,9 @@
          </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="showGrid">
+          <bool>false</bool>
          </property>
          <attribute name="horizontalHeaderMinimumSectionSize">
           <number>200</number>

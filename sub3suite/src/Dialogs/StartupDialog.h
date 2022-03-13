@@ -27,7 +27,13 @@ class StartupDialog : public QDialog{
         void on_buttonChooseExisting_clicked();
         void on_tableViewProjects_pressed(const QModelIndex &index);
 
-    private:
+        void on_lineEditName_textChanged(const QString &arg1);
+
+        void on_lineEditLocation_textChanged(const QString &arg1);
+
+        void on_lineEditExisting_textChanged(const QString &arg1);
+
+private:
         Ui::StartupDialog *ui;
         ProjectStruct *m_project;
         QStandardItemModel *existing_model;

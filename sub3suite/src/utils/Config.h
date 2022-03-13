@@ -15,7 +15,7 @@
 
 
 #define APIKEY Config::apiKeys()
-#define CONFIG Config::sub3suite()
+#define CONFIG Config::general()
 
 /* config groups */
 #define CFG_OSINT "osint"
@@ -45,8 +45,8 @@
 #define CFG_GRP_AUTHORS "authors"
 #define CFG_GRP_DONORS "donors"
 #define CFG_GRP_BUILD "build"
+#define CFG_GRP_DIMENSIONS "dimensions"
 #define CFG_GRP_DEFAULT_NS "default_nameservers"
-#define CFG_GRP_RECENT_PROJECTS "recent_projects"
 
 /* arrays */
 #define CFG_ARR_NAMESERVERS "nameservers"
@@ -59,7 +59,6 @@
 #define CFG_WL_TLD_SPECIAL "tld_special_wordlist"
 #define CFG_WL_SUBSTITUTIONS "wordlist_substitutions"
 
-
 class Config
 {
     public:
@@ -67,7 +66,7 @@ class Config
             static QSettings settings("keys.ini", QSettings::IniFormat);
             return settings;
         }
-        static QSettings &sub3suite(){
+        static QSettings &general(){
             static QSettings settings("sub3suite.ini", QSettings::IniFormat);
             return settings;
         }

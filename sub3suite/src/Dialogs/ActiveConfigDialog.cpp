@@ -368,7 +368,7 @@ void ActiveConfigDialog::m_saveBrute(){
     }
     if(nsRandom){
         CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
-        QStringList nameservers = CONFIG.allKeys();
+        QStringList nameservers = CONFIG.childKeys();
         foreach(const QString &key, nameservers)
             m_configBrute->nameservers.enqueue(CONFIG.value(key).toString());
         CONFIG.endGroup();
@@ -461,7 +461,7 @@ void ActiveConfigDialog::m_saveActive(){
     }
     if(nsRandom){
         CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
-        QStringList nameservers = CONFIG.allKeys();
+        QStringList nameservers = CONFIG.childKeys();
         foreach(const QString &key, nameservers)
             m_configActive->nameservers.enqueue(CONFIG.value(key).toString());
         CONFIG.endGroup();
@@ -531,7 +531,7 @@ void ActiveConfigDialog::m_saveDns(){
     }
     if(nsRandom){
         CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
-        QStringList nameservers = CONFIG.allKeys();
+        QStringList nameservers = CONFIG.childKeys();
         foreach(const QString &key, nameservers)
             m_configDns->nameservers.enqueue(CONFIG.value(key).toString());
         CONFIG.endGroup();

@@ -77,6 +77,12 @@ MainWindow::~MainWindow(){
 }
 
 void MainWindow::closeEvent(QCloseEvent *event){
+    /* save some windows properties */
+    CONFIG.beginGroup(CFG_GRP_DIMENSIONS);
+    CONFIG.setValue("height", this->minimumHeight());
+    CONFIG.setValue("width", this->minimumWidth());
+    CONFIG.endGroup();
+
     /* check if project is configured, if not prompt to save project */
     if(projectModel->info.isNew ||  projectModel->info.isTemporary){
         if(!projectModel->info.isConfigured)
@@ -141,10 +147,12 @@ void MainWindow::recents(){
     CONFIG.beginGroup("recent_projects");
     QStringList recentList =  CONFIG.allKeys();
 
-    if(recentList.count() < 1)
+    if(recentList.count() < 2)
         return;
 
     foreach(const QString &project_name, CONFIG.allKeys()){
+        if(project_name == "none")
+            continue;
         QString project_path = CONFIG.value(project_name).toString();
         m_menuRecents->addAction(project_name, this, [=](){projectModel->openExistingProject(project_name, project_path);});
     }

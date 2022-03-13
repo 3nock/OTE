@@ -17,6 +17,7 @@ InputWidget::InputWidget(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     ui->labelCount->setProperty("dark", true);
+    ui->listView->setProperty("inside_toolbox", true);
 
     ui->lineEdit->setPlaceholderText("Enter new item...");
 }

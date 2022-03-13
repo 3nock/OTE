@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/img">
         <file>res/icons/checkBox.png</file>
-        <file>res/icons/downArrow.png</file>
         <file>res/icons/down.png</file>
         <file>res/icons/left.png</file>
         <file>res/icons/right.png</file>
@@ -64,6 +63,7 @@
         <file>res/icons/sub3suite.png</file>
         <file>res/icons/splash.png</file>
         <file>res/icons/main_logo.ico</file>
+        <file>res/icons/downArrow.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>

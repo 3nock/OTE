@@ -62,7 +62,6 @@ class s3s_ClickableLabel : public QLabel{
 ///
 /// timeout for QNetworkReply custom implementation since versions < Qt 5.15 have no reply timer
 ///
-
 class s3s_ReplyTimeout : public QObject {
     Q_OBJECT
 public:
@@ -147,7 +146,6 @@ class s3s_NetworkReply : public QNetworkReply {
 ///
 /// timeout for QDnsLookup
 ///
-
 class s3s_LookupTimeout : public QObject {
     Q_OBJECT
 public:

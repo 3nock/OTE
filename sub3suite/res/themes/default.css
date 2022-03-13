@@ -1,3 +1,6 @@
+/* check all disables vs non disabled, only color remains in disabled
+   also other properties only specific things should remain */
+
 QWidget {
     outline: 0;
 }
@@ -139,7 +142,7 @@ QHeaderView::section {
     max-height: 20px;
     min-height:20px;
     height: 20px;
-    background-color: rgb(45,45,45);
+    background-color: rgb(40,40,40);
     border-style: solid;
     border-color: rgb(15,15,15);
     border-top-width: 1px;
@@ -155,17 +158,16 @@ QComboBox {
     border-style: solid;
     border-color: rgb(25,25,25);
     border-width: 1px;
-    color: rgb(250,250,250);
+    color: rgb(255,255,255);
     padding-left: 5px;
     padding-bottom: 1px;
     background-color: transparent;
 }
 
 QComboBox QWidget {
-    color: rgb(250,250,250);
-    background-color: rgb(52,52,52);
+    color: rgb(255,255,255);
+    background-color: rgb(45,45,45);
     selection-background-color: rgba(0,0,0, 50);
-    selection-color: rgb(250,250,250);
 }
 
 QComboBox::drop-down {
@@ -181,7 +183,7 @@ QComboBox QWidget::item {
 }
 
 QToolBox QWidget {
-    background-color:rgb(45,45,45);
+    background-color: rgb(45,45,45);
 }
 
 QToolBox QScrollArea {
@@ -338,16 +340,15 @@ QStatusBar {
     border-bottom-color: transparent;
 }
 
-QToolButton:!pressed {
+QToolButton:!disabled {
     min-height: 13px;
-    max-height: 14px;
     min-width: 50px;
     border-style: outset;
     border-color: rgb(15,15,15);
     border-width: 1px;
     border-style: solid;
     border-radius: 5px;
-    padding: 2px;
+    padding: 1.5px;
     color: rgb(185, 185, 145);
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(60, 60, 60),stop: 0.4 rgb(35, 35, 35), stop: 0.5 rgb(35, 35, 35) stop:1 rgb(60, 60, 60));
 }
@@ -395,6 +396,7 @@ QMainWindow {
 }
 
 QDialog {
+    min-width: 400px;
     background-color:rgb(45,45,45);
 }
 
@@ -429,13 +431,9 @@ QPlainTextEdit[text_edit="true"] {
     border-width: 1px;
 }
 
-QListView:!read-only,
 QTextEdit,
-QListWidget,
 QTableView,
 QTreeView,
-QListView,
-QColumnView,
 QPlainTextEdit {
     background-color: rgb(25,25,25);
     alternate-background-color: rgb(30,30,30);
@@ -445,8 +443,17 @@ QPlainTextEdit {
     border-width: 1px;
 }
 
+QListView,
+QListView[inside_toolbox="true"] {
+    background-color: rgb(25,25,25);
+    color: rgb(180,180,140);
+    border-style: solid;
+    border-color: rgb(20,20,20);
+    border-width: 1px;
+}
 
-QTreeView::item{
+QTreeView::item,
+QTableView::item {
     border-style: solid;
     border-color: rgb(15,15,15);
     border-top-width: 0px;
@@ -455,27 +462,17 @@ QTreeView::item{
     border-bottom-width: 1px;
 }
 
-QListWidget::item:selected,
-QTreeView::item:selected,
-QTableView::item:selected,
-QListView::item:selected,
-QColumnView::item:selected {
-    background-color: rgba(0,0,0,50);
-    color: rgb(218, 218, 163);
-}
-
-QListWidget::item:hover,
 QTreeView::item:hover,
 QTableView::item:hover,
 QListView::item:hover,
-QColumnView::item:hover,
-QColumnView::item:hover {
+QTreeView::item:selected,
+QTableView::item:selected,
+QListView::item:selected {
     background-color: rgba(0,0,0,50);
     color: rgb(218, 218, 163);
 }
 
-QPushButton,
-QPushButton:!pressed{
+QPushButton:!disabled {
     min-height: 23px;
     min-width: 75px;
     padding-left: 1px;
@@ -486,6 +483,15 @@ QPushButton:!pressed{
     border-style: solid;
     color: rgb(180, 180, 140);
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(50, 50, 50),stop: 0.4 rgb(25,25,25), stop: 0.5 rgb(25,25,25) stop:1 rgb(50, 50, 50));
+}
+
+QPushButton:disabled {
+    border-style: outset;
+    border-color: rgb(15,15,15);
+    border-width: 1px;
+    border-style: solid;
+    color: grey;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(80, 80, 80),stop: 0.4 rgb(55, 55, 55), stop: 0.5 rgb(55, 55, 55) stop:1 rgb(80, 80, 80));
 }
 
 QPushButton:hover {
@@ -502,36 +508,31 @@ QPushButton:pressed {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(65, 65, 65),stop: 0.4 rgb(45, 45, 45), stop: 0.5 rgb(45, 45, 45) stop:1 rgb(65, 65, 65));
 }
 
-QPushButton:disabled {
-    border-style: outset;
-    border-color: rgb(15,15,15);
+QLineEdit:!disabled {
+    min-height: 18px;
     border-width: 1px;
-    border-style: solid;
-    color: grey;
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(80, 80, 80),stop: 0.4 rgb(55, 55, 55), stop: 0.5 rgb(55, 55, 55) stop:1 rgb(80, 80, 80));
+    border-radius: 5px;
+    border-color: rgb(20,20,20);
+    border-style: inset;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: rgb(180, 180, 140);
+    background-color: rgb(30, 30, 30);
 }
 
 QLineEdit:disabled {
     min-height: 18px;
-    max-height: 18px;
     border-width: 1px;
     border-radius: 5px;
     border-color: rgb(20,20,20);
     border-style: inset;
-    padding: 0 8px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 8px;
+    padding-right: 8px;
     color: grey;
-    background-color: rgb(30, 30, 30);
-}
-
-QLineEdit:!disabled {
-    min-height: 18px;
-    max-height: 18px;
-    border-width: 1px;
-    border-radius: 5px;
-    border-color: rgb(20,20,20);
-    border-style: inset;
-    padding: 0 8px;
-    color: rgb(180, 180, 140);
     background-color: rgb(30, 30, 30);
 }
 
