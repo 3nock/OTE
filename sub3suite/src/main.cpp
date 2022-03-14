@@ -66,23 +66,43 @@ void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
 
 int main(int argc, char *argv[])
 {
+    /* high DPI scalling */
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    s3s_Application::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    /*
+    export QT_DEVICE_PIXEL_RATIO=0
+    export QT_AUTO_SCREEN_SCALE_FACTOR=1
+    export QT_SCREEN_SCALE_FACTORS=1
+    export QT_SCALE_FACTOR=1
+    */
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && defined(Q_OS_WIN)
+    if (qgetenv("QT_SCALE_FACTOR_ROUNDING_POLICY").isEmpty())
+        QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+#endif
+
     /* installing the message handler */
     qInstallMessageHandler(s3s_MessageHandler);
-
-    /* Handle DPI scaling on Windows */
-#if defined(Q_OS_WIN)
-    s3s_Application::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
 
     /* setting org and app name */
     QCoreApplication::setOrganizationName("3Suite");
     QCoreApplication::setApplicationName("Sub3 Suite");
+    QCoreApplication::setApplicationVersion("1.0.0");
+    QCoreApplication::setOrganizationDomain("github.com/3nock/sub3suite");
 
     /* removing context help button from all on dialogs for now */
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 
     /* create the sub3suite app */
     s3s_Application s3s_app(argc, argv);
+
+    /* setting a default font
+    QFont font = qApp->font();
+    font.setPixelSize(11);
+    qApp->setFont(font);
+    */
 
     /* setting stylesheets */
     QFile stylesheet(":/themes/res/themes/default.css");
@@ -115,11 +135,12 @@ int main(int argc, char *argv[])
 
     if(project.isNew || project.isExisting || project.isTemporary)
     {
-        /* get dpi values */
-        qDebug() << "dpi value X: " << qApp->desktop()->logicalDpiX();
-        qDebug() << "dpi value Y: " << qApp->desktop()->logicalDpiY();
+        /* get dpi values
+        qDebug() << "dpi value X: " << qApp->desktop()->physicalDpiX();
+        qDebug() << "dpi value Y: " << qApp->desktop()->physicalDpiY();
         qDebug() << "dpi value Ratio: " << qApp->desktop()->devicePixelRatio();
         qDebug() << "dpi value Ratio FScale: " << qApp->desktop()->devicePixelRatioFScale();
+        */
 
         /* getting saved dimensions */
         CONFIG.beginGroup(CFG_GRP_DIMENSIONS);

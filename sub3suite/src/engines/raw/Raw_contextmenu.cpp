@@ -17,7 +17,7 @@ void Raw::on_buttonActionJson_clicked(){
     /* getting the position of the action button to place the context menu and
        showing the context menu right by the side of the action button... */
     QPoint pos = ui->buttonActionJson->mapToGlobal(QPoint(0,0));
-    pos = QPoint(pos.x()+65, pos.y());
+    pos = QPoint(pos.x()+60, pos.y());
 
     /* creating the context menu... */
     QMenu menu(this);
@@ -40,7 +40,7 @@ void Raw::on_buttonActionTree_clicked(){
     /* getting the position of the action button to place the context menu and
        showing the context menu right by the side of the action button... */
     QPoint pos = ui->buttonActionTree->mapToGlobal(QPoint(0,0));
-    pos = QPoint(pos.x()+65, pos.y());
+    pos = QPoint(pos.x()+60, pos.y());
 
     /* creating the context menu... */
     QMenu menu(this);

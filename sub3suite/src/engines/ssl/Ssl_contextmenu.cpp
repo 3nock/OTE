@@ -17,7 +17,7 @@ void Ssl::on_buttonAction_clicked(){
     /* getting the position of the action button to place the context menu and
        showing the context menu right by the side of the action button... */
     QPoint pos = ui->buttonAction->mapToGlobal(QPoint(0,0));
-    pos = QPoint(pos.x()+65, pos.y());
+    pos = QPoint(pos.x()+60, pos.y());
 
     /* creating the context menu... */
     QMenu menu(this);

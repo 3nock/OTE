@@ -397,6 +397,9 @@
           <property name="selectionBehavior">
            <enum>QAbstractItemView::SelectItems</enum>
           </property>
+          <property name="indentation">
+           <number>16</number>
+          </property>
           <attribute name="headerVisible">
            <bool>false</bool>
           </attribute>
