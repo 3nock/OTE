@@ -77,12 +77,6 @@ MainWindow::~MainWindow(){
 }
 
 void MainWindow::closeEvent(QCloseEvent *event){
-    /* save some windows properties */
-    CONFIG.beginGroup(CFG_GRP_DIMENSIONS);
-    CONFIG.setValue("height", this->minimumHeight());
-    CONFIG.setValue("width", this->minimumWidth());
-    CONFIG.endGroup();
-
     /* check if project is configured, if not prompt to save project */
     if(projectModel->info.isNew ||  projectModel->info.isTemporary){
         if(!projectModel->info.isConfigured)

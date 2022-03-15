@@ -16,6 +16,9 @@
 
 #define APIKEY Config::apiKeys()
 #define CONFIG Config::general()
+#define DONORS Config::donors()
+#define AUTHORS Config::authors()
+#define MODULES Config::modules()
 
 /* config groups */
 #define CFG_OSINT "osint"
@@ -37,15 +40,11 @@
 #define CFG_VAL_DUPLICATES "no_duplicates"
 #define CFG_VAL_AUTOSAVE "autosave_to_project"
 #define CFG_VAL_NAMESERVER "nameserver_type"
-#define CFG_VAL_DATE "date"
+#define CFG_VAL_BUILDDATE "build_date"
 #define CFG_VAL_MAXPAGES "max_pages"
 
 /* groups */
-#define CFG_GRP_MODULES "modules"
-#define CFG_GRP_AUTHORS "authors"
-#define CFG_GRP_DONORS "donors"
-#define CFG_GRP_BUILD "build"
-#define CFG_GRP_DIMENSIONS "dimensions"
+#define CFG_GRP_RECENT "recent_projects"
 #define CFG_GRP_DEFAULT_NS "default_nameservers"
 
 /* arrays */
@@ -68,6 +67,18 @@ class Config
         }
         static QSettings &general(){
             static QSettings settings("sub3suite.ini", QSettings::IniFormat);
+            return settings;
+        }
+        static QSettings &donors(){
+            static QSettings settings(":/files/res/files/DONORS", QSettings::IniFormat);
+            return settings;
+        }
+        static QSettings &authors(){
+            static QSettings settings(":/files/res/files/AUTHORS", QSettings::IniFormat);
+            return settings;
+        }
+        static QSettings &modules(){
+            static QSettings settings(":/files/res/files/MODULES", QSettings::IniFormat);
             return settings;
         }
 

@@ -41,31 +41,21 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
 
     /* setting up description */
     ui->textBrowserDescription->setOpenExternalLinks(true);
-    ui->textBrowserDescription->append("Copyright 2020-2022 © Enock Nicholaus <a href=\"https://twitter.com/3nock_\">@3nock_</a> and contributors.");
-
-    ui->textBrowserDescription->append("\n");
-
-    ui->textBrowserDescription->append("License GPLv3: GNU GPL version 3 <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">https://www.gnu.org/licenses/gpl-3.0.html</a>."
-                                       " This is free software; see the source for copying conditions."
-                                       " There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
-
-    ui->textBrowserDescription->append("\nsub3suite is Open Source Software released under the GNU General Public License.\n");
-
-    ui->textBrowserDescription->append("visit <a href=\"https://3nock.github.io/sub3suite\">https://3nock.github.io</a> for more information.");
-
-    ui->textBrowserDescription->append("\n");
-
-    ui->textBrowserDescription->append("follow <a href=\"https://twitter.com/intent/follow?screen_name=sub3suite&tw_p=followbutton\">@sub3suite</a> for more updates on the project.");
+    QFile file_about(":/files/res/files/ABOUT");
+    if(file_about.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        ui->textBrowserDescription->append(file_about.readAll());
+        file_about.close();
+    }
 
     ///
     /// for authors...
     ///
 
-    CONFIG.beginGroup(CFG_GRP_AUTHORS);
-    foreach(const QString &author, CONFIG.allKeys())
+    foreach(const QString &author, AUTHORS.allKeys())
         m_authorsModel->appendRow({new QStandardItem(author),
-                                   new QStandardItem(CONFIG.value(author).toString())});
-    CONFIG.endGroup();
+                                   new QStandardItem(AUTHORS.value(author).toString())});
+
     m_authorsModel->setHorizontalHeaderLabels({tr(" Author"), tr(" Contact")});
     ui->tableViewContributors->setModel(m_authorsModel);
     ui->tableViewContributors->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -74,11 +64,10 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for modules...
     ///
 
-    CONFIG.beginGroup(CFG_GRP_MODULES);
-    foreach(const QString &module, CONFIG.allKeys())
+    foreach(const QString &module, MODULES.allKeys())
         m_modulesModel->appendRow({new QStandardItem(module),
-                                   new QStandardItem(CONFIG.value(module).toString())});
-    CONFIG.endGroup();
+                                   new QStandardItem(MODULES.value(module).toString())});
+
     m_modulesModel->setHorizontalHeaderLabels({tr(" Module"), tr(" Source")});
     ui->tableViewModules->setModel(m_modulesModel);
     ui->tableViewModules->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -87,11 +76,10 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for donations...
     ///
 
-    CONFIG.beginGroup(CFG_GRP_DONORS);
-    foreach(const QString &donor, CONFIG.allKeys())
+    foreach(const QString &donor, DONORS.allKeys())
         m_authorsModel->appendRow({new QStandardItem(donor),
-                                   new QStandardItem(CONFIG.value(donor).toString())});
-    CONFIG.endGroup();
+                                   new QStandardItem(DONORS.value(donor).toString())});
+
     m_foldersModel->setHorizontalHeaderLabels({tr(" Name"), tr(" Contact")});
     ui->tableViewDonations->setModel(m_foldersModel);
     ui->tableViewDonations->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -103,7 +91,6 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     QFile file_history(":/files/res/files/HISTORY");
     if(file_history.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        /* append HISTORY file content to the plainTextEdit */
         ui->plainTextEditHistory->setPlainText(file_history.readAll());
         file_history.close();
     }
@@ -115,7 +102,6 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     QFile file_license(":/files/res/files/LICENSE");
     if(file_license.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        /* append LICENSE file content to the plainTextEdit */
         ui->plainTextEditLicense->setPlainText(file_license.readAll());
         file_license.close();
     }
