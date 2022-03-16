@@ -14,33 +14,6 @@
 
 #define REQUEST_TYPE "type"
 
-///
-/// a custom QApplication with exceptions handling
-///
-class s3s_Application final: public QApplication
-{
-public:
-    s3s_Application(int &argc, char **argv) : QApplication(argc, argv) {}
-
-    bool notify(QObject* receiver, QEvent* event) override
-    {
-        try {
-            return QApplication::notify(receiver, event);
-        }
-        catch (std::exception &e) {
-            qFatal("Error %s sending event %s to object %s (%s)",
-                e.what(), typeid(*event).name(), qPrintable(receiver->objectName()),
-                typeid(*receiver).name());
-        }
-        catch (...) {
-            qFatal("Error <unknown> sending event %s to object %s (%s)",
-                typeid(*event).name(), qPrintable(receiver->objectName()),
-                typeid(*receiver).name());
-        }
-         return false;
-    }
-};
-
 
 ///
 /// a clickable label for icon-buttons

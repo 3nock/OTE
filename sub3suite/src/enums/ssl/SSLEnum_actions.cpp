@@ -152,7 +152,8 @@ void SSLEnum::sendToProject(){
     {
         QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
         s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
-        project->addActiveSSL(item->raw);
+        foreach(const QSslCertificate &cert, QSslCertificate::fromData(item->raw, QSsl::Pem))
+            project->addActiveSSL(item->text(), cert);
     }
 }
 
@@ -162,7 +163,8 @@ void SSLEnum::sendSelectedToProject(){
         if(index.parent() == m_model->invisibleRootItem()->index()){
             QModelIndex model_index = proxyModel->mapToSource(index);
             s3s_item::SSL *item = static_cast<s3s_item::SSL*>(m_model->itemFromIndex(model_index));
-            project->addActiveSSL(item->raw);
+            foreach(const QSslCertificate &cert, QSslCertificate::fromData(item->raw, QSsl::Pem))
+                project->addActiveSSL(item->text(), cert);
         }
     }
 }

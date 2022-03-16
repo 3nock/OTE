@@ -81,6 +81,7 @@ class Project : public QWidget{
         QMenu *menu_send;
         QMenu *menu_copy;
         QMenu *menu_save;
+        QMenu *menu_extract;
 
         /* main actions */
         QAction a_copy;
@@ -89,6 +90,9 @@ class Project : public QWidget{
         QAction a_clear;
         QAction a_expand;
         QAction a_collapse;
+        QAction a_cancel;
+        QAction a_extract;
+        QAction a_remove_duplicates;
 
         void initUI();
         void init_menubar_tree();
@@ -97,6 +101,7 @@ class Project : public QWidget{
         void init_action_save();
         void init_action_copy();
         void init_action_send();
+        void init_action_extract();
 
         /* menu bar's actions */
         void action_clear();
@@ -129,8 +134,10 @@ class Project : public QWidget{
         void action_send_selected_toEnum(const TOOL&);
         void action_send_selected_toEngine(const ENGINE&, const RESULT_TYPE&);
 
-        void action_extract(bool subdomain, bool tld);
-        void action_extract_selected(bool subdomain, bool tld);
+        void action_extract(bool subdomain, bool tld, bool hosts);
+        void action_extract_selected(bool subdomain, bool tld, bool host);
+
+        void action_remove_duplicates();
 };
 
 #endif // S3SPROJECT_H

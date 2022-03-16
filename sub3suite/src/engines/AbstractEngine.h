@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief : The Base class for Engines classes.
+ @brief : The Base class for Engines classes (it is not an abstract class)
 */
 
 #ifndef ABSTRACTCLASS_H

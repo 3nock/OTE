@@ -27,8 +27,13 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     a_send.setEnabled(true);
     a_expand.setEnabled(true);
     a_collapse.setEnabled(true);
+    a_extract.setEnabled(true);
+    a_remove_duplicates.setEnabled(true);
+    a_cancel.setEnabled(true);
 
     if(parent_index == model->explorer->active->index()){
+        a_remove_duplicates.setDisabled(true);
+
         if(index == model->explorer->activeHost->index()){
             proxyModel->setSourceModel(model->activeHost);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeHost);
@@ -49,6 +54,8 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
+            a_extract.setDisabled(true);
+
             proxyModel->setSourceModel(model->activeDNS);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeDNS);
         }
@@ -60,6 +67,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
 
             a_expand.setDisabled(true);
             a_collapse.setDisabled(true);
+            a_extract.setDisabled(true);
 
             ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->header()->resizeSection(1, 150);
@@ -68,6 +76,8 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
+
+            a_extract.setDisabled(true);
 
             proxyModel->setSourceModel(model->activeSSL);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeSSL);
@@ -96,10 +106,12 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->activeA->index()){
             proxyModel->setSourceModel(model->activeA);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeDNS_A);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->activeAAAA->index()){
             proxyModel->setSourceModel(model->activeAAAA);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeDNS_AAAA);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->activeNS->index()){
             proxyModel->setSourceModel(model->activeNS);
@@ -113,6 +125,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             proxyModel->setSourceModel(model->activeTXT);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeDNS_TXT);
             a_send.setDisabled(true);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->activeCNAME->index()){
             proxyModel->setSourceModel(model->activeCNAME);
@@ -136,10 +149,12 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->activeSSL_sha1->index()){
             proxyModel->setSourceModel(model->activeSSL_sha1);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeSSL_sha1);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->activeSSL_sha256->index()){
             proxyModel->setSourceModel(model->activeSSL_sha256);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeSSL_sha256);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->activeSSL_altNames->index()){
             proxyModel->setSourceModel(model->activeSSL_altNames);
@@ -166,14 +181,17 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->passiveA->index()){
             proxyModel->setSourceModel(model->passiveA);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_A);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->passiveAAAA->index()){
             proxyModel->setSourceModel(model->passiveAAAA);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_AAAA);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->passiveCidr->index()){
             proxyModel->setSourceModel(model->passiveCidr);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_CIDR);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->passiveNS->index()){
             proxyModel->setSourceModel(model->passiveNS);
@@ -186,6 +204,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->passiveTXT->index()){
             proxyModel->setSourceModel(model->passiveTXT);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_TXT);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->passiveCNAME->index()){
             proxyModel->setSourceModel(model->passiveCNAME);
@@ -194,6 +213,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->passiveEmail->index()){
             proxyModel->setSourceModel(model->passiveEmail);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_Email);
+            a_extract.setDisabled(true);
         }
         if(index == model->explorer->passiveUrl->index()){
             proxyModel->setSourceModel(model->passiveUrl);
@@ -205,15 +225,21 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->addItems({"ASN", "name"});
             ui->comboBoxFilter->show();
 
+            a_extract.setDisabled(true);
+
             ui->treeViewTree->header()->resizeSection(0, 300);
         }
         if(index == model->explorer->passiveSSL->index()){
             proxyModel->setSourceModel(model->passiveSSL);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_SSL);
+            a_extract.setDisabled(true);
         }
     }
 
     if(parent_index == model->explorer->enums->index()){
+        a_remove_duplicates.setDisabled(true);
+        a_extract.setDisabled(true);
+
         if(index == model->explorer->enumIp->index()){
             ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
@@ -307,6 +333,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     this->init_action_copy();
     this->init_action_save();
     this->init_action_send();
+    this->init_action_extract();
 }
 
 void Project::on_lineEditFilter_textChanged(const QString &filterKeyword){

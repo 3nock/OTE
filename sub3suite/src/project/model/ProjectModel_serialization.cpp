@@ -9,7 +9,6 @@
 #include <QDate>
 
 #include "src/utils/Config.h"
-#include "src/items/SSLItem.h"
 #include "src/items/ASNItem.h"
 
 
@@ -38,56 +37,50 @@ void ProjectModel::saveProject(){
         file.write(qCompress(this->getJson()));
         file.close();
 
-        CONFIG.beginGroup("recent_projects");
+        /* adding to recent projects */
+        CONFIG.beginGroup(CFG_GRP_RECENT);
         CONFIG.setValue(info.name, info.path);
         CONFIG.endGroup();
+
+        /* setting status as no modifications to the project */
+        modified = false;
+
+        qDebug() << "Project Saved!";
     }
-    else{
+    else
         qWarning() << "Failed To Open Project File";
-    }
 }
 
 void ProjectModel::closeProject(){
-    QByteArray project_json(this->getJson());
-    if (m_project_hash == QCryptographicHash::hash(project_json, QCryptographicHash::Md5))
-        return; // no changes made to project
-
-    int retVal = QMessageBox::warning(nullptr, "Sub3 Suite",
-                               "The project has been modified. Do you want to save changes?",
-                                   QMessageBox::Save |
-                                   QMessageBox::Cancel,
-                                   QMessageBox::Save);
-    if(retVal == QMessageBox::Save)
-        this->saveProject();
+    if(modified){
+        int retVal = QMessageBox::warning(nullptr, "Sub3 Suite",
+                                   "The project has been modified. Do you want to save changes?",
+                                       QMessageBox::Save |
+                                       QMessageBox::Cancel,
+                                       QMessageBox::Save);
+        if(retVal == QMessageBox::Save)
+            this->saveProject();
+    }
 }
 
 void ProjectModel::openProject(ProjectStruct projectStruct){
     info = projectStruct;
 
-    if(info.isTemporary){
-        info.name = "Temp";
-        info.path = QGuiApplication::applicationDirPath()+"/projects/";
-
-        /* set project name on the project explorer */
+    ///
+    /// for temporary & new projects...
+    ///
+    if(info.isTemporary || info.isNew){
         explorer->project->setText(info.name);
         info.date_created = QDate::currentDate().toString();
         info.last_modified = QDate::currentDate().toString();
         return;
     }
 
-    if(info.isNew){
-        /* set project name on the project explorer */
-        explorer->project->setText(info.name);
-        info.date_created = QDate::currentDate().toString();
-        info.last_modified = QDate::currentDate().toString();
-        return;
-    }
-
-    /* if it is an existing project */
-    /* set project name on the project explorer */
+    ///
+    /// for existing projects...
+    ///
     explorer->project->setText(info.name);
 
-    /* opening the the project */
     qDebug() << "Opening Project: " << info.path;
 
     QFile file(info.path);
@@ -96,31 +89,33 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         return;
     }
 
-    /* uncompress the file then open json */
-    QByteArray project_json(qUncompress(file.readAll()));
-
-    /* get the project hash, so as to alert on closing if any changes made */
-    m_project_hash = QCryptographicHash::hash(project_json, QCryptographicHash::Md5);
-
-    qDebug() << "Parsing the Project...";
-    QJsonDocument document = QJsonDocument::fromJson(project_json);
-    file.close();
+    /* uncompress & parse the json */
+    QJsonDocument document = QJsonDocument::fromJson(qUncompress(file.readAll()));
     if(document.isNull() || document.isEmpty()){
         qWarning() << "Error parsing the project file";
         return;
     }
+    file.close();
 
     QJsonObject mainObj = document.object();
 
     ///
-    /// project info
+    /// project info...
     ///
+
     info.date_created = mainObj["info"].toObject()["date_created"].toString();
     info.last_modified = mainObj["info"].toObject()["last_modified"].toString();
 
     ///
+    /// project notes...
+    ///
+
+    notes.setPlainText(mainObj["notes"].toString());
+
+    ///
     /// project data
     ///
+
     QJsonObject data = mainObj["data"].toObject();
 
     /* active Hostnames */
@@ -131,8 +126,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
                                item->ipv4,
                                item->ipv6,
                                item->ports});
-
-        set_Host.insert(item->text(), item);
+        map_activeHost.insert(item->text(), item);
     }
 
     /* active Wildcards */
@@ -142,6 +136,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         activeWildcard->appendRow({item,
                                    item->ipv4,
                                    item->ipv6});
+        map_activeWildcard.insert(item->text(), item);
     }
 
     /* active dns */
@@ -149,6 +144,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         s3s_item::DNS *item = new s3s_item::DNS;
         json_to_dns(value.toObject(), item);
         activeDNS->appendRow(item);
+        map_activeDNS.insert(item->text(), item);
     }
 
     /* active SSL sha1 */
@@ -178,6 +174,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
                               item->status_code,
                               item->banner,
                               item->content_type});
+        map_activeURL.insert(item->text(), item);
     }
 
     /* passive subdomainIP */
@@ -239,42 +236,49 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         s3s_item::ASN *item = new s3s_item::ASN;
         json_to_asn(value.toObject(), item);
         enumASN->appendRow(item);
+        map_enumASN.insert(item->text(), item);
     }
     /* enum CIDR" */
     foreach(const QJsonValue &value, data["enum_CIDR"].toArray()){
         s3s_item::CIDR *item = new s3s_item::CIDR;
         json_to_cidr(value.toObject(), item);
         enumCIDR->appendRow(item);
+        map_enumCIDR.insert(item->text(), item);
     }
     /* enum IP */
     foreach(const QJsonValue &value, data["enum_IP"].toArray()){
         s3s_item::IP *item = new s3s_item::IP;
         json_to_ip(value.toObject(), item);
         enumIp->appendRow(item);
+        map_enumIp.insert(item->text(), item);
     }
     /* enum MX" */
     foreach(const QJsonValue &value, data["enum_MX"].toArray()){
         s3s_item::MX *item = new s3s_item::MX;
         json_to_mx(value.toObject(), item);
         enumMX->appendRow(item);
+        map_enumMX.insert(item->text(), item);
     }
     /* enum NS" */
     foreach(const QJsonValue &value, data["enum_NS"].toArray()){
         s3s_item::NS *item = new s3s_item::NS;
         json_to_ns(value.toObject(), item);
         enumNS->appendRow(item);
+        map_enumNS.insert(item->text(), item);
     }
     /* enum SSL" */
     foreach(const QJsonValue &value, data["enum_SSL"].toArray()){
         s3s_item::SSL *item = new s3s_item::SSL;
         json_to_ssl(value.toObject(), item);
         enumSSL->appendRow(item);
+        map_enumSSL.insert(item->text(), item);
     }
     /* enum Email" */
     foreach(const QJsonValue &value, data["enum_Email"].toArray()){
         s3s_item::Email *item = new s3s_item::Email;
         json_to_email(value.toObject(), item);
         enumEmail->appendRow(item);
+        map_enumEmail.insert(item->text(), item);
     }
     /* raw */
     foreach(const QJsonValue &value, data["enum_Raw"].toArray()){
@@ -509,6 +513,7 @@ QByteArray ProjectModel::getJson(){
 
     QJsonObject mainObj;
     mainObj.insert("data", data);
+    mainObj.insert("notes", notes.toPlainText());
     mainObj.insert("info", info_json);
 
     QJsonDocument document;

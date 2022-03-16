@@ -3,6 +3,7 @@
 
 s3s_struct::RAW raw_to_struct(s3s_item::RAW *item){
     s3s_struct::RAW raw;
+    raw.query_option = item->query_option;
     raw.module = item->module;
     raw.target = item->target;
     raw.results = item->json;
@@ -18,6 +19,7 @@ QJsonObject raw_to_json(s3s_item::RAW *item){
     raw.insert("raw", item->text());
     raw.insert("target", item->target);
     raw.insert("module", item->module);
+    raw.insert("query_option", item->query_option);
     raw.insert("json", QString::fromUtf8(item->json));
     raw.insert("item_info", item_info);
     return raw;
@@ -27,6 +29,7 @@ void json_to_raw(const QJsonObject &raw, s3s_item::RAW *item){
     item->setText(raw.value("raw").toString());
     item->target = raw.value("target").toString();
     item->module = raw.value("module").toString();
+    item->query_option = raw.value("query_option").toString();
     item->json = raw.value("json").toString().toUtf8();
     item->setValues(item->json);
 

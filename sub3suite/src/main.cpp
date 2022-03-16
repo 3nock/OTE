@@ -62,9 +62,37 @@ void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
     mutex.unlock();
 }
 
+///
+/// a custom QApplication with exceptions handling
+///
+class s3s_Application final: public QApplication
+{
+public:
+    s3s_Application(int &argc, char **argv) : QApplication(argc, argv) {}
+
+    bool notify(QObject* receiver, QEvent* event) override
+    {
+        try {
+            return QApplication::notify(receiver, event);
+        }
+        catch (std::exception &e) {
+            qFatal("Error %s sending event %s to object %s (%s)",
+                e.what(), typeid(*event).name(), qPrintable(receiver->objectName()),
+                typeid(*receiver).name());
+        }
+        catch (...) {
+            qFatal("Error <unknown> sending event %s to object %s (%s)",
+                typeid(*event).name(), qPrintable(receiver->objectName()),
+                typeid(*receiver).name());
+        }
+         return false;
+    }
+};
+
+
 int main(int argc, char *argv[])
 {
-    /* high scalling */
+    /* dpi scalling */
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
     s3s_Application::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -105,9 +133,6 @@ int main(int argc, char *argv[])
     QSplashScreen splash(splashImage);
     splash.show();
 
-    /* init configurations */
-    CONFIG;
-
     /* project */
     ProjectStruct project;
 
@@ -123,9 +148,11 @@ int main(int argc, char *argv[])
 
     if(project.isNew || project.isExisting || project.isTemporary)
     {
+        splash.show();
         /* creating the main window */
         MainWindow w;
         w.setWindowState(Qt::WindowMaximized);
+        splash.finish(&w);
         w.show();
 
         /* opening the project */

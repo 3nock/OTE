@@ -10,12 +10,12 @@
 #include <QNetworkAccessManager>
 #include <QBasicTimer>
 #include <QTimerEvent>
-/* ... */
+
 #include "OsintDefinitions.h"
 #include "src/utils/s3s.h"
 #include "src/utils/utils.h"
 #include "gumbo-parser/src/gumbo.h"
-/* ... */
+
 #include "src/items/IPItem.h"
 #include "src/items/ASNItem.h"
 #include "src/items/CIDRItem.h"
@@ -100,6 +100,7 @@ struct ScanArgs{
 
     /* for raw output */
     int rawOption = 0;
+    QString queryOption;
     QMap<int, QString> rawParameters;
 };
 
@@ -215,6 +216,7 @@ class AbstractOsintModule : public QObject {
 
                 s3s_struct::RAW raw;
                 raw.module = log.moduleName;
+                raw.query_option = args.queryOption;
                 raw.target = target;
                 raw.results = byteDocument;
                 emit rawResults(raw);
@@ -230,6 +232,7 @@ class AbstractOsintModule : public QObject {
             else{
                 s3s_struct::RAW raw;
                 raw.module = log.moduleName;
+                raw.query_option = args.queryOption;
                 raw.target = target;
                 raw.results = reply->readAll();
                 emit rawResults(raw);
@@ -245,6 +248,7 @@ class AbstractOsintModule : public QObject {
             else{
                 s3s_struct::RAW raw;
                 raw.module = log.moduleName;
+                raw.query_option = args.queryOption;
                 raw.target = target;
                 raw.results = reply->readAll();
                 emit rawResultsTxt(raw);

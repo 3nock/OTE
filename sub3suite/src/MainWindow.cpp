@@ -156,9 +156,9 @@ void MainWindow::recents(){
     CONFIG.endGroup();
 }
 
-void MainWindow::initProject(ProjectStruct info){
-    ui->statusbar->showMessage("Opening Project....", 6000);
-    projectModel->openProject(info);
+void MainWindow::initProject(ProjectStruct project_info){
+    ui->statusbar->showMessage("Opening Project \""+project_info.name+"\"", 6000);
+    projectModel->openProject(project_info);
     project->initProject();
 }
 

@@ -58,6 +58,7 @@ void Project::initProject(){
     ui->label_project_created->setText(model->info.date_created);
     ui->label_project_modified->setText(model->info.last_modified);
     ui->label_project_items->setNum(model->getItemsCount());
+    ui->plainTextEditNotes->setDocument(&model->notes);
 }
 
 void Project::initUI(){
@@ -98,6 +99,7 @@ void Project::init_menubar_tree(){
     menu_send = new QMenu(this);
     menu_copy = new QMenu(this);
     menu_save = new QMenu(this);
+    menu_extract = new QMenu(this);
 
     a_copy.setIcon(QIcon(":/img/res/icons/copy.png"));
     a_save.setIcon(QIcon(":/img/res/icons/save.png"));
@@ -105,14 +107,33 @@ void Project::init_menubar_tree(){
     a_clear.setIcon(QIcon(":/img/res/icons/delete.png"));
     a_expand.setIcon(QIcon(":/img/res/icons/expand.png"));
     a_collapse.setIcon(QIcon(":/img/res/icons/collapse.png"));
+    a_cancel.setIcon(QIcon(":/img/res/icons/exit.png"));
+    a_extract.setIcon(QIcon(":/img/res/icons/extract.png"));
+    a_remove_duplicates.setIcon(QIcon(":/img/res/icons/duplicate.png"));
 
     connect(&a_clear, &QAction::triggered, this, [=](){this->action_clear();});
     connect(&a_expand, &QAction::triggered, this, [=](){ui->treeViewTree->expandAll();});
     connect(&a_collapse, &QAction::triggered, this, [=](){ui->treeViewTree->collapseAll();});
+    connect(&a_remove_duplicates, &QAction::triggered, this, [=](){this->action_remove_duplicates();});
+    connect(&a_cancel, &QAction::triggered, this, [=](){
+        proxyModel->setSourceModel(nullptr);
+        a_copy.setDisabled(true);
+        a_save.setDisabled(true);
+        a_clear.setDisabled(true);
+        a_send.setDisabled(true);
+        a_expand.setDisabled(true);
+        a_collapse.setDisabled(true);
+        a_extract.setDisabled(true);
+        a_remove_duplicates.setDisabled(true);
+        a_cancel.setDisabled(true);
+
+        ui->treeViewExplorer->clearSelection();
+    });
 
     a_send.setMenu(menu_send);
     a_save.setMenu(menu_save);
     a_copy.setMenu(menu_copy);
+    a_extract.setMenu(menu_extract);
 
     menubar_tree = new QMenuBar(this);
     menubar_tree->addAction(&a_save);
@@ -121,6 +142,9 @@ void Project::init_menubar_tree(){
     menubar_tree->addAction(&a_clear);
     menubar_tree->addAction(&a_expand);
     menubar_tree->addAction(&a_collapse);
+    menubar_tree->addAction(&a_extract);
+    menubar_tree->addAction(&a_remove_duplicates);
+    menubar_tree->addAction(&a_cancel);
     menubar_tree->setToolTipDuration(2);
     ui->horizontalLayoutMap->insertWidget(0, menubar_tree);
 
@@ -130,6 +154,9 @@ void Project::init_menubar_tree(){
     a_clear.setDisabled(true);
     a_expand.setDisabled(true);
     a_collapse.setDisabled(true);
+    a_extract.setDisabled(true);
+    a_remove_duplicates.setDisabled(true);
+    a_cancel.setDisabled(true);
 }
 
 void Project::init_menubar_project(){

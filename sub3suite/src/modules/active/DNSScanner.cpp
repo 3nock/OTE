@@ -9,9 +9,6 @@
 #include "DNSScanner.h"
 
 
-/* TODO:
- *      not well implemented yet
- */
 dns::Scanner::Scanner(dns::ScanArgs *args): AbstractScanner (nullptr),
       m_args(args),
       m_dns_a(new QDnsLookup(this)),
@@ -43,13 +40,13 @@ dns::Scanner::Scanner(dns::ScanArgs *args): AbstractScanner (nullptr),
     m_dns_srv->setNameserver(QHostAddress(nameserver));
     m_args->config->nameservers.enqueue(nameserver);
 
-    connect(m_dns_srv, &QDnsLookup::finished, this, &dns::Scanner::srvLookupFinished);
-    connect(m_dns_a, &QDnsLookup::finished, this, &dns::Scanner::aLookupFinished);
-    connect(m_dns_aaaa, &QDnsLookup::finished, this, &dns::Scanner::aaaaLookupFinished);
-    connect(m_dns_mx, &QDnsLookup::finished, this, &dns::Scanner::mxLookupFinished);
-    connect(m_dns_ns, &QDnsLookup::finished, this, &dns::Scanner::nsLookupFinished);
-    connect(m_dns_txt, &QDnsLookup::finished, this, &dns::Scanner::txtLookupFinished);
-    connect(m_dns_cname, &QDnsLookup::finished, this, &dns::Scanner::cnameLookupFinished);
+    connect(m_dns_srv, &QDnsLookup::finished, this, &dns::Scanner::lookupFinished_srv);
+    connect(m_dns_a, &QDnsLookup::finished, this, &dns::Scanner::lookupFinished_a);
+    connect(m_dns_aaaa, &QDnsLookup::finished, this, &dns::Scanner::lookupFinished_aaaa);
+    connect(m_dns_mx, &QDnsLookup::finished, this, &dns::Scanner::lookupFinished_mx);
+    connect(m_dns_ns, &QDnsLookup::finished, this, &dns::Scanner::lookupFinished_ns);
+    connect(m_dns_txt, &QDnsLookup::finished, this, &dns::Scanner::lookupFinished_txt);
+    connect(m_dns_cname, &QDnsLookup::finished, this, &dns::Scanner::lookupFinished_cname);
 }
 dns::Scanner::~Scanner(){
     delete m_dns_srv;
@@ -61,7 +58,7 @@ dns::Scanner::~Scanner(){
     delete m_dns_a;
 }
 
-void dns::Scanner::srvLookupFinished(){
+void dns::Scanner::lookupFinished_srv(){
     s3s_struct::DNS dns;
     dns.dns = m_currentTarget;
 
@@ -96,7 +93,7 @@ void dns::Scanner::srvLookupFinished(){
     }
 }
 
-void dns::Scanner::aLookupFinished(){
+void dns::Scanner::lookupFinished_a(){
     s3s_struct::DNS dns;
     dns.dns = m_currentTarget;
 
@@ -130,7 +127,7 @@ void dns::Scanner::aLookupFinished(){
     }
 }
 
-void dns::Scanner::aaaaLookupFinished(){
+void dns::Scanner::lookupFinished_aaaa(){
     s3s_struct::DNS dns;
     dns.dns = m_currentTarget;
 
@@ -164,7 +161,7 @@ void dns::Scanner::aaaaLookupFinished(){
     }
 }
 
-void dns::Scanner::mxLookupFinished(){
+void dns::Scanner::lookupFinished_mx(){
     s3s_struct::DNS dns;
     dns.dns = m_currentTarget;
 
@@ -198,7 +195,7 @@ void dns::Scanner::mxLookupFinished(){
     }
 }
 
-void dns::Scanner::cnameLookupFinished(){
+void dns::Scanner::lookupFinished_cname(){
     s3s_struct::DNS dns;
     dns.dns = m_currentTarget;
 
@@ -232,7 +229,7 @@ void dns::Scanner::cnameLookupFinished(){
     }
 }
 
-void dns::Scanner::nsLookupFinished(){
+void dns::Scanner::lookupFinished_ns(){
     s3s_struct::DNS dns;
     dns.dns = m_currentTarget;
 
@@ -266,7 +263,7 @@ void dns::Scanner::nsLookupFinished(){
     }
 }
 
-void dns::Scanner::txtLookupFinished(){
+void dns::Scanner::lookupFinished_txt(){
     s3s_struct::DNS dns;
     dns.dns = m_currentTarget;
 
@@ -347,6 +344,10 @@ void dns::Scanner::lookup(){
         m_dns_srv->setName(m_currentTarget);
         m_dns_srv->lookup();
     }
+}
+
+void dns::Scanner::lookupFinished_any(){
+
 }
 
 QString dns::getTarget(dns::ScanArgs *args){

@@ -15,6 +15,7 @@ namespace s3s_struct {
 struct RAW {
     QString target;
     QString module;
+    QString query_option;
     QByteArray results;
 };
 }
@@ -34,6 +35,7 @@ public:
 public:
     QString module;
     QString target;
+    QString query_option;
     QByteArray json;
 
     /* summary */
@@ -41,9 +43,10 @@ public:
     QString comment;
 
     void setValues(const s3s_struct::RAW &raw){
-        this->setText(QString("%1(%2)").arg(raw.module).arg(raw.target));
+        this->setText(QString("%1 [%2] [%3]").arg(raw.module).arg(raw.query_option).arg(raw.target));
         json = raw.results;
         module = raw.module;
+        query_option = raw.query_option;
         target = raw.target;
 
         QJsonDocument document = QJsonDocument::fromJson(json);

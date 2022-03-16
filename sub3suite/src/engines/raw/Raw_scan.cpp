@@ -59,6 +59,7 @@ void Raw::startScan(){
 
     m_scanArgs->outputRaw = true;
     m_scanArgs->rawOption = ui->comboBoxOptions->currentIndex();
+    m_scanArgs->queryOption = ui->comboBoxOptions->currentText();
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
 
     /* starting the appropriate scan... */

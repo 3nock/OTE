@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>753</width>
-    <height>543</height>
+    <width>796</width>
+    <height>567</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -168,7 +168,7 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>40</width>
            <height>0</height>
           </size>
          </property>
@@ -178,7 +178,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditName"/>
+        <widget class="QLineEdit" name="lineEditNew_name"/>
        </item>
       </layout>
      </item>
@@ -210,22 +210,22 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>30</width>
+           <width>40</width>
            <height>0</height>
           </size>
          </property>
          <property name="text">
-          <string>File:</string>
+          <string>Path:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditLocation"/>
+        <widget class="QLineEdit" name="lineEditNew_path"/>
        </item>
        <item>
         <widget class="QToolButton" name="buttonChooseNew">
          <property name="text">
-          <string>Choose file...</string>
+          <string>Choose Path...</string>
          </property>
         </widget>
        </item>
@@ -307,10 +307,10 @@
           <bool>false</bool>
          </attribute>
          <attribute name="verticalHeaderMinimumSectionSize">
-          <number>16</number>
+          <number>15</number>
          </attribute>
          <attribute name="verticalHeaderDefaultSectionSize">
-          <number>16</number>
+          <number>15</number>
          </attribute>
          <attribute name="verticalHeaderHighlightSections">
           <bool>false</bool>
@@ -329,7 +329,7 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>30</width>
+             <width>40</width>
              <height>0</height>
             </size>
            </property>
@@ -339,7 +339,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditExisting"/>
+          <widget class="QLineEdit" name="lineEditExisting_file"/>
          </item>
          <item>
           <widget class="QToolButton" name="buttonChooseExisting">

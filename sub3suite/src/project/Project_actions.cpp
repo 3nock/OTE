@@ -11,13 +11,15 @@ void Project::action_clear(){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::activeHost:
         model->activeHost->clear();
-        model->set_Host.clear();
+        model->map_activeHost.clear();
         break;
     case ExplorerType::activeWildcard:
         model->activeWildcard->clear();
+        model->map_activeWildcard.clear();
         break;
     case ExplorerType::activeDNS:
         model->activeDNS->clear();
+        model->map_activeDNS.clear();
         break;
     case ExplorerType::activeDNS_A:
         model->activeA->clear();
@@ -39,6 +41,7 @@ void Project::action_clear(){
         break;
     case ExplorerType::activeSSL:
         model->activeSSL->clear();
+        model->map_activeSSL.clear();
         break;
     case ExplorerType::activeSSL_sha1:
         model->activeSSL_sha1->clear();
@@ -51,6 +54,7 @@ void Project::action_clear(){
         break;
     case ExplorerType::activeURL:
         model->activeURL->clear();
+        model->map_activeURL.clear();
         break;
     case ExplorerType::passive_subdomainIp:
         model->passiveSubdomainIp->clear();
@@ -90,24 +94,31 @@ void Project::action_clear(){
         break;
     case ExplorerType::enum_IP:
         model->enumIp->clear();
+        model->map_enumIp.clear();
         break;
     case ExplorerType::enum_ASN:
         model->enumASN->clear();
+        model->map_enumASN.clear();
         break;
     case ExplorerType::enum_CIDR:
         model->enumCIDR->clear();
+        model->map_enumCIDR.clear();
         break;
     case ExplorerType::enum_NS:
         model->enumNS->clear();
+        model->map_enumNS.clear();
         break;
     case ExplorerType::enum_MX:
         model->enumMX->clear();
+        model->map_enumMX.clear();
         break;
     case ExplorerType::enum_Email:
         model->enumEmail->clear();
+        model->map_enumEmail.clear();
         break;
     case ExplorerType::enum_SSL:
         model->enumSSL->clear();
+        model->map_enumSSL.clear();
         break;
     case ExplorerType::raw:
         model->raw->clear();
@@ -116,6 +127,90 @@ void Project::action_clear(){
 
     model->setHeaderLabels();
     ui->labelCount->setNum(proxyModel->rowCount());
+    model->modified = true;
+}
+
+void Project::action_remove_duplicates(){
+    QStandardItemModel *choosen_model;
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeDNS_A:
+        choosen_model = model->activeA;
+        break;
+    case ExplorerType::activeDNS_AAAA:
+        choosen_model = model->activeAAAA;
+        break;
+    case ExplorerType::activeDNS_NS:
+        choosen_model = model->activeNS;
+        break;
+    case ExplorerType::activeDNS_MX:
+        choosen_model = model->activeMX;
+        break;
+    case ExplorerType::activeDNS_TXT:
+        choosen_model = model->activeTXT;
+        break;
+    case ExplorerType::activeDNS_CNAME:
+        choosen_model = model->activeCNAME;
+        break;
+    case ExplorerType::activeSSL_sha1:
+        choosen_model = model->activeSSL_sha1;
+        break;
+    case ExplorerType::activeSSL_sha256:
+        choosen_model = model->activeSSL_sha256;
+        break;
+    case ExplorerType::activeSSL_altNames:
+        choosen_model = model->activeSSL_altNames;
+        break;
+    case ExplorerType::passive_subdomainIp:
+        choosen_model = model->passiveSubdomainIp;
+        break;
+    case ExplorerType::passive_subdomain:
+        choosen_model = model->passiveSubdomain;
+        break;
+    case ExplorerType::passive_A:
+        choosen_model = model->passiveA;
+        break;
+    case ExplorerType::passive_AAAA:
+        choosen_model = model->passiveAAAA;
+        break;
+    case ExplorerType::passive_NS:
+        choosen_model = model->passiveNS;
+        break;
+    case ExplorerType::passive_MX:
+        choosen_model = model->passiveMX;
+        break;
+    case ExplorerType::passive_TXT:
+        choosen_model = model->passiveTXT;
+        break;
+    case ExplorerType::passive_CNAME:
+        choosen_model = model->passiveCNAME;
+        break;
+    case ExplorerType::passive_Email:
+        choosen_model = model->passiveEmail;
+        break;
+    case ExplorerType::passive_URL:
+        choosen_model = model->passiveUrl;
+        break;
+    case ExplorerType::passive_ASN:
+        choosen_model = model->passiveAsn;
+        break;
+    case ExplorerType::passive_SSL:
+        choosen_model = model->passiveSSL;
+        break;
+    default:
+        return;
+    }
+
+    QSet<QString> set;
+    for(int i = 0; i < choosen_model->rowCount(); i++){
+        if(set.contains(choosen_model->item(i,0)->text())){
+            choosen_model->removeRow(i);
+            i--;
+        }
+        else
+            set.insert(choosen_model->item(i,0)->text());
+    }
+    ui->labelCount->setNum(proxyModel->rowCount());
+    model->modified = true;
 }
 
 void Project::action_save(const RESULT_TYPE &result_type){
@@ -1533,12 +1628,22 @@ void Project::action_remove_selected(){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::activeHost:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            if(proxyIndex.column())
+                model->map_activeHost.remove(proxyModel->index(proxyIndex.row(), 0).data().toString());
+            else
+                model->map_activeHost.remove(proxyIndex.data().toString());
+
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
             model->activeHost->removeRow(index.row());
         }
         break;
     case ExplorerType::activeWildcard:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            if(proxyIndex.column())
+                model->map_activeWildcard.remove(proxyModel->index(proxyIndex.row(), 0).data().toString());
+            else
+                model->map_activeWildcard.remove(proxyIndex.data().toString());
+
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
             model->activeWildcard->removeRow(index.row());
         }
@@ -1546,8 +1651,10 @@ void Project::action_remove_selected(){
     case ExplorerType::activeDNS:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->activeDNS->invisibleRootItem()->index())
+            if(index.parent() == model->activeDNS->invisibleRootItem()->index()){
+                model->map_activeDNS.remove(proxyIndex.data().toString());
                 model->activeDNS->removeRow(index.row());
+            }
         }
         break;
     case ExplorerType::activeDNS_A:
@@ -1613,6 +1720,11 @@ void Project::action_remove_selected(){
         break;
     case ExplorerType::activeURL:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
+            if(proxyIndex.column())
+                model->map_activeURL.remove(proxyModel->index(proxyIndex.row(), 0).data().toString());
+            else
+                model->map_activeURL.remove(proxyIndex.data().toString());
+
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
             model->activeURL->removeRow(index.row());
         }
@@ -1692,50 +1804,64 @@ void Project::action_remove_selected(){
     case ExplorerType::enum_IP:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumIp->invisibleRootItem()->index())
+            if(index.parent() == model->enumIp->invisibleRootItem()->index()){
+                model->map_enumIp.remove(proxyIndex.data().toString());
                 model->enumIp->removeRow(index.row());
+            }
         }
         break;
     case ExplorerType::enum_ASN:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumASN->invisibleRootItem()->index())
+            if(index.parent() == model->enumASN->invisibleRootItem()->index()){
+                model->map_enumASN.remove(proxyIndex.data().toString());
                 model->enumASN->removeRow(index.row());
+            }
         }
         break;
     case ExplorerType::enum_CIDR:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumCIDR->invisibleRootItem()->index())
+            if(index.parent() == model->enumCIDR->invisibleRootItem()->index()){
+                model->map_enumCIDR.remove(proxyIndex.data().toString());
                 model->enumCIDR->removeRow(index.row());
+            }
         }
         break;
     case ExplorerType::enum_NS:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumNS->invisibleRootItem()->index())
+            if(index.parent() == model->enumNS->invisibleRootItem()->index()){
+                model->map_enumNS.remove(proxyIndex.data().toString());
                 model->enumNS->removeRow(index.row());
+            }
         }
         break;
     case ExplorerType::enum_MX:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumMX->invisibleRootItem()->index())
+            if(index.parent() == model->enumMX->invisibleRootItem()->index()){
+                model->map_enumMX.remove(proxyIndex.data().toString());
                 model->enumMX->removeRow(index.row());
+            }
         }
         break;
     case ExplorerType::enum_Email:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumEmail->invisibleRootItem()->index())
+            if(index.parent() == model->enumEmail->invisibleRootItem()->index()){
+                model->map_enumEmail.remove(proxyIndex.data().toString());
                 model->enumEmail->removeRow(index.row());
+            }
         }
         break;
     case ExplorerType::enum_SSL:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumSSL->invisibleRootItem()->index())
+            if(index.parent() == model->enumSSL->invisibleRootItem()->index()){
+                model->map_enumSSL.remove(proxyIndex.data().toString());
                 model->enumSSL->removeRow(index.row());
+            }
         }
         break;
     case ExplorerType::raw:
@@ -1748,13 +1874,15 @@ void Project::action_remove_selected(){
     }
 
     ui->labelCount->setNum(proxyModel->rowCount());
+    model->modified = true;
 }
 
-void Project::action_extract(bool subdomain, bool tld){
-    QSet<QString> hostnames;
+void Project::action_extract(bool subdomain, bool tld, bool url){
+    QSet<QString> items;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::activeHost:
+    case ExplorerType::activeURL:
     case ExplorerType::activeDNS_NS:
     case ExplorerType::activeDNS_MX:
     case ExplorerType::activeDNS_CNAME:
@@ -1764,8 +1892,9 @@ void Project::action_extract(bool subdomain, bool tld){
     case ExplorerType::passive_NS:
     case ExplorerType::passive_MX:
     case ExplorerType::passive_CNAME:
+    case ExplorerType::passive_URL:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            hostnames.insert(proxyModel->index(i,0).data().toString());
+            items.insert(proxyModel->index(i,0).data().toString());
         break;
     case ExplorerType::activeDNS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1773,11 +1902,11 @@ void Project::action_extract(bool subdomain, bool tld){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                hostnames.insert(item->CNAME->child(i, 1)->text());
+                items.insert(item->CNAME->child(i, 1)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                hostnames.insert(item->NS->child(i, 1)->text());
+                items.insert(item->NS->child(i, 1)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                hostnames.insert(item->MX->child(i, 1)->text());
+                items.insert(item->MX->child(i, 1)->text());
         }
         break;
     case ExplorerType::activeSSL:
@@ -1786,7 +1915,7 @@ void Project::action_extract(bool subdomain, bool tld){
             s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->activeSSL->itemFromIndex(model_index));
 
             for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
-                hostnames.insert(item->subjectAltNames->child(i, 1)->text());
+                items.insert(item->subjectAltNames->child(i, 1)->text());
         }
         break;
     case ExplorerType::enum_MX:
@@ -1795,7 +1924,7 @@ void Project::action_extract(bool subdomain, bool tld){
             s3s_item::MX *item = static_cast<s3s_item::MX*>(model->enumMX->itemFromIndex(model_index));
 
             for(int j = 0; j < item->domains->rowCount(); j++)
-                hostnames.insert(item->domains->child(i, 1)->text());
+                items.insert(item->domains->child(i, 1)->text());
         }
         break;
     case ExplorerType::enum_NS:
@@ -1804,7 +1933,7 @@ void Project::action_extract(bool subdomain, bool tld){
             s3s_item::NS *item = static_cast<s3s_item::NS*>(model->enumNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->domains->rowCount(); j++)
-                hostnames.insert(item->domains->child(i, 1)->text());
+                items.insert(item->domains->child(i, 1)->text());
         }
         break;
     case ExplorerType::enum_SSL:
@@ -1813,18 +1942,22 @@ void Project::action_extract(bool subdomain, bool tld){
             s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->enumSSL->itemFromIndex(model_index));
 
             for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
-                hostnames.insert(item->subjectAltNames->child(i, 1)->text());
+                items.insert(item->subjectAltNames->child(i, 1)->text());
         }
         break;
     }
 
     /* extracting and saving to a set to avoid repeatition */
     QSet<QString> extracts;
-    foreach(const QString &hostname, hostnames){
+    foreach(const QString &item, items){
         if(subdomain)
-            extracts.insert(hostname.split(".").at(0));
+            extracts.insert(item.split(".").at(0));
         if(tld)
-            extracts.insert(hostname.split(".").last());
+            extracts.insert(item.split(".").last());
+        if(url){
+            QString url = item;
+            extracts.insert(url.remove("https://").remove("http://").split("/").at(0));
+        }
     }
 
     /* setting the data to clipboard */
@@ -1836,18 +1969,22 @@ void Project::action_extract(bool subdomain, bool tld){
     clipboard->setText(data.trimmed());
 }
 
-void Project::action_extract_selected(bool subdomain, bool tld){
-    QSet<QString> hostnames;
+void Project::action_extract_selected(bool subdomain, bool tld, bool url){
+    QSet<QString> items;
     foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes())
-        hostnames.insert(proxyIndex.data().toString());
+        items.insert(proxyIndex.data().toString());
 
     /* extracting and saving to a set to avoid repeatition */
     QSet<QString> extracts;
-    foreach(const QString &hostname, hostnames){
+    foreach(const QString &item, items){
         if(subdomain)
-            extracts.insert(hostname.split(".").at(0));
+            extracts.insert(item.split(".").at(0));
         if(tld)
-            extracts.insert(hostname.split(".").last());
+            extracts.insert(item.split(".").last());
+        if(url){
+            QString url = item;
+            extracts.insert(url.remove("https://").remove("http://").split("/").at(0));
+        }
     }
 
     /* setting the data to clipboard */

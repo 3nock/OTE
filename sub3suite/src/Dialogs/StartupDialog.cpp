@@ -10,51 +10,66 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QMessageBox>
 
 
 StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(parent),
     ui(new Ui::StartupDialog),
     m_project(project),
-    existing_model(new QStandardItemModel)
+    model_existing(new QStandardItemModel)
 {
-    ui->setupUi(this);
+    this->initUI();
 
-    /* setting up logo */
-    QPixmap logo_sub3suite(":/img/res/icons/sub3suite.png");
-    logo_sub3suite.scaled(ui->labelS3S->width(), ui->labelS3S->height());
-    ui->labelS3S->setPixmap(logo_sub3suite);
-    ui->labelS3S->setScaledContents(true);
+    /* model for existing projects */
+    model_existing->setHorizontalHeaderLabels({"Name", "File"});
+    ui->tableViewProjects->setModel(model_existing);
 
-    /* ... */
-    existing_model->setHorizontalHeaderLabels({"Name", "File"});
-    ui->tableViewProjects->setModel(existing_model);
+    /* projects path */
+    ui->lineEditNew_path->setText(QGuiApplication::applicationDirPath()+"/projects");
 
     /* load recent projects */
-    CONFIG.beginGroup("recent_projects");
-    QStringList keys = CONFIG.childKeys();
+    CONFIG.beginGroup(CFG_GRP_RECENT);
+    QStringList projects = CONFIG.childKeys();
 
-    foreach(const QString &key, keys){
-        if(key == "none")
+    foreach(const QString &project, projects){
+        if(project == "none")
             continue;
 
-        QString projectfile = CONFIG.value(key).toString();
+        QString projectfile = CONFIG.value(project).toString();
 
         /* check if project file exists if it doesnt delete in recents */
         QFile file(projectfile);
         if(!file.exists()){
             qDebug() << "Project File: " << projectfile << " doesnt exists. Deleting from existing Projects";
-            CONFIG.remove(key);
+            CONFIG.remove(project);
+            continue;
         }
 
+        /* if project exists add to list */
         QFileInfo fileInfo(file.fileName());
-
-        /* add file to list */
-        existing_model->invisibleRootItem()->appendRow({new QStandardItem(fileInfo.fileName().split(".")[0]),
+        model_existing->invisibleRootItem()->appendRow({new QStandardItem(fileInfo.fileName().split(".")[0]),
                                                         new QStandardItem(projectfile)});
     }
     CONFIG.endGroup();
 
-    /* github account & twitter */
+    /* default option */
+    ui->radioButtonTemporary->setChecked(true);
+}
+StartupDialog::~StartupDialog(){
+    delete model_existing;
+    delete ui;
+}
+
+void StartupDialog::initUI(){
+    ui->setupUi(this);
+
+    /* sub3suite logo */
+    QPixmap logo_sub3suite(":/img/res/icons/sub3suite.png");
+    logo_sub3suite.scaled(ui->labelS3S->width(), ui->labelS3S->height());
+    ui->labelS3S->setPixmap(logo_sub3suite);
+    ui->labelS3S->setScaledContents(true);
+
+    /* github & twitter clickable labels */
     s3s_ClickableLabel *githubLabel = new s3s_ClickableLabel("", this);
     QPixmap github_logo(":/img/res/icons/github.png");
     githubLabel->setPixmap(github_logo.scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -73,37 +88,42 @@ StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(
         QDesktopServices::openUrl(QUrl("https://twitter.com/sub3suite", QUrl::TolerantMode));
     });
 }
-StartupDialog::~StartupDialog(){
-    delete existing_model;
-    delete ui;
-}
 
 void StartupDialog::on_buttonOpen_clicked(){
     if(ui->radioButtonTemporary->isChecked())
+    {
+        m_project->name = "Temp";
+        m_project->path = QGuiApplication::applicationDirPath()+"/projects/Temp.s3s";
         m_project->isTemporary = true;
+
+        accept();
+        return;
+    }
 
     if(ui->radioButtonNewProject->isChecked())
     {
-        if(!ui->lineEditName->text().isEmpty()){
-            QString projectName = ui->lineEditName->text();
-            m_project->name = projectName;
-            m_project->path = QGuiApplication::applicationDirPath()+"/projects/"+projectName+".s3s";
-            m_project->isNew = true;
-            accept();
+        QString projectName = ui->lineEditNew_name->text();
+        if(projectName.isEmpty()){
+            QMessageBox::warning(this, "Error!", "Please Enter Name for the New Project!");
             return;
         }
-        if(!ui->lineEditLocation->text().isEmpty()){
-            QFile file(ui->lineEditLocation->text());
-            if(file.exists())
-            {
-                QFileInfo fileInfo(file);
-                m_project->name = fileInfo.fileName().split(".")[0];
-                m_project->path = file.fileName();
-                m_project->isNew = true;
-            }
-            else
-                m_project->isTemporary = true;
+
+        QString projectPath = ui->lineEditNew_path->text();
+        QDir dir(projectPath);
+        if(!dir.exists()){
+            QMessageBox::warning(this, "Error!", "Please provide a valid path for the New project!");
+            return;
         }
+
+        if(!projectPath.endsWith("/"))
+            projectPath.append("/");
+
+        m_project->name = projectName;
+        m_project->path = projectPath+projectName+".s3s";
+        m_project->isNew = true;
+
+        accept();
+        return;
     }
 
     if(ui->radioButtonExistingProject->isChecked())
@@ -111,26 +131,37 @@ void StartupDialog::on_buttonOpen_clicked(){
         QItemSelectionModel *selection = ui->tableViewProjects->selectionModel();
         if(selection->selectedIndexes().isEmpty())
         {
-            if(!ui->lineEditExisting->text().isEmpty()){
-                QFile file(ui->lineEditExisting->text());
-                if(file.exists())
-                {
-                    QFileInfo fileInfo(file);
-                    m_project->name = fileInfo.fileName().split(".")[0];
-                    m_project->path = file.fileName();
-                    m_project->isExisting = true;
-                }
-            }else
-                m_project->isTemporary = true;
+            QString project = ui->lineEditExisting_file->text();
+            if(project.isEmpty()){
+                QMessageBox::warning(this, "Error!", "Please choose the project to open!");
+                return;
+            }
+
+            if(!project.endsWith(".s3s")){
+                QMessageBox::warning(this, "Error!", "Please choose a valid project file to open!");
+                return;
+            }
+
+            QFile file(project);
+            if(!file.exists()){
+                QMessageBox::warning(this, "Error!", "Please choose a valid project file to open!");
+                return;
+            }
+
+            QFileInfo fileInfo(file);
+            m_project->name = fileInfo.fileName().split(".")[0];
+            m_project->path = file.fileName();
+            m_project->isExisting = true;
         }
         else{
             m_project->name = selection->selectedIndexes()[0].data().toString();
             m_project->path = selection->selectedIndexes()[1].data().toString();
             m_project->isExisting = true;
         }
-    }
 
-    accept();
+        accept();
+        return;
+    }
 }
 
 void StartupDialog::on_buttonCancel_clicked(){
@@ -145,17 +176,26 @@ void StartupDialog::on_buttonAbout_clicked(){
 
 void StartupDialog::on_buttonChooseNew_clicked(){
     ui->radioButtonNewProject->setChecked(true);
-    QString filename = QFileDialog::getOpenFileName(this, "Open", ui->lineEditLocation->text(), "*.s3s");
-    if(filename.isEmpty())
+    QString path = QFileDialog::getExistingDirectory(this, "Choose Path", ui->lineEditNew_path->text());
+    if(path.isEmpty())
         return;
+
+    ui->lineEditNew_path->setText(path);
 }
 
 void StartupDialog::on_buttonChooseExisting_clicked(){
     ui->radioButtonExistingProject->setChecked(true);
-    QString filename = QFileDialog::getOpenFileName(this, "Open", ui->lineEditExisting->text(), "*.s3s");
+    QString filename = QFileDialog::getOpenFileName(this, "Choose File", ui->lineEditExisting_file->text(), "*.s3s");
     if(filename.isEmpty())
         return;
+
+    ui->lineEditExisting_file->setText(filename);
+    ui->tableViewProjects->clearSelection();
 }
+
+///
+/// radiobutton change...
+///
 
 void StartupDialog::on_tableViewProjects_pressed(const QModelIndex &index){
     Q_UNUSED(index);
@@ -163,19 +203,19 @@ void StartupDialog::on_tableViewProjects_pressed(const QModelIndex &index){
     ui->radioButtonExistingProject->setChecked(true);
 }
 
-void StartupDialog::on_lineEditExisting_textChanged(const QString &arg1){
+void StartupDialog::on_lineEditExisting_file_textChanged(const QString &arg1){
     Q_UNUSED(arg1);
 
     ui->radioButtonExistingProject->setChecked(true);
 }
 
-void StartupDialog::on_lineEditName_textChanged(const QString &arg1){
+void StartupDialog::on_lineEditNew_name_textChanged(const QString &arg1){
     Q_UNUSED(arg1);
 
     ui->radioButtonNewProject->setChecked(true);
 }
 
-void StartupDialog::on_lineEditLocation_textChanged(const QString &arg1){
+void StartupDialog::on_lineEditNew_path_textChanged(const QString &arg1){
     Q_UNUSED(arg1);
 
     ui->radioButtonNewProject->setChecked(true);

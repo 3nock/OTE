@@ -26,17 +26,16 @@ class StartupDialog : public QDialog{
         void on_buttonChooseNew_clicked();
         void on_buttonChooseExisting_clicked();
         void on_tableViewProjects_pressed(const QModelIndex &index);
+        void on_lineEditNew_name_textChanged(const QString &arg1);
+        void on_lineEditNew_path_textChanged(const QString &arg1);
+        void on_lineEditExisting_file_textChanged(const QString &arg1);
 
-        void on_lineEditName_textChanged(const QString &arg1);
-
-        void on_lineEditLocation_textChanged(const QString &arg1);
-
-        void on_lineEditExisting_textChanged(const QString &arg1);
-
-private:
+    private:
         Ui::StartupDialog *ui;
         ProjectStruct *m_project;
-        QStandardItemModel *existing_model;
+        QStandardItemModel *model_existing;
+
+        void initUI();
 };
 
 #endif // STARTUPDIALOG_H

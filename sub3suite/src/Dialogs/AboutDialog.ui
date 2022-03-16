@@ -218,10 +218,10 @@
           <bool>false</bool>
          </attribute>
          <attribute name="verticalHeaderMinimumSectionSize">
-          <number>20</number>
+          <number>15</number>
          </attribute>
          <attribute name="verticalHeaderDefaultSectionSize">
-          <number>20</number>
+          <number>15</number>
          </attribute>
          <attribute name="verticalHeaderHighlightSections">
           <bool>false</bool>
@@ -274,10 +274,10 @@
           <bool>false</bool>
          </attribute>
          <attribute name="verticalHeaderMinimumSectionSize">
-          <number>20</number>
+          <number>15</number>
          </attribute>
          <attribute name="verticalHeaderDefaultSectionSize">
-          <number>20</number>
+          <number>15</number>
          </attribute>
          <attribute name="verticalHeaderHighlightSections">
           <bool>false</bool>
@@ -327,10 +327,10 @@
           <bool>false</bool>
          </attribute>
          <attribute name="verticalHeaderMinimumSectionSize">
-          <number>20</number>
+          <number>15</number>
          </attribute>
          <attribute name="verticalHeaderDefaultSectionSize">
-          <number>20</number>
+          <number>15</number>
          </attribute>
          <attribute name="verticalHeaderHighlightSections">
           <bool>false</bool>

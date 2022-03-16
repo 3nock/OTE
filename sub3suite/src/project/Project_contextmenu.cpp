@@ -16,8 +16,8 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
     QMenu extractMenu(this);
     extractMenu.setTitle(tr("Extract"));
     extractMenu.setIcon(QIcon(":/img/res/icons/extract.png"));
-    extractMenu.addAction(tr("Subdomain(*.)"), this, [=](){this->action_extract_selected(true, false);});
-    extractMenu.addAction(tr("Top level domain(.*)"), this, [=](){this->action_extract_selected(false, true);});
+    extractMenu.addAction(tr("Subdomain"), this, [=](){this->action_extract_selected(true, false, false);});
+    extractMenu.addAction(tr("Top level domain"), this, [=](){this->action_extract_selected(false, true, false);});
 
     /* main menu */
     QMenu menu(this);
@@ -141,12 +141,16 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
         if(m_selectionModel->columnIntersectsSelection(0, m_selectionModel->currentIndex().parent())){
             menu.addAction(tr("Open in Browser"), this, [=](){this->action_openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
             menu.addSeparator();
+            menu.addAction(tr("Extract host"), this, [=](){this->action_extract_selected(false,false,true);});
+            menu.addSeparator();
             menu.addAction(tr("Send URL to OSINT"), this, [=](){this->action_send_selected_toEngine(ENGINE::OSINT, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
             menu.addAction(tr("Send URL to RAW"), this, [=](){this->action_send_selected_toEngine(ENGINE::RAW, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
             menu.addAction(tr("Send URL to URL"), this, [=](){this->action_send_selected_toEngine(ENGINE::URL, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
         }
         break;
     case ExplorerType::passive_subdomainIp:
+        menu.addAction(tr("Open in Browser"), this, [=](){this->action_openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
+        menu.addSeparator();
         if(m_selectionModel->columnIntersectsSelection(1, m_selectionModel->currentIndex().parent())){
             menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->action_send_selected_toEngine(ENGINE::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
             menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->action_send_selected_toEngine(ENGINE::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
@@ -154,6 +158,8 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
             menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->action_send_selected_toEnum(TOOL::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         }
         if(m_selectionModel->columnIntersectsSelection(0, m_selectionModel->currentIndex().parent())){
+            menu.addMenu(&extractMenu);
+            menu.addSeparator();
             menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->action_send_selected_toEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
             menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->action_send_selected_toEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
             menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->action_send_selected_toEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
@@ -174,14 +180,7 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
         menu.addSeparator();
         menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->action_send_selected_toEnum(TOOL::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         break;
-    case ExplorerType::enum_IP:
-    case ExplorerType::enum_ASN:
-    case ExplorerType::enum_CIDR:
-    case ExplorerType::enum_NS:
-    case ExplorerType::enum_MX:
-    case ExplorerType::enum_Email:
-    case ExplorerType::enum_SSL:
-    case ExplorerType::raw:
+    default:
         break;
     }
 
@@ -309,15 +308,38 @@ void Project::init_action_send(){
         menu_send->addSeparator();
         menu_send->addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->action_send_asn();})->setIcon(QIcon(":/img/res/icons/asn.png"));
         break;
-    case ExplorerType::enum_IP:
-    case ExplorerType::enum_ASN:
-    case ExplorerType::enum_CIDR:
-    case ExplorerType::enum_NS:
-    case ExplorerType::enum_MX:
-    case ExplorerType::enum_Email:
-    case ExplorerType::enum_SSL:
-    case ExplorerType::raw:
+    default:
         break;
+    }
+}
+
+void Project::init_action_extract(){
+    menu_extract->clear();
+
+    /* check if there are results available else dont show the context menu */
+    if(proxyModel->rowCount() < 1)
+        return;
+
+    switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::activeHost:
+    case ExplorerType::activeDNS_NS:
+    case ExplorerType::activeDNS_MX:
+    case ExplorerType::activeDNS_CNAME:
+    case ExplorerType::activeSSL_altNames:
+    case ExplorerType::passive_subdomainIp:
+    case ExplorerType::passive_subdomain:
+    case ExplorerType::passive_NS:
+    case ExplorerType::passive_MX:
+    case ExplorerType::passive_CNAME:
+        menu_extract->addAction(tr("Extract Subdomain"), this, [=](){this->action_extract(true,false,false);});
+        menu_extract->addAction(tr("Extract TLD"), this, [=](){this->action_extract(false,true,false);});
+        break;
+    case ExplorerType::passive_URL:
+    case ExplorerType::activeURL:
+        menu_extract->addAction("Extract Host", this, [=](){this->action_extract(false,false,true);});
+        break;
+    default:
+        return;
     }
 }
 
@@ -346,34 +368,7 @@ void Project::init_action_save(){
         menu_save->addAction(tr("Save Hostnames"), this, [=](){this->action_save(RESULT_TYPE::SUBDOMAIN);});
         menu_save->addAction(tr("Save IpAddresses"), this, [=](){this->action_save(RESULT_TYPE::IP);});
         break;
-    case ExplorerType::activeDNS:
-    case ExplorerType::activeDNS_A:
-    case ExplorerType::activeDNS_AAAA:
-    case ExplorerType::passive_A:
-    case ExplorerType::passive_AAAA:
-    case ExplorerType::activeDNS_NS:
-    case ExplorerType::passive_NS:
-    case ExplorerType::activeDNS_MX:
-    case ExplorerType::passive_MX:
-    case ExplorerType::activeDNS_CNAME:
-    case ExplorerType::passive_CNAME:
-    case ExplorerType::activeSSL_altNames:
-    case ExplorerType::passive_subdomain:
-    case ExplorerType::activeSSL_sha1:
-    case ExplorerType::activeSSL_sha256:
-    case ExplorerType::passive_SSL:
-    case ExplorerType::activeURL:
-    case ExplorerType::passive_URL:
-    case ExplorerType::passive_Email:
-    case ExplorerType::passive_ASN:
-    case ExplorerType::enum_IP:
-    case ExplorerType::enum_ASN:
-    case ExplorerType::enum_CIDR:
-    case ExplorerType::enum_NS:
-    case ExplorerType::enum_MX:
-    case ExplorerType::enum_Email:
-    case ExplorerType::enum_SSL:
-    case ExplorerType::raw:
+    default:
         menu_save->addAction(tr("Save All"), this, [=](){this->action_save(RESULT_TYPE::ITEM);});
         break;
     }
@@ -404,34 +399,7 @@ void Project::init_action_copy(){
         menu_copy->addAction(tr("Copy Hostnames"), this, [=](){this->action_copy(RESULT_TYPE::SUBDOMAIN);});
         menu_copy->addAction(tr("Copy IpAddresses"), this, [=](){this->action_copy(RESULT_TYPE::IP);});
         break;
-    case ExplorerType::activeDNS:
-    case ExplorerType::activeDNS_A:
-    case ExplorerType::activeDNS_AAAA:
-    case ExplorerType::passive_A:
-    case ExplorerType::passive_AAAA:
-    case ExplorerType::activeDNS_NS:
-    case ExplorerType::passive_NS:
-    case ExplorerType::activeDNS_MX:
-    case ExplorerType::passive_MX:
-    case ExplorerType::activeDNS_CNAME:
-    case ExplorerType::passive_CNAME:
-    case ExplorerType::activeSSL_altNames:
-    case ExplorerType::passive_subdomain:
-    case ExplorerType::activeSSL_sha1:
-    case ExplorerType::activeSSL_sha256:
-    case ExplorerType::passive_SSL:
-    case ExplorerType::activeURL:
-    case ExplorerType::passive_URL:
-    case ExplorerType::passive_Email:
-    case ExplorerType::passive_ASN:
-    case ExplorerType::enum_IP:
-    case ExplorerType::enum_ASN:
-    case ExplorerType::enum_CIDR:
-    case ExplorerType::enum_NS:
-    case ExplorerType::enum_MX:
-    case ExplorerType::enum_Email:
-    case ExplorerType::enum_SSL:
-    case ExplorerType::raw:
+    default:
         menu_copy->addAction(tr("Copy All"), this, [=](){this->action_copy(RESULT_TYPE::ITEM);});
         break;
     }

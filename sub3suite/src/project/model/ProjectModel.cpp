@@ -142,7 +142,6 @@ void ProjectModel::setHeaderLabels(){
 
 void ProjectModel::clearModels(){
     activeHost->clear();
-    set_Host.clear();
     activeWildcard->clear();
     activeDNS->clear();
     activeA->clear();
@@ -178,6 +177,19 @@ void ProjectModel::clearModels(){
     enumSSL->clear();
     enumEmail->clear();
     raw->clear();
+
+    map_activeHost.clear();
+    map_activeWildcard.clear();
+    map_activeDNS.clear();
+    map_activeSSL.clear();
+    map_activeURL.clear();
+    map_enumIp.clear();
+    map_enumASN.clear();
+    map_enumCIDR.clear();
+    map_enumNS.clear();
+    map_enumMX.clear();
+    map_enumSSL.clear();
+    map_enumEmail.clear();
 
     this->setHeaderLabels();
 }

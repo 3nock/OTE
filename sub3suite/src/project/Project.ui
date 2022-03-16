@@ -84,6 +84,11 @@
          </property>
          <item>
           <widget class="QTreeView" name="treeViewExplorer">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+            </font>
+           </property>
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -164,6 +169,11 @@
          </item>
          <item>
           <widget class="QTreeView" name="treeViewTree">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+            </font>
+           </property>
            <property name="contextMenuPolicy">
             <enum>Qt::CustomContextMenu</enum>
            </property>
@@ -321,7 +331,7 @@
           <number>2</number>
          </property>
          <item>
-          <widget class="QPlainTextEdit" name="plainTextEdit"/>
+          <widget class="QPlainTextEdit" name="plainTextEditNotes"/>
          </item>
         </layout>
        </widget>

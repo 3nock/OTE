@@ -10,6 +10,7 @@
 
 #include <QSet>
 #include <QStandardItemModel>
+#include <QTextDocument>
 
 #include "src/items/ASNItem.h"
 #include "src/items/CIDRItem.h"
@@ -19,6 +20,7 @@
 #include "src/items/EmailItem.h"
 #include "src/items/DNSItem.h"
 #include "src/items/URLItem.h"
+#include "src/items/SSLItem.h"
 #include "src/items/HostItem.h"
 #include "src/items/RawItem.h"
 #include "src/items/WildcardItem.h"
@@ -69,7 +71,6 @@ public:
     void addActiveDNS(const s3s_struct::DNS &dns);
     void addActiveURL(const s3s_struct::URL &url);
     void addActiveSSL(const QString &target, const QSslCertificate &cert);
-    void addActiveSSL(const QByteArray &cert);
     void addActiveSSL_hash(const QString &hash);
     void addActiveSSL_sha1(const QString &sha1);
     void addActiveSSL_sha256(const QString &sha256);
@@ -101,7 +102,10 @@ public:
     void addRaw(const s3s_struct::RAW &raw);
 
 public:
+    bool modified = false;
+    QTextDocument notes;
     Explorer *explorer;
+
     /* active Results Model */
     QStandardItemModel *activeHost;
     QStandardItemModel *activeWildcard;
@@ -143,12 +147,22 @@ public:
     /* custom models */
     QStandardItemModel *raw;
 
-    /* sets */
-    QMap<QString, s3s_item::HOST*> set_Host;
+    /* item's maps */
+    QMap<QString, s3s_item::HOST*> map_activeHost;
+    QMap<QString, s3s_item::Wildcard*> map_activeWildcard;
+    QMap<QString, s3s_item::DNS*> map_activeDNS;
+    QMap<QString, s3s_item::SSL*> map_activeSSL;
+    QMap<QString, s3s_item::URL*> map_activeURL;
+    QMap<QString, s3s_item::IP*> map_enumIp;
+    QMap<QString, s3s_item::ASN*> map_enumASN;
+    QMap<QString, s3s_item::CIDR*> map_enumCIDR;
+    QMap<QString, s3s_item::NS*> map_enumNS;
+    QMap<QString, s3s_item::MX*> map_enumMX;
+    QMap<QString, s3s_item::SSL*> map_enumSSL;
+    QMap<QString, s3s_item::Email*> map_enumEmail;
 
 private:
     QByteArray getJson();
-    QByteArray m_project_hash;
 };
 
 #endif // PROJECTMODEL_H

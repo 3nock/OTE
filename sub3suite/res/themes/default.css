@@ -538,8 +538,9 @@ QProgressBar {
     border-style: inset;
     color: black;
     background-color: rgb(40,40,40);
-    min-height: 22px;
     min-width: 200px;
+    max-width: 200px;
+    min-height: 22px;
 }
 
 QProgressBar::chunk {

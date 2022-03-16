@@ -65,19 +65,20 @@ class Scanner: public AbstractScanner {
     Q_OBJECT
 
     public:
-        Scanner(dns::ScanArgs *args);
+        explicit Scanner(dns::ScanArgs *args);
         ~Scanner() override;
 
     private slots:
         void lookup() override;
 
-        void srvLookupFinished();
-        void aLookupFinished();
-        void aaaaLookupFinished();
-        void mxLookupFinished();
-        void cnameLookupFinished();
-        void nsLookupFinished();
-        void txtLookupFinished();
+        void lookupFinished_srv();
+        void lookupFinished_a();
+        void lookupFinished_aaaa();
+        void lookupFinished_mx();
+        void lookupFinished_ns();
+        void lookupFinished_txt();
+        void lookupFinished_cname();
+        void lookupFinished_any();
 
     signals:
         void scanResult(s3s_struct::DNS);
@@ -86,6 +87,7 @@ class Scanner: public AbstractScanner {
 
     private:
         int m_activeLookups = 0;
+
         QString m_currentTarget;
         int m_currentSrvWordlist = 0;
 
@@ -98,6 +100,7 @@ class Scanner: public AbstractScanner {
         QDnsLookup *m_dns_txt;
         QDnsLookup *m_dns_cname;
         QDnsLookup *m_dns_srv;
+        QDnsLookup *m_dns_any;
 };
 
 QString getTarget(dns::ScanArgs *args);
