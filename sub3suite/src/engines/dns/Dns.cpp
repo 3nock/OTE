@@ -91,7 +91,7 @@ void Dns::on_buttonStart_clicked(){
             QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Targets for Enumeration!"));
             return;
         }
-        if((!ui->checkBoxSRV->isChecked()) && (!ui->checkBoxA->isChecked() && !ui->checkBoxAAAA->isChecked() && !ui->checkBoxMX->isChecked() && !ui->checkBoxNS->isChecked() && !ui->checkBoxTXT->isChecked() && !ui->checkBoxCNAME->isChecked())){
+        if((!ui->checkBoxSRV->isChecked()) && (!ui->checkBoxANY->isChecked() && !ui->checkBoxA->isChecked() && !ui->checkBoxAAAA->isChecked() && !ui->checkBoxMX->isChecked() && !ui->checkBoxNS->isChecked() && !ui->checkBoxTXT->isChecked() && !ui->checkBoxCNAME->isChecked())){
             QMessageBox::warning(this, tr("Error!"), tr("Please Choose DNS Record To Enumerate!"));
             return;
         }
@@ -190,6 +190,7 @@ void Dns::on_checkBoxSRV_clicked(bool checked){
 void Dns::initConfigValues(){
     CONFIG.beginGroup(CFG_DNS);
     m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
+    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
     m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
     CONFIG.endGroup();
@@ -217,6 +218,27 @@ void Dns::on_lineEditFilter_textChanged(const QString &filterKeyword){
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void Dns::on_comboBoxFilter_currentIndexChanged(int index){
+void Dns::on_checkBoxANY_toggled(bool checked){
+    if(checked){
+        ui->checkBoxA->setChecked(false);
+        ui->checkBoxMX->setChecked(false);
+        ui->checkBoxNS->setChecked(false);
+        ui->checkBoxSRV->setChecked(false);
+        ui->checkBoxTXT->setChecked(false);
+        ui->checkBoxAAAA->setChecked(false);
+        ui->checkBoxCNAME->setChecked(false);
+    }
+    ui->srvWordlist->hide();
+}
 
+void Dns::on_checkBoxSRV_toggled(bool checked){
+    if(checked){
+        ui->checkBoxA->setChecked(false);
+        ui->checkBoxMX->setChecked(false);
+        ui->checkBoxNS->setChecked(false);
+        ui->checkBoxANY->setChecked(false);
+        ui->checkBoxTXT->setChecked(false);
+        ui->checkBoxAAAA->setChecked(false);
+        ui->checkBoxCNAME->setChecked(false);
+    }
 }

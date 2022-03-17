@@ -30,19 +30,31 @@ void Dns::startScan(){
         m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
     }
 
-    /* getting srv wordlist if checked */
-    if(ui->checkBoxSRV->isChecked())
-        m_scanArgs->srvWordlist = m_srvWordlitsModel->stringList();
-
-    /*
+    /* getting srv wordlist if checked &
      if the numner of threads is greater than the number of wordlists, set the
      number of threads to use to the number of wordlists available to avoid
      creating more threads than needed...
     */
-    if(m_scanArgs->config->threads > m_scanArgs->targets.length())
-        status->activeScanThreads = m_scanArgs->targets.length();
-    else
-        status->activeScanThreads = m_scanArgs->config->threads;
+    if(ui->checkBoxSRV->isChecked()){
+        m_scanArgs->srvWordlist = m_srvWordlitsModel->stringList();
+
+        if(m_scanArgs->config->threads > m_scanArgs->srvWordlist.length())
+            status->activeScanThreads = m_scanArgs->srvWordlist.length();
+        else
+            status->activeScanThreads = m_scanArgs->config->threads;
+
+        m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
+        /* set progressbar maximum value */
+        ui->progressBar->setMaximum(m_scanArgs->targets.length()*m_scanArgs->srvWordlist.length());
+    }
+    else {
+        if(m_scanArgs->config->threads > m_scanArgs->targets.length())
+            status->activeScanThreads = m_scanArgs->targets.length();
+        else
+            status->activeScanThreads = m_scanArgs->config->threads;
+        /* set progressbar maximum value */
+        ui->progressBar->setMaximum(m_scanArgs->targets.length());
+    }
 
     /* renewing scan statistics */
     m_scanStats->failed = 0;
@@ -51,10 +63,8 @@ void Dns::startScan(){
     m_scanStats->targets = m_scanArgs->targets.length();
     m_scanStats->nameservers = m_scanArgs->config->nameservers.length();
 
-    /* set progressbar maximum value */
-    ui->progressBar->setMaximum(m_scanArgs->targets.length());
-
     /* getting the arguments for Dns Records Scan... */
+    m_scanArgs->currentSRV = 0;
     m_scanArgs->progress = 0;
     m_scanArgs->RecordType_a = ui->checkBoxA->isChecked();
     m_scanArgs->RecordType_aaaa = ui->checkBoxAAAA->isChecked();
@@ -76,9 +86,12 @@ void Dns::startScan(){
         scanner->startScan(cThread);
         scanner->moveToThread(cThread);
 
+        if(m_scanArgs->RecordType_srv)
+            connect(scanner, &dns::Scanner::scanResult, this, &Dns::onScanResult_srv);
+        else
+            connect(scanner, &dns::Scanner::scanResult, this, &Dns::onScanResult);
         connect(scanner, &dns::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
         connect(scanner, &dns::Scanner::scanLog, this, &Dns::onScanLog);
-        connect(scanner, &dns::Scanner::scanResult, this, &Dns::onScanResult);
         connect(cThread, &QThread::finished, this, &Dns::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &QThread::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

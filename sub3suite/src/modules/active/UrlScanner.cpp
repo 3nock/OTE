@@ -23,27 +23,37 @@ url::Scanner::~Scanner(){
 }
 
 void url::Scanner::lookupFinished(QNetworkReply *reply){
-    /* scan progress */
-    m_args->progress++;
-    emit scanProgress(m_args->progress);
-
-    if(reply->error()){
+    switch (reply->error()) {
+    case QNetworkReply::OperationCanceledError:
+    {
+        scan::Log log;
+        log.target = reply->url().toString();
+        log.message = "Operation Cancelled due to Timeout";
+        emit scanLog(log);
+    }
+        break;
+    case QNetworkReply::NoError:
+    {
+        s3s_struct::URL url;
+        url.url = reply->url().toString();
+        url.status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        url.banner = reply->header(QNetworkRequest::ServerHeader).toString();
+        url.content_type = reply->header(QNetworkRequest::ContentTypeHeader).toString();
+        emit scanResult(url);
+    }
+        break;
+    default:
+    {
         scan::Log log;
         log.target = reply->url().toString();
         log.message = reply->errorString();
         emit scanLog(log);
-
-        /* goto next target */
-        emit next();
-        return;
+    }
+        break;
     }
 
-    s3s_struct::URL url;
-    url.url = reply->url().toString();
-    url.status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    url.banner = reply->header(QNetworkRequest::ServerHeader).toString();
-    url.content_type = reply->header(QNetworkRequest::ContentTypeHeader).toString();
-    emit scanResult(url);
+    m_args->progress++;
+    emit scanProgress(m_args->progress);
     emit next();
 }
 

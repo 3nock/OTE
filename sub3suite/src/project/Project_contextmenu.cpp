@@ -31,8 +31,6 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::activeHost:
         menu.addAction(tr("Open in Browser"), this, [=](){this->action_openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
-        if(m_selectionModel->columnIntersectsSelection(0, m_selectionModel->currentIndex().parent()))
-            menu.addMenu(&extractMenu);
         menu.addSeparator();
         if(m_selectionModel->columnIntersectsSelection(1, m_selectionModel->currentIndex().parent()) ||
            m_selectionModel->columnIntersectsSelection(2, m_selectionModel->currentIndex().parent())){
@@ -41,6 +39,8 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
             menu.addSeparator();
         }
         if(m_selectionModel->columnIntersectsSelection(0, m_selectionModel->currentIndex().parent())){
+            menu.addMenu(&extractMenu);
+            menu.addSeparator();
             menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->action_send_selected_toEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
             menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->action_send_selected_toEngine(ENGINE::RAW, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
             menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->action_send_selected_toEngine(ENGINE::BRUTE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
@@ -141,7 +141,7 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
         if(m_selectionModel->columnIntersectsSelection(0, m_selectionModel->currentIndex().parent())){
             menu.addAction(tr("Open in Browser"), this, [=](){this->action_openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
             menu.addSeparator();
-            menu.addAction(tr("Extract host"), this, [=](){this->action_extract_selected(false,false,true);});
+            menu.addAction(tr("Extract host"), this, [=](){this->action_extract_selected(false,false,true);})->setIcon(QIcon(":/img/res/icons/extract.png"));
             menu.addSeparator();
             menu.addAction(tr("Send URL to OSINT"), this, [=](){this->action_send_selected_toEngine(ENGINE::OSINT, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
             menu.addAction(tr("Send URL to RAW"), this, [=](){this->action_send_selected_toEngine(ENGINE::RAW, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));

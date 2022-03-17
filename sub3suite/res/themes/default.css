@@ -530,6 +530,19 @@ QLineEdit:!disabled {
     background-color: rgb(30, 30, 30);
 }
 
+QLineEdit:disabled {
+    min-height: 18px;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: rgb(20,20,20);
+    border-style: inset;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: grey;
+    background-color: rgb(30, 30, 30);
+}
 /****************************** ProgressBar ******************************/
 QProgressBar {
     text-align: center;

@@ -34,6 +34,7 @@ class Dns : public AbstractEngine{
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
         void onScanResult(s3s_struct::DNS result);
+        void onScanResult_srv(s3s_struct::DNS result);
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
@@ -48,7 +49,9 @@ class Dns : public AbstractEngine{
         void on_checkBoxSRV_clicked(bool checked);
         void on_lineEditTarget_returnPressed();
         void on_lineEditFilter_textChanged(const QString &arg1);
-        void on_comboBoxFilter_currentIndexChanged(int index);
+
+        void on_checkBoxANY_toggled(bool checked);
+        void on_checkBoxSRV_toggled(bool checked);
 
     private:
         Ui::Dns *ui;

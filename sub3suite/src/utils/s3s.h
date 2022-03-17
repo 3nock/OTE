@@ -31,6 +31,36 @@ class s3s_ClickableLabel : public QLabel{
        void mousePressEvent(QMouseEvent *event) { Q_UNUSED(event); emit clicked(); }
 };
 
+///
+/// timeout for QDnsLookup
+///
+class s3s_LookupTimeout : public QObject {
+    Q_OBJECT
+public:
+    s3s_LookupTimeout(QDnsLookup* dns, const int timeout) :
+        QObject(dns)
+    {
+        Q_ASSERT(dns);
+        if (dns && !dns->isFinished())
+            m_timer.start(timeout, this);
+    }
+    static void set(QDnsLookup* dns, const int timeout){
+        new s3s_LookupTimeout(dns, timeout);
+    }
+
+protected:
+    QBasicTimer m_timer;
+    void timerEvent(QTimerEvent * ev) {
+        if (!m_timer.isActive() || ev->timerId() != m_timer.timerId())
+            return;
+        QDnsLookup* dns = static_cast<QDnsLookup*>(parent());
+        if (!dns->isFinished())
+        {
+            dns->abort();
+            m_timer.stop();
+        }
+    }
+};
 
 ///
 /// timeout for QNetworkReply custom implementation since versions < Qt 5.15 have no reply timer
@@ -43,10 +73,8 @@ public:
         QObject(reply), m_method(method)
     {
         Q_ASSERT(reply);
-        if (reply && reply->isRunning()) {
+        if (reply && reply->isRunning())
             m_timer.start(timeout, this);
-            connect(reply, &QNetworkReply::finished, this, &QObject::deleteLater);
-        }
     }
     static void set(QNetworkReply* reply, const int timeout, HandleMethod method = Abort)
     {
@@ -59,7 +87,7 @@ protected:
     void timerEvent(QTimerEvent * ev) {
         if (!m_timer.isActive() || ev->timerId() != m_timer.timerId())
             return;
-        auto reply = static_cast<QNetworkReply*>(parent());
+        QNetworkReply *reply = static_cast<QNetworkReply*>(parent());
         if (reply->isRunning())
         {
             if (m_method == Close)
@@ -97,54 +125,6 @@ class s3sNetworkAccessManager: public QNetworkAccessManager {
 
     private:
         int m_timeout;
-};
-
-///
-/// \brief The s3s_NetworkReply class, able to set errorstring when operation is
-/// canceled due to timeout
-///
-class s3s_NetworkReply : public QNetworkReply {
-    s3s_NetworkReply(): QNetworkReply()
-    {
-    }
-    ~s3s_NetworkReply()
-    {
-    }
-
-    void setTimeoutError(){
-        setErrorString("Operation canceled due to timeout");
-    }
-};
-
-///
-/// timeout for QDnsLookup
-///
-class s3s_LookupTimeout : public QObject {
-    Q_OBJECT
-public:
-    s3s_LookupTimeout(QDnsLookup* dns, const int timeout) :
-        QObject(dns)
-    {
-        Q_ASSERT(dns);
-        if (dns && !dns->isFinished())
-            m_timer.start(timeout, this);
-    }
-    static void set(QDnsLookup* dns, const int timeout){
-        new s3s_LookupTimeout(dns, timeout);
-    }
-
-protected:
-    QBasicTimer m_timer;
-    void timerEvent(QTimerEvent * ev) {
-        if (!m_timer.isActive() || ev->timerId() != m_timer.timerId())
-            return;
-        QDnsLookup* dns = static_cast<QDnsLookup*>(parent());
-        if (!dns->isFinished())
-        {
-            dns->abort();
-            m_timer.stop();
-        }
-    }
 };
 
 #endif // S3S_H

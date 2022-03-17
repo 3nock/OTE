@@ -6,6 +6,7 @@
 */
 
 #include "ActiveScanner.h"
+#include "src/utils/s3s.h"
 
 
 active::Scanner::Scanner(active::ScanArgs *args): AbstractScanner(nullptr),
@@ -29,6 +30,13 @@ active::Scanner::~Scanner(){
 void active::Scanner::lookupFinished(){
     switch(m_dns->error()){
     case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::OperationCancelledError:
+        log.message = "Operation Cancelled due to Timeout";
+        log.target = m_dns->name();
+        log.nameserver = m_dns->nameserver().toString();
+        emit scanLog(log);
         break;
 
     case QDnsLookup::NoError:
@@ -90,6 +98,7 @@ void active::Scanner::lookup(){
     switch (getTarget(m_dns, m_args)) {
     case RETVAL::LOOKUP:
         m_dns->lookup();
+        s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
         break;
     case RETVAL::QUIT:
         emit quitThread();

@@ -280,10 +280,20 @@ class AbstractOsintModule : public QObject {
         }
 
         void onError(QNetworkReply *reply){
-            log.target = target;
-            log.message = reply->errorString();
-            log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-            emit errorLog(log);
+            switch(reply->error()){
+            case QNetworkReply::OperationCanceledError:
+                log.target = target;
+                log.message = "Operation Cancelled due to Timeout";
+                log.statusCode = 0;
+                emit errorLog(log);
+                break;
+            default:
+                log.target = target;
+                log.message = reply->errorString();
+                log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+                emit errorLog(log);
+                break;
+            }
 
             /* has its own end */
             reply->close();

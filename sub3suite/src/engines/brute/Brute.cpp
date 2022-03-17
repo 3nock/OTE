@@ -239,6 +239,7 @@ void Brute::log(const QString &log){
 void Brute::initConfigValues(){
     CONFIG.beginGroup(CFG_BRUTE);
     m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
+    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
     m_scanArgs->config->levels = CONFIG.value(CFG_VAL_MAXLEVEL).toInt();
     m_scanArgs->config->checkWildcard = CONFIG.value(CFG_VAL_WILDCARD).toBool();
     m_scanArgs->config->multiLevelScan = CONFIG.value(CFG_VAL_LEVEL).toInt();

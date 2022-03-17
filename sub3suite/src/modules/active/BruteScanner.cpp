@@ -6,6 +6,7 @@
 */
 
 #include "BruteScanner.h"
+#include "src/utils/s3s.h"
 
 
 brute::Scanner::Scanner(brute::ScanArgs *args): AbstractScanner(nullptr),
@@ -31,6 +32,13 @@ brute::Scanner::~Scanner(){
 void brute::Scanner::lookupFinished(){
     switch(m_dns->error()){
     case QDnsLookup::NotFoundError:
+        break;
+
+    case QDnsLookup::OperationCancelledError:
+        log.message = "Operation Cancelled due to Timeout";
+        log.target = m_dns->name();
+        log.nameserver = m_dns->nameserver().toString();
+        emit scanLog(log);
         break;
 
     case QDnsLookup::NoError:
@@ -103,6 +111,7 @@ void brute::Scanner::lookup(){
         switch(brute::getTarget_reScan(m_dns, m_args)){
         case RETVAL::LOOKUP:
             m_dns->lookup();
+            s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
             break;
         case RETVAL::QUIT:
             emit quitThread();
@@ -119,6 +128,7 @@ void brute::Scanner::lookup(){
         switch(brute::getTarget_subdomain(this, m_dns, m_args)){
         case RETVAL::LOOKUP:
             m_dns->lookup();
+            s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
             break;
         case RETVAL::NEXT_LEVEL:
             emit nextLevel();
@@ -138,6 +148,7 @@ void brute::Scanner::lookup(){
         switch(brute::getTarget_tld(m_dns, m_args)){
         case RETVAL::LOOKUP:
             m_dns->lookup();
+            s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
             break;
         case RETVAL::NEXT_LEVEL:
             emit nextLevel();
@@ -162,6 +173,7 @@ void brute::Scanner::lookup_wildcard(){
     m_dns_wildcard->setNameserver(m_dns->nameserver());
     m_dns_wildcard->setName(m_args->currentTarget);
     m_dns_wildcard->lookup();
+    s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
 }
 
 void brute::Scanner::lookupFinished_wildcard(){

@@ -263,7 +263,7 @@ void MXEnum::sendSelectedToEngine(const ENGINE &engine){
 ///
 
 void MXEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::EMAIL)
+    if(resultType == RESULT_TYPE::MX)
         ui->targets->add(targets);
 
     /* set multiple targets checkbox checked */

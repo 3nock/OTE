@@ -39,6 +39,7 @@ struct ScanConfig{ // scan configurations
     QQueue<QString> nameservers;
     int levels = 0;
     int threads = 50;
+    int timeout = 1000;
 
     bool noDuplicates = false;
     bool autoSaveToProject = false;

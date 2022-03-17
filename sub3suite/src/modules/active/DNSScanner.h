@@ -39,6 +39,7 @@ struct ScanStat {  // scan statistics
 struct ScanConfig { // scan configurations
     QQueue<QString> nameservers;
     int threads = 50;
+    int timeout = 1000;
 
     bool noDuplicates = false;
     bool autoSaveToProject = false;
@@ -49,6 +50,8 @@ struct ScanArgs {   // scan arguments
     QQueue<QString> targets;
     dns::ScanConfig *config;
     QStringList srvWordlist;
+    QString currentTarget;
+    int currentSRV;
     int progress;
 
     bool RecordType_a;
@@ -70,7 +73,6 @@ class Scanner: public AbstractScanner {
 
     private slots:
         void lookup() override;
-
         void lookupFinished_srv();
         void lookupFinished_a();
         void lookupFinished_aaaa();
@@ -82,16 +84,16 @@ class Scanner: public AbstractScanner {
 
     signals:
         void scanResult(s3s_struct::DNS);
-        void finish();
         void next();
 
     private:
         int m_activeLookups = 0;
 
+        bool has_record;
         QString m_currentTarget;
-        int m_currentSrvWordlist = 0;
 
         dns::ScanArgs *m_args;
+        s3s_struct::DNS m_result;
 
         QDnsLookup *m_dns_a;
         QDnsLookup *m_dns_aaaa;
@@ -104,6 +106,7 @@ class Scanner: public AbstractScanner {
 };
 
 QString getTarget(dns::ScanArgs *args);
+RETVAL getTarget_srv(QDnsLookup *dns, dns::ScanArgs *args);
 
 }
 #endif // DNSRECORDSSCANNER_H

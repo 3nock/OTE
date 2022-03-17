@@ -92,6 +92,16 @@ public:
     QString last_modified;
     QString comment;
 
+    void addSRV(const s3s_struct::DNS &dns){
+        foreach(const QStringList &srv, dns.SRV)
+            SRV->appendRow({new QStandardItem(srv.at(0)),
+                           new QStandardItem(srv.at(1)),
+                           new QStandardItem(srv.at(2))});
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
+    }
+
     void setValues(const s3s_struct::DNS &dns){
         /* append to DNS item */
         if(!dns.A.isEmpty() && !_A){
