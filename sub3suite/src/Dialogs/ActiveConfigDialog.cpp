@@ -41,7 +41,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, active::ScanConfig *conf
     this->m_loadConfigActive();
 
     /* hiding unused widgets */
-    ui->groupBoxLevel->hide();
+    ui->checkBoxWildcards->hide();
 }
 
 /* for records... */
@@ -59,7 +59,6 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config)
     this->m_loadConfigDns();
 
     /* hiding unused widgets */
-    ui->groupBoxLevel->hide();
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
     ui->radioButtonAAAA->hide();
@@ -82,7 +81,6 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
     this->m_loadConfigSSL();
 
     /* hiding unused widgets */
-    ui->groupBoxLevel->hide();
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
     ui->radioButtonAAAA->hide();
@@ -106,7 +104,6 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, url::ScanConfig *config)
     this->m_loadConfigURL();
 
     /* hiding unused widgets */
-    ui->groupBoxLevel->hide();
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
     ui->radioButtonAAAA->hide();
@@ -144,12 +141,10 @@ void ActiveConfigDialog::m_initWidgets(){
     /* setting placeholdertxts... */
     ui->lineEditTimeout->setPlaceholderText("e.g. 3");
     ui->lineEditThreads->setPlaceholderText("e.g. 100");
-    ui->lineEditLevels->setPlaceholderText("e.g. 2");
 
     /* setting validators... */
     ui->lineEditTimeout->setValidator(new QIntValidator(1, 1000, this));
     ui->lineEditThreads->setValidator(new QIntValidator(1, 200, this));
-    ui->lineEditLevels->setValidator(new QIntValidator(1, 5, this));
 
     /* custom-nameserver list */
     ui->customNameservers->setListName("Namerserver");
@@ -164,9 +159,7 @@ void ActiveConfigDialog::m_loadConfigBrute(){
     CONFIG.beginGroup(CFG_BRUTE);
     ui->lineEditThreads->setText(CONFIG.value(CFG_VAL_THREADS).toString());
     ui->lineEditTimeout->setText(CONFIG.value(CFG_VAL_TIMEOUT).toString());
-    ui->lineEditLevels->setText(CONFIG.value(CFG_VAL_MAXLEVEL).toString());
     ui->checkBoxWildcards->setChecked(CONFIG.value(CFG_VAL_WILDCARD).toBool());
-    ui->groupBoxLevel->setChecked(CONFIG.value(CFG_VAL_LEVEL).toInt());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();
@@ -203,7 +196,6 @@ void ActiveConfigDialog::m_loadConfigActive(){
     CONFIG.beginGroup(CFG_ACTIVE);
     ui->lineEditTimeout->setText(CONFIG.value(CFG_VAL_TIMEOUT).toString());
     ui->lineEditThreads->setText(CONFIG.value(CFG_VAL_THREADS).toString());
-    ui->checkBoxWildcards->setChecked(CONFIG.value(CFG_VAL_WILDCARD).toBool());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();
@@ -291,10 +283,8 @@ void ActiveConfigDialog::m_saveBrute(){
 
     QString thread = ui->lineEditThreads->text();
     QString timeout = ui->lineEditTimeout->text();
-    QString maxlevel = ui->lineEditLevels->text();
 
     bool wildcard = ui->checkBoxWildcards->isChecked();
-    bool useLevel = ui->groupBoxLevel->isChecked();
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
 
@@ -312,8 +302,6 @@ void ActiveConfigDialog::m_saveBrute(){
     CONFIG.beginGroup(CFG_BRUTE);
     CONFIG.setValue(CFG_VAL_THREADS, thread);
     CONFIG.setValue(CFG_VAL_TIMEOUT, timeout);
-    CONFIG.setValue(CFG_VAL_MAXLEVEL, maxlevel);
-    CONFIG.setValue(CFG_VAL_LEVEL, useLevel);
     CONFIG.setValue(CFG_VAL_WILDCARD, wildcard);
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
@@ -346,10 +334,8 @@ void ActiveConfigDialog::m_saveBrute(){
 
     m_configBrute->threads = thread.toInt();
     m_configBrute->timeout = timeout.toInt();
-    m_configBrute->levels = maxlevel.toInt();
 
     m_configBrute->checkWildcard =  wildcard;
-    m_configBrute->multiLevelScan = useLevel;
     m_configBrute->noDuplicates = noDuplicates;
     m_configBrute->autoSaveToProject = autosaveToProject;
 
@@ -394,7 +380,6 @@ void ActiveConfigDialog::m_saveActive(){
     QString thread = ui->lineEditThreads->text();
     QString timeout = ui->lineEditTimeout->text();
 
-    bool wildcard = ui->checkBoxWildcards->isChecked();
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
 
@@ -411,7 +396,6 @@ void ActiveConfigDialog::m_saveActive(){
     CONFIG.beginGroup(CFG_ACTIVE);
     CONFIG.setValue(CFG_VAL_THREADS, thread);
     CONFIG.setValue(CFG_VAL_TIMEOUT, timeout);
-    CONFIG.setValue(CFG_VAL_WILDCARD, wildcard);
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
 
@@ -442,7 +426,6 @@ void ActiveConfigDialog::m_saveActive(){
 
     m_configActive->timeout = timeout.toInt();
     m_configActive->threads = thread.toInt();
-    m_configActive->checkWildcard =  wildcard;
     m_configActive->noDuplicates = noDuplicates;
     m_configActive->autoSaveToProject = autosaveToProject;
 

@@ -37,13 +37,11 @@ struct ScanStat{  // scan statistics
 struct ScanConfig{ // scan configurations
     QDnsLookup::Type recordType = QDnsLookup::A;
     QQueue<QString> nameservers;
-    int levels = 0;
     int threads = 50;
     int timeout = 1000;
 
     bool noDuplicates = false;
     bool autoSaveToProject = false;
-    bool multiLevelScan = false;
     bool checkWildcard = false;
 };
 
@@ -52,12 +50,10 @@ struct ScanArgs { // scan arguments
     QHostAddress nameserver;
     brute::OUTPUT output;
     brute::ScanConfig *config;
-    QQueue<QString> nextLevelTargets;
     QQueue<QString> targets;
     QStringList wordlist;
     QString currentTarget;
     int currentWordlist;
-    int currentLevel;
     int progress;
     bool reScan;
 };
@@ -78,8 +74,6 @@ class Scanner : public AbstractScanner{
 
     signals:
         void next(); // next lookup
-        void nextLevel(); // send signal, going to the next level
-        void newProgress(int); // send new progressBar max value
         void scanResult(s3s_struct::HOST host); // lookup results
         void wildcard(s3s_struct::Wildcard wildcard); // found wildcard
 

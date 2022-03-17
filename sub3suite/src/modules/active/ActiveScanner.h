@@ -39,7 +39,6 @@ struct ScanConfig { // scan configurations
 
     bool noDuplicates = false;
     bool autoSaveToProject = false;
-    bool checkWildcard = false;
 };
 
 struct ScanArgs { // scan arguments

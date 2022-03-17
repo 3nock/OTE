@@ -380,8 +380,6 @@ void dns::Scanner::lookup(){
         case RETVAL::QUIT:
             emit quitThread();
             break;
-        default:
-            break;
         }
     }
     else {

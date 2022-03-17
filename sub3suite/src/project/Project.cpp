@@ -128,6 +128,7 @@ void Project::init_menubar_tree(){
         a_cancel.setDisabled(true);
 
         ui->treeViewExplorer->clearSelection();
+        ui->labelCount->clear();
     });
 
     a_send.setMenu(menu_send);

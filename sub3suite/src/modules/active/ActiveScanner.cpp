@@ -86,10 +86,8 @@ void active::Scanner::lookupFinished(){
         break;
     }
 
-    /* scan progress */
-    m_args->progress++;
-
     /* send results and continue scan */
+    m_args->progress++;
     emit scanProgress(m_args->progress);
     emit next();
 }
@@ -100,11 +98,9 @@ void active::Scanner::lookup(){
         m_dns->lookup();
         s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
         break;
-    case RETVAL::QUIT:
-        emit quitThread();
-        break;
     default:
         emit quitThread();
+        break;
     }
 }
 

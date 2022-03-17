@@ -98,10 +98,8 @@ void brute::Scanner::lookupFinished(){
         break;
     }
 
-    /* scan progress */
-    m_args->progress++;
-
     /* send results and continue scan */
+    m_args->progress++;
     emit scanProgress(m_args->progress);
     emit next();
 }
@@ -112,14 +110,13 @@ void brute::Scanner::lookup(){
         case RETVAL::LOOKUP:
             m_dns->lookup();
             s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
-            break;
+            return;
         case RETVAL::QUIT:
             emit quitThread();
-            break;
+            return;
         default:
-            break;
+            return;
         }
-        return;
     }
 
     switch(m_args->output)
@@ -129,11 +126,6 @@ void brute::Scanner::lookup(){
         case RETVAL::LOOKUP:
             m_dns->lookup();
             s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
-            break;
-        case RETVAL::NEXT_LEVEL:
-            emit nextLevel();
-            emit newProgress(m_args->targets.size() * m_args->wordlist.size());
-            emit next();
             break;
         case RETVAL::NEXT:
             emit next();
@@ -149,11 +141,6 @@ void brute::Scanner::lookup(){
         case RETVAL::LOOKUP:
             m_dns->lookup();
             s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
-            break;
-        case RETVAL::NEXT_LEVEL:
-            emit nextLevel();
-            emit newProgress(m_args->targets.size() * m_args->wordlist.size());
-            emit next();
             break;
         case RETVAL::NEXT:
             emit next();
@@ -223,30 +210,7 @@ RETVAL brute::getTarget_subdomain(brute::Scanner *scanner, QDnsLookup *dns, brut
         return RETVAL::LOOKUP;
     }
     else{
-        if(args->targets.isEmpty())
-        {
-            if(args->config->multiLevelScan && // if it is a multi-level scan and
-              !args->nextLevelTargets.isEmpty() && // the targets for next level aren't empty and
-              (args->currentLevel < args->config->levels)) // it is not the last level
-            {
-                /* TODO:
-                 *      Make sure all threads are done before continuing...
-                 */
-                args->currentLevel++;
-                args->targets = args->nextLevelTargets;
-                args->currentTarget = args->targets.dequeue();
-                args->currentWordlist = 0;
-
-                /* wildcard check */
-                if(args->config->checkWildcard)
-                    scanner->lookup_wildcard();
-
-                return RETVAL::NEXT_LEVEL;
-            }
-            else
-                return RETVAL::QUIT;
-        }
-        else{
+        if(!args->targets.isEmpty()){
             /* next target */
             args->currentWordlist = 0;
             args->currentTarget = args->targets.dequeue();
@@ -257,6 +221,8 @@ RETVAL brute::getTarget_subdomain(brute::Scanner *scanner, QDnsLookup *dns, brut
 
             return RETVAL::NEXT;
         }
+        else
+            return RETVAL::QUIT;
     }
 }
 
@@ -276,29 +242,14 @@ RETVAL brute::getTarget_tld(QDnsLookup *dns, brute::ScanArgs *args){
         return RETVAL::LOOKUP;
     }
     else{
-        if(args->targets.isEmpty()){
-            if(args->config->multiLevelScan && // if it is a multi-level scan and
-              !args->nextLevelTargets.isEmpty() && // the targets for next level aren't empty and
-              (args->currentLevel < args->config->levels)) // it is not the last level
-            {
-                /* TODO:
-                 *      Make sure all threads are done before continuing...
-                 */
-                args->currentLevel++;
-                args->targets = args->nextLevelTargets;
-                args->currentTarget = args->targets.dequeue();
-                args->currentWordlist = 0;
-                return RETVAL::NEXT_LEVEL;
-            }
-            else
-                return RETVAL::QUIT;
-        }
-        else{
+        if(!args->targets.isEmpty()){
             /* next target */
             args->currentWordlist = 0;
             args->currentTarget = args->targets.dequeue();
             return RETVAL::NEXT;
         }
+        else
+            return RETVAL::QUIT;
     }
 }
 

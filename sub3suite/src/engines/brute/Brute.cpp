@@ -106,7 +106,6 @@ void Brute::on_buttonStart_clicked(){
         /* clear */
         m_failedScans.clear();
         m_scanArgs->targets.clear();
-        m_scanArgs->nextLevelTargets.clear();
 
         /* get targets & output type */
         switch (ui->comboBoxOutput->currentIndex())
@@ -260,9 +259,7 @@ void Brute::initConfigValues(){
     CONFIG.beginGroup(CFG_BRUTE);
     m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
     m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanArgs->config->levels = CONFIG.value(CFG_VAL_MAXLEVEL).toInt();
     m_scanArgs->config->checkWildcard = CONFIG.value(CFG_VAL_WILDCARD).toBool();
-    m_scanArgs->config->multiLevelScan = CONFIG.value(CFG_VAL_LEVEL).toInt();
     m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();

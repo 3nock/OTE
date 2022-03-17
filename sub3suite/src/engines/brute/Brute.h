@@ -30,7 +30,6 @@ class Brute : public AbstractEngine{
         ~Brute();
 
     public slots:
-        void onNextLevel();
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
         void onWildcard(s3s_struct::Wildcard);

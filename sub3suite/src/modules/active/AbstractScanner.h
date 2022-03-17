@@ -15,7 +15,6 @@
 
 
 enum class RETVAL{
-    NEXT_LEVEL,
     LOOKUP,
     NEXT,
     QUIT

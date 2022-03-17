@@ -34,7 +34,7 @@ Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
 
     /* result model */
     ui->treeViewResults->setHeaderHidden(false);
-    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Values")});
+    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Values"), tr(" Values")});
     proxyModel->setSourceModel(m_model);
     ui->treeViewResults->setModel(proxyModel);
 

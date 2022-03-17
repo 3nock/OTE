@@ -74,7 +74,6 @@ void Brute::startScan(){
     ui->progressBar->setMaximum(m_scanArgs->wordlist.length()*m_scanArgs->targets.length());
     m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
     m_scanArgs->currentWordlist = 0;
-    m_scanArgs->currentLevel = 0;
     m_scanArgs->progress = 0;
     m_scanArgs->reScan = false;
 
@@ -98,9 +97,7 @@ void Brute::startScan(){
         }
         connect(scanner, &brute::Scanner::wildcard, this, &Brute::onWildcard);
         connect(scanner, &brute::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &brute::Scanner::newProgress, ui->progressBar, &QProgressBar::setMaximum);
         connect(scanner, &brute::Scanner::scanLog, this, &Brute::onScanLog);
-        connect(scanner, &brute::Scanner::nextLevel, this, &Brute::onNextLevel);
         connect(cThread, &QThread::finished, this, &Brute::onScanThreadEnded);
         connect(cThread, &QThread::finished, scanner, &brute::Scanner::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
@@ -120,7 +117,6 @@ void Brute::onReScan(QQueue<QString> targets){
     /* clear */
     m_failedScans.clear();
     m_scanArgs->targets.clear();
-    m_scanArgs->nextLevelTargets.clear();
 
     /* get output type */
     switch (ui->comboBoxOutput->currentIndex()){
@@ -141,23 +137,6 @@ void Brute::onReScan(QQueue<QString> targets){
     /* logs */
     log("----------------- Re-Scan ---------------\n");
     qInfo() << "[BRUTE] Re-Scan Started";
-}
-
-void Brute::onNextLevel(){
-    QStringList newTargets;
-
-    while(!m_scanArgs->nextLevelTargets.isEmpty())
-        newTargets.push_back(m_scanArgs->nextLevelTargets.dequeue());
-
-    m_targetListModel->setStringList(newTargets);
-    ui->targets->updateSize();
-    m_scanStats->targets += newTargets.size();
-
-    /* log */
-    ui->plainTextEditLogs->appendHtml("<font color=\"white\">  [ Next Level ]</font>");
-    ui->plainTextEditLogs->appendHtml("[ Level ]    : <font color=\"green\">"+QString::number(m_scanArgs->currentLevel)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[ Targets ]      : <font color=\"green\">"+QString::number(m_targetListModel->rowCount())+"</font>");
-    ui->plainTextEditLogs->appendPlainText("");
 }
 
 void Brute::onScanThreadEnded(){

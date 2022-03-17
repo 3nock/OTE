@@ -35,8 +35,6 @@
 #define CFG_VAL_TIMEOUT "timeout"
 #define CFG_VAL_RECORD "record"
 #define CFG_VAL_WILDCARD "wildcard_scan"
-#define CFG_VAL_LEVEL "level_scan"
-#define CFG_VAL_MAXLEVEL "max_level"
 #define CFG_VAL_DUPLICATES "no_duplicates"
 #define CFG_VAL_AUTOSAVE "autosave_to_project"
 #define CFG_VAL_NAMESERVER "nameserver_type"

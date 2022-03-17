@@ -15,7 +15,7 @@
 void Dns::clearResults(){
     /* clear the results... */
     m_model->clear();
-    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Values")});
+    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Values"), tr(" Values")});
     ui->labelResultsCount->clear();
     m_resultSet.clear();
 
