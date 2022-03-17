@@ -103,13 +103,33 @@ void Brute::on_buttonStart_clicked(){
             return;
         }
 
-        ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText(tr("Pause"));
+        /* clear */
+        m_failedScans.clear();
+        m_scanArgs->targets.clear();
+        m_scanArgs->nextLevelTargets.clear();
 
-        status->isRunning = true;
-        status->isNotActive = false;
-        status->isStopped = false;
-        status->isPaused = false;
+        /* get targets & output type */
+        switch (ui->comboBoxOutput->currentIndex())
+        {
+        case brute::OUTPUT::SUBDOMAIN:
+            if(ui->checkBoxMultipleTargets->isChecked()){
+                foreach(const QString &target, m_targetListModel->stringList())
+                    m_scanArgs->targets.enqueue(this->targetFilterSubdomain(target));
+            }
+            else
+                m_scanArgs->targets.enqueue(this->targetFilterSubdomain(ui->lineEditTarget->text()));
+            m_scanArgs->output = brute::OUTPUT::SUBDOMAIN;
+            break;
+
+        case brute::OUTPUT::TLD:
+            if(ui->checkBoxMultipleTargets->isChecked()){
+                foreach(const QString &target, m_targetListModel->stringList())
+                    m_scanArgs->targets.enqueue(this->targetFilterTLD(target));
+            }
+            else
+                m_scanArgs->targets.enqueue(this->targetFilterTLD(ui->lineEditTarget->text()));
+            m_scanArgs->output = brute::OUTPUT::TLD;
+        }
 
         /* start scan */
         this->startScan();

@@ -100,13 +100,18 @@ void Dns::on_buttonStart_clicked(){
             return;
         }
 
-        ui->buttonStop->setEnabled(true);
-        ui->buttonStart->setText(tr("Pause"));
+        /* clear */
+        m_failedScans.clear();
+        m_scanArgs->targets.clear();
+        m_scanArgs->srvWordlist.clear();
 
-        status->isRunning = true;
-        status->isNotActive = false;
-        status->isStopped = false;
-        status->isPaused = false;
+        /* get targets */
+        if(ui->checkBoxMultipleTargets->isChecked()){
+            foreach(const QString &target, m_targetListModel->stringList())
+                m_scanArgs->targets.enqueue(target);
+        }else {
+            m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
+        }
 
         /* start scan */
         this->startScan();

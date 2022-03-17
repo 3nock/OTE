@@ -66,7 +66,7 @@
                </size>
               </property>
               <property name="text">
-               <string>Threads (max 100):</string>
+               <string>Threads:</string>
               </property>
              </widget>
             </item>
@@ -127,6 +127,41 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBoxTimeout">
+         <property name="title">
+          <string>Timeout</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Timeout (ms):</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEditTimeout"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBoxLevel">
          <property name="title">
           <string>Multi-Level Scan</string>
@@ -155,41 +190,6 @@
             </item>
             <item>
              <widget class="QLineEdit" name="lineEditLevels"/>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBoxTimeout">
-         <property name="title">
-          <string>Timeout</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_9">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="label_2">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Timeout (secs):</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="lineEditTimeout"/>
             </item>
            </layout>
           </item>

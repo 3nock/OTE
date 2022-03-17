@@ -14,21 +14,19 @@
 
 
 void Url::startScan(){
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setText("Pause");
+
+    /* status */
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
+
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
     ui->progressBar->clearMask();
-
-    m_failedScans.clear();
-    m_scanArgs->targets.clear();
-
-    /* get targets */
-    if(ui->checkBoxMultipleTargets->isChecked()){
-        foreach(const QString &target, m_targetListModel->stringList())
-            m_scanArgs->targets.enqueue(target);
-    }else {
-        m_scanArgs->targets.enqueue(ui->lineEditTarget->text());
-    }
 
     /*
      if the numner of threads is greater than the number of wordlists, set the
@@ -77,72 +75,22 @@ void Url::startScan(){
 }
 
 void Url::onReScan(QQueue<QString> targets){
-    /* checks */
     if(targets.isEmpty())
         return;
 
-    ui->buttonStop->setEnabled(true);
-    ui->buttonStart->setText("Pause");
+    /* clear */
+    m_failedScans.clear();
+    m_scanArgs->targets.clear();
 
-    status->isRunning = true;
-    status->isNotActive = false;
-    status->isStopped = false;
-    status->isPaused = false;
+    /* get targets */
+    m_scanArgs->targets = targets;
+
+    /* start scan */
+    this->startScan();
 
     /* logs */
     log("----------------- Re-Scan ---------------\n");
     qInfo() << "[URL] Re-Scan Started";
-
-    /* ressetting and setting new values */
-    ui->progressBar->show();
-    ui->progressBar->reset();
-    ui->progressBar->clearMask();
-
-    m_failedScans.clear();
-    m_scanArgs->targets.clear();
-
-    m_scanArgs->targets = targets;
-
-    /* number of threads */
-    if(m_scanArgs->config->threads > m_scanArgs->targets.length())
-        status->activeScanThreads = m_scanArgs->targets.length();
-    else
-        status->activeScanThreads = m_scanArgs->config->threads;
-
-    /* renewing scan statistics */
-    m_scanStats->failed = 0;
-    m_scanStats->resolved = 0;
-    m_scanStats->threads = status->activeScanThreads;
-    m_scanStats->targets = m_scanArgs->targets.length();
-
-    /* set progressbar maximum value then set the first target & wordlist */
-    ui->progressBar->setMaximum(m_scanArgs->targets.length());
-    m_scanArgs->progress = 0;
-
-    /* start timer */
-    m_timer.start();
-
-    /* loop to create threads for enumeration... */
-    for(int i = 0; i < status->activeScanThreads; i++)
-    {
-        url::Scanner *scanner = new url::Scanner(m_scanArgs);
-        QThread *cThread = new QThread;
-        scanner->startScan(cThread);
-        scanner->moveToThread(cThread);
-
-        connect(scanner, &url::Scanner::scanResult, this, &Url::onScanResult);
-        connect(scanner, &url::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &url::Scanner::scanLog, this, &Url::onScanLog);
-        connect(cThread, &QThread::finished, this, &Url::onScanThreadEnded);
-        connect(cThread, &QThread::finished, scanner, &url::Scanner::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &Url::stopScanThread, scanner, &url::Scanner::onStopScan);
-        connect(this, &Url::pauseScanThread, scanner, &url::Scanner::onPauseScan);
-        connect(this, &Url::resumeScanThread, scanner, &url::Scanner::onResumeScan, Qt::DirectConnection);
-
-        cThread->start();
-    }
-    status->isRunning = true;
 }
 
 void Url::onScanThreadEnded(){

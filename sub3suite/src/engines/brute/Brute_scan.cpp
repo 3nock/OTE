@@ -35,37 +35,22 @@ QString Brute::targetFilterTLD(QString target){
 }
 
 void Brute::startScan(){
+    ui->buttonStop->setEnabled(true);
+    ui->buttonStart->setText(tr("Pause"));
+
+    /* status */
+    status->isRunning = true;
+    status->isNotActive = false;
+    status->isStopped = false;
+    status->isPaused = false;
+
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
     ui->progressBar->clearMask();
 
-    m_failedScans.clear();
-    m_scanArgs->targets.clear();
-    m_scanArgs->nextLevelTargets.clear();
+    /* get wordlist */
     m_scanArgs->wordlist = m_wordlistModel->stringList();
-
-    switch (ui->comboBoxOutput->currentIndex())
-    {
-    case brute::OUTPUT::SUBDOMAIN:
-        if(ui->checkBoxMultipleTargets->isChecked()){
-            foreach(const QString &target, m_targetListModel->stringList())
-                m_scanArgs->targets.enqueue(this->targetFilterSubdomain(target));
-        }
-        else
-            m_scanArgs->targets.enqueue(this->targetFilterSubdomain(ui->lineEditTarget->text()));
-        m_scanArgs->output = brute::OUTPUT::SUBDOMAIN;
-        break;
-
-    case brute::OUTPUT::TLD:
-        if(ui->checkBoxMultipleTargets->isChecked()){
-            foreach(const QString &target, m_targetListModel->stringList())
-                m_scanArgs->targets.enqueue(this->targetFilterTLD(target));
-        }
-        else
-            m_scanArgs->targets.enqueue(this->targetFilterTLD(ui->lineEditTarget->text()));
-        m_scanArgs->output = brute::OUTPUT::TLD;
-    }
 
     /*
      if the numner of threads is greater than the number of wordlists, set the
@@ -99,9 +84,6 @@ void Brute::startScan(){
     /* loop to create threads for scan... */
     for(int i = 0; i < status->activeScanThreads; i++)
     {
-        /*  TODO:
-         *      set each scanner object & thread with specific nameserver
-         */
         brute::Scanner *scanner = new brute::Scanner(m_scanArgs);
         QThread *cThread = new QThread;
         scanner->startScan(cThread);
@@ -132,32 +114,15 @@ void Brute::startScan(){
 }
 
 void Brute::onReScan(QQueue<QString> targets){
-    /* checks */
     if(targets.isEmpty())
         return;
 
-    ui->buttonStop->setEnabled(true);
-    ui->buttonStart->setText(tr("Pause"));
-
-    status->isRunning = true;
-    status->isNotActive = false;
-    status->isStopped = false;
-    status->isPaused = false;
-
-    /* logs */
-    log("----------------- Re-Scan ---------------\n");
-    qInfo() << "[BRUTE] Re-Scan Started";
-
-    /* ressetting and setting new values */
-    ui->progressBar->show();
-    ui->progressBar->reset();
-    ui->progressBar->clearMask();
-
+    /* clear */
     m_failedScans.clear();
     m_scanArgs->targets.clear();
     m_scanArgs->nextLevelTargets.clear();
-    m_scanArgs->wordlist.clear();
 
+    /* get output type */
     switch (ui->comboBoxOutput->currentIndex()){
     case brute::OUTPUT::SUBDOMAIN:
         m_scanArgs->output = brute::OUTPUT::SUBDOMAIN;
@@ -166,62 +131,16 @@ void Brute::onReScan(QQueue<QString> targets){
         m_scanArgs->output = brute::OUTPUT::TLD;
     }
 
+    /* get targets */
     m_scanArgs->reScan = true;
     m_scanArgs->targets = targets;
 
-    /* number of threads */
-    if(m_scanArgs->config->threads > m_scanArgs->targets.length())
-        status->activeScanThreads = m_scanArgs->targets.length();
-    else
-        status->activeScanThreads = m_scanArgs->config->threads;
+    /* start scan */
+    this->startScan();
 
-    /* renewing scan statistics */
-    m_scanStats->failed = 0;
-    m_scanStats->resolved = 0;
-    m_scanStats->wordlist = 0;
-    m_scanStats->threads = status->activeScanThreads;
-    m_scanStats->targets = m_scanArgs->targets.length();
-    m_scanStats->nameservers = m_scanArgs->config->nameservers.length();
-
-    /* set progressbar maximum value then set the first target & wordlist */
-    ui->progressBar->setMaximum(m_scanArgs->targets.length());
-    m_scanArgs->progress = 0;
-
-    /* start timer */
-    m_timer.start();
-
-    /* loop to create threads for scan... */
-    for(int i = 0; i < status->activeScanThreads; i++)
-    {
-        /*  TODO:
-         *      set each scanner object & thread with specific nameserver
-         */
-        brute::Scanner *scanner = new brute::Scanner(m_scanArgs);
-        QThread *cThread = new QThread;
-        scanner->startScan(cThread);
-        scanner->moveToThread(cThread);
-
-        switch (ui->comboBoxOutput->currentIndex()){
-        case brute::OUTPUT::SUBDOMAIN:
-            connect(scanner, &brute::Scanner::scanResult, this, &Brute::onResultSubdomain);
-            break;
-        case brute::OUTPUT::TLD:
-            connect(scanner, &brute::Scanner::scanResult, this, &Brute::onResultTLD);
-        }
-        connect(scanner, &brute::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(scanner, &brute::Scanner::newProgress, ui->progressBar, &QProgressBar::setMaximum);
-        connect(scanner, &brute::Scanner::scanLog, this, &Brute::onScanLog);
-        connect(scanner, &brute::Scanner::nextLevel, this, &Brute::onNextLevel);
-        connect(cThread, &QThread::finished, this, &Brute::onScanThreadEnded);
-        connect(cThread, &QThread::finished, scanner, &brute::Scanner::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        connect(this, &Brute::stopScanThread, scanner, &brute::Scanner::onStopScan);
-        connect(this, &Brute::pauseScanThread, scanner, &brute::Scanner::onPauseScan);
-        connect(this, &Brute::resumeScanThread, scanner, &brute::Scanner::onResumeScan, Qt::DirectConnection);
-
-        cThread->start();
-    }
-    status->isRunning = true;
+    /* logs */
+    log("----------------- Re-Scan ---------------\n");
+    qInfo() << "[BRUTE] Re-Scan Started";
 }
 
 void Brute::onNextLevel(){
