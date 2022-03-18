@@ -111,10 +111,8 @@ void brute::Scanner::lookup(){
             m_dns->lookup();
             s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
             return;
-        case RETVAL::QUIT:
-            emit quitThread();
-            return;
         default:
+            emit quitThread();
             return;
         }
     }

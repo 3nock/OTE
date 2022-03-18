@@ -9,15 +9,13 @@
 JsonWhois::JsonWhois(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "JsonWhois";
+    log.moduleName = OSINT_MODULE_JSONWHOIS;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &JsonWhois::replyFinishedRawJson);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("JsonWhois").toString();
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_JSONWHOIS).toString();
     
 }
 JsonWhois::~JsonWhois(){

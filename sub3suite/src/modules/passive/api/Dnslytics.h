@@ -48,7 +48,9 @@ struct Dnslytics{
                                           {IN_ASN,
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN, OUT_CIDR}},
                                           {IN_CIDR,
-                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN, OUT_CIDR}}};
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN, OUT_CIDR}},
+                                          {IN_QUERYTERM,
+                                           {OUT_SUBDOMAIN}}};
 };
 }
 

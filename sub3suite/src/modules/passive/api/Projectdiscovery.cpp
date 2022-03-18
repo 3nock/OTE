@@ -6,22 +6,20 @@
 
 #define SUBDOMAIN 0
 
+
 Projectdiscovery::Projectdiscovery(ScanArgs args):
     AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "ProjectDiscovery";
+    log.moduleName = OSINT_MODULE_PROJECTDISCOVERY;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedRawJson);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedSubdomain);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("projectdiscovery").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_PROJECTDISCOVERY).toString();
 }
 Projectdiscovery::~Projectdiscovery(){
     delete manager;
@@ -45,11 +43,13 @@ void Projectdiscovery::start(){
     }
 
     if(args.inputDomain){
-        url.setUrl("https://dns.projectdiscovery.io/dns/"+target+"/subdomains");
-        request.setAttribute(QNetworkRequest::User, SUBDOMAIN);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+        if(args.outputSubdomain){
+            url.setUrl("https://dns.projectdiscovery.io/dns/"+target+"/subdomains");
+            request.setAttribute(QNetworkRequest::User, SUBDOMAIN);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 }
 
@@ -60,14 +60,12 @@ void Projectdiscovery::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonObject mainObject = document.object();
-    QString error = mainObject["error"].toString();
-    if(error.isNull() || error.isEmpty()){
-        QJsonArray subdomainList = mainObject["subdomains"].toArray();
-        foreach(const QJsonValue &value, subdomainList){
-            emit resultSubdomain(value.toString());
-            log.resultsCount++;
-        }
+
+    QJsonArray subdomainList = document.object()["subdomains"].toArray();
+    foreach(const QJsonValue &value, subdomainList){
+        emit resultSubdomain(value.toString());
+        log.resultsCount++;
     }
+
     end(reply);
 }

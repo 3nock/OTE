@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Onyphe{
-    QString name = "Onyphe";
+    QString name = OSINT_MODULE_ONYPHE;
     QString url = "https://www.onyphe.io/";
     QString url_apiDoc = "https://www.onyphe.io/documentation/api";
     QString summary = "Cyber Defense Search Engine";
@@ -68,7 +68,10 @@ struct Onyphe{
                                          {PLACEHOLDERTEXT_IP, " It will return one result about whois category of information we have for the given IPv{4,6} address. There will be no history of changes, "
                                                               "the goal of this API is to return the best matching subnet regarding the given address. Best matching subnet means the one with the smallest CIDR mask."}}};
 
-    QMap<int, QList<int>> input_output = {};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_IP, OUT_SSLCERT}},
+                                          {IN_IP,
+                                           {OUT_SUBDOMAIN, OUT_SSLCERT}}};
 };
 }
 
@@ -80,10 +83,9 @@ class Onyphe: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedSSLCert(QNetworkReply *reply) override;
 
     private:
         QString m_key;

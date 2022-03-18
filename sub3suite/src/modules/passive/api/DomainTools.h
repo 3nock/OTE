@@ -64,6 +64,10 @@ struct DomainTools{
                                        };
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_IP, OUT_SUBDOMAINIP}},
+                                          {IN_IP,
+                                           {OUT_SUBDOMAIN, OUT_IP, OUT_SUBDOMAINIP}},
+                                          {IN_QUERYTERM,
                                            {OUT_SUBDOMAIN}}};
 };
 }
@@ -79,6 +83,7 @@ class DomainTools: public AbstractOsintModule{
         void start() override;
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
 
     private:
         QString m_key;

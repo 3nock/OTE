@@ -33,11 +33,13 @@
 #define INDICATOR_URL_URLLIST 26
 
 
-/* 1k per hour unauthenticated, and 10k authed*/
+/*
+ * 1k per hour unauthenticated, and 10k authed
+ */
 OtxPaid::OtxPaid(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "otx";
+    log.moduleName = OSINT_MODULE_OTX;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedRawJson);
@@ -49,12 +51,9 @@ OtxPaid::OtxPaid(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedIp);
     if(args.outputAsn)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedAsn);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("otx").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_OTX).toString();
 }
 OtxPaid::~OtxPaid(){
     delete manager;

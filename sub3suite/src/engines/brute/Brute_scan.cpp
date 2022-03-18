@@ -44,24 +44,6 @@ void Brute::startScan(){
     status->isStopped = false;
     status->isPaused = false;
 
-    /* ressetting and setting new values */
-    ui->progressBar->show();
-    ui->progressBar->reset();
-    ui->progressBar->clearMask();
-
-    /* get wordlist */
-    m_scanArgs->wordlist = m_wordlistModel->stringList();
-
-    /*
-     if the numner of threads is greater than the number of wordlists, set the
-     number of threads to use to the number of wordlists available to avoid
-     creating more threads than needed...
-    */
-    if(m_scanArgs->config->threads > m_scanArgs->wordlist.length())
-        status->activeScanThreads = m_scanArgs->wordlist.length();
-    else
-        status->activeScanThreads = m_scanArgs->config->threads;
-
     /* renewing scan statistics */
     m_scanStats->failed = 0;
     m_scanStats->resolved = 0;
@@ -69,13 +51,6 @@ void Brute::startScan(){
     m_scanStats->wordlist = m_scanArgs->wordlist.size();
     m_scanStats->targets = m_scanArgs->targets.length();
     m_scanStats->nameservers = m_scanArgs->config->nameservers.length();
-
-    /* set progressbar maximum value then set the first target & wordlist */
-    ui->progressBar->setMaximum(m_scanArgs->wordlist.length()*m_scanArgs->targets.length());
-    m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
-    m_scanArgs->currentWordlist = 0;
-    m_scanArgs->progress = 0;
-    m_scanArgs->reScan = false;
 
     /* start timer */
     m_timer.start();
@@ -128,8 +103,27 @@ void Brute::onReScan(QQueue<QString> targets){
     }
 
     /* get targets */
-    m_scanArgs->reScan = true;
     m_scanArgs->targets = targets;
+
+    /* ressetting and setting new values */
+    ui->progressBar->show();
+    ui->progressBar->reset();
+    ui->progressBar->setMaximum(m_scanArgs->targets.length());
+
+    /*
+     if the numner of threads is greater than the number of targets, set the
+     number of threads to use to the number of targets available to avoid
+     creating more threads than needed...
+    */
+    if(m_scanArgs->config->threads > m_scanArgs->targets.length())
+        status->activeScanThreads = m_scanArgs->targets.length();
+    else
+        status->activeScanThreads = m_scanArgs->config->threads;
+
+    m_scanArgs->currentTarget.clear();
+    m_scanArgs->currentWordlist = 0;
+    m_scanArgs->progress = 0;
+    m_scanArgs->reScan = true;
 
     /* start scan */
     this->startScan();

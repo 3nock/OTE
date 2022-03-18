@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct NeutrinoApi{
-    QString name = "NeutrinoApi";
+    QString name = OSINT_MODULE_NEUTRINOAPI;
     QString url = "https://www.neutrinoapi.com/";
     QString url_apiDoc = "https://www.neutrinoapi.com/api/api-basics/";
     QString summary = "Neutrino API solves recurring problems encountered during the development of software systems. Neutrino API is a general-purpose tool which can assist in many different situations.";

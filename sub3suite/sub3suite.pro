@@ -181,7 +181,6 @@ SOURCES += \
     src/enums/ssl/SSLEnum.cpp \
     src/modules/active/BruteScanner.cpp \
     src/modules/active/ActiveScanner.cpp \
-    src/modules/active/IpScanner.cpp \
     src/modules/passive/api/Bgpview.cpp \
     src/modules/passive/api/BinaryEdge.cpp \
     src/modules/passive/api/C99.cpp \
@@ -341,7 +340,6 @@ HEADERS += \
     src/enums/ssl/SSLEnum.h \
     src/modules/active/BruteScanner.h \
     src/modules/active/ActiveScanner.h \
-    src/modules/active/IpScanner.h \
     src/modules/active/AbstractScanner.h \
     src/modules/passive/api/Bgpview.h \
     src/modules/passive/api/BinaryEdge.h \

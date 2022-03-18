@@ -32,11 +32,13 @@
 #define INDICATOR_URL_URLLIST 26
 
 
-/* 1k per hour unauthenticated, and 10k authed*/
+/*
+ * 1k per hour unauthenticated, and 10k authed
+ */
 OtxFree::OtxFree(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "otx";
+    log.moduleName = OSINT_MODULE_OTX;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxFree::replyFinishedRawJson);
@@ -164,7 +166,6 @@ void OtxFree::start(){
             manager->get(request);
             activeRequests++;
         }
-        return;
     }
 
     if(args.inputDomain){

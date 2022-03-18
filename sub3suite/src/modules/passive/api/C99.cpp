@@ -48,7 +48,7 @@ C99::C99(ScanArgs args):
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
 
-    /* getting api key... */
+    /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_C99).toString();
 }
 C99::~C99(){
@@ -164,18 +164,19 @@ void C99::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject jsonObject = document.object();
 
-    if(QUERY_TYPE == SUBDOMAIN_FINDER){
-        if(jsonObject["success"].toBool())
-        {
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case SUBDOMAIN_FINDER:
+        if(jsonObject["success"].toBool()){
             foreach(const QJsonValue &value, jsonObject["subdomains"].toArray()){
                 emit resultSubdomain(value.toString());
                 log.resultsCount++;
             }
         }
+        break;
     }
 
     end(reply);

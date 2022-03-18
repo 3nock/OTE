@@ -429,6 +429,12 @@ void Osint::initModules(){
     else
         ui->moduleBing->hide();
 
+    ModuleInfo::LeakIX leakix;
+    if(leakix.input_output.contains(INPUT_TYPE) && leakix.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
+        ui->moduleLeakIX->show();
+    else
+        ui->moduleLeakIX->hide();
+
     /* uncheck all modules */
     this->uncheckAllModules();
 }
@@ -502,4 +508,5 @@ void Osint::uncheckAllModules(){
     ui->moduleExalead->setChecked(false);
     ui->moduleYahoo->setChecked(false);
     ui->moduleBing->setChecked(false);
+    ui->moduleLeakIX->setChecked(false);
 }

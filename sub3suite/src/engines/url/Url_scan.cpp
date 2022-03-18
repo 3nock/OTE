@@ -26,7 +26,6 @@ void Url::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
-    ui->progressBar->clearMask();
 
     /*
      if the numner of threads is greater than the number of wordlists, set the

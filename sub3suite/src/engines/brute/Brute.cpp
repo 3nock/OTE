@@ -130,6 +130,29 @@ void Brute::on_buttonStart_clicked(){
             m_scanArgs->output = brute::OUTPUT::TLD;
         }
 
+        /* get wordlist */
+        m_scanArgs->wordlist = m_wordlistModel->stringList();
+
+        /* ressetting and setting new values */
+        ui->progressBar->show();
+        ui->progressBar->reset();
+        ui->progressBar->setMaximum(m_scanArgs->wordlist.length()*m_scanArgs->targets.length());
+
+        /*
+         if the numner of threads is greater than the number of wordlists, set the
+         number of threads to use to the number of wordlists available to avoid
+         creating more threads than needed...
+        */
+        if(m_scanArgs->config->threads > m_scanArgs->wordlist.length())
+            status->activeScanThreads = m_scanArgs->wordlist.length();
+        else
+            status->activeScanThreads = m_scanArgs->config->threads;
+
+        m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
+        m_scanArgs->currentWordlist = 0;
+        m_scanArgs->progress = 0;
+        m_scanArgs->reScan = false;
+
         /* start scan */
         this->startScan();
 

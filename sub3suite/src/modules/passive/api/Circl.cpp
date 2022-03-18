@@ -118,11 +118,12 @@ void Circl::replyFinishedSSLCert(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject jsonObject = document.object();
 
-    if(QUERY_TYPE == PASSIVE_SSL){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PASSIVE_SSL:
         foreach(const QString &key, jsonObject.keys()){
             QJsonArray certificates = jsonObject[key].toObject()["certificates"].toArray();
             foreach(const QJsonValue &value, certificates)
@@ -131,7 +132,9 @@ void Circl::replyFinishedSSLCert(QNetworkReply *reply){
                 log.resultsCount++;
             }
         }
+        break;
     }
+
     end(reply);
 }
 
@@ -141,11 +144,12 @@ void Circl::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray jsonArray = document.array();
 
-    if(QUERY_TYPE == PASSIVE_DNS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PASSIVE_DNS:
         foreach(const QJsonValue &value, jsonArray){
             QString rrtype = value.toObject()["rrtype"].toString();
             QString rdata = value.toObject()["rdata"].toString();
@@ -164,6 +168,7 @@ void Circl::replyFinishedSubdomain(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }
 
@@ -173,11 +178,12 @@ void Circl::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray jsonArray = document.array();
 
-    if(QUERY_TYPE == PASSIVE_DNS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PASSIVE_DNS:
         foreach(const QJsonValue &value, jsonArray){
             QString rrtype = value.toObject()["rrtype"].toString();
             QString rdata = value.toObject()["rdata"].toString();
@@ -191,7 +197,9 @@ void Circl::replyFinishedIp(QNetworkReply *reply){
                 log.resultsCount++;
             }
         }
+        break;
     }
+
     end(reply);
 }
 
@@ -201,14 +209,16 @@ void Circl::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject jsonObject = document.object();
 
-    if(QUERY_TYPE == IP_2_ASN){
-        QString value = QString::number(jsonObject["asn"].toInt());
-        emit resultASN(value, "");
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case IP_2_ASN:
+        emit resultASN(QString::number(jsonObject["asn"].toInt()), "");
         log.resultsCount++;
+        break;
     }
+
     end(reply);
 }

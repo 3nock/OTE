@@ -6,21 +6,17 @@
 #define PASTES_ACCOUNT 2
 #define SINGLE_BREACH 3
 
-/*
- * url encode the email...
- */
+
 HaveIBeenPawned::HaveIBeenPawned(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "HaveIBeenPawned";
+    log.moduleName = OSINT_MODULE_HAVEIBEENPAWNED;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HaveIBeenPawned::replyFinishedRawJson);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("haveibeenpawned").toString();
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_HAVEIBEENPAWNED).toString();
     
 }
 HaveIBeenPawned::~HaveIBeenPawned(){
@@ -35,16 +31,16 @@ void HaveIBeenPawned::start(){
     if(args.outputRaw){
         switch (args.rawOption) {
         case BREACHED_ACCOUNT:
-            url.setUrl("https://haveibeenpwned.com/api/v3/breachedaccount/"+target);
+            url.setUrl("https://haveibeenpwned.com/api/v3/breachedaccount/"+QUrl::toPercentEncoding(target));
             break;
         case BREACHED_SITE:
-            url.setUrl("GET https://haveibeenpwned.com/api/v3/breaches?domain="+target);
+            url.setUrl("https://haveibeenpwned.com/api/v3/breaches?domain="+QUrl::toPercentEncoding(target));
             break;
         case PASTES_ACCOUNT:
-            url.setUrl("https://haveibeenpwned.com/api/v3/pasteaccount/"+target);
+            url.setUrl("https://haveibeenpwned.com/api/v3/pasteaccount/"+QUrl::toPercentEncoding(target));
             break;
         case SINGLE_BREACH:
-            url.setUrl("https://haveibeenpwned.com/api/v3/breach/"+target);
+            url.setUrl("https://haveibeenpwned.com/api/v3/breach/"+QUrl::toPercentEncoding(target));
             break;
         }
         request.setUrl(url);

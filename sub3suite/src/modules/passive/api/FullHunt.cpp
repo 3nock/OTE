@@ -15,17 +15,19 @@
 FullHunt::FullHunt(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "FullHunt";
+    log.moduleName = OSINT_MODULE_FULLHUNT;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedRawJson);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedSubdomain);
-    ///
-    /// getting api key....
-    ///
-    
-    m_key = APIKEY.value("fullhunt").toString();
+    if(args.outputAsn)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedAsn);
+    if(args.outputIp)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedIp);
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_FULLHUNT).toString();
     
 }
 FullHunt::~FullHunt(){
@@ -63,6 +65,13 @@ void FullHunt::start(){
             manager->get(request);
             activeRequests++;
         }
+        if(args.outputAsn){
+            url.setUrl("https://fullhunt.io/api/v1/domain/"+target+"/details");
+            request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 }
 
@@ -72,15 +81,65 @@ void FullHunt::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
-        QJsonArray subdomains = document.object()["subdomains"].toArray();
-        foreach(const QJsonValue &value, subdomains){
+    switch (reply->property(REQUEST_TYPE).toInt()) {
+    case DOMAIN_SUBDOMAINS:
+        foreach(const QJsonValue &value, document.object()["subdomains"].toArray()){
             emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
+        break;
+    }
+
+    end(reply);
+}
+
+void FullHunt::replyFinishedAsn(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    switch (reply->property(REQUEST_TYPE).toInt()) {
+    case DOMAIN_DETAILS:
+        foreach(const QJsonValue &value, document.object()["hosts"].toArray()){
+            QJsonObject ip_metadata = value.toObject()["ip_metadata"].toObject();
+            int asn = ip_metadata["asn"].toInt();
+            QString isp = ip_metadata["isp"].toString();
+            emit resultASN(QString::number(asn), isp);
+            log.resultsCount++;
+        }
+        break;
+    }
+
+    end(reply);
+}
+
+void FullHunt::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    switch (reply->property(REQUEST_TYPE).toInt()) {
+    case DOMAIN_DETAILS:
+        foreach(const QJsonValue &value, document.object()["hosts"].toArray()){
+            QJsonObject dns = value.toObject()["dns"].toObject();
+            foreach(const QJsonValue &a, dns["a"].toArray()){
+                emit resultA(a.toString());
+                log.resultsCount++;
+            }
+            foreach(const QJsonValue &aaaa, dns["aaaa"].toArray()){
+                emit resultAAAA(aaaa.toString());
+                log.resultsCount++;
+            }
+        }
+        break;
     }
 
     end(reply);

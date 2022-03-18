@@ -45,7 +45,6 @@ Dnslytics::Dnslytics(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoNS);
 
     /* getting api key... */
-    
     m_key = APIKEY.value(OSINT_MODULE_DNSLYTICS).toString();
     
 }
@@ -134,6 +133,17 @@ void Dnslytics::start(){
     ///
     /// for osint output...
     ///
+    if(args.inputQueryTerm){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+target+"?apikey="+m_key);
+            request.setAttribute(QNetworkRequest::User, DOMAINSEARCH);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+            return;
+        }
+    }
+
     if(args.inputDomain){
         if(args.outputSubdomain){
             url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+target+"?apikey="+m_key);
@@ -199,50 +209,43 @@ void Dnslytics::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    switch (QUERY_TYPE) {
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
     case ASINFO:
     case SUBNETINFO:
-    {
-        /* mxrecords */
         foreach(const QJsonValue &value, data["mxrecords"].toArray()){
             QString mxrecord = value.toObject()["mxrecord"].toString();
             emit resultMX(mxrecord);
             log.resultsCount++;
         }
-        /* nsrecords */
         foreach(const QJsonValue &value, data["nsrecords"].toArray()){
             QString nsrecord = value.toObject()["nsrecord"].toString();
             emit resultNS(nsrecord);
             log.resultsCount++;
         }
-        /* domains */
         foreach(const QJsonValue &value, data["domains"].toArray()){
             QString domain = value.toObject()["domain"].toString();
             emit resultSubdomain(domain);
             log.resultsCount++;
         }
-    }
-    break;
+        break;
+
     case DOMAINSEARCH:
-    {
         foreach(const QJsonValue &value, data["domains"].toArray()){
             QString domain = value.toObject()["domain"].toString();
             emit resultSubdomain(domain);
             log.resultsCount++;
         }
-    }
-    break;
+        break;
+
     case REVERSEIP:
-    {
         foreach(const QJsonValue &value, data["domains"].toArray()){
             emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
-    }
     }
 
     end(reply);
@@ -254,28 +257,25 @@ void Dnslytics::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    switch (QUERY_TYPE) {
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
     case ASINFO:
     case SUBNETINFO:
-        /* mxrecords */
         foreach(const QJsonValue &value, data["mxrecords"].toArray()){
             QString mxrecord = value.toObject()["mxrecord"].toString();
             QString ipv4 = value.toObject()["ipv4"].toString();
             emit resultSubdomainIp(mxrecord, ipv4);
             log.resultsCount++;
         }
-        /* nsrecords */
         foreach(const QJsonValue &value, data["nsrecords"].toArray()){
             QString nsrecord = value.toObject()["nsrecord"].toString();
             QString ipv4 = value.toObject()["ipv4"].toString();
             emit resultSubdomainIp(nsrecord, ipv4);
             log.resultsCount++;
         }
-        /* domains */
         foreach(const QJsonValue &value, data["domains"].toArray()){
             QString domain = value.toObject()["domain"].toString();
             QString ipv4 = value.toObject()["ipv4"].toString();
@@ -293,48 +293,42 @@ void Dnslytics::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    switch (QUERY_TYPE) {
-    case ASINFO:
+    switch (reply->property(REQUEST_TYPE).toInt())
     {
-        /* peersv4 */
+    case ASINFO:
         foreach(const QJsonValue &value, data["peersv4"].toArray()){
             QString asn = QString::number(value.toObject()["aspeer"].toInt());
             QString name = value.toObject()["shortname"].toString();
             emit resultASN(asn, name);
             log.resultsCount++;
         }
-        /* peersv6 */
         foreach(const QJsonValue &value, data["peersv6"].toArray()){
             QString asn = QString::number(value.toObject()["aspeer"].toInt());
             QString name = value.toObject()["shortname"].toString();
             emit resultASN(asn, name);
             log.resultsCount++;
         }
-    }
-    break;
+        break;
+
     case SUBNETINFO:
-    {
         foreach(const QJsonValue &value, data["routes"].toArray()){
             QString asn = QString::number(value.toObject()["asn"].toInt());
             QString name = value.toObject()["shortname"].toString();
             emit resultASN(asn, name);
             log.resultsCount++;
         }
-    }
-    break;
+        break;
+
     case IP2ASN:
-    {
         QJsonObject mainObj = document.object();
         QString asn = QString::number(mainObj["asn"].toInt());
         QString name = mainObj["shortname"].toString();
 
         emit resultASN(asn, name);
         log.resultsCount++;
-    }
     }
 
     end(reply);
@@ -346,49 +340,42 @@ void Dnslytics::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    switch (QUERY_TYPE) {
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
     case ASINFO:
     case SUBNETINFO:
-    {
-        /* mxrecords */
         foreach(const QJsonValue &value, data["mxrecords"].toArray()){
             QString ipv4 = value.toObject()["ipv4"].toString();
             emit resultA(ipv4);
             log.resultsCount++;
         }
-        /* nsrecords */
         foreach(const QJsonValue &value, data["nsrecords"].toArray()){
             QString ipv4 = value.toObject()["ipv4"].toString();
             emit resultA(ipv4);
             log.resultsCount++;
         }
-        /* domains */
         foreach(const QJsonValue &value, data["domains"].toArray()){
             QString ipv4 = value.toObject()["ipv4"].toString();
             emit resultA(ipv4);
             log.resultsCount++;
         }
-    }
-    break;
+        break;
+
     case HOSTINGHISTORY:
-    {
-        /* ipv6 */
         foreach(const QJsonValue &value, data["ipv6"].toArray()){
             QString ip = value.toObject()["ip"].toString();
             emit resultAAAA(ip);
             log.resultsCount++;
         }
-        /* ipv4 */
         foreach(const QJsonValue &value, data["ipv4"].toArray()){
             QString ip = value.toObject()["ip"].toString();
             emit resultA(ip);
             log.resultsCount++;
         }
-    }
+        break;
     }
 
     end(reply);
@@ -400,44 +387,39 @@ void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    switch (QUERY_TYPE) {
-    case ASINFO:
+    switch (reply->property(REQUEST_TYPE).toInt())
     {
-        /* prefixesv4 */
+    case ASINFO:
         foreach(const QJsonValue &value, data["prefixesv4"].toArray()){
             QString Prefix = value.toObject()["prefix"].toString();
             emit resultCidr(Prefix);
             log.resultsCount++;
         }
-        /* prefixesv6 */
         foreach(const QJsonValue &value, data["prefixesv6"].toArray()){
             QString Prefix = value.toObject()["prefix"].toString();
             emit resultCidr(Prefix);
             log.resultsCount++;
         }
-    }
-    break;
+        break;
+
     case SUBNETINFO:
-    {
         foreach(const QJsonValue &value, data["routes"].toArray()){
             QString cidr = value.toObject()["cidr"].toString();
             emit resultCidr(cidr);
             log.resultsCount++;
         }
-    }
-    break;
+        break;
+
     case IP2ASN:
-    {
         QJsonObject mainObj = document.object();
         QString cidr = mainObj["cidr"].toString();
 
         emit resultCidr(cidr);
         log.resultsCount++;
-    }
+        break;
     }
 
     end(reply);
@@ -456,15 +438,10 @@ void Dnslytics::replyFinishedInfoMX(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    /* initiate the struct */
     s3s_struct::MX mx;
-
-    /* append the domains */
     foreach(const QJsonValue &value, data["domains"].toArray()){
         mx.domains.insert(value.toString());
     }
-
-    /* send the structure */
     emit infoMX(mx);
 
     end(reply);
@@ -479,15 +456,10 @@ void Dnslytics::replyFinishedInfoNS(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    /* initiate the struct */
     s3s_struct::NS ns;
-
-    /* append the domains */
     foreach(const QJsonValue &value, data["domains"].toArray()){
         ns.domains.insert(value.toString());
     }
-
-    /* send the structure */
     emit infoNS(ns);
 
     end(reply);
@@ -502,15 +474,10 @@ void Dnslytics::replyFinishedInfoIp(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    /* initiate the struct */
     s3s_struct::IP ip;
-
-    /* append the domains */
     foreach(const QJsonValue &value, data["domains"].toArray()){
         ip.domains.insert(value.toString());
     }
-
-    /* send the structure */
     emit infoIp(ip);
 
     end(reply);

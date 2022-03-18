@@ -70,7 +70,6 @@ class Scanner : public AbstractScanner{
         Scanner(url::ScanArgs *args);
         ~Scanner() override;
 
-
     private slots:
         void lookup() override;
         void lookupFinished(QNetworkReply *reply);

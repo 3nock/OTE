@@ -26,6 +26,10 @@ void IpEnum::onResult(s3s_struct::IP results){
         project->addEnumIP(results);
 }
 
+void IpEnum::onResult_reverse(s3s_struct::IP ip){
+
+}
+
 void IpEnum::onErrorLog(ScanLog log){
     QString message("<font color=\"red\">"+log.message+"</font>");
     QString module("<font color=\"red\">"+log.moduleName+"</font>");

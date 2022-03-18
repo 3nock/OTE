@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Maltiverse{
-    QString name = "Maltiverse";
+    QString name = OSINT_MODULE_MALTIVERSE;
     QString url = "https://maltiverse.com/";
     QString url_apiDoc = "https://app.swaggerhub.com/apis-docs/maltiverse/api/1.0.0-oas3";
     QString summary = "Maltiverse";
@@ -20,7 +20,7 @@ struct Maltiverse{
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_IP, OUT_ASN}},
                                           {IN_IP,
-                                           {OUT_EMAIL, OUT_ASN}}};
+                                           {OUT_EMAIL, OUT_ASN, OUT_CIDR}}};
 };
 }
 
@@ -35,6 +35,7 @@ class Maltiverse: public AbstractOsintModule{
         void replyFinishedAsn(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedEmail(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
 
     private:
         QString m_key;

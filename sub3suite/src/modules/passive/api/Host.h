@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct Host{
-    QString name = "Host";
+    QString name = OSINT_MODULE_HOST;
     QString url = "https://host.io/";
     QString url_apiDoc = "https://host.io/docs";
     QString summary = "A Powerful and Fast Domain Name Data API. Get comprehensive domain name data, uncover new domains and the relationships between them. "

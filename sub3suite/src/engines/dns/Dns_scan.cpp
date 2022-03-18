@@ -25,7 +25,6 @@ void Dns::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
-    ui->progressBar->clearMask();
 
     /* getting srv wordlist if checked &
      if the numner of threads is greater than the number of wordlists, set the

@@ -99,6 +99,11 @@
          <string> Cidr</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string> Search</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -1172,9 +1177,9 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>0</y>
+                <y>-320</y>
                 <width>152</width>
-                <height>830</height>
+                <height>853</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -1302,6 +1307,13 @@
                    <widget class="QCheckBox" name="moduleIpInfo">
                     <property name="text">
                      <string>IpInfo</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="moduleLeakIX">
+                    <property name="text">
+                     <string>LeakIX</string>
                     </property>
                    </widget>
                   </item>

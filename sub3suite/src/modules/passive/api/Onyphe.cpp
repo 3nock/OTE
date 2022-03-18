@@ -38,23 +38,19 @@
 Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Onyphe";
+    log.moduleName = OSINT_MODULE_ONYPHE;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedRawJson);
-    if(args.outputSubdomainIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomainIp);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomain);
     if(args.outputIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedIp);
-    if(args.outputAsn)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedAsn);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("onyphe").toString();
+    if(args.outputSSLCert)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSSLCert);
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_ONYPHE).toString();
     
 }
 Onyphe::~Onyphe(){
@@ -155,21 +151,24 @@ void Onyphe::start(){
     }
 
     if(args.inputDomain){
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
-    }
-}
-
-void Onyphe::replyFinishedSubdomainIp(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
+        if(args.outputSubdomain || args.outputIp || args.outputSSLCert){
+            url.setUrl("https://www.onyphe.io/api/v2/summary/domain/"+target);
+            request.setAttribute(QNetworkRequest::User, SUMMARY_DOMAIN);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-    end(reply);
+    if(args.inputIp){
+        if(args.outputSubdomain || args.outputSSLCert){
+            url.setUrl("https://www.onyphe.io/api/v2/summary/ip/"+target);
+            request.setAttribute(QNetworkRequest::User, SUMMARY_IP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
 void Onyphe::replyFinishedSubdomain(QNetworkReply *reply){
@@ -179,6 +178,23 @@ void Onyphe::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray results = document.object()["results"].toArray();
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case SUMMARY_DOMAIN:
+    case SUMMARY_IP:
+        foreach(const QJsonValue &value, results){
+            foreach(const QJsonValue &domain, value.toObject()["domain"].toArray()){
+                emit resultSubdomain(domain.toString());
+                log.resultsCount++;
+            }
+            foreach(const QJsonValue &domain, value.toObject()["hostname"].toArray()){
+                emit resultSubdomain(domain.toString());
+                log.resultsCount++;
+            }
+        }
+    }
 
     end(reply);
 }
@@ -190,17 +206,41 @@ void Onyphe::replyFinishedIp(QNetworkReply *reply){
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray results = document.object()["results"].toArray();
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case SUMMARY_DOMAIN:
+        foreach(const QJsonValue &value, results){
+            foreach(const QJsonValue &ip, value.toObject()["ip"].toArray()){
+                emit resultIp(ip.toString());
+                log.resultsCount++;
+            }
+        }
+    }
 
     end(reply);
 }
 
-void Onyphe::replyFinishedAsn(QNetworkReply *reply){
+void Onyphe::replyFinishedSSLCert(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
     }
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray results = document.object()["results"].toArray();
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case SUMMARY_DOMAIN:
+    case SUMMARY_IP:
+        foreach(const QJsonValue &value, results){
+            QString sha1 = value.toObject()["fingerprint"].toObject()["sha1"].toString();
+            emit resultSSL(sha1);
+            log.resultsCount++;
+        }
+    }
 
     end(reply);
 }

@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : resolving dns records for hostnames
 */
 
 #ifndef DNSRECORDSSCANNER_H
@@ -16,17 +16,6 @@
 
 
 namespace dns {
-
-enum OUTPUT { // scan type
-    A,
-    AAAA,
-    MX,
-    NS,
-    CNAME,
-    TXT,
-    SRV,
-    ANY
-};
 
 struct ScanStat {  // scan statistics
     int nameservers = 0;

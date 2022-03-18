@@ -6,18 +6,17 @@
 #define RELATED 2
 #define WEB 3
 
+
 Host::Host(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Host";
+    log.moduleName = OSINT_MODULE_HOST;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Host::replyFinishedRawJson);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("host").toString();
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_HOST).toString();
     
 }
 Host::~Host(){

@@ -33,12 +33,12 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("censys_secret", ui->lineEditCensysSecret->text());
     APIKEY.setValue("certspotter", ui->lineEditCertspotter->text());
     APIKEY.setValue("cloudflare", ui->lineEditCloudflare->text());
-    APIKEY.setValue("github", ui->lineEditGithub->text());
+    APIKEY.setValue(OSINT_MODULE_GITHUB, ui->lineEditGithub->text());
     APIKEY.setValue("google", ui->lineEditGoogle->text());
     APIKEY.setValue("hunter", ui->lineEditHunter->text());
     APIKEY.setValue("intelx", ui->lineEditIntelX->text());
     APIKEY.setValue("pentesttools", ui->lineEditPentestTools->text());
-    APIKEY.setValue("projectdiscovery", ui->lineEditProjectDiscovery->text());
+    APIKEY.setValue(OSINT_MODULE_PROJECTDISCOVERY, ui->lineEditProjectDiscovery->text());
     APIKEY.setValue("riskiq_key", ui->lineEditRiskIqKey->text());
     APIKEY.setValue("riskiq_username", ui->lineEditRiskIqUsername->text());
     APIKEY.setValue("securitytrails", ui->lineEditSecurityTrails->text());
@@ -53,26 +53,26 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("whoisxmlapi", ui->lineEditWhoisXmlApi->text());
     APIKEY.setValue("zoomeye", ui->lineEditZoomEye->text());
     APIKEY.setValue("viewdns", ui->lineEditViewDns->text());
-    APIKEY.setValue("hackertarget", ui->lineEditHackerTarget->text());
+    APIKEY.setValue(OSINT_MODULE_HACKERTARGET, ui->lineEditHackerTarget->text());
     APIKEY.setValue("webresolver", ui->lineEditWebResolver->text());
     APIKEY.setValue("circlUser", ui->lineEditCirclUser->text());
     APIKEY.setValue("circlPwd", ui->lineEditCirclPwd->text());
-    APIKEY.setValue("mnemonic", ui->lineEditMnemonic->text());
+    APIKEY.setValue(OSINT_MODULE_MNEMONIC, ui->lineEditMnemonic->text());
     APIKEY.setValue("robtex", ui->lineEditRobtex->text());
-    APIKEY.setValue("otx", ui->lineEditRobtex->text());
+    APIKEY.setValue(OSINT_MODULE_OTX, ui->lineEditRobtex->text());
     APIKEY.setValue(OSINT_MODULE_BUILTWITH, ui->lineEditBuiltWith->text());
     APIKEY.setValue(OSINT_MODULE_DNSLYTICS, ui->lineEditDnslytics->text());
     APIKEY.setValue("domaintools_username", ui->lineEditDomainToolsUsername->text());
     APIKEY.setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
-    APIKEY.setValue("onyphe", ui->lineEditOnyphe->text());
-    APIKEY.setValue("fullhunt", ui->lineEditFullHunt->text());
+    APIKEY.setValue(OSINT_MODULE_ONYPHE, ui->lineEditOnyphe->text());
+    APIKEY.setValue(OSINT_MODULE_FULLHUNT, ui->lineEditFullHunt->text());
     APIKEY.setValue("spamhaus", ui->lineEditSpamHaus->text());
     APIKEY.setValue("debounce", ui->lineEditDebounce->text());
-    APIKEY.setValue("haveibeenpwned", ui->lineEditHaveIBeenPawned->text());
-    APIKEY.setValue("host", ui->lineEditHost->text());
-    APIKEY.setValue("jsonwhois", ui->lineEditJsonWhois->text());
-    APIKEY.setValue("leakix", ui->lineEditLeakIX->text());
-    APIKEY.setValue("networksdb", ui->lineEditNetworksDB->text());
+    APIKEY.setValue(OSINT_MODULE_HAVEIBEENPAWNED, ui->lineEditHaveIBeenPawned->text());
+    APIKEY.setValue(OSINT_MODULE_HOST, ui->lineEditHost->text());
+    APIKEY.setValue(OSINT_MODULE_JSONWHOIS, ui->lineEditJsonWhois->text());
+    APIKEY.setValue(OSINT_MODULE_LEAKIX, ui->lineEditLeakIX->text());
+    APIKEY.setValue(OSINT_MODULE_NETWORKSDB, ui->lineEditNetworksDB->text());
     APIKEY.setValue("neutrinoapi_key", ui->lineEditNeutrinoApiKey->text());
     APIKEY.setValue("neutrinoapi_uid", ui->lineEditNeutrinoApiUID->text());
     APIKEY.setValue("seon", ui->lineEditSeon->text());
@@ -130,7 +130,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditCloudflare->setText(key);
         ui->buttonGetCloudflare->hide();
     }
-    key = APIKEY.value("github").toString();
+    key = APIKEY.value(OSINT_MODULE_GITHUB).toString();
     if(!key.isEmpty()){
         ui->lineEditGithub->setText(key);
         ui->buttonGetGithub->hide();
@@ -155,7 +155,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditPentestTools->setText(key);
         ui->buttonGetPentestTools->hide();
     }
-    key = APIKEY.value("projectdiscovery").toString();
+    key = APIKEY.value(OSINT_MODULE_PROJECTDISCOVERY).toString();
     if(!key.isEmpty()){
         ui->lineEditProjectDiscovery->setText(key);
         ui->buttonGetProjectDiscovery->hide();
@@ -234,7 +234,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditViewDns->setText(key);
         ui->buttonGetViewDns->hide();
     }
-    key = APIKEY.value("hackertarget").toString();
+    key = APIKEY.value(OSINT_MODULE_HACKERTARGET).toString();
     if(!key.isEmpty()){
         ui->lineEditHackerTarget->setText(key);
         ui->buttonGetHackerTarget->hide();
@@ -255,7 +255,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditCirclPwd->setText(key);
         ui->buttonGetCircl->hide();
     }
-    key = APIKEY.value("mnemonic").toString();
+    key = APIKEY.value(OSINT_MODULE_MNEMONIC).toString();
     if(!key.isEmpty()){
         ui->lineEditMnemonic->setText(key);
         ui->buttonGetMnemonic->hide();
@@ -265,7 +265,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditRobtex->setText(key);
         ui->buttonGetRobtex->hide();
     }
-    key = APIKEY.value("otx").toString();
+    key = APIKEY.value(OSINT_MODULE_OTX).toString();
     if(!key.isEmpty()){
         ui->lineEditOtx->setText(key);
         ui->buttonGetOtx->hide();
@@ -290,12 +290,12 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditDomainToolsKey->setText(key);
         ui->buttonGetDomainTools->hide();
     }
-    key = APIKEY.value("onyphe").toString();
+    key = APIKEY.value(OSINT_MODULE_ONYPHE).toString();
     if(!key.isEmpty()){
         ui->lineEditOnyphe->setText(key);
         ui->buttonGetOnyphe->hide();
     }
-    key = APIKEY.value("fullhunt").toString();
+    key = APIKEY.value(OSINT_MODULE_FULLHUNT).toString();
     if(!key.isEmpty()){
         ui->lineEditFullHunt->setText(key);
         ui->buttonGetFullHunt->hide();
@@ -310,27 +310,27 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditDebounce->setText(key);
         ui->buttonGetDebounce->hide();
     }
-    key = APIKEY.value("haveibeenpwned").toString();
+    key = APIKEY.value(OSINT_MODULE_HAVEIBEENPAWNED).toString();
     if(!key.isEmpty()){
         ui->lineEditHaveIBeenPawned->setText(key);
         ui->buttonGetHaveIBeenPawned->hide();
     }
-    key = APIKEY.value("host").toString();
+    key = APIKEY.value(OSINT_MODULE_HOST).toString();
     if(!key.isEmpty()){
         ui->lineEditHost->setText(key);
         ui->buttonGetHost->hide();
     }
-    key = APIKEY.value("jsonwhois").toString();
+    key = APIKEY.value(OSINT_MODULE_JSONWHOIS).toString();
     if(!key.isEmpty()){
         ui->lineEditJsonWhois->setText(key);
         ui->buttonGetJsonWhois->hide();
     }
-    key = APIKEY.value("leakix").toString();
+    key = APIKEY.value(OSINT_MODULE_LEAKIX).toString();
     if(!key.isEmpty()){
         ui->lineEditLeakIX->setText(key);
         ui->buttonGetLeakIX->hide();
     }
-    key = APIKEY.value("networksdb").toString();
+    key = APIKEY.value(OSINT_MODULE_NETWORKSDB).toString();
     if(!key.isEmpty()){
         ui->lineEditNetworksDB->setText(key);
         ui->buttonGetNetworksDB->hide();

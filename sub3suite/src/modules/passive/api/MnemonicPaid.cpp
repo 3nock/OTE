@@ -11,14 +11,11 @@
 #define PDNS_NS 4
 #define IP_ANY_RECORD 5
 
-/*
- * access passive-dns, 1000 queries per day for public usage
- * you can query for any dns record type
- */
+
 MnemonicPaid::MnemonicPaid(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Mnemonic";
+    log.moduleName = OSINT_MODULE_MNEMONIC;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedRawJson);
@@ -26,11 +23,9 @@ MnemonicPaid::MnemonicPaid(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedIp);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedSubdomain);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("mnemonic").toString();
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_MNEMONIC).toString();
     
 }
 MnemonicPaid::~MnemonicPaid(){
@@ -69,42 +64,19 @@ void MnemonicPaid::start(){
     }
 
     if(args.inputIp){
-        url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
-        request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
-    }
-
-    if(args.inputDomain){
-        if(args.outputIp){
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=A&limit=999");
-            request.setAttribute(QNetworkRequest::User, PDNS_A);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
-
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=AAAA&limit=999");
-            request.setAttribute(QNetworkRequest::User, PDNS_AAAA);
+        if(args.outputSubdomain || args.outputIp){
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
+            request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSubdomain){
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=CNAME&limit=999");
-            request.setAttribute(QNetworkRequest::User, PDNS_CNAME);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
+    }
 
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=MX&limit=999");
-            request.setAttribute(QNetworkRequest::User, PDNS_MX);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
-
-            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?rrType=NS&limit=999");
-            request.setAttribute(QNetworkRequest::User, PDNS_NS);
+    if(args.inputDomain){
+        if(args.outputSubdomain || args.outputIp){
+            url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
+            request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -118,38 +90,18 @@ void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray data = document.object()["data"].toArray();
-    //int responseCode = document.object()["responseCode"].toInt();
 
-    if(QUERY_TYPE == IP_ANY_RECORD){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case IP_ANY_RECORD:
         foreach(const QJsonValue &value, data){
             QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "a"){
                 emit resultA(dataObj["answer"].toString());
                 log.resultsCount++;
             }
-            if(dataObj["rrtype"].toString() == "aaaa"){
-                emit resultAAAA(dataObj["answer"].toString());
-                log.resultsCount++;
-            }
-        }
-    }
-
-    if(QUERY_TYPE == PDNS_A){
-        foreach(const QJsonValue &value, data){
-            QJsonObject dataObj = value.toObject();
-            if(dataObj["rrtype"].toString() == "a"){
-                emit resultA(dataObj["answer"].toString());
-                log.resultsCount++;
-            }
-        }
-    }
-
-    if(QUERY_TYPE == PDNS_AAAA){
-        foreach(const QJsonValue &value, data){
-            QJsonObject dataObj = value.toObject();
             if(dataObj["rrtype"].toString() == "aaaa"){
                 emit resultAAAA(dataObj["answer"].toString());
                 log.resultsCount++;
@@ -166,57 +118,17 @@ void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray data = document.object()["data"].toArray();
-    //int responseCode = document.object()["responseCode"].toInt();
 
-    if(QUERY_TYPE == IP_ANY_RECORD){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case IP_ANY_RECORD:
         foreach(const QJsonValue &value, data){
-            QJsonObject dataObj = value.toObject();
-            if(dataObj["rrtype"].toString() == "cname"){
-                emit resultCNAME(dataObj["answer"].toString());
-                log.resultsCount++;
-            }
-            if(dataObj["rrtype"].toString() == "mx"){
-                emit resultMX(dataObj["answer"].toString());
-                log.resultsCount++;
-            }
-            if(dataObj["rrtype"].toString() == "ns"){
-                emit resultNS(dataObj["answer"].toString());
-                log.resultsCount++;
-            }
+            emit resultSubdomain(value.toObject()["query"].toString());
+            log.resultsCount++;
         }
     }
 
-    if(QUERY_TYPE == PDNS_CNAME){
-        foreach(const QJsonValue &value, data){
-            QJsonObject dataObj = value.toObject();
-            if(dataObj["rrtype"].toString() == "cname"){
-                emit resultCNAME(dataObj["answer"].toString());
-                log.resultsCount++;
-            }
-        }
-    }
-
-    if(QUERY_TYPE == PDNS_MX){
-        foreach(const QJsonValue &value, data){
-            QJsonObject dataObj = value.toObject();
-            if(dataObj["rrtype"].toString() == "mx"){
-                emit resultMX(dataObj["answer"].toString());
-                log.resultsCount++;
-            }
-        }
-    }
-
-    if(QUERY_TYPE == PDNS_NS){
-        foreach(const QJsonValue &value, data){
-            QJsonObject dataObj = value.toObject();
-            if(dataObj["rrtype"].toString() == "ns"){
-                emit resultNS(dataObj["answer"].toString());
-                log.resultsCount++;
-            }
-        }
-    }
     end(reply);
 }

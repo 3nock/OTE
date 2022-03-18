@@ -21,7 +21,7 @@
 NetworksDB::NetworksDB(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "NetworksDB";
+    log.moduleName = OSINT_MODULE_NETWORKSDB;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedRawJson);
@@ -31,14 +31,13 @@ NetworksDB::NetworksDB(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedIp);
     if(args.outputCidr)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedCidr);
+    if(args.outputAsn)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedAsn);
     if(args.outputSubdomainIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomainIp);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("networksdb").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_NETWORKSDB).toString();
 }
 NetworksDB::~NetworksDB(){
     delete manager;
@@ -96,7 +95,13 @@ void NetworksDB::start(){
             manager->get(request);
             activeRequests++;
         }
-        return;
+        if(args.outputCidr){
+            url.setUrl("https://networksdb.io/api/ip-info?ip="+target);
+            request.setAttribute(QNetworkRequest::User, IP_INFO);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 
     if(args.inputDomain){
@@ -107,7 +112,6 @@ void NetworksDB::start(){
             manager->get(request);
             activeRequests++;
         }
-        return;
     }
 
     if(args.inputAsn){
@@ -118,13 +122,22 @@ void NetworksDB::start(){
             manager->get(request);
             activeRequests++;
         }
-        return;
     }
 
     if(args.inputCidr){
         if(args.outputSubdomain || args.outputIp || args.outputSubdomainIp){
             url.setUrl("https://networksdb.io/api/mass-reverse-dns?cidr="+target);
             request.setAttribute(QNetworkRequest::User, DOMAINS_IN_NETWORK);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args.inputQueryTerm){
+        if(args.outputAsn){
+            url.setUrl("https://networksdb.io/api/org-search?search="+target);
+            request.setAttribute(QNetworkRequest::User, ORG_SEARCH);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -138,11 +151,12 @@ void NetworksDB::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == DOMAINS_IN_NETWORK){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAINS_IN_NETWORK:
         foreach(const QJsonValue &value, results){
             QJsonArray domains = value.toObject()["domains"].toArray();
             QString address = value.toObject()["ip"].toString();
@@ -162,11 +176,12 @@ void NetworksDB::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == DOMAINS_IN_NETWORK){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAINS_IN_NETWORK:
         foreach(const QJsonValue &value, results){
             QJsonArray domains = value.toObject()["domains"].toArray();
             foreach(const QJsonValue &domain, domains){
@@ -174,13 +189,14 @@ void NetworksDB::replyFinishedSubdomain(QNetworkReply *reply){
                 log.resultsCount++;
             }
         }
-    }
+        break;
 
-    if(QUERY_TYPE == DOMAINS_ON_IP){
+    case DOMAINS_ON_IP:
         foreach(const QJsonValue &value, results){
             emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
+        break;
     }
 
     end(reply);
@@ -192,23 +208,25 @@ void NetworksDB::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == DOMAINS_IN_NETWORK){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAINS_IN_NETWORK:
         foreach(const QJsonValue &value, results){
             QString address = value.toObject()["ip"].toString();
             emit resultIp(address);
             log.resultsCount++;
         }
-    }
+        break;
 
-    if(QUERY_TYPE == IPS_FOR_DOMAIN){
+    case IPS_FOR_DOMAIN:
         foreach(const QJsonValue &value, results){
             emit resultIp(value.toString());
             log.resultsCount++;
         }
+        break;
     }
 
     end(reply);
@@ -220,15 +238,48 @@ void NetworksDB::replyFinishedCidr(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == IPS_FOR_DOMAIN){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case AS_NETWORKS:
+    case IPS_FOR_DOMAIN:
         foreach(const QJsonValue &value, results){
-            QString prefix = value.toObject()["cidr"].toString();
-            emit resultCidr(prefix);
+            emit resultCidr(value.toObject()["cidr"].toString());
             log.resultsCount++;
+        }
+        break;
+
+    case IP_INFO:
+        QString cidr = document.object()["network"].toObject()["cidr"].toString();
+        emit resultCidr(cidr);
+        log.resultsCount++;
+        break;
+    }
+
+    end(reply);
+}
+
+void NetworksDB::replyFinishedAsn(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray results = document.object()["results"].toArray();
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case ORG_SEARCH:
+        foreach(const QJsonValue &value, results){
+            QString organisation = value.toObject()["organisation"].toString();
+            QJsonArray asns = value.toObject()["asns"].toArray();
+            foreach(const QJsonValue &asn, asns){
+                emit resultASN(asn.toString(), organisation);
+                log.resultsCount++;
+            }
         }
     }
 

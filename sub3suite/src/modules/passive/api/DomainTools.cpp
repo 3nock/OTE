@@ -38,13 +38,14 @@ DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
+    if(args.outputIp)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedIp);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
     if(args.outputSubdomainIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
 
     /* getting api key... */
-    
     m_key = APIKEY.value("domaintools_key").toString();
     m_username = APIKEY.value("domaintools_username").toString();
     
@@ -139,9 +140,9 @@ void DomainTools::start(){
     }
 
     if(args.inputDomain){
-        if(args.outputIp){
-            url.setUrl("https://api.domaintools.com/v1/"+target+"/hosting-history/");
-            request.setAttribute(QNetworkRequest::User, HOSTING_HISTORY);
+        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/reverse-ip/?api_username="+m_username+"&api_key="+m_key);
+            request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -150,9 +151,20 @@ void DomainTools::start(){
     }
 
     if(args.inputIp){
-        if(args.outputSubdomain){
-            url.setUrl("https://api.domaintools.com/v1/"+target+"/host-domains/");
+        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+            url.setUrl("https://api.domaintools.com/v1/"+target+"/host-domains/?api_username="+m_username+"&api_key="+m_key);
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+            return;
+        }
+    }
+
+    if(args.inputQueryTerm){
+        if(args.outputSubdomain){
+            url.setUrl("https://api.domaintools.com/v2/domain-search/?query="+target+"&api_username="+m_username+"&api_key="+m_key);
+            request.setAttribute(QNetworkRequest::User, DOMAIN_SEARCH);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -167,11 +179,12 @@ void DomainTools::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
-    if(QUERY_TYPE == REVERSE_IP){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case REVERSE_IP:
         foreach(const QJsonValue &ip_address, response["ip_addresses"].toArray()){
             QString ip = ip_address.toObject()["ip_address"].toString();
             foreach(const QJsonValue &domain, ip_address.toObject()["domain_names"].toArray()){
@@ -179,6 +192,7 @@ void DomainTools::replyFinishedSubdomainIp(QNetworkReply *reply){
                 log.resultsCount++;
             }
         }
+        break;
     }
 
     end(reply);
@@ -190,34 +204,52 @@ void DomainTools::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
-
-    if(QUERY_TYPE == HOSTING_HISTORY){
-        foreach(const QJsonValue &value, response["ip_history"].toArray()){
-            QJsonObject ip_history = value.toObject();
-            if(!ip_history["post_ip"].isNull() || !ip_history["post_ip"].toString().isEmpty()){
-                QString post_ip = value.toObject()["post_ip"].toString();
-                emit resultIp(post_ip);
-                log.resultsCount++;
-            }
-            if(!ip_history["pre_ip"].isNull() || !ip_history["pre_ip"].toString().isEmpty()){
-                QString pre_ip = value.toObject()["pre_ip"].toString();
-                emit resultIp(pre_ip);
-                log.resultsCount++;
-            }
-        }
-    }
-
-    if(QUERY_TYPE == REVERSE_IP){
+    switch(reply->property(REQUEST_TYPE).toInt())
+    {
+    case REVERSE_IP:
         foreach(const QJsonValue &ip_address, response["ip_addresses"].toArray()){
             foreach(const QJsonValue &domain, ip_address.toObject()["domain_names"].toArray()){
                 emit resultSubdomain(domain.toString());
                 log.resultsCount++;
             }
         }
+        break;
+
+    case DOMAIN_SEARCH:
+        foreach(const QJsonValue &results, response["results"].toArray()){
+            QString sld = results.toObject()["sld"].toString();
+            foreach(const QJsonValue &tld, results["tlds"].toArray()){
+                QString domain = sld.append(".").append(tld.toString());
+                emit resultSubdomain(domain);
+                log.resultsCount++;
+            }
+        }
+        break;
+    }
+
+    end(reply);
+}
+
+void DomainTools::replyFinishedIp(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject response = document.object()["response"].toObject();
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case REVERSE_IP:
+        foreach(const QJsonValue &ip_address, response["ip_addresses"].toArray()){
+            emit resultIp(ip_address.toObject()["ip_address"].toString());
+            log.resultsCount++;
+        }
+        break;
     }
 
     end(reply);

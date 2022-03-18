@@ -21,7 +21,8 @@ enum INPUT{
     URL = 3,
     ASN = 4,
     CERT = 5,
-    CIDR = 6
+    CIDR = 6,
+    QUERY_TERM =7
 };
 
 namespace osint{
@@ -99,6 +100,7 @@ class Osint : public AbstractEngine{
         QStringListModel *m_targetListModel_cidr;
         QStringListModel *m_targetListModel_ssl;
         QStringListModel *m_targetListModel_email;
+        QStringListModel *m_targetListModel_query;
         /* results models */
         QStandardItemModel *m_model_subdomainIp;
         QStandardItemModel *m_model_subdomain;

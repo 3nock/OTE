@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct NetworksDB{
-    QString name = "NetworksDB";
+    QString name = OSINT_MODULE_NETWORKSDB;
     QString url = "https://networksdb.io/";
     QString url_apiDoc = "https://networksdb.io/api/docs";
     QString summary = "Our database contains information about the public IPv4 and IPv6 addresses, networks and domains owned by companies "
@@ -40,7 +40,9 @@ struct NetworksDB{
                                           {IN_IP,
                                            {OUT_SUBDOMAIN}},
                                           {IN_ASN,
-                                           {}}};
+                                           {OUT_CIDR}},
+                                          {IN_QUERYTERM,
+                                           {OUT_ASN}}};
 };
 }
 
@@ -56,6 +58,7 @@ class NetworksDB: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedCidr(QNetworkReply *reply) override;
+        void replyFinishedAsn(QNetworkReply *reply) override;
 
     private:
         QString m_key;

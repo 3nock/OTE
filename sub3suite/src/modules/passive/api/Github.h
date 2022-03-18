@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Github{
-    QString name = "Github";
+    QString name = OSINT_MODULE_GITHUB;
     QString url = "https://github.com/";
     QString url_apiDoc = "";
     QString summary = "Github API";

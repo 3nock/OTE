@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct FullHunt{
-    QString name = "FullHunt";
+    QString name = OSINT_MODULE_FULLHUNT;
     QString url = "https://fullhunt.io/";
     QString url_apiDoc = "https://api-docs.fullhunt.io/";
     QString summary = "FullHunt is the attack surface database of the entire Internet. FullHunt enables companies to discover all of their attack surfaces, "
@@ -19,7 +19,8 @@ struct FullHunt{
                                         {"Host details",
                                          {PLACEHOLDERTEXT_HOSTNAME, "This endpoint retrieves details for a given host."}}};
 
-    QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN}}};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_ASN, OUT_IP}}};
 };
 }
 
@@ -32,6 +33,8 @@ class FullHunt: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
 
     private:
         QString m_key;

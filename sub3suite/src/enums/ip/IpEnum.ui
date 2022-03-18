@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>644</width>
+    <width>654</width>
     <height>371</height>
    </rect>
   </property>
@@ -36,7 +36,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="comboBoxOutput">
        <property name="minimumSize">
         <size>
          <width>110</width>
@@ -46,6 +46,11 @@
        <item>
         <property name="text">
          <string>IP Info</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Reverse IP</string>
         </property>
        </item>
       </widget>

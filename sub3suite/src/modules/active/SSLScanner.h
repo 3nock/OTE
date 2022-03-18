@@ -17,19 +17,6 @@
 #include <QSslCertificate>
 #include "AbstractScanner.h"
 
-/* other ports that uses SSL
-3306            MySQL
-110             POP – Incoming
-995             POP SSL – Incoming
-143             IMAP – Incoming
-993             IMAP SSL – Incoming
-25, 80, 3535	SMTP – Outgoing
-465             SMTP SSL – Outgoing
-*/
-
-struct SSL_struct{
-    QString target;
-};
 
 namespace ssl {
 
@@ -37,7 +24,10 @@ enum PORT { // ssl port
     HTTPS,
     FTP,
     FTPs,
-    SSH
+    SSH,
+    SMTP,
+    IMAP,
+    POP
 };
 
 enum OUTPUT { // scan type

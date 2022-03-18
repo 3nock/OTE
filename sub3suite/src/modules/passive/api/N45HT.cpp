@@ -11,7 +11,7 @@
 N45HT::N45HT(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "N45HT";
+    log.moduleName = OSINT_MODULE_N45HT;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &N45HT::replyFinishedRawJson);

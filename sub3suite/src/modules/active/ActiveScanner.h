@@ -2,7 +2,7 @@
  Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
  Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
 
- @brief :
+ @brief : class for resolving hostnames
 */
 
 #ifndef ACTIVESCANNER_H
@@ -16,12 +16,6 @@
 
 
 namespace active {
-
-enum OUTPUT { // scan type
-    ACTIVE_DNS,
-    ACTIVE_PING,
-    ACTIVE_PORT
-};
 
 struct ScanStat {  // scan statistics
     int nameservers = 0;
@@ -43,7 +37,6 @@ struct ScanConfig { // scan configurations
 
 struct ScanArgs { // scan arguments
     QMutex mutex;
-    active::OUTPUT output;
     active::ScanConfig *config;
     QQueue<QString> targets;
     QHostAddress nameserver;
@@ -59,7 +52,6 @@ class Scanner : public AbstractScanner{
     public:
         Scanner(active::ScanArgs *args);
         ~Scanner() override;
-
 
     private slots:
         void lookup() override;

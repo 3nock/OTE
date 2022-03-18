@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct MnemonicFree{
-    QString name = "Mnemonic";
+    QString name = OSINT_MODULE_MNEMONIC;
     QString url = "https://www.mnemonic.no/";
     QString url_apiDoc = "https://docs.mnemonic.no/";
     QString summary = "The mnemonic PassiveDNS service passively collects DNS queries from our sensor network around the globe."

@@ -29,7 +29,7 @@ BuiltWith::BuiltWith(ScanArgs args): AbstractOsintModule(args)
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
 
-    /* getting api key... */
+    /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_BUILTWITH).toString();
 }
 BuiltWith::~BuiltWith(){

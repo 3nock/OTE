@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct HackerTargetPaid{
-    QString name = "HackerTarget";
+    QString name = OSINT_MODULE_HACKERTARGET;
     QString url = "https://hackertarget.com/";
     QString url_apiDoc = "";
     QString summary = "From attack surface discovery to vulnerability identification, actionable network intelligence \n"
@@ -35,7 +35,7 @@ struct HackerTargetPaid{
                                         {"pagelinks",
                                          {PLACEHOLDERTEXT_DOMAIN, "Dump all the links from a web page."}},
                                         {"aslookup",
-                                         {PLACEHOLDERTEXT_IP, "Get Autonomous System Number or ASN details from an AS or an IP address."}},
+                                         {PLACEHOLDERTEXT_IP_OR_ASN, "Get Autonomous System Number or ASN details from an AS or an IP address."}},
                                         {"ping",
                                          {PLACEHOLDERTEXT_IP, "A common tool for testing connectivity to a host, perform a ping from our server."}},
                                         {"traceroute",
@@ -46,7 +46,9 @@ struct HackerTargetPaid{
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
                                           {IN_IP,
-                                           {OUT_SUBDOMAIN, OUT_ASN}}};
+                                           {OUT_SUBDOMAIN, OUT_ASN}},
+                                          {IN_ASN,
+                                           {OUT_CIDR}}};
 };
 }
 
@@ -62,6 +64,7 @@ class HackerTargetPaid: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
 
     private:
         QString m_key;

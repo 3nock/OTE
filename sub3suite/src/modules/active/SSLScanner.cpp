@@ -50,6 +50,15 @@ void ssl::Scanner::lookup(){
         case SSH:
             socket.connectToHostEncrypted(target, 22);
             break;
+        case SMTP:
+            socket.connectToHostEncrypted(target, 465);
+            break;
+        case IMAP:
+            socket.connectToHostEncrypted(target, 993);
+            break;
+        case POP:
+            socket.connectToHostEncrypted(target, 995);
+            break;
         }
 
         if(!socket.waitForEncrypted(m_args->config->timeout*1000))

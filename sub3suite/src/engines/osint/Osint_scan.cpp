@@ -87,6 +87,9 @@ void Osint::startScan(){
     case INPUT::CIDR:
         m_scanArgs->inputCidr = true;
         break;
+    case INPUT::QUERY_TERM:
+        m_scanArgs->inputQueryTerm = true;
+        break;
     }
 
     /* getting output type as specified by users */
@@ -245,6 +248,9 @@ void Osint::startScan(){
 
     if(ui->moduleSpyOnWeb->isChecked())
         this->startScanThread(new SpyOnWeb(*m_scanArgs));
+
+    if(ui->moduleLeakIX->isChecked())
+        this->startScanThread(new LeakIX(*m_scanArgs));
 
     ///
     /// archives...

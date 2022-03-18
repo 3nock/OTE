@@ -21,7 +21,7 @@
 HackerTargetPaid::HackerTargetPaid(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "HackerTarget";
+    log.moduleName = OSINT_MODULE_HACKERTARGET;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedRawTxt);
@@ -33,11 +33,11 @@ HackerTargetPaid::HackerTargetPaid(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedIp);
     if(args.outputAsn)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedAsn);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("hackertarget").toString();
+    if(args.outputCidr)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedCidr);
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_HACKERTARGET).toString();
     
 }
 HackerTargetPaid::~HackerTargetPaid(){
@@ -51,6 +51,8 @@ void HackerTargetPaid::start(){
     if(args.outputRaw){
         switch(args.rawOption){
         case ASLOOKUP:
+            if(!target.startsWith("AS", Qt::CaseInsensitive))
+                target = "AS"+target;
             url.setUrl("https://api.hackertarget.com/aslookup/?q="+target+"&apikey="+m_key);
             break;
         case BANNER_GRABBER:
@@ -103,15 +105,8 @@ void HackerTargetPaid::start(){
 
     if(args.inputDomain){
         if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
-            url.setUrl("https://api.hackertarget.com/hostsearch/?q="+target);
+            url.setUrl("https://api.hackertarget.com/hostsearch/?q="+target+"&apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, HOSTSEARCH);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
-        }
-        if(args.outputSubdomain || args.outputIp){
-            url.setUrl("https://api.hackertarget.com/dnslookup/?q="+target);
-            request.setAttribute(QNetworkRequest::User, DNSLOOKUP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -120,15 +115,27 @@ void HackerTargetPaid::start(){
 
     if(args.inputIp){
         if(args.outputAsn){
-            url.setUrl("https://api.hackertarget.com/aslookup/?q="+target);
+            url.setUrl("https://api.hackertarget.com/aslookup/?q="+target+"&apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, ASLOOKUP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
         if(args.outputSubdomain){
-            url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+target);
+            url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+target+"&apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, REVERSE_IPLOOKUP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args.inputAsn){
+        if(args.outputCidr){
+            if(!target.startsWith("AS", Qt::CaseInsensitive))
+                target = "AS"+target;
+            url.setUrl("https://api.hackertarget.com/aslookup/?q="+target+"&apikey="+m_key);
+            request.setAttribute(QNetworkRequest::User, ASLOOKUP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -142,10 +149,11 @@ void HackerTargetPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
+    QString results = reply->readAll();
 
-    if(QUERY_TYPE == HOSTSEARCH){
-        QString results = reply->readAll();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOSTSEARCH:
         foreach(const QString &item, results.split("\n")){
             QStringList domainAndIp = item.split(","); // ["subdomain", "ip-address"]
             /*
@@ -158,6 +166,7 @@ void HackerTargetPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }
 
@@ -167,43 +176,18 @@ void HackerTargetPaid::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
+    QString results = reply->readAll();
 
-    if(QUERY_TYPE == HOSTSEARCH){
-        QString results = reply->readAll();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOSTSEARCH:
         foreach(const QString &item, results.split("\n")){
             emit resultSubdomain(item.split(",").at(0));
             log.resultsCount++;
         }
-    }
+        break;
 
-    if(QUERY_TYPE == DNSLOOKUP){
-        QString results = reply->readAll();
-        foreach(const QString &item, results.split("\n")){
-            QString type = item.split(":").at(0);
-            QString value = item.split(":").at(1);
-
-            type = type.remove(" ");
-            if(type == "NS"){
-                QString ns = value.remove(" ");
-                emit resultNS(ns);
-                log.resultsCount++;
-            }
-            if(type == "MX"){
-                QString mx = value.split(" ").at(1);
-                emit resultMX(mx);
-                log.resultsCount++;
-            }
-            if(type == "CNAME"){
-                QString cname = value.remove(" ");
-                emit resultCNAME(cname);
-                log.resultsCount++;
-            }
-        }
-    }
-
-    if(QUERY_TYPE == REVERSE_IPLOOKUP){
-        QString results = reply->readAll();
+    case REVERSE_IPLOOKUP:
         foreach(const QString &item, results.split("\n")){
             emit resultSubdomain(item);
             log.resultsCount++;
@@ -219,36 +203,17 @@ void HackerTargetPaid::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
+    QString results = reply->readAll();
 
-    if(QUERY_TYPE == HOSTSEARCH){
-        QString results = reply->readAll();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOSTSEARCH:
         foreach(const QString &item, results.split("\n")){
             emit resultIp(item.split(",").at(1));
             log.resultsCount++;
         }
     }
 
-    if(QUERY_TYPE == DNSLOOKUP){
-        QString results = reply->readAll();
-        foreach(const QString &item, results.split("\n")){
-            QString type = item.split(":").at(0);
-
-            type = type.remove(" ");
-            if(type == "A"){
-                QString value = item.split(":").at(0);
-                value = value.remove(" ");
-                emit resultA(value);
-                log.resultsCount++;
-            }
-            if(type == "AAA"){
-                QString value = item;
-                value = value.remove(0, 7);
-                emit resultAAAA(value);
-                log.resultsCount++;
-            }
-        }
-    }
     end(reply);
 }
 
@@ -258,15 +223,39 @@ void HackerTargetPaid::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
+    QString result = reply->readAll();
 
-    if(QUERY_TYPE == ASLOOKUP){
-        QString result = reply->readAll();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case ASLOOKUP:
         result = result.remove("\"");
         QStringList resultList = result.split(",");
 
         emit resultASN(resultList.at(1), resultList.at(3));
         log.resultsCount++;
     }
+
+    end(reply);
+}
+
+void HackerTargetPaid::replyFinishedCidr(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QString results = reply->readAll();
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case ASLOOKUP:
+        QStringList cidrs = results.split("\n");
+        cidrs.removeAt(0);
+        foreach(const QString &cidr, cidrs){
+            emit resultCidr(cidr);
+            log.resultsCount++;
+        }
+    }
+
     end(reply);
 }

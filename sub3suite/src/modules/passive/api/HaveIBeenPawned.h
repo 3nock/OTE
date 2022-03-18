@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct HaveIBeenPawned{
-    QString name = "HaveIBeenPawned";
+    QString name = OSINT_MODULE_HAVEIBEENPAWNED;
     QString url = "https://haveibeenpwned.com";
     QString url_apiDoc = "https://haveibeenpwned.com/API/v3";
     QString summary = "Check if your email or phone is in a data breach";

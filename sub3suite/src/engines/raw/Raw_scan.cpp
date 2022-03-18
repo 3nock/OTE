@@ -49,7 +49,6 @@ void Raw::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
-    ui->progressBar->clearMask();
 
     /* setting status */
     status->isRunning = true;

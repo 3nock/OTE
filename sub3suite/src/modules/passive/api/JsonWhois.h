@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct JsonWhois{
-    QString name = "JsonWhois";
+    QString name = OSINT_MODULE_JSONWHOIS;
     QString url = "https://jsonwhois.com/";
     QString url_apiDoc = "https://jsonwhois.com/docs";
     QString summary = "Domain API Services; WHOIS | SCREENSHOTS | SOCIAL.";

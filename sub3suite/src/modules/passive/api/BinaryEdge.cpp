@@ -32,7 +32,7 @@ BinaryEdge::BinaryEdge(ScanArgs args): AbstractOsintModule(args)
     if(args.outputIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedIp);
 
-    /* getting api key... */
+    /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_BINARYEDGE).toString();
 }
 BinaryEdge::~BinaryEdge(){
@@ -106,7 +106,7 @@ void BinaryEdge::start(){
             activeRequests++;
         }
 
-        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
+        if(args.outputSubdomainIp || args.outputIp){
             url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_DNS);
             request.setUrl(url);
@@ -122,19 +122,20 @@ void BinaryEdge::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray events = document.object()["events"].toArray();
 
-    if(QUERY_TYPE == DOMAIN_SUBDOMAIN){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_SUBDOMAIN:
         foreach(const QJsonValue &value, events){
             emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
-    }
+        break;
 
-    /* domains/dns and domains/ip have results in same format */
-    if(QUERY_TYPE == DOMAIN_DNS || QUERY_TYPE == DOMAIN_IP){
+    case DOMAIN_IP:
+    case DOMAIN_DNS:
         foreach(const QJsonValue &value, events){
             QString domain = value.toObject()["domain"].toString();
             emit resultSubdomain(domain);
@@ -150,6 +151,7 @@ void BinaryEdge::replyFinishedSubdomain(QNetworkReply *reply){
                 log.resultsCount++;
             }
         }
+        break;
     }
 
     end(reply);
@@ -161,12 +163,13 @@ void BinaryEdge::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray events = document.object()["events"].toArray();
 
-    /* domains/dns and domains/ip have results in same format */
-    if(QUERY_TYPE == DOMAIN_DNS || QUERY_TYPE == DOMAIN_IP){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_DNS:
+    case DOMAIN_IP:
         foreach(const QJsonValue &value, events){
             QString A = value.toObject()["A"].toArray().at(0).toString();
             QString AAAA = value.toObject()["AAAA"].toArray().at(0).toString();
@@ -180,6 +183,7 @@ void BinaryEdge::replyFinishedIp(QNetworkReply *reply){
                 log.resultsCount++;
             }
         }
+        break;
     }
 
     end(reply);
@@ -191,12 +195,13 @@ void BinaryEdge::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray events = document.object()["events"].toArray();
 
-    /* domains/dns and domains/ip have results in same format */
-    if(QUERY_TYPE == DOMAIN_DNS || QUERY_TYPE == DOMAIN_IP){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_DNS:
+    case DOMAIN_IP:
         foreach(const QJsonValue &value, events){
             QString domain = value.toObject()["domain"].toString();
             QString A = value.toObject()["A"].toArray().at(0).toString();
@@ -211,6 +216,7 @@ void BinaryEdge::replyFinishedSubdomainIp(QNetworkReply *reply){
                 log.resultsCount++;
             }
         }
+        break;
     }
 
     end(reply);

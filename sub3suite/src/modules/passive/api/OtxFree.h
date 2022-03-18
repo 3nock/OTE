@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct OtxFree{
-    QString name = "Otx";
+    QString name = OSINT_MODULE_OTX;
     QString url = "https://otx.alienvault.com/";
     QString url_apiDoc = "https://otx.alienvault.com/api";
     QString summary = "The World’s First Truly Open Threat Intelligence Community";

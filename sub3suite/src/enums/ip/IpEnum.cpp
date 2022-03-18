@@ -140,3 +140,14 @@ void IpEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
     ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
+
+void IpEnum::on_comboBoxOutput_currentIndexChanged(int index){
+    ui->comboBoxEngine->clear();
+    switch(index){
+    case 0:
+        ui->comboBoxEngine->addItems({"IPINFO", "IPAPI"});
+        break;
+    case 1:
+        ui->comboBoxEngine->addItems({"DNSLytics"});
+    }
+}

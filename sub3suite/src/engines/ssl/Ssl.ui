@@ -120,6 +120,21 @@
          <string>SSH</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>SMTP</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>IMAP</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>POP</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>

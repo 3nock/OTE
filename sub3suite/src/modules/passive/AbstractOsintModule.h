@@ -73,6 +73,7 @@ struct ScanArgs{
     bool inputEmail = false;
     bool inputDomain = false;
     bool inputSSLCert = false;
+    bool inputQueryTerm = false;
 
     /* output type */
     bool outputRaw = false;
@@ -129,13 +130,13 @@ class AbstractOsintModule : public QObject {
     signals:
         void quitThread();
         void nextTarget();
-        /* ... */
+
         void scanProgress(int progress);
-        /* ... */
+
         void infoLog(ScanLog log);
         void rateLimitLog(ScanLog log);
         void errorLog(ScanLog error);
-        /* ... */
+
         void resultSubdomain(QString subdomain);
         void resultSubdomainIp(QString subdomain, QString ip);
         void resultIp(QString ip);
@@ -150,11 +151,11 @@ class AbstractOsintModule : public QObject {
         void resultCidr(QString cidr);
         void resultUrl(QString url);
         void resultASN(QString asn, QString name);
-        /* ... */
+
         void rawCert(QByteArray);
         void rawResults(s3s_struct::RAW);
         void rawResultsTxt(s3s_struct::RAW);
-        /* ... */
+
         void infoASN(s3s_struct::ASN);
         void infoCIDR(s3s_struct::CIDR);
         void infoMX(s3s_struct::MX);
@@ -187,19 +188,19 @@ class AbstractOsintModule : public QObject {
         virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
         virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails
         virtual void replyFinishedUrl(QNetworkReply*){} // returns URLs
-        /* ... */
+
         virtual void replyFinishedInfoAsn(QNetworkReply*){} // returns multiple info on asn
         virtual void replyFinishedInfoAsnPeers(QNetworkReply*){} // returns multiple info on asn peers
         virtual void replyFinishedInfoAsnPrefixes(QNetworkReply*){} // returns multiple info on asn prefixes
-        /* ... */
+
         virtual void replyFinishedInfo(QNetworkReply*){} // returns multiple info on appropriate target
         virtual void replyFinishedInfoIp(QNetworkReply*){} // returns multiple info on ip
         virtual void replyFinishedInfoCidr(QNetworkReply*){} // returns multiple info on cidr
         virtual void replyFinishedInfoSSLCert(QNetworkReply*){} // returns multiple info on ssl cert
-        /* ... */
+
         virtual void replyFinishedInfoMX(QNetworkReply*){} // returns MX records info
         virtual void replyFinishedInfoNS(QNetworkReply*){} // returns NS records info
-        /* ... */
+
         virtual void replyFinishedRawNdjson(QNetworkReply *reply) // returns raw json results from ndjson
         {
             if(reply->error())

@@ -27,6 +27,7 @@ class IpEnum : public AbstractEnum{
 
     public slots:
         void onResult(s3s_struct::IP);
+        void onResult_reverse(s3s_struct::IP);
 
         void onScanThreadEnded();
         void onInfoLog(ScanLog log);
@@ -45,7 +46,9 @@ class IpEnum : public AbstractEnum{
         void on_lineEditFilter_textChanged(const QString &arg1);
         void on_buttonAction_clicked();
 
-    private:
+        void on_comboBoxOutput_currentIndexChanged(int index);
+
+private:
         Ui::IpEnum *ui;
 
         QStandardItemModel *m_model;

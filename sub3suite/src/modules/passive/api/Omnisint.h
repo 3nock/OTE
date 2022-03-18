@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Omnisint{
-    QString name = "Omnisint";
+    QString name = OSINT_MODULE_OMNISINT;
     QString url = "https://omnisint.io/";
     QString url_apiDoc = "https://github.com/Cgboal/SonarSearch";
     QString summary = "Rapid7's DNS Database easily searchable via a lightening fast API, \n"
@@ -20,13 +20,18 @@ struct Omnisint{
                                         {"all",
                                          {PLACEHOLDERTEXT_DOMAIN, "All Results types"}},
                                         {"reverse ip",
-                                         {PLACEHOLDERTEXT_IP_OR_CIDR, "Identify other domains hosted on the IP address of your target, or even their ASN as supported by CIDR range searchs."
+                                         {PLACEHOLDERTEXT_IP, "Identify other domains hosted on the IP address of your target, or even their ASN as supported by CIDR range searchs."
+                                                                      "Access a comprehensive reverse DNS database without limits"}},
+                                        {"reverse ip/cidr",
+                                         {PLACEHOLDERTEXT_CIDR, "Identify other domains hosted on the IP address of your target, or even their ASN as supported by CIDR range searchs."
                                                                       "Access a comprehensive reverse DNS database without limits"}}};
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_SUBDOMAIN}},
                                           {IN_IP,
-                                           {OUT_SUBDOMAIN}}};
+                                           {OUT_SUBDOMAIN}},
+                                          {IN_CIDR,
+                                          {OUT_SUBDOMAIN, OUT_SUBDOMAINIP}}};
 };
 }
 
@@ -38,7 +43,8 @@ class Omnisint: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedSubdomain(QNetworkReply *) override;
+        void replyFinishedSubdomain(QNetworkReply *reply) override;
+        void replyFinishedSubdomainIp(QNetworkReply *reply) override;
 };
 
 #endif // OMNISINT_H
