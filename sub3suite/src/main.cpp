@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     /* create the sub3suite app */
     s3s_Application s3s_app(argc, argv);
 
-    /* initializing crash handler */
+    /* initializing the crash handler */
     Breakpad::CrashHandler::instance()->Init(QGuiApplication::applicationDirPath()+"/logs");
 
     int dpi = qApp->desktop()->logicalDpiX();

@@ -23,7 +23,6 @@ CONFIG += c99
 CONFIG += c++11
 
 QMAKE_CXXFLAGS+=/Zi
-QMAKE_CXXFLAGS+=/Fd
 QMAKE_LFLAGS+= /INCREMENTAL:NO /Debug
 
 include(../include/gumbo-parser.pri)
