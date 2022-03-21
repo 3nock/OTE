@@ -71,7 +71,7 @@ void UKWebArchive::replyFinishedUrl(QNetworkReply *reply){
 
     foreach(const QJsonValue &urlValue, urls){
         QString domainUrl = urlValue.toObject()["url"].toString();
-        emit resultUrl(domainUrl);
+        emit resultURL(domainUrl);
         log.resultsCount++;
     }
 

@@ -24,8 +24,8 @@ Circl::Circl(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSubdomain);
     if(args.outputIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedIp);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSSL);
     if(args.outputAsn)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
 
@@ -91,7 +91,7 @@ void Circl::start(){
             activeRequests++;
             return;
         }
-        if(args.outputSSLCert){
+        if(args.outputSSL){
             url.setUrl("https://www.circl.lu/pdns/query/"+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL);
             request.setUrl(url);
@@ -101,7 +101,7 @@ void Circl::start(){
         }
     }
 
-    if(args.inputSSLCert){
+    if(args.inputSSL){
         if(args.outputIp){
             url.setUrl("https://www.circl.lu/v2pssl/cquery/"+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL_QUERY);
@@ -112,7 +112,7 @@ void Circl::start(){
     }
 }
 
-void Circl::replyFinishedSSLCert(QNetworkReply *reply){
+void Circl::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

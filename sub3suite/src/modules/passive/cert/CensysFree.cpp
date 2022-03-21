@@ -12,8 +12,8 @@ CensysFree::CensysFree(ScanArgs args): AbstractOsintModule(args)
 
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CensysFree::replyFinishedSubdomain);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &CensysFree::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &CensysFree::replyFinishedSSL);
 }
 CensysFree::~CensysFree(){
     delete manager;
@@ -37,7 +37,7 @@ void CensysFree::start(){
         activeRequests++;
     }
 
-    if(args.inputSSLCert){
+    if(args.inputSSL){
         url.setUrl("https://censys.io/certificates/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
@@ -45,7 +45,7 @@ void CensysFree::start(){
     }
 }
 
-void CensysFree::replyFinishedSSLCert(QNetworkReply *reply){
+void CensysFree::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

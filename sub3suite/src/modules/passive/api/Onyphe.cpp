@@ -46,8 +46,8 @@ Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomain);
     if(args.outputIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedIp);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSSL);
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_ONYPHE).toString();
@@ -151,7 +151,7 @@ void Onyphe::start(){
     }
 
     if(args.inputDomain){
-        if(args.outputSubdomain || args.outputIp || args.outputSSLCert){
+        if(args.outputSubdomain || args.outputIp || args.outputSSL){
             url.setUrl("https://www.onyphe.io/api/v2/summary/domain/"+target);
             request.setAttribute(QNetworkRequest::User, SUMMARY_DOMAIN);
             request.setUrl(url);
@@ -161,7 +161,7 @@ void Onyphe::start(){
     }
 
     if(args.inputIp){
-        if(args.outputSubdomain || args.outputSSLCert){
+        if(args.outputSubdomain || args.outputSSL){
             url.setUrl("https://www.onyphe.io/api/v2/summary/ip/"+target);
             request.setAttribute(QNetworkRequest::User, SUMMARY_IP);
             request.setUrl(url);
@@ -213,7 +213,7 @@ void Onyphe::replyFinishedIp(QNetworkReply *reply){
     case SUMMARY_DOMAIN:
         foreach(const QJsonValue &value, results){
             foreach(const QJsonValue &ip, value.toObject()["ip"].toArray()){
-                emit resultIp(ip.toString());
+                emit resultIP(ip.toString());
                 log.resultsCount++;
             }
         }
@@ -222,7 +222,7 @@ void Onyphe::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void Onyphe::replyFinishedSSLCert(QNetworkReply *reply){
+void Onyphe::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

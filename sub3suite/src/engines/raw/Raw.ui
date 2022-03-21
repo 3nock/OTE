@@ -1048,9 +1048,9 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>0</y>
+                <y>-1347</y>
                 <width>157</width>
-                <height>1501</height>
+                <height>1524</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1467,6 +1467,13 @@
                    <widget class="QRadioButton" name="moduleThreatBook">
                     <property name="text">
                      <string>ThreatBook</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="modulePassiveTotal">
+                    <property name="text">
+                     <string>PassiveTotal</string>
                     </property>
                    </widget>
                   </item>

@@ -50,7 +50,7 @@ class Spyse: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedSSLCert(QNetworkReply *reply) override;
+        void replyFinishedSSL(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
         void replyFinishedUrl(QNetworkReply *reply) override;
 

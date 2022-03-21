@@ -35,9 +35,9 @@ class Raw : public AbstractEngine{
 
     public slots:
         void onScanThreadEnded();
-        void onRateLimitLog(ScanLog log);
         void onErrorLog(ScanLog log);
         void onInfoLog(ScanLog log);
+
         void onResults(s3s_struct::RAW raw); // for Json results
         void onResultsTxt(s3s_struct::RAW raw); // for normal txt results
         void onReScan(QQueue<QString> targets);
@@ -57,6 +57,7 @@ class Raw : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_lineEditTreeFilter_textChanged(const QString &arg1);
         void on_treeViewResults_doubleClicked(const QModelIndex &index);
+        void on_tabWidgetInput_currentChanged(int index);
 
         /* for Find */
         void on_buttonNext_clicked();
@@ -145,8 +146,7 @@ class Raw : public AbstractEngine{
         void on_moduleIpQualityScore_clicked();
         void on_moduleLeakLookup_clicked();
         void on_moduleWappalyzer_clicked();
-
-        void on_tabWidgetInput_currentChanged(int index);
+        void on_modulePassiveTotal_clicked();
 
 private:
         Ui::Raw *ui;

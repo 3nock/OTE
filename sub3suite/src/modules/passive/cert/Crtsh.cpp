@@ -9,10 +9,10 @@ Crtsh::Crtsh(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Crtsh";
 
-    if(args.outputInfo)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedInfo);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedSSLCert);
+    if(args.outputInfoSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedInfoSSL);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedSSL);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedSubdomain);
 }
@@ -71,7 +71,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
         gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
 
-    if(args.inputSSLCert)
+    if(args.inputSSL)
     {
         if(m_queryToGetId)
             m_getCertId(reply); // get the crtsh certificate id and request to download the certificate...
@@ -90,7 +90,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void Crtsh::replyFinishedSSLCert(QNetworkReply *reply){
+void Crtsh::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -106,7 +106,7 @@ void Crtsh::replyFinishedSSLCert(QNetworkReply *reply){
     end(reply);
 }
 
-void Crtsh::replyFinishedInfo(QNetworkReply *reply){
+void Crtsh::replyFinishedInfoSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -115,7 +115,7 @@ void Crtsh::replyFinishedInfo(QNetworkReply *reply){
     if(m_queryToGetId)
         m_getCertId(reply); // get the crtsh certificate id and request to download the certificate...
     else
-        emit rawCert(reply->readAll()); // get and send the raw certificate for analysis
+        emit rawSSL(reply->readAll()); // get and send the raw certificate for analysis
 
     end(reply);
 }

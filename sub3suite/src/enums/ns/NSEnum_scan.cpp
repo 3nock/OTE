@@ -71,7 +71,6 @@ void NSEnum::startScan(){
         connect(dnslytics, &Dnslytics::infoNS, this, &NSEnum::onResult);
         connect(dnslytics, &Dnslytics::infoLog, this, &NSEnum::onInfoLog);
         connect(dnslytics, &Dnslytics::errorLog, this, &NSEnum::onErrorLog);
-        connect(dnslytics, &Dnslytics::rateLimitLog, this, &NSEnum::onRateLimitLog);
         connect(cThread, &QThread::finished, this, &NSEnum::onScanThreadEnded);
         connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

@@ -435,6 +435,12 @@ void Osint::initModules(){
     else
         ui->moduleLeakIX->hide();
 
+    ModuleInfo::PassiveTotal passivetotal;
+    if(passivetotal.input_output.contains(INPUT_TYPE) && passivetotal.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
+        ui->modulePassiveTotal->show();
+    else
+        ui->modulePassiveTotal->hide();
+
     /* uncheck all modules */
     this->uncheckAllModules();
 }
@@ -509,4 +515,5 @@ void Osint::uncheckAllModules(){
     ui->moduleYahoo->setChecked(false);
     ui->moduleBing->setChecked(false);
     ui->moduleLeakIX->setChecked(false);
+    ui->modulePassiveTotal->setChecked(false);
 }

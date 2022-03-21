@@ -130,7 +130,7 @@ void ArchiveToday::replyFinishedUrl(QNetworkReply *reply){
                 GumboNode *domain = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 if(domain->type == GUMBO_NODE_TEXT)
                 {
-                    emit resultUrl(QString::fromUtf8(domain->v.text.text));
+                    emit resultURL(QString::fromUtf8(domain->v.text.text));
                     log.resultsCount++;
                 }
             }

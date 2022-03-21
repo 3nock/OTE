@@ -307,6 +307,9 @@ void Raw::startScan(){
 
     if(ui->moduleWappalyzer->isChecked())
         this->startScanThread(new Wappalyzer(*m_scanArgs));
+
+    if(ui->modulePassiveTotal->isChecked())
+        this->startScanThread(new PassiveTotal(*m_scanArgs));
 }
 
 void Raw::startScanThread(AbstractOsintModule *module){
@@ -317,7 +320,6 @@ void Raw::startScanThread(AbstractOsintModule *module){
     connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::rawResults, this, &Raw::onResults);
     connect(module, &AbstractOsintModule::rawResultsTxt, this, &Raw::onResultsTxt);
-    connect(module, &AbstractOsintModule::rateLimitLog, this, &Raw::onRateLimitLog);
     connect(module, &AbstractOsintModule::errorLog, this, &Raw::onErrorLog);
     connect(module, &AbstractOsintModule::infoLog, this, &Raw::onInfoLog);
     connect(this, &Raw::stopScanThread, module, &AbstractOsintModule::onStop);

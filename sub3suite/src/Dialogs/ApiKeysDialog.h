@@ -89,7 +89,9 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetLeakLookup_clicked();
         void on_buttonGetWappalyzer_clicked();
 
-    private:
+        void on_buttonGetPassiveTotal_clicked();
+
+private:
         Ui::ApiKeysDialog *ui;
         void m_loadApiKeys();
 };

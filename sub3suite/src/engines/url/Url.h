@@ -14,7 +14,7 @@
 
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/modules/active/UrlScanner.h"
+#include "src/modules/active/URLScanner.h"
 
 
 namespace Ui {

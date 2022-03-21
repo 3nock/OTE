@@ -75,7 +75,6 @@ void CidrEnum::startScan(){
         connect(bgpview, &IpInfo::infoCIDR, this, &CidrEnum::onResult);
         connect(bgpview, &IpInfo::infoLog, this, &CidrEnum::onInfoLog);
         connect(bgpview, &IpInfo::errorLog, this, &CidrEnum::onErrorLog);
-        connect(bgpview, &IpInfo::rateLimitLog, this, &CidrEnum::onRateLimitLog);
         connect(this, &CidrEnum::stopScanThread, bgpview, &Bgpview::onStop);
         connect(cThread, &QThread::finished, this, &CidrEnum::onScanThreadEnded);
         connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);

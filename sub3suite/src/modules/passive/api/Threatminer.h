@@ -51,7 +51,7 @@ class Threatminer: public AbstractOsintModule{
         void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
         void replyFinishedUrl(QNetworkReply *reply) override;
-        void replyFinishedSSLCert(QNetworkReply *reply) override;
+        void replyFinishedSSL(QNetworkReply *reply) override;
 };
 
 #endif // THREATMINER_H

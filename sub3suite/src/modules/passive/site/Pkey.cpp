@@ -168,7 +168,7 @@ void Pkey::replyFinishedIp(QNetworkReply *reply){
                         if(td_type->v.element.tag == GUMBO_TAG_TD && td_value->v.element.attributes.length == 1 && td_value->v.element.children.length == 1){
                             GumboNode *value = static_cast<GumboNode*>(td_value->v.element.children.data[0]);
                             QString address = value->v.text.text;
-                            emit resultIp(address);
+                            emit resultIP(address);
                             log.resultsCount++;
                         }
                     }

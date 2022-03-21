@@ -17,8 +17,8 @@ Censys::Censys(ScanArgs args): AbstractOsintModule(args)
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Censys::replyFinishedRawJson);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Censys::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Censys::replyFinishedSSL);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Censys::replyFinishedSubdomain);
     ///
@@ -74,7 +74,7 @@ void Censys::start(){
     }
 
     if(args.inputIp){
-        if(args.outputSSLCert || args.outputSubdomain){
+        if(args.outputSSL || args.outputSubdomain){
             url.setUrl("https://censys.io/api/v1/view/ipv4/"+target);
             request.setUrl(url);
             manager->get(request);
@@ -83,8 +83,8 @@ void Censys::start(){
         }
     }
 
-    if(args.inputSSLCert){
-        if(args.outputSSLCert || args.outputSubdomain){
+    if(args.inputSSL){
+        if(args.outputSSL || args.outputSubdomain){
             url.setUrl("https://censys.io/api/v1/view/certificates/"+target);
             request.setUrl(url);
             manager->get(request);
@@ -93,7 +93,7 @@ void Censys::start(){
     }
 }
 
-void Censys::replyFinishedSSLCert(QNetworkReply *reply){
+void Censys::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

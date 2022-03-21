@@ -54,6 +54,7 @@
 #include "src/modules/passive/api/SpyOnWeb.h"
 #include "src/modules/passive/api/Whatcms.h"
 #include "src/modules/passive/api/Whoxy.h"
+#include "src/modules/passive/api/PassiveTotal.h"
 ///
 /// iana...
 ///

@@ -216,12 +216,12 @@ void Bgpview::replyFinishedIp(QNetworkReply *reply){
     case IP:
         foreach(const QJsonValue &value, data["prefixes"].toArray()){
             QString ip = value.toObject()["ip"].toString();
-            emit resultIp(ip);
+            emit resultIP(ip);
             log.resultsCount++;
         }
         foreach(const QJsonValue &value, data["related_prefixes"].toArray()){
             QString ip = value.toObject()["ip"].toString();
-            emit resultIp(ip);
+            emit resultIP(ip);
             log.resultsCount++;
         }
         break;
@@ -378,11 +378,11 @@ void Bgpview::replyFinishedCidr(QNetworkReply *reply){
     case QUERY:
     case ASN_PREFIXES:
         foreach(const QJsonValue &value, data["ipv4_prefixes"].toArray()){
-            emit resultCidr(value.toObject()["prefix"].toString());
+            emit resultCIDR(value.toObject()["prefix"].toString());
             log.resultsCount++;
         }
         foreach(const QJsonValue &value, data["ipv6_prefixes"].toArray()){
-            emit resultCidr(value.toObject()["prefix"].toString());
+            emit resultCIDR(value.toObject()["prefix"].toString());
             log.resultsCount++;
         }
         break;

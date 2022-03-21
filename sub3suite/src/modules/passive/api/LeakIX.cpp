@@ -17,8 +17,8 @@ LeakIX::LeakIX(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedAsn);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedSubdomain);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedSSL);
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_LEAKIX).toString();
@@ -52,7 +52,7 @@ void LeakIX::start(){
     }
 
     if(args.inputIp){
-        if(args.outputAsn || args.outputSSLCert || args.outputSubdomain){
+        if(args.outputAsn || args.outputSSL || args.outputSubdomain){
             url.setUrl("https://leakix.net/search?q="+target+"&scope=leak");
             request.setUrl(url);
             manager->get(request);
@@ -84,7 +84,7 @@ void LeakIX::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void LeakIX::replyFinishedSSLCert(QNetworkReply *reply){
+void LeakIX::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

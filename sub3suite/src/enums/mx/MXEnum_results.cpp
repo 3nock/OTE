@@ -45,15 +45,3 @@ void MXEnum::onInfoLog(ScanLog log){
     ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
     ui->plainTextEditLogs->appendPlainText("");
 }
-
-void MXEnum::onRateLimitLog(ScanLog log){
-    QString message("<font color=\"yellow\">"+log.message+"</font>");
-    QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
-    QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
-    ui->plainTextEditLogs->appendPlainText("");
-
-    m_failedScans.insert(log.target, log.message);
-}

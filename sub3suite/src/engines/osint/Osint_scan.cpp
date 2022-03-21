@@ -45,7 +45,7 @@ void Osint::startScan(){
     m_scanArgs->inputEmail = false;
     m_scanArgs->inputUrl = false;
     m_scanArgs->inputAsn = false;
-    m_scanArgs->inputSSLCert = false;
+    m_scanArgs->inputSSL = false;
     m_scanArgs->inputCidr = false;
     m_scanArgs->outputSubdomainIp = false;
     m_scanArgs->outputSubdomain = false;
@@ -53,7 +53,7 @@ void Osint::startScan(){
     m_scanArgs->outputEmail = false;
     m_scanArgs->outputUrl = false;
     m_scanArgs->outputAsn = false;
-    m_scanArgs->outputSSLCert = false;
+    m_scanArgs->outputSSL = false;
     m_scanArgs->outputCidr = false;
     total_modules = 0;
 
@@ -82,7 +82,7 @@ void Osint::startScan(){
         m_scanArgs->inputAsn = true;
         break;
     case INPUT::CERT:
-        m_scanArgs->inputSSLCert = true;
+        m_scanArgs->inputSSL = true;
         break;
     case INPUT::CIDR:
         m_scanArgs->inputCidr = true;
@@ -113,7 +113,7 @@ void Osint::startScan(){
         m_scanArgs->outputAsn = true;
         break;
     case osint::OUTPUT::CERT:
-        m_scanArgs->outputSSLCert = true;
+        m_scanArgs->outputSSL = true;
         break;
     case osint::OUTPUT::CIDR:
         m_scanArgs->outputCidr = true;
@@ -252,6 +252,9 @@ void Osint::startScan(){
     if(ui->moduleLeakIX->isChecked())
         this->startScanThread(new LeakIX(*m_scanArgs));
 
+    if(ui->modulePassiveTotal->isChecked())
+        this->startScanThread(new PassiveTotal(*m_scanArgs));
+
     ///
     /// archives...
     ///
@@ -376,7 +379,7 @@ void Osint::startScanThread(AbstractOsintModule *module){
         connect(module, &AbstractOsintModule::resultMX, this, &Osint::onResultMX);
         break;
     case osint::OUTPUT::IP:
-        connect(module, &AbstractOsintModule::resultIp, this, &Osint::onResultIp);
+        connect(module, &AbstractOsintModule::resultIP, this, &Osint::onResultIP);
         connect(module, &AbstractOsintModule::resultA, this, &Osint::onResultA);
         connect(module, &AbstractOsintModule::resultAAAA, this, &Osint::onResultAAAA);
         break;
@@ -387,24 +390,22 @@ void Osint::startScanThread(AbstractOsintModule *module){
         connect(module, &AbstractOsintModule::resultEmail, this, &Osint::onResultEmail);
         break;
     case OUT_URL:
-        connect(module, &AbstractOsintModule::resultUrl, this, &Osint::onResultUrl);
+        connect(module, &AbstractOsintModule::resultURL, this, &Osint::onResultURL);
         break;
     case osint::OUTPUT::ASN:
-        connect(module, &AbstractOsintModule::resultASN, this, &Osint::onResultAsn);
+        connect(module, &AbstractOsintModule::resultASN, this, &Osint::onResultASN);
         break;
     case osint::OUTPUT::CIDR:
-        connect(module, &AbstractOsintModule::resultCidr, this, &Osint::onResultCidr);
+        connect(module, &AbstractOsintModule::resultCIDR, this, &Osint::onResultCIDR);
         break;
     case osint::OUTPUT::CERT:
-        connect(module, &AbstractOsintModule::resultSSL, this, &Osint::onResultSSLCert);
+        connect(module, &AbstractOsintModule::resultSSL, this, &Osint::onResultSSL);
         break;
     }
     connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
-    connect(module, &AbstractOsintModule::rateLimitLog, this, &Osint::onRateLimitLog);
     connect(module, &AbstractOsintModule::errorLog, this, &Osint::onErrorLog);
     connect(module, &AbstractOsintModule::infoLog, this, &Osint::onInfoLog);
     connect(this, &Osint::stopScanThread, module, &AbstractOsintModule::onStop);
-    connect(this, &Osint::pauseScanThread, module, &AbstractOsintModule::onPause);
     connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

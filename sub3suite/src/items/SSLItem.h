@@ -218,10 +218,13 @@ public:
             key_algorithm->setText("DSA algorithm.");
         if(cert.publicKey().algorithm() == QSsl::Ec)
             key_algorithm->setText("Elliptic Curve algorithm.");
-        if(cert.publicKey().algorithm() == QSsl::Dh)
-            key_algorithm->setText("Diffie-Hellman algorithm.");
         if(cert.publicKey().algorithm() == QSsl::Opaque)
             key_algorithm->setText("BlackBox");
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+        if(cert.publicKey().algorithm() == QSsl::Dh)
+            key_algorithm->setText("Diffie-Hellman algorithm.");
+#endif
 
         /* alternative names */
         int count = 0;

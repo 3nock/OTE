@@ -67,7 +67,7 @@ void Arquivo::replyFinishedUrl(QNetworkReply *reply){
 
     foreach(const QJsonValue &response_item, response_items){
         QString urlValue = response_item.toObject()["originalURL"].toString();
-        emit resultUrl(urlValue);
+        emit resultURL(urlValue);
         log.resultsCount++;
     }
 

@@ -13,8 +13,10 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QSplashScreen>
+#include <QStandardPaths>
 
 #include "src/utils/s3s.h"
+#include "src/utils/CrashHandler.h"
 
 ///
 /// a custom messagehandler for logging messages to log file
@@ -89,7 +91,6 @@ public:
     }
 };
 
-
 int main(int argc, char *argv[])
 {
     /* dpi scalling */
@@ -116,6 +117,9 @@ int main(int argc, char *argv[])
 
     /* create the sub3suite app */
     s3s_Application s3s_app(argc, argv);
+
+    /* initializing crash handler */
+    Breakpad::CrashHandler::instance()->Init(QGuiApplication::applicationDirPath()+"/logs");
 
     int dpi = qApp->desktop()->logicalDpiX();
     dpi = static_cast<int>(dpi/96);

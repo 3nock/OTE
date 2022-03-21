@@ -1177,9 +1177,9 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-320</y>
+                <y>-529</y>
                 <width>152</width>
-                <height>853</height>
+                <height>876</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -1363,6 +1363,13 @@
                    <widget class="QCheckBox" name="moduleOtxPaid">
                     <property name="text">
                      <string>Otx</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="modulePassiveTotal">
+                    <property name="text">
+                     <string>PassiveTotal</string>
                     </property>
                    </widget>
                   </item>

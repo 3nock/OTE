@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct SecurityTrails{
-    QString name = "SecurityTrails";
+    QString name = OSINT_MODULE_SECURITYTRAILS;
     QString url = "https://securitytrails.com/";
     QString url_apiDoc = "https://securitytrails.com/corp/api";
     QString summary = "The Total Internet Inventory. Powerful tools for third-party risk, \n"
@@ -43,7 +43,7 @@ struct SecurityTrails{
                                                                   "The data is based on whois data with the names matched to the domains."}}};
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                           {OUT_SUBDOMAIN, OUT_IP}},
+                                           {OUT_SUBDOMAIN, OUT_IP, OUT_CIDR}},
                                           {IN_IP,
                                            {OUT_SUBDOMAIN}}};
 };
@@ -59,9 +59,10 @@ class SecurityTrails: public AbstractOsintModule{
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // SECURITYTRAILS_H

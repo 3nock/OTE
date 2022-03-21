@@ -129,7 +129,7 @@ void ZoomEye::replyFinishedIp(QNetworkReply *reply){
 
     if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_ASN || QUERY_TYPE == HOST_HOSTNAME){
         foreach(const QJsonValue &value, matches){
-            emit resultIp(value.toObject()["ip"].toString());
+            emit resultIP(value.toObject()["ip"].toString());
             log.resultsCount++;
         }
     }

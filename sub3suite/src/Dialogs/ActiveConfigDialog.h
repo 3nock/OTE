@@ -15,7 +15,7 @@
 #include "src/modules/active/ActiveScanner.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
-#include "src/modules/active/UrlScanner.h"
+#include "src/modules/active/URLScanner.h"
 
 
 namespace Ui {

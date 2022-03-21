@@ -16,8 +16,8 @@ GoogleCert::GoogleCert(ScanArgs args): AbstractOsintModule(args)
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedRawJson);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedSSL);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedSubdomain);
 }
@@ -63,7 +63,7 @@ void GoogleCert::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void GoogleCert::replyFinishedSSLCert(QNetworkReply *reply){
+void GoogleCert::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

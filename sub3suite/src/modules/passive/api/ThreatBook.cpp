@@ -169,7 +169,7 @@ void ThreatBook::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_QUERY){
         QJsonArray cur_ips = data["cur_ips"].toArray();
         foreach(const QJsonValue &value, cur_ips){
-            emit resultIp(value.toObject()["ip"].toString());
+            emit resultIP(value.toObject()["ip"].toString());
             log.resultsCount++;
         }
     }
@@ -179,7 +179,7 @@ void ThreatBook::replyFinishedIp(QNetworkReply *reply){
         foreach(const QJsonValue &history_ip, history_ips){
             QJsonArray ips = history_ip.toObject()["ips"].toArray();
             foreach(const QJsonValue &value, ips){
-                emit resultIp(value.toString());
+                emit resultIP(value.toString());
                 log.resultsCount++;
             }
         }

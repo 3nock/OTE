@@ -209,7 +209,7 @@ void HackerTargetPaid::replyFinishedIp(QNetworkReply *reply){
     {
     case HOSTSEARCH:
         foreach(const QString &item, results.split("\n")){
-            emit resultIp(item.split(",").at(1));
+            emit resultIP(item.split(",").at(1));
             log.resultsCount++;
         }
     }
@@ -252,7 +252,7 @@ void HackerTargetPaid::replyFinishedCidr(QNetworkReply *reply){
         QStringList cidrs = results.split("\n");
         cidrs.removeAt(0);
         foreach(const QString &cidr, cidrs){
-            emit resultCidr(cidr);
+            emit resultCIDR(cidr);
             log.resultsCount++;
         }
     }

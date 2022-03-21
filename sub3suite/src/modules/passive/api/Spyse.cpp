@@ -30,8 +30,8 @@ Spyse::Spyse(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedEmail);
     if(args.outputAsn)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedAsn);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedSSL);
     if(args.outputUrl)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedUrl);
     if(args.outputIp)
@@ -102,7 +102,7 @@ void Spyse::start(){
         return;
     }
 
-    if(args.inputSSLCert){
+    if(args.inputSSL){
         url.setUrl("https://api.spyse.com/v4/data/certificate/"+target);
         request.setAttribute(QNetworkRequest::User, SSL_CERT);
         request.setUrl(url);
@@ -184,7 +184,7 @@ void Spyse::replyFinishedIp(QNetworkReply *reply){
             /* from hosts_enrichment */
             QJsonArray hosts_enrichment = item.toObject()["hosts_enrichment"].toArray();
             foreach(const QJsonValue &value, hosts_enrichment){
-                emit resultIp(value.toObject()["ip"].toString());
+                emit resultIP(value.toObject()["ip"].toString());
                 log.resultsCount++;
             }
             /* from dns_records */
@@ -220,7 +220,7 @@ void Spyse::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void Spyse::replyFinishedSSLCert(QNetworkReply *reply){
+void Spyse::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -301,7 +301,7 @@ void Spyse::replyFinishedUrl(QNetworkReply *reply){
         foreach(const QJsonValue &item, items){
             QJsonArray urls = item.toObject()["http_extract"].toObject()["links"].toArray();
             foreach(const QJsonValue &value, urls){
-                emit resultUrl(value.toObject()["url"].toString());
+                emit resultURL(value.toObject()["url"].toString());
                 log.resultsCount++;
             }
         }

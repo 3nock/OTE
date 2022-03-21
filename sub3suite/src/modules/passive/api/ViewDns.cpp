@@ -260,7 +260,7 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
         QJsonArray records = response["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString address = record.toObject()["ip"].toString();
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
     }

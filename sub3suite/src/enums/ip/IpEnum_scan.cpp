@@ -79,7 +79,6 @@ void IpEnum::startScan(){
             connect(ipinfo, &IpInfo::infoIp, this, &IpEnum::onResult);
             connect(ipinfo, &IpInfo::infoLog, this, &IpEnum::onInfoLog);
             connect(ipinfo, &IpInfo::errorLog, this, &IpEnum::onErrorLog);
-            connect(ipinfo, &IpInfo::rateLimitLog, this, &IpEnum::onRateLimitLog);
             connect(this, &IpEnum::stopScanThread, ipinfo, &IpInfo::onStop);
             connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
             connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
@@ -96,7 +95,6 @@ void IpEnum::startScan(){
             connect(ipApi, &IpApi::infoIp, this, &IpEnum::onResult);
             connect(ipApi, &IpApi::infoLog, this, &IpEnum::onInfoLog);
             connect(ipApi, &IpApi::errorLog, this, &IpEnum::onErrorLog);
-            connect(ipApi, &IpApi::rateLimitLog, this, &IpEnum::onRateLimitLog);
             connect(this, &IpEnum::stopScanThread, ipApi, &IpApi::onStop);
             connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
             connect(cThread, &QThread::finished, ipApi, &IpInfo::deleteLater);
@@ -117,7 +115,6 @@ void IpEnum::startScan(){
             connect(dnslytics, &Dnslytics::infoIp, this, &IpEnum::onResult_reverse);
             connect(dnslytics, &Dnslytics::infoLog, this, &IpEnum::onInfoLog);
             connect(dnslytics, &Dnslytics::errorLog, this, &IpEnum::onErrorLog);
-            connect(dnslytics, &Dnslytics::rateLimitLog, this, &IpEnum::onRateLimitLog);
             connect(this, &IpEnum::stopScanThread, dnslytics, &Dnslytics::onStop);
             connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
             connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);

@@ -22,12 +22,11 @@
 
 /*
  * Error in Basic Authentication
- * returns hosts using cert-id HOSTS
  */
 RiskIq::RiskIq(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "RiskIq";
+    log.moduleName = OSINT_MODULE_RISKIQ;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedRawJson);
@@ -37,15 +36,12 @@ RiskIq::RiskIq(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomain);
     if(args.outputSubdomainIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomainIp);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedSSLCert);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_name = APIKEY.value("riskiq_username").toString();
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedSSL);
+
+    /* getting api-key */
     m_key = APIKEY.value("riskiq_key").toString();
-    
+    m_secret = APIKEY.value("riskiq_secret").toString();
 }
 RiskIq::~RiskIq(){
     delete manager;
@@ -54,10 +50,7 @@ RiskIq::~RiskIq(){
 void RiskIq::start(){
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
-    ///
-    /// HTTP Basic authentication header value: base64(username:password)
-    ///
-    QString concatenated = m_name+":"+m_key;
+    QString concatenated = m_key+":"+m_secret;
     QByteArray data = concatenated.toLocal8Bit().toBase64();
     request.setRawHeader("Authorization", "Basic "+data);
 
@@ -124,14 +117,13 @@ void RiskIq::start(){
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSLCert){
+        if(args.outputSSL){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        return;
     }
 
     if(args.inputDomain){
@@ -142,18 +134,17 @@ void RiskIq::start(){
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSLCert){
+        if(args.outputSSL){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        return;
     }
 
-    if(args.inputSSLCert){
-        if(args.outputIp || args.outputSSLCert){
+    if(args.inputSSL){
+        if(args.outputIp || args.outputSSL || args.outputSubdomain){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+target);
             request.setAttribute(QNetworkRequest::User, CERT_SHA1);
             request.setUrl(url);
@@ -169,11 +160,13 @@ void RiskIq::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray records = document.object()["records"].toArray();
 
-    if(QUERY_TYPE == PDNS_IP || QUERY_TYPE == PDNS_NAME){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PDNS_IP:
+    case PDNS_NAME:
         foreach(const QJsonValue &record, records){
             QString rrtype = record.toObject()["rrtype"].toString();
             if(rrtype == "A" || rrtype == "AAAA"){
@@ -186,6 +179,7 @@ void RiskIq::replyFinishedSubdomainIp(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }
 
@@ -195,11 +189,14 @@ void RiskIq::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonArray records = document.object()["records"].toArray();
 
-    if(QUERY_TYPE == PDNS_IP || QUERY_TYPE == PDNS_NAME){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PDNS_IP:
+    case PDNS_NAME:
+    {
+        QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString rrtype = record.toObject()["rrtype"].toString();
             if(rrtype == "A" || rrtype == "AAAA"){
@@ -230,6 +227,21 @@ void RiskIq::replyFinishedSubdomain(QNetworkReply *reply){
             }
         }
     }
+        break;
+
+    case CERT_HOST:
+    case CERT_SHA1:
+        QJsonArray content = document.object()["content"].toArray();
+        foreach(const QJsonValue &record, content){
+            QJsonObject cert = record.toObject()["cert"].toObject();
+            foreach(const QJsonValue &altNames, cert["issuerAlternativeNames"].toArray()){
+                emit resultSubdomain(altNames.toObject()["name"].toString());
+                log.resultsCount++;
+            }
+        }
+        break;
+    }
+
     end(reply);
 }
 
@@ -239,12 +251,14 @@ void RiskIq::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == PDNS_IP || QUERY_TYPE == PDNS_NAME){
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PDNS_IP:
+    case PDNS_NAME:
+    {
         QJsonArray records = document.object()["records"].toArray();
-
         foreach(const QJsonValue &record, records){
             QString rrtype = record.toObject()["rrtype"].toString();
             if(rrtype == "A"){
@@ -263,39 +277,42 @@ void RiskIq::replyFinishedIp(QNetworkReply *reply){
             }
         }
     }
+        break;
 
-    if(QUERY_TYPE == CERT_HOST || QUERY_TYPE == CERT_SHA1){
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    case CERT_SHA1:
         QJsonArray content = document.object()["content"].toArray();
-
         foreach(const QJsonValue &record, content){
             QJsonObject host = record.toObject()["host"].toObject();
             QString hostValue = host["host"].toString();
-            emit resultIp(hostValue);
+            emit resultIP(hostValue);
             log.resultsCount++;
         }
+        break;
     }
+
     end(reply);
 }
 
-void RiskIq::replyFinishedSSLCert(QNetworkReply *reply){
+void RiskIq::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray content = document.object()["content"].toArray();
 
-    if(QUERY_TYPE == CERT_HOST || QUERY_TYPE == CERT_SHA1){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case CERT_HOST:
+    case CERT_SHA1:
         foreach(const QJsonValue &record, content){
             QJsonObject cert = record.toObject()["cert"].toObject();
             QString sha1 = cert["sha1"].toString();
             emit resultSSL(sha1);
             log.resultsCount++;
-            /* QString serialNo = cert["serialNumber"].toString(); */
         }
     }
+
     end(reply);
 }

@@ -16,8 +16,8 @@ Certspotter::Certspotter(ScanArgs args) : AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedRawJson);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedSubdomain);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedSSL);
     ///
     /// getting api key...
     ///
@@ -53,7 +53,7 @@ void Certspotter::start(){
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSLCert){
+        if(args.outputSSL){
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert");
             request.setUrl(url);
             manager->get(request);
@@ -82,7 +82,7 @@ void Certspotter::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void Certspotter::replyFinishedSSLCert(QNetworkReply *reply){
+void Certspotter::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

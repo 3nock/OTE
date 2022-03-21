@@ -85,12 +85,12 @@ void Dnsbufferoverun::replyFinishedIp(QNetworkReply *reply){
 
     /* for forward dns */
     foreach(const QJsonValue &value, mainObj["FDNS_A"].toArray()){
-        emit resultIp(value.toString().split(",")[0]);
+        emit resultIP(value.toString().split(",")[0]);
         log.resultsCount++;
     }
     /* for reverse dns */
     foreach(const QJsonValue &value, mainObj["RDNS"].toArray()){
-        emit resultIp(value.toString().split(",")[0]);
+        emit resultIP(value.toString().split(",")[0]);
         log.resultsCount++;
     }
 

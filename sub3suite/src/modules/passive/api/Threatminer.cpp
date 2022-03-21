@@ -32,8 +32,8 @@ Threatminer::Threatminer(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedAsn);
     if(args.outputUrl)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedUrl);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedSSL);
 }
 Threatminer::~Threatminer(){
     delete manager;
@@ -132,7 +132,7 @@ void Threatminer::start(){
             activeRequests++;
         }
 
-        if(args.outputSSLCert){
+        if(args.outputSSL){
             url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=5");
             request.setAttribute(QNetworkRequest::User, IP_SSL_CERTS);
             request.setUrl(url);
@@ -142,7 +142,7 @@ void Threatminer::start(){
     }
 
     /* for ssl-cert hash target */
-    if(args.inputSSLCert){
+    if(args.inputSSL){
         if(args.outputIp){
             url.setUrl("https://api.threatminer.org/v2/ssl.php?q="+target+"&rt=1");
             request.setAttribute(QNetworkRequest::User, SSL_HOSTS);
@@ -194,7 +194,7 @@ void Threatminer::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_PASSIVE_DNS){
         foreach(const QJsonValue &result, results){
             QString address = result.toObject()["ip"].toString();
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
     }
@@ -202,7 +202,7 @@ void Threatminer::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == SSL_HOSTS){
         foreach(const QJsonValue &result, results){
             QString address = result.toString();
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
     }
@@ -267,14 +267,14 @@ void Threatminer::replyFinishedUrl(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_QUERY_URI || QUERY_TYPE == IP_QUERY_URI){
         foreach(const QJsonValue &result, results){
             QString uri = result.toObject()["uri"].toString();
-            emit resultUrl(uri);
+            emit resultURL(uri);
             log.resultsCount++;
         }
     }
     end(reply);
 }
 
-void Threatminer::replyFinishedSSLCert(QNetworkReply *reply){
+void Threatminer::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

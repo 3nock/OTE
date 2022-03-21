@@ -33,18 +33,6 @@ void Osint::onErrorLog(ScanLog log){
     ui->plainTextEditLogs->appendPlainText("");
 }
 
-void Osint::onRateLimitLog(ScanLog log){
-    ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"yellow\">"+log.moduleName+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"yellow\">"+log.target+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"yellow\">"+QString::number(log.resultsCount)+"</font>");
-    if(!log.message.isEmpty())
-        ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"yellow\">"+log.message+"</font>");
-
-    // add a new line...
-    ui->plainTextEditLogs->appendPlainText("");
-}
-
 void Osint::onResultSubdomainIp(QString subdomain, QString ip){
     if(set_subdomainIP.contains(subdomain))
         return;
@@ -69,19 +57,7 @@ void Osint::onResultSubdomain(QString subdomain){
         project->addPassiveSubdomain(subdomain);
 }
 
-void Osint::onResultMightContainWildcards(QString subdomain){
-    if(set_subdomain.contains(subdomain))
-        return;
-
-    m_model_subdomain->appendRow(new QStandardItem(subdomain));
-    set_subdomain.insert(subdomain);
-    ui->labelResultsCount->setNum(proxyModel->rowCount());
-
-    if(m_scanConfig->autosaveToProject)
-        project->addPassiveSubdomain(subdomain);
-}
-
-void Osint::onResultIp(QString ip){
+void Osint::onResultIP(QString ip){
     if(set_ip.contains(ip))
         return;
 
@@ -105,7 +81,7 @@ void Osint::onResultEmail(QString email){
         project->addPassiveEMail(email);
 }
 
-void Osint::onResultUrl(QString url){
+void Osint::onResultURL(QString url){
     if(set_url.contains(url))
         return;
 
@@ -117,7 +93,7 @@ void Osint::onResultUrl(QString url){
         project->addPassiveUrl(url);
 }
 
-void Osint::onResultAsn(QString asn, QString name){
+void Osint::onResultASN(QString asn, QString name){
     if(set_asn.contains(asn))
         return;
 
@@ -129,7 +105,7 @@ void Osint::onResultAsn(QString asn, QString name){
         project->addPassiveAsn(asn, name);
 }
 
-void Osint::onResultCidr(QString cidr){
+void Osint::onResultCIDR(QString cidr){
     if(set_cidr.contains(cidr))
         return;
 
@@ -206,7 +182,7 @@ void Osint::onResultTXT(QString TXT){
         project->addPassiveTXT(TXT);
 }
 
-void Osint::onResultSSLCert(QString sha1_or_sha256){
+void Osint::onResultSSL(QString sha1_or_sha256){
     if(set_ssl.contains(sha1_or_sha256))
         return;
 

@@ -102,7 +102,6 @@ void ASNEnum::startScan(){
         }
         connect(bgpview, &Bgpview::infoLog, this, &ASNEnum::onInfoLog);
         connect(bgpview, &Bgpview::errorLog, this, &ASNEnum::onErrorLog);
-        connect(bgpview, &Bgpview::rateLimitLog, this, &ASNEnum::onRateLimitLog);
         connect(bgpview, &Bgpview::scanProgress, ui->progressBar, &QProgressBar::setValue);
         connect(this, &ASNEnum::stopScanThread, bgpview, &AbstractOsintModule::onStop);
         connect(cThread, &QThread::finished, this, &ASNEnum::onScanThreadEnded);

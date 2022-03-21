@@ -19,16 +19,12 @@
 #define IP_WHOIS 12
 
 /*
- * Limited to 2000 results, 50 queries a month for the Free plan and to 10000 for subdomainIp paid subscriptions.
- */
-
-/*
- * many not implemented yet, needs more fixing...
+ * Limited to 2000 results, 50 queries a month for the Free plan and to 10000 for all paid subscriptions.
  */
 SecurityTrails::SecurityTrails(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "SecurityTrails";
+    log.moduleName = OSINT_MODULE_SECURITYTRAILS;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedRawJson);
@@ -36,11 +32,11 @@ SecurityTrails::SecurityTrails(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedSubdomain);
     if(args.outputIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedIp);
-    ///
-    /// get api key....
-    ///
-    
-    m_key = APIKEY.value("securitytrails").toString();
+    if(args.outputCidr)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedCidr);
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_SECURITYTRAILS).toString();
     
 }
 SecurityTrails::~SecurityTrails(){
@@ -107,23 +103,20 @@ void SecurityTrails::start(){
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
+        }
 
+        if(args.outputIp){
             url.setUrl("https://api.securitytrails.com/v1/domain/"+target);
+            url.setUrl("https://api.securitytrails.com/v1/domain/"+target+"/subdomains?children_only=false&include_inactive=true");
             request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args.outputIp){
+        if(args.outputCidr){
             url.setUrl("https://api.securitytrails.com/v1/company/"+target+"/associated-ips");
             request.setAttribute(QNetworkRequest::User, COMPANY_ASSOCIATED_IP);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
-
-            url.setUrl("https://api.securitytrails.com/v1/domain/"+target);
-            request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -147,45 +140,20 @@ void SecurityTrails::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == DOMAIN_SUBDOMAIN){
+    switch (reply->property(REQUEST_TYPE).toInt()) {
+    case DOMAIN_SUBDOMAIN:
+    {
         QJsonArray subdomainList = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomainList){
             emit resultSubdomain(value.toString().append(".").append(target));
             log.resultsCount++;
         }
     }
+        break;
 
-    if(QUERY_TYPE == DOMAIN_DETAILS){
-        QJsonObject txt = document.object()["current_dns"].toObject()["txt"].toObject();
-        QJsonObject ns = document.object()["current_dns"].toObject()["ns"].toObject();
-        QJsonObject mx = document.object()["current_dns"].toObject()["mx"].toObject();
-        //QJsonObject soa = document.object()["current_dns"].toObject()["soa"].toObject();
-
-        if(!txt.isEmpty()){
-            foreach(const QJsonValue &value, txt["values"].toArray()){
-                emit resultTXT(value.toObject()["value"].toString());
-                log.resultsCount++;
-            }
-        }
-        if(!ns.isEmpty()){
-            foreach(const QJsonValue &value, ns["values"].toArray()){
-                emit resultNS(value.toObject()["nameserver"].toString());
-                log.resultsCount++;
-            }
-        }
-        if(!mx.isEmpty()){
-            foreach(const QJsonValue &value, mx["values"].toArray()){
-                emit resultMX(value.toObject()["hostname"].toString());
-                log.resultsCount++;
-            }
-        }
-    }
-
-    /* for getting neighbouring addresses cidr/hostnames... */
-    if(QUERY_TYPE == IP_NEIGHBOURS){
+    case IP_NEIGHBOURS:
         foreach(const QJsonValue &value, document.object()["blocks"].toArray()){
             QString ipCidr = value.toObject()["ip"].toString();
             QJsonArray hostnames = value.toObject()["hostnames"].toArray();
@@ -196,6 +164,7 @@ void SecurityTrails::replyFinishedSubdomain(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }
 
@@ -205,19 +174,11 @@ void SecurityTrails::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == COMPANY_ASSOCIATED_IP){
-        QJsonArray records = document.object()["records"].toArray();
-        foreach(const QJsonValue &value, records){
-            emit resultIp(value.toObject()["cidr"].toString());
-            //emit ipCDIR(value.toObject()["cidr"].toString());
-            log.resultsCount++;
-        }
-    }
-
-    if(QUERY_TYPE == DOMAIN_DETAILS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_DETAILS:
         QJsonObject a = document.object()["current_dns"].toObject()["a"].toObject();
         QJsonObject aaaa = document.object()["current_dns"].toObject()["aaaa"].toObject();
 
@@ -234,5 +195,26 @@ void SecurityTrails::replyFinishedIp(QNetworkReply *reply){
             }
         }
     }
+
+    end(reply);
+}
+
+void SecurityTrails::replyFinishedCidr(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case COMPANY_ASSOCIATED_IP:
+        foreach(const QJsonValue &value, document.object()["records"].toArray()){
+            emit resultCIDR(value.toObject()["cidr"].toString());
+            log.resultsCount++;
+        }
+    }
+
     end(reply);
 }

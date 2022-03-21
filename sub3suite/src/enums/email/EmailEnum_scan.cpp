@@ -76,7 +76,6 @@ void EmailEnum::startScan(){
         connect(emailRep, &EmailRep::infoEmail, this, &EmailEnum::onResult);
         connect(emailRep, &EmailRep::infoLog, this, &EmailEnum::onInfoLog);
         connect(emailRep, &EmailRep::errorLog, this, &EmailEnum::onErrorLog);
-        connect(emailRep, &EmailRep::rateLimitLog, this, &EmailEnum::onRateLimitLog);
         connect(cThread, &QThread::finished, this, &EmailEnum::onScanThreadEnded);
         connect(cThread, &QThread::finished, emailRep, &EmailRep::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

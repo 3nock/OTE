@@ -246,7 +246,7 @@ void DomainTools::replyFinishedIp(QNetworkReply *reply){
     {
     case REVERSE_IP:
         foreach(const QJsonValue &ip_address, response["ip_addresses"].toArray()){
-            emit resultIp(ip_address.toObject()["ip_address"].toString());
+            emit resultIP(ip_address.toObject()["ip_address"].toString());
             log.resultsCount++;
         }
         break;

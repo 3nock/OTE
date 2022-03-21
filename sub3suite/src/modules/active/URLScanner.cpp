@@ -5,7 +5,7 @@
  @brief :
 */
 
-#include "UrlScanner.h"
+#include "URLScanner.h"
 
 #include <QNetworkReply>
 

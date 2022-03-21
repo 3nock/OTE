@@ -28,7 +28,7 @@ class Certspotter : public AbstractOsintModule {
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedSSLCert(QNetworkReply *reply) override;
+        void replyFinishedSSL(QNetworkReply *reply) override;
 
     private:
         QString m_key;

@@ -13,7 +13,7 @@
 RobtexPaid::RobtexPaid(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "RobtexPaid";
+    log.moduleName = OSINT_MODULE_ROBTEX;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedRawJson);
@@ -25,11 +25,11 @@ RobtexPaid::RobtexPaid(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomainIp);
     if(args.outputAsn)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedAsn);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("robtex").toString();
+    if(args.outputCidr)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedCidr);
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_ROBTEX).toString();
     
 }
 RobtexPaid::~RobtexPaid(){
@@ -62,7 +62,7 @@ void RobtexPaid::start(){
     }
 
     if(args.inputIp){
-        if(args.outputIp || args.outputAsn){
+        if(args.outputCidr || args.outputAsn){
             url.setUrl("https://proapi.robtex.com/ipquery/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, IPQUERY);
             request.setUrl(url);
@@ -77,24 +77,27 @@ void RobtexPaid::start(){
             manager->get(request);
             activeRequests++;
         }
-        return;
     }
 
     if(args.inputDomain){
-        url.setUrl("https://proapi.robtex.com/pdns/forward/"+target+"?key="+m_key);
-        request.setAttribute(QNetworkRequest::User, PDNS_FORWARD);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
-        return;
+        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+            url.setUrl("https://proapi.robtex.com/pdns/forward/"+target+"?key="+m_key);
+            request.setAttribute(QNetworkRequest::User, PDNS_FORWARD);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+            return;
+        }
     }
 
     if(args.inputAsn){
-        url.setUrl("https://proapi.robtex.com/asquery/"+target+"?key="+m_key);
-        request.setAttribute(QNetworkRequest::User, ASQUERY);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+        if(args.outputCidr){
+            url.setUrl("https://proapi.robtex.com/asquery/"+target+"?key="+m_key);
+            request.setAttribute(QNetworkRequest::User, ASQUERY);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 }
 
@@ -104,9 +107,10 @@ void RobtexPaid::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
-
-    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PDNS_FORWARD:
+    case PDNS_REVERSE:
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 
@@ -134,23 +138,6 @@ void RobtexPaid::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    if(QUERY_TYPE == IPQUERY){
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-        QJsonArray act = document.object()["act"].toArray();
-        foreach(const QJsonValue &value, act){
-            QString host = value.toObject()["o"].toString();
-            emit resultSubdomain(host);
-            log.resultsCount++;
-        }
-
-        QJsonArray pas = document.object()["pas"].toArray();
-        foreach(const QJsonValue &value, pas){
-            QString host = value.toObject()["o"].toString();
-            emit resultSubdomain(host);
-            log.resultsCount++;
-        }
-    }
     end(reply);
 }
 
@@ -160,9 +147,11 @@ void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
-
-    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PDNS_FORWARD:
+    case PDNS_REVERSE:
+    {
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 
@@ -181,17 +170,8 @@ void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
             }
         }
     }
-
-    if(QUERY_TYPE == ASQUERY){
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        QJsonArray nets = document.object()["nets"].toArray();
-        foreach(const QJsonValue &value, nets){
-            QString address = value.toObject()["n"].toString();
-            emit resultIp(address);
-            //emit resultCidr(address); since the return address is a ip/cdir..
-            log.resultsCount++;
-        }
     }
+
     end(reply);
 }
 
@@ -201,17 +181,43 @@ void RobtexPaid::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == IPQUERY){
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case IPQUERY:
         QJsonObject mainObj = document.object();
-        QString asnValue = mainObj["as"].toString();
-        QString asnName = mainObj["asname"].toString();
 
-        emit resultASN(asnValue, asnName);
+        emit resultASN(mainObj["as"].toString(), mainObj["asname"].toString());
         log.resultsCount++;
     }
+
+    end(reply);
+}
+
+void RobtexPaid::replyFinishedCidr(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case IPQUERY:
+    {
+        emit resultCIDR(document.object()["bgproute"].toString());
+        log.resultsCount++;
+    }
+        break;
+    case ASQUERY:
+        foreach(const QJsonValue &value, document.object()["nets"].toArray()){
+            emit resultCIDR(value.toObject()["n"].toString());
+            log.resultsCount++;
+        }
+    }
+
     end(reply);
 }
 
@@ -221,9 +227,10 @@ void RobtexPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
-
-    if(QUERY_TYPE == PDNS_FORWARD || QUERY_TYPE == PDNS_REVERSE){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case PDNS_FORWARD:
+    case PDNS_REVERSE:
         QString stringReply = QString::fromUtf8(reply->readAll());
         QStringList results = stringReply.split("\n");
 
@@ -238,5 +245,6 @@ void RobtexPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }

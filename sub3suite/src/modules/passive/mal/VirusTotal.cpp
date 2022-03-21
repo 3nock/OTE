@@ -39,8 +39,8 @@ VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedUrl);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSubdomain);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSL);
     ///
     /// obtain apikey...
     ///
@@ -137,7 +137,7 @@ void VirusTotal::start(){
         //...
         request.setRawHeader("x-apikey", m_key.toUtf8());
         //...
-        if(args.outputSubdomain || args.outputSSLCert){
+        if(args.outputSubdomain || args.outputSSL){
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/historical_ssl_certificates");
             request.setAttribute(QNetworkRequest::User, DOMAIN_HISTORICAL_SSL_CERTS);
             request.setUrl(url);
@@ -153,7 +153,7 @@ void VirusTotal::start(){
             activeRequests++;
         }
 
-        if(args.outputIp || args.outputSubdomain || args.outputSSLCert){
+        if(args.outputIp || args.outputSubdomain || args.outputSSL){
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/subdomains");
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
@@ -173,7 +173,7 @@ void VirusTotal::start(){
         //...
         request.setRawHeader("x-apikey", m_key.toUtf8());
         //...
-        if(args.outputSubdomain || args.outputSSLCert){
+        if(args.outputSubdomain || args.outputSSL){
             url.setUrl("https://www.virustotal.com/api/v3/ip_addresses/"+target+"/historical_ssl_certificates");
             request.setAttribute(QNetworkRequest::User, IP_HISTORICAL_SSL_CERTS);
             request.setUrl(url);
@@ -288,7 +288,7 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
         QJsonArray resolutions = document.object()["resolutions"].toArray();
         foreach(const QJsonValue &value, resolutions){
             QString address = value.toObject()["ip_address"].toString();
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
     }
@@ -297,7 +297,7 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_RESOLUTIONS){
         foreach(const QJsonValue &value, data){
             QString address = value.toObject()["attributes"].toObject()["ip_address"].toString();
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
     }
@@ -340,21 +340,21 @@ void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
         QJsonArray detected_urls = document.object()["detected_urls"].toArray();
         foreach(const QJsonValue &value, detected_urls){
             QString detected_url = value.toArray().at(0).toString();
-            emit resultUrl(detected_url);
+            emit resultURL(detected_url);
             log.resultsCount++;
         }
 
         QJsonArray undetected_urls = document.object()["undetected_urls"].toArray();
         foreach(const QJsonValue &value, undetected_urls){
             QString undetected_url = value.toArray().at(0).toString();
-            emit resultUrl(undetected_url);
+            emit resultURL(undetected_url);
             log.resultsCount++;
         }
     }
     end(reply);
 }
 
-void VirusTotal::replyFinishedSSLCert(QNetworkReply *reply){
+void VirusTotal::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

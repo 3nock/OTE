@@ -117,7 +117,7 @@ void Maltiverse::replyFinishedIp(QNetworkReply *reply){
     case HOSTNAME:
         foreach(const QJsonValue &value, mainObj["resolved_ip"].toArray()){
             QString address = value.toObject()["ip_addr"].toString();
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
     }
@@ -159,7 +159,7 @@ void Maltiverse::replyFinishedCidr(QNetworkReply *reply){
     {
     case IPV4:
         foreach(const QJsonValue &value, cidr){
-            emit resultCidr(value.toString());
+            emit resultCIDR(value.toString());
             log.resultsCount++;
         }
     }

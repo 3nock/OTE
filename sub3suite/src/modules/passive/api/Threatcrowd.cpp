@@ -137,7 +137,7 @@ void Threatcrowd::replyFinishedIp(QNetworkReply *reply){
         if(mainObj["response_code"].toString() == "1"){
             QJsonArray resolutions = mainObj["resolutions"].toArray();
             foreach(const QJsonValue &value, resolutions){
-                emit resultIp(value["ip_address"].toString());
+                emit resultIP(value["ip_address"].toString());
                 log.resultsCount++;
             }
         }

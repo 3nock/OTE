@@ -55,7 +55,7 @@ void ArchiveIt::replyFinishedUrl(QNetworkReply *reply){
     QStringList urlList = document.remove(" ").split("\n");
 
     foreach(const QString &urlValue, urlList){
-        emit resultUrl(urlValue);
+        emit resultURL(urlValue);
         log.resultsCount++;
     }
 

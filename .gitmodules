@@ -3,3 +3,6 @@
 	path = include/gumbo-parser
 	url = https://github.com/google/gumbo-parser
 	ignore = dirty
+[submodule "include/breakpad"]
+	path = include/breakpad
+	url = https://github.com/google/breakpad.git

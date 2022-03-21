@@ -40,8 +40,10 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("pentesttools", ui->lineEditPentestTools->text());
     APIKEY.setValue(OSINT_MODULE_PROJECTDISCOVERY, ui->lineEditProjectDiscovery->text());
     APIKEY.setValue("riskiq_key", ui->lineEditRiskIqKey->text());
-    APIKEY.setValue("riskiq_username", ui->lineEditRiskIqUsername->text());
-    APIKEY.setValue("securitytrails", ui->lineEditSecurityTrails->text());
+    APIKEY.setValue("riskiq_secret", ui->lineEditRiskIqSecret->text());
+    APIKEY.setValue("passivetotal_key", ui->lineEditPassiveTotalKey->text());
+    APIKEY.setValue("passivetotal_username", ui->lineEditPassiveTotalUsername->text());
+    APIKEY.setValue(OSINT_MODULE_SECURITYTRAILS, ui->lineEditSecurityTrails->text());
     APIKEY.setValue("shodan", ui->lineEditShodan->text());
     APIKEY.setValue("spyse", ui->lineEditSpyse->text());
     APIKEY.setValue("virustotal", ui->lineEditVirusTotal->text());
@@ -58,7 +60,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("circlUser", ui->lineEditCirclUser->text());
     APIKEY.setValue("circlPwd", ui->lineEditCirclPwd->text());
     APIKEY.setValue(OSINT_MODULE_MNEMONIC, ui->lineEditMnemonic->text());
-    APIKEY.setValue("robtex", ui->lineEditRobtex->text());
+    APIKEY.setValue(OSINT_MODULE_ROBTEX, ui->lineEditRobtex->text());
     APIKEY.setValue(OSINT_MODULE_OTX, ui->lineEditRobtex->text());
     APIKEY.setValue(OSINT_MODULE_BUILTWITH, ui->lineEditBuiltWith->text());
     APIKEY.setValue(OSINT_MODULE_DNSLYTICS, ui->lineEditDnslytics->text());
@@ -164,12 +166,21 @@ void ApiKeysDialog::m_loadApiKeys(){
     if(!key.isEmpty()){
         ui->lineEditRiskIqKey->setText(key);
     }
-    key = APIKEY.value("riskiq_username").toString();
+    key = APIKEY.value("riskiq_secret").toString();
     if(!key.isEmpty()){
-        ui->lineEditRiskIqUsername->setText(key);
+        ui->lineEditRiskIqSecret->setText(key);
         ui->buttonGetRiskIq->hide();
     }
-    key = APIKEY.value("securitytrails").toString();
+    key = APIKEY.value("passivetotal_key").toString();
+    if(!key.isEmpty()){
+        ui->lineEditPassiveTotalKey->setText(key);
+    }
+    key = APIKEY.value("passivetotal_username").toString();
+    if(!key.isEmpty()){
+        ui->lineEditPassiveTotalUsername->setText(key);
+        ui->buttonGetPassiveTotal->hide();
+    }
+    key = APIKEY.value(OSINT_MODULE_SECURITYTRAILS).toString();
     if(!key.isEmpty()){
         ui->lineEditSecurityTrails->setText(key);
         ui->buttonGetSecurityTrails->hide();
@@ -260,7 +271,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditMnemonic->setText(key);
         ui->buttonGetMnemonic->hide();
     }
-    key = APIKEY.value("robtex").toString();
+    key = APIKEY.value(OSINT_MODULE_ROBTEX).toString();
     if(!key.isEmpty()){
         ui->lineEditRobtex->setText(key);
         ui->buttonGetRobtex->hide();
@@ -686,4 +697,8 @@ void ApiKeysDialog::on_buttonGetLeakLookup_clicked(){
 
 void ApiKeysDialog::on_buttonGetWappalyzer_clicked(){
     QDesktopServices::openUrl(QUrl("https://www.wappalyzer.com/pricing/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetPassiveTotal_clicked(){
+    QDesktopServices::openUrl(QUrl("https://community.riskiq.com/", QUrl::TolerantMode));
 }

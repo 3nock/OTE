@@ -74,7 +74,7 @@ void CommonCrawl::replyFinishedUrl(QNetworkReply *reply){
     {
         QString urlValue = value;
         urlValue.chop(2);
-        emit resultUrl(urlValue.remove(0, 9));
+        emit resultURL(urlValue.remove(0, 9));
         log.resultsCount++;
     }
 

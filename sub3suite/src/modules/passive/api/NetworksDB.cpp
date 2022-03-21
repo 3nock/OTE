@@ -216,14 +216,14 @@ void NetworksDB::replyFinishedIp(QNetworkReply *reply){
     case DOMAINS_IN_NETWORK:
         foreach(const QJsonValue &value, results){
             QString address = value.toObject()["ip"].toString();
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
         break;
 
     case IPS_FOR_DOMAIN:
         foreach(const QJsonValue &value, results){
-            emit resultIp(value.toString());
+            emit resultIP(value.toString());
             log.resultsCount++;
         }
         break;
@@ -246,14 +246,14 @@ void NetworksDB::replyFinishedCidr(QNetworkReply *reply){
     case AS_NETWORKS:
     case IPS_FOR_DOMAIN:
         foreach(const QJsonValue &value, results){
-            emit resultCidr(value.toObject()["cidr"].toString());
+            emit resultCIDR(value.toObject()["cidr"].toString());
             log.resultsCount++;
         }
         break;
 
     case IP_INFO:
         QString cidr = document.object()["network"].toObject()["cidr"].toString();
-        emit resultCidr(cidr);
+        emit resultCIDR(cidr);
         log.resultsCount++;
         break;
     }

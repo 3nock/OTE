@@ -146,7 +146,7 @@ void Bing::replyFinishedUrl(QNetworkReply *reply){
         if(node->v.element.tag == GUMBO_TAG_CITE)
         {
             GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-            emit resultUrl(QString::fromUtf8(child->v.text.text));
+            emit resultURL(QString::fromUtf8(child->v.text.text));
             log.resultsCount++;
         }
 

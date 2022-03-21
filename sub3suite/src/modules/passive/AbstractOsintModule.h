@@ -1,7 +1,6 @@
 #ifndef ABSTRACTOSINTMODULE_H
 #define ABSTRACTOSINTMODULE_H
 
-
 #include <QObject>
 #include <QThread>
 #include <QQueue>
@@ -35,6 +34,7 @@
 #define IN_SSLCERT 5
 #define IN_CIDR 6
 #define IN_QUERYTERM 7
+
 /* output option */
 #define OUT_SUBDOMAIN 0
 #define OUT_SUBDOMAINIP 1
@@ -44,6 +44,7 @@
 #define OUT_ASN 5
 #define OUT_SSLCERT 6
 #define OUT_CIDR 7
+
 
 struct ScanLog{
     QString moduleName;
@@ -72,24 +73,10 @@ struct ScanArgs{
     bool inputUrl = false;
     bool inputEmail = false;
     bool inputDomain = false;
-    bool inputSSLCert = false;
+    bool inputSSL = false;
     bool inputQueryTerm = false;
 
     /* output type */
-    bool outputRaw = false;
-    /* ... */
-    bool outputInfo = false;
-    bool outputInfoIp = false;
-    bool outputInfoCidr = false;
-    bool outputInfoSSLCert = false;
-    bool outputInfoMX = false;
-    bool outputInfoNS = false;
-    bool outputInfoEmail = false;
-    /* ... */
-    bool outputInfoAsn = false;
-    bool outputInfoAsnPeers = false;
-    bool outputInfoAsnPrefixes = false;
-    /* ... */
     bool outputSubdomainIp = false;
     bool outputSubdomain = false;
     bool outputEmail = false;
@@ -97,7 +84,19 @@ struct ScanArgs{
     bool outputUrl = false;
     bool outputIp = false;
     bool outputCidr = false;
-    bool outputSSLCert = false;
+    bool outputSSL = false;
+    bool outputRaw = false;
+
+    bool outputInfoIp = false;
+    bool outputInfoCidr = false;
+    bool outputInfoSSL = false;
+    bool outputInfoMX = false;
+    bool outputInfoNS = false;
+    bool outputInfoEmail = false;
+    bool outputInfoAsn = false;
+    bool outputInfoAsnPeers = false;
+    bool outputInfoAsnPrefixes = false;
+
 
     /* for raw output */
     int rawOption = 0;
@@ -117,10 +116,9 @@ class AbstractOsintModule : public QObject {
         }
         void startScan(QThread* cThread)
         {
-            /* signal & slots */
-            connect(cThread, &QThread::started, this, &AbstractOsintModule::start); // to start the enumeration when the thread starts
-            connect(this, &AbstractOsintModule::nextTarget, this, &AbstractOsintModule::start); // goes to next target
-            connect(this, &AbstractOsintModule::quitThread, cThread, &QThread::quit); // ends(terminates) the thread
+            connect(cThread, &QThread::started, this, &AbstractOsintModule::start);
+            connect(this, &AbstractOsintModule::nextTarget, this, &AbstractOsintModule::start);
+            connect(this, &AbstractOsintModule::quitThread, cThread, &QThread::quit);
 
             /* first target */
             target = args.targets.dequeue();
@@ -134,12 +132,11 @@ class AbstractOsintModule : public QObject {
         void scanProgress(int progress);
 
         void infoLog(ScanLog log);
-        void rateLimitLog(ScanLog log);
         void errorLog(ScanLog error);
 
         void resultSubdomain(QString subdomain);
         void resultSubdomainIp(QString subdomain, QString ip);
-        void resultIp(QString ip);
+        void resultIP(QString ip);
         void resultA(QString ip);
         void resultAAAA(QString ip);
         void resultNS(QString NS);
@@ -148,11 +145,11 @@ class AbstractOsintModule : public QObject {
         void resultTXT(QString TXT);
         void resultSSL(QString certId);
         void resultEmail(QString email);
-        void resultCidr(QString cidr);
-        void resultUrl(QString url);
+        void resultCIDR(QString cidr);
+        void resultURL(QString url);
         void resultASN(QString asn, QString name);
 
-        void rawCert(QByteArray);
+        void rawSSL(QByteArray);
         void rawResults(s3s_struct::RAW);
         void rawResultsTxt(s3s_struct::RAW);
 
@@ -171,18 +168,11 @@ class AbstractOsintModule : public QObject {
             emit quitThread();
         }
 
-        void onPause(){
-            log.statusCode = 0;
-            log.message = "Paused...";
-            emit infoLog(log);
-            emit quitThread();
-        }
-
     protected slots:
         virtual void start() = 0;
         virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains
         virtual void replyFinishedCidr(QNetworkReply *){} // returns ip/cidr
-        virtual void replyFinishedSSLCert(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
+        virtual void replyFinishedSSL(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
         virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
         virtual void replyFinishedIp(QNetworkReply*){} // returns ip-addresses
         virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
@@ -196,7 +186,7 @@ class AbstractOsintModule : public QObject {
         virtual void replyFinishedInfo(QNetworkReply*){} // returns multiple info on appropriate target
         virtual void replyFinishedInfoIp(QNetworkReply*){} // returns multiple info on ip
         virtual void replyFinishedInfoCidr(QNetworkReply*){} // returns multiple info on cidr
-        virtual void replyFinishedInfoSSLCert(QNetworkReply*){} // returns multiple info on ssl cert
+        virtual void replyFinishedInfoSSL(QNetworkReply*){} // returns multiple info on ssl cert
 
         virtual void replyFinishedInfoMX(QNetworkReply*){} // returns MX records info
         virtual void replyFinishedInfoNS(QNetworkReply*){} // returns NS records info
@@ -266,20 +256,6 @@ class AbstractOsintModule : public QObject {
         int QUERY_TYPE;
         s3sNetworkAccessManager *manager = nullptr;
 
-        void  onRateLimit(QNetworkReply *reply){
-            log.target = target;
-            log.message = "API rate limit reached";
-            log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-            emit rateLimitLog(log);
-
-            /* has its own end */
-            reply->close();
-            reply->deleteLater();
-            activeRequests--;
-            if(activeRequests == 0)
-                emit quitThread();
-        }
-
         void onError(QNetworkReply *reply){
             switch(reply->error()){
             case QNetworkReply::OperationCanceledError:
@@ -331,6 +307,7 @@ class AbstractOsintModule : public QObject {
             }
         }
 
+        /* make this a normal function not a class object */
         GumboNode* getBody(GumboNode *node){
             for(unsigned int i = 0; i < node->v.element.children.length; i++)
             {

@@ -116,7 +116,7 @@ void DuckDuckGo::replyFinishedUrl(QNetworkReply *reply){
             if(QString::fromUtf8(classAttribute->value) == "result__url")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                emit resultUrl(QString::fromUtf8(child->v.text.text).trimmed());
+                emit resultURL(QString::fromUtf8(child->v.text.text).trimmed());
                 log.resultsCount++;
             }
         }

@@ -18,8 +18,8 @@ IpApi::IpApi(ScanArgs args): AbstractOsintModule(args)
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedRawJson);
-    if(args.outputInfo)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedInfo);
+    if(args.outputInfoIp)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedInfoIp);
     ///
     /// get api key...
     ///
@@ -53,7 +53,7 @@ void IpApi::start(){
         return;
     }
 
-    if(args.outputInfo){
+    if(args.outputInfoIp){
         url.setUrl("http://api.ipapi.com/api/"+target+"?access_key="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -61,7 +61,7 @@ void IpApi::start(){
     }
 }
 
-void IpApi::replyFinishedInfo(QNetworkReply *reply){
+void IpApi::replyFinishedInfoIp(QNetworkReply *reply){
     if(reply->error()){
         quitThread();
         return;

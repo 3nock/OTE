@@ -395,12 +395,12 @@ void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
     case ASINFO:
         foreach(const QJsonValue &value, data["prefixesv4"].toArray()){
             QString Prefix = value.toObject()["prefix"].toString();
-            emit resultCidr(Prefix);
+            emit resultCIDR(Prefix);
             log.resultsCount++;
         }
         foreach(const QJsonValue &value, data["prefixesv6"].toArray()){
             QString Prefix = value.toObject()["prefix"].toString();
-            emit resultCidr(Prefix);
+            emit resultCIDR(Prefix);
             log.resultsCount++;
         }
         break;
@@ -408,7 +408,7 @@ void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
     case SUBNETINFO:
         foreach(const QJsonValue &value, data["routes"].toArray()){
             QString cidr = value.toObject()["cidr"].toString();
-            emit resultCidr(cidr);
+            emit resultCIDR(cidr);
             log.resultsCount++;
         }
         break;
@@ -417,7 +417,7 @@ void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
         QJsonObject mainObj = document.object();
         QString cidr = mainObj["cidr"].toString();
 
-        emit resultCidr(cidr);
+        emit resultCIDR(cidr);
         log.resultsCount++;
         break;
     }

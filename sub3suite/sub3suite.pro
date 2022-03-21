@@ -22,7 +22,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c99
 CONFIG += c++11
 
+QMAKE_CXXFLAGS+=/Zi
+QMAKE_CXXFLAGS+=/Fd
+QMAKE_LFLAGS+= /INCREMENTAL:NO /Debug
+
 include(../include/gumbo-parser.pri)
+include(../include/breakpad.pri)
 
 SOURCES += \
     src/dialogs/DocumentationDialog.cpp \
@@ -105,6 +110,8 @@ SOURCES += \
     src/items/IPItem.cpp \
     src/items/MXItem.cpp \
     src/items/NSItem.cpp \
+    src/modules/active/URLScanner.cpp \
+    src/modules/passive/api/PassiveTotal.cpp \
     src/project/Project_contextmenu.cpp \
     src/project/model/Explorer.cpp \
     src/project/model/ProjectModel.cpp \
@@ -115,7 +122,6 @@ SOURCES += \
     src/items/URLItem.cpp \
     src/items/WildcardItem.cpp \
     src/modules/active/PortScanner.cpp \
-    src/modules/active/UrlScanner.cpp \
     src/modules/passive/api/HaveIBeenPawned.cpp \
     src/modules/passive/api/Host.cpp \
     src/modules/passive/api/JsonWhois.cpp \
@@ -235,6 +241,7 @@ SOURCES += \
     src/utils/JsonSyntaxHighlighter.cpp \
     src/utils/LogsSyntaxHighlighter.cpp \
     src/utils/UpdateChecker.cpp \
+    src/utils/CrashHandler.cpp \
     src/widgets/InputWidget.cpp \
     src/dialogs/LogViewerDialog.cpp \
     src/dialogs/AboutDialog.cpp \
@@ -263,6 +270,8 @@ HEADERS += \
     src/items/IPItem.h \
     src/items/MXItem.h \
     src/items/NSItem.h \
+    src/modules/active/URLScanner.h \
+    src/modules/passive/api/PassiveTotal.h \
     src/project/model/Explorer.h \
     src/project/model/ProjectModel.h \
     src/items/RawItem.h \
@@ -270,7 +279,6 @@ HEADERS += \
     src/items/URLItem.h \
     src/items/WildcardItem.h \
     src/modules/active/PortScanner.h \
-    src/modules/active/UrlScanner.h \
     src/modules/passive/OsintDefinitions.h \
     src/modules/passive/api/HaveIBeenPawned.h \
     src/modules/passive/api/Host.h \
@@ -392,6 +400,7 @@ HEADERS += \
     src/engines/brute/Brute.h \
     src/engines/osint/Osint.h \
     src/engines/AbstractEngine.h \
+    src/utils/CrashHandler.h \
     src/utils/s3s.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \

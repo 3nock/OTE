@@ -19,8 +19,8 @@ IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedRawJson);
-    if(args.outputInfo)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedInfo);
+    if(args.outputInfoIp)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedInfoIp);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
     ///
@@ -60,7 +60,7 @@ void IpInfo::start(){
         return;
     }
 
-    if(args.outputInfo){
+    if(args.outputInfoIp){
         url.setUrl("https://ipinfo.io/"+target+"/json?token="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -99,7 +99,7 @@ void IpInfo::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void IpInfo::replyFinishedInfo(QNetworkReply *reply){
+void IpInfo::replyFinishedInfoIp(QNetworkReply *reply){
     if(reply->error()){
         quitThread();
         return;

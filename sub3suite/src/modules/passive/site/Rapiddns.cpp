@@ -171,7 +171,7 @@ void Rapiddns::replyFinishedIp(QNetworkReply *reply){
                         GumboNode *a = static_cast<GumboNode*>(td_address->v.element.children.data[0]);
                         GumboNode *address = static_cast<GumboNode*>(a->v.element.children.data[0]);
 
-                        emit resultIp(address->v.text.text);
+                        emit resultIP(address->v.text.text);
                         log.resultsCount++;
                     }
                 }

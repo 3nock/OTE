@@ -37,20 +37,6 @@ void Raw::onErrorLog(ScanLog log){
     m_failedScans.insert(log.target, log.message);
 }
 
-void Raw::onRateLimitLog(ScanLog log){
-    QString message("<font color=\"yellow\">"+log.message+"</font>");
-    QString module("<font color=\"yellow\">"+log.moduleName+"</font>");
-    QString target("<font color=\"yellow\">"+log.target+"</font>");
-    QString status("<font color=\"yellow\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Target]        :"+target);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
-    ui->plainTextEditLogs->appendPlainText("");
-
-    m_failedScans.insert(log.target, log.message);
-}
-
 void Raw::onResults(s3s_struct::RAW raw){
     if(raw.results.isEmpty())
         return;

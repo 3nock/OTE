@@ -17,8 +17,8 @@ CertspotterFree::CertspotterFree(ScanArgs args) : AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedRawJson);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSubdomain);
-    if(args.outputSSLCert)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSSLCert);
+    if(args.outputSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSSL);
 }
 CertspotterFree::~CertspotterFree(){
     delete manager;
@@ -47,7 +47,7 @@ void CertspotterFree::start(){
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSLCert){
+        if(args.outputSSL){
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert");
             request.setUrl(url);
             manager->get(request);
@@ -76,7 +76,7 @@ void CertspotterFree::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void CertspotterFree::replyFinishedSSLCert(QNetworkReply *reply){
+void CertspotterFree::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

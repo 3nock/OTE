@@ -30,7 +30,6 @@ class CidrEnum : public AbstractEnum {
         void onScanThreadEnded();
         void onErrorLog(ScanLog log);
         void onInfoLog(ScanLog log);
-        void onRateLimitLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);

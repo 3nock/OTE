@@ -83,7 +83,7 @@ void Waybackmachine::replyFinishedUrl(QNetworkReply *reply){
     foreach(const QJsonValue &value, urls)
     {
         QString urlValue = value.toArray()[0].toString();
-        emit resultUrl(urlValue);
+        emit resultURL(urlValue);
         log.resultsCount++;
     }
 

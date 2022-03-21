@@ -29,8 +29,8 @@ class Crtsh: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedSSLCert(QNetworkReply *reply) override;
-        void replyFinishedInfo(QNetworkReply *reply) override;
+        void replyFinishedSSL(QNetworkReply *reply) override;
+        void replyFinishedInfoSSL(QNetworkReply *reply) override;
 
     private:
         void m_getCertId(QNetworkReply *reply);

@@ -130,7 +130,7 @@ void WebResolver::replyFinishedIp(QNetworkReply *reply){
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString address = record.toObject()["ip"].toString();
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
     }

@@ -75,7 +75,6 @@ void MXEnum::startScan(){
         connect(dnslytics, &Dnslytics::infoMX, this, &MXEnum::onResult);
         connect(dnslytics, &Dnslytics::infoLog, this, &MXEnum::onInfoLog);
         connect(dnslytics, &Dnslytics::errorLog, this, &MXEnum::onErrorLog);
-        connect(dnslytics, &Dnslytics::rateLimitLog, this, &MXEnum::onRateLimitLog);
         connect(cThread, &QThread::finished, this, &MXEnum::onScanThreadEnded);
         connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
         connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

@@ -6,10 +6,11 @@
 
 namespace ModuleInfo {
 struct RiskIq{
-    QString name = "RiskIq";
+    QString name = OSINT_MODULE_RISKIQ;
     QString url = "https://www.riskiq.com/";
     QString url_apiDoc = "https://api.riskiq.net/api/concepts.html";
-    QString summary = "Relevant, actionable security intelligence to protect your attack surface";
+    QString summary = "Relevant, actionable security intelligence to protect your attack surface. Security Intelligence Services provides direct, "
+                      "high volume access to RiskIQ data, allowing mature customers the ability to use this data to defend against threats to their environment.";
 
     QMap<QString, QStringList> flags = {{"pdns ip",
                                          {PLACEHOLDERTEXT_IP, "Retrieve results by searching for specified IP address within PDNS record data field"}},
@@ -47,7 +48,7 @@ struct RiskIq{
                                           {IN_IP,
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_SSLCERT}},
                                           {IN_SSLCERT,
-                                           {OUT_IP, OUT_SSLCERT}}};
+                                           {OUT_IP, OUT_SSLCERT, OUT_SUBDOMAIN}}};
 };
 }
 
@@ -62,11 +63,11 @@ class RiskIq: public AbstractOsintModule{
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedSSLCert(QNetworkReply *reply) override;
+        void replyFinishedSSL(QNetworkReply *reply) override;
 
     private:
-        QString m_name = nullptr;
-        QString m_key = nullptr;
+        QString m_key;
+        QString m_secret;
 };
 
 #endif // RISKIQ_H

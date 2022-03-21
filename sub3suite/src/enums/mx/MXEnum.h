@@ -30,7 +30,6 @@ class MXEnum : public AbstractEnum {
         void onScanThreadEnded();
         void onInfoLog(ScanLog log);
         void onErrorLog(ScanLog log);
-        void onRateLimitLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);

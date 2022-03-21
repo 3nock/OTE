@@ -55,23 +55,21 @@ class Osint : public AbstractEngine{
         void onScanThreadEnded();
         void onInfoLog(ScanLog log);
         void onErrorLog(ScanLog log);
-        void onRateLimitLog(ScanLog log);
-        /* ... */
+
         void onResultSubdomainIp(QString subdomain, QString ip);
         void onResultSubdomain(QString subdomain);
-        void onResultMightContainWildcards(QString subdomain);
-        void onResultIp(QString ip);
+        void onResultIP(QString ip);
         void onResultEmail(QString email);
-        void onResultUrl(QString url);
-        void onResultAsn(QString asnValue, QString asnName);
-        void onResultCidr(QString cidr);
+        void onResultURL(QString url);
+        void onResultASN(QString asnValue, QString asnName);
+        void onResultCIDR(QString cidr);
+        void onResultSSL(QString ssl_hash);
         void onResultA(QString A);
         void onResultAAAA(QString AAAA);
         void onResultCNAME(QString CNAME);
         void onResultMX(QString MX);
         void onResultNS(QString NS);
         void onResultTXT(QString TXT);
-        void onResultSSLCert(QString sha1_or_sha256);
 
         /* receiving targets from other engines */
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);

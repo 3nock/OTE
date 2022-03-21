@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct RobtexFree{
-    QString name = "Robtex";
+    QString name = OSINT_MODULE_ROBTEX;
     QString url = "https://www.robtex.com/";
     QString url_apiDoc = "https://www.robtex.com/api/";
     QString summary = "Robtex is used for various kinds of research of IP numbers, Domain names, etc";
@@ -23,9 +23,9 @@ struct RobtexFree{
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
                                           {IN_IP,
-                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN}},
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN, OUT_CIDR}},
                                           {IN_ASN,
-                                           {OUT_IP}}};
+                                           {OUT_CIDR}}};
 };
 }
 
@@ -41,6 +41,7 @@ class RobtexFree: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
 };
 
 #endif // ROBTEXFREE_H

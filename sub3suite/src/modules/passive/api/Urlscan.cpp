@@ -74,7 +74,7 @@ void Urlscan::replyFinishedIp(QNetworkReply *reply){
 
     foreach(const QJsonValue &value, resultsArray){
         QJsonObject page = value["page"].toObject();
-        emit resultIp(page["ptr"].toString());
+        emit resultIP(page["ptr"].toString());
         log.resultsCount++;
     }
     end(reply);
@@ -91,7 +91,7 @@ void Urlscan::replyFinishedUrl(QNetworkReply *reply){
 
     foreach(const QJsonValue &value, resultsArray){
         QJsonObject page = value["page"].toObject();
-        emit resultUrl(page["url"].toString());
+        emit resultURL(page["url"].toString());
         log.resultsCount++;
     }
     end(reply);

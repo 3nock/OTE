@@ -35,7 +35,7 @@ class IpInfo: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedInfo(QNetworkReply *reply) override;
+        void replyFinishedInfoIp(QNetworkReply *reply) override;
 
     private:
         QString m_key = nullptr;

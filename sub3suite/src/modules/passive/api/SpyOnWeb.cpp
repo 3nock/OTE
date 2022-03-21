@@ -174,7 +174,7 @@ void SpyOnWeb::replyFinishedIp(QNetworkReply *reply){
     if(QUERY_TYPE == DOMAIN_API){
         QStringList addresses = result["ip_dns"].toObject().keys();
         foreach(const QString &address, addresses){
-            emit resultIp(address);
+            emit resultIP(address);
             log.resultsCount++;
         }
     }

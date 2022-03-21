@@ -26,5 +26,9 @@
 #define OSINT_MODULE_ONYPHE "Onyphe"
 #define OSINT_MODULE_OTX "otx"
 #define OSINT_MODULE_PROJECTDISCOVERY "ProjectDiscovery"
+#define OSINT_MODULE_RISKIQ "RiskIq"
+#define OSINT_MODULE_PASSIVETOTAL "PassiveTotal"
+#define OSINT_MODULE_ROBTEX "Robtex"
+#define OSINT_MODULE_SECURITYTRAILS "SecurityTrails"
 
 #endif // OSINTDEFINITIONS_H

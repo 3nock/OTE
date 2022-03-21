@@ -147,7 +147,7 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
                 QString domain = QString::fromUtf8(child->v.text.text);
                 domain.append(target);
-                emit resultUrl(domain);
+                emit resultURL(domain);
                 log.resultsCount++;
             }
         }

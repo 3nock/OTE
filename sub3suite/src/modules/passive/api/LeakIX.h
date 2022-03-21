@@ -32,7 +32,7 @@ class LeakIX: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedSSLCert(QNetworkReply *reply) override;
+        void replyFinishedSSL(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
 
     private:
