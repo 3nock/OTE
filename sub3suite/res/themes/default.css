@@ -89,7 +89,7 @@ QGroupBox:title {
 
 /****************************** CheckBox ******************************/
 QCheckBox {
-    color: rgb(255,255,255);
+    color: white;
     padding: 2px;
 }
 
@@ -213,8 +213,8 @@ QToolBox QScrollArea {
 
 QToolBox::tab {
     padding-left: 12px;
-    color: black;
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgb(37, 37, 37), stop:1 rgb(57, 57, 57));
+    color: white;
+    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgb(37, 37, 37), stop:1 rgb(47, 47, 47));
     border-style: solid;
     border-width: 1px;
     border-color: rgb(20,20,20);

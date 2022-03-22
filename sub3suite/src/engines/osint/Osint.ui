@@ -702,6 +702,13 @@
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QToolBox" name="toolBoxNoKey">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
            </property>
@@ -716,12 +723,12 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>165</width>
+              <width>177</width>
               <height>1057</height>
              </rect>
             </property>
             <attribute name="label">
-             <string>Api Key not Required</string>
+             <string>API Keys not Required</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
@@ -1060,6 +1067,13 @@
          </item>
          <item>
           <widget class="QToolBox" name="toolBoxRequireKey">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="currentIndex">
             <number>0</number>
            </property>
@@ -1076,7 +1090,7 @@
              </rect>
             </property>
             <attribute name="label">
-             <string>Require Api Keys</string>
+             <string>API Keys Required</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_18">
              <item>
