@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Whatcms{
-    QString name = "WhatCMS";
+    QString name = OSINT_MODULE_WHATCMS;
     QString url = "https://whatcms.org/";
     QString url_apiDoc = "https://whatcms.org/Documentation";
     QString summary = "WhatCMS.org handles requests from users around the world seeking to find out more about the websites they're using.  "

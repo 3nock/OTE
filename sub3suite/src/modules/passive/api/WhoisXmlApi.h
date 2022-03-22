@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct WhoisXmlApi{
-    QString name = "WhoisXmlApi";
+    QString name = OSINT_MODULE_WHOISXMLAPI;
     QString url = "https://whoisxmlapi.com/";
     QString url_apiDoc = "https://whoisxmlapi.github.io/";
     QString summary = "The Who Behind Cyber Threat Intelligence";
@@ -22,6 +22,8 @@ struct WhoisXmlApi{
                                          {PLACEHOLDERTEXT_EMAIL, " Boost email marketing results and get rid of abusers with our complete email verification product line—API, web-based lookup tool, bulk processing capabilities, and disposable email domains database."}},
                                         {"domain availability", {PLACEHOLDERTEXT_DOMAIN, ""}},
                                         {"ip netblocks asn",
+                                         {PLACEHOLDERTEXT_ASN, "With one API call get exhaustive information on the IP range that a given IP address belongs to, with detailed ownership information regarding each range."}},
+                                        {"ip netblocks cidr",
                                          {PLACEHOLDERTEXT_ASN, "With one API call get exhaustive information on the IP range that a given IP address belongs to, with detailed ownership information regarding each range."}},
                                         {"ip netblocks ip",
                                          {PLACEHOLDERTEXT_IP, "With one API call get exhaustive information on the IP range that a given IP address belongs to, with detailed ownership information regarding each range."}},
@@ -48,9 +50,11 @@ struct WhoisXmlApi{
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_SUBDOMAIN, OUT_EMAIL}},
                                           {IN_IP,
-                                           {OUT_SUBDOMAIN, OUT_ASN}},
-                                          {IN_IP,
-                                           {OUT_ASN}}};
+                                           {OUT_SUBDOMAIN, OUT_ASN, OUT_CIDR, OUT_EMAIL}},
+                                          {IN_ASN,
+                                           {OUT_ASN, OUT_CIDR, OUT_EMAIL}},
+                                          {IN_CIDR,
+                                           {OUT_ASN, OUT_CIDR, OUT_EMAIL}}};
 };
 }
 
@@ -64,7 +68,10 @@ class WhoisXmlApi: public AbstractOsintModule{
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
         void replyFinishedEmail(QNetworkReply *reply) override;
+        void replyFinishedInfoNS(QNetworkReply *reply) override;
+        void replyFinishedInfoMX(QNetworkReply *reply) override;
 
     private:
         QString m_key = nullptr;

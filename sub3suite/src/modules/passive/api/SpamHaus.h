@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct SpamHaus{
-    QString name = "SpamHaus";
+    QString name = OSINT_MODULE_SPAMHAUS;
     QString url = "https://spamhaus.com/";
     QString url_apiDoc = "https://docs.spamhaus.com/";
     QString summary = "Protect and investigate using IP and domain reputation data.";

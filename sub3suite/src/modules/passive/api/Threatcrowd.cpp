@@ -13,7 +13,7 @@
 Threatcrowd::Threatcrowd(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "ThreatCrowd";
+    log.moduleName = OSINT_MODULE_THREATCROWD;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedRawJson);
@@ -89,37 +89,39 @@ void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(QUERY_TYPE == DOMAINS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAINS:
+    {
         QJsonArray subdomains = mainObj["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
             emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }
+        break;
 
-    if(QUERY_TYPE == EMAIL){
-        if(mainObj["response_code"].toString() == "1"){
-            QJsonArray domains = mainObj["domains"].toArray();
-            foreach(const QJsonValue &value, domains){
-                emit resultSubdomain(value.toString());
-                log.resultsCount++;
-            }
+    case EMAIL:
+    {
+        QJsonArray domains = mainObj["domains"].toArray();
+        foreach(const QJsonValue &value, domains){
+            emit resultSubdomain(value.toString());
+            log.resultsCount++;
+        }
+    }
+        break;
+
+    case IP:
+        QJsonArray resolutions = mainObj["resolutions"].toArray();
+        foreach(const QJsonValue &value, resolutions){
+            emit resultSubdomain(value.toObject()["domain"].toString());
+            log.resultsCount++;
         }
     }
 
-    if(QUERY_TYPE == IP){
-        if(mainObj["response_code"].toString() == "1"){
-            QJsonArray resolutions = mainObj["resolutions"].toArray();
-            foreach(const QJsonValue &value, resolutions){
-                emit resultSubdomain(value.toObject()["domain"].toString());
-                log.resultsCount++;
-            }
-        }
-    }
     end(reply);
 }
 
@@ -129,19 +131,19 @@ void Threatcrowd::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(QUERY_TYPE == DOMAINS){
-        if(mainObj["response_code"].toString() == "1"){
-            QJsonArray resolutions = mainObj["resolutions"].toArray();
-            foreach(const QJsonValue &value, resolutions){
-                emit resultIP(value["ip_address"].toString());
-                log.resultsCount++;
-            }
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAINS:
+        QJsonArray resolutions = mainObj["resolutions"].toArray();
+        foreach(const QJsonValue &value, resolutions){
+            emit resultIP(value["ip_address"].toString());
+            log.resultsCount++;
         }
     }
+
     end(reply);
 }
 
@@ -151,19 +153,19 @@ void Threatcrowd::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    if(QUERY_TYPE == DOMAINS){
-        if(mainObj["response_code"].toString() == "1"){
-            QJsonArray emails = mainObj["emails"].toArray();
-            foreach(const QJsonValue &value, emails){
-                QString EmailAddress = value.toString();
-                emit resultEmail(EmailAddress);
-                log.resultsCount++;
-            }
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAINS:
+        QJsonArray emails = mainObj["emails"].toArray();
+        foreach(const QJsonValue &value, emails){
+            QString EmailAddress = value.toString();
+            emit resultEmail(EmailAddress);
+            log.resultsCount++;
         }
     }
+
     end(reply);
 }

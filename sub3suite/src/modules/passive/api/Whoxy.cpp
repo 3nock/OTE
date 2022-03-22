@@ -9,19 +9,21 @@
 #define WHOIS_HISTORY 5
 #define WHOIS_LOOKUP 6
 
+/*
+ * not implemented yet...
+ *
+ * https://www.whoxy.com/free-whois-api/
+ */
 Whoxy::Whoxy(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Whoxy";
+    log.moduleName = OSINT_MODULE_WHOXY;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Whoxy::replyFinishedRawJson);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("whoxy").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_WHOXY).toString();
 }
 Whoxy::~Whoxy(){
     delete manager;

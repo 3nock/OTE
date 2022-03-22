@@ -25,10 +25,13 @@
 #define REGISTRANT_MONITOR 17
 #define REVERSE_IP 18
 #define REVERSE_IP_WHOIS 19
-#define REVERSE_NAMESERVER 20
-#define REVERSE_WHOIS 21
-#define WHOIS_HISTORY 22
-#define WHOIS_LOOKUP 23
+#define REVERSE_MX_DOMAIN 20
+#define REVERSE_MX_IP 21
+#define REVERSE_MX_MX 22
+#define REVERSE_NAMESERVER 23
+#define REVERSE_WHOIS 24
+#define WHOIS_HISTORY 25
+#define WHOIS_LOOKUP 26
 
 
 DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
@@ -120,6 +123,15 @@ void DomainTools::start(){
         case REVERSE_IP_WHOIS:
             url.setUrl("https://api.domaintools.com/v1/reverse-ip-whois/?ip="+target+"&api_username="+m_username+"&api_key="+m_key);
             break;
+        case REVERSE_MX_DOMAIN:
+            url.setUrl("https://api.domaintools.com/v1/reverse-mx/?domain="+target+"&api_username="+m_username+"&api_key="+m_key);
+            break;
+        case REVERSE_MX_IP:
+            url.setUrl("https://api.domaintools.com/v1/reverse-mx/?mx_ip="+target+"&api_username="+m_username+"&api_key="+m_key);
+            break;
+        case REVERSE_MX_MX:
+            url.setUrl("https://api.domaintools.com/v1/reverse-mx/?mx_server="+target+"&api_username="+m_username+"&api_key="+m_key);
+            break;
         case REVERSE_NAMESERVER:
             url.setUrl("https://api.domaintools.com/v1/"+target+"/name-server-domains/?api_username="+m_username+"&api_key="+m_key);
             break;
@@ -170,6 +182,28 @@ void DomainTools::start(){
             activeRequests++;
             return;
         }
+    }
+
+    ///
+    /// Info...
+    ///
+
+    if(args.outputInfoMX){
+        url.setUrl("https://api.domaintools.com/v1/reverse-mx/?mx_server="+target+"&api_username="+m_username+"&api_key="+m_key);
+        request.setAttribute(QNetworkRequest::User, REVERSE_MX_MX);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
+    }
+
+    if(args.outputInfoNS){
+        url.setUrl("https://api.domaintools.com/v1/"+target+"/name-server-domains/?api_username="+m_username+"&api_key="+m_key);
+        request.setAttribute(QNetworkRequest::User, REVERSE_NAMESERVER);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+        return;
     }
 }
 
@@ -251,6 +285,54 @@ void DomainTools::replyFinishedIp(QNetworkReply *reply){
         }
         break;
     }
+
+    end(reply);
+}
+
+void DomainTools::replyFinishedInfoMX(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject response = document.object()["response"].toObject();
+
+    s3s_struct::MX mx;
+    mx.info_mx = target;
+
+    foreach(const QJsonValue &domain, response["domains"].toArray())
+        mx.domains.insert(domain.toString());
+    /*
+    foreach(const QJsonValue &mx_server, response["mx_servers"].toArray())
+        mx.mx_servers.insert(mx_server.toString());
+    foreach(const QJsonValue &ip, response["ips"].toArray())
+        mx.ip.insert(ip.toString());
+    */
+
+    emit infoMX(mx);
+
+    end(reply);
+}
+
+void DomainTools::replyFinishedInfoNS(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject response = document.object()["response"].toObject();
+
+    s3s_struct::NS ns;
+    ns.info_ns = target;
+
+    foreach(const QJsonValue &domain, response["primary_domains"].toArray())
+        ns.domains.insert(domain.toString());
+    foreach(const QJsonValue &domain, response["secondary_domains"].toArray())
+        ns.domains.insert(domain.toString());
+
+    emit infoNS(ns);
 
     end(reply);
 }

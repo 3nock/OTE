@@ -70,6 +70,21 @@
          <string>DNSLytics</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>ViewDns</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>WhoIsXMLAPI</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>DomainTools</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>

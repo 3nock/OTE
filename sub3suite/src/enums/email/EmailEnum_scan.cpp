@@ -67,21 +67,27 @@ void EmailEnum::startScan(){
 
     m_scanArgs->outputInfoEmail = true;
 
-    QThread *cThread = new QThread;
-    switch (ui->comboBoxEngine->currentIndex()) {
+    /* start scan thread */
+    switch (ui->comboBoxEngine->currentIndex())
+    {
     case 0: // EmailRep
-        EmailRep *emailRep = new EmailRep(*m_scanArgs);
-        emailRep->startScan(cThread);
-        emailRep->moveToThread(cThread);
-        connect(emailRep, &EmailRep::infoEmail, this, &EmailEnum::onResult);
-        connect(emailRep, &EmailRep::infoLog, this, &EmailEnum::onInfoLog);
-        connect(emailRep, &EmailRep::errorLog, this, &EmailEnum::onErrorLog);
-        connect(cThread, &QThread::finished, this, &EmailEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, emailRep, &EmailRep::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
+        this->startScanThread(new EmailRep(*m_scanArgs));
+        break;
     }
+}
+
+void EmailEnum::startScanThread(AbstractOsintModule *module){
+    QThread *cThread = new QThread;
+    module->startScan(cThread);
+    module->moveToThread(cThread);
+    connect(module, &AbstractOsintModule::infoEmail, this, &EmailEnum::onResult);
+    connect(module, &AbstractOsintModule::infoLog, this, &EmailEnum::onInfoLog);
+    connect(module, &AbstractOsintModule::errorLog, this, &EmailEnum::onErrorLog);
+    connect(cThread, &QThread::finished, this, &EmailEnum::onScanThreadEnded);
+    connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
+    connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+    cThread->start();
+    status->activeScanThreads++;
 }
 
 void EmailEnum::onReScan(QQueue<QString> targets){

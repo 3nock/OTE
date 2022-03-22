@@ -63,6 +63,8 @@ private:
         void initConfigValues();
 
         void startScan();
+        void startScanThread(AbstractOsintModule*);
+        void startScanThread_reverseIP(AbstractOsintModule*);
         void log(QString log);
 
         /* for context menu */

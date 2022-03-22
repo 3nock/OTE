@@ -10,12 +10,11 @@
 #define IP_QUERY 3
 #define SUBDOMAINS 4
 
-/* also has nameservers and certificates */
-/* has some problems... */
+
 ThreatBook::ThreatBook(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "ThreatBook";
+    log.moduleName = OSINT_MODULE_THREATBOOK;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ThreatBook::replyFinishedRawJson);
@@ -25,12 +24,9 @@ ThreatBook::ThreatBook(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ThreatBook::replyFinishedAsn);
     if(args.outputIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ThreatBook::replyFinishedIp);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("threatbook").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_THREATBOOK).toString();
 }
 ThreatBook::~ThreatBook(){
     delete manager;
@@ -80,13 +76,14 @@ void ThreatBook::start(){
             manager->get(request);
             activeRequests++;
 
+            /*
             url.setUrl("https://api.threatbook.cn/v3/domain/adv_query?apikey="+m_key+"&resource="+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_ADV_QUERY);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
+            */
         }
-        return;
     }
 
     if(args.inputIp){
@@ -96,11 +93,13 @@ void ThreatBook::start(){
         manager->get(request);
         activeRequests++;
 
+        /*
         url.setUrl("https://api.threatbook.cn/v3/ip/adv_query?apikey="+m_key+"&resource="+target);
         request.setAttribute(QNetworkRequest::User, IP_ADV_QUERY);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
+        */
     }
 }
 
@@ -110,18 +109,21 @@ void ThreatBook::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == SUBDOMAINS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case SUBDOMAINS:
+    {
         QJsonArray subdomainList = document.object()["data"].toObject()["sub_domains"].toObject()["data"].toArray();
         foreach(const QJsonValue &value, subdomainList){
             emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }
+        break;
 
-    if(QUERY_TYPE == IP_ADV_QUERY){
+    case IP_ADV_QUERY:
         QJsonObject data = document.object()["data"].toObject();
         QJsonObject history_domains = data["history_domains"].toObject();
         QStringList historyDomainsList = history_domains.keys();
@@ -134,6 +136,7 @@ void ThreatBook::replyFinishedSubdomain(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }
 
@@ -143,16 +146,18 @@ void ThreatBook::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    if(QUERY_TYPE == IP_QUERY){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case IP_QUERY:
         QString asnValue = QString::number(data["asn"].toObject()["number"].toInt());
         QString asnName = data["asn"].toObject()["info"].toString();
         emit resultASN(asnValue, asnName);
         log.resultsCount++;
     }
+
     end(reply);
 }
 
@@ -162,19 +167,21 @@ void ThreatBook::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document.object()["data"].toObject();
 
-    if(QUERY_TYPE == DOMAIN_QUERY){
+    switch (reply->property(REQUEST_TYPE).toInt()) {
+    case DOMAIN_QUERY:
+    {
         QJsonArray cur_ips = data["cur_ips"].toArray();
         foreach(const QJsonValue &value, cur_ips){
             emit resultIP(value.toObject()["ip"].toString());
             log.resultsCount++;
         }
     }
+        break;
 
-    if(QUERY_TYPE == DOMAIN_ADV_QUERY){
+    case DOMAIN_ADV_QUERY:
         QJsonArray history_ips = data["history_ips"].toArray();
         foreach(const QJsonValue &history_ip, history_ips){
             QJsonArray ips = history_ip.toObject()["ips"].toArray();
@@ -184,5 +191,6 @@ void ThreatBook::replyFinishedIp(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }

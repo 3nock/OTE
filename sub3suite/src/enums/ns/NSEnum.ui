@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>644</width>
-    <height>340</height>
+    <width>654</width>
+    <height>412</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,6 +68,26 @@
        <item>
         <property name="text">
          <string>DNSLytics</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>SpyOnWeb</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ViewDns</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>WhoIsXMLAPI</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>DomainTools</string>
         </property>
        </item>
       </widget>

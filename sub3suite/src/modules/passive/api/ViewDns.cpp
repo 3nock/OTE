@@ -20,14 +20,12 @@
 #define REVERSE_WHOIS_LOOKUP 13
 
 /*
- * only 250 api csubdomainIps available for free...
- * also has a reverse dns lookup...
- * has mx,ip & ns reverse lookups...
+ * only 250 api calls available for free...
  */
 ViewDns::ViewDns(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "ViewDns";
+    log.moduleName = OSINT_MODULE_VIEWDNS;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedRawJson);
@@ -37,12 +35,13 @@ ViewDns::ViewDns(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedIp);
     if(args.outputEmail)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedEmail);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("viewdns").toString();
-    
+    if(args.outputInfoNS)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedInfoNS);
+    if(args.outputInfoMX)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedInfoMX);
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_VIEWDNS).toString();
 }
 ViewDns::~ViewDns(){
     delete manager;
@@ -149,6 +148,25 @@ void ViewDns::start(){
         }
     }
 
+    ///
+    /// info...
+    ///
+
+    if(args.outputInfoMX){
+        url.setUrl("https://api.viewdns.info/reversemx/?mx="+target+"&apikey="+m_key+"&output=json");
+        request.setAttribute(QNetworkRequest::User, REVERSE_MX_LOOKUP);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
+
+    if(args.outputInfoNS){
+        url.setUrl("https://api.viewdns.info/reversens/?ns="+target+"&apikey="+m_key+"&output=json");
+        request.setAttribute(QNetworkRequest::User, REVERSE_NS_LOOKUP);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
 void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
@@ -157,11 +175,13 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
-    if(QUERY_TYPE == DNS_RECORD_LOOKUP){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DNS_RECORD_LOOKUP:
+    {
         QJsonArray records = response["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString type = record.toObject()["type"].toString();
@@ -188,8 +208,10 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
             }
         }
     }
+        break;
 
-    if(QUERY_TYPE == REVERSE_IP_LOOKUP){
+    case REVERSE_IP_LOOKUP:
+    {
         QJsonArray domains = response["domains"].toArray();
         foreach(const QJsonValue &domain, domains){
             QString hostname = domain.toObject()["name"].toString();
@@ -197,8 +219,10 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
+        break;
 
-    if(QUERY_TYPE == REVERSE_WHOIS_LOOKUP){
+    case REVERSE_WHOIS_LOOKUP:
+    {
         QJsonArray matches = response["matches"].toArray();
         foreach(const QJsonValue &match, matches){
             QString hostname = match.toObject()["domain"].toString();
@@ -206,6 +230,8 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
+    }
+
     end(reply);
 }
 
@@ -215,13 +241,13 @@ void ViewDns::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
 
-    if(QUERY_TYPE == ABUSE_CONTACT_LOOKUP){
-        QString emailAddress = response["abusecontact"].toString();
-        emit resultEmail(emailAddress);
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case ABUSE_CONTACT_LOOKUP:
+        emit resultEmail(response["abusecontact"].toString());
         log.resultsCount++;
     }
 
@@ -234,12 +260,13 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject response = document.object()["response"].toObject();
+    QJsonArray records = response["records"].toArray();
 
-    if(QUERY_TYPE == DNS_RECORD_LOOKUP){
-        QJsonArray records = response["records"].toArray();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DNS_RECORD_LOOKUP:
         foreach(const QJsonValue &record, records){
             QString type = record.toObject()["type"].toString();
 
@@ -254,16 +281,61 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
                 log.resultsCount++;
             }
         }
-    }
+        break;
 
-    if(QUERY_TYPE == IP_HISTORY){
-        QJsonArray records = response["records"].toArray();
+    case IP_HISTORY:
         foreach(const QJsonValue &record, records){
             QString address = record.toObject()["ip"].toString();
             emit resultIP(address);
             log.resultsCount++;
         }
     }
+
+    end(reply);
+}
+
+///
+/// Info...
+///
+
+void ViewDns::replyFinishedInfoNS(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject response = document.object()["response"].toObject();
+    QJsonArray domains = response["domains"].toArray();
+
+    s3s_struct::NS ns;
+    ns.info_ns = target;
+
+    foreach(const QJsonValue &domain, domains)
+        ns.domains.insert(domain.toObject()["domain"].toString());
+
+    emit infoNS(ns);
+
+    end(reply);
+}
+
+void ViewDns::replyFinishedInfoMX(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject response = document.object()["response"].toObject();
+    QJsonArray domains = response["domains"].toArray();
+
+    s3s_struct::MX mx;
+    mx.info_mx = target;
+
+    foreach(const QJsonValue &domain, domains)
+        mx.domains.insert(domain.toString());
+
+    emit infoMX(mx);
 
     end(reply);
 }

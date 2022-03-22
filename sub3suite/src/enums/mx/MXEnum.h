@@ -59,6 +59,7 @@ class MXEnum : public AbstractEnum {
         void initConfigValues();
 
         void startScan();
+        void startScanThread(AbstractOsintModule*);
         void log(QString log);
 
         /* for context menu */

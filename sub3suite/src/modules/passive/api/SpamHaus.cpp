@@ -7,16 +7,13 @@
 SpamHaus::SpamHaus(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "SpamHaus";
+    log.moduleName = OSINT_MODULE_SPAMHAUS;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpamHaus::replyFinishedRawJson);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_key = APIKEY.value("spamhaus").toString();
-    
+
+    /* getting api-key */
+    m_key = APIKEY.value(OSINT_MODULE_SPAMHAUS).toString();
 }
 SpamHaus::~SpamHaus(){
     delete manager;

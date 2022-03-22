@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct WebResolver{
-    QString name = "WebResolver";
+    QString name = OSINT_MODULE_WEBRESOLVER;
     QString url = "https://webresolver.nl/";
     QString url_apiDoc = "https://webresolver.nl/api";
     QString summary = "WebResolver";

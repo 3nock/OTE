@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Threatminer{
-    QString name = "Threatminer";
+    QString name = OSINT_MODULE_THREATMINER;
     QString url = "https://threatminer.org/";
     QString url_apiDoc = "https://www.threatminer.org/api.php";
     QString summary = "Data Mining for threat Intelligence";

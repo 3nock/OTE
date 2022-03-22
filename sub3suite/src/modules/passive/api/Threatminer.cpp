@@ -18,7 +18,7 @@
 Threatminer::Threatminer(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "ThreatMiner";
+    log.moduleName = OSINT_MODULE_THREATMINER;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedRawJson);
@@ -159,25 +159,27 @@ void Threatminer::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_SUBDOMAINS:
         foreach(const QJsonValue &result, results){
             QString hostname = result.toString();
             emit resultSubdomain(hostname);
             log.resultsCount++;
         }
-    }
+        break;
 
-    if(QUERY_TYPE == IP_PASSIVE_DNS){
+    case IP_PASSIVE_DNS:
         foreach(const QJsonValue &result, results){
             QString hostname = result.toObject()["domain"].toString();
             emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
+
     end(reply);
 }
 
@@ -187,25 +189,27 @@ void Threatminer::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == DOMAIN_PASSIVE_DNS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_PASSIVE_DNS:
         foreach(const QJsonValue &result, results){
             QString address = result.toObject()["ip"].toString();
             emit resultIP(address);
             log.resultsCount++;
         }
-    }
+        break;
 
-    if(QUERY_TYPE == SSL_HOSTS){
+    case SSL_HOSTS:
         foreach(const QJsonValue &result, results){
             QString address = result.toString();
             emit resultIP(address);
             log.resultsCount++;
         }
     }
+
     end(reply);
 }
 
@@ -215,11 +219,12 @@ void Threatminer::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == DOMAIN_WHOIS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_WHOIS:
         foreach(const QJsonValue &result, results){
             QJsonObject emails = result.toObject()["whois"].toObject()["emails"].toObject();
             QStringList keys = emails.keys();
@@ -230,6 +235,7 @@ void Threatminer::replyFinishedEmail(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }
 
@@ -239,11 +245,12 @@ void Threatminer::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == IP_WHOIS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case IP_WHOIS:
         foreach(const QJsonValue &result, results){
             QString asnValue = result.toObject()["asn"].toString();
             QString asnName = result.toObject()["asn_name"].toString();
@@ -251,6 +258,7 @@ void Threatminer::replyFinishedAsn(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
+
     end(reply);
 }
 
@@ -260,17 +268,19 @@ void Threatminer::replyFinishedUrl(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == DOMAIN_QUERY_URI || QUERY_TYPE == IP_QUERY_URI){
+    switch (reply->property(REQUEST_TYPE).toInt()) {
+    case DOMAIN_QUERY_URI:
+    case IP_QUERY_URI:
         foreach(const QJsonValue &result, results){
             QString uri = result.toObject()["uri"].toString();
             emit resultURL(uri);
             log.resultsCount++;
         }
     }
+
     end(reply);
 }
 
@@ -280,16 +290,17 @@ void Threatminer::replyFinishedSSL(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray results = document.object()["results"].toArray();
 
-    if(QUERY_TYPE == IP_SSL_CERTS){
+    switch (reply->property(REQUEST_TYPE).toInt()) {
+    case IP_SSL_CERTS:
         foreach(const QJsonValue &result, results){
             QString hash = result.toString();
             emit resultSSL(hash);
             log.resultsCount++;
         }
     }
+
     end(reply);
 }

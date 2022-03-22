@@ -5,11 +5,13 @@
 
 namespace ModuleInfo {
 struct ZETAlytics{
-    QString name = "ZETAlytics";
+    QString name = OSINT_MODULE_ZETALYTICS;
     QString url = "https://zetalytics.com/";
-    QString url_apiDoc = "";
+    QString url_apiDoc = "https://zetalytics.com/";
     QString summary = "https://zetalytics.com/";
-    QMap<QString, QStringList> flags = {};
+
+    QMap<QString, QStringList> flags = {{"Subdomain",
+                                         {PLACEHOLDERTEXT_DOMAIN, "Subdomain"}}};
     QMap<int, QList<int>> input_output = {};
 };
 }
@@ -22,7 +24,6 @@ class ZETAlytics: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedSubdomain(QNetworkReply *) override;
 
     private:
         QString m_key = nullptr;

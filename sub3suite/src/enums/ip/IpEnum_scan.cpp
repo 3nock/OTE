@@ -66,67 +66,57 @@ void IpEnum::startScan(){
 
     m_scanArgs->outputInfoIp = true;
 
-    QThread *cThread = new QThread;
+    /* start scanthread */
     switch (ui->comboBoxOutput->currentIndex())
     {
     case 0: // IP informations
-        switch (ui->comboBoxEngine->currentIndex()) {
-        case 0: // IPINFO
+        switch (ui->comboBoxEngine->currentIndex())
         {
-            IpInfo *ipinfo = new IpInfo(*m_scanArgs);
-            ipinfo->startScan(cThread);
-            ipinfo->moveToThread(cThread);
-            connect(ipinfo, &IpInfo::infoIp, this, &IpEnum::onResult);
-            connect(ipinfo, &IpInfo::infoLog, this, &IpEnum::onInfoLog);
-            connect(ipinfo, &IpInfo::errorLog, this, &IpEnum::onErrorLog);
-            connect(this, &IpEnum::stopScanThread, ipinfo, &IpInfo::onStop);
-            connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
-            connect(cThread, &QThread::finished, ipinfo, &IpInfo::deleteLater);
-            connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-            cThread->start();
-            status->activeScanThreads++;
-        }
+        case 0: // IPINFO
+            this->startScanThread(new IpInfo(*m_scanArgs));
             break;
         case 1: // IPAPI
-        {
-            IpApi *ipApi = new IpApi(*m_scanArgs);
-            ipApi->startScan(cThread);
-            ipApi->moveToThread(cThread);
-            connect(ipApi, &IpApi::infoIp, this, &IpEnum::onResult);
-            connect(ipApi, &IpApi::infoLog, this, &IpEnum::onInfoLog);
-            connect(ipApi, &IpApi::errorLog, this, &IpEnum::onErrorLog);
-            connect(this, &IpEnum::stopScanThread, ipApi, &IpApi::onStop);
-            connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
-            connect(cThread, &QThread::finished, ipApi, &IpInfo::deleteLater);
-            connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-            cThread->start();
-            status->activeScanThreads++;
-        }
+            this->startScanThread(new IpApi(*m_scanArgs));
+            break;
         }
         break;
 
     case 1: // Rerverse IP-Address
-        switch (ui->comboBoxEngine->currentIndex()) {
-        case 0: // DNSLytics
+        switch (ui->comboBoxEngine->currentIndex())
         {
-            Dnslytics *dnslytics = new Dnslytics(*m_scanArgs);
-            dnslytics->startScan(cThread);
-            dnslytics->moveToThread(cThread);
-            connect(dnslytics, &Dnslytics::infoIp, this, &IpEnum::onResult_reverse);
-            connect(dnslytics, &Dnslytics::infoLog, this, &IpEnum::onInfoLog);
-            connect(dnslytics, &Dnslytics::errorLog, this, &IpEnum::onErrorLog);
-            connect(this, &IpEnum::stopScanThread, dnslytics, &Dnslytics::onStop);
-            connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
-            connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
-            connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-            cThread->start();
-            status->activeScanThreads++;
-        }
+        case 0: // DNSLytics
+            this->startScanThread_reverseIP(new Dnslytics(*m_scanArgs));
             break;
         }
-        break;
     }
+}
 
+void IpEnum::startScanThread(AbstractOsintModule *module){
+    QThread *cThread = new QThread;
+    module->startScan(cThread);
+    module->moveToThread(cThread);
+    connect(module, &AbstractOsintModule::infoIp, this, &IpEnum::onResult);
+    connect(module, &AbstractOsintModule::infoLog, this, &IpEnum::onInfoLog);
+    connect(module, &AbstractOsintModule::errorLog, this, &IpEnum::onErrorLog);
+    connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
+    connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
+    connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+    cThread->start();
+    status->activeScanThreads++;
+}
+
+void IpEnum::startScanThread_reverseIP(AbstractOsintModule *module){
+    QThread *cThread = new QThread;
+    module->startScan(cThread);
+    module->moveToThread(cThread);
+    connect(module, &AbstractOsintModule::infoIp, this, &IpEnum::onResult_reverse);
+    connect(module, &AbstractOsintModule::infoLog, this, &IpEnum::onInfoLog);
+    connect(module, &AbstractOsintModule::errorLog, this, &IpEnum::onErrorLog);
+    connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
+    connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
+    connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+    cThread->start();
+    status->activeScanThreads++;
 }
 
 void IpEnum::onReScan(QQueue<QString> targets){

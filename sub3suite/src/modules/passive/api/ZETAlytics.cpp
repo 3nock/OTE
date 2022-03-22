@@ -8,18 +8,13 @@
 ZETAlytics::ZETAlytics(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "ZETAlytics";
+    log.moduleName = OSINT_MODULE_ZETALYTICS;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRawJson);
-    if(args.outputSubdomain)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedSubdomain);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("zetalytics").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_ZETALYTICS).toString();
 }
 ZETAlytics::~ZETAlytics(){
     delete manager;
@@ -37,23 +32,4 @@ void ZETAlytics::start(){
         activeRequests++;
         return;
     }
-
-    if(args.inputDomain){
-        url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+target+"&token="+m_key);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
-    }
-}
-
-void ZETAlytics::replyFinishedSubdomain(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    /*
-     * Not implemented yet...
-     */
-    end(reply);
 }

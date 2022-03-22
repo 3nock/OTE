@@ -53,7 +53,13 @@ struct DomainTools{
                                          {PLACEHOLDERTEXT_IP, "List of domains that share the same network host"}},
                                         {"Reverse IP Whois",
                                          {PLACEHOLDERTEXT_NONE, "Provides a list of IP network ranges with Whois records that match a specific query"}},
-                                        {"Reverse Name Server",
+                                        {"Reverse Mail-Server Domain",
+                                         {PLACEHOLDERTEXT_DOMAIN, "List of domains that share the same primary mail server"}},
+                                        {"Reverse Mail-Server MX",
+                                         {PLACEHOLDERTEXT_MX, "List of domains that share the same primary mail server"}},
+                                        {"Reverse Mail-Server IP",
+                                         {PLACEHOLDERTEXT_IP, "List of domains that share the same primary mail server"}},
+                                        {"Reverse Name-Server",
                                          {PLACEHOLDERTEXT_NS, "List of domains that share the same primary name server"}},
                                         {"Reverse Whois",
                                          {PLACEHOLDERTEXT_QUERY, "Provides a list of domain names with Whois records that match a specific query"}},
@@ -84,6 +90,8 @@ class DomainTools: public AbstractOsintModule{
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
+        void replyFinishedInfoMX(QNetworkReply *reply) override;
+        void replyFinishedInfoNS(QNetworkReply *reply) override;
 
     private:
         QString m_key;

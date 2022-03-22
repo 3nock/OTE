@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Wappalyzer{
-    QString name = "Wappalyzer";
+    QString name = OSINT_MODULE_WAPPALYZER;
     QString url = "https://www.wappalyzer.com/";
     QString url_apiDoc = "https://www.wappalyzer.com/docs/api/v2/basics/";
     QString summary = "We track over a thousand web technologies across millions of websites. We know who uses your software and that of your competitors.";

@@ -9,16 +9,13 @@
 Seon::Seon(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Seon";
+    log.moduleName = OSINT_MODULE_SEON;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Seon::replyFinishedRawJson);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("seon").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_SEON).toString();
 }
 Seon::~Seon(){
     delete manager;

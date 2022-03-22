@@ -66,21 +66,39 @@ void MXEnum::startScan(){
 
     m_scanArgs->outputInfoMX = true;
 
-    QThread *cThread = new QThread;
-    switch (ui->comboBoxEngine->currentIndex()) {
+    /* start scan thread */
+    switch (ui->comboBoxEngine->currentIndex())
+    {
     case 0: // DNSLytics
-        Dnslytics *dnslytics = new Dnslytics(*m_scanArgs);
-        dnslytics->startScan(cThread);
-        dnslytics->moveToThread(cThread);
-        connect(dnslytics, &Dnslytics::infoMX, this, &MXEnum::onResult);
-        connect(dnslytics, &Dnslytics::infoLog, this, &MXEnum::onInfoLog);
-        connect(dnslytics, &Dnslytics::errorLog, this, &MXEnum::onErrorLog);
-        connect(cThread, &QThread::finished, this, &MXEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
+        this->startScanThread(new Dnslytics(*m_scanArgs));
+        break;
+
+    case 1: // ViewDNS
+        this->startScanThread(new ViewDns(*m_scanArgs));
+        break;
+
+    case 2: // WhoIsXMLAPI
+        this->startScanThread(new WhoisXmlApi(*m_scanArgs));
+        break;
+
+    case 3: // DomainTools
+        this->startScanThread(new DomainTools(*m_scanArgs));
+        break;
     }
+}
+
+void MXEnum::startScanThread(AbstractOsintModule *module){
+    QThread *cThread = new QThread;
+    module->startScan(cThread);
+    module->moveToThread(cThread);
+    connect(module, &AbstractOsintModule::infoMX, this, &MXEnum::onResult);
+    connect(module, &AbstractOsintModule::infoLog, this, &MXEnum::onInfoLog);
+    connect(module, &AbstractOsintModule::errorLog, this, &MXEnum::onErrorLog);
+    connect(cThread, &QThread::finished, this, &MXEnum::onScanThreadEnded);
+    connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
+    connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+    cThread->start();
+    status->activeScanThreads++;
 }
 
 void MXEnum::onReScan(QQueue<QString> targets){

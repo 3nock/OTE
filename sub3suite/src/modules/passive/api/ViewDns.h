@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct ViewDns{
-    QString name = "ViewDns";
+    QString name = OSINT_MODULE_VIEWDNS;
     QString url = "https://viewdns.info/";
     QString url_apiDoc = "https://viewdns.info/api/docs/";
     QString summary = "The tools provided by ViewDNS.info allow users to gather a large amount of data about a given website or IP address.";
@@ -62,6 +62,8 @@ class ViewDns: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
+        void replyFinishedInfoNS(QNetworkReply *reply) override;
+        void replyFinishedInfoMX(QNetworkReply *reply) override;
 
     private:
         QString m_key = nullptr;

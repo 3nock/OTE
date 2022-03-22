@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Shodan{
-    QString name = "Shodan";
+    QString name = OSINT_MODULE_SHODAN;
     QString url = "https://www.shodan.io/";
     QString url_apiDoc = "https://developer.shodan.io/api";
     QString summary = "Search Engine for the Internet of Everything";
@@ -38,7 +38,7 @@ struct Shodan{
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
                                           {IN_IP,
-                                           {OUT_IP, OUT_ASN}}};
+                                           {OUT_ASN, OUT_SUBDOMAIN}}};
 };
 }
 

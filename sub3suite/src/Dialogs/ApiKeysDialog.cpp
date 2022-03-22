@@ -44,19 +44,19 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("passivetotal_key", ui->lineEditPassiveTotalKey->text());
     APIKEY.setValue("passivetotal_username", ui->lineEditPassiveTotalUsername->text());
     APIKEY.setValue(OSINT_MODULE_SECURITYTRAILS, ui->lineEditSecurityTrails->text());
-    APIKEY.setValue("shodan", ui->lineEditShodan->text());
+    APIKEY.setValue(OSINT_MODULE_SHODAN, ui->lineEditShodan->text());
     APIKEY.setValue("spyse", ui->lineEditSpyse->text());
     APIKEY.setValue("virustotal", ui->lineEditVirusTotal->text());
     APIKEY.setValue(OSINT_MODULE_BINARYEDGE, ui->lineEditBinaryEdge->text());
     APIKEY.setValue(OSINT_MODULE_C99, ui->lineEditC99->text());
     APIKEY.setValue("ipapi", ui->lineEditIpApi->text());
     APIKEY.setValue("ipinfo", ui->lineEditIpInfo->text());
-    APIKEY.setValue("threatbook", ui->lineEditThreatBook->text());
-    APIKEY.setValue("whoisxmlapi", ui->lineEditWhoisXmlApi->text());
-    APIKEY.setValue("zoomeye", ui->lineEditZoomEye->text());
-    APIKEY.setValue("viewdns", ui->lineEditViewDns->text());
+    APIKEY.setValue(OSINT_MODULE_THREATBOOK, ui->lineEditThreatBook->text());
+    APIKEY.setValue(OSINT_MODULE_WHOISXMLAPI, ui->lineEditWhoisXmlApi->text());
+    APIKEY.setValue(OSINT_MODULE_ZOOMEYE, ui->lineEditZoomEye->text());
+    APIKEY.setValue(OSINT_MODULE_VIEWDNS, ui->lineEditViewDns->text());
     APIKEY.setValue(OSINT_MODULE_HACKERTARGET, ui->lineEditHackerTarget->text());
-    APIKEY.setValue("webresolver", ui->lineEditWebResolver->text());
+    APIKEY.setValue(OSINT_MODULE_WEBRESOLVER, ui->lineEditWebResolver->text());
     APIKEY.setValue("circlUser", ui->lineEditCirclUser->text());
     APIKEY.setValue("circlPwd", ui->lineEditCirclPwd->text());
     APIKEY.setValue(OSINT_MODULE_MNEMONIC, ui->lineEditMnemonic->text());
@@ -68,7 +68,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
     APIKEY.setValue(OSINT_MODULE_ONYPHE, ui->lineEditOnyphe->text());
     APIKEY.setValue(OSINT_MODULE_FULLHUNT, ui->lineEditFullHunt->text());
-    APIKEY.setValue("spamhaus", ui->lineEditSpamHaus->text());
+    APIKEY.setValue(OSINT_MODULE_SPAMHAUS, ui->lineEditSpamHaus->text());
     APIKEY.setValue("debounce", ui->lineEditDebounce->text());
     APIKEY.setValue(OSINT_MODULE_HAVEIBEENPAWNED, ui->lineEditHaveIBeenPawned->text());
     APIKEY.setValue(OSINT_MODULE_HOST, ui->lineEditHost->text());
@@ -77,10 +77,10 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue(OSINT_MODULE_NETWORKSDB, ui->lineEditNetworksDB->text());
     APIKEY.setValue("neutrinoapi_key", ui->lineEditNeutrinoApiKey->text());
     APIKEY.setValue("neutrinoapi_uid", ui->lineEditNeutrinoApiUID->text());
-    APIKEY.setValue("seon", ui->lineEditSeon->text());
-    APIKEY.setValue("spyonweb", ui->lineEditSpyOnWeb->text());
-    APIKEY.setValue("whatcms", ui->lineEditWhatcms->text());
-    APIKEY.setValue("whoxy", ui->lineEditWhoxy->text());
+    APIKEY.setValue(OSINT_MODULE_SEON, ui->lineEditSeon->text());
+    APIKEY.setValue(OSINT_MODULE_SPYONWEB, ui->lineEditSpyOnWeb->text());
+    APIKEY.setValue(OSINT_MODULE_WHATCMS, ui->lineEditWhatcms->text());
+    APIKEY.setValue(OSINT_MODULE_WHOXY, ui->lineEditWhoxy->text());
     APIKEY.setValue("emailcrawlr", ui->lineEditEmailCrawlr->text());
     APIKEY.setValue("emailformat", ui->lineEditEmailFormat->text());
     APIKEY.setValue("emailrep", ui->lineEditEmailRep->text());
@@ -95,7 +95,8 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("hybridanalysis", ui->lineEditHybridAnalysis->text());
     APIKEY.setValue("ipqualityscore", ui->lineEditIpQualityScore->text());
     APIKEY.setValue("leaklookup", ui->lineEditLeakLookup->text());
-    APIKEY.setValue("wappalyzer", ui->lineEditWappalyzer->text());
+    APIKEY.setValue(OSINT_MODULE_ZETALYTICS, ui->lineEditZETAlytics->text());
+    APIKEY.setValue(OSINT_MODULE_WAPPALYZER, ui->lineEditWappalyzer->text());
     accept();
 }
 
@@ -185,7 +186,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditSecurityTrails->setText(key);
         ui->buttonGetSecurityTrails->hide();
     }
-    key = APIKEY.value("shodan").toString();
+    key = APIKEY.value(OSINT_MODULE_SHODAN).toString();
     if(!key.isEmpty()){
         ui->lineEditShodan->setText(key);
         ui->buttonGetShodan->hide();
@@ -215,22 +216,22 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditIpInfo->setText(key);
         ui->buttonGetIpInfo->hide();
     }
-    key = APIKEY.value("threatbook").toString();
+    key = APIKEY.value(OSINT_MODULE_THREATBOOK).toString();
     if(!key.isEmpty()){
         ui->lineEditThreatBook->setText(key);
         ui->buttonGetThreatBook->hide();
     }
-    key = APIKEY.value("whoisxmlapi").toString();
+    key = APIKEY.value(OSINT_MODULE_WHOISXMLAPI).toString();
     if(!key.isEmpty()){
         ui->lineEditWhoisXmlApi->setText(key);
         ui->buttonGetWhoisXmlApi->hide();
     }
-    key = APIKEY.value("zetalytics").toString();
+    key = APIKEY.value(OSINT_MODULE_ZETALYTICS).toString();
     if(!key.isEmpty()){
         ui->lineEditZETAlytics->setText(key);
         ui->buttonGetZETAlytics->hide();
     }
-    key = APIKEY.value("zoomeye").toString();
+    key = APIKEY.value(OSINT_MODULE_ZOOMEYE).toString();
     if(!key.isEmpty()){
         ui->lineEditZoomEye->setText(key);
         ui->buttonGetZoomEye->hide();
@@ -240,7 +241,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditIpApi->setText(key);
         ui->buttonGetIpApi->hide();
     }
-    key = APIKEY.value("viewdns").toString();
+    key = APIKEY.value(OSINT_MODULE_VIEWDNS).toString();
     if(!key.isEmpty()){
         ui->lineEditViewDns->setText(key);
         ui->buttonGetViewDns->hide();
@@ -250,7 +251,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditHackerTarget->setText(key);
         ui->buttonGetHackerTarget->hide();
     }
-    key = APIKEY.value("webresolver").toString();
+    key = APIKEY.value(OSINT_MODULE_WEBRESOLVER).toString();
     if(!key.isEmpty()){
         ui->lineEditWebResolver->setText(key);
         ui->buttonGetWebResolver->hide();
@@ -311,7 +312,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditFullHunt->setText(key);
         ui->buttonGetFullHunt->hide();
     }
-    key = APIKEY.value("spamhaus").toString();
+    key = APIKEY.value(OSINT_MODULE_SPAMHAUS).toString();
     if(!key.isEmpty()){
         ui->lineEditSpamHaus->setText(key);
         ui->buttonGetSpamHaus->hide();
@@ -355,22 +356,22 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->buttonGetNeutrinoApi->hide();
     }
     //...
-    key = APIKEY.value("seon").toString();
+    key = APIKEY.value(OSINT_MODULE_SEON).toString();
     if(!key.isEmpty()){
         ui->lineEditSeon->setText(key);
         ui->buttonGetSeon->hide();
     }
-    key = APIKEY.value("spyonweb").toString();
+    key = APIKEY.value(OSINT_MODULE_SPYONWEB).toString();
     if(!key.isEmpty()){
         ui->lineEditSpyOnWeb->setText(key);
         ui->buttonGetSpyOnWeb->hide();
     }
-    key = APIKEY.value("whatcms").toString();
+    key = APIKEY.value(OSINT_MODULE_WHATCMS).toString();
     if(!key.isEmpty()){
         ui->lineEditWhatcms->setText(key);
         ui->buttonGetWhatcms->hide();
     }
-    key = APIKEY.value("whoxy").toString();
+    key = APIKEY.value(OSINT_MODULE_WHOXY).toString();
     if(!key.isEmpty()){
         ui->lineEditWhoxy->setText(key);
         ui->buttonGetWhoxy->hide();
@@ -444,7 +445,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditLeakLookup->setText(key);
         ui->buttonGetLeakLookup->hide();
     }
-    key = APIKEY.value("wappalyzer").toString();
+    key = APIKEY.value(OSINT_MODULE_WAPPALYZER).toString();
     if(!key.isEmpty()){
         ui->lineEditWappalyzer->setText(key);
         ui->buttonGetWappalyzer->hide();

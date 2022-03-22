@@ -175,6 +175,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="checkBoxOverride">
+            <property name="text">
+             <string>Override Values</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="checkBoxAutosave">
             <property name="text">
              <string>AutoSave To Project</string>

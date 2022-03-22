@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Seon{
-    QString name = "Seon";
+    QString name = OSINT_MODULE_SEON;
     QString url = "https://seon.io/";
     QString url_apiDoc = "https://docs.seon.io/";
     QString summary = "Seon";

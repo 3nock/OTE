@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct ZoomEye{
-    QString name = "ZoomEye";
+    QString name = OSINT_MODULE_ZOOMEYE;
     QString url = "https://www.zoomeye.org/";
     QString url_apiDoc = "https://www.zoomeye.org/doc";
     QString summary = "ZoomEyeis a Cyberspace Search Engine recording information of devices, websites, \n"
@@ -27,7 +27,9 @@ struct ZoomEye{
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN}},
                                           {IN_IP,
                                            {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP, OUT_ASN}},
-                                          {IN_IP,
+                                          {IN_ASN,
+                                           {OUT_IP, OUT_ASN}},
+                                          {IN_CIDR,
                                            {OUT_IP, OUT_ASN}}};
 };
 }
@@ -46,7 +48,7 @@ class ZoomEye: public AbstractOsintModule{
         void replyFinishedAsn(QNetworkReply *reply) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // ZOOMEYE_H

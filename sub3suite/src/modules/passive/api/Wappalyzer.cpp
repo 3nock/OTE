@@ -13,15 +13,13 @@
 Wappalyzer::Wappalyzer(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Wappalyzer";
+    log.moduleName = OSINT_MODULE_WAPPALYZER;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Wappalyzer::replyFinishedRawJson);
 
-    /* getting api key... */
-    
-    m_key = APIKEY.value("wappalyzer").toString();
-    
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_WAPPALYZER).toString();
 }
 Wappalyzer::~Wappalyzer(){
     delete manager;

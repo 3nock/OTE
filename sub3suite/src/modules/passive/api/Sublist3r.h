@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Sublist3r{
-    QString name = "Sublist3r";
+    QString name = OSINT_MODULE_SUBLIST3R;
     QString url = "https://api.sublist3r.com/";
     QString url_apiDoc = "";
     QString summary = "Sublist3r";

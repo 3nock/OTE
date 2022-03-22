@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct Whoxy{
-    QString name = "Whoxy";
+    QString name = OSINT_MODULE_WHOXY;
     QString url = "https://www.whoxy.com/";
     QString url_apiDoc = "https://www.whoxy.com/#api";
     QString summary = "Our Whois API returns consistent and well-structured WHOIS data in XML & JSON format. Returned data contain parsed WHOIS fields that can be easily understood by your application. "

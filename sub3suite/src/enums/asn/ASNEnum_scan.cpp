@@ -82,34 +82,38 @@ void ASNEnum::startScan(){
         break;
     }
 
-    switch (ui->comboBoxEngine->currentIndex()) {
+    /* starting scan thread */
+    switch (ui->comboBoxEngine->currentIndex())
+    {
     case 0: // Bgpview
-        QThread *cThread = new QThread;
-        Bgpview *bgpview = new Bgpview(*m_scanArgs);
-        bgpview->startScan(cThread);
-        bgpview->moveToThread(cThread);
-
-        switch(ui->comboBoxOption->currentIndex()){
-        case 0:
-            connect(bgpview, &Bgpview::infoASN, this, &ASNEnum::onResultsAsn);
-            break;
-        case 1:
-            connect(bgpview, &Bgpview::infoASN, this, &ASNEnum::onResultsAsnPeers);
-            break;
-        case 2:
-            connect(bgpview, &Bgpview::infoASN, this, &ASNEnum::onResultsAsnPrefixes);
-            break;
-        }
-        connect(bgpview, &Bgpview::infoLog, this, &ASNEnum::onInfoLog);
-        connect(bgpview, &Bgpview::errorLog, this, &ASNEnum::onErrorLog);
-        connect(bgpview, &Bgpview::scanProgress, ui->progressBar, &QProgressBar::setValue);
-        connect(this, &ASNEnum::stopScanThread, bgpview, &AbstractOsintModule::onStop);
-        connect(cThread, &QThread::finished, this, &ASNEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
+        this->startScanThread(new Bgpview(*m_scanArgs));
+        break;
     }
+}
+
+void ASNEnum::startScanThread(AbstractOsintModule *module){
+    QThread *cThread = new QThread;
+    module->startScan(cThread);
+    module->moveToThread(cThread);
+
+    switch(ui->comboBoxOption->currentIndex()){
+    case 0:
+        connect(module, &AbstractOsintModule::infoASN, this, &ASNEnum::onResultsAsn);
+        break;
+    case 1:
+        connect(module, &AbstractOsintModule::infoASN, this, &ASNEnum::onResultsAsnPeers);
+        break;
+    case 2:
+        connect(module, &AbstractOsintModule::infoASN, this, &ASNEnum::onResultsAsnPrefixes);
+        break;
+    }
+    connect(module, &AbstractOsintModule::infoLog, this, &ASNEnum::onInfoLog);
+    connect(module, &AbstractOsintModule::errorLog, this, &ASNEnum::onErrorLog);
+    connect(cThread, &QThread::finished, this, &ASNEnum::onScanThreadEnded);
+    connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
+    connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+    cThread->start();
+    status->activeScanThreads++;
 }
 
 void ASNEnum::onReScan(QQueue<QString> targets){

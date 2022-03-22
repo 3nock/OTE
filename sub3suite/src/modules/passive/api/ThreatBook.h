@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct ThreatBook{
-    QString name = "ThreatBook";
+    QString name = OSINT_MODULE_THREATBOOK;
     QString url = "https://threatbook.cn/";
     QString url_apiDoc = "https://x.threatbook.cn/api";
     QString summary = "Threat detection platform";

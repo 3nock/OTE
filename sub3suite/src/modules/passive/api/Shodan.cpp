@@ -17,15 +17,11 @@
 #define HOST_SEARCH_TOKENS 10
 
 
-/* 1 request/ second */
-/*
- * able to reverse ip addresses to domain names, targets are comma seperated...
- * also able to resolve domains, targets are comma seperated...
- */
+/* 1 request per second */
 Shodan::Shodan(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Shodan";
+    log.moduleName = OSINT_MODULE_SHODAN;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedRawJson);
@@ -37,12 +33,9 @@ Shodan::Shodan(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedAsn);
     if(args.outputSubdomainIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomainIp);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_key = APIKEY.value("shodan").toString();
-    
+
+    /* getting api-key */
+    m_key = APIKEY.value(OSINT_MODULE_SHODAN).toString();
 }
 Shodan::~Shodan(){
     delete manager;
@@ -95,19 +88,23 @@ void Shodan::start(){
     }
 
     if(args.inputDomain){
-        url.setUrl("https://api.shodan.io/dns/domain/"+target+"?key="+m_key);
-        request.setAttribute(QNetworkRequest::User, DNS_DOMAIN);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+        if(args.outputSubdomain || args.outputSubdomainIp || args.outputIp){
+            url.setUrl("https://api.shodan.io/dns/domain/"+target+"?key="+m_key);
+            request.setAttribute(QNetworkRequest::User, DNS_DOMAIN);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 
     if(args.inputIp){
-        url.setUrl("https://api.shodan.io/shodan/host/"+target+"?key="+m_key);
-        request.setAttribute(QNetworkRequest::User, HOST_IP);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+        if(args.outputAsn || args.outputSubdomain){
+            url.setUrl("https://api.shodan.io/shodan/host/"+target+"?key="+m_key);
+            request.setAttribute(QNetworkRequest::User, HOST_IP);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 }
 
@@ -117,12 +114,12 @@ void Shodan::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray data = document.object()["data"].toArray();
 
-    if(QUERY_TYPE == DNS_DOMAIN){
-        /* dns records */
-        QJsonArray data = document.object()["data"].toArray();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DNS_DOMAIN:
         foreach(const QJsonValue &value, data){
             QString type = value.toObject()["type"].toString();
             if(type == "A" || type == "AAAA"){
@@ -142,10 +139,13 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray data = document.object()["data"].toArray();
 
-    if(QUERY_TYPE == DNS_DOMAIN){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DNS_DOMAIN:
+    {
         /* direct subdomains */
         QJsonArray subdomains = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
@@ -153,7 +153,6 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
             log.resultsCount++;
         }
         /* dns records */
-        QJsonArray data = document.object()["data"].toArray();
         foreach(const QJsonValue &value, data){
             QString type = value.toObject()["type"].toString();
             QString hostname = value.toObject()["value"].toString();
@@ -175,16 +174,18 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
             }
         }
     }
+        break;
 
-    if(QUERY_TYPE == HOST_IP){
-        QJsonArray data = document.object()["data"].toArray();
+    case HOST_IP:
         foreach(const QJsonValue &dataValue, data){
             foreach(const QJsonValue &value, dataValue.toObject()["hostnames"].toArray()){
                 emit resultSubdomain(value.toString());
                 log.resultsCount++;
             }
         }
+        break;
     }
+
     end(reply);
 }
 
@@ -194,12 +195,12 @@ void Shodan::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray data = document.object()["data"].toArray();
 
-    if(QUERY_TYPE == DNS_DOMAIN){
-        /* dns records */
-        QJsonArray data = document.object()["data"].toArray();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DNS_DOMAIN:
         foreach(const QJsonValue &value, data){
             QString type = value.toObject()["type"].toString();
             if(type == "A"){
@@ -214,6 +215,7 @@ void Shodan::replyFinishedIp(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }
 
@@ -223,15 +225,17 @@ void Shodan::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray data = document.object()["data"].toArray();
 
-    if(QUERY_TYPE == HOST_IP){
-        QJsonArray data = document.object()["data"].toArray();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOST_IP:
         foreach(const QJsonValue &value, data){
-            emit resultASN(value.toObject()["asn"].toString(), "");
+            emit resultASN(value.toObject()["asn"].toString(), value.toObject()["org"].toString());
             log.resultsCount++;
         }
     }
+
     end(reply);
 }

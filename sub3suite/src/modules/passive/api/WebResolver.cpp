@@ -19,7 +19,7 @@
 WebResolver::WebResolver(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "WebResolver";
+    log.moduleName = OSINT_MODULE_WEBRESOLVER;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedRawJson);
@@ -29,12 +29,9 @@ WebResolver::WebResolver(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedIp);
     if(args.outputSubdomainIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomainIp);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("webresolver").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_WEBRESOLVER).toString();
 }
 WebResolver::~WebResolver(){
     delete manager;
@@ -98,10 +95,11 @@ void WebResolver::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == DNSRESOLVER){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DNSRESOLVER:
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString type = record.toObject()["type"].toString();
@@ -114,6 +112,7 @@ void WebResolver::replyFinishedSubdomainIp(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }
 
@@ -123,10 +122,11 @@ void WebResolver::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == DNSRESOLVER){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DNSRESOLVER:
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString address = record.toObject()["ip"].toString();
@@ -134,6 +134,7 @@ void WebResolver::replyFinishedIp(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
+
     end(reply);
 }
 
@@ -143,10 +144,11 @@ void WebResolver::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == DNSRESOLVER){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DNSRESOLVER:
         QJsonArray records = document.object()["records"].toArray();
         foreach(const QJsonValue &record, records){
             QString type = record.toObject()["type"].toString();
@@ -173,5 +175,6 @@ void WebResolver::replyFinishedSubdomain(QNetworkReply *reply){
             }
         }
     }
+
     end(reply);
 }

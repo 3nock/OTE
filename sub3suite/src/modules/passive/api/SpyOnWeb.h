@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct SpyOnWeb{
-    QString name = "Spyonweb";
+    QString name = OSINT_MODULE_SPYONWEB;
     QString url = "https://spyonweb.com/";
     QString url_apiDoc = "https://api.spyonweb.com/v1/docs";
     QString summary = "SpyOnWeb.com takes the information from public sources, then structures it for your quick and convenient search for the websites that probably belong to the same owner. "
@@ -45,6 +45,7 @@ class SpyOnWeb: public AbstractOsintModule{
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
+        void replyFinishedInfoNS(QNetworkReply *reply) override;
 
     private:
         QString m_key;

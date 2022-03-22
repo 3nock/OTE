@@ -17,7 +17,7 @@
 ZoomEye::ZoomEye(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "ZoomEye";
+    log.moduleName = OSINT_MODULE_ZOOMEYE;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedRawJson);
@@ -29,12 +29,9 @@ ZoomEye::ZoomEye(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedAsn);
     if(args.outputIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedIp);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("zoomeye").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_ZOOMEYE).toString();
 }
 ZoomEye::~ZoomEye(){
     delete manager;
@@ -93,6 +90,14 @@ void ZoomEye::start(){
         manager->get(request);
         activeRequests++;
     }
+
+    if(args.inputCidr){
+        url.setUrl("https://api.zoomeye.org/host/search?query=cidr:"+target);
+        request.setAttribute(QNetworkRequest::User, HOST_CIDR);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
 void ZoomEye::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -101,11 +106,13 @@ void ZoomEye::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray matches = document.object()["matches"].toArray();
 
-    if(QUERY_TYPE == HOST_HOSTNAME || QUERY_TYPE == HOST_IP){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOST_HOSTNAME:
+    case HOST_IP:
         foreach(const QJsonValue &value, matches){
             QString hostname = value.toObject()["rdns"].toString();
             QString address = value.toObject()["ip"].toString();
@@ -123,11 +130,15 @@ void ZoomEye::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray matches = document.object()["matches"].toArray();
 
-    if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_ASN || QUERY_TYPE == HOST_HOSTNAME){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOST_IP:
+    case HOST_ASN:
+    case HOST_CIDR:
+    case HOST_HOSTNAME:
         foreach(const QJsonValue &value, matches){
             emit resultIP(value.toObject()["ip"].toString());
             log.resultsCount++;
@@ -143,11 +154,15 @@ void ZoomEye::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray matches = document.object()["matches"].toArray();
 
-    if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_ASN || QUERY_TYPE == HOST_HOSTNAME){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOST_IP:
+    case HOST_ASN:
+    case HOST_CIDR:
+    case HOST_HOSTNAME:
         foreach(const QJsonValue &value, matches){
             QString ASN = value.toObject()["geoinfo"].toObject()["asn"].toString();
             QString org = value.toObject()["geoinfo"].toObject()["organization"].toString();
@@ -165,11 +180,13 @@ void ZoomEye::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray matches = document.object()["matches"].toArray();
 
-    if(QUERY_TYPE == HOST_IP || QUERY_TYPE == HOST_HOSTNAME){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOST_IP:
+    case HOST_HOSTNAME:
         foreach(const QJsonValue &value, matches){
             emit resultSubdomain(value.toObject()["rdns"].toString());
             log.resultsCount++;

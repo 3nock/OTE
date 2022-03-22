@@ -12,15 +12,13 @@
 Whatcms::Whatcms(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Whatcms";
+    log.moduleName = OSINT_MODULE_WHATCMS;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Whatcms::replyFinishedRawJson);
 
-    /* getting api key... */
-    
-    m_key = APIKEY.value("whatcms").toString();
-    
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_WHATCMS).toString();
 }
 Whatcms::~Whatcms(){
     delete manager;

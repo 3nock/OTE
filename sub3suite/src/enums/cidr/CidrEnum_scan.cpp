@@ -66,22 +66,27 @@ void CidrEnum::startScan(){
 
     m_scanArgs->outputInfoCidr = true;
 
-    switch (ui->comboBoxEngine->currentIndex()) {
+    /* starting scan thread */
+    switch (ui->comboBoxEngine->currentIndex())
+    {
     case 0: // Bgpview
-        QThread *cThread = new QThread;
-        Bgpview *bgpview = new Bgpview(*m_scanArgs);
-        bgpview->startScan(cThread);
-        bgpview->moveToThread(cThread);
-        connect(bgpview, &IpInfo::infoCIDR, this, &CidrEnum::onResult);
-        connect(bgpview, &IpInfo::infoLog, this, &CidrEnum::onInfoLog);
-        connect(bgpview, &IpInfo::errorLog, this, &CidrEnum::onErrorLog);
-        connect(this, &CidrEnum::stopScanThread, bgpview, &Bgpview::onStop);
-        connect(cThread, &QThread::finished, this, &CidrEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, bgpview, &Bgpview::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
+        this->startScanThread(new Bgpview(*m_scanArgs));
+        break;
     }
+}
+
+void CidrEnum::startScanThread(AbstractOsintModule *module){
+    QThread *cThread = new QThread;
+    module->startScan(cThread);
+    module->moveToThread(cThread);
+    connect(module, &AbstractOsintModule::infoCIDR, this, &CidrEnum::onResult);
+    connect(module, &AbstractOsintModule::infoLog, this, &CidrEnum::onInfoLog);
+    connect(module, &AbstractOsintModule::errorLog, this, &CidrEnum::onErrorLog);
+    connect(cThread, &QThread::finished, this, &CidrEnum::onScanThreadEnded);
+    connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
+    connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+    cThread->start();
+    status->activeScanThreads++;
 }
 
 void CidrEnum::onReScan(QQueue<QString> targets){

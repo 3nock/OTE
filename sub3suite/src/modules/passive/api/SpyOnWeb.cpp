@@ -12,28 +12,25 @@
 #define NAMESERVERS_ON_IP 5
 #define SUMMARY 6
 
-/*
- * resolves the domains on nameserver...
- */
+
 SpyOnWeb::SpyOnWeb(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "SpyOnWeb";
+    log.moduleName = OSINT_MODULE_SPYONWEB;
 
     if(args.outputRaw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedRawJson);
+    if(args.outputInfoNS)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedInfoNS);
     if(args.outputIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedIp);
     if(args.outputSubdomain)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomain);
     if(args.outputSubdomainIp)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomainIp);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("spyonweb").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_SPYONWEB).toString();
 }
 SpyOnWeb::~SpyOnWeb(){
     delete manager;
@@ -81,7 +78,6 @@ void SpyOnWeb::start(){
             manager->get(request);
             activeRequests++;
         }
-        return;
     }
 
     if(args.inputDomain){
@@ -93,6 +89,18 @@ void SpyOnWeb::start(){
             activeRequests++;
         }
     }
+
+    ///
+    /// NS info ...
+    ///
+
+    if(args.outputInfoNS){
+        url.setUrl("https://api.spyonweb.com/v1/dns_domain/"+target+"?access_token="+m_key);
+        request.setAttribute(QNetworkRequest::User, DOMAINS_ON_NAMESERVER);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
 }
 
 void SpyOnWeb::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -101,11 +109,12 @@ void SpyOnWeb::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject result = document.object()["result"].toObject();
 
-    if(QUERY_TYPE == DOMAIN_API){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_API:
         QString domainName = result["domain"].toObject().keys()[0];
         QJsonObject dns_servers = result["domain"].toObject()[domainName].toObject()["items"].toObject()["dns_servers"].toObject();
         QStringList dnsServers = dns_servers.keys();
@@ -126,11 +135,13 @@ void SpyOnWeb::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject result = document.object()["result"].toObject();
 
-    if(QUERY_TYPE == DOMAIN_API){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_API:
+    {
         /* from dns_servers */
         QString domainName = result["domain"].toObject().keys()[0];
         QJsonObject dns_servers = result["domain"].toObject()[domainName].toObject()["items"].toObject()["dns_servers"].toObject();
@@ -148,14 +159,17 @@ void SpyOnWeb::replyFinishedSubdomain(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
+        break;
 
-    if(QUERY_TYPE == IP_API){
+    case IP_API:
+    {
         QString ip = result["ip"].toObject().keys()[0];
         QStringList domains = result["ip"].toObject()[ip].toObject()["items"].toObject().keys();
         foreach(const QString &domain, domains){
             emit resultSubdomain(domain);
             log.resultsCount++;
         }
+    }
     }
 
     end(reply);
@@ -167,17 +181,40 @@ void SpyOnWeb::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject result = document.object()["result"].toObject();
 
-    if(QUERY_TYPE == DOMAIN_API){
+    switch (reply->property(REQUEST_TYPE).toInt()) {
+    case DOMAIN_API:
+    {
         QStringList addresses = result["ip_dns"].toObject().keys();
         foreach(const QString &address, addresses){
             emit resultIP(address);
             log.resultsCount++;
         }
     }
+    }
+
+    end(reply);
+}
+
+void SpyOnWeb::replyFinishedInfoNS(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject result = document.object()["result"].toObject();
+
+    s3s_struct::NS ns;
+    ns.info_ns = target;
+
+    QJsonObject dns_domain = result["dns_domain"].toObject();
+    QJsonObject nameserver = dns_domain.value(dns_domain.keys().at(0)).toObject();
+    foreach(const QString domain, nameserver["items"].toObject().keys())
+        ns.domains.insert(domain);
+    emit infoNS(ns);
 
     end(reply);
 }

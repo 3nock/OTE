@@ -62,21 +62,43 @@ void NSEnum::startScan(){
 
     m_scanArgs->outputInfoNS = true;
 
-    QThread *cThread = new QThread;
-    switch (ui->comboBoxEngine->currentIndex()) {
+    /* start scanthread */
+    switch (ui->comboBoxEngine->currentIndex())
+    {
     case 0: // DNSLytics
-        Dnslytics *dnslytics = new Dnslytics(*m_scanArgs);
-        dnslytics->startScan(cThread);
-        dnslytics->moveToThread(cThread);
-        connect(dnslytics, &Dnslytics::infoNS, this, &NSEnum::onResult);
-        connect(dnslytics, &Dnslytics::infoLog, this, &NSEnum::onInfoLog);
-        connect(dnslytics, &Dnslytics::errorLog, this, &NSEnum::onErrorLog);
-        connect(cThread, &QThread::finished, this, &NSEnum::onScanThreadEnded);
-        connect(cThread, &QThread::finished, dnslytics, &Dnslytics::deleteLater);
-        connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-        cThread->start();
-        status->activeScanThreads++;
+        this->startScanThread(new Dnslytics(*m_scanArgs));
+        break;
+
+    case 1: // SpyOnWeb
+        this->startScanThread(new SpyOnWeb(*m_scanArgs));
+        break;
+
+    case 2: // ViewDNS
+        this->startScanThread(new ViewDns(*m_scanArgs));
+        break;
+
+    case 3: // WhoIsXMLAPI
+        this->startScanThread(new WhoisXmlApi(*m_scanArgs));
+        break;
+
+    case 4: // DomainTools
+        this->startScanThread(new DomainTools(*m_scanArgs));
+        break;
     }
+}
+
+void NSEnum::startScanThread(AbstractOsintModule *module){
+    QThread *cThread = new QThread;
+    module->startScan(cThread);
+    module->moveToThread(cThread);
+    connect(module, &AbstractOsintModule::infoNS, this, &NSEnum::onResult);
+    connect(module, &AbstractOsintModule::infoLog, this, &NSEnum::onInfoLog);
+    connect(module, &AbstractOsintModule::errorLog, this, &NSEnum::onErrorLog);
+    connect(cThread, &QThread::finished, this, &NSEnum::onScanThreadEnded);
+    connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
+    connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+    cThread->start();
+    status->activeScanThreads++;
 }
 
 void NSEnum::onReScan(QQueue<QString> targets){

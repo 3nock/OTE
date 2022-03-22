@@ -46,7 +46,7 @@ public:
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
         domains->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
-        info->appendRow({new QStandardItem("MailServer"), info_ns});
+        info->appendRow({new QStandardItem("NameServer"), info_ns});
         info->appendRow({new QStandardItem("Ip"), info_ip});
 
         /* append to the NS */

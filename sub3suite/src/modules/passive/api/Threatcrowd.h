@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Threatcrowd{
-    QString name = "Threatcrowd";
+    QString name = OSINT_MODULE_THREATCROWD;
     QString url = "https://www.threatcrowd.org/";
     QString url_apiDoc = "https://github.com/AlienVault-OTX/ApiV2";
     QString summary = "A Search Engine for Threats";

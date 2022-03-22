@@ -6,12 +6,12 @@
 
 namespace ModuleInfo {
 struct Spyse{
-    QString name = "Spyse";
+    QString name = OSINT_MODULE_SPYSE;
     QString url = "https://spyse.com/";
     QString url_apiDoc = "https://spyse.com/api";
     QString summary = "Find any Internet asset by digital fingerprints";
 
-    QMap<QString, QStringList> flags = {{"Domain",
+    QMap<QString, QStringList> flags = {{"DOMAIN",
                                          {PLACEHOLDERTEXT_DOMAIN, ""}},
                                         {"IPv4 Host",
                                          {PLACEHOLDERTEXT_IP, ""}},
@@ -21,7 +21,7 @@ struct Spyse{
                                          {PLACEHOLDERTEXT_ASN, ""}},
                                         {"CVE",
                                          {"CVE id", ""}},
-                                        {"Emails",
+                                        {"EMAILS",
                                          {PLACEHOLDERTEXT_EMAIL, ""}},
                                         {"DNS History",
                                          {PLACEHOLDERTEXT_DOMAIN, ""}}};
