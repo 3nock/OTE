@@ -246,7 +246,7 @@
         <item>
          <widget class="QPlainTextEdit" name="plainTextEditResults">
           <property name="contextMenuPolicy">
-           <enum>Qt::CustomContextMenu</enum>
+           <enum>Qt::DefaultContextMenu</enum>
           </property>
           <property name="readOnly">
            <bool>true</bool>
@@ -387,6 +387,9 @@
             <family>MS Shell Dlg 2</family>
             <pointsize>8</pointsize>
            </font>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
           </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
@@ -1048,7 +1051,7 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-1347</y>
+                <y>0</y>
                 <width>157</width>
                 <height>1524</height>
                </rect>

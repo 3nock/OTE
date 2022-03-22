@@ -206,20 +206,18 @@ QToolBox QWidget {
 }
 
 QToolBox QScrollArea {
-    border-width: 0px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(20,20,20);
 }
 
 QToolBox::tab {
     padding-left: 12px;
-    color: white;
+    color: black;
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgb(37, 37, 37), stop:1 rgb(57, 57, 57));
     border-style: solid;
     border-width: 1px;
-    border-color: rgb(20,20,20);;
-}
-
-QToolBox::pane {
-    background-color: rgb(45,45,45);
+    border-color: rgb(20,20,20);
 }
 
 /****************************** ScrollBar ******************************/
@@ -576,7 +574,11 @@ QProgressBar::chunk {
     color: rgb(185, 185, 145);
 }
 
-*::item[no_item_border="true"]{
+*::item[no_item_border="true"] {
+    border-width: 0px;
+}
+
+QTreeView[no_item_border="true"] {
     border-width: 0px;
 }
 

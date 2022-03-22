@@ -23,6 +23,9 @@
 
 #include <QScreen>
 
+///
+/// use this parent for child items to be destroyed when parent is destroyed
+///
 /*
  * TODO:
  *      status from all engines, so as to alert during close event

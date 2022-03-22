@@ -195,8 +195,8 @@ private:
 
         void sendToProject();
         void sendSelectedToProject();
-        void sendToEngine();
-        void sendToEnum();
+        void sendToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendToEnum(const TOOL&, const RESULT_TYPE&);
 };
 
 #endif // Raw_H

@@ -89,6 +89,9 @@ void Osint::initUI(){
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
 
+    ui->page_keyrequired->setProperty("has_border", true);
+    ui->page_keynotrequired->setProperty("has_border", true);
+
     /* setting placeholdertxt */
     ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
     ui->lineEditFilter->setPlaceholderText(tr("Filter..."));

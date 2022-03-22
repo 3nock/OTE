@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_15">
+  <layout class="QVBoxLayout" name="verticalLayout_10">
    <property name="leftMargin">
     <number>4</number>
    </property>
@@ -680,8 +680,8 @@
        </layout>
       </widget>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout_17">
+     <widget class="QWidget" name="">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <widget class="InputWidget" name="targets" native="true">
          <property name="sizePolicy">
@@ -699,778 +699,660 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_10">
-           <item>
-            <widget class="QLabel" name="label_11">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <property name="text">
-              <string>Api Key not Required</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QScrollArea" name="scrollArea_noKeyEngines">
-             <property name="cursor" stdset="0">
-              <cursorShape>ArrowCursor</cursorShape>
-             </property>
-             <property name="contextMenuPolicy">
-              <enum>Qt::NoContextMenu</enum>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Sunken</enum>
-             </property>
-             <property name="lineWidth">
-              <number>1</number>
-             </property>
-             <property name="midLineWidth">
-              <number>0</number>
-             </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustIgnored</enum>
-             </property>
-             <property name="widgetResizable">
-              <bool>true</bool>
-             </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents1">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>159</width>
-                <height>1057</height>
-               </rect>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_4">
-               <property name="leftMargin">
-                <number>9</number>
+          <widget class="QToolBox" name="toolBoxNoKey">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="tabSpacing">
+            <number>3</number>
+           </property>
+           <widget class="QWidget" name="page_keynotrequired">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>165</width>
+              <height>1057</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>Api Key not Required</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QGroupBox" name="groupBox">
+               <property name="title">
+                <string>Certificates</string>
                </property>
-               <property name="topMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_6">
+                <item>
+                 <widget class="QCheckBox" name="moduleGoogleCert">
+                  <property name="text">
+                   <string>GoogleCert</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleCrtsh">
+                  <property name="text">
+                   <string>Crtsh</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleCensysFree">
+                  <property name="text">
+                   <string>Censys (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleCertspotterFree">
+                  <property name="text">
+                   <string>CertSpotter (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_2">
+               <property name="title">
+                <string>API</string>
                </property>
-               <property name="rightMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QCheckBox" name="moduleAnubis">
+                  <property name="text">
+                   <string>Anubis</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleRipe">
+                  <property name="text">
+                   <string>RipeStat</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleHackerTargetFree">
+                  <property name="text">
+                   <string>HackerTarget (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleBgpview">
+                  <property name="text">
+                   <string>Bgpview</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleDnsbufferoverrun">
+                  <property name="text">
+                   <string>DnsBufferOverRun</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleMaltiverseFree">
+                  <property name="text">
+                   <string>Maltiverse (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleMnemonicFree">
+                  <property name="text">
+                   <string>Mnemonic (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleN45HT">
+                  <property name="text">
+                   <string>N45HT</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleOmnisint">
+                  <property name="text">
+                   <string>Omnisint</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleOtxFree">
+                  <property name="text">
+                   <string>Otx (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleRobtexFree">
+                  <property name="text">
+                   <string>Robtex (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleSublist3r">
+                  <property name="text">
+                   <string>sublist3r</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleThreatcrowd">
+                  <property name="text">
+                   <string>ThreatCrowd</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleThreatminer">
+                  <property name="text">
+                   <string>ThreatMiner</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleUrlscan">
+                  <property name="text">
+                   <string>urlscan</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_3">
+               <property name="title">
+                <string>Sites</string>
                </property>
-               <property name="bottomMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_3">
+                <item>
+                 <widget class="QCheckBox" name="moduleDnsdumpster">
+                  <property name="text">
+                   <string>DnsDumpster</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleNetcraft">
+                  <property name="cursor">
+                   <cursorShape>ArrowCursor</cursorShape>
+                  </property>
+                  <property name="text">
+                   <string>Netcraft</string>
+                  </property>
+                  <property name="tristate">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="modulePagesInventory">
+                  <property name="text">
+                   <string>PagesInventory</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="modulePkey">
+                  <property name="text">
+                   <string>pKey</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleRapiddns">
+                  <property name="text">
+                   <string>RapidDns</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleSitedossier">
+                  <property name="text">
+                   <string>SiteDossier</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_4">
+               <property name="title">
+                <string>Scrape</string>
                </property>
-               <item>
-                <widget class="QGroupBox" name="groupBox">
-                 <property name="title">
-                  <string>Certificates</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_6">
-                  <item>
-                   <widget class="QCheckBox" name="moduleGoogleCert">
-                    <property name="text">
-                     <string>GoogleCert</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleCrtsh">
-                    <property name="text">
-                     <string>Crtsh</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleCensysFree">
-                    <property name="text">
-                     <string>Censys (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleCertspotterFree">
-                    <property name="text">
-                     <string>CertSpotter (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_2">
-                 <property name="title">
-                  <string>API</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_7">
-                  <item>
-                   <widget class="QCheckBox" name="moduleAnubis">
-                    <property name="text">
-                     <string>Anubis</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleRipe">
-                    <property name="text">
-                     <string>RipeStat</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleHackerTargetFree">
-                    <property name="text">
-                     <string>HackerTarget (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleBgpview">
-                    <property name="text">
-                     <string>Bgpview</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleDnsbufferoverrun">
-                    <property name="text">
-                     <string>DnsBufferOverRun</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleMaltiverseFree">
-                    <property name="text">
-                     <string>Maltiverse (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleMnemonicFree">
-                    <property name="text">
-                     <string>Mnemonic (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleN45HT">
-                    <property name="text">
-                     <string>N45HT</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleOmnisint">
-                    <property name="text">
-                     <string>Omnisint</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleOtxFree">
-                    <property name="text">
-                     <string>Otx (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleRobtexFree">
-                    <property name="text">
-                     <string>Robtex (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleSublist3r">
-                    <property name="text">
-                     <string>sublist3r</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleThreatcrowd">
-                    <property name="text">
-                     <string>ThreatCrowd</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleThreatminer">
-                    <property name="text">
-                     <string>ThreatMiner</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleUrlscan">
-                    <property name="text">
-                     <string>urlscan</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_3">
-                 <property name="title">
-                  <string>Sites</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_3">
-                  <item>
-                   <widget class="QCheckBox" name="moduleDnsdumpster">
-                    <property name="text">
-                     <string>DnsDumpster</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleNetcraft">
-                    <property name="cursor">
-                     <cursorShape>ArrowCursor</cursorShape>
-                    </property>
-                    <property name="text">
-                     <string>Netcraft</string>
-                    </property>
-                    <property name="tristate">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="modulePagesInventory">
-                    <property name="text">
-                     <string>PagesInventory</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="modulePkey">
-                    <property name="text">
-                     <string>pKey</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleRapiddns">
-                    <property name="text">
-                     <string>RapidDns</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleSitedossier">
-                    <property name="text">
-                     <string>SiteDossier</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_4">
-                 <property name="title">
-                  <string>Scrape</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_8">
-                  <item>
-                   <widget class="QCheckBox" name="moduleAsk">
-                    <property name="text">
-                     <string>Ask</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleBaidu">
-                    <property name="text">
-                     <string>Baidu</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleBing">
-                    <property name="text">
-                     <string>Bing</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleDogpile">
-                    <property name="text">
-                     <string>DogPile</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleDuckduckgo">
-                    <property name="text">
-                     <string>DuckduckGo</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleExalead">
-                    <property name="text">
-                     <string>Exalead</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleYahoo">
-                    <property name="text">
-                     <string>Yahoo</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_5">
-                 <property name="title">
-                  <string>Archives</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_9">
-                  <item>
-                   <widget class="QCheckBox" name="moduleArchiveit">
-                    <property name="text">
-                     <string>ArchiveIt</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleArchiveToday">
-                    <property name="text">
-                     <string>ArchiveToday</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleArquivo">
-                    <property name="text">
-                     <string>Arquivo</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleCommonCrawl">
-                    <property name="text">
-                     <string>CommonCrawl</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleUKWebArchive">
-                    <property name="text">
-                     <string>UKWebArchive</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleWaybackmachine">
-                    <property name="text">
-                     <string>WayBackMachine</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer_3">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
+               <layout class="QVBoxLayout" name="verticalLayout_8">
+                <item>
+                 <widget class="QCheckBox" name="moduleAsk">
+                  <property name="text">
+                   <string>Ask</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleBaidu">
+                  <property name="text">
+                   <string>Baidu</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleBing">
+                  <property name="text">
+                   <string>Bing</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleDogpile">
+                  <property name="text">
+                   <string>DogPile</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleDuckduckgo">
+                  <property name="text">
+                   <string>DuckduckGo</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleExalead">
+                  <property name="text">
+                   <string>Exalead</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleYahoo">
+                  <property name="text">
+                   <string>Yahoo</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_5">
+               <property name="title">
+                <string>Archives</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <item>
+                 <widget class="QCheckBox" name="moduleArchiveit">
+                  <property name="text">
+                   <string>ArchiveIt</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleArchiveToday">
+                  <property name="text">
+                   <string>ArchiveToday</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleArquivo">
+                  <property name="text">
+                   <string>Arquivo</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleCommonCrawl">
+                  <property name="text">
+                   <string>CommonCrawl</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleUKWebArchive">
+                  <property name="text">
+                   <string>UKWebArchive</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleWaybackmachine">
+                  <property name="text">
+                   <string>WayBackMachine</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_13">
-           <item>
-            <widget class="QLabel" name="label_16">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <property name="text">
-              <string>Require Api Keys</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QScrollArea" name="scrollArea_keyEngines">
-             <property name="contextMenuPolicy">
-              <enum>Qt::NoContextMenu</enum>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Sunken</enum>
-             </property>
-             <property name="lineWidth">
-              <number>1</number>
-             </property>
-             <property name="midLineWidth">
-              <number>0</number>
-             </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustIgnored</enum>
-             </property>
-             <property name="widgetResizable">
-              <bool>true</bool>
-             </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>-529</y>
-                <width>152</width>
-                <height>876</height>
-               </rect>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_14">
-               <property name="leftMargin">
-                <number>9</number>
+          <widget class="QToolBox" name="toolBoxRequireKey">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="tabSpacing">
+            <number>3</number>
+           </property>
+           <widget class="QWidget" name="page_keyrequired">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>165</width>
+              <height>876</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>Require Api Keys</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_18">
+             <item>
+              <widget class="QGroupBox" name="groupBox_6">
+               <property name="title">
+                <string>Certificates</string>
                </property>
-               <property name="topMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_11">
+                <item>
+                 <widget class="QCheckBox" name="moduleCensys">
+                  <property name="text">
+                   <string>Censys</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleCertspotter">
+                  <property name="text">
+                   <string>Certspotter</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_7">
+               <property name="title">
+                <string>Emails</string>
                </property>
-               <property name="rightMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_12">
+                <item>
+                 <widget class="QCheckBox" name="moduleHunter">
+                  <property name="text">
+                   <string>Hunter</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleEmailCrawlr">
+                  <property name="text">
+                   <string>EmailCrawlr</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_8">
+               <property name="title">
+                <string>API</string>
                </property>
-               <property name="bottomMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_16">
+                <item>
+                 <widget class="QCheckBox" name="moduleBinaryEdge">
+                  <property name="text">
+                   <string>BinaryEdge</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleC99">
+                  <property name="text">
+                   <string>C99</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleCircl">
+                  <property name="text">
+                   <string>Circl</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleDnslytics">
+                  <property name="text">
+                   <string>DNSlytics</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleDomainTools">
+                  <property name="text">
+                   <string>DomainTools</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleFullHunt">
+                  <property name="text">
+                   <string>FullHunt</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleGithub">
+                  <property name="text">
+                   <string>Github</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleHackerTargetPaid">
+                  <property name="text">
+                   <string>HackerTarget</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleIpInfo">
+                  <property name="text">
+                   <string>IpInfo</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleLeakIX">
+                  <property name="text">
+                   <string>LeakIX</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleMnemonicPaid">
+                  <property name="text">
+                   <string>Mnemonic</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleNetworksDB">
+                  <property name="text">
+                   <string>NetworksDB</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleOnyphe">
+                  <property name="text">
+                   <string>Onyphe</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleSpyOnWeb">
+                  <property name="text">
+                   <string>SpyOnWeb</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleSpyse">
+                  <property name="text">
+                   <string>spyse</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleVirusTotal">
+                  <property name="text">
+                   <string>VirusTotal</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleOtxPaid">
+                  <property name="text">
+                   <string>Otx</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="modulePassiveTotal">
+                  <property name="text">
+                   <string>PassiveTotal</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleProjectdiscovery">
+                  <property name="text">
+                   <string>ProjectDiscovery</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleRiskIq">
+                  <property name="text">
+                   <string>RiskIq</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleRobtexPaid">
+                  <property name="text">
+                   <string>Robtex</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleSecuritytrails">
+                  <property name="text">
+                   <string>SecurityTrails</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleShodan">
+                  <property name="text">
+                   <string>Shodan</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleThreatBook">
+                  <property name="text">
+                   <string>ThreatBook</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleViewDns">
+                  <property name="text">
+                   <string>ViewDns</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleWebResolver">
+                  <property name="text">
+                   <string>WebResolver</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleWhoisXmlApi">
+                  <property name="text">
+                   <string>WhoisXmlApi</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleZetalytics">
+                  <property name="text">
+                   <string>ZETAlytics</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleZoomeye">
+                  <property name="text">
+                   <string>ZoomEye</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
                </property>
-               <item>
-                <widget class="QGroupBox" name="groupBox_6">
-                 <property name="title">
-                  <string>Certificates</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_11">
-                  <item>
-                   <widget class="QCheckBox" name="moduleCensys">
-                    <property name="text">
-                     <string>Censys</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleCertspotter">
-                    <property name="text">
-                     <string>Certspotter</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_7">
-                 <property name="title">
-                  <string>Emails</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_12">
-                  <item>
-                   <widget class="QCheckBox" name="moduleHunter">
-                    <property name="text">
-                     <string>Hunter</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleEmailCrawlr">
-                    <property name="text">
-                     <string>EmailCrawlr</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_8">
-                 <property name="title">
-                  <string>API</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_16">
-                  <item>
-                   <widget class="QCheckBox" name="moduleBinaryEdge">
-                    <property name="text">
-                     <string>BinaryEdge</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleC99">
-                    <property name="text">
-                     <string>C99</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleCircl">
-                    <property name="text">
-                     <string>Circl</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleDnslytics">
-                    <property name="text">
-                     <string>DNSlytics</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleDomainTools">
-                    <property name="text">
-                     <string>DomainTools</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleFullHunt">
-                    <property name="text">
-                     <string>FullHunt</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleGithub">
-                    <property name="text">
-                     <string>Github</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleHackerTargetPaid">
-                    <property name="text">
-                     <string>HackerTarget</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleIpInfo">
-                    <property name="text">
-                     <string>IpInfo</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleLeakIX">
-                    <property name="text">
-                     <string>LeakIX</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleMnemonicPaid">
-                    <property name="text">
-                     <string>Mnemonic</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleNetworksDB">
-                    <property name="text">
-                     <string>NetworksDB</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleOnyphe">
-                    <property name="text">
-                     <string>Onyphe</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleSpyOnWeb">
-                    <property name="text">
-                     <string>SpyOnWeb</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleSpyse">
-                    <property name="text">
-                     <string>spyse</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleVirusTotal">
-                    <property name="text">
-                     <string>VirusTotal</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleOtxPaid">
-                    <property name="text">
-                     <string>Otx</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="modulePassiveTotal">
-                    <property name="text">
-                     <string>PassiveTotal</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleProjectdiscovery">
-                    <property name="text">
-                     <string>ProjectDiscovery</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleRiskIq">
-                    <property name="text">
-                     <string>RiskIq</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleRobtexPaid">
-                    <property name="text">
-                     <string>Robtex</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleSecuritytrails">
-                    <property name="text">
-                     <string>SecurityTrails</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleShodan">
-                    <property name="text">
-                     <string>Shodan</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleThreatBook">
-                    <property name="text">
-                     <string>ThreatBook</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleViewDns">
-                    <property name="text">
-                     <string>ViewDns</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleWebResolver">
-                    <property name="text">
-                     <string>WebResolver</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleWhoisXmlApi">
-                    <property name="text">
-                     <string>WhoisXmlApi</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleZetalytics">
-                    <property name="text">
-                     <string>ZETAlytics</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="moduleZoomeye">
-                    <property name="text">
-                     <string>ZoomEye</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>89</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>89</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
          </item>
         </layout>
        </item>
