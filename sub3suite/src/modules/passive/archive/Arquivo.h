@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Arquivo{
-    QString name = "Arquivo";
+    QString name = OSINT_MODULE_ARQUIVO;
     QString url = "https://arquivo.pt/";
     QString url_apiDoc = "https://github.com/arquivo/pwa-technologies/wiki/APIs";
     QString summary = "Arquivo.pt is a research infrastructure that allows searching and accessing web pages archived since 1996. "
@@ -19,6 +19,10 @@ struct Arquivo{
                                          {PLACEHOLDERTEXT_DOMAIN, "CDX-server API allows automatic access in order to list, sort, and filter preserved pages from a given URL."}}};
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_URL,
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_QUERYTERM,
                                            {OUT_SUBDOMAIN, OUT_URL}}};
 };
 }

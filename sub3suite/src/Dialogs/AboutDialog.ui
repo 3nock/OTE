@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>647</width>
-    <height>543</height>
+    <width>702</width>
+    <height>569</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -38,6 +38,11 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -181,6 +186,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QTableView" name="tableViewContributors">
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
          </property>
@@ -237,6 +247,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QTableView" name="tableViewModules">
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
          </property>
@@ -293,6 +308,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <widget class="QTableView" name="tableViewDonations">
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
          <property name="contextMenuPolicy">
           <enum>Qt::CustomContextMenu</enum>
          </property>
@@ -345,7 +365,13 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEditHistory"/>
+        <widget class="QPlainTextEdit" name="plainTextEditHistory">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -356,6 +382,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
         <widget class="QPlainTextEdit" name="plainTextEditLicense">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
          <property name="textInteractionFlags">
           <set>Qt::NoTextInteraction</set>
          </property>

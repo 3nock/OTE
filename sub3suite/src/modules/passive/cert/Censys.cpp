@@ -13,21 +13,18 @@
 Censys::Censys(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Censys";
+    log.moduleName = OSINT_MODULE_CENSYS;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Censys::replyFinishedRawJson);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Censys::replyFinishedSSL);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Censys::replyFinishedSubdomain);
-    ///
-    /// getting api key...
-    ///
-    
+
+    /* getting api key */
     m_uid = APIKEY.value("censys_id").toString();
     m_key = APIKEY.value("censys_secret").toString();
-    
 }
 Censys::~Censys(){
     delete manager;
@@ -42,8 +39,8 @@ void Censys::start(){
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ACCOUNT:
             url.setUrl("https://censys.io/api/v1/account");
             break;
@@ -63,8 +60,8 @@ void Censys::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputUrl || args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_URL || args.output_Hostname){
             url.setUrl("https://censys.io/api/v1/view/websites/"+target);
             request.setUrl(url);
             manager->get(request);
@@ -73,8 +70,8 @@ void Censys::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputSSL || args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_SSL || args.output_Hostname){
             url.setUrl("https://censys.io/api/v1/view/ipv4/"+target);
             request.setUrl(url);
             manager->get(request);
@@ -83,8 +80,8 @@ void Censys::start(){
         }
     }
 
-    if(args.inputSSL){
-        if(args.outputSSL || args.outputSubdomain){
+    if(args.input_SSL){
+        if(args.output_SSL || args.output_Hostname){
             url.setUrl("https://censys.io/api/v1/view/certificates/"+target);
             request.setUrl(url);
             manager->get(request);

@@ -21,9 +21,9 @@ Anubis::Anubis(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_ANUBIS;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Anubis::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Anubis::replyFinishedSubdomain);
 }
 Anubis::~Anubis(){
@@ -34,8 +34,8 @@ void Anubis::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case SUBDOMAIN:
             url.setUrl("https://jldc.me/anubis/subdomains/"+target);
             break;
@@ -46,7 +46,7 @@ void Anubis::start(){
         return;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://jldc.me/anubis/subdomains/"+target);
         request.setUrl(url);
         manager->get(request);

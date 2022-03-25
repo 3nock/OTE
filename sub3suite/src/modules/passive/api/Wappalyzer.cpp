@@ -15,7 +15,7 @@ Wappalyzer::Wappalyzer(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_WAPPALYZER;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Wappalyzer::replyFinishedRawJson);
 
     /* getting api key */
@@ -30,8 +30,8 @@ void Wappalyzer::start(){
     request.setRawHeader("x-api-key", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case BALANCE:
             url.setUrl("https://api.wappalyzer.com/v2/credits/balance/");
             break;

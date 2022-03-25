@@ -1,14 +1,14 @@
-#include "Explorer.h"
+#include "ExplorerModel.h"
 
 
-Explorer::Explorer(): QStandardItemModel(),
+ExplorerModel::ExplorerModel(): QStandardItemModel(),
     project(new QStandardItem),
     active(new QStandardItem("Active")),
     passive(new QStandardItem("Passive")),
     enums(new QStandardItem("Enum")),
     custom(new QStandardItem("Custom")),
 
-    /* active Results Explorer */
+    /* active Results ExplorerModel */
     activeHost(new QStandardItem("Hostnames")),
     activeWildcard(new QStandardItem("Wildcards")),
     activeDNS(new QStandardItem("DNS")),
@@ -25,7 +25,7 @@ Explorer::Explorer(): QStandardItemModel(),
     activeSSL_altNames(new QStandardItem("Alt-names")),
     activeURL(new QStandardItem("URL")),
 
-    /* passive Results explorer */
+    /* passive Results ExplorerModel */
     passiveSubdomainIp(new QStandardItem("Subdomain & Ip")),
     passiveSubdomain(new QStandardItem("Subdomain")),
     passiveA(new QStandardItem("A")),
@@ -40,7 +40,7 @@ Explorer::Explorer(): QStandardItemModel(),
     passiveAsn(new QStandardItem("ASN")),
     passiveSSL(new QStandardItem("SSL")),
 
-    /* enum Results explorer */
+    /* enum Results ExplorerModel */
     enumIp(new QStandardItem("IP")),
     enumASN(new QStandardItem("ASN")),
     enumCIDR(new QStandardItem("CIDR")),
@@ -189,7 +189,7 @@ Explorer::Explorer(): QStandardItemModel(),
     custom->appendRow(raw);
 
     ///
-    /// append to project explorer....
+    /// append to project ExplorerModel....
     ///
     this->appendRow(project);
     project->appendRow(active);
@@ -197,5 +197,5 @@ Explorer::Explorer(): QStandardItemModel(),
     project->appendRow(enums);
     project->appendRow(custom);
 }
-Explorer::~Explorer(){
+ExplorerModel::~ExplorerModel(){
 }

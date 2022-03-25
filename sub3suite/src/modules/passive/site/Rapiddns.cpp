@@ -10,11 +10,11 @@ Rapiddns::Rapiddns(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "RapidDns";
 
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Rapiddns::replyFinishedSubdomainIp);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Rapiddns::replyFinishedIp);
 }
 Rapiddns::~Rapiddns(){
@@ -25,21 +25,21 @@ void Rapiddns::start(){
     QNetworkRequest request;
     QUrl url;
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://rapiddns.io/subdomain/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args.inputIp){
+    if(args.input_IP){
         url.setUrl("https://rapiddns.io/sameip/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args.inputCidr){
+    if(args.input_CIDR){
         url.setUrl("https://rapiddns.io/s/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
@@ -55,7 +55,7 @@ void Rapiddns::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -96,7 +96,7 @@ void Rapiddns::replyFinishedSubdomainIp(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -147,7 +147,7 @@ void Rapiddns::replyFinishedIp(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())

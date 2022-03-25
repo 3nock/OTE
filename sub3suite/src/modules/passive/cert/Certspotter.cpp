@@ -10,20 +10,17 @@
 Certspotter::Certspotter(ScanArgs args) : AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "CertSpotter";
+    log.moduleName = OSINT_MODULE_CERTSPOTTER;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedSubdomain);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedSSL);
-    ///
-    /// getting api key...
-    ///
-    
-    m_key = APIKEY.value("certspotter").toString();
-    
+
+    /* getting api key */
+    m_key = APIKEY.value(OSINT_MODULE_CERTSPOTTER).toString();
 }
 Certspotter::~Certspotter(){
     delete manager;
@@ -34,8 +31,8 @@ void Certspotter::start(){
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ISSUEANCES:
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert&expand=issuer&expand=dns_names");
             break;
@@ -46,14 +43,14 @@ void Certspotter::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
-            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=dns_names");
+    if(args.input_Domain){
+        if(args.output_Hostname){
+            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=dns_names&match_wildcards=true");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSL){
+        if(args.output_SSL){
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert");
             request.setUrl(url);
             manager->get(request);
@@ -94,7 +91,7 @@ void Certspotter::replyFinishedSSL(QNetworkReply *reply){
     {
         QJsonObject cert = value.toObject()["cert"].toObject();
         QString sha256 = cert["sha256"].toString();
-        /* ... */
+
         emit resultSSL(sha256);
         log.resultsCount++;
     }

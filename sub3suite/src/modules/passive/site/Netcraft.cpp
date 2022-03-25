@@ -12,7 +12,7 @@ Netcraft::Netcraft(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Netcraft";
 
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Netcraft::replyFinishedSubdomain);
 }
 Netcraft::~Netcraft(){
@@ -35,7 +35,7 @@ void Netcraft::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())

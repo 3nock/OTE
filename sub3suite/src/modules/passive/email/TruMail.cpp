@@ -8,7 +8,7 @@ TruMail::TruMail(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "TruMail";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &TruMail::replyFinishedRawJson);
 }
 TruMail::~TruMail(){
@@ -19,8 +19,8 @@ void TruMail::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case EMAIL:
             url.setUrl("https://api.trumail.io/v2/lookups/json?email="+target);
             break;

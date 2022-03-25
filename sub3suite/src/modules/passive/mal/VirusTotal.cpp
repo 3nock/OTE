@@ -31,15 +31,15 @@ VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "VirusTotal";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedRawJson);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedIp);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedUrl);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSubdomain);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSL);
     ///
     /// obtain apikey...
@@ -56,8 +56,8 @@ void VirusTotal::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case DOMAIN_HISTORICAL_WHOIS:
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/historical_whois");
             break;
@@ -126,8 +126,8 @@ void VirusTotal::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputIp || args.outputSubdomain || args.outputUrl){
+    if(args.input_Domain){
+        if(args.output_IP || args.output_Hostname || args.output_URL){
             url.setUrl("https://www.virustotal.com/vtapi/v2/domain/report?apikey="+m_key+"&domain="+target);
             request.setAttribute(QNetworkRequest::User, V2_DOMAIN);
             request.setUrl(url);
@@ -137,7 +137,7 @@ void VirusTotal::start(){
         //...
         request.setRawHeader("x-apikey", m_key.toUtf8());
         //...
-        if(args.outputSubdomain || args.outputSSL){
+        if(args.output_Hostname || args.output_SSL){
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/historical_ssl_certificates");
             request.setAttribute(QNetworkRequest::User, DOMAIN_HISTORICAL_SSL_CERTS);
             request.setUrl(url);
@@ -145,7 +145,7 @@ void VirusTotal::start(){
             activeRequests++;
         }
 
-        if(args.outputIp){
+        if(args.output_IP){
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/resolutions");
             request.setAttribute(QNetworkRequest::User, DOMAIN_RESOLUTIONS);
             request.setUrl(url);
@@ -153,7 +153,7 @@ void VirusTotal::start(){
             activeRequests++;
         }
 
-        if(args.outputIp || args.outputSubdomain || args.outputSSL){
+        if(args.output_IP || args.output_Hostname || args.output_SSL){
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/subdomains");
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
@@ -162,8 +162,8 @@ void VirusTotal::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputIp || args.outputSubdomain || args.outputUrl){
+    if(args.input_IP){
+        if(args.output_IP || args.output_Hostname || args.output_URL){
             url.setUrl("https://www.virustotal.com/vtapi/v2/ip-address/report?apikey="+m_key+"&ip="+target);
             request.setAttribute(QNetworkRequest::User, V2_IPADDRESS);
             request.setUrl(url);
@@ -173,7 +173,7 @@ void VirusTotal::start(){
         //...
         request.setRawHeader("x-apikey", m_key.toUtf8());
         //...
-        if(args.outputSubdomain || args.outputSSL){
+        if(args.output_Hostname || args.output_SSL){
             url.setUrl("https://www.virustotal.com/api/v3/ip_addresses/"+target+"/historical_ssl_certificates");
             request.setAttribute(QNetworkRequest::User, IP_HISTORICAL_SSL_CERTS);
             request.setUrl(url);
@@ -181,7 +181,7 @@ void VirusTotal::start(){
             activeRequests++;
         }
 
-        if(args.outputSubdomain){
+        if(args.output_Hostname){
             url.setUrl("https://www.virustotal.com/api/v3/ip_addresses/"+target+"/resolutions");
             request.setAttribute(QNetworkRequest::User, IP_RESOLUTIONS);
             request.setUrl(url);

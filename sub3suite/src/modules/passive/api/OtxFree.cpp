@@ -40,15 +40,15 @@ OtxFree::OtxFree(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_OTX;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxFree::replyFinishedRawJson);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxFree::replyFinishedSubdomainIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxFree::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxFree::replyFinishedIp);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &OtxFree::replyFinishedAsn);
 }
 OtxFree::~OtxFree(){
@@ -59,8 +59,8 @@ void OtxFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case INDICATOR_DOMAIN_GENERAL:
             url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/general");
             break;
@@ -149,7 +149,7 @@ void OtxFree::start(){
         return;
     }
 
-    if(args.inputIp){
+    if(args.input_IP){
         /* if target ip-address contains  ":" then its an ipv6 */
         if(target.contains(":")){
             url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/passive_dns");
@@ -168,7 +168,7 @@ void OtxFree::start(){
         }
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/passive_dns");
         request.setAttribute(QNetworkRequest::User, INDICATOR_HOSTNAME_PASSIVEDNS);
         request.setUrl(url);

@@ -1,4 +1,4 @@
-#include "HackerTargetPaid.h"
+#include "HackerTarget.h"
 #include "src/utils/Config.h"
 
 #define ASLOOKUP 0
@@ -18,38 +18,38 @@
 #define ZONETRANSFER 14
 
 
-HackerTargetPaid::HackerTargetPaid(ScanArgs args): AbstractOsintModule(args)
+HackerTarget::HackerTarget(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_HACKERTARGET;
 
-    if(args.outputRaw)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedRawTxt);
-    if(args.outputSubdomainIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomainIp);
-    if(args.outputSubdomain)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedSubdomain);
-    if(args.outputIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedIp);
-    if(args.outputAsn)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedAsn);
-    if(args.outputCidr)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetPaid::replyFinishedCidr);
+    if(args.output_Raw)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTarget::replyFinishedRawTxt);
+    if(args.output_HostnameIP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTarget::replyFinishedSubdomainIp);
+    if(args.output_Hostname)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTarget::replyFinishedSubdomain);
+    if(args.output_IP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTarget::replyFinishedIp);
+    if(args.output_ASN)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTarget::replyFinishedAsn);
+    if(args.output_CIDR)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTarget::replyFinishedCidr);
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_HACKERTARGET).toString();
     
 }
-HackerTargetPaid::~HackerTargetPaid(){
+HackerTarget::~HackerTarget(){
     delete manager;
 }
 
-void HackerTargetPaid::start(){
+void HackerTarget::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case ASLOOKUP:
             if(!target.startsWith("AS", Qt::CaseInsensitive))
                 target = "AS"+target;
@@ -103,8 +103,8 @@ void HackerTargetPaid::start(){
         activeRequests++;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_HostnameIP || args.output_Hostname || args.output_IP){
             url.setUrl("https://api.hackertarget.com/hostsearch/?q="+target+"&apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, HOSTSEARCH);
             request.setUrl(url);
@@ -113,15 +113,15 @@ void HackerTargetPaid::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputAsn){
+    if(args.input_IP){
+        if(args.output_ASN){
             url.setUrl("https://api.hackertarget.com/aslookup/?q="+target+"&apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, ASLOOKUP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSubdomain){
+        if(args.output_Hostname){
             url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+target+"&apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, REVERSE_IPLOOKUP);
             request.setUrl(url);
@@ -130,8 +130,8 @@ void HackerTargetPaid::start(){
         }
     }
 
-    if(args.inputAsn){
-        if(args.outputCidr){
+    if(args.input_ASN){
+        if(args.output_CIDR){
             if(!target.startsWith("AS", Qt::CaseInsensitive))
                 target = "AS"+target;
             url.setUrl("https://api.hackertarget.com/aslookup/?q="+target+"&apikey="+m_key);
@@ -143,7 +143,7 @@ void HackerTargetPaid::start(){
     }
 }
 
-void HackerTargetPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
+void HackerTarget::replyFinishedSubdomainIp(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -170,7 +170,7 @@ void HackerTargetPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
     end(reply);
 }
 
-void HackerTargetPaid::replyFinishedSubdomain(QNetworkReply *reply){
+void HackerTarget::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -197,7 +197,7 @@ void HackerTargetPaid::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void HackerTargetPaid::replyFinishedIp(QNetworkReply *reply){
+void HackerTarget::replyFinishedIp(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -217,7 +217,7 @@ void HackerTargetPaid::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void HackerTargetPaid::replyFinishedAsn(QNetworkReply *reply){
+void HackerTarget::replyFinishedAsn(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -238,7 +238,7 @@ void HackerTargetPaid::replyFinishedAsn(QNetworkReply *reply){
     end(reply);
 }
 
-void HackerTargetPaid::replyFinishedCidr(QNetworkReply *reply){
+void HackerTarget::replyFinishedCidr(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

@@ -11,11 +11,11 @@ Yahoo::Yahoo(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Yahoo";
 
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Yahoo::replyFinishedSubdomain);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Yahoo::replyFinishedEmail);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Yahoo::replyFinishedUrl);
 }
 Yahoo::~Yahoo(){
@@ -25,8 +25,8 @@ Yahoo::~Yahoo(){
 void Yahoo::start(){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             QUrl url("https://search.yahoo.com/search?p=site:"+target+"&b=1&pz=10&bct=0&xargs=0");
             request.setUrl(url);
             manager->get(request);
@@ -34,7 +34,7 @@ void Yahoo::start(){
             activeRequests++;
         }
 
-        if(args.outputUrl){
+        if(args.output_URL){
             QUrl url("https://search.yahoo.com/search?p=site:"+target+"&b=1&pz=10&bct=0&xargs=0");
             request.setUrl(url);
             manager->get(request);
@@ -52,7 +52,7 @@ void Yahoo::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -121,7 +121,7 @@ void Yahoo::replyFinishedUrl(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -172,8 +172,8 @@ void Yahoo::replyFinishedUrl(QNetworkReply *reply){
 void Yahoo::sendRequests(){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain)
+    if(args.input_Domain){
+        if(args.output_Hostname)
         {
             ///
             /// getting the max pages to query...

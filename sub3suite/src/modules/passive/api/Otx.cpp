@@ -1,4 +1,4 @@
-#include "OtxPaid.h"
+#include "Otx.h"
 #include "src/utils/Config.h"
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -36,36 +36,36 @@
 /*
  * 1k per hour unauthenticated, and 10k authed
  */
-OtxPaid::OtxPaid(ScanArgs args): AbstractOsintModule(args)
+Otx::Otx(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_OTX;
 
-    if(args.outputRaw)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedRawJson);
-    if(args.outputSubdomainIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomainIp);
-    if(args.outputSubdomain)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedSubdomain);
-    if(args.outputIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedIp);
-    if(args.outputAsn)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &OtxPaid::replyFinishedAsn);
+    if(args.output_Raw)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Otx::replyFinishedRawJson);
+    if(args.output_HostnameIP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Otx::replyFinishedSubdomainIp);
+    if(args.output_Hostname)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Otx::replyFinishedSubdomain);
+    if(args.output_IP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Otx::replyFinishedIp);
+    if(args.output_ASN)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Otx::replyFinishedAsn);
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_OTX).toString();
 }
-OtxPaid::~OtxPaid(){
+Otx::~Otx(){
     delete manager;
 }
 
-void OtxPaid::start(){
+void Otx::start(){
     QNetworkRequest request;
     request.setRawHeader("X-OTX-API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case INDICATOR_DOMAIN_GENERAL:
             url.setUrl("https://otx.alienvault.com/api/v1/indicators/domain/"+target+"/general");
             break;
@@ -154,7 +154,7 @@ void OtxPaid::start(){
         return;
     }
 
-    if(args.inputIp){
+    if(args.input_IP){
         /* if target ip-address contains  ":" then its an ipv6 */
         if(target.contains(":")){
             url.setUrl("https://otx.alienvault.com/api/v1/indicators/IPv4/"+target+"/passive_dns");
@@ -174,7 +174,7 @@ void OtxPaid::start(){
         return;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://otx.alienvault.com/api/v1/indicators/hostname/"+target+"/passive_dns");
         request.setAttribute(QNetworkRequest::User, INDICATOR_HOSTNAME_PASSIVEDNS);
         request.setUrl(url);
@@ -183,7 +183,7 @@ void OtxPaid::start(){
     }
 }
 
-void OtxPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
+void Otx::replyFinishedSubdomainIp(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -206,7 +206,7 @@ void OtxPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
     end(reply);
 }
 
-void OtxPaid::replyFinishedSubdomain(QNetworkReply *reply){
+void Otx::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -243,7 +243,7 @@ void OtxPaid::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void OtxPaid::replyFinishedIp(QNetworkReply *reply){
+void Otx::replyFinishedIp(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -272,7 +272,7 @@ void OtxPaid::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void OtxPaid::replyFinishedAsn(QNetworkReply *reply){
+void Otx::replyFinishedAsn(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

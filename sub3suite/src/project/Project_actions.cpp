@@ -4,7 +4,6 @@
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QClipboard>
-#include "src/items/SSLItem.h"
 
 
 void Project::action_clear(){
@@ -893,6 +892,86 @@ void Project::action_copy(const RESULT_TYPE &result_type){
 
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(clipboardData.trimmed());
+}
+
+///
+/// Send...
+///
+
+void Project::action_sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+    foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
+        targets.insert(index.data().toString());
+
+    switch (engine) {
+    case ENGINE::OSINT:
+        emit sendToOsint(targets, result_type);
+        emit changeTabToOsint();
+        break;
+    case ENGINE::RAW:
+        emit sendToRaw(targets, result_type);
+        emit changeTabToRaw();
+        break;
+    case ENGINE::BRUTE:
+        emit sendToBrute(targets, result_type);
+        emit changeTabToBrute();
+        break;
+    case ENGINE::ACTIVE:
+        emit sendToActive(targets, result_type);
+        emit changeTabToActive();
+        break;
+    case ENGINE::DNS:
+        emit sendToDns(targets, result_type);
+        emit changeTabToDns();
+        break;
+    case ENGINE::SSL:
+        emit sendToSsl(targets, result_type);
+        emit changeTabToSSL();
+        break;
+    case ENGINE::URL:
+        emit sendToUrl(targets, result_type);
+        emit changeTabToURL();
+        break;
+    default:
+        break;
+    }
+}
+
+void Project::action_sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+    QSet<QString> targets;
+    foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
+        targets.insert(index.data().toString());
+
+    switch (tool) {
+    case TOOL::IP:
+        emit sendToIpEnum(targets, result_type);
+        emit changeTabToIpEnum();
+        break;
+    case TOOL::ASN:
+        emit sendToAsnEnum(targets, result_type);
+        emit changeTabToAsnEnum();
+        break;
+    case TOOL::CIDR:
+        emit sendToCidrEnum(targets, result_type);
+        emit changeTabToCidrEnum();
+        break;
+    case TOOL::NS:
+        emit sendToNSEnum(targets, result_type);
+        emit changeTabToNSEnum();
+        break;
+    case TOOL::MX:
+        emit sendToMXEnum(targets, result_type);
+        emit changeTabToMXEnum();
+        break;
+    case TOOL::EMAIL:
+        emit sendToEmailEnum(targets, result_type);
+        emit changeTabToEmailEnum();
+        break;
+    case TOOL::SSL:
+        emit sendToSSLEnum(targets, result_type);
+        emit changeTabToSSLEnum();
+        break;
+    }
 }
 
 void Project::action_send_host(const ENGINE &engine){

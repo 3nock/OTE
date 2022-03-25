@@ -6,3 +6,4 @@
 [submodule "include/breakpad"]
 	path = include/breakpad
 	url = https://github.com/google/breakpad.git
+	ignore = dirty

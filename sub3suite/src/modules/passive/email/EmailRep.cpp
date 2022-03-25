@@ -9,7 +9,7 @@ EmailRep::EmailRep(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "EmailRep";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailRep::replyFinishedRawJson);
     ///
     /// getting api-key...
@@ -28,8 +28,8 @@ void EmailRep::start(){
     // request.setRawHeader("User-Agent", userAget);
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case EMAIL_QUERY:
             url.setUrl("https://emailrep.io/"+target);
             break;

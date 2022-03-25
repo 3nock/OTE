@@ -70,8 +70,8 @@ class WhoisXmlApi: public AbstractOsintModule{
         void replyFinishedAsn(QNetworkReply *reply) override;
         void replyFinishedCidr(QNetworkReply *reply) override;
         void replyFinishedEmail(QNetworkReply *reply) override;
-        void replyFinishedInfoNS(QNetworkReply *reply) override;
-        void replyFinishedInfoMX(QNetworkReply *reply) override;
+        void replyFinishedEnumNS(QNetworkReply *reply) override;
+        void replyFinishedEnumMX(QNetworkReply *reply) override;
 
     private:
         QString m_key = nullptr;

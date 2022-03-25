@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct CommonCrawl{
-    QString name = "CommonCrawl";
+    QString name = OSINT_MODULE_COMMONCRAWL;
     QString url = "http://commoncrawl.org/";
     QString url_apiDoc = "https://commoncrawl.org/the-data/get-started/";
     QString summary = "We build and maintain an open repository of web crawl data that can be accessed and \n"
@@ -18,6 +18,8 @@ struct CommonCrawl{
                                          {PLACEHOLDERTEXT_DOMAIN, "/* not yet implemented */"}}};
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_URL,
                                            {OUT_SUBDOMAIN, OUT_URL}}};
 };
 }

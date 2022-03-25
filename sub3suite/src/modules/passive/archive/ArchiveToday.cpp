@@ -8,11 +8,11 @@
 ArchiveToday::ArchiveToday(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Archive";
+    log.moduleName = OSINT_MODULE_ARCHIVETODAY;
 
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveToday::replyFinishedUrl);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveToday::replyFinishedSubdomain);
 }
 ArchiveToday::~ArchiveToday(){
@@ -26,15 +26,32 @@ void ArchiveToday::start(){
     request.setRawHeader("Connection", "close");
 
     QUrl url;
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://archive.md/*."+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputUrl){
+        if(args.output_URL){
             url.setUrl("https://archive.md/*."+target+"/*");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args.input_URL){
+        if(args.output_Hostname){
+            url.setUrl("https://archive.md/"+target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+
+        if(args.output_URL){
+            url.setUrl("https://archive.md/"+target+"*");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
@@ -48,20 +65,12 @@ void ArchiveToday::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    ///
-    /// declaring and initializing variables...
-    ///
     QStack<GumboNode*> nodes;
 
-    ///
-    /// getting the body node...
-    ///
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
-    ///
-    /// loop to parse and obtain subdomains from the body node...
-    ///
+    /* loop to parse and obtain subdomains from the body node... */
     while(!nodes.isEmpty()){
         GumboNode *node = nodes.pop();
 
@@ -88,9 +97,7 @@ void ArchiveToday::replyFinishedSubdomain(QNetworkReply *reply){
             nodes.push(static_cast<GumboNode*>(children->data[i]));
     }
 
-    ///
-    /// finilizing...
-    ///
+    /* finilizing... */
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
     end(reply);
@@ -102,20 +109,12 @@ void ArchiveToday::replyFinishedUrl(QNetworkReply *reply){
         return;
     }
 
-    ///
-    /// declaring and initializing variables...
-    ///
     QStack<GumboNode*> nodes;
 
-    ///
-    /// getting the body node...
-    ///
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
-    ///
-    /// loop to parse and obtain subdomains from the body node...
-    ///
+    /* loop to parse and obtain subdomains from the body node... */
     while(!nodes.isEmpty()){
         GumboNode *node = nodes.pop();
 
@@ -142,9 +141,7 @@ void ArchiveToday::replyFinishedUrl(QNetworkReply *reply){
             nodes.push(static_cast<GumboNode*>(children->data[i]));
     }
 
-    ///
-    /// finilizing...
-    ///
+    /* finilizing... */
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
     end(reply);

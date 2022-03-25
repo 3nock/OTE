@@ -19,19 +19,19 @@ Spyse::Spyse(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_SPYSE;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedSubdomain);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedEmail);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedAsn);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedSSL);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedUrl);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedIp);
 
     /* getting api-key */
@@ -48,8 +48,8 @@ void Spyse::start(){
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case DOMAINS:
             url.setUrl("https://api.spyse.com/v4/data/domain/"+target);
             break;
@@ -78,7 +78,7 @@ void Spyse::start(){
         return;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://api.spyse.com/v3/data/domain/subdomain?limit=100&domain="+target);
         request.setAttribute(QNetworkRequest::User, DOMAINS);
         request.setUrl(url);
@@ -87,7 +87,7 @@ void Spyse::start(){
         return;
     }
 
-    if(args.inputIp){
+    if(args.input_IP){
         url.setUrl("https://api.spyse.com/v4/data/ip/"+target);
         request.setAttribute(QNetworkRequest::User, IPV4);
         request.setUrl(url);
@@ -96,7 +96,7 @@ void Spyse::start(){
         return;
     }
 
-    if(args.inputSSL){
+    if(args.input_SSL){
         url.setUrl("https://api.spyse.com/v4/data/certificate/"+target);
         request.setAttribute(QNetworkRequest::User, SSL_CERT);
         request.setUrl(url);
@@ -105,7 +105,7 @@ void Spyse::start(){
         return;
     }
 
-    if(args.inputAsn){
+    if(args.input_ASN){
         url.setUrl("https://api.spyse.com/v4/data/as/"+target);
         request.setAttribute(QNetworkRequest::User, AS);
         request.setUrl(url);
@@ -114,7 +114,7 @@ void Spyse::start(){
         return;
     }
 
-    if(args.inputEmail){
+    if(args.input_Email){
         url.setUrl("https://api.spyse.com/v4/data/email/"+target);
         request.setAttribute(QNetworkRequest::User, EMAILS);
         request.setUrl(url);

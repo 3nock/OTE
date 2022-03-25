@@ -39,13 +39,13 @@ DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_DOMAINTOOLS;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedRawJson);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
 
     /* getting api key... */
@@ -61,8 +61,8 @@ void DomainTools::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case BRAND_MONITOR:
             url.setUrl("https://api.domaintools.com/v1/account/?api_username="+m_username+"&api_key="+m_key);
             break;
@@ -151,8 +151,8 @@ void DomainTools::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+    if(args.input_Domain){
+        if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://api.domaintools.com/v1/"+target+"/reverse-ip/?api_username="+m_username+"&api_key="+m_key);
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
@@ -162,8 +162,8 @@ void DomainTools::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+    if(args.input_IP){
+        if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://api.domaintools.com/v1/"+target+"/host-domains/?api_username="+m_username+"&api_key="+m_key);
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
@@ -173,8 +173,8 @@ void DomainTools::start(){
         }
     }
 
-    if(args.inputQueryTerm){
-        if(args.outputSubdomain){
+    if(args.input_Search){
+        if(args.output_Hostname){
             url.setUrl("https://api.domaintools.com/v2/domain-search/?query="+target+"&api_username="+m_username+"&api_key="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAIN_SEARCH);
             request.setUrl(url);
@@ -188,7 +188,7 @@ void DomainTools::start(){
     /// Info...
     ///
 
-    if(args.outputInfoMX){
+    if(args.output_EnumMX){
         url.setUrl("https://api.domaintools.com/v1/reverse-mx/?mx_server="+target+"&api_username="+m_username+"&api_key="+m_key);
         request.setAttribute(QNetworkRequest::User, REVERSE_MX_MX);
         request.setUrl(url);
@@ -197,7 +197,7 @@ void DomainTools::start(){
         return;
     }
 
-    if(args.outputInfoNS){
+    if(args.output_EnumNS){
         url.setUrl("https://api.domaintools.com/v1/"+target+"/name-server-domains/?api_username="+m_username+"&api_key="+m_key);
         request.setAttribute(QNetworkRequest::User, REVERSE_NAMESERVER);
         request.setUrl(url);
@@ -289,7 +289,7 @@ void DomainTools::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void DomainTools::replyFinishedInfoMX(QNetworkReply *reply){
+void DomainTools::replyFinishedEnumMX(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -299,23 +299,24 @@ void DomainTools::replyFinishedInfoMX(QNetworkReply *reply){
     QJsonObject response = document.object()["response"].toObject();
 
     s3s_struct::MX mx;
-    mx.info_mx = target;
+    mx.mx = target;
 
     foreach(const QJsonValue &domain, response["domains"].toArray())
         mx.domains.insert(domain.toString());
+
+    foreach(const QJsonValue &ip, response["ips"].toArray())
+        mx.ip.insert(ip.toString());
     /*
     foreach(const QJsonValue &mx_server, response["mx_servers"].toArray())
         mx.mx_servers.insert(mx_server.toString());
-    foreach(const QJsonValue &ip, response["ips"].toArray())
-        mx.ip.insert(ip.toString());
     */
 
-    emit infoMX(mx);
+    emit resultEnumMX(mx);
 
     end(reply);
 }
 
-void DomainTools::replyFinishedInfoNS(QNetworkReply *reply){
+void DomainTools::replyFinishedEnumNS(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -325,14 +326,14 @@ void DomainTools::replyFinishedInfoNS(QNetworkReply *reply){
     QJsonObject response = document.object()["response"].toObject();
 
     s3s_struct::NS ns;
-    ns.info_ns = target;
+    ns.ns = target;
 
     foreach(const QJsonValue &domain, response["primary_domains"].toArray())
         ns.domains.insert(domain.toString());
     foreach(const QJsonValue &domain, response["secondary_domains"].toArray())
         ns.domains.insert(domain.toString());
 
-    emit infoNS(ns);
+    emit resultEnumNS(ns);
 
     end(reply);
 }

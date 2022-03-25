@@ -7,12 +7,11 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
-#include <QBasicTimer>
-#include <QTimerEvent>
 
-#include "OsintDefinitions.h"
+#include "ParserMethods.h"
 #include "src/utils/s3s.h"
 #include "src/utils/utils.h"
+#include "OsintDefinitions.h"
 #include "gumbo-parser/src/gumbo.h"
 
 #include "src/items/IPItem.h"
@@ -46,15 +45,16 @@
 #define OUT_CIDR 7
 
 
-struct ScanLog{
+struct ScanLog {
     QString moduleName;
     QString message;
     QString target;
     int statusCode = 0;
-    unsigned int resultsCount = 0;
+    uint resultsCount = 0;
+    bool error = false;
 };
 
-struct ScanConfig{
+struct ScanConfig {
     int maxPage = 50;
     bool noDuplicates = false;
     bool autosaveToProject = false;
@@ -62,46 +62,44 @@ struct ScanConfig{
     int progress = 0;
 };
 
-struct ScanArgs{
+struct ScanArgs {
     ScanConfig *config;
     QQueue<QString> targets;
 
     /* input type */
-    bool inputIp = false;
-    bool inputAsn = false;
-    bool inputCidr = false;
-    bool inputUrl = false;
-    bool inputEmail = false;
-    bool inputDomain = false;
-    bool inputSSL = false;
-    bool inputQueryTerm = false;
+    bool input_IP = false;
+    bool input_ASN = false;
+    bool input_CIDR = false;
+    bool input_URL = false;
+    bool input_SSL = false;
+    bool input_Email = false;
+    bool input_Domain = false;
+    bool input_Search = false;
 
     /* output type */
-    bool outputSubdomainIp = false;
-    bool outputSubdomain = false;
-    bool outputEmail = false;
-    bool outputAsn = false;
-    bool outputUrl = false;
-    bool outputIp = false;
-    bool outputCidr = false;
-    bool outputSSL = false;
-    bool outputRaw = false;
+    bool output_HostnameIP = false;
+    bool output_Hostname = false;
+    bool output_Email = false;
+    bool output_ASN = false;
+    bool output_URL = false;
+    bool output_IP = false;
+    bool output_CIDR = false;
+    bool output_SSL = false;
+    bool output_Raw = false;
 
-    bool outputInfoIp = false;
-    bool outputInfoCidr = false;
-    bool outputInfoSSL = false;
-    bool outputInfoMX = false;
-    bool outputInfoNS = false;
-    bool outputInfoEmail = false;
-    bool outputInfoAsn = false;
-    bool outputInfoAsnPeers = false;
-    bool outputInfoAsnPrefixes = false;
-
+    bool output_EnumIP = false;
+    bool output_EnumCIDR = false;
+    bool output_EnumSSL = false;
+    bool output_EnumMX = false;
+    bool output_EnumNS = false;
+    bool output_EnumEmail = false;
+    bool output_EnumASN = false;
+    bool output_EnumASNPeers = false;
+    bool output_EnumASNPrefixes = false;
 
     /* for raw output */
-    int rawOption = 0;
-    QString queryOption;
-    QMap<int, QString> rawParameters;
+    int raw_query_id = 0;
+    QString raw_query_name;
 };
 
 
@@ -114,6 +112,10 @@ class AbstractOsintModule : public QObject {
               args(args)
         {
         }
+        ~AbstractOsintModule()
+        {
+        }
+
         void startScan(QThread* cThread)
         {
             connect(cThread, &QThread::started, this, &AbstractOsintModule::start);
@@ -130,9 +132,7 @@ class AbstractOsintModule : public QObject {
         void nextTarget();
 
         void scanProgress(int progress);
-
-        void infoLog(ScanLog log);
-        void errorLog(ScanLog error);
+        void scanLog(ScanLog);
 
         void resultSubdomain(QString subdomain);
         void resultSubdomainIp(QString subdomain, QString ip);
@@ -149,47 +149,46 @@ class AbstractOsintModule : public QObject {
         void resultURL(QString url);
         void resultASN(QString asn, QString name);
 
-        void rawSSL(QByteArray);
-        void rawResults(s3s_struct::RAW);
-        void rawResultsTxt(s3s_struct::RAW);
+        void resultRawSSL(QByteArray);
+        void resultRawTXT(s3s_struct::RAW);
+        void resultRawJSON(s3s_struct::RAW);
 
-        void infoASN(s3s_struct::ASN);
-        void infoCIDR(s3s_struct::CIDR);
-        void infoMX(s3s_struct::MX);
-        void infoNS(s3s_struct::NS);
-        void infoIp(s3s_struct::IP);
-        void infoEmail(s3s_struct::Email);
+        void resultEnumASN(s3s_struct::ASN);
+        void resultEnumCIDR(s3s_struct::CIDR);
+        void resultEnumMX(s3s_struct::MX);
+        void resultEnumNS(s3s_struct::NS);
+        void resultEnumIP(s3s_struct::IP);
+        void resultEnumEmail(s3s_struct::Email);
 
     public slots:
         void onStop(){
             log.statusCode = 0;
             log.message = "Stopped...";
-            emit infoLog(log);
+            emit scanLog(log);
             emit quitThread();
         }
 
     protected slots:
         virtual void start() = 0;
+        virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
         virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains
         virtual void replyFinishedCidr(QNetworkReply *){} // returns ip/cidr
         virtual void replyFinishedSSL(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
-        virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
         virtual void replyFinishedIp(QNetworkReply*){} // returns ip-addresses
         virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
         virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails
         virtual void replyFinishedUrl(QNetworkReply*){} // returns URLs
 
-        virtual void replyFinishedInfoAsn(QNetworkReply*){} // returns multiple info on asn
-        virtual void replyFinishedInfoAsnPeers(QNetworkReply*){} // returns multiple info on asn peers
-        virtual void replyFinishedInfoAsnPrefixes(QNetworkReply*){} // returns multiple info on asn prefixes
+        virtual void replyFinishedEnumASN(QNetworkReply*){} // returns multiple info on asn
+        virtual void replyFinishedEnumASNPeers(QNetworkReply*){} // returns multiple info on asn peers
+        virtual void replyFinishedEnumASNPrefixes(QNetworkReply*){} // returns multiple info on asn prefixes
 
-        virtual void replyFinishedInfo(QNetworkReply*){} // returns multiple info on appropriate target
-        virtual void replyFinishedInfoIp(QNetworkReply*){} // returns multiple info on ip
-        virtual void replyFinishedInfoCidr(QNetworkReply*){} // returns multiple info on cidr
-        virtual void replyFinishedInfoSSL(QNetworkReply*){} // returns multiple info on ssl cert
+        virtual void replyFinishedEnumIP(QNetworkReply*){} // returns multiple info on ip
+        virtual void replyFinishedEnumCIDR(QNetworkReply*){} // returns multiple info on cidr
+        virtual void replyFinishedEnumSSL(QNetworkReply*){} // returns multiple info on ssl cert
 
-        virtual void replyFinishedInfoMX(QNetworkReply*){} // returns MX records info
-        virtual void replyFinishedInfoNS(QNetworkReply*){} // returns NS records info
+        virtual void replyFinishedEnumMX(QNetworkReply*){} // returns MX records info
+        virtual void replyFinishedEnumNS(QNetworkReply*){} // returns NS records info
 
         virtual void replyFinishedRawNdjson(QNetworkReply *reply) // returns raw json results from ndjson
         {
@@ -197,7 +196,6 @@ class AbstractOsintModule : public QObject {
                 this->onError(reply);
             else
             {
-
                 /* converting ndjson to json array document */
                 QByteArray byteDocument = reply->readAll();
                 byteDocument = byteDocument.simplified();
@@ -207,10 +205,10 @@ class AbstractOsintModule : public QObject {
 
                 s3s_struct::RAW raw;
                 raw.module = log.moduleName;
-                raw.query_option = args.queryOption;
+                raw.query_option = args.raw_query_name;
                 raw.target = target;
                 raw.results = byteDocument;
-                emit rawResults(raw);
+                emit resultRawJSON(raw);
             }
 
             end(reply);
@@ -223,10 +221,10 @@ class AbstractOsintModule : public QObject {
             else{
                 s3s_struct::RAW raw;
                 raw.module = log.moduleName;
-                raw.query_option = args.queryOption;
+                raw.query_option = args.raw_query_name;
                 raw.target = target;
                 raw.results = reply->readAll();
-                emit rawResults(raw);
+                emit resultRawJSON(raw);
             }
 
             end(reply);
@@ -239,10 +237,10 @@ class AbstractOsintModule : public QObject {
             else{
                 s3s_struct::RAW raw;
                 raw.module = log.moduleName;
-                raw.query_option = args.queryOption;
+                raw.query_option = args.raw_query_name;
                 raw.target = target;
                 raw.results = reply->readAll();
-                emit rawResultsTxt(raw);
+                emit resultRawTXT(raw);
             }
 
             end(reply);
@@ -262,13 +260,15 @@ class AbstractOsintModule : public QObject {
                 log.target = target;
                 log.message = "Operation Cancelled due to Timeout";
                 log.statusCode = 0;
-                emit errorLog(log);
+                log.error = true;
+                emit scanLog(log);
                 break;
             default:
                 log.target = target;
                 log.message = reply->errorString();
                 log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-                emit errorLog(log);
+                log.error = true;
+                emit scanLog(log);
                 break;
             }
 
@@ -288,12 +288,9 @@ class AbstractOsintModule : public QObject {
             activeRequests--;
             if(activeRequests == 0)
             {
-                /* send logs on the target scanned */
-                emit infoLog(log);
-
-                /* scan prohress */
                 args.config->progress++;
                 emit scanProgress(args.config->progress);
+                emit scanLog(log);
 
                 /* enumerate next target if there are still targets available */
                 if(args.targets.length()){
@@ -305,17 +302,6 @@ class AbstractOsintModule : public QObject {
                 else
                     emit quitThread();
             }
-        }
-
-        /* make this a normal function not a class object */
-        GumboNode* getBody(GumboNode *node){
-            for(unsigned int i = 0; i < node->v.element.children.length; i++)
-            {
-                GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[i]);
-                if(child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_BODY)
-                    return child;
-            }
-            return nullptr;
         }
 };
 

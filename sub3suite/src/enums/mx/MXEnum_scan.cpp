@@ -64,7 +64,7 @@ void MXEnum::startScan(){
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
     m_scanArgs->config->progress = 0;
 
-    m_scanArgs->outputInfoMX = true;
+    m_scanArgs->output_EnumMX = true;
 
     /* start scan thread */
     switch (ui->comboBoxEngine->currentIndex())
@@ -91,9 +91,8 @@ void MXEnum::startScanThread(AbstractOsintModule *module){
     QThread *cThread = new QThread;
     module->startScan(cThread);
     module->moveToThread(cThread);
-    connect(module, &AbstractOsintModule::infoMX, this, &MXEnum::onResult);
-    connect(module, &AbstractOsintModule::infoLog, this, &MXEnum::onInfoLog);
-    connect(module, &AbstractOsintModule::errorLog, this, &MXEnum::onErrorLog);
+    connect(module, &AbstractOsintModule::resultEnumMX, this, &MXEnum::onResult);
+    connect(module, &AbstractOsintModule::scanLog, this, &MXEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &MXEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

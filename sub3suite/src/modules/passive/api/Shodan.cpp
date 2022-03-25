@@ -23,15 +23,15 @@ Shodan::Shodan(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_SHODAN;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedIp);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedAsn);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomainIp);
 
     /* getting api-key */
@@ -45,8 +45,8 @@ void Shodan::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption){
+    if(args.output_Raw){
+        switch (args.raw_query_id){
         case HOST_IP:
             url.setUrl("https://api.shodan.io/shodan/host/"+target+"?key="+m_key);
             break;
@@ -87,8 +87,8 @@ void Shodan::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain || args.outputSubdomainIp || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_Hostname || args.output_HostnameIP || args.output_IP){
             url.setUrl("https://api.shodan.io/dns/domain/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, DNS_DOMAIN);
             request.setUrl(url);
@@ -97,8 +97,8 @@ void Shodan::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputAsn || args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_ASN || args.output_Hostname){
             url.setUrl("https://api.shodan.io/shodan/host/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, HOST_IP);
             request.setUrl(url);

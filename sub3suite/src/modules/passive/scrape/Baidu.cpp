@@ -10,11 +10,11 @@ Baidu::Baidu(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Baidu";
 
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Baidu::replyFinishedSubdomain);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Baidu::replyFinishedEmail);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Baidu::replyFinishedUrl);
 }
 Baidu::~Baidu(){
@@ -24,8 +24,8 @@ Baidu::~Baidu(){
 void Baidu::start(){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             QUrl url("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn=1");
             request.setUrl(url);
             manager->get(request);
@@ -33,7 +33,7 @@ void Baidu::start(){
             activeRequests++;
         }
 
-        if(args.outputUrl){
+        if(args.output_URL){
             QUrl url("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn=1");
             request.setUrl(url);
             manager->get(request);
@@ -51,7 +51,7 @@ void Baidu::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -122,7 +122,7 @@ void Baidu::replyFinishedUrl(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -173,8 +173,8 @@ void Baidu::replyFinishedUrl(QNetworkReply *reply){
 void Baidu::sendRequests(){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain)
+    if(args.input_Domain){
+        if(args.output_Hostname)
         {
             ///
             /// getting the max pages to query...

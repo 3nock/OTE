@@ -13,13 +13,13 @@
 UKWebArchive::UKWebArchive(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "UKWebArchive";
+    log.moduleName = OSINT_MODULE_UKWEBARCHIVE;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &UKWebArchive::replyFinishedRawNdjson);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &UKWebArchive::replyFinishedUrl);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &UKWebArchive::replyFinishedSubdomain);
 }
 UKWebArchive::~UKWebArchive(){
@@ -30,8 +30,8 @@ void UKWebArchive::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case URL:
             url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+target);
             break;
@@ -42,8 +42,17 @@ void UKWebArchive::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputUrl || args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_URL || args.output_Hostname){
+            url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args.input_URL){
+        if(args.output_URL || args.output_Hostname){
             url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+target);
             request.setUrl(url);
             manager->get(request);
@@ -65,7 +74,6 @@ void UKWebArchive::replyFinishedUrl(QNetworkReply *reply){
     byteDocument.push_back("]");
     byteDocument.push_front("[");
 
-    /* ... */
     QJsonDocument document = QJsonDocument::fromJson(byteDocument);
     QJsonArray urls = document.array();
 
@@ -91,7 +99,6 @@ void UKWebArchive::replyFinishedSubdomain(QNetworkReply *reply){
     byteDocument.push_back("]");
     byteDocument.push_front("[");
 
-    /* ... */
     QJsonDocument document = QJsonDocument::fromJson(byteDocument);
     QJsonArray urls = document.array();
 

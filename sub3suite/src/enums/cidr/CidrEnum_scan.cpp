@@ -64,7 +64,7 @@ void CidrEnum::startScan(){
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
     m_scanArgs->config->progress = 0;
 
-    m_scanArgs->outputInfoCidr = true;
+    m_scanArgs->output_EnumCIDR = true;
 
     /* starting scan thread */
     switch (ui->comboBoxEngine->currentIndex())
@@ -79,9 +79,8 @@ void CidrEnum::startScanThread(AbstractOsintModule *module){
     QThread *cThread = new QThread;
     module->startScan(cThread);
     module->moveToThread(cThread);
-    connect(module, &AbstractOsintModule::infoCIDR, this, &CidrEnum::onResult);
-    connect(module, &AbstractOsintModule::infoLog, this, &CidrEnum::onInfoLog);
-    connect(module, &AbstractOsintModule::errorLog, this, &CidrEnum::onErrorLog);
+    connect(module, &AbstractOsintModule::resultEnumCIDR, this, &CidrEnum::onResult);
+    connect(module, &AbstractOsintModule::scanLog, this, &CidrEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &CidrEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

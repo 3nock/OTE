@@ -40,13 +40,13 @@ Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_ONYPHE;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedIp);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSSL);
 
     /* getting api key */
@@ -63,8 +63,8 @@ void Onyphe::start(){
     request.setRawHeader("Authorization", "apikey "+m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case USER:
             url.setUrl("https://www.onyphe.io/api/v2/user");
             break;
@@ -150,8 +150,8 @@ void Onyphe::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain || args.outputIp || args.outputSSL){
+    if(args.input_Domain){
+        if(args.output_Hostname || args.output_IP || args.output_SSL){
             url.setUrl("https://www.onyphe.io/api/v2/summary/domain/"+target);
             request.setAttribute(QNetworkRequest::User, SUMMARY_DOMAIN);
             request.setUrl(url);
@@ -160,8 +160,8 @@ void Onyphe::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain || args.outputSSL){
+    if(args.input_IP){
+        if(args.output_Hostname || args.output_SSL){
             url.setUrl("https://www.onyphe.io/api/v2/summary/ip/"+target);
             request.setAttribute(QNetworkRequest::User, SUMMARY_IP);
             request.setUrl(url);

@@ -21,11 +21,11 @@ MnemonicFree::MnemonicFree(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_MNEMONIC;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedRawJson);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicFree::replyFinishedSubdomain);
 }
 MnemonicFree::~MnemonicFree(){
@@ -36,8 +36,8 @@ void MnemonicFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case IP_ANY_RECORD:
             url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
             break;
@@ -62,8 +62,8 @@ void MnemonicFree::start(){
         activeRequests++;
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain || args.outputIp){
+    if(args.input_IP){
+        if(args.output_Hostname || args.output_IP){
             url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
             request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
             request.setUrl(url);
@@ -72,8 +72,8 @@ void MnemonicFree::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_Hostname || args.output_IP){
             url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
             request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
             request.setUrl(url);

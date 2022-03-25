@@ -9,25 +9,23 @@
 #include "ui_Osint.h"
 
 
-void Osint::onInfoLog(ScanLog log){
-    ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"green\">"+log.moduleName+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"green\">"+log.target+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"green\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"green\">"+QString::number(log.resultsCount)+"</font>");
-    if(!log.message.isEmpty())
-        ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"green\">"+log.message+"</font>");
-
-    // add a new line...
-    ui->plainTextEditLogs->appendPlainText("");
-}
-
-void Osint::onErrorLog(ScanLog log){
-    ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"red\">"+log.moduleName+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"red\">"+log.target+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"red\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"red\">"+QString::number(log.resultsCount)+"</font>");
-    if(!log.message.isEmpty())
-        ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"red\">"+log.message+"</font>");
+void Osint::onScanLog(ScanLog log){
+    if(log.error){
+        ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"red\">"+log.moduleName+"</font>");
+        ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"red\">"+log.target+"</font>");
+        ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"red\">"+QString::number(log.statusCode)+"</font>");
+        ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"red\">"+QString::number(log.resultsCount)+"</font>");
+        if(!log.message.isEmpty())
+            ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"red\">"+log.message+"</font>");
+    }
+    else{
+        ui->plainTextEditLogs->appendHtml("[Module]        : <font color=\"green\">"+log.moduleName+"</font>");
+        ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"green\">"+log.target+"</font>");
+        ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"green\">"+QString::number(log.statusCode)+"</font>");
+        ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"green\">"+QString::number(log.resultsCount)+"</font>");
+        if(!log.message.isEmpty())
+            ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"green\">"+log.message+"</font>");
+    }
 
     // add a new line...
     ui->plainTextEditLogs->appendPlainText("");

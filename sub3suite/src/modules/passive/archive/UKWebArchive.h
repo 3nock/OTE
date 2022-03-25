@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct UKWebArchive{
-    QString name = "Uk Web Archive";
+    QString name = OSINT_MODULE_UKWEBARCHIVE;
     QString url = "https://www.webarchive.org.uk/";
     QString url_apiDoc = "https://data.webarchive.org.uk/";
     QString summary = "The UK Web Archive (UKWA) collects millions of websites each year, preserving them for future generations. "
@@ -16,6 +16,8 @@ struct UKWebArchive{
                                          {PLACEHOLDERTEXT_URL, "Urls archived in UKWebArchive..."}}};
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_URL,
                                            {OUT_SUBDOMAIN, OUT_URL}}};
 };
 }

@@ -11,7 +11,7 @@ EmailFormat::EmailFormat(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "EmailFormat";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailFormat::replyFinishedRawJson);
     ///
     /// getting api-key...
@@ -30,8 +30,8 @@ void EmailFormat::start(){
     request.setRawHeader("Authorization", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case FORMATS:
             url.setUrl("https://www.email-format.com/api/v2/get_formats?domain="+target);
             break;

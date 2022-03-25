@@ -21,13 +21,13 @@ WebResolver::WebResolver(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_WEBRESOLVER;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedIp);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WebResolver::replyFinishedSubdomainIp);
 
     /* getting api key */
@@ -41,8 +41,8 @@ void WebResolver::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case GEOIP:
             url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=geoip&string="+target);
             break;
@@ -80,7 +80,7 @@ void WebResolver::start(){
         return;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://webresolver.nl/api.php?key="+m_key+"&json&action=dns&string="+target);
         request.setAttribute(QNetworkRequest::User, DNSRESOLVER);
         request.setUrl(url);

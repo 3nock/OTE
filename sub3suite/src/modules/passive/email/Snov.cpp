@@ -18,7 +18,7 @@ Snov::Snov(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Snov";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Snov::replyFinishedRawJson);
     ///
     /// getting api-key...
@@ -35,8 +35,8 @@ void Snov::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case CHECK_USER_BALANCE:
         {
             url.setUrl("https://api.snov.io/v1/get-balance");

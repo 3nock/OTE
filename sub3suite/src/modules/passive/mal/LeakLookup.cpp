@@ -14,7 +14,7 @@ LeakLookup::LeakLookup(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "LeakLookup";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakLookup::replyFinishedRawJson);
     ///
     /// get api key...
@@ -31,8 +31,8 @@ void LeakLookup::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case DOMAINS:
             url.setUrl("https://leak-lookup.com/api/search/?key="+m_key+"&type=domain&query="+target);
             break;

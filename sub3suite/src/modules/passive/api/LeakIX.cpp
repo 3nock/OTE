@@ -11,13 +11,13 @@ LeakIX::LeakIX(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_LEAKIX;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedRawJson);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedAsn);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedSubdomain);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedSSL);
 
     /* getting api key */
@@ -34,8 +34,8 @@ void LeakIX::start(){
     request.setRawHeader("api-key", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case HOST:
             url.setUrl("https://leakix.net/host/"+target);
             break;
@@ -51,8 +51,8 @@ void LeakIX::start(){
         activeRequests++;
     }
 
-    if(args.inputIp){
-        if(args.outputAsn || args.outputSSL || args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_ASN || args.output_SSL || args.output_Hostname){
             url.setUrl("https://leakix.net/search?q="+target+"&scope=leak");
             request.setUrl(url);
             manager->get(request);

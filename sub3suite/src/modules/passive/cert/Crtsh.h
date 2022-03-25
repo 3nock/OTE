@@ -7,7 +7,7 @@
 
 namespace ModuleInfo {
 struct Crtsh{
-    QString name = "Crtsh";
+    QString name = OSINT_MODULE_CRTSH;
     QString url = "https://crt.sh";
     QString url_apiDoc = "https://crt.sh";
     QString summary = "crt.sh";
@@ -30,7 +30,7 @@ class Crtsh: public AbstractOsintModule{
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedSSL(QNetworkReply *reply) override;
-        void replyFinishedInfoSSL(QNetworkReply *reply) override;
+        void replyFinishedEnumSSL(QNetworkReply *reply) override;
 
     private:
         void m_getCertId(QNetworkReply *reply);

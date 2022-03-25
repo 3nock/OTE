@@ -60,7 +60,7 @@ void NSEnum::startScan(){
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
     m_scanArgs->config->progress = 0;
 
-    m_scanArgs->outputInfoNS = true;
+    m_scanArgs->output_EnumNS = true;
 
     /* start scanthread */
     switch (ui->comboBoxEngine->currentIndex())
@@ -91,9 +91,8 @@ void NSEnum::startScanThread(AbstractOsintModule *module){
     QThread *cThread = new QThread;
     module->startScan(cThread);
     module->moveToThread(cThread);
-    connect(module, &AbstractOsintModule::infoNS, this, &NSEnum::onResult);
-    connect(module, &AbstractOsintModule::infoLog, this, &NSEnum::onInfoLog);
-    connect(module, &AbstractOsintModule::errorLog, this, &NSEnum::onErrorLog);
+    connect(module, &AbstractOsintModule::resultEnumNS, this, &NSEnum::onResult);
+    connect(module, &AbstractOsintModule::scanLog, this, &NSEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &NSEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

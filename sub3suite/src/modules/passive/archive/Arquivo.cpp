@@ -14,13 +14,13 @@
 Arquivo::Arquivo(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Arquivo";
+    log.moduleName = OSINT_MODULE_ARQUIVO;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Arquivo::replyFinishedRawJson);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Arquivo::replyFinishedUrl);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Arquivo::replyFinishedSubdomain);
 }
 Arquivo::~Arquivo(){
@@ -31,13 +31,13 @@ void Arquivo::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case CDX_SERVER:
-            url.setUrl("https://arquivo.pt/wayback/cdx?url=*."+target+"&output=json");
+            url.setUrl("https://arquivo.pt/wayback/cdx?url="+target+"&output=json");
             break;
         case TEXTSEARCH:
-            url.setUrl("https://arquivo.pt/textsearch?q=*."+target+"&prettyPrint=false&maxItems=100");
+            url.setUrl("https://arquivo.pt/textsearch?q="+target+"&prettyPrint=false&maxItems=100");
             break;
         }
         request.setUrl(url);
@@ -46,9 +46,39 @@ void Arquivo::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputUrl || args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_URL){
+            url.setUrl("https://arquivo.pt/textsearch?q="+target+"/*&prettyPrint=false&maxItems=100");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args.output_Hostname){
             url.setUrl("https://arquivo.pt/textsearch?q=*."+target+"&prettyPrint=false&maxItems=100");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args.input_URL){
+        if(args.output_Hostname){
+            url.setUrl("https://arquivo.pt/textsearch?q="+target+"&prettyPrint=false&maxItems=100");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args.output_URL){
+            url.setUrl("https://arquivo.pt/textsearch?q="+target+"*&prettyPrint=false&maxItems=100");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args.input_Search){
+        if(args.output_Hostname || args.output_URL){
+            url.setUrl("https://arquivo.pt/textsearch?q="+target+"&prettyPrint=false&maxItems=100");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;

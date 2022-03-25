@@ -20,19 +20,19 @@ Threatminer::Threatminer(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_THREATMINER;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedSubdomain);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedEmail);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedIp);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedAsn);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedUrl);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatminer::replyFinishedSSL);
 }
 Threatminer::~Threatminer(){
@@ -43,8 +43,8 @@ void Threatminer::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption){
+    if(args.output_Raw){
+        switch (args.raw_query_id){
         case DOMAIN_WHOIS:
             url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=1");
             break;
@@ -80,8 +80,8 @@ void Threatminer::start(){
     }
 
     /* for domain name target */
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=5");
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
@@ -89,7 +89,7 @@ void Threatminer::start(){
             activeRequests++;
         }
 
-        if(args.outputEmail){
+        if(args.output_Email){
             url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=1");
             request.setAttribute(QNetworkRequest::User, DOMAIN_WHOIS);
             request.setUrl(url);
@@ -97,7 +97,7 @@ void Threatminer::start(){
             activeRequests++;
         }
 
-        if(args.outputIp){
+        if(args.output_IP){
             url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=2");
             request.setAttribute(QNetworkRequest::User, DOMAIN_PASSIVE_DNS);
             request.setUrl(url);
@@ -105,7 +105,7 @@ void Threatminer::start(){
             activeRequests++;
         }
 
-        if(args.outputUrl){
+        if(args.output_URL){
             url.setUrl("https://api.threatminer.org/v2/domain.php?q="+target+"&rt=3");
             request.setAttribute(QNetworkRequest::User, DOMAIN_QUERY_URI);
             request.setUrl(url);
@@ -115,8 +115,8 @@ void Threatminer::start(){
     }
 
     /* For ip-address target */
-    if(args.inputIp){
-        if(args.outputAsn){
+    if(args.input_IP){
+        if(args.output_ASN){
             url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=1");
             request.setAttribute(QNetworkRequest::User, IP_WHOIS);
             request.setUrl(url);
@@ -124,7 +124,7 @@ void Threatminer::start(){
             activeRequests++;
         }
 
-        if(args.outputSubdomain){
+        if(args.output_Hostname){
             url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=2");
             request.setAttribute(QNetworkRequest::User, IP_PASSIVE_DNS);
             request.setUrl(url);
@@ -132,7 +132,7 @@ void Threatminer::start(){
             activeRequests++;
         }
 
-        if(args.outputSSL){
+        if(args.output_SSL){
             url.setUrl("https://api.threatminer.org/v2/host.php?q="+target+"&rt=5");
             request.setAttribute(QNetworkRequest::User, IP_SSL_CERTS);
             request.setUrl(url);
@@ -142,8 +142,8 @@ void Threatminer::start(){
     }
 
     /* for ssl-cert hash target */
-    if(args.inputSSL){
-        if(args.outputIp){
+    if(args.input_SSL){
+        if(args.output_IP){
             url.setUrl("https://api.threatminer.org/v2/ssl.php?q="+target+"&rt=1");
             request.setAttribute(QNetworkRequest::User, SSL_HOSTS);
             request.setUrl(url);

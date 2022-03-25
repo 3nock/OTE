@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct GoogleCert{
-    QString name = "GoogleCert";
+    QString name = OSINT_MODULE_GOOGLECERT;
     QString url = "https://transparencyreport.google.com/";
     QString url_apiDoc = "https://transparencyreport.google.com/";
     QString summary = "Sharing data that sheds light on how the policies and actions of governments and \n"

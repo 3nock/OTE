@@ -65,7 +65,7 @@ void EmailEnum::startScan(){
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
     m_scanArgs->config->progress = 0;
 
-    m_scanArgs->outputInfoEmail = true;
+    m_scanArgs->output_EnumEmail = true;
 
     /* start scan thread */
     switch (ui->comboBoxEngine->currentIndex())
@@ -80,9 +80,8 @@ void EmailEnum::startScanThread(AbstractOsintModule *module){
     QThread *cThread = new QThread;
     module->startScan(cThread);
     module->moveToThread(cThread);
-    connect(module, &AbstractOsintModule::infoEmail, this, &EmailEnum::onResult);
-    connect(module, &AbstractOsintModule::infoLog, this, &EmailEnum::onInfoLog);
-    connect(module, &AbstractOsintModule::errorLog, this, &EmailEnum::onErrorLog);
+    connect(module, &AbstractOsintModule::resultEnumEmail, this, &EmailEnum::onResult);
+    connect(module, &AbstractOsintModule::scanLog, this, &EmailEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &EmailEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

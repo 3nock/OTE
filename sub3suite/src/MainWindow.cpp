@@ -23,6 +23,11 @@
 
 #include <QScreen>
 
+int buggyFunc() {
+    delete reinterpret_cast<QString*>(0xFEE1DEAD);
+    return 0;
+}
+
 ///
 /// use this parent for child items to be destroyed when parent is destroyed
 ///
@@ -63,12 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     hbox_donate->setContentsMargins(0, 0, 15, 2);
     ui->tabWidgetMain->setCornerWidget(cornerWidget_donate);
     connect(donate, &s3s_ClickableLabel::clicked, this, [=](){
-        /* taking a screenshot */
-        QScreen *screen = QGuiApplication::primaryScreen();
-        QPixmap qpx_pixmap = screen->grabWindow(0, this->x(), this->y()+5, this->width()+2, this->height());
-        if(qpx_pixmap.save(QApplication::applicationDirPath()+"/screenshot.png", "PNG"))
-            qDebug() << "screenshot taken";
-        /*QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite", QUrl::TolerantMode));*/
+        buggyFunc();
     });
 
     /* check for updates */

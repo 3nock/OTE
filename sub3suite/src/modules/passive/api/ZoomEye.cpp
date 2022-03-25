@@ -19,15 +19,15 @@ ZoomEye::ZoomEye(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_ZOOMEYE;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedRawJson);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomainIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedSubdomain);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedAsn);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedIp);
 
     /* getting api key */
@@ -43,8 +43,8 @@ void ZoomEye::start(){
     request.setRawHeader("API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case HOST_ASN:
             url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+target);
             break;
@@ -67,7 +67,7 @@ void ZoomEye::start(){
         return;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://api.zoomeye.org/host/search?query=hostname:*."+target);
         request.setAttribute(QNetworkRequest::User, HOST_HOSTNAME);
         request.setUrl(url);
@@ -75,7 +75,7 @@ void ZoomEye::start(){
         activeRequests++;
     }
 
-    if(args.inputIp){
+    if(args.input_IP){
         url.setUrl("https://api.zoomeye.org/host/search?query=ip:"+target);
         request.setAttribute(QNetworkRequest::User, HOST_IP);
         request.setUrl(url);
@@ -83,7 +83,7 @@ void ZoomEye::start(){
         activeRequests++;
     }
 
-    if(args.inputAsn){
+    if(args.input_ASN){
         url.setUrl("https://api.zoomeye.org/host/search?query=asn:"+target);
         request.setAttribute(QNetworkRequest::User, HOST_ASN);
         request.setUrl(url);
@@ -91,7 +91,7 @@ void ZoomEye::start(){
         activeRequests++;
     }
 
-    if(args.inputCidr){
+    if(args.input_CIDR){
         url.setUrl("https://api.zoomeye.org/host/search?query=cidr:"+target);
         request.setAttribute(QNetworkRequest::User, HOST_CIDR);
         request.setUrl(url);

@@ -28,8 +28,7 @@ class CidrEnum : public AbstractEnum {
         void onResult(s3s_struct::CIDR);
 
         void onScanThreadEnded();
-        void onErrorLog(ScanLog log);
-        void onInfoLog(ScanLog log);
+        void onScanLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);

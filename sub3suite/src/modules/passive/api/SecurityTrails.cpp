@@ -26,13 +26,13 @@ SecurityTrails::SecurityTrails(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_SECURITYTRAILS;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedIp);
-    if(args.outputCidr)
+    if(args.output_CIDR)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedCidr);
 
     /* get api key */
@@ -49,8 +49,8 @@ void SecurityTrails::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case HISTORY_DNS:
             url.setUrl("https://api.securitytrails.com/v1/history/"+target+"/dns/any");
             break;
@@ -96,8 +96,8 @@ void SecurityTrails::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://api.securitytrails.com/v1/domain/"+target+"/subdomains?children_only=false&include_inactive=true");
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAIN);
             request.setUrl(url);
@@ -105,7 +105,7 @@ void SecurityTrails::start(){
             activeRequests++;
         }
 
-        if(args.outputIp){
+        if(args.output_IP){
             url.setUrl("https://api.securitytrails.com/v1/domain/"+target);
             url.setUrl("https://api.securitytrails.com/v1/domain/"+target+"/subdomains?children_only=false&include_inactive=true");
             request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
@@ -114,7 +114,7 @@ void SecurityTrails::start(){
             activeRequests++;
         }
 
-        if(args.outputCidr){
+        if(args.output_CIDR){
             url.setUrl("https://api.securitytrails.com/v1/company/"+target+"/associated-ips");
             request.setAttribute(QNetworkRequest::User, COMPANY_ASSOCIATED_IP);
             request.setUrl(url);
@@ -123,8 +123,8 @@ void SecurityTrails::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_Hostname){
             url.setUrl("https://api.securitytrails.com/v1/ips/nearby/"+target);
             request.setAttribute(QNetworkRequest::User, IP_NEIGHBOURS);
             request.setUrl(url);

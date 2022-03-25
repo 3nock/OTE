@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>658</width>
-    <height>459</height>
+    <width>661</width>
+    <height>545</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Raw</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_19">
+  <layout class="QVBoxLayout" name="verticalLayout_7">
    <property name="leftMargin">
     <number>4</number>
    </property>
@@ -124,7 +124,7 @@
       <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>* Scan Configuration</string>
+         <string>*Scan Configuration</string>
         </property>
        </widget>
       </item>
@@ -460,7 +460,10 @@
        <attribute name="title">
         <string>Json</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <property name="spacing">
+         <number>4</number>
+        </property>
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -471,10 +474,69 @@
          <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>2</number>
+         <number>0</number>
         </property>
         <item>
          <widget class="QPlainTextEdit" name="plainTextEditJson"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_11">
+          <item>
+           <widget class="QLineEdit" name="lineEditFind_json">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonNext_json">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Next</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonPrev_json">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Previous</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxCaseSensitive_json">
+            <property name="text">
+             <string>case sensitive</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -506,9 +568,15 @@
       </widget>
      </widget>
      <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout_18">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
         <widget class="QTabWidget" name="tabWidgetInput">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -524,7 +592,7 @@
             <number>4</number>
            </property>
            <property name="rightMargin">
-            <number>3</number>
+            <number>0</number>
            </property>
            <property name="bottomMargin">
             <number>0</number>
@@ -765,10 +833,10 @@
             <number>6</number>
            </property>
            <property name="rightMargin">
-            <number>4</number>
+            <number>0</number>
            </property>
            <property name="bottomMargin">
-            <number>2</number>
+            <number>0</number>
            </property>
            <item>
             <widget class="InputWidget" name="targets" native="true">
@@ -793,743 +861,715 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
-           <item>
-            <widget class="QLabel" name="label_10">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Api Key not Required</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QScrollArea" name="scrollArea_2">
-             <property name="widgetResizable">
-              <bool>true</bool>
-             </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents1">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>159</width>
-                <height>617</height>
-               </rect>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_3">
-               <property name="leftMargin">
-                <number>9</number>
+          <widget class="QToolBox" name="toolBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="tabSpacing">
+            <number>3</number>
+           </property>
+           <widget class="QWidget" name="page_keynotrequired">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>177</width>
+              <height>617</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>API Keys not Required</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_18">
+             <item>
+              <widget class="QGroupBox" name="groupBox">
+               <property name="title">
+                <string>Iana</string>
                </property>
-               <property name="topMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <item>
+                 <widget class="QRadioButton" name="moduleAfrinic">
+                  <property name="text">
+                   <string>Afrinic</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleApnic">
+                  <property name="text">
+                   <string>Apnic</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleArin">
+                  <property name="text">
+                   <string>Arin</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleRipe">
+                  <property name="text">
+                   <string>Ripe</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_2">
+               <property name="title">
+                <string>Archives</string>
                </property>
-               <property name="rightMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_10">
+                <item>
+                 <widget class="QRadioButton" name="moduleArchiveIt">
+                  <property name="text">
+                   <string>ArchiveIt</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleArquivo">
+                  <property name="text">
+                   <string>Arquivo</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleUKWebArchive">
+                  <property name="text">
+                   <string>UKWebArchive</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWaybackMachine">
+                  <property name="text">
+                   <string>WaybackMachine</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_3">
+               <property name="title">
+                <string>API</string>
                </property>
-               <property name="bottomMargin">
-                <number>9</number>
-               </property>
-               <item>
-                <widget class="QGroupBox" name="groupBox">
-                 <property name="title">
-                  <string>Iana</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_9">
-                  <item>
-                   <widget class="QRadioButton" name="moduleAfrinic">
-                    <property name="text">
-                     <string>Afrinic</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleApnic">
-                    <property name="text">
-                     <string>Apnic</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleArin">
-                    <property name="text">
-                     <string>Arin</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleRipe">
-                    <property name="text">
-                     <string>Ripe</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_2">
-                 <property name="title">
-                  <string>Archives</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_10">
-                  <item>
-                   <widget class="QRadioButton" name="moduleArchiveIt">
-                    <property name="text">
-                     <string>ArchiveIt</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleArquivo">
-                    <property name="text">
-                     <string>Arquivo</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleUKWebArchive">
-                    <property name="text">
-                     <string>UKWebArchive</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleWaybackMachine">
-                    <property name="text">
-                     <string>WaybackMachine</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_3">
-                 <property name="title">
-                  <string>API</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_13">
-                  <item>
-                   <widget class="QRadioButton" name="moduleAnubis">
-                    <property name="text">
-                     <string>Anubis</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleTruMail">
-                    <property name="text">
-                     <string>TruMail</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleCertspotterFree">
-                    <property name="text">
-                     <string>CertSpotter(Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleMaltiverseFree">
-                    <property name="text">
-                     <string>Maltiverse (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleN45HT">
-                    <property name="text">
-                     <string>N45HT</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleSublist3r">
-                    <property name="text">
-                     <string>Sublist3r</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleBgpview">
-                    <property name="text">
-                     <string>Bgpview</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleThreatMiner">
-                    <property name="text">
-                     <string>ThreatMiner</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleThreatCrowd">
-                    <property name="text">
-                     <string>ThreatCrowd</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleHackerTargetFree">
-                    <property name="text">
-                     <string>HackerTarget (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleDnsBufferOverRun">
-                    <property name="text">
-                     <string>DnsBufferOverRun</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleGoogleCert">
-                    <property name="text">
-                     <string>GoogleCert</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleOmnisint">
-                    <property name="text">
-                     <string>Omnisint</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleUrlScan">
-                    <property name="text">
-                     <string>UrlScan</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <widget class="QRadioButton" name="moduleAnubis">
+                  <property name="text">
+                   <string>Anubis</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleTruMail">
+                  <property name="text">
+                   <string>TruMail</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCertspotterFree">
+                  <property name="text">
+                   <string>CertSpotter(Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleMaltiverseFree">
+                  <property name="text">
+                   <string>Maltiverse (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleN45HT">
+                  <property name="text">
+                   <string>N45HT</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSublist3r">
+                  <property name="text">
+                   <string>Sublist3r</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleBgpview">
+                  <property name="text">
+                   <string>Bgpview</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleThreatMiner">
+                  <property name="text">
+                   <string>ThreatMiner</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleThreatCrowd">
+                  <property name="text">
+                   <string>ThreatCrowd</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHackerTargetFree">
+                  <property name="text">
+                   <string>HackerTarget (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleDnsBufferOverRun">
+                  <property name="text">
+                   <string>DnsBufferOverRun</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleGoogleCert">
+                  <property name="text">
+                   <string>GoogleCert</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleOmnisint">
+                  <property name="text">
+                   <string>Omnisint</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleUrlScan">
+                  <property name="text">
+                   <string>UrlScan</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
-           <item>
-            <widget class="QLabel" name="label_11">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Require Api Keys</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QScrollArea" name="scrollArea">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="widgetResizable">
-              <bool>true</bool>
-             </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>157</width>
-                <height>1524</height>
-               </rect>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_6">
-               <property name="leftMargin">
-                <number>9</number>
+          <widget class="QToolBox" name="toolBox_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="tabSpacing">
+            <number>3</number>
+           </property>
+           <widget class="QWidget" name="page_keyrequired">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>176</width>
+              <height>1524</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>API Keys Required</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <widget class="QGroupBox" name="groupBox_4">
+               <property name="title">
+                <string>Abuse</string>
                </property>
-               <property name="topMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_14">
+                <item>
+                 <widget class="QRadioButton" name="moduleAbuseIPDB">
+                  <property name="text">
+                   <string>AbuseIPDB</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleBotScout">
+                  <property name="text">
+                   <string>BotScout</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleFraudGuard">
+                  <property name="text">
+                   <string>FraudGuard</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHybridAnalysis">
+                  <property name="text">
+                   <string>HybridAnalysis</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpQualityScore">
+                  <property name="text">
+                   <string>IpQualityScore</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleLeakLookup">
+                  <property name="text">
+                   <string>Leak-Lookup</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_5">
+               <property name="title">
+                <string>Email</string>
                </property>
-               <property name="rightMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_15">
+                <item>
+                 <widget class="QRadioButton" name="moduleDebounce">
+                  <property name="text">
+                   <string>Debounce</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleEmailCrawlr">
+                  <property name="text">
+                   <string>EmailCrawlr</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleEmailFormat">
+                  <property name="text">
+                   <string>EmailFormat</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleEmailRep">
+                  <property name="text">
+                   <string>EmailRep</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHunter">
+                  <property name="text">
+                   <string>Hunter</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSnov">
+                  <property name="text">
+                   <string>Snov</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_6">
+               <property name="title">
+                <string>IP</string>
                </property>
-               <property name="bottomMargin">
-                <number>9</number>
+               <layout class="QVBoxLayout" name="verticalLayout_16">
+                <item>
+                 <widget class="QRadioButton" name="moduleIpApi">
+                  <property name="text">
+                   <string>IpApi</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpInfo">
+                  <property name="text">
+                   <string>IpInfo</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpData">
+                  <property name="text">
+                   <string>IpData</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpGeoLocation">
+                  <property name="text">
+                   <string>IpGeoLocation</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpRegistry">
+                  <property name="text">
+                   <string>IpRegistry</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpStack">
+                  <property name="text">
+                   <string>IpStack</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_7">
+               <property name="title">
+                <string>API</string>
                </property>
-               <item>
-                <widget class="QGroupBox" name="groupBox_4">
-                 <property name="title">
-                  <string>Abuse</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_14">
-                  <item>
-                   <widget class="QRadioButton" name="moduleAbuseIPDB">
-                    <property name="text">
-                     <string>AbuseIPDB</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleBotScout">
-                    <property name="text">
-                     <string>BotScout</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleFraudGuard">
-                    <property name="text">
-                     <string>FraudGuard</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleHybridAnalysis">
-                    <property name="text">
-                     <string>HybridAnalysis</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleIpQualityScore">
-                    <property name="text">
-                     <string>IpQualityScore</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleLeakLookup">
-                    <property name="text">
-                     <string>Leak-Lookup</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_5">
-                 <property name="title">
-                  <string>Email</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_15">
-                  <item>
-                   <widget class="QRadioButton" name="moduleDebounce">
-                    <property name="text">
-                     <string>Debounce</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleEmailCrawlr">
-                    <property name="text">
-                     <string>EmailCrawlr</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleEmailFormat">
-                    <property name="text">
-                     <string>EmailFormat</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleEmailRep">
-                    <property name="text">
-                     <string>EmailRep</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleHunter">
-                    <property name="text">
-                     <string>Hunter</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleSnov">
-                    <property name="text">
-                     <string>Snov</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_6">
-                 <property name="title">
-                  <string>IP</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_16">
-                  <item>
-                   <widget class="QRadioButton" name="moduleIpApi">
-                    <property name="text">
-                     <string>IpApi</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleIpInfo">
-                    <property name="text">
-                     <string>IpInfo</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleIpData">
-                    <property name="text">
-                     <string>IpData</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleIpGeoLocation">
-                    <property name="text">
-                     <string>IpGeoLocation</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleIpRegistry">
-                    <property name="text">
-                     <string>IpRegistry</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleIpStack">
-                    <property name="text">
-                     <string>IpStack</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBox_7">
-                 <property name="title">
-                  <string>API</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_17">
-                  <item>
-                   <widget class="QRadioButton" name="moduleBuiltWith">
-                    <property name="text">
-                     <string>Builtwith</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleCensys">
-                    <property name="text">
-                     <string>Censys</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleCertspotter">
-                    <property name="text">
-                     <string>Certspotter</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleDnslytics">
-                    <property name="text">
-                     <string>DNSlytics</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleDomainTools">
-                    <property name="text">
-                     <string>DomainTools</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleFullHunt">
-                    <property name="text">
-                     <string>FullHunt</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleHaveIBeenPawned">
-                    <property name="text">
-                     <string>HaveIBeenPawned</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleHost">
-                    <property name="text">
-                     <string>Host</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleJsonWhois">
-                    <property name="text">
-                     <string>JsonWhois</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleLeakIX">
-                    <property name="text">
-                     <string>LeakIX</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleNetworksDB">
-                    <property name="text">
-                     <string>Networksdb</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleProjectDiscovery">
-                    <property name="text">
-                     <string>ProjectDiscovery</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleWhoisXmlApi">
-                    <property name="text">
-                     <string>WhoisXmlApi</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleRobtexPaid">
-                    <property name="text">
-                     <string>Robtex (Pro)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleSpamHaus">
-                    <property name="text">
-                     <string>SpamHaus</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleRobtex">
-                    <property name="text">
-                     <string>Robtex</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleSpyse">
-                    <property name="text">
-                     <string>Spyse</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleZoomEye">
-                    <property name="text">
-                     <string>ZoomEye</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleGithub">
-                    <property name="text">
-                     <string>Github</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleBinaryEdge">
-                    <property name="text">
-                     <string>BinaryEdge</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleRiskIq">
-                    <property name="text">
-                     <string>RiskIq</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleWhatcms">
-                    <property name="text">
-                     <string>WhatCMS</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleShodan">
-                    <property name="text">
-                     <string>Shodan</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleMnemonicFree">
-                    <property name="text">
-                     <string>Mnemonic (Free)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleMnemonic">
-                    <property name="text">
-                     <string>Mnemonic (Paid)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleSpyOnWeb">
-                    <property name="text">
-                     <string>SpyOnWeb</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleWhoxy">
-                    <property name="text">
-                     <string>Whoxy</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleC99">
-                    <property name="text">
-                     <string>C99</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleSeon">
-                    <property name="text">
-                     <string>Seon</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleVirusTotal">
-                    <property name="text">
-                     <string>VirusTotal</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleWebResolver">
-                    <property name="text">
-                     <string>WebResolver</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleHackerTarget">
-                    <property name="text">
-                     <string>HackerTarget (Paid)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleWappalyzer">
-                    <property name="text">
-                     <string>Wappalyzer</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleViewDns">
-                    <property name="text">
-                     <string>ViewDns</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleThreatBook">
-                    <property name="text">
-                     <string>ThreatBook</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="modulePassiveTotal">
-                    <property name="text">
-                     <string>PassiveTotal</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleSecurityTrails">
-                    <property name="text">
-                     <string>SecurityTrails</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleCircl">
-                    <property name="text">
-                     <string>Circl</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleZETALytics">
-                    <property name="text">
-                     <string>ZETALytics</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleOnyphe">
-                    <property name="text">
-                     <string>Onyphe</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleNeutrinoApi">
-                    <property name="text">
-                     <string>NeutrinoApi</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="moduleOtx">
-                    <property name="text">
-                     <string>Otx</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
+               <layout class="QVBoxLayout" name="verticalLayout_17">
+                <item>
+                 <widget class="QRadioButton" name="moduleBuiltWith">
+                  <property name="text">
+                   <string>Builtwith</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCensys">
+                  <property name="text">
+                   <string>Censys</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCertspotter">
+                  <property name="text">
+                   <string>Certspotter</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleDnslytics">
+                  <property name="text">
+                   <string>DNSlytics</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleDomainTools">
+                  <property name="text">
+                   <string>DomainTools</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleFullHunt">
+                  <property name="text">
+                   <string>FullHunt</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHaveIBeenPawned">
+                  <property name="text">
+                   <string>HaveIBeenPawned</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHost">
+                  <property name="text">
+                   <string>Host</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleJsonWhois">
+                  <property name="text">
+                   <string>JsonWhois</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleLeakIX">
+                  <property name="text">
+                   <string>LeakIX</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleNetworksDB">
+                  <property name="text">
+                   <string>Networksdb</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleProjectDiscovery">
+                  <property name="text">
+                   <string>ProjectDiscovery</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWhoisXmlApi">
+                  <property name="text">
+                   <string>WhoisXmlApi</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleRobtexPaid">
+                  <property name="text">
+                   <string>Robtex (Pro)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSpamHaus">
+                  <property name="text">
+                   <string>SpamHaus</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleRobtex">
+                  <property name="text">
+                   <string>Robtex</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSpyse">
+                  <property name="text">
+                   <string>Spyse</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleZoomEye">
+                  <property name="text">
+                   <string>ZoomEye</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleGithub">
+                  <property name="text">
+                   <string>Github</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleBinaryEdge">
+                  <property name="text">
+                   <string>BinaryEdge</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleRiskIq">
+                  <property name="text">
+                   <string>RiskIq</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWhatcms">
+                  <property name="text">
+                   <string>WhatCMS</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleShodan">
+                  <property name="text">
+                   <string>Shodan</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleMnemonicFree">
+                  <property name="text">
+                   <string>Mnemonic (Free)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleMnemonic">
+                  <property name="text">
+                   <string>Mnemonic (Paid)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSpyOnWeb">
+                  <property name="text">
+                   <string>SpyOnWeb</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWhoxy">
+                  <property name="text">
+                   <string>Whoxy</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleC99">
+                  <property name="text">
+                   <string>C99</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSeon">
+                  <property name="text">
+                   <string>Seon</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleVirusTotal">
+                  <property name="text">
+                   <string>VirusTotal</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWebResolver">
+                  <property name="text">
+                   <string>WebResolver</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHackerTarget">
+                  <property name="text">
+                   <string>HackerTarget (Paid)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWappalyzer">
+                  <property name="text">
+                   <string>Wappalyzer</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleViewDns">
+                  <property name="text">
+                   <string>ViewDns</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleThreatBook">
+                  <property name="text">
+                   <string>ThreatBook</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="modulePassiveTotal">
+                  <property name="text">
+                   <string>PassiveTotal</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSecurityTrails">
+                  <property name="text">
+                   <string>SecurityTrails</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCircl">
+                  <property name="text">
+                   <string>Circl</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleZETALytics">
+                  <property name="text">
+                   <string>ZETALytics</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleOnyphe">
+                  <property name="text">
+                   <string>Onyphe</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleNeutrinoApi">
+                  <property name="text">
+                   <string>NeutrinoApi</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleOtx">
+                  <property name="text">
+                   <string>Otx</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
          </item>
         </layout>
        </item>

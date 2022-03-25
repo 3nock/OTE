@@ -11,7 +11,7 @@
 #include <QStringListModel>
 #include "src/utils/utils.h"
 #include "src/widgets/InputWidget.h"
-#include "src/project/model/ProjectModel.h"
+#include "src/models/ProjectModel.h"
 
 
 class AbstractEnum : public QWidget{

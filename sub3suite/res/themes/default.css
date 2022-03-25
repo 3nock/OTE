@@ -213,7 +213,7 @@ QToolBox QScrollArea {
 
 QToolBox::tab {
     padding-left: 12px;
-    color: white;
+    color: black;
     background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgb(37, 37, 37), stop:1 rgb(47, 47, 47));
     border-style: solid;
     border-width: 1px;

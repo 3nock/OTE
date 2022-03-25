@@ -66,19 +66,19 @@ void ASNEnum::startScan(){
 
     switch(ui->comboBoxOption->currentIndex()){
     case 0: // ASN INFO
-        m_scanArgs->outputInfoAsn = true;
-        m_scanArgs->outputInfoAsnPeers = false;
-        m_scanArgs->outputInfoAsnPrefixes = false;
+        m_scanArgs->output_EnumASN = true;
+        m_scanArgs->output_EnumASNPeers = false;
+        m_scanArgs->output_EnumASNPrefixes = false;
         break;
     case 1: // ASN PEERS
-        m_scanArgs->outputInfoAsn = false;
-        m_scanArgs->outputInfoAsnPeers = true;
-        m_scanArgs->outputInfoAsnPrefixes = false;
+        m_scanArgs->output_EnumASN = false;
+        m_scanArgs->output_EnumASNPeers = true;
+        m_scanArgs->output_EnumASNPrefixes = false;
         break;
     case 2: // ASN PREFIXES
-        m_scanArgs->outputInfoAsn = false;
-        m_scanArgs->outputInfoAsnPeers = false;
-        m_scanArgs->outputInfoAsnPrefixes = true;
+        m_scanArgs->output_EnumASN = false;
+        m_scanArgs->output_EnumASNPeers = false;
+        m_scanArgs->output_EnumASNPrefixes = true;
         break;
     }
 
@@ -98,17 +98,16 @@ void ASNEnum::startScanThread(AbstractOsintModule *module){
 
     switch(ui->comboBoxOption->currentIndex()){
     case 0:
-        connect(module, &AbstractOsintModule::infoASN, this, &ASNEnum::onResultsAsn);
+        connect(module, &AbstractOsintModule::resultEnumASN, this, &ASNEnum::onResultsAsn);
         break;
     case 1:
-        connect(module, &AbstractOsintModule::infoASN, this, &ASNEnum::onResultsAsnPeers);
+        connect(module, &AbstractOsintModule::resultEnumASN, this, &ASNEnum::onResultsAsnPeers);
         break;
     case 2:
-        connect(module, &AbstractOsintModule::infoASN, this, &ASNEnum::onResultsAsnPrefixes);
+        connect(module, &AbstractOsintModule::resultEnumASN, this, &ASNEnum::onResultsAsnPrefixes);
         break;
     }
-    connect(module, &AbstractOsintModule::infoLog, this, &ASNEnum::onInfoLog);
-    connect(module, &AbstractOsintModule::errorLog, this, &ASNEnum::onErrorLog);
+    connect(module, &AbstractOsintModule::scanLog, this, &ASNEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &ASNEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);

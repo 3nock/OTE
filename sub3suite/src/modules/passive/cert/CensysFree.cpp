@@ -1,18 +1,17 @@
 #include "CensysFree.h"
 #include <QStack>
 
-
 /*
  * fix for ip-input and sslcert-input
  */
 CensysFree::CensysFree(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "CensysFree";
+    log.moduleName = OSINT_MODULE_CENSYS;
 
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CensysFree::replyFinishedSubdomain);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CensysFree::replyFinishedSSL);
 }
 CensysFree::~CensysFree(){
@@ -23,21 +22,21 @@ void CensysFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://censys.io/domain/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args.inputIp){
+    if(args.input_IP){
         url.setUrl("https://censys.io/ipv4/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args.inputSSL){
+    if(args.input_SSL){
         url.setUrl("https://censys.io/certificates/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
@@ -51,20 +50,11 @@ void CensysFree::replyFinishedSSL(QNetworkReply *reply){
         return;
     }
 
-    ///
-    /// declaring and initializing variables...
-    ///
     QStack<GumboNode*> nodes;
-
-    ///
-    /// getting the body node...
-    ///
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
-    ///
-    /// loop to parse and obtain subdomains from the body node...
-    ///
+    /* loop to parse and obtain subdomains from the body node */
     while(!nodes.isEmpty()){
         GumboNode *node = nodes.pop();
 
@@ -131,9 +121,6 @@ void CensysFree::replyFinishedSSL(QNetworkReply *reply){
             nodes.push(static_cast<GumboNode*>(children->data[i]));
     }
 
-    ///
-    /// finilizing...
-    ///
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
     end(reply);
@@ -145,20 +132,11 @@ void CensysFree::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    ///
-    /// declaring and initializing variables...
-    ///
     QStack<GumboNode*> nodes;
-
-    ///
-    /// getting the body node...
-    ///
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
-    ///
-    /// loop to parse and obtain subdomains from the body node...
-    ///
+    /* loop to parse and obtain subdomains from the body node */
     while(!nodes.isEmpty()){
         GumboNode *node = nodes.pop();
 
@@ -236,9 +214,6 @@ void CensysFree::replyFinishedSubdomain(QNetworkReply *reply){
             nodes.push(static_cast<GumboNode*>(children->data[i]));
     }
 
-    ///
-    /// finilizing...
-    ///
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
     end(reply);

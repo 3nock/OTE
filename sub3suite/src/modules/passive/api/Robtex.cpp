@@ -1,4 +1,4 @@
-#include "RobtexPaid.h"
+#include "Robtex.h"
 #include "src/utils/Config.h"
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -10,39 +10,39 @@
 #define PDNS_REVERSE 3
 
 
-RobtexPaid::RobtexPaid(ScanArgs args): AbstractOsintModule(args)
+Robtex::Robtex(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_ROBTEX;
 
-    if(args.outputRaw)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedRawJson);
-    if(args.outputIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedIp);
-    if(args.outputSubdomain)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedSubdomainIp);
-    if(args.outputAsn)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedAsn);
-    if(args.outputCidr)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexPaid::replyFinishedCidr);
+    if(args.output_Raw)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Robtex::replyFinishedRawJson);
+    if(args.output_IP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Robtex::replyFinishedIp);
+    if(args.output_Hostname)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Robtex::replyFinishedSubdomain);
+    if(args.output_HostnameIP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Robtex::replyFinishedSubdomainIp);
+    if(args.output_ASN)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Robtex::replyFinishedAsn);
+    if(args.output_CIDR)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Robtex::replyFinishedCidr);
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_ROBTEX).toString();
     
 }
-RobtexPaid::~RobtexPaid(){
+Robtex::~Robtex(){
     delete manager;
 }
 
-void RobtexPaid::start(){
+void Robtex::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ASQUERY:
             url.setUrl("https://proapi.robtex.com/asquery/"+target+"?key="+m_key);
             break;
@@ -61,8 +61,8 @@ void RobtexPaid::start(){
         return;
     }
 
-    if(args.inputIp){
-        if(args.outputCidr || args.outputAsn){
+    if(args.input_IP){
+        if(args.output_CIDR || args.output_ASN){
             url.setUrl("https://proapi.robtex.com/ipquery/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, IPQUERY);
             request.setUrl(url);
@@ -70,7 +70,7 @@ void RobtexPaid::start(){
             activeRequests++;
         }
 
-        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+        if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://proapi.robtex.com/pdns/reverse/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, PDNS_REVERSE);
             request.setUrl(url);
@@ -79,8 +79,8 @@ void RobtexPaid::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+    if(args.input_Domain){
+        if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://proapi.robtex.com/pdns/forward/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, PDNS_FORWARD);
             request.setUrl(url);
@@ -90,8 +90,8 @@ void RobtexPaid::start(){
         }
     }
 
-    if(args.inputAsn){
-        if(args.outputCidr){
+    if(args.input_ASN){
+        if(args.output_CIDR){
             url.setUrl("https://proapi.robtex.com/asquery/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, ASQUERY);
             request.setUrl(url);
@@ -101,7 +101,7 @@ void RobtexPaid::start(){
     }
 }
 
-void RobtexPaid::replyFinishedSubdomain(QNetworkReply *reply){
+void Robtex::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -141,7 +141,7 @@ void RobtexPaid::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
+void Robtex::replyFinishedIp(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -175,7 +175,7 @@ void RobtexPaid::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void RobtexPaid::replyFinishedAsn(QNetworkReply *reply){
+void Robtex::replyFinishedAsn(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -195,7 +195,7 @@ void RobtexPaid::replyFinishedAsn(QNetworkReply *reply){
     end(reply);
 }
 
-void RobtexPaid::replyFinishedCidr(QNetworkReply *reply){
+void Robtex::replyFinishedCidr(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -221,7 +221,7 @@ void RobtexPaid::replyFinishedCidr(QNetworkReply *reply){
     end(reply);
 }
 
-void RobtexPaid::replyFinishedSubdomainIp(QNetworkReply *reply){
+void Robtex::replyFinishedSubdomainIp(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

@@ -11,11 +11,11 @@ DogPile::DogPile(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "DogPile";
 
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DogPile::replyFinishedSubdomain);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DogPile::replyFinishedEmail);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DogPile::replyFinishedUrl);
 }
 DogPile::~DogPile(){
@@ -25,8 +25,8 @@ DogPile::~DogPile(){
 void DogPile::start(){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             QUrl url("https://www.dogpile.com/serp?q="+target);
             request.setUrl(url);
             manager->get(request);
@@ -34,7 +34,7 @@ void DogPile::start(){
             activeRequests++;
         }
 
-        if(args.outputUrl){
+        if(args.output_URL){
             QUrl url("https://www.dogpile.com/serp?q="+target);
             request.setUrl(url);
             manager->get(request);
@@ -52,7 +52,7 @@ void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -118,7 +118,7 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -165,8 +165,8 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
 void DogPile::sendRequests(QString anotherPage){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             if(m_sentPages < args.config->maxPage){
                 QUrl url("https://www.dogpile.com"+anotherPage);
                 request.setUrl(url);

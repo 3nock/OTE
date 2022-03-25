@@ -60,7 +60,7 @@ void SSLEnum::startScan(){
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
     m_scanArgs->config->progress = 0;
 
-    m_scanArgs->outputInfoSSL = true;
+    m_scanArgs->output_EnumSSL = true;
 
     QThread *cThread = new QThread;
     switch (ui->comboBoxModule->currentIndex()) {
@@ -68,9 +68,8 @@ void SSLEnum::startScan(){
         Crtsh *crtsh = new Crtsh(*m_scanArgs);
         crtsh->startScan(cThread);
         crtsh->moveToThread(cThread);
-        connect(crtsh, &Crtsh::rawSSL, this, &SSLEnum::onResult);
-        connect(crtsh, &Crtsh::infoLog, this, &SSLEnum::onInfoLog);
-        connect(crtsh, &Crtsh::errorLog, this, &SSLEnum::onErrorLog);
+        connect(crtsh, &Crtsh::resultRawSSL, this, &SSLEnum::onResult);
+        connect(crtsh, &Crtsh::scanLog, this, &SSLEnum::onScanLog);
         connect(this, &SSLEnum::stopScanThread, crtsh, &AbstractOsintModule::onStop);
         connect(cThread, &QThread::finished, this, &SSLEnum::onScanThreadEnded);
         connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);

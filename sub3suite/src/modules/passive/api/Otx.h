@@ -1,11 +1,11 @@
-#ifndef OTXPAID_H
-#define OTXPAID_H
+#ifndef OTX_H
+#define OTX_H
 
 #include "../AbstractOsintModule.h"
 
 
 namespace ModuleInfo {
-struct OtxPaid{
+struct Otx{
     QString name = OSINT_MODULE_OTX;
     QString url = "https://otx.alienvault.com/";
     QString url_apiDoc = "https://otx.alienvault.com/api";
@@ -73,11 +73,11 @@ struct OtxPaid{
 };
 }
 
-class OtxPaid: public AbstractOsintModule{
+class Otx: public AbstractOsintModule{
 
     public:
-        OtxPaid(ScanArgs args);
-        ~OtxPaid() override;
+        Otx(ScanArgs args);
+        ~Otx() override;
 
     public slots:
         void start() override;
@@ -89,4 +89,4 @@ class OtxPaid: public AbstractOsintModule{
     private:
         QString m_key;
 };
-#endif // OTXPAID_H
+#endif // OTX_H

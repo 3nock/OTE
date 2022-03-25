@@ -6,13 +6,13 @@
 ArchiveIt::ArchiveIt(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "ArchiveIt";
+    log.moduleName = OSINT_MODULE_ARCHIVEIT;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedRawNdjson);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedUrl);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ArchiveIt::replyFinishedSubdomain);
 }
 ArchiveIt::~ArchiveIt(){
@@ -23,8 +23,8 @@ void ArchiveIt::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case URL:
             url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+target);
             break;
@@ -35,8 +35,17 @@ void ArchiveIt::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputUrl || args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_URL || args.output_Hostname){
+            url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args.input_URL){
+        if(args.output_URL || args.output_Hostname){
             url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);

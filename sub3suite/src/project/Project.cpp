@@ -76,6 +76,7 @@ void Project::initUI(){
     ui->label_item_type->setProperty("s3s_color", true);
     ui->label_item_modified->setProperty("s3s_color", true);
     ui->plainTextEdit_item_comment->setProperty("text_edit", true);
+    ui->lineEditFind->setPlaceholderText(tr("Find..."));
 
     /* hiding un-used widgets */
     ui->comboBoxFilter->hide();
@@ -165,4 +166,47 @@ void Project::init_menubar_project(){
     menubar_project->addAction("Save", this, [=](){model->saveProject();})->setIcon(QIcon(":/img/res/icons/save.png"));
     menubar_project->addAction("Clear", this, [=](){model->clearModels();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     ui->horizontalLayout_summary_project->insertWidget(0, menubar_project);
+}
+
+///
+/// Find...
+///
+
+void Project::find(const QString &searchTerm, QTextDocument::FindFlags flags){
+    if(ui->plainTextEditJson->find(searchTerm, flags))
+        ui->lineEditFind->setStyleSheet("color: white");
+    else
+        ui->lineEditFind->setStyleSheet("color: rgb(255, 86, 80);");
+}
+
+void Project::on_buttonNext_clicked(){
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    this->find(ui->lineEditFind->text(), flags);
+}
+
+void Project::on_buttonPrev_clicked(){
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    flags |= QTextDocument::FindBackward;
+
+    this->find(ui->lineEditFind->text(), flags);
+}
+
+void Project::on_lineEditFind_textChanged(const QString &searchTerm){
+    /* set cursor to the begining of the document... */
+    QTextCursor currentCursorPosition;
+    currentCursorPosition.setPosition(QTextCursor::Start);
+    ui->plainTextEditJson->setTextCursor(currentCursorPosition);
+
+    /* get option flags... */
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    this->find(searchTerm, flags);
 }

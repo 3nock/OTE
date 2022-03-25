@@ -10,15 +10,15 @@
 
 
 void NSEnum::onResult(s3s_struct::NS results){
-    if(m_resultsSet.contains(results.info_ns))
+    if(m_resultsSet.contains(results.ns))
     {
-        s3s_item::NS *item = m_resultsSet.value(results.info_ns);
+        s3s_item::NS *item = m_resultsSet.value(results.ns);
         item->setValues(results);
     }else {
         s3s_item::NS *item = new s3s_item::NS;
         item->setValues(results);
         m_model->appendRow(item);
-        m_resultsSet.insert(results.info_ns, item);
+        m_resultsSet.insert(results.ns, item);
         ui->labelResultsCount->setNum(proxyModel->rowCount());
     }
 
@@ -26,22 +26,22 @@ void NSEnum::onResult(s3s_struct::NS results){
         project->addEnumNS(results);
 }
 
-void NSEnum::onErrorLog(ScanLog log){
-    QString message("<font color=\"red\">"+log.message+"</font>");
-    QString module("<font color=\"red\">"+log.moduleName+"</font>");
-    QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
-    ui->plainTextEditLogs->appendPlainText("");
-
-    m_failedScans.insert(log.target, log.message);
-}
-
-void NSEnum::onInfoLog(ScanLog log){
-    QString module("<font color=\"green\">"+log.moduleName+"</font>");
-    QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
-    ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
-    ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-    ui->plainTextEditLogs->appendPlainText("");
+void NSEnum::onScanLog(ScanLog log){
+    if(log.error){
+        QString message("<font color=\"red\">"+log.message+"</font>");
+        QString module("<font color=\"red\">"+log.moduleName+"</font>");
+        QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
+        ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+        ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+        ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
+        ui->plainTextEditLogs->appendPlainText("");
+        m_failedScans.insert(log.target, log.message);
+    }
+    else{
+        QString module("<font color=\"green\">"+log.moduleName+"</font>");
+        QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
+        ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+        ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
+        ui->plainTextEditLogs->appendPlainText("");
+    }
 }

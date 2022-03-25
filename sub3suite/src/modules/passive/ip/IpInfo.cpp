@@ -17,11 +17,11 @@ IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "IpInfo";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedRawJson);
-    if(args.outputInfoIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedInfoIp);
-    if(args.outputSubdomain)
+    if(args.output_EnumIP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedEnumIP);
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
     ///
     /// getting the api key...
@@ -39,8 +39,8 @@ void IpInfo::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case IP:
             url.setUrl("https://ipinfo.io/"+target+"/json?token="+m_key);
             break;
@@ -60,7 +60,7 @@ void IpInfo::start(){
         return;
     }
 
-    if(args.outputInfoIp){
+    if(args.output_EnumIP){
         url.setUrl("https://ipinfo.io/"+target+"/json?token="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -68,8 +68,8 @@ void IpInfo::start(){
         return;
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_Hostname){
             url.setUrl("https://ipinfo.io/domains"+target+"/json?token="+m_key);
             request.setAttribute(QNetworkRequest::User, HOSTED_DOMAINS);
             request.setUrl(url);
@@ -99,7 +99,7 @@ void IpInfo::replyFinishedSubdomain(QNetworkReply *reply){
     end(reply);
 }
 
-void IpInfo::replyFinishedInfoIp(QNetworkReply *reply){
+void IpInfo::replyFinishedEnumIP(QNetworkReply *reply){
     if(reply->error()){
         quitThread();
         return;

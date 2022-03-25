@@ -1,11 +1,11 @@
-#ifndef MNEMONICPAID_H
-#define MNEMONICPAID_H
+#ifndef MNEMONIC_H
+#define MNEMONIC_H
 
 #include "../AbstractOsintModule.h"
 
 
 namespace ModuleInfo {
-struct MnemonicPaid{
+struct Mnemonic{
     QString name = OSINT_MODULE_MNEMONIC;
     QString url = "https://www.mnemonic.no/";
     QString url_apiDoc = "https://docs.mnemonic.no/";
@@ -32,11 +32,11 @@ struct MnemonicPaid{
 };
 }
 
-class MnemonicPaid: public AbstractOsintModule{
+class Mnemonic: public AbstractOsintModule{
 
     public:
-        MnemonicPaid(ScanArgs args);
-        ~MnemonicPaid() override;
+        Mnemonic(ScanArgs args);
+        ~Mnemonic() override;
 
     public slots:
         void start() override;
@@ -47,4 +47,4 @@ class MnemonicPaid: public AbstractOsintModule{
         QString m_key;
 };
 
-#endif // MNEMONICPAID_H
+#endif // MNEMONIC_H

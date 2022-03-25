@@ -27,8 +27,7 @@ class SSLEnum : public AbstractEnum {
         void onResult(QByteArray);
 
         void onScanThreadEnded();
-        void onInfoLog(ScanLog log);
-        void onErrorLog(ScanLog log);
+        void onScanLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);

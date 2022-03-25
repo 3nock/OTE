@@ -31,7 +31,7 @@ class IpApi: public AbstractOsintModule{
 
     public slots:
         void start() override;
-        void replyFinishedInfoIp(QNetworkReply *) override;
+        void replyFinishedEnumIP(QNetworkReply *) override;
 
     private:
         QString m_key = nullptr;

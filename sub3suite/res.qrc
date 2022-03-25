@@ -60,7 +60,6 @@
         <file>res/icons/extract.png</file>
         <file>res/icons/send.png</file>
         <file>res/icons/sub3suite.png</file>
-        <file>res/icons/splash.png</file>
         <file>res/icons/main_logo.ico</file>
         <file>res/icons/downArrow.png</file>
         <file>res/icons/radio_checked_focus.png</file>
@@ -69,6 +68,7 @@
         <file>res/icons/radio_unchecked.png</file>
         <file>res/icons/copy.png</file>
         <file>res/icons/duplicate.png</file>
+        <file>res/icons/splash.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>

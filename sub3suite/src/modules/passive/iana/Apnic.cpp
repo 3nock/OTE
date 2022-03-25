@@ -13,7 +13,7 @@ Apnic::Apnic(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Apnic";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Apnic::replyFinishedRawJson);
 }
 Apnic::~Apnic(){
@@ -24,8 +24,8 @@ void Apnic::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case IP:
             url.setUrl("http://rdap.apnic.net/ip/"+target);
             break;

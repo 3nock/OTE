@@ -14,7 +14,7 @@ BotScout::BotScout(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "BotScout";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BotScout::replyFinishedRawJson);
 }
 BotScout::~BotScout(){
@@ -25,8 +25,8 @@ void BotScout::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ALL:
             url.setUrl("http://botscout.com/test/?all="+target);
             break;

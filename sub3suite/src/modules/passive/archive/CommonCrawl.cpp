@@ -9,7 +9,7 @@
 CommonCrawl::CommonCrawl(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "CommonCrawl";
+    log.moduleName = OSINT_MODULE_COMMONCRAWL;
 }
 CommonCrawl::~CommonCrawl(){
     delete manager;
@@ -46,17 +46,45 @@ void CommonCrawl::replyFinishedIndex(QNetworkReply *reply){
     disconnect(manager, &s3sNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedIndex);
 
     /* make new manager connection depending on user output */
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedUrl);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CommonCrawl::replyFinishedSubdomain);
 
-    /* send request to get the subdomains/urls */
-    QUrl url(urlList.at(0)+"?url=*."+target+"&output=json&fl=url");
     QNetworkRequest request;
-    request.setUrl(url);
-    manager->get(request);
-    activeRequests++;
+    QUrl url;
+
+    if(args.input_Domain){
+        if(args.output_Hostname){
+            url.setUrl(urlList.at(0)+"?url=*."+target+"&output=json&fl=url");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args.output_URL){
+            url.setUrl(urlList.at(0)+"?url="+target+"/*&output=json&fl=url");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+
+    }
+
+    if(args.input_Domain){
+        if(args.output_Hostname){
+            url.setUrl(urlList.at(0)+"?url="+target+"&output=json&fl=url");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args.output_URL){
+            url.setUrl(urlList.at(0)+"?url="+target+"/*&output=json&fl=url");
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+
+    }
 
     end(reply);
 }

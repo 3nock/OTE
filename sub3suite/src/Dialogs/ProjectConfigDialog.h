@@ -4,7 +4,7 @@
 #include <QMap>
 #include <QDialog>
 
-#include "src/project/model/ProjectModel.h"
+#include "src/models/ProjectModel.h"
 
 namespace Ui {
 class ProjectConfigDialog;

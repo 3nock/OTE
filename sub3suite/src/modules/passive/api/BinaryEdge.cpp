@@ -23,13 +23,13 @@ BinaryEdge::BinaryEdge(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_BINARYEDGE;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedRawJson);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomainIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedIp);
 
     /* getting api key */
@@ -45,8 +45,8 @@ void BinaryEdge::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case DOMAIN_DNS:
             url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+target);
             break;
@@ -86,8 +86,8 @@ void BinaryEdge::start(){
         return;
     }
 
-    if(args.inputIp){
-        if(args.outputIp || args.outputSubdomainIp || args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_IP || args.output_HostnameIP || args.output_Hostname){
             url.setUrl("https://api.binaryedge.io/v2/query/ip/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_IP);
             request.setUrl(url);
@@ -97,8 +97,8 @@ void BinaryEdge::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://api.binaryedge.io/v2/query/domains/subdomain/"+target+"?page="+QString::number(m_page));
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAIN);
             request.setUrl(url);
@@ -106,7 +106,7 @@ void BinaryEdge::start(){
             activeRequests++;
         }
 
-        if(args.outputSubdomainIp || args.outputIp){
+        if(args.output_HostnameIP || args.output_IP){
             url.setUrl("https://api.binaryedge.io/v2/query/domains/dns/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_DNS);
             request.setUrl(url);

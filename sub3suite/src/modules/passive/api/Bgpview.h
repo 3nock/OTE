@@ -57,11 +57,11 @@ class Bgpview: public AbstractOsintModule{
         void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedCidr(QNetworkReply *reply) override;
         /* ... */
-        void replyFinishedInfoAsn(QNetworkReply *reply) override;
-        void replyFinishedInfoAsnPeers(QNetworkReply *reply) override;
-        void replyFinishedInfoAsnPrefixes(QNetworkReply *reply) override;
+        void replyFinishedEnumASN(QNetworkReply *reply) override;
+        void replyFinishedEnumASNPeers(QNetworkReply *reply) override;
+        void replyFinishedEnumASNPrefixes(QNetworkReply *reply) override;
         /* ... */
-        void replyFinishedInfoCidr(QNetworkReply *reply) override;
+        void replyFinishedEnumCIDR(QNetworkReply *reply) override;
 };
 
 #endif // BGPVIEW_H

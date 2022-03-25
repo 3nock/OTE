@@ -9,11 +9,11 @@ Dnsdumpster::Dnsdumpster(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "DnsDumpster";
 
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomainIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedIp);
 }
 Dnsdumpster::~Dnsdumpster(){
@@ -44,7 +44,7 @@ void Dnsdumpster::replyFinishedSubdomainIp(QNetworkReply *reply){
     else{
         QStack<GumboNode*> nodes;
         GumboOutput *output = gumbo_parse(reply->readAll());
-        nodes.push(this->getBody(output->root));
+        nodes.push(getBody(output->root));
 
         GumboNode *node;
         while(!nodes.isEmpty())
@@ -91,7 +91,7 @@ void Dnsdumpster::replyFinishedSubdomain(QNetworkReply *reply){
     else{
         QStack<GumboNode*> nodes;
         GumboOutput *output = gumbo_parse(reply->readAll());
-        nodes.push(this->getBody(output->root));
+        nodes.push(getBody(output->root));
 
         GumboNode *node;
         while(!nodes.isEmpty())
@@ -140,7 +140,7 @@ void Dnsdumpster::replyFinishedIp(QNetworkReply *reply){
     else{
         QStack<GumboNode*> nodes;
         GumboOutput *output = gumbo_parse(reply->readAll());
-        nodes.push(this->getBody(output->root));
+        nodes.push(getBody(output->root));
 
         GumboNode *node;
         while(!nodes.isEmpty())
@@ -184,7 +184,7 @@ void Dnsdumpster::m_getToken(QNetworkReply *reply){
     QStack<GumboNode*> nodes;
 
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty()){

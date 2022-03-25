@@ -16,10 +16,10 @@ IpApi::IpApi(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "IpApi";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedRawJson);
-    if(args.outputInfoIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedInfoIp);
+    if(args.output_EnumIP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedEnumIP);
     ///
     /// get api key...
     ///
@@ -35,8 +35,8 @@ void IpApi::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case STANDARD_LOOKUP:
             url.setUrl("http://api.ipapi.com/api/"+target+"?access_key="+m_key);
             break;
@@ -53,7 +53,7 @@ void IpApi::start(){
         return;
     }
 
-    if(args.outputInfoIp){
+    if(args.output_EnumIP){
         url.setUrl("http://api.ipapi.com/api/"+target+"?access_key="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -61,7 +61,7 @@ void IpApi::start(){
     }
 }
 
-void IpApi::replyFinishedInfoIp(QNetworkReply *reply){
+void IpApi::replyFinishedEnumIP(QNetworkReply *reply){
     if(reply->error()){
         quitThread();
         return;

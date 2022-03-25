@@ -28,8 +28,7 @@ class MXEnum : public AbstractEnum {
         void onResult(s3s_struct::MX);
 
         void onScanThreadEnded();
-        void onInfoLog(ScanLog log);
-        void onErrorLog(ScanLog log);
+        void onScanLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);

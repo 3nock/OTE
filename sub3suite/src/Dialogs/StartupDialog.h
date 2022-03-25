@@ -5,7 +5,7 @@
 #include <QStandardItemModel>
 
 #include "src/utils/s3s.h"
-#include "src/project/model/ProjectModel.h"
+#include "src/models/ProjectModel.h"
 
 
 namespace Ui {

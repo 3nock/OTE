@@ -17,14 +17,23 @@ TEMPLATE = app
 # show deprecated functions warnings
 DEFINES += QT_DEPRECATED_WARNINGS
 
-# adding compiler versions to be used. c99 for compiling gumbo-parser &
-# c++11 for compiling the rest of the project
+# compiler versions
 CONFIG += c99
 CONFIG += c++11
 
-QMAKE_CXXFLAGS+=/Zi
-QMAKE_LFLAGS+= /INCREMENTAL:NO /Debug
+# debug information
+win32-msvc* {
+    QMAKE_LFLAGS_RELEASE += /MAP
+    QMAKE_CFLAGS_RELEASE += /Zi
+    QMAKE_LFLAGS_RELEASE += /INCREMENTAL:NO /debug /opt:ref
+}
 
+unix {
+    CONFIG += separate_debug_info
+    QMAKE_CXXFLAGS += -g
+}
+
+# included external libraries
 include(../include/gumbo-parser.pri)
 include(../include/breakpad.pri)
 
@@ -109,13 +118,18 @@ SOURCES += \
     src/items/IPItem.cpp \
     src/items/MXItem.cpp \
     src/items/NSItem.cpp \
+    src/models/ExplorerModel.cpp \
     src/modules/active/URLScanner.cpp \
+    src/modules/passive/ParserMethods.cpp \
+    src/modules/passive/api/HackerTarget.cpp \
+    src/modules/passive/api/Mnemonic.cpp \
+    src/modules/passive/api/Otx.cpp \
     src/modules/passive/api/PassiveTotal.cpp \
+    src/modules/passive/api/Robtex.cpp \
     src/project/Project_contextmenu.cpp \
-    src/project/model/Explorer.cpp \
-    src/project/model/ProjectModel.cpp \
-    src/project/model/ProjectModel_serialization.cpp \
-    src/project/model/ProjectModel_slots.cpp \
+    src/models/ProjectModel.cpp \
+    src/models/ProjectModel_serialization.cpp \
+    src/models/ProjectModel_slots.cpp \
     src/items/RawItem.cpp \
     src/items/SSLItem.cpp \
     src/items/URLItem.cpp \
@@ -150,17 +164,13 @@ SOURCES += \
     src/modules/passive/api/Dnslytics.cpp \
     src/modules/passive/api/DomainTools.cpp \
     src/modules/passive/api/HackerTargetFree.cpp \
-    src/modules/passive/api/HackerTargetPaid.cpp \
     src/modules/passive/api/Maltiverse.cpp \
     src/modules/passive/api/MnemonicFree.cpp \
-    src/modules/passive/api/MnemonicPaid.cpp \
     src/modules/passive/api/N45HT.cpp \
     src/modules/passive/api/Onyphe.cpp \
     src/modules/passive/api/OtxFree.cpp \
-    src/modules/passive/api/OtxPaid.cpp \
     src/modules/passive/iana/Ripe.cpp \
     src/modules/passive/api/RobtexFree.cpp \
-    src/modules/passive/api/RobtexPaid.cpp \
     src/modules/passive/api/SpamHaus.cpp \
     src/modules/passive/api/WebResolver.cpp \
     src/modules/passive/iana/Afrinic.cpp \
@@ -269,10 +279,14 @@ HEADERS += \
     src/items/IPItem.h \
     src/items/MXItem.h \
     src/items/NSItem.h \
+    src/models/ExplorerModel.h \
     src/modules/active/URLScanner.h \
+    src/modules/passive/ParserMethods.h \
+    src/modules/passive/api/HackerTarget.h \
+    src/modules/passive/api/Mnemonic.h \
+    src/modules/passive/api/Otx.h \
     src/modules/passive/api/PassiveTotal.h \
-    src/project/model/Explorer.h \
-    src/project/model/ProjectModel.h \
+    src/models/ProjectModel.h \
     src/items/RawItem.h \
     src/items/SSLItem.h \
     src/items/URLItem.h \
@@ -285,6 +299,7 @@ HEADERS += \
     src/modules/passive/api/LeakIX.h \
     src/modules/passive/api/NetworksDB.h \
     src/modules/passive/api/NeutrinoApi.h \
+    src/modules/passive/api/Robtex.h \
     src/modules/passive/api/Seon.h \
     src/modules/passive/api/SpyOnWeb.h \
     src/modules/passive/api/Wappalyzer.h \
@@ -309,17 +324,13 @@ HEADERS += \
     src/modules/passive/api/Dnslytics.h \
     src/modules/passive/api/DomainTools.h \
     src/modules/passive/api/HackerTargetFree.h \
-    src/modules/passive/api/HackerTargetPaid.h \
     src/modules/passive/api/Maltiverse.h \
     src/modules/passive/api/MnemonicFree.h \
-    src/modules/passive/api/MnemonicPaid.h \
     src/modules/passive/api/N45HT.h \
     src/modules/passive/api/Onyphe.h \
     src/modules/passive/api/OtxFree.h \
-    src/modules/passive/api/OtxPaid.h \
     src/modules/passive/iana/Ripe.h \
     src/modules/passive/api/RobtexFree.h \
-    src/modules/passive/api/RobtexPaid.h \
     src/modules/passive/api/SpamHaus.h \
     src/modules/passive/api/WebResolver.h \
     src/modules/passive/iana/Afrinic.h \
@@ -446,8 +457,6 @@ FORMS += \
 
 RESOURCES += \
     res.qrc
-
-DISTFILES +=
 
 # setting the icon...
 RC_ICONS = res/icons/main_logo.ico

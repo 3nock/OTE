@@ -18,15 +18,15 @@ SpyOnWeb::SpyOnWeb(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_SPYONWEB;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedRawJson);
-    if(args.outputInfoNS)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedInfoNS);
-    if(args.outputIp)
+    if(args.output_EnumNS)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedEnumNS);
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomainIp);
 
     /* getting api key */
@@ -40,8 +40,8 @@ void SpyOnWeb::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case DOMAIN_API:
             url.setUrl("https://api.spyonweb.com/v1/domain/"+target+"?access_token="+m_key);
             break;
@@ -70,8 +70,8 @@ void SpyOnWeb::start(){
         return;
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_Hostname){
             url.setUrl("https://api.spyonweb.com/v1/ip/"+target+"?access_token="+m_key);
             request.setAttribute(QNetworkRequest::User, IP_API);
             request.setUrl(url);
@@ -80,8 +80,8 @@ void SpyOnWeb::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+    if(args.input_Domain){
+        if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://api.spyonweb.com/v1/domain/"+target+"?access_token="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAIN_API);
             request.setUrl(url);
@@ -94,7 +94,7 @@ void SpyOnWeb::start(){
     /// NS info ...
     ///
 
-    if(args.outputInfoNS){
+    if(args.output_EnumNS){
         url.setUrl("https://api.spyonweb.com/v1/dns_domain/"+target+"?access_token="+m_key);
         request.setAttribute(QNetworkRequest::User, DOMAINS_ON_NAMESERVER);
         request.setUrl(url);
@@ -198,7 +198,7 @@ void SpyOnWeb::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void SpyOnWeb::replyFinishedInfoNS(QNetworkReply *reply){
+void SpyOnWeb::replyFinishedEnumNS(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -206,15 +206,16 @@ void SpyOnWeb::replyFinishedInfoNS(QNetworkReply *reply){
 
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject result = document.object()["result"].toObject();
-
-    s3s_struct::NS ns;
-    ns.info_ns = target;
-
     QJsonObject dns_domain = result["dns_domain"].toObject();
     QJsonObject nameserver = dns_domain.value(dns_domain.keys().at(0)).toObject();
+
+    s3s_struct::NS ns;
+    ns.ns = target;
+
     foreach(const QString domain, nameserver["items"].toObject().keys())
         ns.domains.insert(domain);
-    emit infoNS(ns);
+
+    emit resultEnumNS(ns);
 
     end(reply);
 }

@@ -12,7 +12,7 @@ HaveIBeenPawned::HaveIBeenPawned(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_HAVEIBEENPAWNED;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HaveIBeenPawned::replyFinishedRawJson);
 
     /* getting api key */
@@ -28,8 +28,8 @@ void HaveIBeenPawned::start(){
     request.setRawHeader("hibp-api-key", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case BREACHED_ACCOUNT:
             url.setUrl("https://haveibeenpwned.com/api/v3/breachedaccount/"+QUrl::toPercentEncoding(target));
             break;

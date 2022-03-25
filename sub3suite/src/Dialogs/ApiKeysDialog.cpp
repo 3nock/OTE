@@ -31,7 +31,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("bing", ui->lineEditBing->text());
     APIKEY.setValue("censys_id", ui->lineEditCensysId->text());
     APIKEY.setValue("censys_secret", ui->lineEditCensysSecret->text());
-    APIKEY.setValue("certspotter", ui->lineEditCertspotter->text());
+    APIKEY.setValue(OSINT_MODULE_CERTSPOTTER, ui->lineEditCertspotter->text());
     APIKEY.setValue("cloudflare", ui->lineEditCloudflare->text());
     APIKEY.setValue(OSINT_MODULE_GITHUB, ui->lineEditGithub->text());
     APIKEY.setValue("google", ui->lineEditGoogle->text());
@@ -123,7 +123,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditCensysSecret->setText(key);
         ui->buttonGetCensys->hide();
     }
-    key = APIKEY.value("certspotter").toString();
+    key = APIKEY.value(OSINT_MODULE_CERTSPOTTER).toString();
     if(!key.isEmpty()){
         ui->lineEditCertspotter->setText(key);
         ui->buttonGetCertspotter->hide();

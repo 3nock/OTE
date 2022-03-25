@@ -12,13 +12,13 @@ Dnsbufferoverun::Dnsbufferoverun(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_DNSBUFFEROVERRUN;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedSubdomainIp);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsbufferoverun::replyFinishedIp);
 }
 Dnsbufferoverun::~Dnsbufferoverun(){
@@ -29,8 +29,8 @@ void Dnsbufferoverun::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case SUBOMAINS:
             url.setUrl("https://dns.bufferover.run/dns?q="+target);
             break;
@@ -41,8 +41,8 @@ void Dnsbufferoverun::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_HostnameIP || args.output_Hostname || args.output_IP){
             url.setUrl("https://dns.bufferover.run/dns?q="+target);
             request.setUrl(url);
             manager->get(request);

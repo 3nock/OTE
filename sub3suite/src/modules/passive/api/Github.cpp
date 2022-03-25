@@ -11,9 +11,9 @@ Github::Github(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_GITHUB;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Github::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Github::replyFinishedSubdomain);
 
     /* getting the api-key */
@@ -30,8 +30,8 @@ void Github::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case CODE:
             url.setUrl("https://api.github.com/search/code?q="+target+"&type=Code&page=1&per_page=100");
             break;
@@ -42,7 +42,7 @@ void Github::start(){
         return;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://api.github.com/search/code?q="+target+"&type=Code&page=1&per_page=100");
         request.setUrl(url);
         request.setAttribute(QNetworkRequest::User, CODE);

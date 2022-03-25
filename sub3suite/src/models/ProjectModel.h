@@ -27,7 +27,7 @@
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 
-#include "Explorer.h"
+#include "ExplorerModel.h"
 
 /* TODO:
  *      compress & decompress data before saving and loading project,
@@ -104,7 +104,7 @@ public:
 public:
     bool modified = false;
     QTextDocument notes;
-    Explorer *explorer;
+    ExplorerModel *explorer;
 
     /* active Results Model */
     QStandardItemModel *activeHost;

@@ -90,8 +90,8 @@ class DomainTools: public AbstractOsintModule{
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedInfoMX(QNetworkReply *reply) override;
-        void replyFinishedInfoNS(QNetworkReply *reply) override;
+        void replyFinishedEnumMX(QNetworkReply *reply) override;
+        void replyFinishedEnumNS(QNetworkReply *reply) override;
 
     private:
         QString m_key;

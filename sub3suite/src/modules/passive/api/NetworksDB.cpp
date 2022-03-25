@@ -23,17 +23,17 @@ NetworksDB::NetworksDB(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_NETWORKSDB;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedIp);
-    if(args.outputCidr)
+    if(args.output_CIDR)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedCidr);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedAsn);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomainIp);
 
     /* getting api key */
@@ -48,8 +48,8 @@ void NetworksDB::start(){
     request.setRawHeader("X-Api-Key", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case AS_INFO:
             url.setUrl("https://networksdb.io/api/asn-info?asn="+target);
             break;
@@ -87,15 +87,15 @@ void NetworksDB::start(){
         return;
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_Hostname){
             url.setUrl("https://networksdb.io/api/reverse-dns?ip="+target);
             request.setAttribute(QNetworkRequest::User, DOMAINS_ON_IP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputCidr){
+        if(args.output_CIDR){
             url.setUrl("https://networksdb.io/api/ip-info?ip="+target);
             request.setAttribute(QNetworkRequest::User, IP_INFO);
             request.setUrl(url);
@@ -104,8 +104,8 @@ void NetworksDB::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputIp){
+    if(args.input_Domain){
+        if(args.output_IP){
             url.setUrl("https://networksdb.io/api/dns?domain="+target);
             request.setAttribute(QNetworkRequest::User, IPS_FOR_DOMAIN);
             request.setUrl(url);
@@ -114,8 +114,8 @@ void NetworksDB::start(){
         }
     }
 
-    if(args.inputAsn){
-        if(args.outputCidr){
+    if(args.input_ASN){
+        if(args.output_CIDR){
             url.setUrl("https://networksdb.io/api/asn-networks?asn="+target);
             request.setAttribute(QNetworkRequest::User, AS_NETWORKS);
             request.setUrl(url);
@@ -124,8 +124,8 @@ void NetworksDB::start(){
         }
     }
 
-    if(args.inputCidr){
-        if(args.outputSubdomain || args.outputIp || args.outputSubdomainIp){
+    if(args.input_CIDR){
+        if(args.output_Hostname || args.output_IP || args.output_HostnameIP){
             url.setUrl("https://networksdb.io/api/mass-reverse-dns?cidr="+target);
             request.setAttribute(QNetworkRequest::User, DOMAINS_IN_NETWORK);
             request.setUrl(url);
@@ -134,8 +134,8 @@ void NetworksDB::start(){
         }
     }
 
-    if(args.inputQueryTerm){
-        if(args.outputAsn){
+    if(args.input_Search){
+        if(args.output_ASN){
             url.setUrl("https://networksdb.io/api/org-search?search="+target);
             request.setAttribute(QNetworkRequest::User, ORG_SEARCH);
             request.setUrl(url);

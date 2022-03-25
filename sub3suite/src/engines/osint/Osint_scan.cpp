@@ -40,21 +40,21 @@ void Osint::startScan(){
     ui->progressBar->reset();
     ui->progressBar->clearMask();
     m_scanArgs->targets.clear();
-    m_scanArgs->inputDomain = false;
-    m_scanArgs->inputIp = false;
-    m_scanArgs->inputEmail = false;
-    m_scanArgs->inputUrl = false;
-    m_scanArgs->inputAsn = false;
-    m_scanArgs->inputSSL = false;
-    m_scanArgs->inputCidr = false;
-    m_scanArgs->outputSubdomainIp = false;
-    m_scanArgs->outputSubdomain = false;
-    m_scanArgs->outputIp = false;
-    m_scanArgs->outputEmail = false;
-    m_scanArgs->outputUrl = false;
-    m_scanArgs->outputAsn = false;
-    m_scanArgs->outputSSL = false;
-    m_scanArgs->outputCidr = false;
+    m_scanArgs->input_Domain = false;
+    m_scanArgs->input_IP = false;
+    m_scanArgs->input_Email = false;
+    m_scanArgs->input_URL = false;
+    m_scanArgs->input_ASN = false;
+    m_scanArgs->input_SSL = false;
+    m_scanArgs->input_CIDR = false;
+    m_scanArgs->output_HostnameIP = false;
+    m_scanArgs->output_Hostname = false;
+    m_scanArgs->output_IP = false;
+    m_scanArgs->output_Email = false;
+    m_scanArgs->output_URL = false;
+    m_scanArgs->output_ASN = false;
+    m_scanArgs->output_SSL = false;
+    m_scanArgs->output_CIDR = false;
     total_modules = 0;
 
     /* get the targets... */
@@ -67,56 +67,56 @@ void Osint::startScan(){
     /* getting input type as specified by user */
     switch(ui->comboBoxInput->currentIndex()){
     case INPUT::HOSTNAME:
-        m_scanArgs->inputDomain = true;
+        m_scanArgs->input_Domain = true;
         break;
     case INPUT::IP:
-        m_scanArgs->inputIp = true;
+        m_scanArgs->input_IP = true;
         break;
     case INPUT::EMAIL:
-        m_scanArgs->inputEmail = true;
+        m_scanArgs->input_Email = true;
         break;
     case INPUT::URL:
-        m_scanArgs->inputUrl = true;
+        m_scanArgs->input_URL = true;
         break;
     case INPUT::ASN:
-        m_scanArgs->inputAsn = true;
+        m_scanArgs->input_ASN = true;
         break;
     case INPUT::CERT:
-        m_scanArgs->inputSSL = true;
+        m_scanArgs->input_SSL = true;
         break;
     case INPUT::CIDR:
-        m_scanArgs->inputCidr = true;
+        m_scanArgs->input_CIDR = true;
         break;
     case INPUT::QUERY_TERM:
-        m_scanArgs->inputQueryTerm = true;
+        m_scanArgs->input_Search = true;
         break;
     }
 
     /* getting output type as specified by users */
     switch(ui->comboBoxOutput->currentIndex()){
     case osint::OUTPUT::SUBDOMAINIP:
-        m_scanArgs->outputSubdomainIp = true;
+        m_scanArgs->output_HostnameIP = true;
         break;
     case osint::OUTPUT::SUBDOMAIN:
-        m_scanArgs->outputSubdomain = true;
+        m_scanArgs->output_Hostname = true;
         break;
     case osint::OUTPUT::IP:
-        m_scanArgs->outputIp = true;
+        m_scanArgs->output_IP = true;
         break;
     case osint::OUTPUT::EMAIL:
-        m_scanArgs->outputEmail = true;
+        m_scanArgs->output_Email = true;
         break;
     case osint::OUTPUT::URL:
-        m_scanArgs->outputUrl = true;
+        m_scanArgs->output_URL = true;
         break;
     case osint::OUTPUT::ASN:
-        m_scanArgs->outputAsn = true;
+        m_scanArgs->output_ASN = true;
         break;
     case osint::OUTPUT::CERT:
-        m_scanArgs->outputSSL = true;
+        m_scanArgs->output_SSL = true;
         break;
     case osint::OUTPUT::CIDR:
-        m_scanArgs->outputCidr = true;
+        m_scanArgs->output_CIDR = true;
         break;
     }
 
@@ -148,13 +148,13 @@ void Osint::startScan(){
         this->startScanThread(new HackerTargetFree(*m_scanArgs));
 
     if(ui->moduleHackerTargetPaid->isChecked())
-        this->startScanThread(new HackerTargetPaid(*m_scanArgs));
+        this->startScanThread(new HackerTarget(*m_scanArgs));
 
     if(ui->moduleMnemonicFree->isChecked())
         this->startScanThread(new MnemonicFree(*m_scanArgs));
 
     if(ui->moduleMnemonicPaid->isChecked())
-        this->startScanThread(new MnemonicPaid(*m_scanArgs));
+        this->startScanThread(new Mnemonic(*m_scanArgs));
 
     if(ui->moduleOmnisint->isChecked())
         this->startScanThread(new Omnisint(*m_scanArgs));
@@ -163,7 +163,7 @@ void Osint::startScan(){
         this->startScanThread(new OtxFree(*m_scanArgs));
 
     if(ui->moduleOtxPaid->isChecked())
-        this->startScanThread(new OtxPaid(*m_scanArgs));
+        this->startScanThread(new Otx(*m_scanArgs));
 
     if(ui->moduleProjectdiscovery->isChecked())
         this->startScanThread(new Projectdiscovery(*m_scanArgs));
@@ -175,7 +175,7 @@ void Osint::startScan(){
         this->startScanThread(new RobtexFree(*m_scanArgs));
 
     if(ui->moduleRobtexPaid->isChecked())
-        this->startScanThread(new RobtexPaid(*m_scanArgs));
+        this->startScanThread(new Robtex(*m_scanArgs));
 
     if(ui->moduleSecuritytrails->isChecked())
         this->startScanThread(new SecurityTrails(*m_scanArgs));
@@ -403,8 +403,7 @@ void Osint::startScanThread(AbstractOsintModule *module){
         break;
     }
     connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
-    connect(module, &AbstractOsintModule::errorLog, this, &Osint::onErrorLog);
-    connect(module, &AbstractOsintModule::infoLog, this, &Osint::onInfoLog);
+    connect(module, &AbstractOsintModule::scanLog, this, &Osint::onScanLog);
     connect(this, &Osint::stopScanThread, module, &AbstractOsintModule::onStop);
     connect(cThread, &QThread::finished, this, &Osint::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);

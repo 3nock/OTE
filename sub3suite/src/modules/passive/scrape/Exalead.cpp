@@ -10,11 +10,11 @@ Exalead::Exalead(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Exalead";
 
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedSubdomain);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedEmail);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedUrl);
 }
 Exalead::~Exalead(){
@@ -24,15 +24,15 @@ Exalead::~Exalead(){
 void Exalead::start(){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             QUrl url("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
 
-        if(args.outputUrl){
+        if(args.output_URL){
             QUrl url("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
             request.setUrl(url);
             manager->get(request);
@@ -49,7 +49,7 @@ void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -100,7 +100,7 @@ void Exalead::replyFinishedUrl(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())

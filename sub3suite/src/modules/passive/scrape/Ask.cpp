@@ -7,11 +7,11 @@ Ask::Ask(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Ask";
 
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ask::replyFinishedSubdomain);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ask::replyFinishedEmail);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ask::replyFinishedUrl);
 }
 Ask::~Ask(){
@@ -21,8 +21,8 @@ Ask::~Ask(){
 void Ask::start(){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
             request.setUrl(url);
             manager->get(request);
@@ -30,7 +30,7 @@ void Ask::start(){
             activeRequests++;
         }
 
-        if(args.outputUrl){
+        if(args.output_URL){
             QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
             request.setUrl(url);
             manager->get(request);
@@ -38,7 +38,7 @@ void Ask::start(){
             activeRequests++;
         }
 
-        if(args.outputEmail){
+        if(args.output_Email){
             QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
             request.setUrl(url);
             manager->get(request);
@@ -56,7 +56,7 @@ void Ask::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -126,7 +126,7 @@ void Ask::replyFinishedUrl(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(this->getBody(output->root));
+    nodes.push(getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -176,8 +176,8 @@ void Ask::replyFinishedUrl(QNetworkReply *reply){
 void Ask::sendRequests(){
     QNetworkRequest request;
 
-    if(args.inputDomain){
-        if(args.outputSubdomain)
+    if(args.input_Domain){
+        if(args.output_Hostname)
         {
             ///
             /// getting the max pages to query...

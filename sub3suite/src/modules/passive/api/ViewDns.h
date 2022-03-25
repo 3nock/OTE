@@ -62,8 +62,8 @@ class ViewDns: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedIp(QNetworkReply *reply) override;
-        void replyFinishedInfoNS(QNetworkReply *reply) override;
-        void replyFinishedInfoMX(QNetworkReply *reply) override;
+        void replyFinishedEnumNS(QNetworkReply *reply) override;
+        void replyFinishedEnumMX(QNetworkReply *reply) override;
 
     private:
         QString m_key = nullptr;

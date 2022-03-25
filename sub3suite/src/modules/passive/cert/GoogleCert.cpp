@@ -12,13 +12,13 @@
 GoogleCert::GoogleCert(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "GoogleCert";
+    log.moduleName = OSINT_MODULE_GOOGLECERT;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedRawJson);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedSSL);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &GoogleCert::replyFinishedSubdomain);
 }
 GoogleCert::~GoogleCert(){

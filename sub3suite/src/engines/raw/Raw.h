@@ -35,8 +35,7 @@ class Raw : public AbstractEngine{
 
     public slots:
         void onScanThreadEnded();
-        void onErrorLog(ScanLog log);
-        void onInfoLog(ScanLog log);
+        void onScanLog(ScanLog log);
 
         void onResults(s3s_struct::RAW raw); // for Json results
         void onResultsTxt(s3s_struct::RAW raw); // for normal txt results
@@ -63,6 +62,9 @@ class Raw : public AbstractEngine{
         void on_buttonNext_clicked();
         void on_buttonPrev_clicked();
         void on_lineEditFind_textEdited(const QString &arg1);
+        void on_buttonNext_json_clicked();
+        void on_buttonPrev_json_clicked();
+        void on_lineEditFind_json_textChanged(const QString &arg1);
 
         /* modules */
         void on_moduleCertspotter_clicked();
@@ -148,7 +150,7 @@ class Raw : public AbstractEngine{
         void on_moduleWappalyzer_clicked();
         void on_modulePassiveTotal_clicked();
 
-private:
+    private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         QStringListModel *m_targetListModel;
@@ -175,6 +177,7 @@ private:
         void startScanThread(AbstractOsintModule *);
 
         void find(const QString &, QTextDocument::FindFlags);
+        void find_json(const QString &, QTextDocument::FindFlags);
         void log(const QString &log);
 
     /* for context menu */

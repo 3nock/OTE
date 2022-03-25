@@ -16,9 +16,9 @@ Hunter::Hunter(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Hunter";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Hunter::replyFinishedRawJson);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
     ///
     /// getting api-key...
@@ -35,8 +35,8 @@ void Hunter::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case ACCOUNT_INFO:
             url.setUrl("https://api.hunter.io/v2/account?api_key="+m_key);
             break;
@@ -60,8 +60,8 @@ void Hunter::start(){
         manager->get(request);
         activeRequests++;
     }
-    if(args.inputDomain){
-        if(args.outputEmail){
+    if(args.input_Domain){
+        if(args.output_Email){
             url.setUrl("https://api.hunter.io/v2/domain-search?domain="+target+"&api_key="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAIN_SEARCH);
             request.setUrl(url);

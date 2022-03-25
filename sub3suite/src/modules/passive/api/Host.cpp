@@ -12,7 +12,7 @@ Host::Host(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_HOST;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Host::replyFinishedRawJson);
 
     /* getting api key */
@@ -27,8 +27,8 @@ void Host::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case DNS:
             url.setUrl("https://host.io/api/dns/"+target+"?token="+m_key);
             break;

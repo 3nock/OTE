@@ -43,9 +43,9 @@ C99::C99(ScanArgs args):
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_C99;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &C99::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
 
     /* getting api key */
@@ -59,8 +59,8 @@ void C99::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ALEXA_RANK:
             url.setUrl("https://api.c99.nl/alexarank?key="+m_key+"&url="+target+"&json");
             break;
@@ -148,8 +148,8 @@ void C99::start(){
         activeRequests++;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             request.setUrl(url);
             request.setAttribute(QNetworkRequest::User, SUBDOMAIN_FINDER);
             manager->get(request);

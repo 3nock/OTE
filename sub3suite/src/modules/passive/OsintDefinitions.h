@@ -49,4 +49,20 @@
 #define OSINT_MODULE_ZETALYTICS "ZETAlytics"
 #define OSINT_MODULE_ZOOMEYE "ZoomEye"
 
+/* archives */
+#define OSINT_MODULE_ARCHIVEIT "ArchiveIt"
+#define OSINT_MODULE_ARCHIVETODAY "ArchiveToday"
+#define OSINT_MODULE_ARQUIVO "Arquivo"
+#define OSINT_MODULE_COMMONCRAWL "CommonCrawl"
+#define OSINT_MODULE_UKWEBARCHIVE "UKWebArchive"
+#define OSINT_MODULE_WAYBACKMACHINE "WaybackMachine"
+
+/* certifcates */
+#define OSINT_MODULE_CENSYS "Censys"
+#define OSINT_MODULE_CERTSPOTTER "CertSpotter"
+#define OSINT_MODULE_CRTSH "Crtsh"
+#define OSINT_MODULE_GOOGLECERT "GoogleCert"
+
+/* emails */
+
 #endif // OSINTDEFINITIONS_H

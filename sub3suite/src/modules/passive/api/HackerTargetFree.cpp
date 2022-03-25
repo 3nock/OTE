@@ -19,17 +19,17 @@ HackerTargetFree::HackerTargetFree(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_HACKERTARGET;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedRawTxt);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomainIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedIp);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedAsn);
-    if(args.outputCidr)
+    if(args.output_CIDR)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTargetFree::replyFinishedCidr);
 }
 HackerTargetFree::~HackerTargetFree(){
@@ -40,8 +40,8 @@ void HackerTargetFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case ASLOOKUP:
             if(!target.startsWith("AS", Qt::CaseInsensitive))
                 target = "AS"+target;
@@ -86,8 +86,8 @@ void HackerTargetFree::start(){
         activeRequests++;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_HostnameIP || args.output_Hostname || args.output_IP){
             url.setUrl("https://api.hackertarget.com/hostsearch/?q="+target);
             request.setAttribute(QNetworkRequest::User, HOSTSEARCH);
             request.setUrl(url);
@@ -96,15 +96,15 @@ void HackerTargetFree::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputAsn){
+    if(args.input_IP){
+        if(args.output_ASN){
             url.setUrl("https://api.hackertarget.com/aslookup/?q="+target);
             request.setAttribute(QNetworkRequest::User, ASLOOKUP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSubdomain){
+        if(args.output_Hostname){
             url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+target);
             request.setAttribute(QNetworkRequest::User, REVERSE_IPLOOKUP);
             request.setUrl(url);
@@ -113,8 +113,8 @@ void HackerTargetFree::start(){
         }
     }
 
-    if(args.inputAsn){
-        if(args.outputCidr){
+    if(args.input_ASN){
+        if(args.output_CIDR){
             if(!target.startsWith("AS", Qt::CaseInsensitive))
                 target = "AS"+target;
             url.setUrl("https://api.hackertarget.com/aslookup/?q="+target);

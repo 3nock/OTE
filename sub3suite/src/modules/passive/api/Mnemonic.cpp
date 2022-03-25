@@ -1,4 +1,4 @@
-#include "MnemonicPaid.h"
+#include "Mnemonic.h"
 #include "src/utils/Config.h"
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -12,33 +12,33 @@
 #define IP_ANY_RECORD 5
 
 
-MnemonicPaid::MnemonicPaid(ScanArgs args): AbstractOsintModule(args)
+Mnemonic::Mnemonic(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_MNEMONIC;
 
-    if(args.outputRaw)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedRawJson);
-    if(args.outputIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedIp);
-    if(args.outputSubdomain)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &MnemonicPaid::replyFinishedSubdomain);
+    if(args.output_Raw)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Mnemonic::replyFinishedRawJson);
+    if(args.output_IP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Mnemonic::replyFinishedIp);
+    if(args.output_Hostname)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Mnemonic::replyFinishedSubdomain);
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_MNEMONIC).toString();
     
 }
-MnemonicPaid::~MnemonicPaid(){
+Mnemonic::~Mnemonic(){
     delete manager;
 }
 
-void MnemonicPaid::start(){
+void Mnemonic::start(){
     QNetworkRequest request;
     request.setRawHeader("Argus-API-Key", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case IP_ANY_RECORD:
             url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
             break;
@@ -63,8 +63,8 @@ void MnemonicPaid::start(){
         activeRequests++;
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain || args.outputIp){
+    if(args.input_IP){
+        if(args.output_Hostname || args.output_IP){
             url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
             request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
             request.setUrl(url);
@@ -73,8 +73,8 @@ void MnemonicPaid::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_Hostname || args.output_IP){
             url.setUrl("https://api.mnemonic.no/pdns/v3/"+target+"?limit=999");
             request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
             request.setUrl(url);
@@ -84,7 +84,7 @@ void MnemonicPaid::start(){
     }
 }
 
-void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
+void Mnemonic::replyFinishedIp(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -112,7 +112,7 @@ void MnemonicPaid::replyFinishedIp(QNetworkReply *reply){
     end(reply);
 }
 
-void MnemonicPaid::replyFinishedSubdomain(QNetworkReply *reply){
+void Mnemonic::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;

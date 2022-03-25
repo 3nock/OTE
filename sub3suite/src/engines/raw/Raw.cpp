@@ -75,6 +75,7 @@ void Raw::initUI(){
     /* placeholder texts */
     ui->lineEditTarget->setPlaceholderText(tr("Enter target..."));
     ui->lineEditFind->setPlaceholderText(tr("Find..."));
+    ui->lineEditFind_json->setPlaceholderText("Find...");
     ui->lineEditTreeFilter->setPlaceholderText(tr("Filter..."));
 
     /* ... */
@@ -205,48 +206,6 @@ void Raw::log(const QString &log){
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
 
-///
-/// find...
-///
-void Raw::on_buttonNext_clicked(){
-    QTextDocument::FindFlags flags;
-    if(ui->checkBoxCaseSensitive->isChecked())
-        flags |= QTextDocument::FindCaseSensitively;
-
-    this->find(ui->lineEditFind->text(), flags);
-}
-
-void Raw::on_buttonPrev_clicked(){
-    QTextDocument::FindFlags flags;
-    if(ui->checkBoxCaseSensitive->isChecked())
-        flags |= QTextDocument::FindCaseSensitively;
-
-    flags |= QTextDocument::FindBackward;
-
-    this->find(ui->lineEditFind->text(), flags);
-}
-
-void Raw::find(const QString &searchTerm, QTextDocument::FindFlags flags){
-    if(ui->plainTextEditResults->find(searchTerm, flags))
-        ui->lineEditFind->setStyleSheet("color: white");
-    else
-        ui->lineEditFind->setStyleSheet("color: rgb(255, 86, 80);");
-}
-
-void Raw::on_lineEditFind_textEdited(const QString &searchTerm){
-    /* set cursor to the begining of the document... */
-    QTextCursor currentCursorPosition;
-    currentCursorPosition.setPosition(QTextCursor::Start);
-    ui->plainTextEditResults->setTextCursor(currentCursorPosition);
-
-    /* get option flags... */
-    QTextDocument::FindFlags flags;
-    if(ui->checkBoxCaseSensitive->isChecked())
-        flags |= QTextDocument::FindCaseSensitively;
-
-    this->find(searchTerm, flags);
-}
-
 void Raw::on_lineEditTreeFilter_textChanged(const QString &filterKeyword){
     proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
 
@@ -282,4 +241,85 @@ void Raw::on_tabWidgetInput_currentChanged(int index){
         ui->targets->hide();
 
     ui->tabWidgetInput->adjustSize();
+}
+
+///
+/// find...
+///
+void Raw::find(const QString &searchTerm, QTextDocument::FindFlags flags){
+    if(ui->plainTextEditResults->find(searchTerm, flags))
+        ui->lineEditFind->setStyleSheet("color: white");
+    else
+        ui->lineEditFind->setStyleSheet("color: rgb(255, 86, 80);");
+}
+
+void Raw::find_json(const QString &searchTerm, QTextDocument::FindFlags flags){
+    if(ui->plainTextEditJson->find(searchTerm, flags))
+        ui->lineEditFind_json->setStyleSheet("color: white");
+    else
+        ui->lineEditFind_json->setStyleSheet("color: rgb(255, 86, 80);");
+}
+
+void Raw::on_buttonNext_clicked(){
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    this->find(ui->lineEditFind->text(), flags);
+}
+
+void Raw::on_buttonPrev_clicked(){
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    flags |= QTextDocument::FindBackward;
+
+    this->find(ui->lineEditFind->text(), flags);
+}
+
+void Raw::on_lineEditFind_textEdited(const QString &searchTerm){
+    /* set cursor to the begining of the document... */
+    QTextCursor currentCursorPosition;
+    currentCursorPosition.setPosition(QTextCursor::Start);
+    ui->plainTextEditResults->setTextCursor(currentCursorPosition);
+
+    /* get option flags... */
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    this->find(searchTerm, flags);
+}
+
+void Raw::on_buttonNext_json_clicked(){
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive_json->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    this->find(ui->lineEditFind_json->text(), flags);
+}
+
+void Raw::on_buttonPrev_json_clicked(){
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive_json->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    flags |= QTextDocument::FindBackward;
+
+    this->find(ui->lineEditFind_json->text(), flags);
+}
+
+void Raw::on_lineEditFind_json_textChanged(const QString &searchTerm){
+    /* set cursor to the begining of the document... */
+    QTextCursor currentCursorPosition;
+    currentCursorPosition.setPosition(QTextCursor::Start);
+    ui->plainTextEditJson->setTextCursor(currentCursorPosition);
+
+    /* get option flags... */
+    QTextDocument::FindFlags flags;
+    if(ui->checkBoxCaseSensitive_json->isChecked())
+        flags |= QTextDocument::FindCaseSensitively;
+
+    this->find_json(searchTerm, flags);
 }

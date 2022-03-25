@@ -18,15 +18,15 @@ Circl::Circl(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_CIRCL;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedIp);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSSL);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
 
     /* get login credentials... */
@@ -39,8 +39,8 @@ void Circl::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case IP_2_ASN:
             url.setUrl("https://bgpranking-ng.circl.lu/ipasn_history/asn_meta");
             break;
@@ -63,8 +63,8 @@ void Circl::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputIp || args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_IP || args.output_Hostname){
             url.setUrl("https://www.circl.lu/pdns/query/"+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_DNS);
             request.setUrl(url);
@@ -74,8 +74,8 @@ void Circl::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputIp || args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_IP || args.output_Hostname){
             url.setUrl("https://www.circl.lu/pdns/query/"+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_DNS);
             request.setUrl(url);
@@ -83,7 +83,7 @@ void Circl::start(){
             activeRequests++;
             return;
         }
-        if(args.outputAsn){
+        if(args.output_ASN){
             url.setUrl("https://bgpranking-ng.circl.lu/ipasn_history/asn_meta");
             request.setAttribute(QNetworkRequest::User, IP_2_ASN);
             request.setUrl(url);
@@ -91,7 +91,7 @@ void Circl::start(){
             activeRequests++;
             return;
         }
-        if(args.outputSSL){
+        if(args.output_SSL){
             url.setUrl("https://www.circl.lu/pdns/query/"+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL);
             request.setUrl(url);
@@ -101,8 +101,8 @@ void Circl::start(){
         }
     }
 
-    if(args.inputSSL){
-        if(args.outputIp){
+    if(args.input_SSL){
+        if(args.output_IP){
             url.setUrl("https://www.circl.lu/v2pssl/cquery/"+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL_QUERY);
             request.setUrl(url);

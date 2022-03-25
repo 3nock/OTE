@@ -13,11 +13,11 @@ Omnisint::Omnisint(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_OMNISINT;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Omnisint::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Omnisint::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Omnisint::replyFinishedSubdomainIp);
 }
 Omnisint::~Omnisint(){
@@ -28,8 +28,8 @@ void Omnisint::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case ALL:
             url.setUrl("https://sonar.omnisint.io/all/"+target);
             break;
@@ -49,8 +49,8 @@ void Omnisint::start(){
         activeRequests++;
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_Hostname){
             url.setUrl("https://sonar.omnisint.io/reverse/"+target);
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
@@ -59,8 +59,8 @@ void Omnisint::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://sonar.omnisint.io/all/"+target);
             request.setAttribute(QNetworkRequest::User, ALL);
             request.setUrl(url);
@@ -69,8 +69,8 @@ void Omnisint::start(){
         }
     }
 
-    if(args.inputCidr){
-        if(args.outputSubdomain || args.outputSubdomainIp){
+    if(args.input_CIDR){
+        if(args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://sonar.omnisint.io/reverse/"+target);
             request.setAttribute(QNetworkRequest::User, REVERSE_IPCIDR);
             request.setUrl(url);

@@ -8,9 +8,11 @@
 s3s_struct::MX mx_to_struct(s3s_item::MX *item){
     s3s_struct::MX mx;
 
-    /* info */
-    mx.info_mx = item->info_mx->text();
-    mx.info_ip = item->info_ip->text();
+    mx.mx = item->text();
+
+    /* ip */
+    for(int i = 0; i < item->ip->rowCount(); i++)
+        mx.ip.insert(item->ip->child(i, 1)->text());
 
     /* domains */
     for(int i = 0; i < item->domains->rowCount(); i++)
@@ -25,10 +27,13 @@ QJsonObject mx_to_json(s3s_item::MX *item){
     item_info.insert("comment", item->comment);
 
     QJsonObject mx;
+    mx.insert("mx", item->text());
 
-    /* info */
-    mx.insert("info_mx", item->info_mx->text());
-    mx.insert("info_ip", item->info_ip->text());
+    /* ip */
+    QJsonArray ip;
+    for(int i = 0; i < item->ip->rowCount(); i++)
+        ip.append(item->ip->child(i, 1)->text());
+    mx.insert("ip", ip);
 
     /* domains */
     QJsonArray domains;
@@ -42,14 +47,18 @@ QJsonObject mx_to_json(s3s_item::MX *item){
 }
 
 void json_to_mx(const QJsonObject &mx, s3s_item::MX *item){
-    item->setText(mx.value("info_mx").toString());
+    item->setText(mx.value("mx").toString());
 
-    /* info */
-    item->info_mx->setText(mx.value("info_mx").toString());
-    item->info_ip->setText(mx.value("info_ip").toString());
+    /* ip */
+    int count = 0;
+    foreach(const QJsonValue &value, mx.value("ip").toArray()){
+        item->ip->appendRow({new QStandardItem(QString::number(count)),
+                                  new QStandardItem(value.toString())});
+        count++;
+    }
 
     /* domains */
-    int count = 0;
+    count = 0;
     foreach(const QJsonValue &value, mx.value("domains").toArray()){
         item->domains->appendRow({new QStandardItem(QString::number(count)),
                                   new QStandardItem(value.toString())});

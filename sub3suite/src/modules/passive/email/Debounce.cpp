@@ -12,7 +12,7 @@ Debounce::Debounce(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Debounce";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Debounce::replyFinishedRawJson);
     ///
     /// getting api-key...
@@ -29,8 +29,8 @@ void Debounce::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case ACCOUNT_BALANCE:
             url.setUrl("https://api.debounce.io/v1/balance?api="+m_key);
             break;

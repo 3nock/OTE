@@ -12,15 +12,15 @@ Urlscan::Urlscan(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_URLSCAN;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Urlscan::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Urlscan::replyFinishedSubdomain);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Urlscan::replyFinishedAsn);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Urlscan::replyFinishedUrl);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Urlscan::replyFinishedIp);
 }
 Urlscan::~Urlscan(){
@@ -31,14 +31,14 @@ void Urlscan::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
+    if(args.output_Raw){
         url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+target);
         request.setUrl(url);
         manager->get(request);
         activeRequests++;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+target);
         request.setUrl(url);
         manager->get(request);

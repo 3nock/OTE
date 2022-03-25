@@ -14,17 +14,17 @@ RobtexFree::RobtexFree(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_ROBTEX;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexFree::replyFinishedRawJson);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexFree::replyFinishedIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexFree::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexFree::replyFinishedSubdomainIp);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexFree::replyFinishedAsn);
-    if(args.outputCidr)
+    if(args.output_CIDR)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RobtexFree::replyFinishedCidr);
 }
 RobtexFree::~RobtexFree(){
@@ -36,8 +36,8 @@ void RobtexFree::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ASQUERY:
             url.setUrl("https://freeapi.robtex.com/asquery/"+target);
             break;
@@ -56,8 +56,8 @@ void RobtexFree::start(){
         return;
     }
 
-    if(args.inputIp){
-        if(args.outputCidr || args.outputAsn){
+    if(args.input_IP){
+        if(args.output_CIDR || args.output_ASN){
             url.setUrl("https://freeapi.robtex.com/ipquery/"+target);
             request.setAttribute(QNetworkRequest::User, IPQUERY);
             request.setUrl(url);
@@ -65,7 +65,7 @@ void RobtexFree::start(){
             activeRequests++;
         }
 
-        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+        if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://freeapi.robtex.com/pdns/reverse/"+target);
             request.setAttribute(QNetworkRequest::User, PDNS_REVERSE);
             request.setUrl(url);
@@ -74,8 +74,8 @@ void RobtexFree::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_HostnameIP || args.output_Hostname || args.output_IP){
             url.setUrl("https://freeapi.robtex.com/pdns/forward/"+target);
             request.setAttribute(QNetworkRequest::User, PDNS_FORWARD);
             request.setUrl(url);
@@ -84,8 +84,8 @@ void RobtexFree::start(){
         }
     }
 
-    if(args.inputAsn){
-        if(args.outputCidr){
+    if(args.input_ASN){
+        if(args.output_CIDR){
             url.setUrl("https://freeapi.robtex.com/asquery/"+target);
             request.setAttribute(QNetworkRequest::User, ASQUERY);
             request.setUrl(url);

@@ -12,7 +12,7 @@ IpGeoLocation::IpGeoLocation(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "IpGeoLocation";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpGeoLocation::replyFinishedRawJson);
     ///
     /// get api key...
@@ -29,8 +29,8 @@ void IpGeoLocation::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case IP_GEOLOCATION:
             url.setUrl("https://api.ipgeolocation.io/ipgeo?apiKey="+m_key+"&ip="+target);
             break;

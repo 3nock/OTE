@@ -15,8 +15,19 @@
 #include <QSplashScreen>
 #include <QStandardPaths>
 
-#include "src/utils/s3s.h"
 #include "src/utils/CrashHandler.h"
+
+///
+/// logging device informations...
+///
+void log_device_info(){
+    qDebug() << "Device INFO:";
+    qDebug() << "physical dpi value X: " << qApp->desktop()->physicalDpiX();
+    qDebug() << "physical dpi value Y: " << qApp->desktop()->physicalDpiY();
+    qDebug() << "Logical dpi value X: " << qApp->desktop()->logicalDpiX();
+    qDebug() << "Logical dpi value Y: " << qApp->desktop()->logicalDpiY();
+    qDebug() << "device-pixel Ratio: " << qApp->desktop()->devicePixelRatio();
+}
 
 ///
 /// a custom messagehandler for logging messages to log file
@@ -121,8 +132,16 @@ int main(int argc, char *argv[])
     /* initializing the crash handler */
     Breakpad::CrashHandler::instance()->Init(QGuiApplication::applicationDirPath()+"/logs");
 
-    int dpi = qApp->desktop()->logicalDpiX();
-    dpi = static_cast<int>(dpi/96);
+    log_device_info();
+
+#if defined(Q_OS_LINUX)
+    if(qApp->desktop()->physicalDpiX() == 112 && qApp->desktop()->logicalDpiX() == 96)
+    {
+        QFont font = qApp->font();
+        font.setPixelSize(11);
+        qApp->setFont(font);
+    }
+#endif
 
     /* setting stylesheets */
     QFile stylesheet(":/themes/res/themes/default.css");

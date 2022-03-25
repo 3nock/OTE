@@ -56,9 +56,9 @@ void Raw::startScan(){
     status->isStopped = false;
     status->isPaused = false;
 
-    m_scanArgs->outputRaw = true;
-    m_scanArgs->rawOption = ui->comboBoxOptions->currentIndex();
-    m_scanArgs->queryOption = ui->comboBoxOptions->currentText();
+    m_scanArgs->output_Raw = true;
+    m_scanArgs->raw_query_id = ui->comboBoxOptions->currentIndex();
+    m_scanArgs->raw_query_name = ui->comboBoxOptions->currentText();
     ui->progressBar->setMaximum(m_scanArgs->targets.length());
 
     /* starting the appropriate scan... */
@@ -102,7 +102,7 @@ void Raw::startScan(){
         this->startScanThread(new Omnisint(*m_scanArgs));
 
     if(ui->moduleRobtexPaid->isChecked())
-        this->startScanThread(new RobtexPaid(*m_scanArgs));
+        this->startScanThread(new Robtex(*m_scanArgs));
 
     if(ui->moduleVirusTotal->isChecked())
         this->startScanThread(new VirusTotal(*m_scanArgs));
@@ -174,13 +174,13 @@ void Raw::startScan(){
         this->startScanThread(new Circl(*m_scanArgs));
 
     if(ui->moduleHackerTarget->isChecked())
-        this->startScanThread(new HackerTargetPaid(*m_scanArgs));
+        this->startScanThread(new HackerTarget(*m_scanArgs));
 
     if(ui->moduleMnemonic->isChecked())
-        this->startScanThread(new MnemonicPaid(*m_scanArgs));
+        this->startScanThread(new Mnemonic(*m_scanArgs));
 
     if(ui->moduleOtx->isChecked())
-        this->startScanThread(new OtxPaid(*m_scanArgs));
+        this->startScanThread(new Otx(*m_scanArgs));
 
     if(ui->moduleArin->isChecked())
         this->startScanThread(new Arin(*m_scanArgs));
@@ -318,10 +318,9 @@ void Raw::startScanThread(AbstractOsintModule *module){
     module->moveToThread(cThread);
 
     connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
-    connect(module, &AbstractOsintModule::rawResults, this, &Raw::onResults);
-    connect(module, &AbstractOsintModule::rawResultsTxt, this, &Raw::onResultsTxt);
-    connect(module, &AbstractOsintModule::errorLog, this, &Raw::onErrorLog);
-    connect(module, &AbstractOsintModule::infoLog, this, &Raw::onInfoLog);
+    connect(module, &AbstractOsintModule::resultRawJSON, this, &Raw::onResults);
+    connect(module, &AbstractOsintModule::resultRawTXT, this, &Raw::onResultsTxt);
+    connect(module, &AbstractOsintModule::scanLog, this, &Raw::onScanLog);
     connect(this, &Raw::stopScanThread, module, &AbstractOsintModule::onStop);
     connect(cThread, &QThread::finished, this, &Raw::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);

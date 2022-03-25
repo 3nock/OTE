@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Certspotter{
-    QString name = "Certspotter";
+    QString name = OSINT_MODULE_CERTSPOTTER;
     QString url = "https://sslmate.com/certspotter/";
     QString url_apiDoc = "https://sslmate.com/help/reference/ct_search_api_v1";
     QString summary = "SSLMate monitors public Certificate Transparency logs, coalescing all the certificates and precertificates for a particular issuance event into a single issuance object. "

@@ -13,9 +13,9 @@ Projectdiscovery::Projectdiscovery(ScanArgs args):
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_PROJECTDISCOVERY;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedSubdomain);
 
     /* getting api key */
@@ -30,8 +30,8 @@ void Projectdiscovery::start(){
     request.setRawHeader("Authorization", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch(args.rawOption){
+    if(args.output_Raw){
+        switch(args.raw_query_id){
         case SUBDOMAIN:
             url.setUrl("https://dns.projectdiscovery.io/dns/"+target+"/subdomains");
             break;
@@ -42,8 +42,8 @@ void Projectdiscovery::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://dns.projectdiscovery.io/dns/"+target+"/subdomains");
             request.setAttribute(QNetworkRequest::User, SUBDOMAIN);
             request.setUrl(url);

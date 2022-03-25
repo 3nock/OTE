@@ -1,5 +1,5 @@
-#ifndef EXPLORER_H
-#define EXPLORER_H
+#ifndef EXPLORERMODEL_H
+#define EXPLORERMODEL_H
 
 #include <QStandardItemModel>
 
@@ -45,10 +45,10 @@ enum ExplorerType {
     raw
 };
 
-class Explorer: public QStandardItemModel {
+class ExplorerModel: public QStandardItemModel {
     public:
-        Explorer();
-        ~Explorer();
+        ExplorerModel();
+        ~ExplorerModel();
 
     public:
         QStandardItem *project;
@@ -102,4 +102,4 @@ class Explorer: public QStandardItemModel {
         QStandardItem *raw;
 };
 
-#endif // EXPLORER_H
+#endif // EXPLORERMODEL_H

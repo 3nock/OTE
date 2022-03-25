@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Waybackmachine{
-    QString name = "Waybackmachine";
+    QString name = OSINT_MODULE_WAYBACKMACHINE;
     QString url = "https://archive.org/web/";
     QString url_apiDoc = "https://github.com/internetarchive/wayback/tree/master/wayback-cdx-server";
     QString summary = "The Internet Archive, a 501(c)(3) non-profit, is building a digital library of Internet sites and other cultural artifacts in digital form. "
@@ -21,7 +21,10 @@ struct Waybackmachine{
                                         {"MatchType Domain",
                                          {PLACEHOLDERTEXT_DOMAIN, "will return results from host archive.org and all subhosts *.archive.org"}}};
 
-    QMap<int, QList<int>> input_output = {{IN_DOMAIN, {OUT_SUBDOMAIN, OUT_URL}}};
+    QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_URL,
+                                           {OUT_SUBDOMAIN, OUT_URL}}};
 };
 }
 

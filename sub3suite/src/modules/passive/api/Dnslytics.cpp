@@ -25,24 +25,24 @@ Dnslytics::Dnslytics(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_DNSLYTICS;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedIp);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedAsn);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedSubdomainIp);
-    if(args.outputCidr)
+    if(args.output_CIDR)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedCidr);
-    if(args.outputInfoIp)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoIp);
-    if(args.outputInfoMX)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoMX);
-    if(args.outputInfoNS)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedInfoNS);
+    if(args.output_EnumIP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedEnumIP);
+    if(args.output_EnumMX)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedEnumMX);
+    if(args.output_EnumNS)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedEnumNS);
 
     /* getting api key... */
     m_key = APIKEY.value(OSINT_MODULE_DNSLYTICS).toString();
@@ -56,8 +56,8 @@ void Dnslytics::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ACCOUNTINFO:
             url.setUrl("https://api.dnslytics.net/v1/accountinfo?apikey="+m_key);
             break;
@@ -106,7 +106,7 @@ void Dnslytics::start(){
     ///
     /// for info output...
     ///
-    if(args.outputInfoIp){
+    if(args.output_EnumIP){
         url.setUrl("https://api.dnslytics.net/v1/reverseip/"+target+"?apikey="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -114,7 +114,7 @@ void Dnslytics::start(){
         return;
     }
 
-    if(args.outputInfoNS){
+    if(args.output_EnumNS){
         url.setUrl("https://api.dnslytics.net/v1/reversens/"+target+"?apikey="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -122,7 +122,7 @@ void Dnslytics::start(){
         return;
     }
 
-    if(args.outputInfoMX){
+    if(args.output_EnumMX){
         url.setUrl("https://api.dnslytics.net/v1/reversemx/"+target+"?apikey="+m_key);
         request.setUrl(url);
         manager->get(request);
@@ -133,8 +133,8 @@ void Dnslytics::start(){
     ///
     /// for osint output...
     ///
-    if(args.inputQueryTerm){
-        if(args.outputSubdomain){
+    if(args.input_Search){
+        if(args.output_Hostname){
             url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+target+"?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAINSEARCH);
             request.setUrl(url);
@@ -144,8 +144,8 @@ void Dnslytics::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+target+"?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAINSEARCH);
             request.setUrl(url);
@@ -153,7 +153,7 @@ void Dnslytics::start(){
             activeRequests++;
             return;
         }
-        if(args.outputIp){
+        if(args.output_IP){
             url.setUrl("https://api.dnslytics.net/v1/hostinghistory/"+target+"?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, HOSTINGHISTORY);
             request.setUrl(url);
@@ -163,8 +163,8 @@ void Dnslytics::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_Hostname){
             url.setUrl("https://api.dnslytics.net/v1/reverseip/"+target+"?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, REVERSEIP);
             request.setUrl(url);
@@ -172,7 +172,7 @@ void Dnslytics::start(){
             activeRequests++;
             return;
         }
-        if(args.outputAsn || args.outputCidr){
+        if(args.output_ASN || args.output_CIDR){
             url.setUrl("https://freeapi.dnslytics.net/v1/ip2asn/"+target);
             request.setAttribute(QNetworkRequest::User, IP2ASN);
             request.setUrl(url);
@@ -182,8 +182,8 @@ void Dnslytics::start(){
         }
     }
 
-    if(args.inputAsn){
-        if(args.outputIp || args.outputAsn || args.outputSubdomain || args.outputSubdomainIp || args.outputCidr){
+    if(args.input_ASN){
+        if(args.output_IP || args.output_ASN || args.output_Hostname || args.output_HostnameIP || args.output_CIDR){
             url.setUrl("https://api.dnslytics.net/v1/asinfo/"+target+"/summary?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, ASINFO);
             request.setUrl(url);
@@ -192,8 +192,8 @@ void Dnslytics::start(){
         }
     }
 
-    if(args.inputCidr){
-        if(args.outputIp || args.outputAsn || args.outputSubdomain || args.outputSubdomainIp || args.outputCidr){
+    if(args.input_CIDR){
+        if(args.output_IP || args.output_ASN || args.output_Hostname || args.output_HostnameIP || args.output_CIDR){
             url.setUrl("https://api.dnslytics.net/v1/subnetinfo/"+target+"/summary?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, SUBNETINFO);
             request.setUrl(url);
@@ -429,7 +429,7 @@ void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
 /// For info...
 ///
 
-void Dnslytics::replyFinishedInfoMX(QNetworkReply *reply){
+void Dnslytics::replyFinishedEnumMX(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -439,15 +439,17 @@ void Dnslytics::replyFinishedInfoMX(QNetworkReply *reply){
     QJsonObject data = document.object()["data"].toObject();
 
     s3s_struct::MX mx;
-    foreach(const QJsonValue &value, data["domains"].toArray()){
+    mx.mx = target;
+
+    foreach(const QJsonValue &value, data["domains"].toArray())
         mx.domains.insert(value.toString());
-    }
-    emit infoMX(mx);
+
+    emit resultEnumMX(mx);
 
     end(reply);
 }
 
-void Dnslytics::replyFinishedInfoNS(QNetworkReply *reply){
+void Dnslytics::replyFinishedEnumNS(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -457,15 +459,17 @@ void Dnslytics::replyFinishedInfoNS(QNetworkReply *reply){
     QJsonObject data = document.object()["data"].toObject();
 
     s3s_struct::NS ns;
-    foreach(const QJsonValue &value, data["domains"].toArray()){
+    ns.ns = target;
+
+    foreach(const QJsonValue &value, data["domains"].toArray())
         ns.domains.insert(value.toString());
-    }
-    emit infoNS(ns);
+
+    emit resultEnumNS(ns);
 
     end(reply);
 }
 
-void Dnslytics::replyFinishedInfoIp(QNetworkReply *reply){
+void Dnslytics::replyFinishedEnumIP(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -475,10 +479,12 @@ void Dnslytics::replyFinishedInfoIp(QNetworkReply *reply){
     QJsonObject data = document.object()["data"].toObject();
 
     s3s_struct::IP ip;
-    foreach(const QJsonValue &value, data["domains"].toArray()){
+    ip.ip = target;
+
+    foreach(const QJsonValue &value, data["domains"].toArray())
         ip.domains.insert(value.toString());
-    }
-    emit infoIp(ip);
+
+    emit resultEnumIP(ip);
 
     end(reply);
 }

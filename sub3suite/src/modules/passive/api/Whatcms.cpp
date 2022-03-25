@@ -14,7 +14,7 @@ Whatcms::Whatcms(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_WHATCMS;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Whatcms::replyFinishedRawJson);
 
     /* getting api key */
@@ -28,8 +28,8 @@ void Whatcms::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case TECHNOLOGY_DETECTION:
             url.setUrl("https://whatcms.org/API/Tech?key="+m_key+"&url="+target);
             break;

@@ -37,9 +37,14 @@ Minor adjustment to the GumboParser submodule.
 	- util.c
 	- vector.c
 	
+Minor adjustment to the breakpad submodule.
+1. Create a folder `lss` inside `sub3suite/include/breakpad/src/third_party`.
+2. Copy `linux_syscall_support.h` file from `sub3suite/include`.
+3. Paste it to `sub3suite/include/breakpad/src/third_party/lss`.
+	
 ## Build
 
-1. If you are using Qt creator, then just click to build.
+1. If you are using QtCreator. Then just open the project file `sub3suite.pro` in QtCreator, configure compiler & build.
 2. If you are using qmake, then just use the following commands to build the project respective to your system.
 
 - Linux

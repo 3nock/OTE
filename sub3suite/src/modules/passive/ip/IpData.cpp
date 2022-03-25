@@ -15,7 +15,7 @@ IpData::IpData(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "IpData";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpData::replyFinishedRawJson);
     ///
     /// get api key...
@@ -32,8 +32,8 @@ void IpData::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ASN_DATA:
             url.setUrl("https://api.ipdata.co/"+target+"/asn?api-key="+m_key);
             break;

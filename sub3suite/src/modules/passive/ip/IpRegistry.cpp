@@ -13,7 +13,7 @@ IpRegistry::IpRegistry(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "IpRegistry";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpRegistry::replyFinishedRawJson);
     ///
     /// get api key...
@@ -30,8 +30,8 @@ void IpRegistry::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case SINGLE_IP_LOOKUP:
             url.setUrl("https://api.ipregistry.co/"+target+"?key="+m_key);
             break;

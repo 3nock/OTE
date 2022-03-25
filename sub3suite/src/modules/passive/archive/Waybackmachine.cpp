@@ -16,13 +16,13 @@
 Waybackmachine::Waybackmachine(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "WaybackMachine";
+    log.moduleName = OSINT_MODULE_WAYBACKMACHINE;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedRawJson);
-    if(args.outputUrl)
+    if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedUrl);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Waybackmachine::replyFinishedSubdomain);
 }
 Waybackmachine::~Waybackmachine(){
@@ -33,8 +33,8 @@ void Waybackmachine::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case MATCHTYPE_DOMAIN:
             url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&output=json&collapse=urlkey&url="+target);
             break;
@@ -54,14 +54,29 @@ void Waybackmachine::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputUrl){
+    if(args.input_Domain){
+        if(args.output_URL){
             url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&fl=original&output=json&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSubdomain){
+        if(args.output_Hostname){
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=json&collapse=urlkey&url="+target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
+
+    if(args.input_URL){
+        if(args.output_URL){
+            url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&fl=original&output=json&collapse=urlkey&url="+target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+        if(args.output_Hostname){
             url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=json&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);

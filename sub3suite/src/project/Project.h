@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QMenuBar>
 
-#include "model/ProjectModel.h"
+#include "src/models/ProjectModel.h"
 #include "src/utils/JsonSyntaxHighlighter.h"
 
 #define SITEMAP_TYPE "smt"
@@ -63,6 +63,11 @@ class Project : public QWidget{
         void on_treeViewTree_doubleClicked(const QModelIndex &index);
         void on_treeViewTree_customContextMenuRequested(const QPoint &pos);
 
+        /* find */
+        void on_buttonNext_clicked();
+        void on_buttonPrev_clicked();
+        void on_lineEditFind_textChanged(const QString &arg1);
+
     private:
         Ui::Project *ui;
 
@@ -94,6 +99,8 @@ class Project : public QWidget{
         QAction a_extract;
         QAction a_remove_duplicates;
 
+        void find(const QString &, QTextDocument::FindFlags);
+
         void initUI();
         void init_menubar_tree();
         void init_menubar_project();
@@ -108,6 +115,9 @@ class Project : public QWidget{
 
         void action_copy(const RESULT_TYPE&);
         void action_save(const RESULT_TYPE&);
+
+        void action_sendToEngine(const ENGINE&, const RESULT_TYPE&);
+        void action_sendToEnum(const TOOL&, const RESULT_TYPE&);
 
         void action_send_host(const ENGINE&);
         void action_send_ip(const ENGINE&);

@@ -63,7 +63,7 @@ void Osint::initModules(){
     else
         ui->moduleHackerTargetFree->hide();
 
-    ModuleInfo::HackerTargetPaid hackertarget;
+    ModuleInfo::HackerTarget hackertarget;
     if(hackertarget.input_output.contains(INPUT_TYPE) && hackertarget.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
         ui->moduleHackerTargetPaid->show();
     else
@@ -75,7 +75,7 @@ void Osint::initModules(){
     else
         ui->moduleMnemonicFree->hide();
 
-    ModuleInfo::MnemonicPaid mnemonic;
+    ModuleInfo::Mnemonic mnemonic;
     if(mnemonic.input_output.contains(INPUT_TYPE) && mnemonic.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
         ui->moduleMnemonicPaid->show();
     else
@@ -93,7 +93,7 @@ void Osint::initModules(){
     else
         ui->moduleOtxFree->hide();
 
-    ModuleInfo::OtxPaid otxpaid;
+    ModuleInfo::Otx otxpaid;
     if(otxpaid.input_output.contains(INPUT_TYPE) && otxpaid.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
         ui->moduleOtxPaid->show();
     else
@@ -117,7 +117,7 @@ void Osint::initModules(){
     else
         ui->moduleRobtexFree->hide();
 
-    ModuleInfo::RobtexPaid robtex;
+    ModuleInfo::Robtex robtex;
     if(robtex.input_output.contains(INPUT_TYPE) && robtex.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
         ui->moduleRobtexPaid->show();
     else

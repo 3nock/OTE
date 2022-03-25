@@ -27,15 +27,15 @@ PassiveTotal::PassiveTotal(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_RISKIQ;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &PassiveTotal::replyFinishedRawJson);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &PassiveTotal::replyFinishedIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &PassiveTotal::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &PassiveTotal::replyFinishedSubdomainIp);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &PassiveTotal::replyFinishedSSL);
 
     /* getting api-key */
@@ -54,8 +54,8 @@ void PassiveTotal::start(){
     request.setRawHeader("Authorization", "Basic "+data);
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ACCOUNT:
             url.setUrl("https://api.riskiq.net/pt/v2/account");
             break;
@@ -111,8 +111,8 @@ void PassiveTotal::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomainIp || args.outputSubdomain || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_HostnameIP || args.output_Hostname || args.output_IP){
             url.setUrl("https://api.riskiq.net/pt/v2/dns/passive?query="+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_DNS);
             request.setUrl(url);
@@ -121,8 +121,8 @@ void PassiveTotal::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputSSL){
+    if(args.input_IP){
+        if(args.output_SSL){
             url.setUrl("https://api.riskiq.net/pt/v2/ssl-certificate/history?query="+target);
             request.setAttribute(QNetworkRequest::User, CERTIFICATE_HISTORY);
             request.setUrl(url);
@@ -131,8 +131,8 @@ void PassiveTotal::start(){
         }
     }
 
-    if(args.inputSSL){
-        if(args.outputIp){
+    if(args.input_SSL){
+        if(args.output_IP){
             url.setUrl("https://api.riskiq.net/pt/v2/ssl-certificate/history?query="+target);
             request.setAttribute(QNetworkRequest::User, CERTIFICATE_HISTORY);
             request.setUrl(url);
@@ -141,15 +141,15 @@ void PassiveTotal::start(){
         }
     }
 
-    if(args.inputQueryTerm){
-        if(args.outputSubdomain){
+    if(args.input_Search){
+        if(args.output_Hostname){
             url.setUrl("https://api.riskiq.net/pt/v2/dns/search/keyword?query="+target);
             request.setAttribute(QNetworkRequest::User, PASSIVE_DNS_SEARCH);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSL){
+        if(args.output_SSL){
             url.setUrl("https://api.riskiq.net/pt/v2/ssl-certificate/search/keyword?query="+target);
             request.setAttribute(QNetworkRequest::User, CERTIFICATE_KEYWORD);
             request.setUrl(url);

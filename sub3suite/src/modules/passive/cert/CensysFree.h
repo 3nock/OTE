@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct CensysFree{
-    QString name = "Censys";
+    QString name = OSINT_MODULE_CENSYS;
     QString url = "https://censys.io/";
     QString url_apiDoc = "https://censys.io/api/v1/docs/";
     QString summary = "Censys reduces your Internet attack surface by continually discovering unknown assets and helping remediate Internet facing risks";

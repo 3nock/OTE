@@ -15,13 +15,13 @@ Threatcrowd::Threatcrowd(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_THREATCROWD;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedIp);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Threatcrowd::replyFinishedEmail);
 }
 Threatcrowd::~Threatcrowd(){
@@ -32,8 +32,8 @@ void Threatcrowd::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case EMAIL:
             url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+target);
             break;
@@ -56,7 +56,7 @@ void Threatcrowd::start(){
         return;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         url.setUrl("https://www.threatcrowd.org/searchApi/v2/domain/report/?domain="+target);
         request.setAttribute(QNetworkRequest::User, DOMAINS);
         request.setUrl(url);
@@ -65,7 +65,7 @@ void Threatcrowd::start(){
         return;
     }
 
-    if(args.inputEmail){
+    if(args.input_Email){
         url.setUrl("https://www.threatcrowd.org/searchApi/v2/email/report/?email="+target);
         request.setAttribute(QNetworkRequest::User, EMAIL);
         request.setUrl(url);
@@ -74,7 +74,7 @@ void Threatcrowd::start(){
         return;
     }
 
-    if(args.inputIp){
+    if(args.input_IP){
         url.setUrl("https://www.threatcrowd.org/searchApi/v2/ip/report/?ip="+target);
         request.setAttribute(QNetworkRequest::User, IP);
         request.setUrl(url);

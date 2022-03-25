@@ -54,11 +54,11 @@ Ripe::Ripe(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Ripe";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ripe::replyFinishedRawJson);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ripe::replyFinishedAsn);
-    if(args.outputCidr)
+    if(args.output_CIDR)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ripe::replyFinishedCidr);
 }
 Ripe::~Ripe(){
@@ -69,8 +69,8 @@ void Ripe::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ABUSE_CONTACT_FINDER:
             url.setUrl("https://stat.ripe.net/data/abuse-contact-finder/data.json?resource="+target);
             break;
@@ -186,8 +186,8 @@ void Ripe::start(){
         return;
     }
 
-    if(args.inputIp){
-        if(args.outputAsn){
+    if(args.input_IP){
+        if(args.output_ASN){
             url.setUrl("https://stat.ripe.net/data/network-info/data.json?resource="+target);
             request.setAttribute(QNetworkRequest::User, NETWORK_INFO);
             request.setUrl(url);
@@ -196,8 +196,8 @@ void Ripe::start(){
         }
     }
 
-    if(args.inputAsn){
-        if(args.outputCidr){
+    if(args.input_ASN){
+        if(args.output_CIDR){
             url.setUrl("https://stat.ripe.net/data/ris-prefixes/data.json?resource="+target+"&list_prefixes=true");
             request.setAttribute(QNetworkRequest::User, RIS_PREFIXES);
             request.setUrl(url);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
-    <height>348</height>
+    <width>500</width>
+    <height>390</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -69,6 +69,13 @@
        <widget class="QCheckBox" name="checkBoxNoDuplicates">
         <property name="text">
          <string>No Duplicates</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxOverride">
+        <property name="text">
+         <string>Override Values</string>
         </property>
        </widget>
       </item>

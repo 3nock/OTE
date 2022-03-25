@@ -68,9 +68,9 @@ class Dnslytics: public AbstractOsintModule{
         void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedCidr(QNetworkReply *reply) override;
         /* ... */
-        void replyFinishedInfoMX(QNetworkReply *reply) override;
-        void replyFinishedInfoNS(QNetworkReply *reply) override;
-        void replyFinishedInfoIp(QNetworkReply *reply) override;
+        void replyFinishedEnumMX(QNetworkReply *reply) override;
+        void replyFinishedEnumNS(QNetworkReply *reply) override;
+        void replyFinishedEnumIP(QNetworkReply *reply) override;
 
     private:
         QString m_key;

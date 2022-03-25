@@ -18,7 +18,7 @@ FraudGuard::FraudGuard(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "FraudGuard";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FraudGuard::replyFinishedRawJson);
     ///
     /// get api key...
@@ -41,8 +41,8 @@ void FraudGuard::start(){
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case GET_CUSTOM_GEOBLOCK:
             url.setUrl("https://@api.fraudguard.io/geoblock");
             break;

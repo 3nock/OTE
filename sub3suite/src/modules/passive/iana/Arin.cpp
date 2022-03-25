@@ -33,7 +33,7 @@ Arin::Arin(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "Arin";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Arin::replyFinishedRawJson);
 }
 Arin::~Arin(){
@@ -45,8 +45,8 @@ void Arin::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case REGISTRY_IP:
             url.setUrl("https://rdap.arin.net/registry/ip/"+target);
             break;

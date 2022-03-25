@@ -11,13 +11,13 @@
 CertspotterFree::CertspotterFree(ScanArgs args) : AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "CertspotterFree";
+    log.moduleName = OSINT_MODULE_CERTSPOTTER;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSubdomain);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CertspotterFree::replyFinishedSSL);
 }
 CertspotterFree::~CertspotterFree(){
@@ -28,8 +28,8 @@ void CertspotterFree::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ISSUEANCES:
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert&expand=issuer&expand=dns_names");
             break;
@@ -40,14 +40,14 @@ void CertspotterFree::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
-            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=dns_names");
+    if(args.input_Domain){
+        if(args.output_Hostname){
+            url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=dns_names&match_wildcards=true");
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSL){
+        if(args.output_SSL){
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert");
             request.setUrl(url);
             manager->get(request);

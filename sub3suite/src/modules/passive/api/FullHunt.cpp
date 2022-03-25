@@ -17,13 +17,13 @@ FullHunt::FullHunt(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_FULLHUNT;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedSubdomain);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedAsn);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedIp);
 
     /* getting api key */
@@ -39,8 +39,8 @@ void FullHunt::start(){
     request.setRawHeader("X-API-KEY", m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case DOMAIN_DETAILS:
             url.setUrl("https://fullhunt.io/api/v1/domain/"+target+"/details");
             break;
@@ -57,15 +57,15 @@ void FullHunt::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             QUrl url("https://jldc.me/FullHunt/subdomains/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputAsn){
+        if(args.output_ASN){
             url.setUrl("https://fullhunt.io/api/v1/domain/"+target+"/details");
             request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
             request.setUrl(url);

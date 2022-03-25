@@ -11,7 +11,7 @@ JsonWhois::JsonWhois(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_JSONWHOIS;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &JsonWhois::replyFinishedRawJson);
 
     /* getting api key */
@@ -28,8 +28,8 @@ void JsonWhois::start(){
     request.setRawHeader("Authorization", "Token token="+m_key.toUtf8());
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case SCREENSHOT:
             url.setUrl("https://jsonwhois/api/v1/screenshot?domain="+target);
             break;

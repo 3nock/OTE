@@ -30,8 +30,7 @@ class IpEnum : public AbstractEnum{
         void onResult_reverse(s3s_struct::IP);
 
         void onScanThreadEnded();
-        void onInfoLog(ScanLog log);
-        void onErrorLog(ScanLog log);
+        void onScanLog(ScanLog log);
         void onReScan(QQueue<QString> targets);
 
         void onReceiveTargets(QSet<QString>, RESULT_TYPE);

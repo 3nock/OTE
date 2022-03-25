@@ -8,9 +8,11 @@
 s3s_struct::NS ns_to_struct(s3s_item::NS *item){
     s3s_struct::NS ns;
 
-    /* info */
-    ns.info_ns = item->info_ns->text();
-    ns.info_ip = item->info_ip->text();
+    ns.ns = item->text();
+
+    /* ip */
+    for(int i = 0; i < item->ip->rowCount(); i++)
+        ns.ip.insert(item->ip->child(i, 1)->text());
 
     /* domains */
     for(int i = 0; i < item->domains->rowCount(); i++)
@@ -25,10 +27,13 @@ QJsonObject ns_to_json(s3s_item::NS *item){
     item_info.insert("comment", item->comment);
 
     QJsonObject ns;
+    ns.insert("ns", item->text());
 
-    /* info */
-    ns.insert("info_ns", item->info_ns->text());
-    ns.insert("info_ip", item->info_ip->text());
+    /* ip */
+    QJsonArray ip;
+    for(int i = 0; i < item->ip->rowCount(); i++)
+        ip.append(item->ip->child(i, 1)->text());
+    ns.insert("ip", ip);
 
     /* domains */
     QJsonArray domains;
@@ -42,14 +47,18 @@ QJsonObject ns_to_json(s3s_item::NS *item){
 }
 
 void json_to_ns(const QJsonObject &ns, s3s_item::NS *item){
-    item->setText(ns.value("info_ns").toString());
+    item->setText(ns.value("ns").toString());
 
-    /* info */
-    item->info_ns->setText(ns.value("info_ns").toString());
-    item->info_ip->setText(ns.value("info_ip").toString());
+    /* ip */
+    int count = 0;
+    foreach(const QJsonValue &value, ns.value("ip").toArray()){
+        item->ip->appendRow({new QStandardItem(QString::number(count)),
+                                  new QStandardItem(value.toString())});
+        count++;
+    }
 
     /* domains */
-    int count = 0;
+    count = 0;
     foreach(const QJsonValue &value, ns.value("domains").toArray()){
         item->domains->appendRow({new QStandardItem(QString::number(count)),
                                   new QStandardItem(value.toString())});

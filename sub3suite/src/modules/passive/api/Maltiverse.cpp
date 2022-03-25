@@ -19,15 +19,15 @@ Maltiverse::Maltiverse(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_MALTIVERSE;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Maltiverse::replyFinishedRawJson);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Maltiverse::replyFinishedEmail);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Maltiverse::replyFinishedAsn);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Maltiverse::replyFinishedIp);
-    if(args.outputCidr)
+    if(args.output_CIDR)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Maltiverse::replyFinishedCidr);
 }
 Maltiverse::~Maltiverse(){
@@ -38,8 +38,8 @@ void Maltiverse::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case HOSTNAME:
             url.setUrl("https://api.maltiverse.com/hostname/"+target);
             break;
@@ -56,8 +56,8 @@ void Maltiverse::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputIp || args.outputAsn){
+    if(args.input_Domain){
+        if(args.output_IP || args.output_ASN){
             url.setUrl("https://api.maltiverse.com/hostname/"+target);
             request.setAttribute(QNetworkRequest::User, HOSTNAME);
             request.setUrl(url);
@@ -66,8 +66,8 @@ void Maltiverse::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputAsn || args.outputCidr || args.outputEmail){
+    if(args.input_IP){
+        if(args.output_ASN || args.output_CIDR || args.output_Email){
             url.setUrl("https://api.maltiverse.com/ip/"+target);
             request.setAttribute(QNetworkRequest::User, IPV4);
             request.setUrl(url);

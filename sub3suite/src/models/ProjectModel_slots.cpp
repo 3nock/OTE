@@ -231,8 +231,8 @@ void ProjectModel::addEnumIP(const s3s_struct::IP &ip){
 }
 
 void ProjectModel::addEnumNS(const s3s_struct::NS &ns){
-    if(map_enumNS.contains(ns.info_ns)){
-        s3s_item::NS *item = map_enumNS.value(ns.info_ns);
+    if(map_enumNS.contains(ns.ns)){
+        s3s_item::NS *item = map_enumNS.value(ns.ns);
         item->setValues(ns);
         return;
     }
@@ -240,13 +240,13 @@ void ProjectModel::addEnumNS(const s3s_struct::NS &ns){
     s3s_item::NS *item = new s3s_item::NS;
     item->setValues(ns);
     enumNS->appendRow(item);
-    map_enumNS.insert(ns.info_ns, item);
+    map_enumNS.insert(ns.ns, item);
     modified = true;
 }
 
 void ProjectModel::addEnumMX(const s3s_struct::MX &mx){
-    if(map_enumMX.contains(mx.info_mx)){
-        s3s_item::MX *item = map_enumMX.value(mx.info_mx);
+    if(map_enumMX.contains(mx.mx)){
+        s3s_item::MX *item = map_enumMX.value(mx.mx);
         item->setValues(mx);
         return;
     }
@@ -254,7 +254,7 @@ void ProjectModel::addEnumMX(const s3s_struct::MX &mx){
     s3s_item::MX *item = new s3s_item::MX;
     item->setValues(mx);
     enumMX->appendRow(item);
-    map_enumMX.insert(mx.info_mx, item);
+    map_enumMX.insert(mx.mx, item);
     modified = true;
 }
 

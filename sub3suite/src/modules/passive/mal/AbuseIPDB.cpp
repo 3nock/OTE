@@ -14,7 +14,7 @@ AbuseIPDB::AbuseIPDB(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "AbuseIPDB";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &AbuseIPDB::replyFinishedRawJson);
     ///
     /// get api key...
@@ -33,8 +33,8 @@ void AbuseIPDB::start(){
     request.setRawHeader("Accept", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case BLACKLIST_ENDPOINT:
             url.setUrl("https://api.abuseipdb.com/api/v2/blacklist");
             break;

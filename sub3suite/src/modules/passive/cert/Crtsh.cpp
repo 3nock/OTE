@@ -7,13 +7,13 @@
 Crtsh::Crtsh(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Crtsh";
+    log.moduleName = OSINT_MODULE_CRTSH;
 
-    if(args.outputInfoSSL)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedInfoSSL);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedSSL);
-    if(args.outputSubdomain)
+    if(args.output_EnumSSL)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedEnumSSL);
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Crtsh::replyFinishedSubdomain);
 }
 Crtsh::~Crtsh(){
@@ -34,12 +34,12 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    if(args.inputDomain){
+    if(args.input_Domain){
         /* a stack for storing the GumboNodes for parsing by backtracking... */
         QStack<GumboNode*> m_nodes;
         /* getting the body node... */
         GumboOutput *output = gumbo_parse(reply->readAll());
-        m_nodes.push(this->getBody(output->root));
+        m_nodes.push(getBody(output->root));
 
         /* loop to parse and obtain subdomains from the body node... */
         while(!m_nodes.isEmpty()){
@@ -71,7 +71,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
         gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
 
-    if(args.inputSSL)
+    if(args.input_SSL)
     {
         if(m_queryToGetId)
             m_getCertId(reply); // get the crtsh certificate id and request to download the certificate...
@@ -106,7 +106,7 @@ void Crtsh::replyFinishedSSL(QNetworkReply *reply){
     end(reply);
 }
 
-void Crtsh::replyFinishedInfoSSL(QNetworkReply *reply){
+void Crtsh::replyFinishedEnumSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -115,7 +115,7 @@ void Crtsh::replyFinishedInfoSSL(QNetworkReply *reply){
     if(m_queryToGetId)
         m_getCertId(reply); // get the crtsh certificate id and request to download the certificate...
     else
-        emit rawSSL(reply->readAll()); // get and send the raw certificate for analysis
+        emit resultRawSSL(reply->readAll()); // get and send the raw certificate for analysis
 
     end(reply);
 }
@@ -126,7 +126,7 @@ void Crtsh::m_getCertId(QNetworkReply *reply){
     QStack<GumboNode*> m_nodes;
     /* getting the body node... */
     GumboOutput *output = gumbo_parse(reply->readAll());
-    m_nodes.push(this->getBody(output->root));
+    m_nodes.push(getBody(output->root));
 
     /* loop to parse and obtain subdomains from the body node... */
     while(!m_nodes.isEmpty()){

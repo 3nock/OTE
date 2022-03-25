@@ -27,18 +27,18 @@ ViewDns::ViewDns(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_VIEWDNS;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedIp);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedEmail);
-    if(args.outputInfoNS)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedInfoNS);
-    if(args.outputInfoMX)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedInfoMX);
+    if(args.output_EnumNS)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedEnumNS);
+    if(args.output_EnumMX)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedEnumMX);
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_VIEWDNS).toString();
@@ -51,8 +51,8 @@ void ViewDns::start(){
     QNetworkRequest request;
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case ABUSE_CONTACT_LOOKUP:
             url.setUrl("https://api.viewdns.info/abuselookup/?domain="+target+"&apikey="+m_key+"&output=json");
             break;
@@ -102,8 +102,8 @@ void ViewDns::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain || args.outputIp){
+    if(args.input_Domain){
+        if(args.output_Hostname || args.output_IP){
             url.setUrl("https://api.viewdns.info/dnsrecord/?domain="+target+"&recordtype=ANY&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, DNS_RECORD_LOOKUP);
             request.setUrl(url);
@@ -111,7 +111,7 @@ void ViewDns::start(){
             activeRequests++;
         }
 
-        if(args.outputIp){
+        if(args.output_IP){
             url.setUrl("https://api.viewdns.info/iphistory/?domain="+target+"&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, IP_HISTORY);
             request.setUrl(url);
@@ -119,7 +119,7 @@ void ViewDns::start(){
             activeRequests++;
         }
 
-        if(args.outputEmail){
+        if(args.output_Email){
             url.setUrl("https://api.viewdns.info/abuselookup/?domain="+target+"&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, ABUSE_CONTACT_LOOKUP);
             request.setUrl(url);
@@ -128,8 +128,8 @@ void ViewDns::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_Hostname){
             url.setUrl("https://api.viewdns.info/reverseip/?host="+target+"&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, REVERSE_IP_LOOKUP);
             request.setUrl(url);
@@ -138,8 +138,8 @@ void ViewDns::start(){
         }
     }
 
-    if(args.inputEmail){
-        if(args.outputSubdomain){
+    if(args.input_Email){
+        if(args.output_Hostname){
             url.setUrl("https://api.viewdns.info/reversewhois/?q="+target+"&apikey="+m_key+"&output=json");
             request.setAttribute(QNetworkRequest::User, REVERSE_WHOIS_LOOKUP);
             request.setUrl(url);
@@ -152,7 +152,7 @@ void ViewDns::start(){
     /// info...
     ///
 
-    if(args.outputInfoMX){
+    if(args.output_EnumMX){
         url.setUrl("https://api.viewdns.info/reversemx/?mx="+target+"&apikey="+m_key+"&output=json");
         request.setAttribute(QNetworkRequest::User, REVERSE_MX_LOOKUP);
         request.setUrl(url);
@@ -160,7 +160,7 @@ void ViewDns::start(){
         activeRequests++;
     }
 
-    if(args.outputInfoNS){
+    if(args.output_EnumNS){
         url.setUrl("https://api.viewdns.info/reversens/?ns="+target+"&apikey="+m_key+"&output=json");
         request.setAttribute(QNetworkRequest::User, REVERSE_NS_LOOKUP);
         request.setUrl(url);
@@ -298,7 +298,7 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
 /// Info...
 ///
 
-void ViewDns::replyFinishedInfoNS(QNetworkReply *reply){
+void ViewDns::replyFinishedEnumNS(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -309,17 +309,17 @@ void ViewDns::replyFinishedInfoNS(QNetworkReply *reply){
     QJsonArray domains = response["domains"].toArray();
 
     s3s_struct::NS ns;
-    ns.info_ns = target;
+    ns.ns = target;
 
     foreach(const QJsonValue &domain, domains)
         ns.domains.insert(domain.toObject()["domain"].toString());
 
-    emit infoNS(ns);
+    emit resultEnumNS(ns);
 
     end(reply);
 }
 
-void ViewDns::replyFinishedInfoMX(QNetworkReply *reply){
+void ViewDns::replyFinishedEnumMX(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -330,12 +330,12 @@ void ViewDns::replyFinishedInfoMX(QNetworkReply *reply){
     QJsonArray domains = response["domains"].toArray();
 
     s3s_struct::MX mx;
-    mx.info_mx = target;
+    mx.mx = target;
 
     foreach(const QJsonValue &domain, domains)
         mx.domains.insert(domain.toString());
 
-    emit infoMX(mx);
+    emit resultEnumMX(mx);
 
     end(reply);
 }

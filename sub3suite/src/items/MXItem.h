@@ -17,8 +17,8 @@
 
 namespace s3s_struct {
 struct MX{
-    QString info_mx;
-    QString info_ip;
+    QString mx;
+    QSet<QString> ip;
     QSet<QString> domains;
 };
 }
@@ -28,53 +28,48 @@ namespace s3s_item {
 class MX: public QStandardItem {
 public:
     MX(): QStandardItem(),
-        info(new QStandardItem("Info")),
-        domains(new QStandardItem("Domains")),
-        /* info */
-        info_mx(new QStandardItem),
-        info_ip(new QStandardItem)
+        ip(new QStandardItem("IPs")),
+        domains(new QStandardItem("Domains"))
     {
         this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
 
-        info->setForeground(Qt::white);
+        ip->setForeground(Qt::white);
         domains->setForeground(Qt::white);
 
-        info->setWhatsThis(JSON_OBJECT);
+        ip->setWhatsThis(JSON_ARRAY);
         domains->setWhatsThis(JSON_ARRAY);
 
-        info->setIcon(QIcon(":/img/res/icons/folder2.png"));
+        ip->setIcon(QIcon(":/img/res/icons/folder2.png"));
         domains->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
-        info->appendRow({new QStandardItem("MailServer"), info_mx});
-        info->appendRow({new QStandardItem("Ip"), info_ip});
-
         /* append to the MX */
-        this->appendRow(info);
+        this->appendRow(ip);
         this->appendRow(domains);
     }
     ~MX(){}
 
 public:
-    QStandardItem *info;
+    QStandardItem *ip;
     QStandardItem *domains;
-    /* info */
-    QStandardItem *info_mx;
-    QStandardItem *info_ip;
 
     /* summary */
     QString last_modified;
     QString comment;
 
     void setValues(const s3s_struct::MX &mx){
-        this->setText(mx.info_mx);
+        this->setText(mx.mx);
 
-        /* info */
-        info_mx->setText(mx.info_mx);
-        info_ip->setText(mx.info_ip);
+        /* ip */
+        int count = ip->rowCount();
+        foreach(const QString &ip_address, mx.ip){
+            ip->appendRow({new QStandardItem(QString::number(count)),
+                                new QStandardItem(ip_address)});
+            count++;
+        }
 
         /* domains */
-        int count = domains->rowCount();
+        count = domains->rowCount();
         foreach(const QString &domain, mx.domains){
             domains->appendRow({new QStandardItem(QString::number(count)),
                                 new QStandardItem(domain)});

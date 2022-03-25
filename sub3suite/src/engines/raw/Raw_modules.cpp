@@ -31,7 +31,7 @@ void Raw::on_moduleCertspotterFree_clicked(){
 
 void Raw::on_moduleOtx_clicked(){
     ui->comboBoxOptions->clear();
-    ModuleInfo::OtxPaid meta;
+    ModuleInfo::Otx meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
@@ -131,7 +131,7 @@ void Raw::on_moduleOmnisint_clicked(){
 
 void Raw::on_moduleRobtexPaid_clicked(){
     ui->comboBoxOptions->clear();
-    ModuleInfo::RobtexPaid meta;
+    ModuleInfo::Robtex meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
@@ -251,7 +251,7 @@ void Raw::on_moduleRiskIq_clicked(){
 
 void Raw::on_moduleRobtex_clicked(){
     ui->comboBoxOptions->clear();
-    ModuleInfo::RobtexPaid meta;
+    ModuleInfo::Robtex meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
@@ -361,7 +361,7 @@ void Raw::on_moduleCircl_clicked(){
 
 void Raw::on_moduleHackerTarget_clicked(){
     ui->comboBoxOptions->clear();
-    ModuleInfo::HackerTargetPaid meta;
+    ModuleInfo::HackerTarget meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
@@ -371,7 +371,7 @@ void Raw::on_moduleHackerTarget_clicked(){
 
 void Raw::on_moduleMnemonic_clicked(){
     ui->comboBoxOptions->clear();
-    ModuleInfo::MnemonicPaid meta;
+    ModuleInfo::Mnemonic meta;
     m_optionSet = meta.flags;
     ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
     ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");

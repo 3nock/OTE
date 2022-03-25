@@ -30,22 +30,22 @@ WhoisXmlApi::WhoisXmlApi(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_WHOISXMLAPI;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedSubdomain);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedIp);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedAsn);
-    if(args.outputCidr)
+    if(args.output_CIDR)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedCidr);
-    if(args.outputEmail)
+    if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedEmail);
-    if(args.outputInfoNS)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedInfoNS);
-    if(args.outputInfoMX)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedInfoMX);
+    if(args.output_EnumNS)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedEnumNS);
+    if(args.output_EnumMX)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedEnumMX);
 
     /* get api key */
     m_key = APIKEY.value(OSINT_MODULE_WHOISXMLAPI).toString();
@@ -59,8 +59,8 @@ void WhoisXmlApi::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption){
+    if(args.output_Raw){
+        switch (args.raw_query_id){
         case WHOIS:
             url.setUrl("https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey="+m_key+"&domainName="+target);
             break;
@@ -124,8 +124,8 @@ void WhoisXmlApi::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://subdomains.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             request.setAttribute(QNetworkRequest::User, SUBDOMAIN_LOOKUP);
             request.setUrl(url);
@@ -133,7 +133,7 @@ void WhoisXmlApi::start(){
             activeRequests++;
         }
 
-        if(args.outputEmail){
+        if(args.output_Email){
             url.setUrl("https://website-contacts.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
             request.setAttribute(QNetworkRequest::User, WEBSITE_CONTACTS);
             request.setUrl(url);
@@ -150,8 +150,8 @@ void WhoisXmlApi::start(){
         }
     }
 
-    if(args.inputIp){
-        if(args.outputSubdomain){
+    if(args.input_IP){
+        if(args.output_Hostname){
             url.setUrl("https://reverse-ip.whoisxmlapi.com/api/v1?apiKey="+m_key+"&ip="+target);
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
@@ -159,7 +159,7 @@ void WhoisXmlApi::start(){
             activeRequests++;
         }
 
-        if(args.outputAsn || args.outputCidr || args.outputEmail){
+        if(args.output_ASN || args.output_CIDR || args.output_Email){
             url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&ip="+target);
             request.setAttribute(QNetworkRequest::User, IP_NETBLOCKS_IP);
             request.setUrl(url);
@@ -168,8 +168,8 @@ void WhoisXmlApi::start(){
         }
     }
 
-    if(args.inputAsn){
-        if(args.outputAsn || args.outputCidr || args.outputEmail){
+    if(args.input_ASN){
+        if(args.output_ASN || args.output_CIDR || args.output_Email){
             url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&asn="+target);
             request.setAttribute(QNetworkRequest::User, IP_NETBLOCKS_ASN);
             request.setUrl(url);
@@ -178,8 +178,8 @@ void WhoisXmlApi::start(){
         }
     }
 
-    if(args.inputCidr){
-        if(args.outputAsn || args.outputCidr || args.outputEmail){
+    if(args.input_CIDR){
+        if(args.output_ASN || args.output_CIDR || args.output_Email){
             QString ip = target.split("/").at(0);
             QString mask = target.split("/").at(1);
             url.setUrl("https://ip-netblocks.whoisxmlapi.com/api/v2?apiKey="+m_key+"&ip="+ip+"&mask="+mask);
@@ -194,7 +194,7 @@ void WhoisXmlApi::start(){
     /// info...
     ///
 
-    if(args.outputInfoMX){
+    if(args.output_EnumMX){
         url.setUrl("https://reverse-mx.whoisxmlapi.com/api/v1?apiKey="+m_key+"&mx="+target);
         request.setAttribute(QNetworkRequest::User, REVERSE_MX);
         request.setUrl(url);
@@ -202,7 +202,7 @@ void WhoisXmlApi::start(){
         activeRequests++;
     }
 
-    if(args.outputInfoNS){
+    if(args.output_EnumNS){
         url.setUrl("https://reverse-ns.whoisxmlapi.com/api/v1?apiKey="+m_key+"&ns="+target);
         request.setAttribute(QNetworkRequest::User, REVERSE_NS);
         request.setUrl(url);
@@ -407,7 +407,7 @@ void WhoisXmlApi::replyFinishedEmail(QNetworkReply *reply){
 /// Info...
 ///
 
-void WhoisXmlApi::replyFinishedInfoNS(QNetworkReply *reply){
+void WhoisXmlApi::replyFinishedEnumNS(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -417,17 +417,17 @@ void WhoisXmlApi::replyFinishedInfoNS(QNetworkReply *reply){
     QJsonArray result = document.object()["result"].toArray();
 
     s3s_struct::NS ns;
-    ns.info_ns = target;
+    ns.ns = target;
 
     foreach(const QJsonValue &domain, result)
         ns.domains.insert(domain.toObject()["name"].toString());
 
-    emit infoNS(ns);
+    emit resultEnumNS(ns);
 
     end(reply);
 }
 
-void WhoisXmlApi::replyFinishedInfoMX(QNetworkReply *reply){
+void WhoisXmlApi::replyFinishedEnumMX(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -437,12 +437,12 @@ void WhoisXmlApi::replyFinishedInfoMX(QNetworkReply *reply){
     QJsonArray result = document.object()["result"].toArray();
 
     s3s_struct::MX mx;
-    mx.info_mx = target;
+    mx.mx = target;
 
     foreach(const QJsonValue &domain, result)
         mx.domains.insert(domain.toObject()["name"].toString());
 
-    emit infoMX(mx);
+    emit resultEnumMX(mx);
 
     end(reply);
 }

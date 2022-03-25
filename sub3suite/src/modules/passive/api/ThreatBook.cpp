@@ -16,13 +16,13 @@ ThreatBook::ThreatBook(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_THREATBOOK;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ThreatBook::replyFinishedRawJson);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ThreatBook::replyFinishedSubdomain);
-    if(args.outputAsn)
+    if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ThreatBook::replyFinishedAsn);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ThreatBook::replyFinishedIp);
 
     /* get api key */
@@ -37,8 +37,8 @@ void ThreatBook::start(){
     request.setRawHeader("Content-Type", "application/json");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case SUBDOMAINS:
             url.setUrl("https://api.threatbook.cn/v3/domain/sub_domains?apikey="+m_key+"&resource="+target);
             break;
@@ -61,15 +61,15 @@ void ThreatBook::start(){
         return;
     }
 
-    if(args.inputDomain){
-        if(args.outputSubdomain){
+    if(args.input_Domain){
+        if(args.output_Hostname){
             url.setUrl("https://api.threatbook.cn/v3/domain/sub_domains?apikey="+m_key+"&resource="+target);
             request.setAttribute(QNetworkRequest::User, SUBDOMAINS);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputIp){
+        if(args.output_IP){
             url.setUrl("https://api.threatbook.cn/v3/domain/query?apikey="+m_key+"&resource="+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_QUERY);
             request.setUrl(url);
@@ -86,7 +86,7 @@ void ThreatBook::start(){
         }
     }
 
-    if(args.inputIp){
+    if(args.input_IP){
         url.setUrl("https://api.threatbook.cn/v3/ip/query?apikey="+m_key+"&resource="+target);
         request.setAttribute(QNetworkRequest::User, IP_QUERY);
         request.setUrl(url);

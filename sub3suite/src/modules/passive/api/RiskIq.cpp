@@ -28,15 +28,15 @@ RiskIq::RiskIq(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = OSINT_MODULE_RISKIQ;
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedRawJson);
-    if(args.outputIp)
+    if(args.output_IP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedIp);
-    if(args.outputSubdomain)
+    if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomain);
-    if(args.outputSubdomainIp)
+    if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedSubdomainIp);
-    if(args.outputSSL)
+    if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedSSL);
 
     /* getting api-key */
@@ -55,8 +55,8 @@ void RiskIq::start(){
     request.setRawHeader("Authorization", "Basic "+data);
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case CERT_HOST:
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             break;
@@ -109,15 +109,15 @@ void RiskIq::start(){
         return;
     }
 
-    if(args.inputIp){
-        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+    if(args.input_IP){
+        if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://api.riskiq.net/v0/pdns/data/ip?ip="+target);
             request.setAttribute(QNetworkRequest::User, PDNS_IP);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSL){
+        if(args.output_SSL){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
@@ -126,15 +126,15 @@ void RiskIq::start(){
         }
     }
 
-    if(args.inputDomain){
-        if(args.outputIp || args.outputSubdomain || args.outputSubdomainIp){
+    if(args.input_Domain){
+        if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
             url.setUrl("https://api.riskiq.net/v0/pdns/data/name?name="+target);
             request.setAttribute(QNetworkRequest::User, PDNS_NAME);
             request.setUrl(url);
             manager->get(request);
             activeRequests++;
         }
-        if(args.outputSSL){
+        if(args.output_SSL){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
@@ -143,8 +143,8 @@ void RiskIq::start(){
         }
     }
 
-    if(args.inputSSL){
-        if(args.outputIp || args.outputSSL || args.outputSubdomain){
+    if(args.input_SSL){
+        if(args.output_IP || args.output_SSL || args.output_Hostname){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/sha1?sha1="+target);
             request.setAttribute(QNetworkRequest::User, CERT_SHA1);
             request.setUrl(url);

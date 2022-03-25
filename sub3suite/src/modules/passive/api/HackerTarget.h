@@ -1,11 +1,11 @@
-#ifndef HACKERTARGETPAID_H
-#define HACKERTARGETPAID_H
+#ifndef HACKERTARGET_H
+#define HACKERTARGET_H
 
 #include "../AbstractOsintModule.h"
 
 
 namespace ModuleInfo {
-struct HackerTargetPaid{
+struct HackerTarget{
     QString name = OSINT_MODULE_HACKERTARGET;
     QString url = "https://hackertarget.com/";
     QString url_apiDoc = "";
@@ -52,11 +52,11 @@ struct HackerTargetPaid{
 };
 }
 
-class HackerTargetPaid: public AbstractOsintModule{
+class HackerTarget: public AbstractOsintModule{
 
     public:
-        HackerTargetPaid(ScanArgs args);
-        ~HackerTargetPaid() override;
+        HackerTarget(ScanArgs args);
+        ~HackerTarget() override;
 
     public slots:
         void start() override;
@@ -71,4 +71,4 @@ class HackerTargetPaid: public AbstractOsintModule{
 };
 
 
-#endif // HACKERTARGETPAID_H
+#endif // HACKERTARGET_H

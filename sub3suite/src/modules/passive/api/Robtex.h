@@ -1,11 +1,11 @@
-#ifndef ROBTEXPAID_H
-#define ROBTEXPAID_H
+#ifndef ROBTEX_H
+#define ROBTEX_H
 
 #include "../AbstractOsintModule.h"
 
 
 namespace ModuleInfo {
-struct RobtexPaid{
+struct Robtex{
     QString name = OSINT_MODULE_ROBTEX;
     QString url = "https://www.robtex.com/";
     QString url_apiDoc = "https://www.robtex.com/api/";
@@ -29,11 +29,11 @@ struct RobtexPaid{
 };
 }
 
-class RobtexPaid: public AbstractOsintModule{
+class Robtex: public AbstractOsintModule{
 
     public:
-        RobtexPaid(ScanArgs args);
-        ~RobtexPaid() override;
+        Robtex(ScanArgs args);
+        ~Robtex() override;
 
     public slots:
         void start() override;
@@ -46,4 +46,4 @@ class RobtexPaid: public AbstractOsintModule{
     private:
         QString m_key;
 };
-#endif // ROBTEXPAID_H
+#endif // ROBTEX_H

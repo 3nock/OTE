@@ -9,7 +9,7 @@ HybridAnalysis::HybridAnalysis(ScanArgs args): AbstractOsintModule(args)
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
     log.moduleName = "HybridAnalysis";
 
-    if(args.outputRaw)
+    if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HybridAnalysis::replyFinishedRawJson);
     ///
     /// get api key...
@@ -30,8 +30,8 @@ void HybridAnalysis::start(){
     request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
 
     QUrl url;
-    if(args.outputRaw){
-        switch (args.rawOption) {
+    if(args.output_Raw){
+        switch (args.raw_query_id) {
         case URL_QUICKSCAN:
             url.setUrl("https://www.hybrid-analysis.com/api/v2/quick-scan/url");
             QByteArray data;
