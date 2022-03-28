@@ -145,9 +145,9 @@ class Osint : public AbstractEngine{
         void sendToProject();
         void sendSelectedToProject();
         void sendToEngine(const ENGINE&, const RESULT_TYPE&);
-        void sendToEnum(const TOOL&, const RESULT_TYPE&);
+        void sendToEnum(const ENUMERATOR&, const RESULT_TYPE&);
         void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
-        void sendSelectedToEnum(const TOOL&, const RESULT_TYPE&);
+        void sendSelectedToEnum(const ENUMERATOR&, const RESULT_TYPE&);
 };
 
 #endif // OSINT_H

@@ -97,8 +97,8 @@ class Brute : public AbstractEngine{
         void sendSelectedToProject();
         void sendToEngine(const ENGINE&, const RESULT_TYPE&);
         void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
-        void sendToEnum(const TOOL&);
-        void sendSelectedToEnum(const TOOL&);
+        void sendToEnum(const ENUMERATOR&);
+        void sendSelectedToEnum(const ENUMERATOR&);
 };
 
 #endif // BRUTE_H

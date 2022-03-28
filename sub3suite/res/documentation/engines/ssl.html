@@ -1,13 +1,27 @@
 <h1> SSL ENGINE </h1>
 
-The SSL Engine performs an encrypted connection to target and pulls the target's SSL Certificate to 
-obtain valuable information from the certificates.<br><br>
+<h2> What is? </h2>
+<p style="color:white">
+	<b> SSL/TLS - </b> SSL (Secure Sockets Layer) and its successor, TLS (Transport Layer Security), are protocols for establishing authenticated and encrypted links between networked computers. 
+	Although the SSL protocol was deprecated with the release of TLS 1.0 in 1999, it is still common to refer to these related technologies as "SSL" or "SSL/TLS". 
+	<a href=https://www.ssl.com/faqs/faq-what-is-ssl> reference </a>.<br><br>
 
-The Tool returns results as SSL Certificates full info, SSL Cert Hash(sha1 && sha256) & SSL alternative names.<br><br>
+	<b> SSL Certificates - </b> SSL certificates make SSL/TLS encryption possible, and they contain the website's public key and the website's identity, along with related information. 
+	Devices attempting to communicate with the origin server will reference this file to obtain the public key and verify the server's identity. The private key is kept secret and secure.
+	<a href=https://www.cloudflare.com/learning/ssl/what-is-an-ssl-certificate> reference </a>.<br><br>
 
-This Tool uses multiple threads as alocated by the user to perform enumeration.
+	<b> SSL Engine - </b> Is used to enumerate SSL Certificates from targets by actively establishing encrypted connection to the target and pulling the obtained SSL Certificate to
+	obtain all relevant information stored in the certificate that can be useful to map the target.<br>
+	SSL Certificates store important information such as:<br>
+	1. Associated domains.<br>
+	2. Organization name & contacts.<br>
+	3. Issued & Expirely date of the certificate. etc<br><br>
 
+	sub3suite's SSL Engine pulls all the data from the SSL Certificate and present it in a very intuitive manner.
+	The Tool returns results as SSL Certificates full info, SSL Cert Hash(sha1 && sha256) & SSL alternative names.<br><br>
 
+	This Tool uses multiple threads as alocated by the user to perform enumeration.
+</p>
 <h2> Features </h2>
 1. Supports multiple Targets connections in one scan using multiple threads.<br>
 2. Supports enumeration by connecting to host on specified ports eg (HTTP, HTTPS, FTP etc.).<br>
@@ -19,6 +33,8 @@ This Tool uses multiple threads as alocated by the user to perform enumeration.
 
 <br> <a href=https://github.com/3nock/sub3suite>Help improve the documentation...</a><br>
 
-<h2> Blog Posts </h2>
-
 <h2> References </h2>
+
+<h2> NOTE: </h2><br>
+<i> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
+Help improve the <a href=https://github.com/3nock/sub3suite_doc> documentation </a>.</i>

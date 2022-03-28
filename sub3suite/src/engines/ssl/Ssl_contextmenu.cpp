@@ -50,7 +50,7 @@ void Ssl::on_buttonAction_clicked(){
         menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(TOOL::SSL);})->setIcon(QIcon(":/img/res/icons/hash.png"));
+        menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::SSL);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         break;
     case 2: // ssl
         menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
@@ -100,7 +100,7 @@ void Ssl::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendSelectedToEnum(TOOL::SSL);})->setIcon(QIcon(":/img/res/icons/hash.png"));
+        menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendSelectedToEnum(ENUMERATOR::SSL);})->setIcon(QIcon(":/img/res/icons/hash.png"));
         break;
     case 2: // ssl
         menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));

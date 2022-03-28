@@ -77,6 +77,7 @@ void Raw::initUI(){
     ui->lineEditFind->setPlaceholderText(tr("Find..."));
     ui->lineEditFind_json->setPlaceholderText("Find...");
     ui->lineEditTreeFilter->setPlaceholderText(tr("Filter..."));
+    ui->plainTextEditJson->setPlaceholderText("Double-click on an item (first column) on Tree-tab to view it in json...");
 
     /* ... */
     ui->labelUrl->setTextFormat(Qt::RichText);

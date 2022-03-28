@@ -103,7 +103,7 @@
 #define PLACEHOLDERTEXT_UA "User-Agent"
 #define PLACEHOLDERTEXT_BULK_IP "ip-address,ip-address"
 
-struct ScanStatus{
+struct ScanStatus {
     bool isNotActive = true;
     bool isRunning = false;
     bool isStopped = false;
@@ -111,7 +111,7 @@ struct ScanStatus{
     int activeScanThreads = 0;
 };
 
-enum class RESULT_TYPE{
+enum class RESULT_TYPE {
     SUBDOMAINIP,
     SUBDOMAIN,
     TLD,
@@ -137,7 +137,7 @@ enum class RESULT_TYPE{
     IPV6
 };
 
-enum class ENGINE{
+enum class ENGINE {
     BRUTE,
     TLDBRUTE,
     SUBBRUTE,
@@ -149,7 +149,7 @@ enum class ENGINE{
     URL
 };
 
-enum class TOOL{
+enum class ENUMERATOR {
     MX,
     NS,
     CIDR,

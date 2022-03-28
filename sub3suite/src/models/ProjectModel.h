@@ -56,6 +56,7 @@ public:
     void openProject(ProjectStruct project);
     void openExistingProject(QString name, QString path);
     void saveProject();
+    void saveProjectCopy();
     void closeProject();
 
     /* actions */
@@ -127,17 +128,17 @@ public:
     QStandardItemModel *passiveSubdomain;
     QStandardItemModel *passiveA;
     QStandardItemModel *passiveAAAA;
-    QStandardItemModel *passiveCidr;
+    QStandardItemModel *passiveCIDR;
     QStandardItemModel *passiveNS;
     QStandardItemModel *passiveMX;
     QStandardItemModel *passiveTXT;
     QStandardItemModel *passiveCNAME;
     QStandardItemModel *passiveEmail;
-    QStandardItemModel *passiveUrl;
-    QStandardItemModel *passiveAsn;
+    QStandardItemModel *passiveURL;
+    QStandardItemModel *passiveASN;
     QStandardItemModel *passiveSSL;
     /* enum Results model */
-    QStandardItemModel *enumIp;
+    QStandardItemModel *enumIP;
     QStandardItemModel *enumASN;
     QStandardItemModel *enumCIDR;
     QStandardItemModel *enumNS;
@@ -153,7 +154,7 @@ public:
     QMap<QString, s3s_item::DNS*> map_activeDNS;
     QMap<QString, s3s_item::SSL*> map_activeSSL;
     QMap<QString, s3s_item::URL*> map_activeURL;
-    QMap<QString, s3s_item::IP*> map_enumIp;
+    QMap<QString, s3s_item::IP*> map_enumIP;
     QMap<QString, s3s_item::ASN*> map_enumASN;
     QMap<QString, s3s_item::CIDR*> map_enumCIDR;
     QMap<QString, s3s_item::NS*> map_enumNS;

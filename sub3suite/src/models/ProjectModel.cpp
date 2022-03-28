@@ -32,18 +32,18 @@ ProjectModel::ProjectModel():
     passiveSubdomain(new QStandardItemModel),
     passiveA(new QStandardItemModel),
     passiveAAAA(new QStandardItemModel),
-    passiveCidr(new QStandardItemModel),
+    passiveCIDR(new QStandardItemModel),
     passiveNS(new QStandardItemModel),
     passiveMX(new QStandardItemModel),
     passiveTXT(new QStandardItemModel),
     passiveCNAME(new QStandardItemModel),
     passiveEmail(new QStandardItemModel),
-    passiveUrl(new QStandardItemModel),
-    passiveAsn(new QStandardItemModel),
+    passiveURL(new QStandardItemModel),
+    passiveASN(new QStandardItemModel),
     passiveSSL(new QStandardItemModel),
 
     /* enum Results model */
-    enumIp(new QStandardItemModel),
+    enumIP(new QStandardItemModel),
     enumASN(new QStandardItemModel),
     enumCIDR(new QStandardItemModel),
     enumNS(new QStandardItemModel),
@@ -57,41 +57,42 @@ ProjectModel::ProjectModel():
     this->setHeaderLabels();
 }
 ProjectModel::~ProjectModel(){
-    delete activeHost;
-    delete activeWildcard;
-    delete activeDNS;
-    delete activeA;
-    delete activeAAAA;
-    delete activeNS;
-    delete activeMX;
-    delete activeTXT;
-    delete activeCNAME;
-    delete activeSRV;
-    delete activeSSL;
-    delete activeSSL_sha1;
-    delete activeSSL_sha256;
-    delete activeSSL_altNames;
-    delete activeURL;
-    delete passiveSubdomainIp;
-    delete passiveSubdomain;
-    delete passiveA;
-    delete passiveAAAA;
-    delete passiveCidr;
-    delete passiveNS;
-    delete passiveMX;
-    delete passiveTXT;
-    delete passiveCNAME;
-    delete passiveEmail;
-    delete passiveUrl;
-    delete passiveAsn;
-    delete passiveSSL;
-    delete enumIp;
-    delete enumASN;
-    delete enumCIDR;
-    delete enumNS;
-    delete enumMX;
-    delete enumSSL;
+    delete raw;
     delete enumEmail;
+    delete enumSSL;
+    delete enumMX;
+    delete enumNS;
+    delete enumCIDR;
+    delete enumASN;
+    delete enumIP;
+    delete passiveSSL;
+    delete passiveASN;
+    delete passiveURL;
+    delete passiveEmail;
+    delete passiveCNAME;
+    delete passiveTXT;
+    delete passiveMX;
+    delete passiveNS;
+    delete passiveCIDR;
+    delete passiveAAAA;
+    delete passiveA;
+    delete passiveSubdomain;
+    delete passiveSubdomainIp;
+    delete activeURL;
+    delete activeSSL_altNames;
+    delete activeSSL_sha256;
+    delete activeSSL_sha1;
+    delete activeSSL;
+    delete activeSRV;
+    delete activeCNAME;
+    delete activeTXT;
+    delete activeMX;
+    delete activeNS;
+    delete activeAAAA;
+    delete activeA;
+    delete activeDNS;
+    delete activeWildcard;
+    delete activeHost;
     delete explorer;
 }
 
@@ -117,18 +118,18 @@ void ProjectModel::setHeaderLabels(){
     passiveSubdomain->setHorizontalHeaderLabels({QObject::tr(" Subdomains")});
     passiveA->setHorizontalHeaderLabels({QObject::tr(" A Records")});
     passiveAAAA->setHorizontalHeaderLabels({QObject::tr(" AAAA Records")});
-    passiveCidr->setHorizontalHeaderLabels({QObject::tr(" IP/CIDR")});
+    passiveCIDR->setHorizontalHeaderLabels({QObject::tr(" IP/CIDR")});
     passiveNS->setHorizontalHeaderLabels({QObject::tr(" NS Records")});
     passiveMX->setHorizontalHeaderLabels({QObject::tr(" MX Records")});
     passiveTXT->setHorizontalHeaderLabels({QObject::tr(" TXT Records")});
     passiveCNAME->setHorizontalHeaderLabels({QObject::tr(" CNAME Records")});
     passiveEmail->setHorizontalHeaderLabels({QObject::tr(" Emails")});
-    passiveUrl->setHorizontalHeaderLabels({QObject::tr(" URLs")});
-    passiveAsn->setHorizontalHeaderLabels({QObject::tr(" ASN"), QObject::tr(" Name")});
+    passiveURL->setHorizontalHeaderLabels({QObject::tr(" URLs")});
+    passiveASN->setHorizontalHeaderLabels({QObject::tr(" ASN"), QObject::tr(" Name")});
     passiveSSL->setHorizontalHeaderLabels({QObject::tr(" SSL Certificates ID")});
 
     /* enum Results model */
-    enumIp->setHorizontalHeaderLabels({QObject::tr(" IP"), QObject::tr(" Values")});
+    enumIP->setHorizontalHeaderLabels({QObject::tr(" IP"), QObject::tr(" Values")});
     enumASN->setHorizontalHeaderLabels({QObject::tr(" ASN"), QObject::tr(" Values")});
     enumCIDR->setHorizontalHeaderLabels({QObject::tr(" CIDR"), QObject::tr(" Values")});
     enumNS->setHorizontalHeaderLabels({QObject::tr(" NS"), QObject::tr(" Values")});
@@ -160,16 +161,16 @@ void ProjectModel::clearModels(){
     passiveSubdomain->clear();
     passiveA->clear();
     passiveAAAA->clear();
-    passiveCidr->clear();
+    passiveCIDR->clear();
     passiveNS->clear();
     passiveMX->clear();
     passiveTXT->clear();
     passiveCNAME->clear();
     passiveEmail->clear();
-    passiveUrl->clear();
-    passiveAsn->clear();
+    passiveURL->clear();
+    passiveASN->clear();
     passiveSSL->clear();
-    enumIp->clear();
+    enumIP->clear();
     enumASN->clear();
     enumCIDR->clear();
     enumNS->clear();
@@ -183,7 +184,7 @@ void ProjectModel::clearModels(){
     map_activeDNS.clear();
     map_activeSSL.clear();
     map_activeURL.clear();
-    map_enumIp.clear();
+    map_enumIP.clear();
     map_enumASN.clear();
     map_enumCIDR.clear();
     map_enumNS.clear();
@@ -214,16 +215,16 @@ int ProjectModel::getItemsCount(){
             passiveSubdomain->rowCount()+
             passiveA->rowCount()+
             passiveAAAA->rowCount()+
-            passiveCidr->rowCount()+
+            passiveCIDR->rowCount()+
             passiveNS->rowCount()+
             passiveMX->rowCount()+
             passiveTXT->rowCount()+
             passiveCNAME->rowCount()+
             passiveEmail->rowCount()+
-            passiveUrl->rowCount()+
-            passiveAsn->rowCount()+
+            passiveURL->rowCount()+
+            passiveASN->rowCount()+
             passiveSSL->rowCount()+
-            enumIp->rowCount()+
+            enumIP->rowCount()+
             enumASN->rowCount()+
             enumCIDR->rowCount()+
             enumNS->rowCount()+

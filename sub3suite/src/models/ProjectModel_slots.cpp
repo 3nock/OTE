@@ -141,7 +141,7 @@ void ProjectModel::addPassiveAAAA(const QString &ipv6){
 }
 
 void ProjectModel::addPassiveCidr(const QString &cidr){
-    passiveCidr->appendRow(new QStandardItem(cidr));
+    passiveCIDR->appendRow(new QStandardItem(cidr));
     modified = true;
 }
 
@@ -171,12 +171,12 @@ void ProjectModel::addPassiveEMail(const QString &email){
 }
 
 void ProjectModel::addPassiveUrl(const QString &url){
-    passiveUrl->appendRow(new QStandardItem(url));
+    passiveURL->appendRow(new QStandardItem(url));
     modified = true;
 }
 
 void ProjectModel::addPassiveAsn(const QString &asn, const QString &name){
-    passiveAsn->appendRow({new QStandardItem(asn), new QStandardItem(name)});
+    passiveASN->appendRow({new QStandardItem(asn), new QStandardItem(name)});
     modified = true;
 }
 
@@ -218,15 +218,15 @@ void ProjectModel::addEnumCIDR(const s3s_struct::CIDR &cidr){
 
 void ProjectModel::addEnumIP(const s3s_struct::IP &ip){
     if(map_enumASN.contains(ip.ip)){
-        s3s_item::IP *item = map_enumIp.value(ip.ip);
+        s3s_item::IP *item = map_enumIP.value(ip.ip);
         item->setValues(ip);
         return;
     }
 
     s3s_item::IP *item = new s3s_item::IP;
     item->setValues(ip);
-    enumIp->appendRow(item);
-    map_enumIp.insert(ip.ip, item);
+    enumIP->appendRow(item);
+    map_enumIP.insert(ip.ip, item);
     modified = true;
 }
 

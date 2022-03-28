@@ -5,8 +5,8 @@
 [![Twitter](https://img.shields.io/twitter/follow/sub3suite?label=twitter&style=social)](https://twitter.com/sub3suite)
 
 # Subdomain Enumeration Suite
-sub3 suite is a research-grade suite of tools for subdomain enumeration and general osint information gathering. Supports both
-manual and automated analysis on targets with many available feautues. You can find more information on the [blog](https://3nock.github.io/sub3suite)!
+sub3suite is a research-grade suite of tools for subdomain enumeration, OSINT information gathering & attack surface mapping. Supports both
+manual and automated analysis on targets with many available feautues & tools.
 
 ## ScreenShots
 <img src="docs/images/screenshot_osint.png"/>
@@ -21,9 +21,13 @@ If you're just getting started with subdomain enumeration, osint information gat
 
 Check out the [open issues](https://github.com/3nock/sub3suite/issues) and many scattered `TODO` messages throughout the source code.
 
-**Not a developer?** 
+**Are you a designer?**
 
-You can help by reporting [bugs](https://github.com/3nock/sub3suite), requesting [features](https://github.com/3nock/sub3suite), providing [translations](https://github.com/3nock/sub3suite) and sharing this project.
+You can help design an even more intuitive UI, Logos & Icons.
+
+**Not a developer?**
+
+You can help by reporting [bugs](https://github.com/3nock/sub3suite), requesting [features](https://github.com/3nock/sub3suite), [sponsoring](SPONSOR.md) the project, writing blog posts & sharing this project to peers.
 
 For More information see [contribution guide](CONTRIBUTING.md).
 
@@ -33,11 +37,15 @@ For More information see [contribution guide](CONTRIBUTING.md).
 2. Unzip.
 3. Run.
 
+**NOTE**
+On windows install the msvc-redistributable package `sub3suite/vcredist_x64.exe` or `sub3suite/vcredist_x86.exe` if the program fails to run.
+
+
 You can also [compile](COMPILING.md) sub3suite yourself with a few easy steps!
 
 ## Credits
 
-- HTML parser by Google's [GumboParser](https://github.com/google/gumbo-parser)
+- HTML parser by Google's [gumbo-parser](https://github.com/google/gumbo-parser)
 - Crash-Handler by Google's [breakpad](https://github.com/google/breakpad)
 
 ## Developers

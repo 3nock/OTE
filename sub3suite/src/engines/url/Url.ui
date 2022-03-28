@@ -41,8 +41,8 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>110</width>
-         <height>21</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -53,7 +53,7 @@
        </property>
        <item>
         <property name="text">
-         <string>Auto</string>
+         <string>Target</string>
         </property>
        </item>
       </widget>
@@ -400,10 +400,10 @@
               <bool>false</bool>
              </attribute>
              <attribute name="verticalHeaderMinimumSectionSize">
-              <number>15</number>
+              <number>50</number>
              </attribute>
              <attribute name="verticalHeaderDefaultSectionSize">
-              <number>15</number>
+              <number>250</number>
              </attribute>
              <attribute name="verticalHeaderHighlightSections">
               <bool>false</bool>
@@ -416,7 +416,7 @@
               <widget class="QComboBox" name="comboBoxFilter">
                <property name="minimumSize">
                 <size>
-                 <width>110</width>
+                 <width>0</width>
                  <height>0</height>
                 </size>
                </property>

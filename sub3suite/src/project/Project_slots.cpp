@@ -31,6 +31,8 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     a_remove_duplicates.setEnabled(true);
     a_cancel.setEnabled(true);
 
+    ui->treeViewTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
     if(parent_index == model->explorer->active->index()){
         a_remove_duplicates.setDisabled(true);
 
@@ -42,15 +44,8 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
 
             a_expand.setDisabled(true);
             a_collapse.setDisabled(true);
-
-            ui->treeViewTree->header()->resizeSection(0, 200);
-            ui->treeViewTree->header()->resizeSection(1, 100);
-            ui->treeViewTree->header()->resizeSection(2, 150);
-            ui->treeViewTree->header()->resizeSection(3, 100);
         }
         if(index == model->explorer->activeDNS->index()){
-            ui->treeViewTree->header()->resizeSection(0, 200);
-            ui->treeViewTree->header()->resizeSection(1, 200);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -68,12 +63,8 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             a_expand.setDisabled(true);
             a_collapse.setDisabled(true);
             a_extract.setDisabled(true);
-
-            ui->treeViewTree->header()->resizeSection(0, 300);
-            ui->treeViewTree->header()->resizeSection(1, 150);
         }
         if(index == model->explorer->activeSSL->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -92,10 +83,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
 
             a_expand.setDisabled(true);
             a_collapse.setDisabled(true);
-
-            ui->treeViewTree->header()->resizeSection(0, 300);
-            ui->treeViewTree->header()->resizeSection(1, 10);
-            ui->treeViewTree->header()->resizeSection(2, 120);
         }
     }
 
@@ -136,9 +123,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeDNS_SRV);
             ui->comboBoxFilter->addItems({"Name", "Target", "Port"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewTree->header()->resizeSection(0, 300);
-            ui->treeViewTree->header()->resizeSection(1, 300);
         }
     }
 
@@ -171,8 +155,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_subdomainIp);
             ui->comboBoxFilter->addItems({"Subdomain", "IpAddress"});
             ui->comboBoxFilter->show();
-
-            ui->treeViewTree->header()->resizeSection(0, 300);
         }
         if(index == model->explorer->passiveSubdomain->index()){
             proxyModel->setSourceModel(model->passiveSubdomain);
@@ -188,8 +170,8 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_AAAA);
             a_extract.setDisabled(true);
         }
-        if(index == model->explorer->passiveCidr->index()){
-            proxyModel->setSourceModel(model->passiveCidr);
+        if(index == model->explorer->passiveCIDR->index()){
+            proxyModel->setSourceModel(model->passiveCIDR);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_CIDR);
             a_extract.setDisabled(true);
         }
@@ -215,19 +197,17 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_Email);
             a_extract.setDisabled(true);
         }
-        if(index == model->explorer->passiveUrl->index()){
-            proxyModel->setSourceModel(model->passiveUrl);
+        if(index == model->explorer->passiveURL->index()){
+            proxyModel->setSourceModel(model->passiveURL);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_URL);
         }
-        if(index == model->explorer->passiveAsn->index()){
-            proxyModel->setSourceModel(model->passiveAsn);
+        if(index == model->explorer->passiveASN->index()){
+            proxyModel->setSourceModel(model->passiveASN);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_ASN);
             ui->comboBoxFilter->addItems({"ASN", "name"});
             ui->comboBoxFilter->show();
 
             a_extract.setDisabled(true);
-
-            ui->treeViewTree->header()->resizeSection(0, 300);
         }
         if(index == model->explorer->passiveSSL->index()){
             proxyModel->setSourceModel(model->passiveSSL);
@@ -240,18 +220,16 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         a_remove_duplicates.setDisabled(true);
         a_extract.setDisabled(true);
 
-        if(index == model->explorer->enumIp->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
+        if(index == model->explorer->enumIP->index()){
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
-            proxyModel->setSourceModel(model->enumIp);
+            proxyModel->setSourceModel(model->enumIP);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::enum_IP);
             ui->comboBoxFilter->addItems({"IP", "Value"});
             ui->comboBoxFilter->show();
         }
         if(index == model->explorer->enumMX->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -261,7 +239,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->show();
         }
         if(index == model->explorer->enumASN->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -271,7 +248,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->show();
         }
         if(index == model->explorer->enumCIDR->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -281,7 +257,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->show();
         }
         if(index == model->explorer->enumNS->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -291,7 +266,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->show();
         }
         if(index == model->explorer->enumSSL->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -301,7 +275,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->show();
         }
         if(index == model->explorer->enumEmail->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -314,7 +287,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
 
     if(parent_index == model->explorer->custom->index()){
         if(index == model->explorer->raw->index()){
-            ui->treeViewTree->header()->resizeSection(0, 300);
             ui->treeViewTree->setIndentation(15);
             ui->treeViewTree->setSortingEnabled(false);
 
@@ -334,6 +306,8 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     this->init_action_save();
     this->init_action_send();
     this->init_action_extract();
+
+    ui->treeViewTree->header()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 void Project::on_lineEditFilter_textChanged(const QString &filterKeyword){
@@ -411,7 +385,7 @@ void Project::on_treeViewTree_clicked(const QModelIndex &index){
     case ExplorerType::enum_IP:
     {
         ui->label_item_type->setText("Enumerated IP");
-        s3s_item::IP *item = static_cast<s3s_item::IP*>(model->enumIp->itemFromIndex(proxyModel->mapToSource(index)));
+        s3s_item::IP *item = static_cast<s3s_item::IP*>(model->enumIP->itemFromIndex(proxyModel->mapToSource(index)));
         ui->label_item_modified->setText(item->last_modified);
         ui->plainTextEdit_item_comment->setPlainText(item->comment);
         item_comment = &item->comment;
@@ -557,15 +531,15 @@ void Project::on_treeViewTree_doubleClicked(const QModelIndex &index){
     case ExplorerType::enum_IP:
     {
         QModelIndex model_index = proxyModel->mapToSource(index);
-        if(model_index.parent() == model->enumIp->invisibleRootItem()->index()){
-            s3s_item::IP *item = static_cast<s3s_item::IP*>(model->enumIp->itemFromIndex(model_index));
+        if(model_index.parent() == model->enumIP->invisibleRootItem()->index()){
+            s3s_item::IP *item = static_cast<s3s_item::IP*>(model->enumIP->itemFromIndex(model_index));
             QJsonDocument document;
             document.setObject(ip_to_json(item));
             ui->plainTextEditJson->setPlainText(document.toJson());
             return;
         }
-        if(model->enumIp->itemFromIndex(model_index)->hasChildren())
-            ui->plainTextEditJson->setPlainText(item_to_json(model->enumIp->itemFromIndex(model_index)));
+        if(model->enumIP->itemFromIndex(model_index)->hasChildren())
+            ui->plainTextEditJson->setPlainText(item_to_json(model->enumIP->itemFromIndex(model_index)));
     }
         break;
     case ExplorerType::enum_ASN:

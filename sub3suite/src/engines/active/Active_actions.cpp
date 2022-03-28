@@ -369,7 +369,7 @@ void Active::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &resul
     }
 }
 
-void Active::sendToEnum(const TOOL &tool){
+void Active::sendToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting the targets */
@@ -380,7 +380,7 @@ void Active::sendToEnum(const TOOL &tool){
 
     /* sending the targets */
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
@@ -389,7 +389,7 @@ void Active::sendToEnum(const TOOL &tool){
     }
 }
 
-void Active::sendSelectedToEnum(const TOOL &tool){
+void Active::sendSelectedToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting the targets */
@@ -400,7 +400,7 @@ void Active::sendSelectedToEnum(const TOOL &tool){
 
     /* sending the targets */
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;

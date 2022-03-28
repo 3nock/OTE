@@ -26,7 +26,7 @@
 #include "src/engines/ssl/Ssl.h"
 #include "src/engines/url/Url.h"
 
-/* tools */
+/* Enumerators */
 #include "src/enums/ip/IpEnum.h"
 #include "src/enums/asn/ASNEnum.h"
 #include "src/enums/ssl/SSLEnum.h"
@@ -55,7 +55,7 @@ class MainWindow : public QMainWindow{
     public slots:
         void onReceiveStatus(QString status);
 
-        /* change to Engine */
+        /* tab change */
         void onChangeTabToOsint();
         void onChangeTabToActive();
         void onChangeTabToBrute();
@@ -63,7 +63,6 @@ class MainWindow : public QMainWindow{
         void onChangeTabToRaw();
         void onChangeTabToSSL();
         void onChangeTabToURL();
-        /* change tab To Enum */
         void onChangeTabToIpEnum();
         void onChangeTabToAsnEnum();
         void onChangeTabToCidrEnum();
@@ -72,9 +71,10 @@ class MainWindow : public QMainWindow{
         void onChangeTabToSSLEnum();
         void onChangeTabToEmailEnum();
 
-        void onSetTabIcons();
-
     private slots:
+        /* get documentation */
+        void onGetDocumentation();
+
         /* file menu */
         void on_actionExit_triggered();
 
@@ -95,11 +95,6 @@ class MainWindow : public QMainWindow{
         void on_actionCheckUpdates_triggered();
         void on_actionSaveCopy_triggered();
 
-        /* documentations */
-        void onDocumentation_active();
-        void onDocumentation_passive();
-        void onDocumentation_tools();
-
     protected:
         void closeEvent(QCloseEvent *event) override;
 
@@ -117,7 +112,7 @@ class MainWindow : public QMainWindow{
         Ssl *ssl = nullptr;
         Url *url = nullptr;
 
-        /* tools */
+        /* enumerators */
         IpEnum *ipEnum = nullptr;
         ASNEnum *asnEnum = nullptr;
         CidrEnum *cidrEnum = nullptr;
@@ -126,17 +121,16 @@ class MainWindow : public QMainWindow{
         SSLEnum *sslEnum = nullptr;
         EmailEnum *emailEnum = nullptr;
 
-        /* ... */
-        UpdateChecker *m_updateChecker;
-        QMenu *m_menuRecents;
-        void recents();
+        UpdateChecker *m_updateChecker = nullptr;
+        QMenu *m_menuRecents = nullptr;
+
+        void initUI();
         void initActions();
-        void m_initEngines();
-        void m_documentation();
-        void m_registerMetaTypes();
-        void m_connectSignals(AbstractEngine *engine);
-        void m_connectSignals(AbstractEnum *enumerator);
-        void m_connectSignals();
+        void initEngines();
+        void connectSignals(AbstractEngine *engine); // from Engines
+        void connectSignals(AbstractEnum *enumerator); // from Enumerators
+        void connectSignals(); // from project
+        void setRecentProjects();
 };
 
 #endif // MAINWINDOW_H

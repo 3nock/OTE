@@ -44,11 +44,36 @@ void ProjectModel::saveProject(){
 
         /* setting status as no modifications to the project */
         modified = false;
+        info.isExisting = true;
+        info.isTemporary = false;
+        info.isNew = false;
+        info.isConfigured = true;
 
         qDebug() << "Project Saved!";
     }
     else
         qWarning() << "Failed To Open Project File";
+}
+
+void ProjectModel::saveProjectCopy(){
+    qDebug() << "Saving Project Copy To: " << info.path;
+
+    QFile file(info.path);
+    if(file.open(QIODevice::WriteOnly))
+    {
+        /* compress the data then save */
+        file.write(qCompress(this->getJson()));
+        file.close();
+
+        /* adding to recent projects */
+        CONFIG.beginGroup(CFG_GRP_RECENT);
+        CONFIG.setValue(info.name, info.path);
+        CONFIG.endGroup();
+
+        qDebug() << "Project Copy Saved!";
+    }
+    else
+        qWarning() << "Failed To Open Project Copy File";
 }
 
 void ProjectModel::closeProject(){
@@ -184,7 +209,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
 
     /* passive ASN */
     foreach(const QJsonValue &value, data["passive_ASN"].toArray())
-        passiveAsn->appendRow({new QStandardItem(value.toArray()[0].toString()),
+        passiveASN->appendRow({new QStandardItem(value.toArray()[0].toString()),
                                new QStandardItem(value.toArray()[1].toString())});
 
     /* passive Subdomain */
@@ -201,7 +226,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
 
     /* passive CIDR */
     foreach(const QJsonValue &value, data["passive_CIDR"].toArray())
-        passiveCidr->appendRow(new QStandardItem(value.toString()));
+        passiveCIDR->appendRow(new QStandardItem(value.toString()));
 
     /* passive NS */
     foreach(const QJsonValue &value, data["passive_NS"].toArray())
@@ -225,7 +250,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
 
     /* passive URL */
     foreach(const QJsonValue &value, data["passive_URL"].toArray())
-        passiveUrl->appendRow(new QStandardItem(value.toString()));
+        passiveURL->appendRow(new QStandardItem(value.toString()));
 
     /* passive SSL */
     foreach(const QJsonValue &value, data["passive_SSL"].toArray())
@@ -249,8 +274,8 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     foreach(const QJsonValue &value, data["enum_IP"].toArray()){
         s3s_item::IP *item = new s3s_item::IP;
         json_to_ip(value.toObject(), item);
-        enumIp->appendRow(item);
-        map_enumIp.insert(item->text(), item);
+        enumIP->appendRow(item);
+        map_enumIP.insert(item->text(), item);
     }
     /* enum MX" */
     foreach(const QJsonValue &value, data["enum_MX"].toArray()){
@@ -329,8 +354,8 @@ QByteArray ProjectModel::getJson(){
         passive_SSL_array.append(passiveSSL->index(i, 0).data().toString());
 
     /* passive URL */
-    for(int i = 0; i < passiveUrl->rowCount(); ++i)
-        passive_URL_array.append(passiveUrl->index(i, 0).data().toString());
+    for(int i = 0; i < passiveURL->rowCount(); ++i)
+        passive_URL_array.append(passiveURL->index(i, 0).data().toString());
 
     /* passive Email */
     for(int i = 0; i < passiveEmail->rowCount(); ++i)
@@ -353,8 +378,8 @@ QByteArray ProjectModel::getJson(){
         passive_MX_array.append(passiveMX->index(i, 0).data().toString());
 
     /* passive CIDR */
-    for(int i = 0; i < passiveCidr->rowCount(); ++i)
-        passive_CIDR_array.append(passiveCidr->index(i, 0).data().toString());
+    for(int i = 0; i < passiveCIDR->rowCount(); ++i)
+        passive_CIDR_array.append(passiveCIDR->index(i, 0).data().toString());
 
     /* passive A */
     for(int i = 0; i < passiveA->rowCount(); ++i)
@@ -369,10 +394,10 @@ QByteArray ProjectModel::getJson(){
         passive_Subdomain_array.append(passiveSubdomain->index(i, 0).data().toString());
 
     /* passive ASN */
-    for(int i = 0; i < passiveAsn->rowCount(); ++i){
+    for(int i = 0; i < passiveASN->rowCount(); ++i){
         QJsonArray asn;
-        asn.append(passiveAsn->index(i, 0).data().toString());
-        asn.append(passiveAsn->index(i, 1).data().toString());
+        asn.append(passiveASN->index(i, 0).data().toString());
+        asn.append(passiveASN->index(i, 1).data().toString());
         passive_ASN_array.append(asn);
     }
 
@@ -439,8 +464,8 @@ QByteArray ProjectModel::getJson(){
     }
 
     /* enum IP */
-    for(int i = 0; i < enumIp->rowCount(); ++i){
-        s3s_item::IP *item = static_cast<s3s_item::IP*>(enumIp->itemFromIndex(enumIp->index(i, 0)));
+    for(int i = 0; i < enumIP->rowCount(); ++i){
+        s3s_item::IP *item = static_cast<s3s_item::IP*>(enumIP->itemFromIndex(enumIP->index(i, 0)));
         enum_IP_array.append(ip_to_json(item));
     }
 

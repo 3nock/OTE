@@ -48,13 +48,13 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>110</width>
-         <height>21</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>110</width>
+         <width>16777215</width>
          <height>16777215</height>
         </size>
        </property>
@@ -457,10 +457,10 @@
               <bool>false</bool>
              </attribute>
              <attribute name="verticalHeaderMinimumSectionSize">
-              <number>15</number>
+              <number>50</number>
              </attribute>
              <attribute name="verticalHeaderDefaultSectionSize">
-              <number>15</number>
+              <number>250</number>
              </attribute>
             </widget>
            </item>
@@ -470,7 +470,7 @@
               <widget class="QComboBox" name="comboBoxFilter">
                <property name="minimumSize">
                 <size>
-                 <width>110</width>
+                 <width>0</width>
                  <height>0</height>
                 </size>
                </property>

@@ -14,19 +14,37 @@
 #include <QDesktopWidget>
 #include <QSplashScreen>
 #include <QStandardPaths>
+#include <QTranslator>
 
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
 #include "src/utils/CrashHandler.h"
+#endif
 
 ///
 /// logging device informations...
 ///
 void log_device_info(){
-    qDebug() << "Device INFO:";
     qDebug() << "physical dpi value X: " << qApp->desktop()->physicalDpiX();
     qDebug() << "physical dpi value Y: " << qApp->desktop()->physicalDpiY();
     qDebug() << "Logical dpi value X: " << qApp->desktop()->logicalDpiX();
     qDebug() << "Logical dpi value Y: " << qApp->desktop()->logicalDpiY();
     qDebug() << "device-pixel Ratio: " << qApp->desktop()->devicePixelRatio();
+}
+
+void registerMetaTypes(){
+    qRegisterMetaType<ScanLog>("ScanLog");
+    qRegisterMetaType<scan::Log>("scan::Log");
+    qRegisterMetaType<s3s_struct::RAW>("s3s_struct::RAW");
+    qRegisterMetaType<s3s_struct::DNS>("s3s_struct::DNS");
+    qRegisterMetaType<s3s_struct::IP>("s3s_struct::IP");
+    qRegisterMetaType<s3s_struct::ASN>("s3s_struct::ASN");
+    qRegisterMetaType<s3s_struct::CIDR>("s3s_struct::CIDR");
+    qRegisterMetaType<s3s_struct::NS>("s3s_struct::NS");
+    qRegisterMetaType<s3s_struct::MX>("s3s_struct::MX");
+    qRegisterMetaType<s3s_struct::URL>("s3s_struct::URL");
+    qRegisterMetaType<s3s_struct::HOST>("s3s_struct::HOST");
+    qRegisterMetaType<s3s_struct::Wildcard>("s3s_struct::Wildcard");
+    qRegisterMetaType<QSslCertificate>("QSslCertificate");
 }
 
 ///
@@ -129,11 +147,32 @@ int main(int argc, char *argv[])
     /* create the sub3suite app */
     s3s_Application s3s_app(argc, argv);
 
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
     /* initializing the crash handler */
     Breakpad::CrashHandler::instance()->Init(QGuiApplication::applicationDirPath()+"/logs");
+#endif
+
+    qInfo() << "**************************************************************************************";
+    qInfo() << "";
+    qInfo() << "**************************************************************************************";
+
+    /* loading translations
+    QString language = CONFIG.value("language").toString();
+    QTranslator translator;
+    if(translator.load(QString("s3s_%1").arg(language), QGuiApplication::applicationDirPath()+"/translations")){
+         if(s3s_app.installTranslator(&translator))
+             qDebug() << "Translator Installed successfully!";
+    }
+    else
+        qWarning() << "Failed to load translation file.";
+    */
 
     log_device_info();
 
+    /* registering meta-objects */
+    registerMetaTypes();
+
+    /* setting font */
 #if defined(Q_OS_LINUX)
     if(qApp->desktop()->physicalDpiX() == 112 && qApp->desktop()->logicalDpiX() == 96)
     {
@@ -181,8 +220,6 @@ int main(int argc, char *argv[])
         /* opening the project */
         w.initProject(project);
 
-        /* starting the app */
-        qInfo() << "starting sub3suite...";
         return s3s_app.exec();
     }
     else

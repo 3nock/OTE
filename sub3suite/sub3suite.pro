@@ -1,6 +1,6 @@
 #---------------------------------------------------------------------------------
 #
-#                Project created by QtCreator 2020-12-07T00:44:51
+#                Project created by QtCreator 2020-11-07T00:44:51
 #
 # Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
 #
@@ -21,16 +21,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c99
 CONFIG += c++11
 
-# debug information
 win32-msvc* {
+    # debug information; PDB and MAP files
     QMAKE_LFLAGS_RELEASE += /MAP
     QMAKE_CFLAGS_RELEASE += /Zi
     QMAKE_LFLAGS_RELEASE += /INCREMENTAL:NO /debug /opt:ref
 }
 
 unix {
+    # debug information; .debug file
     CONFIG += separate_debug_info
     QMAKE_CXXFLAGS += -g
+
+    # linked shared libraries path
+    QMAKE_LFLAGS_RPATH =
+    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/lib\'"
 }
 
 # included external libraries

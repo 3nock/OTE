@@ -21,7 +21,7 @@ StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(
     this->initUI();
 
     /* model for existing projects */
-    model_existing->setHorizontalHeaderLabels({"Name", "File"});
+    model_existing->setHorizontalHeaderLabels({tr(" Name"), tr(" File")});
     ui->tableViewProjects->setModel(model_existing);
 
     /* projects path */

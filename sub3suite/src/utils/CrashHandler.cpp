@@ -10,11 +10,11 @@
 #include "client/windows/handler/exception_handler.h"
 #endif
 
-
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN32)
 namespace Breakpad {
 
 ///
-/// \brief The CrashHandlerPrivate class
+/// \brief The CrashHandlerPrivate class...
 ///
 
 class CrashHandlerPrivate {
@@ -35,7 +35,7 @@ google_breakpad::ExceptionHandler* CrashHandlerPrivate::pHandler = NULL;
 bool CrashHandlerPrivate::bReportCrashesToSystem = false;
 
 ///
-/// DumpCallback
+/// DumpCallback...
 ///
 
 #if defined(Q_OS_WIN32)
@@ -89,7 +89,7 @@ void CrashHandlerPrivate::InitCrashHandler(const QString& dumpPath) {
 }
 
 ///
-/// CrashHandler
+/// CrashHandler...
 ///
 
 CrashHandler* CrashHandler::instance(){
@@ -124,3 +124,5 @@ void CrashHandler::Init( const QString& reportPath ){
 }
 
 }
+
+#endif

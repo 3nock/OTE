@@ -67,7 +67,7 @@ void Brute::on_buttonAction_clicked(){
     menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     menu.addSeparator();
-    menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+    menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
 
     /* showing the context menu... */
     menu.exec(pos);
@@ -120,7 +120,7 @@ void Brute::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     }
     if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent()) ||
        selectionModel->columnIntersectsSelection(2, selectionModel->currentIndex().parent()))
-        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendSelectedToEnum(ENUMERATOR::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
 
     /* showing the context menu... */
     menu.exec(QCursor::pos());

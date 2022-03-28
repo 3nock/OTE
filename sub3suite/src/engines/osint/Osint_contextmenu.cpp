@@ -66,7 +66,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
     }
         break;
     case osint::OUTPUT::SUBDOMAIN:
@@ -92,7 +92,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         break;
     case osint::OUTPUT::EMAIL:
         menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/save.png"));
@@ -103,7 +103,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::EMAIL, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         break;
     case osint::OUTPUT::URL:
         menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/save.png"));
@@ -123,7 +123,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         break;
     case osint::OUTPUT::CERT:
         menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/save.png"));
@@ -134,7 +134,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(TOOL::SSL, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
+        menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::SSL, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         break;
     case osint::OUTPUT::CIDR:
         menu.addAction(tr("Save"), this, [=](){this->saveResults(RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/save.png"));
@@ -145,7 +145,7 @@ void Osint::on_buttonAction_clicked(){
         menu.addAction(tr("Send CIDR to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
         menu.addAction(tr("Send CIDR to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(TOOL::CIDR, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+        menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::CIDR, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
     }
 
     /* showing the context menu... */
@@ -203,7 +203,7 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
             menu.addSeparator();
         }
         if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent()))
-            menu.addAction(tr("Send IpAddress To IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+            menu.addAction(tr("Send IpAddress To IP-Enum"), this, [=](){this->sendSelectedToEnum(ENUMERATOR::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         break;
     case osint::OUTPUT::SUBDOMAIN:
         menu.addAction(tr("Send Hostname To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
@@ -217,13 +217,13 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send IpAddress To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         menu.addAction(tr("Send IpAddress To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send IpAddress To IP-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+        menu.addAction(tr("Send IpAddress To IP-Enum"), this, [=](){this->sendSelectedToEnum(ENUMERATOR::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         break;
     case osint::OUTPUT::EMAIL:
         menu.addAction(tr("Send Email To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu.addAction(tr("Send Email To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send Email To EMAIL-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::EMAIL, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addAction(tr("Send Email To EMAIL-Enum"), this, [=](){this->sendSelectedToEnum(ENUMERATOR::EMAIL, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         break;
     case osint::OUTPUT::URL:
         menu.addAction(tr("Send URL To URL"), this, [=](){this->sendSelectedToEngine(ENGINE::URL, RESULT_TYPE::URL);})->setIcon(QIcon(":/img/res/icons/url.png"));
@@ -233,19 +233,19 @@ void Osint::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send ASN To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         menu.addAction(tr("Send ASN To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send ASN To ASN-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send ASN To ASN-Enum"), this, [=](){this->sendSelectedToEnum(ENUMERATOR::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         break;
     case osint::OUTPUT::CERT:
         menu.addAction(tr("Send SSL To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         menu.addAction(tr("Send SSL To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send SSL To SSL-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::SSL, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
+        menu.addAction(tr("Send SSL To SSL-Enum"), this, [=](){this->sendSelectedToEnum(ENUMERATOR::SSL, RESULT_TYPE::CERT_ID);})->setIcon(QIcon(":/img/res/icons/ssl.png"));
         break;
     case osint::OUTPUT::CIDR:
         menu.addAction(tr("Send CIDR To OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
         menu.addAction(tr("Send CIDR To RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
         menu.addSeparator();
-        menu.addAction(tr("Send CIDR To CIDR-Enum"), this, [=](){this->sendSelectedToEnum(TOOL::CIDR, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+        menu.addAction(tr("Send CIDR To CIDR-Enum"), this, [=](){this->sendSelectedToEnum(ENUMERATOR::CIDR, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
     }
 
     /* showing the context menu... */

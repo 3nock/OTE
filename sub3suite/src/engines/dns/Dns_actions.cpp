@@ -470,12 +470,12 @@ void Dns::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_t
     }
 }
 
-void Dns::sendToEnum(const TOOL &tool){
+void Dns::sendToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting & sending targets */
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
@@ -489,7 +489,7 @@ void Dns::sendToEnum(const TOOL &tool){
         emit changeTabToIpEnum();
         break;
 
-    case TOOL::NS:
+    case ENUMERATOR::NS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
@@ -501,7 +501,7 @@ void Dns::sendToEnum(const TOOL &tool){
         emit changeTabToNSEnum();
         break;
 
-    case TOOL::MX:
+    case ENUMERATOR::MX:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
@@ -518,7 +518,7 @@ void Dns::sendToEnum(const TOOL &tool){
     }
 }
 
-void Dns::sendSelectedToEnum(const TOOL &tool){
+void Dns::sendSelectedToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting targets */
@@ -529,15 +529,15 @@ void Dns::sendSelectedToEnum(const TOOL &tool){
 
     /* sending targets */
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
-    case TOOL::NS:
+    case ENUMERATOR::NS:
         emit sendToNSEnum(targets, RESULT_TYPE::NS);
         emit changeTabToNSEnum();
         break;
-    case TOOL::MX:
+    case ENUMERATOR::MX:
         emit sendToMXEnum(targets, RESULT_TYPE::MX);
         emit changeTabToMXEnum();
         break;

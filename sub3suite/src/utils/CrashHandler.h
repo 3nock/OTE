@@ -4,6 +4,8 @@
 #pragma once
 #include <QString>
 
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN32)
+
 namespace Breakpad {
     class CrashHandlerPrivate;
     class CrashHandler
@@ -22,5 +24,7 @@ namespace Breakpad {
         CrashHandlerPrivate* d;
     };
 }
+
+#endif
 
 #endif // CRASHHANDLER_H

@@ -54,8 +54,8 @@
       <widget class="QComboBox" name="comboBoxInput">
        <property name="minimumSize">
         <size>
-         <width>110</width>
-         <height>21</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -129,8 +129,8 @@
       <widget class="QComboBox" name="comboBoxOutput">
        <property name="minimumSize">
         <size>
-         <width>110</width>
-         <height>21</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -368,7 +368,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>*Api Keys</string>
+         <string>*API Keys</string>
         </property>
        </widget>
       </item>
@@ -613,10 +613,10 @@
            <bool>false</bool>
           </attribute>
           <attribute name="verticalHeaderMinimumSectionSize">
-           <number>15</number>
+           <number>50</number>
           </attribute>
           <attribute name="verticalHeaderDefaultSectionSize">
-           <number>15</number>
+           <number>250</number>
           </attribute>
          </widget>
         </item>
@@ -626,8 +626,8 @@
            <widget class="QComboBox" name="comboBoxFilter">
             <property name="minimumSize">
              <size>
-              <width>100</width>
-              <height>20</height>
+              <width>0</width>
+              <height>0</height>
              </size>
             </property>
             <item>
@@ -1103,7 +1103,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>163</width>
+              <width>167</width>
               <height>876</height>
              </rect>
             </property>

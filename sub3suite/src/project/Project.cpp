@@ -44,6 +44,8 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     proxyModel->setFilterKeyColumn(0);
     ui->treeViewTree->setModel(proxyModel);
 
+    ui->treeViewTree->header()->setSectionResizeMode(QHeaderView::Interactive);
+
     this->init_menubar_tree();
     this->init_menubar_project();
 }
@@ -84,7 +86,7 @@ void Project::initUI(){
     /* placeholder texts */
     ui->lineEditFilter->setPlaceholderText("Filter...");
     ui->plainTextEdit_item_comment->setPlaceholderText("comment...");
-    ui->plainTextEditJson->setPlaceholderText("Double-click on an item (fist column) on Tree-tab to view it in json...");
+    ui->plainTextEditJson->setPlaceholderText("Double-click on an item (first column) on Tree-tab to view it in json...");
 
     /* resizing */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.22))

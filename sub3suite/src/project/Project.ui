@@ -68,12 +68,12 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>293</width>
+          <width>256</width>
           <height>436</height>
          </rect>
         </property>
         <attribute name="label">
-         <string>Project</string>
+         <string>Project Explorer</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="leftMargin">
@@ -92,6 +92,7 @@
           <widget class="QTreeView" name="treeViewExplorer">
            <property name="font">
             <font>
+             <family>MS Shell Dlg 2</family>
              <pointsize>8</pointsize>
              <weight>75</weight>
              <bold>true</bold>
@@ -179,6 +180,7 @@
           <widget class="QTreeView" name="treeViewTree">
            <property name="font">
             <font>
+             <family>MS Shell Dlg 2</family>
              <pointsize>8</pointsize>
             </font>
            </property>
@@ -213,10 +215,10 @@
             <bool>true</bool>
            </attribute>
            <attribute name="headerMinimumSectionSize">
-            <number>40</number>
+            <number>50</number>
            </attribute>
            <attribute name="headerDefaultSectionSize">
-            <number>40</number>
+            <number>250</number>
            </attribute>
            <attribute name="headerShowSortIndicator" stdset="0">
             <bool>true</bool>
@@ -232,7 +234,7 @@
             <widget class="QComboBox" name="comboBoxFilter">
              <property name="minimumSize">
               <size>
-               <width>100</width>
+               <width>0</width>
                <height>0</height>
               </size>
              </property>
@@ -440,12 +442,12 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>118</width>
+         <width>103</width>
          <height>411</height>
         </rect>
        </property>
        <attribute name="label">
-        <string>Project</string>
+        <string>Project Summary</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
@@ -608,12 +610,12 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>118</width>
+         <width>103</width>
          <height>411</height>
         </rect>
        </property>
        <attribute name="label">
-        <string>Item</string>
+        <string>Item Summary</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>

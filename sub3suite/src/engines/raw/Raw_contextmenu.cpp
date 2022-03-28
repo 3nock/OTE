@@ -85,7 +85,7 @@ void Raw::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     send_ip_menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::IP);});
     send_ip_menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::IP);});
     send_ip_menu.addSeparator();
-    send_ip_menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(TOOL::IP, RESULT_TYPE::IP);});
+    send_ip_menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::IP, RESULT_TYPE::IP);});
 
     QMenu send_url_menu(this);
     send_url_menu.setTitle(tr("URL"));
@@ -100,7 +100,7 @@ void Raw::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     send_email_menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);});
     send_email_menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);});
     send_email_menu.addSeparator();
-    send_email_menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(TOOL::EMAIL, RESULT_TYPE::EMAIL);});
+    send_email_menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::EMAIL, RESULT_TYPE::EMAIL);});
 
     QMenu send_asn_menu(this);
     send_asn_menu.setTitle(tr("ASN"));
@@ -108,7 +108,7 @@ void Raw::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     send_asn_menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);});
     send_asn_menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);});
     send_asn_menu.addSeparator();
-    send_asn_menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(TOOL::ASN, RESULT_TYPE::ASN);});
+    send_asn_menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::ASN, RESULT_TYPE::ASN);});
 
     QMenu send_cidr_menu(this);
     send_cidr_menu.setTitle(tr("CIDR"));
@@ -116,7 +116,7 @@ void Raw::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     send_cidr_menu.addAction(tr("Send CIDR to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);});
     send_cidr_menu.addAction(tr("Send CIDR to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CIDR);});
     send_cidr_menu.addSeparator();
-    send_cidr_menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(TOOL::CIDR, RESULT_TYPE::CIDR);});
+    send_cidr_menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::CIDR, RESULT_TYPE::CIDR);});
 
     QMenu send_ssl_menu(this);
     send_ssl_menu.setTitle(tr("SSL"));
@@ -124,17 +124,17 @@ void Raw::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     send_ssl_menu.addAction(tr("Send SSL to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CERT_ID);});
     send_ssl_menu.addAction(tr("Send SSL to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CERT_ID);});
     send_ssl_menu.addSeparator();
-    send_ssl_menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(TOOL::SSL, RESULT_TYPE::CERT_ID);});
+    send_ssl_menu.addAction(tr("Send SSL to SSL-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::SSL, RESULT_TYPE::CERT_ID);});
 
     QMenu send_ns_menu(this);
     send_ns_menu.setTitle(tr("NameServer"));
     send_ns_menu.setIcon(QIcon(":/img/res/icons/ns.png"));
-    send_ns_menu.addAction(tr("Send NS to NS-Enum"), this, [=](){this->sendToEnum(TOOL::NS, RESULT_TYPE::NS);});
+    send_ns_menu.addAction(tr("Send NS to NS-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::NS, RESULT_TYPE::NS);});
 
     QMenu send_mx_menu(this);
     send_mx_menu.setTitle(tr("MailServer"));
     send_mx_menu.setIcon(QIcon(":/img/res/icons/mx.png"));
-    send_mx_menu.addAction(tr("Send MX to MX-Enum"), this, [=](){this->sendToEnum(TOOL::MX, RESULT_TYPE::MX);});
+    send_mx_menu.addAction(tr("Send MX to MX-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::MX, RESULT_TYPE::MX);});
 
     QMenu send_menu(this);
     send_menu.setTitle(tr("Send Item"));

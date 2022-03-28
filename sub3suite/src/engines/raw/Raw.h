@@ -199,7 +199,7 @@ class Raw : public AbstractEngine{
         void sendToProject();
         void sendSelectedToProject();
         void sendToEngine(const ENGINE&, const RESULT_TYPE&);
-        void sendToEnum(const TOOL&, const RESULT_TYPE&);
+        void sendToEnum(const ENUMERATOR&, const RESULT_TYPE&);
 };
 
 #endif // Raw_H

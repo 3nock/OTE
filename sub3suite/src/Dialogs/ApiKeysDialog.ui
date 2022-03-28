@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Api Keys</string>
+   <string>API Keys</string>
   </property>
   <property name="windowIcon">
    <iconset>

@@ -459,10 +459,10 @@
               <bool>true</bool>
              </attribute>
              <attribute name="headerMinimumSectionSize">
-              <number>200</number>
+              <number>50</number>
              </attribute>
              <attribute name="headerDefaultSectionSize">
-              <number>200</number>
+              <number>100</number>
              </attribute>
             </widget>
            </item>
@@ -472,7 +472,7 @@
               <widget class="QComboBox" name="comboBoxFilter">
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>0</width>
                  <height>0</height>
                 </size>
                </property>

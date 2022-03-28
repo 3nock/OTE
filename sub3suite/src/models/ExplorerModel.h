@@ -84,14 +84,14 @@ class ExplorerModel: public QStandardItemModel {
         QStandardItem *passiveMX;
         QStandardItem *passiveTXT;
         QStandardItem *passiveCNAME;
-        QStandardItem *passiveCidr;
+        QStandardItem *passiveCIDR;
         QStandardItem *passiveEmail;
-        QStandardItem *passiveUrl;
-        QStandardItem *passiveAsn;
+        QStandardItem *passiveURL;
+        QStandardItem *passiveASN;
         QStandardItem *passiveSSL;
 
         /* enum Results explorer */
-        QStandardItem *enumIp;
+        QStandardItem *enumIP;
         QStandardItem *enumASN;
         QStandardItem *enumCIDR;
         QStandardItem *enumNS;

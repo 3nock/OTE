@@ -45,8 +45,8 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>110</width>
-         <height>21</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -76,8 +76,8 @@
       <widget class="QComboBox" name="comboBoxOption">
        <property name="minimumSize">
         <size>
-         <width>110</width>
-         <height>21</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <item>
@@ -96,8 +96,8 @@
       <widget class="QComboBox" name="comboBoxProtocal">
        <property name="minimumSize">
         <size>
-         <width>110</width>
-         <height>21</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <item>
@@ -248,13 +248,13 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>20</height>
+          <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>19</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -461,10 +461,10 @@
               <bool>true</bool>
              </attribute>
              <attribute name="headerMinimumSectionSize">
-              <number>200</number>
+              <number>50</number>
              </attribute>
              <attribute name="headerDefaultSectionSize">
-              <number>200</number>
+              <number>250</number>
              </attribute>
              <attribute name="headerStretchLastSection">
               <bool>true</bool>
@@ -477,7 +477,7 @@
               <widget class="QComboBox" name="comboBoxFilter">
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>0</width>
                  <height>0</height>
                 </size>
                </property>

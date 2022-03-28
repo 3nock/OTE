@@ -30,9 +30,15 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QComboBox" name="comboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>0</width>
          <height>0</height>
         </size>
        </property>
@@ -151,7 +157,7 @@
       <item>
        <widget class="QLabel" name="label_17">
         <property name="text">
-         <string>*Api Keys</string>
+         <string>*API Keys</string>
         </property>
        </widget>
       </item>
@@ -413,7 +419,7 @@
            <number>100</number>
           </attribute>
           <attribute name="headerDefaultSectionSize">
-           <number>200</number>
+           <number>250</number>
           </attribute>
           <attribute name="headerShowSortIndicator" stdset="0">
            <bool>false</bool>
@@ -785,10 +791,16 @@
                 </item>
                 <item>
                  <widget class="QComboBox" name="comboBoxOptions">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="minimumSize">
                    <size>
-                    <width>170</width>
-                    <height>21</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                  </widget>

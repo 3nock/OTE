@@ -417,7 +417,7 @@ void Brute::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result
     }
 }
 
-void Brute::sendToEnum(const TOOL &tool){
+void Brute::sendToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting the targets */
@@ -428,7 +428,7 @@ void Brute::sendToEnum(const TOOL &tool){
 
     /* sending the targets */
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
@@ -437,7 +437,7 @@ void Brute::sendToEnum(const TOOL &tool){
     }
 }
 
-void Brute::sendSelectedToEnum(const TOOL &tool){
+void Brute::sendSelectedToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting the targets */
@@ -448,7 +448,7 @@ void Brute::sendSelectedToEnum(const TOOL &tool){
 
     /* sending the targets */
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;

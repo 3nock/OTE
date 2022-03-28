@@ -7,6 +7,7 @@ Welcome to Sub3 Suite! This document is relevant for you if you want to contribu
 This is a list of things you can do to help us out (in no particular order). Each item will be expanded upon later in the document.
 
 - [Compile sub3suite](COMPILING.md) and add new features and/or solving current [issues](https://github.com/3nock/sub3suite).
+- Design an even more intuitive UI, Logos and Icons.
 - Report [bugs](https://github.com/3nock/sub3suite) at the issue tracker.
 - Add feature requests to the [issue tracker](https://github.com/3nock/sub3suite).
 - [Write a blogpost](https://3nock.github.io/Looking-for-writers.html) about sub3suite in any blog.

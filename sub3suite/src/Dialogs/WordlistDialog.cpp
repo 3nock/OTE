@@ -21,8 +21,6 @@ WordListDialog::WordListDialog(QWidget *parent, QStringListModel *wordlistModel)
     this->m_initGenerate();
 
     /* adjust the dialog size accordingly */
-
-
     ui->scrollAreaGenerate->hide();
     this->adjustSize();
 }

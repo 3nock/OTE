@@ -34,14 +34,14 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     passiveMX(new QStandardItem("MX")),
     passiveTXT(new QStandardItem("TXT")),
     passiveCNAME(new QStandardItem("CNAME")),
-    passiveCidr(new QStandardItem("CIDR")),
+    passiveCIDR(new QStandardItem("CIDR")),
     passiveEmail(new QStandardItem("EMAIL")),
-    passiveUrl(new QStandardItem("URL")),
-    passiveAsn(new QStandardItem("ASN")),
+    passiveURL(new QStandardItem("URL")),
+    passiveASN(new QStandardItem("ASN")),
     passiveSSL(new QStandardItem("SSL")),
 
     /* enum Results ExplorerModel */
-    enumIp(new QStandardItem("IP")),
+    enumIP(new QStandardItem("IP")),
     enumASN(new QStandardItem("ASN")),
     enumCIDR(new QStandardItem("CIDR")),
     enumNS(new QStandardItem("NS")),
@@ -90,16 +90,16 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     passiveSubdomain->setIcon(QIcon(":/img/res/icons/domain.png"));
     passiveA->setIcon(QIcon(":/img/res/icons/ipv4.png"));
     passiveAAAA->setIcon(QIcon(":/img/res/icons/ipv6.png"));
-    passiveCidr->setIcon(QIcon(":/img/res/icons/cidr.png"));
+    passiveCIDR->setIcon(QIcon(":/img/res/icons/cidr.png"));
     passiveNS->setIcon(QIcon(":/img/res/icons/ns.png"));
     passiveMX->setIcon(QIcon(":/img/res/icons/mx.png"));
     passiveTXT->setIcon(QIcon(":/img/res/icons/txt.png"));
     passiveCNAME->setIcon(QIcon(":/img/res/icons/cname.png"));
     passiveEmail->setIcon(QIcon(":/img/res/icons/email.png"));
-    passiveUrl->setIcon(QIcon(":/img/res/icons/url.png"));
-    passiveAsn->setIcon(QIcon(":/img/res/icons/asn.png"));
+    passiveURL->setIcon(QIcon(":/img/res/icons/url.png"));
+    passiveASN->setIcon(QIcon(":/img/res/icons/asn.png"));
     passiveSSL->setIcon(QIcon(":/img/res/icons/ssl.png"));
-    enumIp->setIcon(QIcon(":/img/res/icons/ip.png"));
+    enumIP->setIcon(QIcon(":/img/res/icons/ip.png"));
     enumASN->setIcon(QIcon(":/img/res/icons/asn.png"));
     enumCIDR->setIcon(QIcon(":/img/res/icons/cidr.png"));
     enumNS->setIcon(QIcon(":/img/res/icons/ns.png"));
@@ -130,16 +130,16 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     passiveSubdomainIp->setForeground(Qt::white);
     passiveA->setForeground(Qt::white);
     passiveAAAA->setForeground(Qt::white);
-    passiveCidr->setForeground(Qt::white);
+    passiveCIDR->setForeground(Qt::white);
     passiveNS->setForeground(Qt::white);
     passiveMX->setForeground(Qt::white);
     passiveTXT->setForeground(Qt::white);
     passiveCNAME->setForeground(Qt::white);
     passiveEmail->setForeground(Qt::white);
-    passiveUrl->setForeground(Qt::white);
-    passiveAsn->setForeground(Qt::white);
+    passiveURL->setForeground(Qt::white);
+    passiveASN->setForeground(Qt::white);
     passiveSSL->setForeground(Qt::white);
-    enumIp->setForeground(Qt::white);
+    enumIP->setForeground(Qt::white);
     enumASN->setForeground(Qt::white);
     enumCIDR->setForeground(Qt::white);
     enumNS->setForeground(Qt::white);
@@ -170,16 +170,16 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     passive->appendRow(passiveSubdomain);
     passive->appendRow(passiveA);
     passive->appendRow(passiveAAAA);
-    passive->appendRow(passiveCidr);
+    passive->appendRow(passiveCIDR);
     passive->appendRow(passiveNS);
     passive->appendRow(passiveMX);
     passive->appendRow(passiveTXT);
     passive->appendRow(passiveCNAME);
     passive->appendRow(passiveEmail);
-    passive->appendRow(passiveUrl);
-    passive->appendRow(passiveAsn);
+    passive->appendRow(passiveURL);
+    passive->appendRow(passiveASN);
     passive->appendRow(passiveSSL);
-    enums->appendRow(enumIp);
+    enums->appendRow(enumIP);
     enums->appendRow(enumMX);
     enums->appendRow(enumASN);
     enums->appendRow(enumCIDR);

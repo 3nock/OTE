@@ -169,14 +169,6 @@ void SSLEnum::sendSelectedToProject(){
     }
 }
 
-void SSLEnum::sendToEngine(const ENGINE &engine){
-
-}
-
-void SSLEnum::sendSelectedToEngine(const ENGINE &engine){
-
-}
-
 ///
 /// receiving targets...
 ///

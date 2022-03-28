@@ -206,37 +206,37 @@ void Raw::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
     }
 }
 
-void Raw::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+void Raw::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
     QSet<QString> targets;
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
         targets.insert(index.data().toString());
 
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, result_type);
         emit changeTabToIpEnum();
         break;
-    case TOOL::ASN:
+    case ENUMERATOR::ASN:
         emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
-    case TOOL::CIDR:
+    case ENUMERATOR::CIDR:
         emit sendToCidrEnum(targets, result_type);
         emit changeTabToCidrEnum();
         break;
-    case TOOL::NS:
+    case ENUMERATOR::NS:
         emit sendToNSEnum(targets, result_type);
         emit changeTabToNSEnum();
         break;
-    case TOOL::MX:
+    case ENUMERATOR::MX:
         emit sendToMXEnum(targets, result_type);
         emit changeTabToMXEnum();
         break;
-    case TOOL::EMAIL:
+    case ENUMERATOR::EMAIL:
         emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;
-    case TOOL::SSL:
+    case ENUMERATOR::SSL:
         emit sendToSSLEnum(targets, result_type);
         emit changeTabToSSLEnum();
         break;

@@ -14,7 +14,8 @@ class DocumentationDialog : public QDialog{
 
     public:
         DocumentationDialog(QWidget *parent = nullptr); // for general documentation
-        DocumentationDialog(ENGINE engine, QWidget *parent = nullptr); // for specific documentation
+        DocumentationDialog(ENGINE engine, QWidget *parent = nullptr); // documentation for engines
+        DocumentationDialog(ENUMERATOR enumerator, QWidget *parent = nullptr); // documentation for enumerators
         ~DocumentationDialog();
 
     private slots:
@@ -23,13 +24,6 @@ class DocumentationDialog : public QDialog{
 
     private:
         Ui::DocumentationDialog *ui;
-        void general_documentation();
-        void about_osint();
-        void about_raw();
-        void about_brute();
-        void about_active();
-        void about_dns();
-        void about_ssl();
 };
 
 #endif // DOCUMENTATIONDIALOG_H

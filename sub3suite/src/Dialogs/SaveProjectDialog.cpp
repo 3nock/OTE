@@ -51,9 +51,8 @@ void SaveProjectDialog::on_buttonSave_clicked(){
     m_projectModel->info.name = name;
     m_projectModel->info.path = path+"/"+name+".s3s";
 
-    qDebug() << "Saving a project copy: " << m_projectModel->info.path;
-    m_projectModel->saveProject();
-    qDebug() << "Saving project copy done!";
+    /* save the project copy */
+    m_projectModel->saveProjectCopy();
 
     /* restoring default details */
     m_projectModel->info.name = prev_name;

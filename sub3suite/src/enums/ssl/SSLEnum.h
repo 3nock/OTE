@@ -72,8 +72,6 @@ class SSLEnum : public AbstractEnum {
         /* sending results */
         void sendToProject();
         void sendSelectedToProject();
-        void sendToEngine(const ENGINE&);
-        void sendSelectedToEngine(const ENGINE&);
 };
 
 #endif // SSLENUM_H

@@ -242,7 +242,7 @@ void CidrEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &res
     }
 }
 
-void CidrEnum::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+void CidrEnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -273,11 +273,11 @@ void CidrEnum::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
 
     /* sending targets */
     switch (tool) {
-    case TOOL::ASN:
+    case ENUMERATOR::ASN:
         emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
-    case TOOL::EMAIL:
+    case ENUMERATOR::EMAIL:
         emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;
@@ -286,7 +286,7 @@ void CidrEnum::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
     }
 }
 
-void CidrEnum::sendSelectedToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+void CidrEnum::sendSelectedToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -296,11 +296,11 @@ void CidrEnum::sendSelectedToEnum(const TOOL &tool, const RESULT_TYPE &result_ty
 
     /* sending targets */
     switch (tool) {
-    case TOOL::ASN:
+    case ENUMERATOR::ASN:
         emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
-    case TOOL::EMAIL:
+    case ENUMERATOR::EMAIL:
         emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;

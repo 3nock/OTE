@@ -364,7 +364,7 @@ void Ssl::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_t
     }
 }
 
-void Ssl::sendToEnum(const TOOL &tool){
+void Ssl::sendToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting targets */
@@ -374,13 +374,13 @@ void Ssl::sendToEnum(const TOOL &tool){
     }
 
     /* sending targets */
-    if(tool == TOOL::SSL){
+    if(tool == ENUMERATOR::SSL){
         emit sendToSSLEnum(targets, RESULT_TYPE::CERT_ID);
         emit changeTabToSSLEnum();
     }
 }
 
-void Ssl::sendSelectedToEnum(const TOOL &tool){
+void Ssl::sendSelectedToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting targets */
@@ -390,7 +390,7 @@ void Ssl::sendSelectedToEnum(const TOOL &tool){
     }
 
     /* sending targets */
-    if(tool == TOOL::SSL){
+    if(tool == ENUMERATOR::SSL){
         emit sendToSSLEnum(targets, RESULT_TYPE::CERT_ID);
         emit changeTabToSSLEnum();
     }

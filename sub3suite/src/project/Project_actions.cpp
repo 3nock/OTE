@@ -83,17 +83,17 @@ void Project::action_clear(){
         model->passiveEmail->clear();
         break;
     case ExplorerType::passive_URL:
-        model->passiveUrl->clear();
+        model->passiveURL->clear();
         break;
     case ExplorerType::passive_ASN:
-        model->passiveAsn->clear();
+        model->passiveASN->clear();
         break;
     case ExplorerType::passive_SSL:
         model->passiveSSL->clear();
         break;
     case ExplorerType::enum_IP:
-        model->enumIp->clear();
-        model->map_enumIp.clear();
+        model->enumIP->clear();
+        model->map_enumIP.clear();
         break;
     case ExplorerType::enum_ASN:
         model->enumASN->clear();
@@ -187,10 +187,10 @@ void Project::action_remove_duplicates(){
         choosen_model = model->passiveEmail;
         break;
     case ExplorerType::passive_URL:
-        choosen_model = model->passiveUrl;
+        choosen_model = model->passiveURL;
         break;
     case ExplorerType::passive_ASN:
-        choosen_model = model->passiveAsn;
+        choosen_model = model->passiveASN;
         break;
     case ExplorerType::passive_SSL:
         choosen_model = model->passiveSSL;
@@ -937,37 +937,37 @@ void Project::action_sendToEngine(const ENGINE &engine, const RESULT_TYPE &resul
     }
 }
 
-void Project::action_sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+void Project::action_sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
     QSet<QString> targets;
     foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
         targets.insert(index.data().toString());
 
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, result_type);
         emit changeTabToIpEnum();
         break;
-    case TOOL::ASN:
+    case ENUMERATOR::ASN:
         emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
-    case TOOL::CIDR:
+    case ENUMERATOR::CIDR:
         emit sendToCidrEnum(targets, result_type);
         emit changeTabToCidrEnum();
         break;
-    case TOOL::NS:
+    case ENUMERATOR::NS:
         emit sendToNSEnum(targets, result_type);
         emit changeTabToNSEnum();
         break;
-    case TOOL::MX:
+    case ENUMERATOR::MX:
         emit sendToMXEnum(targets, result_type);
         emit changeTabToMXEnum();
         break;
-    case TOOL::EMAIL:
+    case ENUMERATOR::EMAIL:
         emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;
-    case TOOL::SSL:
+    case ENUMERATOR::SSL:
         emit sendToSSLEnum(targets, result_type);
         emit changeTabToSSLEnum();
         break;
@@ -1627,37 +1627,37 @@ void Project::action_copy_selected(){
     clipboard->setText(clipboardData.trimmed());
 }
 
-void Project::action_send_selected_toEnum(const TOOL &tool){
+void Project::action_send_selected_toEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
     foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
         targets.insert(index.data().toString());
 
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
         break;
-    case TOOL::ASN:
+    case ENUMERATOR::ASN:
         emit sendToAsnEnum(targets, RESULT_TYPE::ASN);
         emit changeTabToAsnEnum();
         break;
-    case TOOL::CIDR:
+    case ENUMERATOR::CIDR:
         emit sendToCidrEnum(targets, RESULT_TYPE::CIDR);
         emit changeTabToCidrEnum();
         break;
-    case TOOL::NS:
+    case ENUMERATOR::NS:
         emit sendToNSEnum(targets, RESULT_TYPE::NS);
         emit changeTabToNSEnum();
         break;
-    case TOOL::MX:
+    case ENUMERATOR::MX:
         emit sendToMXEnum(targets, RESULT_TYPE::MX);
         emit changeTabToMXEnum();
         break;
-    case TOOL::SSL:
+    case ENUMERATOR::SSL:
         emit sendToSSLEnum(targets, RESULT_TYPE::CERT_ID);
         emit changeTabToSSLEnum();
         break;
-    case TOOL::EMAIL:
+    case ENUMERATOR::EMAIL:
         emit sendToEmailEnum(targets, RESULT_TYPE::EMAIL);
         emit changeTabToEmailEnum();
         break;
@@ -1865,13 +1865,13 @@ void Project::action_remove_selected(){
     case ExplorerType::passive_URL:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveUrl->removeRow(index.row());
+            model->passiveURL->removeRow(index.row());
         }
         break;
     case ExplorerType::passive_ASN:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveAsn->removeRow(index.row());
+            model->passiveASN->removeRow(index.row());
         }
         break;
     case ExplorerType::passive_SSL:
@@ -1883,9 +1883,9 @@ void Project::action_remove_selected(){
     case ExplorerType::enum_IP:
         foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
             QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumIp->invisibleRootItem()->index()){
-                model->map_enumIp.remove(proxyIndex.data().toString());
-                model->enumIp->removeRow(index.row());
+            if(index.parent() == model->enumIP->invisibleRootItem()->index()){
+                model->map_enumIP.remove(proxyIndex.data().toString());
+                model->enumIP->removeRow(index.row());
             }
         }
         break;

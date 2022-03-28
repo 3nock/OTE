@@ -512,7 +512,7 @@ void Osint::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result
     }
 }
 
-void Osint::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
+void Osint::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -535,38 +535,38 @@ void Osint::sendToEnum(const TOOL &tool, const RESULT_TYPE &result_type){
 
     /* sending targets */
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, result_type);
         emit changeTabToIpEnum();
         break;
-    case TOOL::ASN:
+    case ENUMERATOR::ASN:
         emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
-    case TOOL::CIDR:
+    case ENUMERATOR::CIDR:
         emit sendToCidrEnum(targets, result_type);
         emit changeTabToCidrEnum();
         break;
-    case TOOL::NS:
+    case ENUMERATOR::NS:
         emit sendToNSEnum(targets, result_type);
         emit changeTabToNSEnum();
         break;
-    case TOOL::MX:
+    case ENUMERATOR::MX:
         emit sendToMXEnum(targets, result_type);
         emit changeTabToMXEnum();
         break;
-    case TOOL::SSL:
+    case ENUMERATOR::SSL:
         emit sendToSSLEnum(targets, result_type);
         emit changeTabToSSLEnum();
         break;
-    case TOOL::EMAIL:
+    case ENUMERATOR::EMAIL:
         emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;
     }
 }
 
-void Osint::sendSelectedToEnum(const TOOL &tool , const RESULT_TYPE &result_type){
+void Osint::sendSelectedToEnum(const ENUMERATOR &tool , const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -590,31 +590,31 @@ void Osint::sendSelectedToEnum(const TOOL &tool , const RESULT_TYPE &result_type
 
     /* sending targets */
     switch (tool) {
-    case TOOL::IP:
+    case ENUMERATOR::IP:
         emit sendToIpEnum(targets, result_type);
         emit changeTabToIpEnum();
         break;
-    case TOOL::ASN:
+    case ENUMERATOR::ASN:
         emit sendToAsnEnum(targets, result_type);
         emit changeTabToAsnEnum();
         break;
-    case TOOL::CIDR:
+    case ENUMERATOR::CIDR:
         emit sendToCidrEnum(targets, result_type);
         emit changeTabToCidrEnum();
         break;
-    case TOOL::NS:
+    case ENUMERATOR::NS:
         emit sendToNSEnum(targets, result_type);
         emit changeTabToNSEnum();
         break;
-    case TOOL::MX:
+    case ENUMERATOR::MX:
         emit sendToMXEnum(targets, result_type);
         emit changeTabToMXEnum();
         break;
-    case TOOL::SSL:
+    case ENUMERATOR::SSL:
         emit sendToSSLEnum(targets, result_type);
         emit changeTabToSSLEnum();
         break;
-    case TOOL::EMAIL:
+    case ENUMERATOR::EMAIL:
         emit sendToEmailEnum(targets, result_type);
         emit changeTabToEmailEnum();
         break;

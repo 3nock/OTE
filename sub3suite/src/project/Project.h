@@ -117,7 +117,7 @@ class Project : public QWidget{
         void action_save(const RESULT_TYPE&);
 
         void action_sendToEngine(const ENGINE&, const RESULT_TYPE&);
-        void action_sendToEnum(const TOOL&, const RESULT_TYPE&);
+        void action_sendToEnum(const ENUMERATOR&, const RESULT_TYPE&);
 
         void action_send_host(const ENGINE&);
         void action_send_ip(const ENGINE&);
@@ -141,7 +141,7 @@ class Project : public QWidget{
         void action_save_selected();
         void action_copy_selected();
         void action_remove_selected();
-        void action_send_selected_toEnum(const TOOL&);
+        void action_send_selected_toEnum(const ENUMERATOR&);
         void action_send_selected_toEngine(const ENGINE&, const RESULT_TYPE&);
 
         void action_extract(bool subdomain, bool tld, bool hosts);

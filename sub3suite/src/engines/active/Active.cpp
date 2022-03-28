@@ -30,14 +30,12 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
     ui->targets->setListModel(m_targetListModel);
 
     /* result model */
+    ui->tableViewResults->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_model->setHorizontalHeaderLabels({tr(" Host"), tr(" Ipv4"), tr(" Ipv6"), tr(" Ports")});
     proxyModel->setSourceModel(m_model);
     ui->tableViewResults->setModel(proxyModel);
 
-    ui->tableViewResults->horizontalHeader()->resizeSection(0, 200);
-    ui->tableViewResults->horizontalHeader()->resizeSection(1, 100);
-    ui->tableViewResults->horizontalHeader()->resizeSection(2, 150);
-    ui->tableViewResults->horizontalHeader()->resizeSection(3, 100);
+    ui->tableViewResults->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* config... */
