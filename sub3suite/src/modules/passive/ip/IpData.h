@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct IpData{
-    QString name = "IpData";
+    QString name = OSINT_MODULE_IPDATA;
     QString url = "https://ipdata.co/";
     QString url_apiDoc = "https://docs.ipdata.co/";
     QString summary = "ipdata provides an IP Address Intelligence API that allows you to lookup the approximate location of any IP Address. "
@@ -37,7 +37,7 @@ class IpData: public AbstractOsintModule{
         void start() override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // IPDATA_H

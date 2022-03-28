@@ -10,16 +10,13 @@
 Debounce::Debounce(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Debounce";
+    log.moduleName = OSINT_MODULE_DEBOUNCE;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Debounce::replyFinishedRawJson);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_key = APIKEY.value("debounce").toString();
-    
+
+    /* getting api-key */
+    m_key = APIKEY.value(OSINT_MODULE_DEBOUNCE).toString();
 }
 Debounce::~Debounce(){
     delete manager;

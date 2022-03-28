@@ -131,6 +131,7 @@ SOURCES += \
     src/modules/passive/api/Otx.cpp \
     src/modules/passive/api/PassiveTotal.cpp \
     src/modules/passive/api/Robtex.cpp \
+    src/modules/passive/ip/Ipfy.cpp \
     src/project/Project_contextmenu.cpp \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
@@ -343,6 +344,7 @@ HEADERS += \
     src/modules/passive/ip/IpGeoLocation.h \
     src/modules/passive/ip/IpRegistry.h \
     src/modules/passive/ip/IpStack.h \
+    src/modules/passive/ip/Ipfy.h \
     src/modules/passive/mal/AbuseIPDB.h \
     src/modules/passive/archive/Arquivo.h \
     src/modules/passive/mal/BotScout.h \

@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct EmailFormat{
-    QString name = "EmailFormat";
+    QString name = OSINT_MODULE_EMAILFORMAT;
     QString url = "https://www.email-format.com/";
     QString url_apiDoc = "https://www.email-format.com/i/api_v2/";
     QString summary = "Save time and energy - find the email address formats in use at thousands of companies.";

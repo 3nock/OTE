@@ -6,10 +6,12 @@
 TruMail::TruMail(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "TruMail";
+    log.moduleName = OSINT_MODULE_TRUMAIL;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &TruMail::replyFinishedRawJson);
+    if(args.output_EnumEmail)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &TruMail::replyFinishedEnumEmail);
 }
 TruMail::~TruMail(){
     delete manager;
@@ -29,4 +31,35 @@ void TruMail::start(){
         manager->get(request);
         activeRequests++;
     }
+
+    if(args.output_EnumEmail){
+        url.setUrl("https://api.trumail.io/v2/lookups/json?email="+target);
+        request.setUrl(url);
+        manager->get(request);
+        activeRequests++;
+    }
+}
+
+void TruMail::replyFinishedEnumEmail(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    if(mainObj["hostExists"].toBool()){
+        s3s_struct::Email email;
+        email.email = target;
+        email.domain = mainObj["domain"].toString();
+        email.free = mainObj["free"].toBool();
+        email.hostExists = mainObj["hostExists"].toBool();
+        email.disposable = mainObj["disposable"].toBool();
+        email.deliverable = mainObj["deliverable"].toBool();
+
+        emit resultEnumEmail(email);
+    }
+
+    end(reply);
 }

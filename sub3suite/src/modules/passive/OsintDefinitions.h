@@ -64,5 +64,17 @@
 #define OSINT_MODULE_GOOGLECERT "GoogleCert"
 
 /* emails */
+#define OSINT_MODULE_DEBOUNCE "Debounce"
+#define OSINT_MODULE_EMAILCRAWLR "EmailCrawlr"
+#define OSINT_MODULE_EMAILFORMAT "EmailFormat"
+#define OSINT_MODULE_EMAILREP "EmailRep"
+#define OSINT_MODULE_HUNTER "Hunter"
+#define OSINT_MODULE_SNOV "Snov"
+#define OSINT_MODULE_TRUMAIL "TruMail"
+
+/* ip */
+#define OSINT_MODULE_IPFY "Ipfy"
+#define OSINT_MODULE_IPAPI "IpApi"
+#define OSINT_MODULE_IPDATA "IpData"
 
 #endif // OSINTDEFINITIONS_H

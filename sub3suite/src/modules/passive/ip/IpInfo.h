@@ -38,7 +38,7 @@ class IpInfo: public AbstractOsintModule{
         void replyFinishedEnumIP(QNetworkReply *reply) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // IPINFO_H

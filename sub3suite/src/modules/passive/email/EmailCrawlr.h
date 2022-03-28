@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct EmailCrawlr{
-    QString name = "EmailCrawlr";
+    QString name = OSINT_MODULE_EMAILCRAWLR;
     QString url = "https://emailcrawlr.com/";
     QString url_apiDoc = "https://emailcrawlr.com/docs";
     QString summary = "By using the EmailCrawlr JSON API you can: Get key information about company websites. Find all email addresses associated with a domain. "

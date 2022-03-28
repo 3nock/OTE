@@ -62,7 +62,7 @@ class BinaryEdge: public AbstractOsintModule{
 
     private:
         int m_page = 1;
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // BINARYEDGE_H

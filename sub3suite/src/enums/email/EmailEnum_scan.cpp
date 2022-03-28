@@ -70,8 +70,8 @@ void EmailEnum::startScan(){
     /* start scan thread */
     switch (ui->comboBoxEngine->currentIndex())
     {
-    case 0: // EmailRep
-        this->startScanThread(new EmailRep(*m_scanArgs));
+    case 0: // TruMail
+        this->startScanThread(new TruMail(*m_scanArgs));
         break;
     }
 }
@@ -81,6 +81,8 @@ void EmailEnum::startScanThread(AbstractOsintModule *module){
     module->startScan(cThread);
     module->moveToThread(cThread);
     connect(module, &AbstractOsintModule::resultEnumEmail, this, &EmailEnum::onResult);
+    connect(this, &EmailEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::scanLog, this, &EmailEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &EmailEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);

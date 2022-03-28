@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Snov{
-    QString name = "Snov";
+    QString name = OSINT_MODULE_SNOV;
     QString url = "https://snov.io/";
     QString url_apiDoc = "https://snov.io/api";
     QString summary = "Snov.io API allows to get a list of all emails from a particular domain, find email addresses by name and domain, verify emails, add prospects to a list, change a recipient's status and more."

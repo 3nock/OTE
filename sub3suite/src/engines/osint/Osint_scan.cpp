@@ -47,6 +47,7 @@ void Osint::startScan(){
     m_scanArgs->input_ASN = false;
     m_scanArgs->input_SSL = false;
     m_scanArgs->input_CIDR = false;
+    m_scanArgs->input_Search = false;
     m_scanArgs->output_HostnameIP = false;
     m_scanArgs->output_Hostname = false;
     m_scanArgs->output_IP = false;
@@ -351,6 +352,15 @@ void Osint::startScan(){
     if(ui->moduleBing->isChecked())
         this->startScanThread(new Bing(*m_scanArgs));
 
+    ///
+    /// ip...
+    ///
+    if(ui->moduleIpfy->isChecked())
+        this->startScanThread(new Ipfy(*m_scanArgs));
+
+    /* set progressBar */
+    ui->progressBar->setMaximum(total_modules*m_scanArgs->targets.length());
+
     /* after starting all choosen enumerations... */
     if(status->activeScanThreads)
     {
@@ -365,8 +375,6 @@ void Osint::startScan(){
 
 void Osint::startScanThread(AbstractOsintModule *module){
     total_modules++;
-    ui->progressBar->setMaximum(total_modules*m_scanArgs->targets.length());
-
     QThread *cThread = new QThread(this);
     module->startScan(cThread);
     module->moveToThread(cThread);

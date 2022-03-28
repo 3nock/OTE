@@ -28,7 +28,7 @@ void ProjectModel::openExistingProject(QString name, QString path){
 }
 
 void ProjectModel::saveProject(){
-    qDebug() << "Saving the Project To: " << info.path;
+    qDebug() << "Saving Project: " << info.path;
 
     QFile file(info.path);
     if(file.open(QIODevice::WriteOnly))
@@ -56,7 +56,7 @@ void ProjectModel::saveProject(){
 }
 
 void ProjectModel::saveProjectCopy(){
-    qDebug() << "Saving Project Copy To: " << info.path;
+    qDebug() << "Saving Project Copy: " << info.path;
 
     QFile file(info.path);
     if(file.open(QIODevice::WriteOnly))

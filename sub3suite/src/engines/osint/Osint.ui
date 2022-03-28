@@ -598,10 +598,10 @@
            <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderMinimumSectionSize">
-           <number>200</number>
+           <number>50</number>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>220</number>
+           <number>250</number>
           </attribute>
           <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
            <bool>true</bool>
@@ -613,10 +613,10 @@
            <bool>false</bool>
           </attribute>
           <attribute name="verticalHeaderMinimumSectionSize">
-           <number>50</number>
+           <number>15</number>
           </attribute>
           <attribute name="verticalHeaderDefaultSectionSize">
-           <number>250</number>
+           <number>15</number>
           </attribute>
          </widget>
         </item>
@@ -1102,9 +1102,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-152</y>
               <width>167</width>
-              <height>876</height>
+              <height>932</height>
              </rect>
             </property>
             <attribute name="label">
@@ -1151,6 +1151,22 @@
                  <widget class="QCheckBox" name="moduleEmailCrawlr">
                   <property name="text">
                    <string>EmailCrawlr</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_9">
+               <property name="title">
+                <string>IP</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <widget class="QCheckBox" name="moduleIpfy">
+                  <property name="text">
+                   <string>Ipfy</string>
                   </property>
                  </widget>
                 </item>

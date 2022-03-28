@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct IpApi{
-    QString name = "IpApi";
+    QString name = OSINT_MODULE_IPAPI;
     QString url = "https://ipapi.com/";
     QString url_apiDoc = "https://ipapi.com/documentation";
     QString summary = "ipapi provides an easy-to-use API interface allowing customers to look various pieces "
@@ -34,7 +34,7 @@ class IpApi: public AbstractOsintModule{
         void replyFinishedEnumIP(QNetworkReply *) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // IPAPI_H

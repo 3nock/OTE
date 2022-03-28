@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct TruMail{
-    QString name = "TruMail";
+    QString name = OSINT_MODULE_TRUMAIL;
     QString url = "https://trumail.io/";
     QString url_apiDoc = "https://trumail.io/documentation";
     QString summary = "Prevent bounced emails and low-quality users with FREE professional grade email verification";
@@ -26,6 +26,7 @@ class TruMail: public AbstractOsintModule{
 
     public slots:
         void start() override;
+        void replyFinishedEnumEmail(QNetworkReply *reply) override;
 
     private:
         QString m_key;

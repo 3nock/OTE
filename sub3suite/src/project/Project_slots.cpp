@@ -127,6 +127,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     }
 
     if(parent_index == model->explorer->activeSSL->index()){
+        a_send.setDisabled(true);
         a_expand.setDisabled(true);
         a_collapse.setDisabled(true);
 

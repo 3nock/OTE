@@ -441,6 +441,12 @@ void Osint::initModules(){
     else
         ui->modulePassiveTotal->hide();
 
+    ModuleInfo::Ipfy ipfy;
+    if(ipfy.input_output.contains(INPUT_TYPE) && ipfy.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
+        ui->moduleIpfy->show();
+    else
+        ui->moduleIpfy->hide();
+
     /* uncheck all modules */
     this->uncheckAllModules();
 }
@@ -516,4 +522,6 @@ void Osint::uncheckAllModules(){
     ui->moduleBing->setChecked(false);
     ui->moduleLeakIX->setChecked(false);
     ui->modulePassiveTotal->setChecked(false);
+    ui->moduleIpfy->setChecked(false);
+    ui->moduleDnsbufferoverrun->setChecked(false);
 }

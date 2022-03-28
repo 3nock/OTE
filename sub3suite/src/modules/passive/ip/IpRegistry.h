@@ -34,7 +34,7 @@ class IpRegistry: public AbstractOsintModule{
         void start() override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // IPREGISTRY_H

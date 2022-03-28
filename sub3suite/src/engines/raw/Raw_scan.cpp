@@ -310,6 +310,9 @@ void Raw::startScan(){
 
     if(ui->modulePassiveTotal->isChecked())
         this->startScanThread(new PassiveTotal(*m_scanArgs));
+
+    if(ui->moduleIpfy->isChecked())
+        this->startScanThread(new Ipfy(*m_scanArgs));
 }
 
 void Raw::startScanThread(AbstractOsintModule *module){

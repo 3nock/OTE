@@ -35,7 +35,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("cloudflare", ui->lineEditCloudflare->text());
     APIKEY.setValue(OSINT_MODULE_GITHUB, ui->lineEditGithub->text());
     APIKEY.setValue("google", ui->lineEditGoogle->text());
-    APIKEY.setValue("hunter", ui->lineEditHunter->text());
+    APIKEY.setValue(OSINT_MODULE_HUNTER, ui->lineEditHunter->text());
     APIKEY.setValue("intelx", ui->lineEditIntelX->text());
     APIKEY.setValue("pentesttools", ui->lineEditPentestTools->text());
     APIKEY.setValue(OSINT_MODULE_PROJECTDISCOVERY, ui->lineEditProjectDiscovery->text());
@@ -49,7 +49,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("virustotal", ui->lineEditVirusTotal->text());
     APIKEY.setValue(OSINT_MODULE_BINARYEDGE, ui->lineEditBinaryEdge->text());
     APIKEY.setValue(OSINT_MODULE_C99, ui->lineEditC99->text());
-    APIKEY.setValue("ipapi", ui->lineEditIpApi->text());
+    APIKEY.setValue(OSINT_MODULE_IPAPI, ui->lineEditIpApi->text());
     APIKEY.setValue("ipinfo", ui->lineEditIpInfo->text());
     APIKEY.setValue(OSINT_MODULE_THREATBOOK, ui->lineEditThreatBook->text());
     APIKEY.setValue(OSINT_MODULE_WHOISXMLAPI, ui->lineEditWhoisXmlApi->text());
@@ -69,7 +69,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue(OSINT_MODULE_ONYPHE, ui->lineEditOnyphe->text());
     APIKEY.setValue(OSINT_MODULE_FULLHUNT, ui->lineEditFullHunt->text());
     APIKEY.setValue(OSINT_MODULE_SPAMHAUS, ui->lineEditSpamHaus->text());
-    APIKEY.setValue("debounce", ui->lineEditDebounce->text());
+    APIKEY.setValue(OSINT_MODULE_DEBOUNCE, ui->lineEditDebounce->text());
     APIKEY.setValue(OSINT_MODULE_HAVEIBEENPAWNED, ui->lineEditHaveIBeenPawned->text());
     APIKEY.setValue(OSINT_MODULE_HOST, ui->lineEditHost->text());
     APIKEY.setValue(OSINT_MODULE_JSONWHOIS, ui->lineEditJsonWhois->text());
@@ -81,11 +81,11 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue(OSINT_MODULE_SPYONWEB, ui->lineEditSpyOnWeb->text());
     APIKEY.setValue(OSINT_MODULE_WHATCMS, ui->lineEditWhatcms->text());
     APIKEY.setValue(OSINT_MODULE_WHOXY, ui->lineEditWhoxy->text());
-    APIKEY.setValue("emailcrawlr", ui->lineEditEmailCrawlr->text());
-    APIKEY.setValue("emailformat", ui->lineEditEmailFormat->text());
-    APIKEY.setValue("emailrep", ui->lineEditEmailRep->text());
-    APIKEY.setValue("snov", ui->lineEditSnov->text());
-    APIKEY.setValue("ipdata", ui->lineEditIpData->text());
+    APIKEY.setValue(OSINT_MODULE_EMAILCRAWLR, ui->lineEditEmailCrawlr->text());
+    APIKEY.setValue(OSINT_MODULE_EMAILFORMAT, ui->lineEditEmailFormat->text());
+    APIKEY.setValue(OSINT_MODULE_EMAILREP, ui->lineEditEmailRep->text());
+    APIKEY.setValue(OSINT_MODULE_SNOV, ui->lineEditSnov->text());
+    APIKEY.setValue(OSINT_MODULE_IPDATA, ui->lineEditIpData->text());
     APIKEY.setValue("ipgeolocation", ui->lineEditIpGeoLocation->text());
     APIKEY.setValue("ipregistry", ui->lineEditIpRegistry->text());
     APIKEY.setValue("ipstack", ui->lineEditIpStack->text());
@@ -97,6 +97,7 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("leaklookup", ui->lineEditLeakLookup->text());
     APIKEY.setValue(OSINT_MODULE_ZETALYTICS, ui->lineEditZETAlytics->text());
     APIKEY.setValue(OSINT_MODULE_WAPPALYZER, ui->lineEditWappalyzer->text());
+    APIKEY.setValue(OSINT_MODULE_IPFY, ui->lineEditIpfy->text());
     accept();
 }
 
@@ -143,7 +144,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditGoogle->setText(key);
         ui->buttonGetGoogle->hide();
     }
-    key = APIKEY.value("hunter").toString();
+    key = APIKEY.value(OSINT_MODULE_HUNTER).toString();
     if(!key.isEmpty()){
         ui->lineEditHunter->setText(key);
         ui->buttonGetHunter->hide();
@@ -236,7 +237,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditZoomEye->setText(key);
         ui->buttonGetZoomEye->hide();
     }
-    key = APIKEY.value("ipapi").toString();
+    key = APIKEY.value(OSINT_MODULE_IPAPI).toString();
     if(!key.isEmpty()){
         ui->lineEditIpApi->setText(key);
         ui->buttonGetIpApi->hide();
@@ -317,7 +318,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditSpamHaus->setText(key);
         ui->buttonGetSpamHaus->hide();
     }
-    key = APIKEY.value("debounce").toString();
+    key = APIKEY.value(OSINT_MODULE_DEBOUNCE).toString();
     if(!key.isEmpty()){
         ui->lineEditDebounce->setText(key);
         ui->buttonGetDebounce->hide();
@@ -376,27 +377,27 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditWhoxy->setText(key);
         ui->buttonGetWhoxy->hide();
     }
-    key = APIKEY.value("emailcrawlr").toString();
+    key = APIKEY.value(OSINT_MODULE_EMAILCRAWLR).toString();
     if(!key.isEmpty()){
         ui->lineEditEmailCrawlr->setText(key);
         ui->buttonGetEmailCrawlr->hide();
     }
-    key = APIKEY.value("emailformat").toString();
+    key = APIKEY.value(OSINT_MODULE_EMAILFORMAT).toString();
     if(!key.isEmpty()){
         ui->lineEditEmailFormat->setText(key);
         ui->buttonGetEmailFormat->hide();
     }
-    key = APIKEY.value("emailrep").toString();
+    key = APIKEY.value(OSINT_MODULE_EMAILREP).toString();
     if(!key.isEmpty()){
         ui->lineEditEmailRep->setText(key);
         ui->buttonGetEmailRep->hide();
     }
-    key = APIKEY.value("snov").toString();
+    key = APIKEY.value(OSINT_MODULE_SNOV).toString();
     if(!key.isEmpty()){
         ui->lineEditSnov->setText(key);
         ui->buttonGetSnov->hide();
     }
-    key = APIKEY.value("ipdata").toString();
+    key = APIKEY.value(OSINT_MODULE_IPDATA).toString();
     if(!key.isEmpty()){
         ui->lineEditIpData->setText(key);
         ui->buttonGetIpData->hide();
@@ -449,6 +450,11 @@ void ApiKeysDialog::m_loadApiKeys(){
     if(!key.isEmpty()){
         ui->lineEditWappalyzer->setText(key);
         ui->buttonGetWappalyzer->hide();
+    }
+    key = APIKEY.value(OSINT_MODULE_IPFY).toString();
+    if(!key.isEmpty()){
+        ui->lineEditIpfy->setText(key);
+        ui->buttonGetIpfy->hide();
     }
 }
 
@@ -702,4 +708,8 @@ void ApiKeysDialog::on_buttonGetWappalyzer_clicked(){
 
 void ApiKeysDialog::on_buttonGetPassiveTotal_clicked(){
     QDesktopServices::openUrl(QUrl("https://community.riskiq.com/", QUrl::TolerantMode));
+}
+
+void ApiKeysDialog::on_buttonGetIpfy_clicked(){
+    QDesktopServices::openUrl(QUrl("https://geo.ipify.org/pricing", QUrl::TolerantMode));
 }

@@ -107,6 +107,8 @@ void ASNEnum::startScanThread(AbstractOsintModule *module){
         connect(module, &AbstractOsintModule::resultEnumASN, this, &ASNEnum::onResultsAsnPrefixes);
         break;
     }
+    connect(this, &ASNEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::scanLog, this, &ASNEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &ASNEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);

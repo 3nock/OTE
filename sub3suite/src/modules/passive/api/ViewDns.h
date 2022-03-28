@@ -66,6 +66,6 @@ class ViewDns: public AbstractOsintModule{
         void replyFinishedEnumMX(QNetworkReply *reply) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 #endif // VIEWDNS_H

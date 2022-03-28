@@ -150,7 +150,9 @@ class Raw : public AbstractEngine{
         void on_moduleWappalyzer_clicked();
         void on_modulePassiveTotal_clicked();
 
-    private:
+        void on_moduleIpfy_clicked();
+
+private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         QStringListModel *m_targetListModel;

@@ -29,6 +29,6 @@ class Github: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 #endif // GITHUB_H

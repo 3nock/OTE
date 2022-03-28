@@ -127,6 +127,8 @@ void json_to_dns(const QJsonObject &dns, s3s_item::DNS *item){
                               new QStandardItem(srv.at(2).toString())});
     }
 
+    item->update_items();
+
     QJsonObject item_info = dns.value("item_info").toObject();
     item->comment = item_info["comment"].toString();
     item->last_modified = item_info["last_modified"].toString();

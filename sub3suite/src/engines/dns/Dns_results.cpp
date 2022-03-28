@@ -36,6 +36,7 @@ void Dns::onScanResult_srv(s3s_struct::DNS dns){
     if(m_scanConfig->autoSaveToProject)
         project->addActiveDNS(dns);
 
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
 }
 
@@ -54,5 +55,6 @@ void Dns::onScanResult(s3s_struct::DNS dns){
     if(m_scanConfig->autoSaveToProject)
         project->addActiveDNS(dns);
 
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
 }

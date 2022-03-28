@@ -19,10 +19,11 @@
 namespace s3s_struct {
 struct Email {
     QString email;
-    QString address;
     QString domain;
     bool free;
+    bool hostExists;
     bool disposable;
+    bool deliverable;
 };
 }
 
@@ -31,10 +32,11 @@ class Email: public QStandardItem {
 public:
     Email(): QStandardItem (),
         info(new QStandardItem("Info")),
-        address(new QStandardItem()),
         domain(new QStandardItem),
         free(new QStandardItem),
-        disposable(new QStandardItem)
+        hostExists(new QStandardItem),
+        disposable(new QStandardItem),
+        deliverable(new QStandardItem)
     {
         this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
@@ -42,10 +44,13 @@ public:
         info->setForeground(Qt::white);
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
-        info->appendRow({new QStandardItem("Address"), address});
         info->appendRow({new QStandardItem("Domain"), domain});
         info->appendRow({new QStandardItem("Free"), free});
+        info->appendRow({new QStandardItem("Host Exists"), hostExists});
         info->appendRow({new QStandardItem("Disposable"), disposable});
+        info->appendRow({new QStandardItem("Deliverable"), deliverable});
+
+        info->setWhatsThis(JSON_OBJECT);
 
         this->appendRow(info);
     }
@@ -55,10 +60,11 @@ public:
 
 public:
     QStandardItem *info;
-    QStandardItem *address;
     QStandardItem *domain;
     QStandardItem *free;
+    QStandardItem *hostExists;
     QStandardItem *disposable;
+    QStandardItem *deliverable;
 
     /* summary */
     QString last_modified;
@@ -67,7 +73,6 @@ public:
     void setValues(const s3s_struct::Email &email){
         this->setText(email.email);
 
-        address->setText(email.address);
         domain->setText(email.domain);
 
         if(email.free)
@@ -79,6 +84,16 @@ public:
             disposable->setText("true");
         else
             disposable->setText("false");
+
+        if(email.deliverable)
+            deliverable->setText("true");
+        else
+            deliverable->setText("false");
+
+        if(email.hostExists)
+            hostExists->setText("true");
+        else
+            hostExists->setText("false");
 
         /* last modified */
         last_modified = QDate::currentDate().toString();

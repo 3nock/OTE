@@ -15,18 +15,15 @@
 EmailCrawlr::EmailCrawlr(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "EmailCrawlr";
+    log.moduleName = OSINT_MODULE_EMAILCRAWLR;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedRawJson);
     if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedEmail);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_key = APIKEY.value("emailcrawlr").toString();
-    
+
+    /* getting api-key */
+    m_key = APIKEY.value(OSINT_MODULE_EMAILCRAWLR).toString();
 }
 EmailCrawlr::~EmailCrawlr(){
     delete manager;
@@ -59,10 +56,12 @@ void EmailCrawlr::start(){
     }
 
     if(args.input_Domain){
-        url.setUrl("https://api.emailcrawlr.com/v2/domain?domain="+target);
-        request.setUrl(url);
-        manager->get(request);
-        activeRequests++;
+        if(args.output_Email){
+            url.setUrl("https://api.emailcrawlr.com/v2/domain?domain="+target);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
     }
 }
 

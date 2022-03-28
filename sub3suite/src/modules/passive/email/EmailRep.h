@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct EmailRep{
-    QString name = "EmailRep";
+    QString name = OSINT_MODULE_EMAILREP;
     QString url = "https://emailrep.io/";
     QString url_apiDoc = "https://docs.emailrep.io/";
     QString summary = "EmailRep is a system of crawlers, scanners and enrichment services that collects data on email addresses, domains, and internet personas.";

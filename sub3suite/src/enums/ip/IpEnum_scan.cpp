@@ -96,6 +96,8 @@ void IpEnum::startScanThread(AbstractOsintModule *module){
     module->startScan(cThread);
     module->moveToThread(cThread);
     connect(module, &AbstractOsintModule::resultEnumIP, this, &IpEnum::onResult);
+    connect(this, &IpEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::scanLog, this, &IpEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
@@ -109,6 +111,8 @@ void IpEnum::startScanThread_reverseIP(AbstractOsintModule *module){
     module->startScan(cThread);
     module->moveToThread(cThread);
     connect(module, &AbstractOsintModule::resultEnumIP, this, &IpEnum::onResult_reverse);
+    connect(this, &IpEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::scanLog, this, &IpEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);

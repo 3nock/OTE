@@ -9,16 +9,13 @@
 EmailFormat::EmailFormat(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "EmailFormat";
+    log.moduleName = OSINT_MODULE_EMAILFORMAT;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailFormat::replyFinishedRawJson);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_key = APIKEY.value("emailformat").toString();
-    
+
+    /* getting api-key */
+    m_key = APIKEY.value(OSINT_MODULE_EMAILFORMAT).toString();
 }
 EmailFormat::~EmailFormat(){
     delete manager;

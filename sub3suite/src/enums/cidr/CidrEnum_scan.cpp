@@ -80,6 +80,8 @@ void CidrEnum::startScanThread(AbstractOsintModule *module){
     module->startScan(cThread);
     module->moveToThread(cThread);
     connect(module, &AbstractOsintModule::resultEnumCIDR, this, &CidrEnum::onResult);
+    connect(this, &CidrEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::scanLog, this, &CidrEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &CidrEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);

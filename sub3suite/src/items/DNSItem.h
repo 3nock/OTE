@@ -29,7 +29,6 @@ struct DNS {
 }
 
 namespace s3s_item {
-
 class DNS: public QStandardItem {
 public:
     DNS(): QStandardItem(),
@@ -80,17 +79,42 @@ public:
     QStandardItem *MX;
     QStandardItem *TXT;
     QStandardItem *SRV;
-    bool _A = false;
-    bool _AAAA = false;
-    bool _CNAME = false;
-    bool _NS = false;
-    bool _MX = false;
-    bool _TXT = false;
-    bool _SRV = false;
+
+    bool A_appended = false;
+    bool AAAA_appended = false;
+    bool CNAME_appended = false;
+    bool TXT_appended = false;
+    bool NS_appended = false;
+    bool MX_appended = false;
+    bool SRV_appended = false;
 
     /* summary */
     QString last_modified;
     QString comment;
+
+    void update_items(){
+        if(A->rowCount() && !A_appended){
+            this->appendRow(A); A_appended = true;
+        }
+        if(AAAA->rowCount() && !AAAA_appended){
+            this->appendRow(AAAA); AAAA_appended = true;
+        }
+        if(CNAME->rowCount() && !CNAME_appended){
+            this->appendRow(CNAME);  CNAME_appended = true;
+        }
+        if(TXT->rowCount() && !TXT_appended){
+            this->appendRow(TXT);  TXT_appended = true;
+        }
+        if(NS->rowCount() && !NS_appended){
+            this->appendRow(NS);  NS_appended = true;
+        }
+        if(MX->rowCount() && !MX_appended){
+            this->appendRow(MX);  MX_appended = true;
+        }
+        if(SRV->rowCount() && !SRV_appended){
+            this->appendRow(SRV);  SRV_appended = true;
+        }
+    }
 
     void addSRV(const s3s_struct::DNS &dns){
         foreach(const QStringList &srv, dns.SRV)
@@ -98,41 +122,13 @@ public:
                            new QStandardItem(srv.at(1)),
                            new QStandardItem(srv.at(2))});
 
+        this->update_items();
+
         /* last modified */
         last_modified = QDate::currentDate().toString();
     }
 
     void setValues(const s3s_struct::DNS &dns){
-        /* append to DNS item */
-        if(!dns.A.isEmpty() && !_A){
-            this->appendRow(A);
-            _A = true;
-        }
-        if(!dns.AAAA.isEmpty() && !_AAAA){
-            this->appendRow(AAAA);
-            _AAAA = true;
-        }
-        if(!dns.CNAME.isEmpty() && !_CNAME){
-            this->appendRow(CNAME);
-            _CNAME = true;
-        }
-        if(!dns.NS.isEmpty() && !_NS){
-            this->appendRow(NS);
-            _NS = true;
-        }
-        if(!dns.MX.isEmpty() && !_MX){
-            this->appendRow(MX);
-            _MX = true;
-        }
-        if(!dns.TXT.isEmpty() && !_TXT){
-            this->appendRow(TXT);
-            _TXT = true;
-        }
-        if(!dns.SRV.isEmpty() && !_SRV){
-            this->appendRow(SRV);
-            _SRV = true;
-        }
-
         this->setText(dns.dns);
 
         /* enter results */
@@ -172,10 +168,13 @@ public:
                             new QStandardItem(txt)});
             count++;
         }
-        foreach(const QStringList &srv, dns.SRV)
+        foreach(const QStringList &srv, dns.SRV){
             SRV->appendRow({new QStandardItem(srv.at(0)),
                            new QStandardItem(srv.at(1)),
                            new QStandardItem(srv.at(2))});
+        }
+
+        this->update_items();
 
         /* last modified */
         last_modified = QDate::currentDate().toString();

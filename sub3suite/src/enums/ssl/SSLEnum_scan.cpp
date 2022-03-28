@@ -70,6 +70,7 @@ void SSLEnum::startScan(){
         crtsh->moveToThread(cThread);
         connect(crtsh, &Crtsh::resultRawSSL, this, &SSLEnum::onResult);
         connect(crtsh, &Crtsh::scanLog, this, &SSLEnum::onScanLog);
+        connect(crtsh, &Crtsh::scanProgress, ui->progressBar, &QProgressBar::setValue);
         connect(this, &SSLEnum::stopScanThread, crtsh, &AbstractOsintModule::onStop);
         connect(cThread, &QThread::finished, this, &SSLEnum::onScanThreadEnded);
         connect(cThread, &QThread::finished, crtsh, &Crtsh::deleteLater);

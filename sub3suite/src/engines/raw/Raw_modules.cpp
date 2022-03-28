@@ -828,3 +828,13 @@ void Raw::on_modulePassiveTotal_clicked(){
     ui->textEditEngineSummary->setText(meta.summary);
     ui->comboBoxOptions->addItems(meta.flags.keys());
 }
+
+void Raw::on_moduleIpfy_clicked(){
+    ui->comboBoxOptions->clear();
+    ModuleInfo::Ipfy meta;
+    m_optionSet = meta.flags;
+    ui->labelUrl->setText("<a href=\""+meta.url+"\" style=\"color: green;\">"+meta.name+"</a>");
+    ui->labelApiDoc->setText("<a href=\""+meta.url_apiDoc+"\" style=\"color: green;\">"+meta.url_apiDoc+"</a>");
+    ui->textEditEngineSummary->setText(meta.summary);
+    ui->comboBoxOptions->addItems(meta.flags.keys());
+}

@@ -416,7 +416,7 @@
            <bool>true</bool>
           </attribute>
           <attribute name="headerMinimumSectionSize">
-           <number>100</number>
+           <number>50</number>
           </attribute>
           <attribute name="headerDefaultSectionSize">
            <number>250</number>
@@ -896,9 +896,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-215</y>
               <width>177</width>
-              <height>617</height>
+              <height>650</height>
              </rect>
             </property>
             <attribute name="label">
@@ -980,6 +980,22 @@
               </widget>
              </item>
              <item>
+              <widget class="QGroupBox" name="groupBox_8">
+               <property name="title">
+                <string>Email</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_11">
+                <item>
+                 <widget class="QRadioButton" name="moduleTruMail">
+                  <property name="text">
+                   <string>TruMail</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
               <widget class="QGroupBox" name="groupBox_3">
                <property name="title">
                 <string>API</string>
@@ -989,13 +1005,6 @@
                  <widget class="QRadioButton" name="moduleAnubis">
                   <property name="text">
                    <string>Anubis</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleTruMail">
-                  <property name="text">
-                   <string>TruMail</string>
                   </property>
                  </widget>
                 </item>
@@ -1114,9 +1123,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-347</y>
               <width>176</width>
-              <height>1524</height>
+              <height>1547</height>
              </rect>
             </property>
             <attribute name="label">
@@ -1249,6 +1258,13 @@
                  <widget class="QRadioButton" name="moduleIpData">
                   <property name="text">
                    <string>IpData</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpfy">
+                  <property name="text">
+                   <string>Ipfy</string>
                   </property>
                  </widget>
                 </item>

@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Hunter{
-    QString name = "Hunter";
+    QString name = OSINT_MODULE_HUNTER;
     QString url = "https://hunter.io/";
     QString url_apiDoc = "https://hunter.io/api-documentation/";
     QString summary = "Hunter lets you find professional email addresses in seconds and \n"

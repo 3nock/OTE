@@ -14,18 +14,15 @@
 IpApi::IpApi(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "IpApi";
+    log.moduleName = OSINT_MODULE_IPAPI;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedRawJson);
     if(args.output_EnumIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedEnumIP);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("ipapi").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_IPAPI).toString();
 }
 IpApi::~IpApi(){
     delete manager;

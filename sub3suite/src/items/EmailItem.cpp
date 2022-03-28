@@ -10,16 +10,25 @@ s3s_struct::Email email_to_struct(s3s_item::Email *item){
 
     email.email = item->text();
     email.domain = item->domain->text();
-    email.address = item->address->text();
     if(item->free->text() == "true")
         email.free = true;
     else
         email.free = false;
 
+    if(item->hostExists->text() == "true")
+        email.hostExists = true;
+    else
+        email.hostExists = false;
+
     if(item->disposable->text() == "true")
         email.disposable = true;
     else
         email.disposable = false;
+
+    if(item->deliverable->text() == "true")
+        email.deliverable = true;
+    else
+        email.deliverable = false;
 
     return email;
 }
@@ -32,9 +41,10 @@ QJsonObject email_to_json(s3s_item::Email *item){
     QJsonObject email;
     email.insert("email", item->text());
     email.insert("domain", item->domain->text());
-    email.insert("address", item->address->text());
     email.insert("free", item->free->text());
+    email.insert("hostExists", item->hostExists->text());
     email.insert("disposable", item->disposable->text());
+    email.insert("deliverable", item->deliverable->text());
     email.insert("item_info", item_info);
 
     return email;
@@ -43,9 +53,10 @@ QJsonObject email_to_json(s3s_item::Email *item){
 void json_to_email(const QJsonObject &email, s3s_item::Email *item){
     item->setText(email.value("email").toString());
     item->domain->setText(email.value("domain").toString());
-    item->address->setText(email.value("address").toString());
     item->free->setText(email.value("free").toString());
+    item->hostExists->setText(email.value("hostExists").toString());
     item->disposable->setText(email.value("disposable").toString());
+    item->deliverable->setText(email.value("deliverable").toString());
 
     QJsonObject item_info = email.value("item_info").toObject();
     item->comment = item_info["comment"].toString();

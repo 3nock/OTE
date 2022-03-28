@@ -92,6 +92,8 @@ void MXEnum::startScanThread(AbstractOsintModule *module){
     module->startScan(cThread);
     module->moveToThread(cThread);
     connect(module, &AbstractOsintModule::resultEnumMX, this, &MXEnum::onResult);
+    connect(this, &MXEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::scanLog, this, &MXEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &MXEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);

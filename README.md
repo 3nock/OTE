@@ -46,7 +46,7 @@ You can also [compile](COMPILING.md) sub3suite yourself with a few easy steps!
 ## Credits
 
 - HTML parser by Google's [gumbo-parser](https://github.com/google/gumbo-parser)
-- Crash-Handler by Google's [breakpad](https://github.com/google/breakpad)
+- Crash handler by Google's [breakpad](https://github.com/google/breakpad)
 
 ## Developers
 

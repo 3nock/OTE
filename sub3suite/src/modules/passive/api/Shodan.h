@@ -56,6 +56,6 @@ class Shodan: public AbstractOsintModule{
         void replyFinishedAsn(QNetworkReply *reply) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 #endif // SHODAN_H

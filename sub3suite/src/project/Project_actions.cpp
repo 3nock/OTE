@@ -285,7 +285,7 @@ void Project::action_save(const RESULT_TYPE &result_type){
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QString name(proxyModel->index(i, 0).data().toString());
             QString target(proxyModel->index(i, 1).data().toString());
-            QString port(proxyModel->index(i, 1).data().toString());
+            QString port(proxyModel->index(i, 2).data().toString());
 
             if(!target.isEmpty())
                 name.append(",").append(target);
@@ -620,7 +620,7 @@ void Project::action_copy(const RESULT_TYPE &result_type){
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QString name(proxyModel->index(i, 0).data().toString());
             QString target(proxyModel->index(i, 1).data().toString());
-            QString port(proxyModel->index(i, 1).data().toString());
+            QString port(proxyModel->index(i, 2).data().toString());
 
             if(!target.isEmpty())
                 name.append(",").append(target);
@@ -1128,7 +1128,7 @@ void Project::action_send_url(const ENGINE &engine){
     case ExplorerType::activeURL:
     case ExplorerType::passive_URL:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            url.insert(proxyModel->index(i, 1).data().toString());
+            url.insert(proxyModel->index(i, 0).data().toString());
         break;
     }
 
@@ -1156,7 +1156,7 @@ void Project::action_send_email(const ENGINE &engine){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_Email:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            emails.insert(proxyModel->index(i, 1).data().toString());
+            emails.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::enum_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1202,7 +1202,7 @@ void Project::action_send_asn(const ENGINE &engine){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            asn.insert(proxyModel->index(i, 1).data().toString());
+            asn.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::enum_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1244,7 +1244,7 @@ void Project::action_send_cidr(const ENGINE &engine){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_CIDR:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            cidr.insert(proxyModel->index(i, 1).data().toString());
+            cidr.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::enum_NS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1276,7 +1276,7 @@ void Project::action_send_ssl(const ENGINE &engine){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_SSL:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            ssl.insert(proxyModel->index(i, 1).data().toString());
+            ssl.insert(proxyModel->index(i, 0).data().toString());
         break;
     }
 
@@ -1301,7 +1301,7 @@ void Project::action_send_ns(const ENGINE &engine){
     case ExplorerType::activeDNS_NS:
     case ExplorerType::passive_NS:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            ns.insert(proxyModel->index(i, 1).data().toString());
+            ns.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::activeDNS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1351,7 +1351,7 @@ void Project::action_send_mx(const ENGINE &engine){
     case ExplorerType::activeDNS_MX:
     case ExplorerType::passive_MX:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            mx.insert(proxyModel->index(i, 1).data().toString());
+            mx.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::activeDNS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1439,7 +1439,7 @@ void Project::action_send_email(){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_Email:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            emails.insert(proxyModel->index(i, 1).data().toString());
+            emails.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::enum_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1475,7 +1475,7 @@ void Project::action_send_asn(){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            asn.insert(proxyModel->index(i, 1).data().toString());
+            asn.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::enum_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1507,7 +1507,7 @@ void Project::action_send_cidr(){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_CIDR:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            cidr.insert(proxyModel->index(i, 1).data().toString());
+            cidr.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::enum_NS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1529,7 +1529,7 @@ void Project::action_send_ssl(){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_SSL:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            ssl.insert(proxyModel->index(i, 1).data().toString());
+            ssl.insert(proxyModel->index(i, 0).data().toString());
         break;
     }
 
@@ -1544,7 +1544,7 @@ void Project::action_send_ns(){
     case ExplorerType::activeDNS_NS:
     case ExplorerType::passive_NS:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            ns.insert(proxyModel->index(i, 1).data().toString());
+            ns.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::activeDNS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
@@ -1568,7 +1568,7 @@ void Project::action_send_mx(){
     case ExplorerType::activeDNS_MX:
     case ExplorerType::passive_MX:
         for(int i = 0; i < proxyModel->rowCount(); i++)
-            mx.insert(proxyModel->index(i, 1).data().toString());
+            mx.insert(proxyModel->index(i, 0).data().toString());
         break;
     case ExplorerType::activeDNS:
         for(int i = 0; i < proxyModel->rowCount(); i++){

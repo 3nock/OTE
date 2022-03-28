@@ -190,6 +190,8 @@ class AbstractOsintModule : public QObject {
         virtual void replyFinishedEnumMX(QNetworkReply*){} // returns MX records info
         virtual void replyFinishedEnumNS(QNetworkReply*){} // returns NS records info
 
+        virtual void replyFinishedEnumEmail(QNetworkReply*){} // returns Email info
+
         virtual void replyFinishedRawNdjson(QNetworkReply *reply) // returns raw json results from ndjson
         {
             if(reply->error())

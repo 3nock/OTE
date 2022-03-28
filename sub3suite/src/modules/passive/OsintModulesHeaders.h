@@ -89,6 +89,7 @@
 #include "src/modules/passive/ip/IpGeoLocation.h"
 #include "src/modules/passive/ip/IpRegistry.h"
 #include "src/modules/passive/ip/IpStack.h"
+#include "src/modules/passive/ip/Ipfy.h"
 ///
 /// email...
 ///

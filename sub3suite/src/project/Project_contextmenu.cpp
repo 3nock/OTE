@@ -392,6 +392,12 @@ void Project::init_action_send(){
         menu_send->addSeparator();
         menu_send->addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->action_send_asn();})->setIcon(QIcon(":/img/res/icons/asn.png"));
         break;
+    case ExplorerType::passive_CIDR:
+        menu_send->addAction(tr("Send CIDR to OSINT"), this, [=](){this->action_send_cidr(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+        menu_send->addAction(tr("Send CIDR to RAW"), this, [=](){this->action_send_cidr(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+        menu_send->addSeparator();
+        menu_send->addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->action_send_cidr();})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+        break;
     default:
         break;
     }

@@ -32,7 +32,7 @@ void Ssl::onScanResultSHA1(QString sha1){
     if(m_scanConfig->autoSaveToProject)
         project->addActiveSSL_sha1(sha1);
 
-    ui->labelResultsCount->setNum(m_model_hash->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
 }
 
@@ -46,7 +46,7 @@ void Ssl::onScanResultSHA256(QString sha256){
     if(m_scanConfig->autoSaveToProject)
         project->addActiveSSL_sha256(sha256);
 
-    ui->labelResultsCount->setNum(m_model_hash->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
 }
 
@@ -63,7 +63,7 @@ void Ssl::onScanResultRaw(QString target, QSslCertificate ssl){
     if(m_scanConfig->autoSaveToProject)
         project->addActiveSSL(target, ssl);
 
-    ui->labelResultsCount->setNum(m_model_ssl->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
 }
 
@@ -80,6 +80,6 @@ void Ssl::onScanResultSubdomain(QStringList subdomains){
             project->addActiveSSL_altNames(subdomain);
     }
 
-    ui->labelResultsCount->setNum(m_model_subdomain->rowCount());
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
 }

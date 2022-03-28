@@ -91,6 +91,8 @@ class ApiKeysDialog : public QDialog{
 
         void on_buttonGetPassiveTotal_clicked();
 
+        void on_buttonGetIpfy_clicked();
+
 private:
         Ui::ApiKeysDialog *ui;
         void m_loadApiKeys();

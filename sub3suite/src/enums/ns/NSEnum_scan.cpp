@@ -92,6 +92,8 @@ void NSEnum::startScanThread(AbstractOsintModule *module){
     module->startScan(cThread);
     module->moveToThread(cThread);
     connect(module, &AbstractOsintModule::resultEnumNS, this, &NSEnum::onResult);
+    connect(this, &NSEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
     connect(module, &AbstractOsintModule::scanLog, this, &NSEnum::onScanLog);
     connect(cThread, &QThread::finished, this, &NSEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);

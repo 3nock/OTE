@@ -462,7 +462,7 @@
               <number>50</number>
              </attribute>
              <attribute name="headerDefaultSectionSize">
-              <number>100</number>
+              <number>200</number>
              </attribute>
             </widget>
            </item>

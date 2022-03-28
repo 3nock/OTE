@@ -41,7 +41,7 @@ class ThreatBook: public AbstractOsintModule{
         void replyFinishedIp(QNetworkReply *reply) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // THREATBOOK_H

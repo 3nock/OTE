@@ -81,7 +81,7 @@ class C99: public AbstractOsintModule{
         void replyFinishedSubdomain(QNetworkReply *reply) override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // C99_H

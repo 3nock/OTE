@@ -34,7 +34,7 @@ class LeakLookup: public AbstractOsintModule{
         void start() override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // LEAKLOOKUP_H

@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Debounce{
-    QString name = "Debounce";
+    QString name = OSINT_MODULE_DEBOUNCE;
     QString url = "https://debounce.io/";
     QString url_apiDoc = "https://docs.debounce.io/";
     QString summary = "Email Validation Tool; Simple, Fast & Accurate.";

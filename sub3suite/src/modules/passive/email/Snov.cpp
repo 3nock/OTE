@@ -11,21 +11,20 @@
 #define GET_PROFILE_WITH_EMAIL 4
 
 /*
- * still many feautures arent implemented
+ * Many api not implemented
  */
 Snov::Snov(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Snov";
+    log.moduleName = OSINT_MODULE_SNOV;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Snov::replyFinishedRawJson);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_key = APIKEY.value("snov").toString();
-    
+    if(args.output_Email)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Snov::replyFinishedEmail);
+
+    /* getting api-key */
+    m_key = APIKEY.value(OSINT_MODULE_SNOV).toString();
 }
 Snov::~Snov(){
     delete manager;
@@ -80,8 +79,34 @@ void Snov::start(){
         }
         activeRequests++;
     }
+
+    if(args.input_Domain){
+        if(args.output_Email){
+            url.setUrl("https://api.snov.io/v2/domain-emails-with-info?type=all&access_token="+m_key+"&domain="+target);
+            request.setAttribute(QNetworkRequest::User, DOMAIN_SEARCH);
+            request.setUrl(url);
+            manager->get(request);
+            activeRequests++;
+        }
+    }
 }
 
 void Snov::replyFinishedEmail(QNetworkReply *reply){
-    Q_UNUSED(reply);
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_SEARCH:
+        foreach(const QJsonValue &email, document.object()["emails"].toArray()){
+            emit resultEmail(email["email"].toString());
+            log.resultsCount++;
+        }
+    }
+
+    end(reply);
 }

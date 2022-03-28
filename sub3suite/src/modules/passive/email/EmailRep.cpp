@@ -7,16 +7,13 @@
 EmailRep::EmailRep(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "EmailRep";
+    log.moduleName = OSINT_MODULE_EMAILREP;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailRep::replyFinishedRawJson);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_key = APIKEY.value("emailrep").toString();
-    
+
+    /* getting api-key */
+    m_key = APIKEY.value(OSINT_MODULE_EMAILREP).toString();
 }
 EmailRep::~EmailRep(){
     delete manager;

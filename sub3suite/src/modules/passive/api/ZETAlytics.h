@@ -26,7 +26,7 @@ class ZETAlytics: public AbstractOsintModule{
         void start() override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // ZETALYTICS_H

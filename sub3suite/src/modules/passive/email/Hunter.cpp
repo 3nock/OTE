@@ -14,18 +14,15 @@
 Hunter::Hunter(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Hunter";
+    log.moduleName = OSINT_MODULE_HUNTER;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Hunter::replyFinishedRawJson);
     if(args.output_Email)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
-    ///
-    /// getting api-key...
-    ///
-    
-    m_key = APIKEY.value("hunter").toString();
-    
+
+    /* getting api-key */
+    m_key = APIKEY.value(OSINT_MODULE_HUNTER).toString();
 }
 Hunter::~Hunter(){
     delete manager;
@@ -77,28 +74,17 @@ void Hunter::replyFinishedEmail(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject data = document["data"].toObject();
 
-    if(QUERY_TYPE == DOMAIN_SEARCH){
-        /*
-         * QString OrganizationName = data["organization"].toString();
-         */
-        QJsonArray emailList = data["emails"].toArray();
-        foreach(const QJsonValue &value, emailList){
-            QString Email = value["value"].toString();
-            emit resultEmail(Email);
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_SEARCH:
+        foreach(const QJsonValue &value, data["emails"].toArray()){
+            emit resultEmail(value["value"].toString());
             log.resultsCount++;
-            /*
-             * getting where the email was extracted from
-             *
-            QStringList uriSources;
-            foreach(const QJsonValue &sources, value["sources"].toArray())
-                uriSources.append(value["uri"].toString());
-             *
-             */
         }
     }
+
     end(reply);
 }

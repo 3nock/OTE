@@ -28,7 +28,7 @@ class HybridAnalysis: public AbstractOsintModule{
         void start() override;
 
     private:
-        QString m_key = nullptr;
+        QString m_key;
 };
 
 #endif // HYBRIDANALYSIS_H
