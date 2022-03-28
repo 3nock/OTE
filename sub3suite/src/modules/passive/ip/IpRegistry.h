@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct IpRegistry{
-    QString name = "IpRegistry";
+    QString name = OSINT_MODULE_IPREGISTRY;
     QString url = "https://ipregistry.co/";
     QString url_apiDoc = "https://ipregistry.co/docs/";
     QString summary = "Ipregistry is a trusted and in-depth IP Geolocation and Threat detections source of information that can benefit publishers, ad networks, retailers, financial services, e-commerce stores and more.";

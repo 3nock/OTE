@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct PagesInventory{
-    QString name = "PagesInventory";
+    QString name = OSINT_MODULE_PAGESINVENTORY;
     QString url = "https://pagesinventory.com/";
     QString url_apiDoc = "";
     QString summary = "";

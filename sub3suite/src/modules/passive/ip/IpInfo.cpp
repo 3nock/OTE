@@ -15,7 +15,7 @@
 IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "IpInfo";
+    log.moduleName = OSINT_MODULE_IPINFO;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedRawJson);
@@ -23,12 +23,9 @@ IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedEnumIP);
     if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
-    ///
-    /// getting the api key...
-    ///
-    
-    m_key = APIKEY.value("ipinfo").toString();
-    
+
+    /* getting the api key */
+    m_key = APIKEY.value(OSINT_MODULE_IPINFO).toString();
 }
 IpInfo::~IpInfo(){
     delete manager;

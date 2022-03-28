@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct IpInfo{
-    QString name = "IpInfo";
+    QString name = OSINT_MODULE_IPINFO;
     QString url = "https://ipinfo.io/";
     QString url_apiDoc = "https://ipinfo.io/developers";
     QString summary = "With IPinfo, you can pinpoint your users’ locations, customize their experiences, \n"

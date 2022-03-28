@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct LeakLookup{
-    QString name = "Leak-Lookup";
+    QString name = OSINT_MODULE_LEAKLOOKUP;
     QString url = "https://leak-lookup.com/";
     QString url_apiDoc = "https://leak-lookup.com/api";
     QString summary = "Leak-Lookup allows you to search across thousands of data breaches to stay on top of credentials that may have been compromised, allowing you to proactively stay on top of the latest data leaks with ease.";

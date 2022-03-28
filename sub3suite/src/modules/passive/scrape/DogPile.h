@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct DogPile{
-    QString name = "DogPile";
+    QString name = OSINT_MODULE_DOGPILE;
     QString url = "https://dogpile.com/";
     QString url_apiDoc = "";
     QString summary = "";

@@ -31,7 +31,7 @@
 Arin::Arin(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Arin";
+    log.moduleName = OSINT_MODULE_ARIN;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Arin::replyFinishedRawJson);

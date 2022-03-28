@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct DuckDuckGo{
-    QString name = "DuckDuckGo";
+    QString name = OSINT_MODULE_DUCKDUCKGO;
     QString url = "https://duckduckgo.com/";
     QString url_apiDoc = "";
     QString summary = "";

@@ -12,7 +12,7 @@
 BotScout::BotScout(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "BotScout";
+    log.moduleName = OSINT_MODULE_BOTSCOUT;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BotScout::replyFinishedRawJson);

@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct SiteDossier{
-    QString name = "SiteDossier";
+    QString name = OSINT_MODULE_SITEDOSSIER;
     QString url = "https://sitedossier.com/";
     QString url_apiDoc = "";
     QString summary = "";

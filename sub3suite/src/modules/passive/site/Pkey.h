@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Pkey{
-    QString name = "Pkey";
+    QString name = OSINT_MODULE_PKEY;
     QString url = "https://pkey.in/";
     QString url_apiDoc = "";
     QString summary = "";

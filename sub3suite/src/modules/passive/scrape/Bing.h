@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct Bing{
-    QString name = "Bing";
+    QString name = OSINT_MODULE_BING;
     QString url = "https://bing.com/";
     QString url_apiDoc = "";
     QString summary = "";

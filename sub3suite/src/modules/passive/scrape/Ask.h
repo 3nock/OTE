@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Ask{
-    QString name = "Ask";
+    QString name = OSINT_MODULE_ASK;
     QString url = "https://ask.com/";
     QString url_apiDoc = "";
     QString summary = "";

@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct HybridAnalysis{
-    QString name = "HybridAnalysis";
+    QString name = OSINT_MODULE_HYBRIDANALYSIS;
     QString url = "https://www.hybrid-analysis.com/";
     QString url_apiDoc = "https://www.hybrid-analysis.com/docs/api/v2";
     QString summary = "Detects and analyzes unknown threats using a unique Hybrid Analysis technology.";

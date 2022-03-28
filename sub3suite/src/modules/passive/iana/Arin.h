@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Arin{
-    QString name = "Arin";
+    QString name = OSINT_MODULE_ARIN;
     QString url = "https://www.arin.net/";
     QString url_apiDoc = "https://www.arin.net/resources/registry/whois/rws/api/";
     QString summary = "ARIN is a nonprofit, member-based organization that administers IP addresses & ASNs "

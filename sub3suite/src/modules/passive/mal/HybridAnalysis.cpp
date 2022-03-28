@@ -7,16 +7,13 @@
 HybridAnalysis::HybridAnalysis(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "HybridAnalysis";
+    log.moduleName = OSINT_MODULE_HYBRIDANALYSIS;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HybridAnalysis::replyFinishedRawJson);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("hybridanalysis").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_HYBRIDANALYSIS).toString();
 }
 HybridAnalysis::~HybridAnalysis(){
     delete manager;

@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct Exalead{
-    QString name = "Exalead";
+    QString name = OSINT_MODULE_EXALEAD;
     QString url = "https://exalead.com/";
     QString url_apiDoc = "";
     QString summary = "";

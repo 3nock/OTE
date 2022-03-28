@@ -11,16 +11,13 @@
 IpRegistry::IpRegistry(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "IpRegistry";
+    log.moduleName = OSINT_MODULE_IPREGISTRY;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpRegistry::replyFinishedRawJson);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("ipregistry").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_IPREGISTRY).toString();
 }
 IpRegistry::~IpRegistry(){
     delete manager;

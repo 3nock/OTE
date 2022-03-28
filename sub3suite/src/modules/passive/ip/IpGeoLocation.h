@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct IpGeoLocation{
-    QString name = "IpGeoLocation";
+    QString name = OSINT_MODULE_IPGEOLOCATION;
     QString url = "https://ipgeolocation.io/";
     QString url_apiDoc = "https://ipgeolocation.io/documentation/";
     QString summary = "The Trusted Source of IP Address Data";

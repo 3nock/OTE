@@ -10,16 +10,13 @@
 IpGeoLocation::IpGeoLocation(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "IpGeoLocation";
+    log.moduleName = OSINT_MODULE_IPGEOLOCATION;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpGeoLocation::replyFinishedRawJson);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("ipgeolocation").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_IPGEOLOCATION).toString();
 }
 IpGeoLocation::~IpGeoLocation(){
     delete manager;

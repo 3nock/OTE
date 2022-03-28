@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Rapiddns{
-    QString name = "Rapiddns";
+    QString name = OSINT_MODULE_RAPIDDNS;
     QString url = "https://rapiddns.io/";
     QString url_apiDoc = "";
     QString summary = "RapidDNS is a dns query tool which make querying subdomains or sites of a same ip easy!";

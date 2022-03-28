@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct IpStack{
-    QString name = "IpStack";
+    QString name = OSINT_MODULE_IPSTACK;
     QString url = "https://ipstack.com/";
     QString url_apiDoc = "https://ipstack.com/documentation";
     QString summary = "ipstack offers a powerful, real-time IP to geolocation API capable of looking up accurate location data and assessing security threats originating from risky IP addresses.";

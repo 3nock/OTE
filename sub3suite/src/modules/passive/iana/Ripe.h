@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Ripe{
-    QString name = "Ripe";
+    QString name = OSINT_MODULE_RIPE;
     QString url = "https://stat.ripe.net/";
     QString url_apiDoc = "https://stat.ripe.net/docs/data_api";
     QString summary = "RIPEstat is a large-scale information service and the open data platform of the RIPE NCC. Get essential information on "

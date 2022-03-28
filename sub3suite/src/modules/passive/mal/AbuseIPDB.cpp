@@ -12,16 +12,13 @@
 AbuseIPDB::AbuseIPDB(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "AbuseIPDB";
+    log.moduleName = OSINT_MODULE_ABUSEIPDB;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &AbuseIPDB::replyFinishedRawJson);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("abuseipdb").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_ABUSEIPDB).toString();
 }
 AbuseIPDB::~AbuseIPDB(){
     delete manager;

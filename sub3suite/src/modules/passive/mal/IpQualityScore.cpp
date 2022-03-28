@@ -13,16 +13,13 @@
 IpQualityScore::IpQualityScore(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "IpQualityScore";
+    log.moduleName = OSINT_MODULE_IPQUALITYSCORE;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRawJson);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("ipqualityscore").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_IPQUALITYSCORE).toString();
 }
 IpQualityScore::~IpQualityScore(){
     delete manager;

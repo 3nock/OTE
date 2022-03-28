@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct AbuseIPDB{
-    QString name = "AbuseIPDB";
+    QString name = OSINT_MODULE_ABUSEIPDB;
     QString url = "https://abuseipdb.com/";
     QString url_apiDoc = "https://docs.abuseipdb.com/";
     QString summary = "AbuseIPDB is a project managed by Marathon Studios Inc. Our mission is to help make Web safer by providing a central repository for webmasters, system administrators, "

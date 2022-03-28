@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct Yahoo{
-    QString name = "Yahoo";
+    QString name = OSINT_MODULE_YAHOO;
     QString url = "https://yahoo.com/";
     QString url_apiDoc = "";
     QString summary = "";

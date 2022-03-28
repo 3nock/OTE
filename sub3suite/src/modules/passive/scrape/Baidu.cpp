@@ -8,7 +8,7 @@
 Baidu::Baidu(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Baidu";
+    log.moduleName = OSINT_MODULE_BAIDU;
 
     if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Baidu::replyFinishedSubdomain);

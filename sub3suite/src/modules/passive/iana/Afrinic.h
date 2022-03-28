@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Afrinic{
-    QString name = "Afrinic";
+    QString name = OSINT_MODULE_AFRINIC;
     QString url = "https://afrinic.net/";
     QString url_apiDoc = "https://afrinic.net/whois/rdap#how-to";
     QString summary = "AFRINIC Whois Database is a public database containing information regarding the entities that hold Internet number resources "

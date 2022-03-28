@@ -11,7 +11,7 @@
 Apnic::Apnic(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Apnic";
+    log.moduleName = OSINT_MODULE_APNIC;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Apnic::replyFinishedRawJson);

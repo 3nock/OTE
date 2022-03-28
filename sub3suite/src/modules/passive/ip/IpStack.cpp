@@ -11,16 +11,13 @@
 IpStack::IpStack(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "IpStack";
+    log.moduleName = OSINT_MODULE_IPSTACK;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpStack::replyFinishedRawJson);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("ipstack").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_IPSTACK).toString();
 }
 IpStack::~IpStack(){
     delete manager;

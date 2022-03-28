@@ -29,7 +29,7 @@
 VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "VirusTotal";
+    log.moduleName = OSINT_MODULE_VIRUSTOTAL;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedRawJson);
@@ -41,12 +41,9 @@ VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSubdomain);
     if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSL);
-    ///
-    /// obtain apikey...
-    ///
-    
-    m_key = APIKEY.value("virustotal").toString();
-    
+
+    /* obtain apikey */
+    m_key = APIKEY.value(OSINT_MODULE_VIRUSTOTAL).toString();
 }
 VirusTotal::~VirusTotal(){
     delete manager;
@@ -197,12 +194,14 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray data = document.object()["data"].toArray();
 
-    /* from v2 api endpoint */
-    if(QUERY_TYPE == V2_DOMAIN || QUERY_TYPE == V2_IPADDRESS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case V2_DOMAIN:
+    case V2_IPADDRESS:
+    {
         QJsonArray subdomains = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
             QString hostname = value.toString();
@@ -210,9 +209,11 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
+        break;
 
-    /* alternative names from historical ssl certificates */
-    if(QUERY_TYPE == DOMAIN_HISTORICAL_SSL_CERTS || QUERY_TYPE == IP_HISTORICAL_SSL_CERTS){
+    case DOMAIN_HISTORICAL_SSL_CERTS:
+    case IP_HISTORICAL_SSL_CERTS:
+    {
         foreach(const QJsonValue &value, data){
             QJsonArray subject_alternative_name = value.toObject()["attributes"].toObject()["extensions"].toObject()["subject_alternative_name"].toArray();
             foreach(const QJsonValue &alt_name, subject_alternative_name){
@@ -222,8 +223,10 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
             }
         }
     }
+        break;
 
-    if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
+    case DOMAIN_SUBDOMAINS:
+    {
         foreach(const QJsonValue &value, data){
            /* from id */
            QString hostname = value.toObject()["id"].toString();
@@ -262,14 +265,16 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
            }
         }
     }
+        break;
 
-    if(QUERY_TYPE == IP_RESOLUTIONS){
+    case IP_RESOLUTIONS:
         foreach(const QJsonValue &value, data){
             QString hostname = value.toObject()["attributes"].toObject()["host_name"].toString();
             emit resultSubdomain(hostname);
             log.resultsCount++;
         }
     }
+
     end(reply);
 }
 
@@ -279,12 +284,14 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray data = document.object()["data"].toArray();
 
-    /* from v2 api endpoint */
-    if(QUERY_TYPE == V2_DOMAIN || QUERY_TYPE == V2_IPADDRESS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case V2_DOMAIN:
+    case V2_IPADDRESS:
+    {
         QJsonArray resolutions = document.object()["resolutions"].toArray();
         foreach(const QJsonValue &value, resolutions){
             QString address = value.toObject()["ip_address"].toString();
@@ -292,17 +299,20 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
+        break;
 
-    /* from v3 api endpoint */
-    if(QUERY_TYPE == DOMAIN_RESOLUTIONS){
+    case DOMAIN_RESOLUTIONS:
+    {
         foreach(const QJsonValue &value, data){
             QString address = value.toObject()["attributes"].toObject()["ip_address"].toString();
             emit resultIP(address);
             log.resultsCount++;
         }
     }
+        break;
 
-    if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
+    case DOMAIN_SUBDOMAINS:
+    {
         foreach(const QJsonValue &value, data){
            /* from last dns records */
            QJsonArray last_dns_records = value.toObject()["attributes"].toObject()["last_dns_records"].toArray();
@@ -322,6 +332,8 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
            }
         }
     }
+    }
+
     end(reply);
 }
 
@@ -331,12 +343,14 @@ void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray data = document.object()["data"].toArray();
 
-    /* from v2 api endpoint */
-    if(QUERY_TYPE == V2_DOMAIN || QUERY_TYPE == V2_IPADDRESS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case V2_DOMAIN:
+    case V2_IPADDRESS:
+    {
         QJsonArray detected_urls = document.object()["detected_urls"].toArray();
         foreach(const QJsonValue &value, detected_urls){
             QString detected_url = value.toArray().at(0).toString();
@@ -351,6 +365,8 @@ void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
+    }
+
     end(reply);
 }
 
@@ -360,20 +376,21 @@ void VirusTotal::replyFinishedSSL(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray data = document.object()["data"].toArray();
 
-    /* certificate id from historical ssl certificates */
-    if(QUERY_TYPE == DOMAIN_HISTORICAL_SSL_CERTS || QUERY_TYPE == IP_HISTORICAL_SSL_CERTS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case DOMAIN_HISTORICAL_SSL_CERTS:
+    case IP_HISTORICAL_SSL_CERTS:
         foreach(const QJsonValue &value, data){
             QString cert_id = value.toObject()["id"].toString();
             emit resultSSL(cert_id);
             log.resultsCount++;
         }
-    }
+        break;
 
-    if(QUERY_TYPE == DOMAIN_SUBDOMAINS){
+    case DOMAIN_SUBDOMAINS:
         foreach(const QJsonValue &value, data){
            /* from ssl cert alternative name */
            QJsonObject last_https_certificate = value.toObject()["attributes"].toObject()["last_https_certificate"].toObject();
@@ -382,5 +399,6 @@ void VirusTotal::replyFinishedSSL(QNetworkReply *reply){
            log.resultsCount++;
         }
     }
+
     end(reply);
 }

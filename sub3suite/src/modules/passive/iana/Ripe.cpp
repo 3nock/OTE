@@ -52,7 +52,7 @@
 Ripe::Ripe(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Ripe";
+    log.moduleName = OSINT_MODULE_RIPE;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ripe::replyFinishedRawJson);
@@ -213,11 +213,12 @@ void Ripe::replyFinishedAsn(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray asns = document.object()["data"].toObject()["asns"].toArray();
 
-    if(QUERY_TYPE == NETWORK_INFO){
-        QJsonArray asns = document.object()["data"].toObject()["asns"].toArray();
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case NETWORK_INFO:
         foreach(const QJsonValue &value, asns){
             emit resultASN(value.toString(), "");
             log.resultsCount++;
@@ -233,10 +234,11 @@ void Ripe::replyFinishedCidr(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    if(QUERY_TYPE == RIS_PREFIXES){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case RIS_PREFIXES:
         QJsonObject prefixes = document.object()["data"].toObject()["prefixes"].toObject();
 
         /* for ipv4 */

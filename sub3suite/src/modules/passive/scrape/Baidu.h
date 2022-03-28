@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct Baidu{
-    QString name = "Baidu";
+    QString name = OSINT_MODULE_BAIDU;
     QString url = "https://baidu.com/";
     QString url_apiDoc = "";
     QString summary = "";

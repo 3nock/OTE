@@ -8,7 +8,7 @@
 DuckDuckGo::DuckDuckGo(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "DuckDuckGo";
+    log.moduleName = OSINT_MODULE_DUCKDUCKGO;
 
     if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedSubdomain);

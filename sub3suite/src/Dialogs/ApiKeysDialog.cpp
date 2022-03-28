@@ -45,12 +45,12 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue("passivetotal_username", ui->lineEditPassiveTotalUsername->text());
     APIKEY.setValue(OSINT_MODULE_SECURITYTRAILS, ui->lineEditSecurityTrails->text());
     APIKEY.setValue(OSINT_MODULE_SHODAN, ui->lineEditShodan->text());
-    APIKEY.setValue("spyse", ui->lineEditSpyse->text());
-    APIKEY.setValue("virustotal", ui->lineEditVirusTotal->text());
+    APIKEY.setValue(OSINT_MODULE_SPYSE, ui->lineEditSpyse->text());
+    APIKEY.setValue(OSINT_MODULE_VIRUSTOTAL, ui->lineEditVirusTotal->text());
     APIKEY.setValue(OSINT_MODULE_BINARYEDGE, ui->lineEditBinaryEdge->text());
     APIKEY.setValue(OSINT_MODULE_C99, ui->lineEditC99->text());
     APIKEY.setValue(OSINT_MODULE_IPAPI, ui->lineEditIpApi->text());
-    APIKEY.setValue("ipinfo", ui->lineEditIpInfo->text());
+    APIKEY.setValue(OSINT_MODULE_IPINFO, ui->lineEditIpInfo->text());
     APIKEY.setValue(OSINT_MODULE_THREATBOOK, ui->lineEditThreatBook->text());
     APIKEY.setValue(OSINT_MODULE_WHOISXMLAPI, ui->lineEditWhoisXmlApi->text());
     APIKEY.setValue(OSINT_MODULE_ZOOMEYE, ui->lineEditZoomEye->text());
@@ -86,15 +86,15 @@ void ApiKeysDialog::on_buttonSave_clicked(){
     APIKEY.setValue(OSINT_MODULE_EMAILREP, ui->lineEditEmailRep->text());
     APIKEY.setValue(OSINT_MODULE_SNOV, ui->lineEditSnov->text());
     APIKEY.setValue(OSINT_MODULE_IPDATA, ui->lineEditIpData->text());
-    APIKEY.setValue("ipgeolocation", ui->lineEditIpGeoLocation->text());
-    APIKEY.setValue("ipregistry", ui->lineEditIpRegistry->text());
-    APIKEY.setValue("ipstack", ui->lineEditIpStack->text());
-    APIKEY.setValue("abuseipdb", ui->lineEditAbuseIPDB->text());
+    APIKEY.setValue(OSINT_MODULE_IPGEOLOCATION, ui->lineEditIpGeoLocation->text());
+    APIKEY.setValue(OSINT_MODULE_IPREGISTRY, ui->lineEditIpRegistry->text());
+    APIKEY.setValue(OSINT_MODULE_IPSTACK, ui->lineEditIpStack->text());
+    APIKEY.setValue(OSINT_MODULE_ABUSEIPDB, ui->lineEditAbuseIPDB->text());
     APIKEY.setValue("fraudguard_user", ui->lineEditFraudGuardUser->text());
     APIKEY.setValue("fraudguard_pass", ui->lineEditFraudGuardPass->text());
-    APIKEY.setValue("hybridanalysis", ui->lineEditHybridAnalysis->text());
-    APIKEY.setValue("ipqualityscore", ui->lineEditIpQualityScore->text());
-    APIKEY.setValue("leaklookup", ui->lineEditLeakLookup->text());
+    APIKEY.setValue(OSINT_MODULE_HYBRIDANALYSIS, ui->lineEditHybridAnalysis->text());
+    APIKEY.setValue(OSINT_MODULE_IPQUALITYSCORE, ui->lineEditIpQualityScore->text());
+    APIKEY.setValue(OSINT_MODULE_LEAKLOOKUP, ui->lineEditLeakLookup->text());
     APIKEY.setValue(OSINT_MODULE_ZETALYTICS, ui->lineEditZETAlytics->text());
     APIKEY.setValue(OSINT_MODULE_WAPPALYZER, ui->lineEditWappalyzer->text());
     APIKEY.setValue(OSINT_MODULE_IPFY, ui->lineEditIpfy->text());
@@ -192,12 +192,12 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditShodan->setText(key);
         ui->buttonGetShodan->hide();
     }
-    key = APIKEY.value("spyse").toString();
+    key = APIKEY.value(OSINT_MODULE_SPYSE).toString();
     if(!key.isEmpty()){
         ui->lineEditSpyse->setText(key);
         ui->buttonGetSpyse->hide();
     }
-    key = APIKEY.value("virustotal").toString();
+    key = APIKEY.value(OSINT_MODULE_VIRUSTOTAL).toString();
     if(!key.isEmpty()){
         ui->lineEditVirusTotal->setText(key);
         ui->buttonGetVirusTotal->hide();
@@ -212,7 +212,7 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditC99->setText(key);
         ui->buttonGetC99->hide();
     }
-    key = APIKEY.value("ipinfo").toString();
+    key = APIKEY.value(OSINT_MODULE_IPINFO).toString();
     if(!key.isEmpty()){
         ui->lineEditIpInfo->setText(key);
         ui->buttonGetIpInfo->hide();
@@ -402,22 +402,22 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditIpData->setText(key);
         ui->buttonGetIpData->hide();
     }
-    key = APIKEY.value("ipgeolocation").toString();
+    key = APIKEY.value(OSINT_MODULE_IPGEOLOCATION).toString();
     if(!key.isEmpty()){
         ui->lineEditIpGeoLocation->setText(key);
         ui->buttonGetIpGeoLocation->hide();
     }
-    key = APIKEY.value("ipregistry").toString();
+    key = APIKEY.value(OSINT_MODULE_IPREGISTRY).toString();
     if(!key.isEmpty()){
         ui->lineEditIpRegistry->setText(key);
         ui->buttonGetIpRegistry->hide();
     }
-    key = APIKEY.value("ipstack").toString();
+    key = APIKEY.value(OSINT_MODULE_IPSTACK).toString();
     if(!key.isEmpty()){
         ui->lineEditIpStack->setText(key);
         ui->buttonGetIpStack->hide();
     }
-    key = APIKEY.value("abuseipdb").toString();
+    key = APIKEY.value(OSINT_MODULE_ABUSEIPDB).toString();
     if(!key.isEmpty()){
         ui->lineEditAbuseIPDB->setText(key);
         ui->buttonGetAbuseIPDB->hide();
@@ -431,17 +431,17 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->buttonGetFraudGuard->hide();
     }
     //...
-    key = APIKEY.value("hybridanalysis").toString();
+    key = APIKEY.value(OSINT_MODULE_HYBRIDANALYSIS).toString();
     if(!key.isEmpty()){
         ui->lineEditHybridAnalysis->setText(key);
         ui->buttonGetHybridAnalysis->hide();
     }
-    key = APIKEY.value("ipqualityscore").toString();
+    key = APIKEY.value(OSINT_MODULE_IPQUALITYSCORE).toString();
     if(!key.isEmpty()){
         ui->lineEditIpQualityScore->setText(key);
         ui->buttonGetIpQualityScore->hide();
     }
-    key = APIKEY.value("leaklookup").toString();
+    key = APIKEY.value(OSINT_MODULE_LEAKLOOKUP).toString();
     if(!key.isEmpty()){
         ui->lineEditLeakLookup->setText(key);
         ui->buttonGetLeakLookup->hide();

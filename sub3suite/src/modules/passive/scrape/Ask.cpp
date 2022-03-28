@@ -5,7 +5,7 @@
 Ask::Ask(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Ask";
+    log.moduleName = OSINT_MODULE_ASK;
 
     if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ask::replyFinishedSubdomain);

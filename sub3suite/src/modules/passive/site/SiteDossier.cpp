@@ -8,8 +8,9 @@
  */
 SiteDossier::SiteDossier(ScanArgs args): AbstractOsintModule(args)
 {
+
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.resultsCount++;
+    log.moduleName = OSINT_MODULE_SITEDOSSIER;
 
     if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SiteDossier::replyFinishedSubdomain);

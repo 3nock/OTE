@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct BotScout{
-    QString name = "BotScout";
+    QString name = OSINT_MODULE_BOTSCOUT;
     QString url = "http://botscout.com";
     QString url_apiDoc = "http://botscout.com/api.htm";
     QString summary = "BotScout helps prevent automated web scripts, known as bots, from registering on forums, polluting databases, spreading spam, and abusing forms on web sites. "

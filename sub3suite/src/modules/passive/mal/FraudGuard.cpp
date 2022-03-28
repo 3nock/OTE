@@ -16,17 +16,14 @@
 FraudGuard::FraudGuard(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "FraudGuard";
+    log.moduleName = OSINT_MODULE_FRAUDGUARD;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FraudGuard::replyFinishedRawJson);
-    ///
-    /// get api key...
-    ///
-    
+
+    /* get api key */
     m_user = APIKEY.value("fraudguard_user").toString();
     m_pass = APIKEY.value("fraudguard_pass").toString();
-    
 }
 FraudGuard::~FraudGuard(){
     delete manager;

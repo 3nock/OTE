@@ -7,7 +7,7 @@
 Dnsdumpster::Dnsdumpster(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "DnsDumpster";
+    log.moduleName = OSINT_MODULE_DNSDUMPSTER;
 
     if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnsdumpster::replyFinishedSubdomainIp);

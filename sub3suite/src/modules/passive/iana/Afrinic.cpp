@@ -14,7 +14,7 @@
 Afrinic::Afrinic(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Afrinic";
+    log.moduleName = OSINT_MODULE_AFRINIC;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Afrinic::replyFinishedRawJson);

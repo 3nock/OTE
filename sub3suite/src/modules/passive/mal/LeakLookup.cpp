@@ -12,16 +12,13 @@
 LeakLookup::LeakLookup(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "LeakLookup";
+    log.moduleName = OSINT_MODULE_LEAKLOOKUP;
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakLookup::replyFinishedRawJson);
-    ///
-    /// get api key...
-    ///
-    
-    m_key = APIKEY.value("leaklookup").toString();
-    
+
+    /* get api key */
+    m_key = APIKEY.value(OSINT_MODULE_LEAKLOOKUP).toString();
 }
 LeakLookup::~LeakLookup(){
     delete manager;

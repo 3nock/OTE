@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct FraudGuard{
-    QString name = "FraudGuard";
+    QString name = OSINT_MODULE_FRAUDGUARD;
     QString url = "https://fraudguard.io/";
     QString url_apiDoc = "https://docs.fraudguard.io/";
     QString summary = "FraudGuard...";

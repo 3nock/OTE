@@ -10,7 +10,7 @@
 Netcraft::Netcraft(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout);
-    log.moduleName = "Netcraft";
+    log.moduleName = OSINT_MODULE_NETCRAFT;
 
     if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Netcraft::replyFinishedSubdomain);

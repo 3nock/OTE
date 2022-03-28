@@ -76,5 +76,41 @@
 #define OSINT_MODULE_IPFY "Ipfy"
 #define OSINT_MODULE_IPAPI "IpApi"
 #define OSINT_MODULE_IPDATA "IpData"
+#define OSINT_MODULE_IPGEOLOCATION "IpGeoLocation"
+#define OSINT_MODULE_IPINFO "IpInfo"
+#define OSINT_MODULE_IPREGISTRY "IpRegistry"
+#define OSINT_MODULE_IPSTACK "IpStack"
+
+/* iana */
+#define OSINT_MODULE_AFRINIC "Afrinic"
+#define OSINT_MODULE_APNIC "Apnic"
+#define OSINT_MODULE_ARIN "Arin"
+#define OSINT_MODULE_RIPE "Ripe"
+
+/* mal */
+#define OSINT_MODULE_ABUSEIPDB "AbuseIPDB"
+#define OSINT_MODULE_BOTSCOUT "BotScout"
+#define OSINT_MODULE_FRAUDGUARD "FraudGuard"
+#define OSINT_MODULE_HYBRIDANALYSIS "HybridAnalysis"
+#define OSINT_MODULE_IPQUALITYSCORE "IpQualityScore"
+#define OSINT_MODULE_LEAKLOOKUP "LeakLookup"
+#define OSINT_MODULE_VIRUSTOTAL "VirusTotal"
+
+/* Scrape */
+#define OSINT_MODULE_ASK "Ask"
+#define OSINT_MODULE_BAIDU "Baidu"
+#define OSINT_MODULE_BING "Bing"
+#define OSINT_MODULE_DOGPILE "DogPile"
+#define OSINT_MODULE_DUCKDUCKGO "DuckDuckGo"
+#define OSINT_MODULE_EXALEAD "Exalead"
+#define OSINT_MODULE_YAHOO "Yahoo"
+
+/* site */
+#define OSINT_MODULE_DNSDUMPSTER "DnsDumpster"
+#define OSINT_MODULE_NETCRAFT "Netcraft"
+#define OSINT_MODULE_PAGESINVENTORY "PagesInventory"
+#define OSINT_MODULE_PKEY "PKey"
+#define OSINT_MODULE_RAPIDDNS "RapidDNS"
+#define OSINT_MODULE_SITEDOSSIER "SiteDossier"
 
 #endif // OSINTDEFINITIONS_H

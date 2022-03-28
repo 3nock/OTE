@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct IpQualityScore{
-    QString name = "IpQualityScore";
+    QString name = OSINT_MODULE_IPQUALITYSCORE;
     QString url = "https://www.ipqualityscore.com/";
     QString url_apiDoc = "https://www.ipqualityscore.com/documentation/overview";
     QString summary = "IPQualityScore offers a variety of different risk analysis APIs designed to Proactively Prevent Fraud™ for your company, website, or app. "

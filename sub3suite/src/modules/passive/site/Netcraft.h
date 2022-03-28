@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Netcraft{
-    QString name = "Netcraft";
+    QString name = OSINT_MODULE_NETCRAFT;
     QString url = "https://netcraft.com/";
     QString url_apiDoc = "";
     QString summary = "Netcraft is an internet services company based in the United Kingdom which provides internet security services, including cybercrime disruption, application security testing and automated vulnerability scanning."

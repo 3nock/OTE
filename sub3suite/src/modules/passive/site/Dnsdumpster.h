@@ -6,7 +6,7 @@
 
 namespace ModuleInfo {
 struct Dnsdumpster{
-    QString name = "Dnsdumpster";
+    QString name = OSINT_MODULE_DNSDUMPSTER;
     QString url = "https://dnsdumpster.com/";
     QString url_apiDoc = "";
     QString summary = "";

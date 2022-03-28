@@ -253,7 +253,6 @@ class AbstractOsintModule : public QObject {
         ScanArgs args;
         QString target;
         int activeRequests = 0;
-        int QUERY_TYPE;
         s3sNetworkAccessManager *manager = nullptr;
 
         void onError(QNetworkReply *reply){

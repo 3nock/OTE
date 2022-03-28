@@ -5,7 +5,7 @@
 
 namespace ModuleInfo {
 struct Apnic{
-    QString name = "Apnic";
+    QString name = OSINT_MODULE_APNIC;
     QString url = "https://Apnic.net/";
     QString url_apiDoc = "https://www.apnic.net/about-apnic/whois_search/about/rdap/";
     QString summary = "The APNIC Whois Database is an official record that contains information regarding organizations that hold IP addresses and AS Numbers in the Asia Pacific region "
