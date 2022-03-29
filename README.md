@@ -5,10 +5,10 @@
 [![Twitter](https://img.shields.io/twitter/follow/sub3suite?label=twitter&style=social)](https://twitter.com/sub3suite)
 
 # Subdomain Enumeration Suite
-sub3suite is a research-grade suite of tools for subdomain enumeration, OSINT information gathering & attack surface mapping. Supports both
-manual and automated analysis on targets with many available feautues & tools.
+Sub3 Suite is a research-grade suite of tools for Subdomain Enumeration, OSINT Information gathering & Attack Surface Mapping. Supports both
+manual and automated analysis on variety of targets types with many available feautues & tools.
 
-## ScreenShots
+## Screenshots
 <img src="docs/images/screenshot_osint.png"/>
 <img src="docs/images/screenshot_project.png"/>
 
@@ -37,8 +37,9 @@ For More information see [contribution guide](CONTRIBUTING.md).
 2. Unzip.
 3. Run.
 
-**NOTE**
-On windows install the msvc-redistributable package `sub3suite/vcredist_x64.exe` or `sub3suite/vcredist_x86.exe` if the program fails to run.
+**NOTE:**
+
+On windows install the msvc-redistributable package `sub3suite/vcredist_x64.exe` or `sub3suite/vcredist_x86.exe` if the program fails to run on first try.
 
 
 You can also [compile](COMPILING.md) sub3suite yourself with a few easy steps!
