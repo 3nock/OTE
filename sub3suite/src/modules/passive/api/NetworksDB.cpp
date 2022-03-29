@@ -20,7 +20,7 @@
  */
 NetworksDB::NetworksDB(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_NETWORKSDB;
 
     if(args.output_Raw)
@@ -46,8 +46,8 @@ NetworksDB::~NetworksDB(){
 void NetworksDB::start(){
     QNetworkRequest request;
     request.setRawHeader("X-Api-Key", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case AS_INFO:
@@ -83,7 +83,6 @@ void NetworksDB::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -93,14 +92,14 @@ void NetworksDB::start(){
             request.setAttribute(QNetworkRequest::User, DOMAINS_ON_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_CIDR){
             url.setUrl("https://networksdb.io/api/ip-info?ip="+target);
             request.setAttribute(QNetworkRequest::User, IP_INFO);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -110,7 +109,7 @@ void NetworksDB::start(){
             request.setAttribute(QNetworkRequest::User, IPS_FOR_DOMAIN);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -120,7 +119,7 @@ void NetworksDB::start(){
             request.setAttribute(QNetworkRequest::User, AS_NETWORKS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -130,7 +129,7 @@ void NetworksDB::start(){
             request.setAttribute(QNetworkRequest::User, DOMAINS_IN_NETWORK);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -140,7 +139,7 @@ void NetworksDB::start(){
             request.setAttribute(QNetworkRequest::User, ORG_SEARCH);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -167,7 +166,7 @@ void NetworksDB::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void NetworksDB::replyFinishedSubdomain(QNetworkReply *reply){
@@ -199,7 +198,7 @@ void NetworksDB::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void NetworksDB::replyFinishedIp(QNetworkReply *reply){
@@ -229,7 +228,7 @@ void NetworksDB::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void NetworksDB::replyFinishedCidr(QNetworkReply *reply){
@@ -258,7 +257,7 @@ void NetworksDB::replyFinishedCidr(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void NetworksDB::replyFinishedAsn(QNetworkReply *reply){
@@ -283,5 +282,5 @@ void NetworksDB::replyFinishedAsn(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

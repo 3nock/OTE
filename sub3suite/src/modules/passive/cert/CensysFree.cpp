@@ -6,7 +6,7 @@
  */
 CensysFree::CensysFree(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_CENSYS;
 
     if(args.output_Hostname)
@@ -26,21 +26,20 @@ void CensysFree::start(){
         url.setUrl("https://censys.io/domain/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_IP){
         url.setUrl("https://censys.io/ipv4/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_SSL){
         url.setUrl("https://censys.io/certificates/"+target+"/table");
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }
 
@@ -123,7 +122,7 @@ void CensysFree::replyFinishedSSL(QNetworkReply *reply){
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }
 
 void CensysFree::replyFinishedSubdomain(QNetworkReply *reply){
@@ -216,5 +215,5 @@ void CensysFree::replyFinishedSubdomain(QNetworkReply *reply){
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }

@@ -9,14 +9,11 @@
 #define URL 2
 
 /*
- * 100 requests per day...
- *
- * ratelimit-consumed: 1
- * ratelimit-limit: 20
+ * 100 requests per day
  */
 Maltiverse::Maltiverse(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_MALTIVERSE;
 
     if(args.output_Raw)
@@ -36,8 +33,8 @@ Maltiverse::~Maltiverse(){
 
 void Maltiverse::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case HOSTNAME:
@@ -52,7 +49,6 @@ void Maltiverse::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -62,7 +58,7 @@ void Maltiverse::start(){
             request.setAttribute(QNetworkRequest::User, HOSTNAME);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -72,7 +68,7 @@ void Maltiverse::start(){
             request.setAttribute(QNetworkRequest::User, IPV4);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -100,7 +96,7 @@ void Maltiverse::replyFinishedAsn(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Maltiverse::replyFinishedIp(QNetworkReply *reply){
@@ -122,7 +118,7 @@ void Maltiverse::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Maltiverse::replyFinishedEmail(QNetworkReply *reply){
@@ -143,7 +139,7 @@ void Maltiverse::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Maltiverse::replyFinishedCidr(QNetworkReply *reply){
@@ -164,5 +160,5 @@ void Maltiverse::replyFinishedCidr(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

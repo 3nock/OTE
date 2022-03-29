@@ -10,7 +10,7 @@
  */
 N45HT::N45HT(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_N45HT;
 
     if(args.output_Raw)
@@ -24,8 +24,8 @@ N45HT::~N45HT(){
 
 void N45HT::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case SUBDOMAIN:
@@ -34,7 +34,6 @@ void N45HT::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -42,7 +41,7 @@ void N45HT::start(){
         url.setUrl("https://api.n45ht.or.id/v1/subdomain-enumeration?domain="+target);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 
@@ -60,5 +59,5 @@ void N45HT::replyFinishedSubdomain(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }

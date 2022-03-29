@@ -34,18 +34,22 @@ void IpEnum::onScanLog(ScanLog log){
     if(log.error){
         QString message("<font color=\"red\">"+log.message+"</font>");
         QString module("<font color=\"red\">"+log.moduleName+"</font>");
+        QString target("<font color=\"red\">"+log.target+"</font>");
         QString status("<font color=\"red\">"+QString::number(log.statusCode)+"</font>");
         ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+        ui->plainTextEditLogs->appendHtml("[Target]        :"+target);
         ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
         ui->plainTextEditLogs->appendHtml("[Error message] :"+message);
-        ui->plainTextEditLogs->appendPlainText("");
         m_failedScans.insert(log.target, log.message);
     }
     else{
         QString module("<font color=\"green\">"+log.moduleName+"</font>");
+        QString target("<font color=\"green\">"+log.target+"</font>");
         QString status("<font color=\"green\">"+QString::number(log.statusCode)+"</font>");
         ui->plainTextEditLogs->appendHtml("[Module]        :"+module);
+        ui->plainTextEditLogs->appendHtml("[Target]        :"+target);
         ui->plainTextEditLogs->appendHtml("[Status Code]   :"+status);
-        ui->plainTextEditLogs->appendPlainText("");
     }
+
+    ui->plainTextEditLogs->appendPlainText("");
 }

@@ -37,7 +37,7 @@
  */
 Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ONYPHE;
 
     if(args.output_Raw)
@@ -51,7 +51,6 @@ Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_ONYPHE).toString();
-    
 }
 Onyphe::~Onyphe(){
     delete manager;
@@ -61,8 +60,8 @@ void Onyphe::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("Authorization", "apikey "+m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case USER:
@@ -146,7 +145,6 @@ void Onyphe::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -156,7 +154,7 @@ void Onyphe::start(){
             request.setAttribute(QNetworkRequest::User, SUMMARY_DOMAIN);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -166,7 +164,7 @@ void Onyphe::start(){
             request.setAttribute(QNetworkRequest::User, SUMMARY_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -196,7 +194,7 @@ void Onyphe::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Onyphe::replyFinishedIp(QNetworkReply *reply){
@@ -219,7 +217,7 @@ void Onyphe::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Onyphe::replyFinishedSSL(QNetworkReply *reply){
@@ -242,5 +240,5 @@ void Onyphe::replyFinishedSSL(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

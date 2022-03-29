@@ -15,7 +15,7 @@
  */
 Snov::Snov(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_SNOV;
 
     if(args.output_Raw)
@@ -32,8 +32,8 @@ Snov::~Snov(){
 
 void Snov::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case CHECK_USER_BALANCE:
@@ -77,7 +77,7 @@ void Snov::start(){
             request.setUrl(url);
             manager->post(request, data);
         }
-        activeRequests++;
+        return;
     }
 
     if(args.input_Domain){
@@ -86,7 +86,6 @@ void Snov::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_SEARCH);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -108,5 +107,5 @@ void Snov::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

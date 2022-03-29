@@ -115,6 +115,7 @@ void EmailEnum::initConfigValues(){
     CONFIG.beginGroup(CFG_ENUM);
     m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_email").toBool();
     m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_email").toBool();
+    m_scanConfig->setTimeout = CONFIG.value("set_timeout_email").toBool();
     m_scanConfig->timeout = CONFIG.value("timeout_email").toInt();
     CONFIG.endGroup();
 }

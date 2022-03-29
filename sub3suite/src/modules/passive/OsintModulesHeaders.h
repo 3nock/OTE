@@ -35,6 +35,7 @@
 #include "src/modules/passive/api/Omnisint.h"
 #include "src/modules/passive/api/Urlscan.h"
 #include "src/modules/passive/api/Circl.h"
+#include "src/modules/passive/api/CirclPublic.h"
 #include "src/modules/passive/api/WebResolver.h"
 #include "src/modules/passive/api/BuiltWith.h"
 #include "src/modules/passive/api/Dnslytics.h"
@@ -55,6 +56,7 @@
 #include "src/modules/passive/api/Whatcms.h"
 #include "src/modules/passive/api/Whoxy.h"
 #include "src/modules/passive/api/PassiveTotal.h"
+#include "src/modules/passive/api/ASRank.h"
 ///
 /// iana...
 ///

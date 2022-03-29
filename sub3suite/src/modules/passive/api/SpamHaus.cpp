@@ -4,9 +4,12 @@
 #define FORWARD_SEARCH 0
 #define REVERSE_SEARCH 1
 
+/*
+ * for now only raw results
+ */
 SpamHaus::SpamHaus(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_SPAMHAUS;
 
     if(args.output_Raw)
@@ -36,6 +39,5 @@ void SpamHaus::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }

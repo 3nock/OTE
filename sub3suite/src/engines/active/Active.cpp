@@ -182,6 +182,7 @@ void Active::initConfigValues(){
     m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
     m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
+    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();
     CONFIG.endGroup();
 

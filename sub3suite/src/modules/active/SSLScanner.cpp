@@ -61,7 +61,7 @@ void ssl::Scanner::lookup(){
             break;
         }
 
-        if(!socket.waitForEncrypted(m_args->config->timeout*1000))
+        if(!socket.waitForEncrypted(m_args->config->timeout))
         {
             switch (socket.error())
             {

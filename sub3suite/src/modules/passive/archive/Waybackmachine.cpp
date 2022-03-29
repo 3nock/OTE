@@ -15,7 +15,7 @@
 
 Waybackmachine::Waybackmachine(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_WAYBACKMACHINE;
 
     if(args.output_Raw)
@@ -31,8 +31,8 @@ Waybackmachine::~Waybackmachine(){
 
 void Waybackmachine::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case MATCHTYPE_DOMAIN:
@@ -50,7 +50,6 @@ void Waybackmachine::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -59,13 +58,13 @@ void Waybackmachine::start(){
             url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&fl=original&output=json&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_Hostname){
             url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=json&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -74,13 +73,13 @@ void Waybackmachine::start(){
             url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=prefix&fl=original&output=json&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_Hostname){
             url.setUrl("https://web.archive.org/cdx/search/cdx?matchType=domain&fl=original&output=json&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -102,7 +101,7 @@ void Waybackmachine::replyFinishedUrl(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Waybackmachine::replyFinishedSubdomain(QNetworkReply *reply){
@@ -135,5 +134,5 @@ void Waybackmachine::replyFinishedSubdomain(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }

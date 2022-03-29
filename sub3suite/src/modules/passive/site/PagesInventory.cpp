@@ -8,7 +8,7 @@
  */
 PagesInventory::PagesInventory(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_PAGESINVENTORY;
 
     if(args.output_HostnameIP)
@@ -27,7 +27,6 @@ void PagesInventory::start(){
     QUrl url("https://www.pagesinventory.com/search/?s="+target);
     request.setUrl(url);
     manager->get(request);
-    activeRequests++;
 }
 
 void PagesInventory::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -102,7 +101,7 @@ void PagesInventory::replyFinishedSubdomainIp(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }
 
 void PagesInventory::replyFinishedIp(QNetworkReply *reply){
@@ -167,7 +166,7 @@ void PagesInventory::replyFinishedIp(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }
 
 void PagesInventory::replyFinishedSubdomain(QNetworkReply *reply){
@@ -215,5 +214,5 @@ void PagesInventory::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }

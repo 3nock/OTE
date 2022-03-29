@@ -41,6 +41,7 @@ void PassiveConfigDialog::loadConfig_osint(){
     ui->lineEditMaxPages->setText(CONFIG.value(CFG_VAL_MAXPAGES).toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     CONFIG.endGroup();
     osint = true;
 }
@@ -51,6 +52,7 @@ void PassiveConfigDialog::loadConfig_raw(){
     ui->lineEditTimeout->setText(CONFIG.value(CFG_VAL_TIMEOUT).toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     CONFIG.endGroup();
     raw = true;
 }
@@ -77,12 +79,14 @@ void PassiveConfigDialog::saveConfig_osint(){
     m_config->maxPage = ui->lineEditMaxPages->text().toInt();
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
 
     CONFIG.beginGroup(CFG_OSINT);
     CONFIG.setValue(CFG_VAL_TIMEOUT, ui->lineEditTimeout->text());
     CONFIG.setValue(CFG_VAL_MAXPAGES, ui->lineEditMaxPages->text());
     CONFIG.setValue(CFG_VAL_AUTOSAVE, ui->checkBoxAutosave->isChecked());
     CONFIG.setValue(CFG_VAL_DUPLICATES, ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue(CFG_VAL_SETTIMEOUT, ui->groupBoxTimeout->isChecked());
     CONFIG.endGroup();
 }
 
@@ -90,10 +94,12 @@ void PassiveConfigDialog::saveConfig_raw(){
     m_config->timeout = ui->lineEditTimeout->text().toInt();
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
 
     CONFIG.beginGroup(CFG_RAW);
     CONFIG.setValue(CFG_VAL_TIMEOUT, ui->lineEditTimeout->text());
     CONFIG.setValue(CFG_VAL_AUTOSAVE, ui->checkBoxAutosave->isChecked());
     CONFIG.setValue(CFG_VAL_DUPLICATES, ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue(CFG_VAL_SETTIMEOUT, ui->groupBoxTimeout->isChecked());
     CONFIG.endGroup();
 }

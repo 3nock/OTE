@@ -48,6 +48,8 @@
 #define OSINT_MODULE_WHOXY "Whoxy"
 #define OSINT_MODULE_ZETALYTICS "ZETAlytics"
 #define OSINT_MODULE_ZOOMEYE "ZoomEye"
+#define OSINT_MODULE_CIRCLPUBLIC "Circl Public"
+#define OSINT_MODULE_ASRANK "ASRank"
 
 /* archives */
 #define OSINT_MODULE_ARCHIVEIT "ArchiveIt"

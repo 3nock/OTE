@@ -32,13 +32,12 @@
 #define INDICATOR_URL_GENERAL 25
 #define INDICATOR_URL_URLLIST 26
 
-
 /*
  * 1k per hour unauthenticated, and 10k authed
  */
 Otx::Otx(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_OTX;
 
     if(args.output_Raw)
@@ -62,8 +61,8 @@ Otx::~Otx(){
 void Otx::start(){
     QNetworkRequest request;
     request.setRawHeader("X-OTX-API-KEY", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case INDICATOR_DOMAIN_GENERAL:
@@ -150,7 +149,6 @@ void Otx::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -161,7 +159,7 @@ void Otx::start(){
             request.setAttribute(QNetworkRequest::User, INDICATOR_IPV4_PASSIVEDNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         /* if target ip-address doesnt contains  ":" then its an ipv4 */
         else{
@@ -169,9 +167,8 @@ void Otx::start(){
             request.setAttribute(QNetworkRequest::User, INDICATOR_IPV6_PASSIVEDNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
-        return;
     }
 
     if(args.input_Domain){
@@ -179,7 +176,6 @@ void Otx::start(){
         request.setAttribute(QNetworkRequest::User, INDICATOR_HOSTNAME_PASSIVEDNS);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }
 
@@ -203,7 +199,7 @@ void Otx::replyFinishedSubdomainIp(QNetworkReply *reply){
             }
         }
     }
-    end(reply);
+    this->end(reply);
 }
 
 void Otx::replyFinishedSubdomain(QNetworkReply *reply){
@@ -240,7 +236,7 @@ void Otx::replyFinishedSubdomain(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
-    end(reply);
+    this->end(reply);
 }
 
 void Otx::replyFinishedIp(QNetworkReply *reply){
@@ -269,7 +265,7 @@ void Otx::replyFinishedIp(QNetworkReply *reply){
             }
         }
     }
-    end(reply);
+    this->end(reply);
 }
 
 void Otx::replyFinishedAsn(QNetworkReply *reply){
@@ -297,5 +293,5 @@ void Otx::replyFinishedAsn(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
-    end(reply);
+    this->end(reply);
 }

@@ -447,6 +447,18 @@ void Osint::initModules(){
     else
         ui->moduleIpfy->hide();
 
+    ModuleInfo::CirclPublic circlpublic;
+    if(circlpublic.input_output.contains(INPUT_TYPE) && circlpublic.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
+        ui->moduleCirclPublic->show();
+    else
+        ui->moduleCirclPublic->hide();
+
+    ModuleInfo::ASRank asrank;
+    if(asrank.input_output.contains(INPUT_TYPE) && asrank.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
+        ui->moduleASRank->show();
+    else
+        ui->moduleASRank->hide();
+
     /* uncheck all modules */
     this->uncheckAllModules();
 }
@@ -524,4 +536,6 @@ void Osint::uncheckAllModules(){
     ui->modulePassiveTotal->setChecked(false);
     ui->moduleIpfy->setChecked(false);
     ui->moduleDnsbufferoverrun->setChecked(false);
+    ui->moduleCirclPublic->setChecked(false);
+    ui->moduleASRank->setChecked(false);
 }

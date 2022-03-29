@@ -8,7 +8,7 @@
  */
 Bing::Bing(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_BING;
 
     if(args.output_Hostname)
@@ -24,24 +24,25 @@ Bing::~Bing(){
 
 void Bing::start(){
     QNetworkRequest request;
+    QUrl url;
 
     if(args.input_Domain){
         if(args.output_Hostname){
-            QUrl url("https://www.bing.com/search?q=site:"+target+"&first=1&FORM=PORE");
+            url.setUrl("https://www.bing.com/search?q=site:"+target+"&first=1&FORM=PORE");
             //request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
 
         if(args.output_URL){
-            QUrl url("https://www.bing.com/search?q=site:"+target+"&first=1&FORM=PORE");
+            url.setUrl("https://www.bing.com/search?q=site:"+target+"&first=1&FORM=PORE");
             //request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
     }
 }
@@ -96,7 +97,7 @@ void Bing::replyFinishedSubdomain(QNetworkReply *reply){
     if(m_firstRequest)
         this->sendRequests();
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bing::replyFinishedEmail(QNetworkReply *reply){
@@ -109,7 +110,7 @@ void Bing::replyFinishedEmail(QNetworkReply *reply){
      * not yet implemented...
      */
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bing::replyFinishedUrl(QNetworkReply *reply){
@@ -160,7 +161,7 @@ void Bing::replyFinishedUrl(QNetworkReply *reply){
     if(m_firstRequest)
         this->sendRequests();
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bing::sendRequests(){
@@ -189,7 +190,6 @@ void Bing::sendRequests(){
                 request.setUrl(url);
                 manager->get(request);
                 m_firstRequest = false;
-                activeRequests++;
                 currentPage++;
                 first += 10;
             }

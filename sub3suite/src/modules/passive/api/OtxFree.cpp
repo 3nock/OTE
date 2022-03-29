@@ -37,7 +37,7 @@
  */
 OtxFree::OtxFree(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_OTX;
 
     if(args.output_Raw)
@@ -57,8 +57,8 @@ OtxFree::~OtxFree(){
 
 void OtxFree::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case INDICATOR_DOMAIN_GENERAL:
@@ -145,7 +145,6 @@ void OtxFree::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -156,7 +155,7 @@ void OtxFree::start(){
             request.setAttribute(QNetworkRequest::User, INDICATOR_IPV4_PASSIVEDNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         /* if target ip-address doesnt contains  ":" then its an ipv4 */
         else{
@@ -164,7 +163,7 @@ void OtxFree::start(){
             request.setAttribute(QNetworkRequest::User, INDICATOR_IPV6_PASSIVEDNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -173,7 +172,6 @@ void OtxFree::start(){
         request.setAttribute(QNetworkRequest::User, INDICATOR_HOSTNAME_PASSIVEDNS);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }
 
@@ -197,7 +195,7 @@ void OtxFree::replyFinishedSubdomainIp(QNetworkReply *reply){
             }
         }
     }
-    end(reply);
+    this->end(reply);
 }
 
 void OtxFree::replyFinishedSubdomain(QNetworkReply *reply){
@@ -234,7 +232,7 @@ void OtxFree::replyFinishedSubdomain(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
-    end(reply);
+    this->end(reply);
 }
 
 void OtxFree::replyFinishedIp(QNetworkReply *reply){
@@ -263,7 +261,7 @@ void OtxFree::replyFinishedIp(QNetworkReply *reply){
             }
         }
     }
-    end(reply);
+    this->end(reply);
 }
 
 void OtxFree::replyFinishedAsn(QNetworkReply *reply){
@@ -291,5 +289,5 @@ void OtxFree::replyFinishedAsn(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
-    end(reply);
+    this->end(reply);
 }

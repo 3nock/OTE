@@ -117,6 +117,7 @@ void ASNEnum::initConfigValues(){
     CONFIG.beginGroup(CFG_ENUM);
     m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_asn").toBool();
     m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_asn").toBool();
+    m_scanConfig->setTimeout = CONFIG.value("set_timeout_asn").toBool();
     m_scanConfig->timeout = CONFIG.value("timeout_asn").toInt();
     CONFIG.endGroup();
 }

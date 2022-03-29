@@ -6,10 +6,12 @@
 #define PASTES_ACCOUNT 2
 #define SINGLE_BREACH 3
 
-
+/*
+ * for now only raw results
+ */
 HaveIBeenPawned::HaveIBeenPawned(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_HAVEIBEENPAWNED;
 
     if(args.output_Raw)
@@ -26,8 +28,8 @@ HaveIBeenPawned::~HaveIBeenPawned(){
 void HaveIBeenPawned::start(){
     QNetworkRequest request;
     request.setRawHeader("hibp-api-key", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case BREACHED_ACCOUNT:
@@ -45,6 +47,6 @@ void HaveIBeenPawned::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }

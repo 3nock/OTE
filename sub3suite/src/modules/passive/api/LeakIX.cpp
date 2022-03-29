@@ -8,7 +8,7 @@
 
 LeakIX::LeakIX(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_LEAKIX;
 
     if(args.output_Raw)
@@ -32,8 +32,8 @@ void LeakIX::start(){
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("api-key", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case HOST:
@@ -48,7 +48,7 @@ void LeakIX::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_IP){
@@ -56,7 +56,7 @@ void LeakIX::start(){
             url.setUrl("https://leakix.net/search?q="+target+"&scope=leak");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -81,7 +81,7 @@ void LeakIX::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void LeakIX::replyFinishedSSL(QNetworkReply *reply){
@@ -98,7 +98,7 @@ void LeakIX::replyFinishedSSL(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void LeakIX::replyFinishedAsn(QNetworkReply *reply){
@@ -116,5 +116,5 @@ void LeakIX::replyFinishedAsn(QNetworkReply *reply){
         emit resultASN(asn, name);
         log.resultsCount++;
     }
-    end(reply);
+    this->end(reply);
 }

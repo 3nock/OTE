@@ -5,10 +5,12 @@
 #define SOCIAL_DATA 1
 #define WHOIS 2
 
-
+/*
+ * for now only raw results
+ */
 JsonWhois::JsonWhois(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_JSONWHOIS;
 
     if(args.output_Raw)
@@ -26,8 +28,8 @@ void JsonWhois::start(){
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("Authorization", "Token token="+m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case SCREENSHOT:
@@ -42,7 +44,7 @@ void JsonWhois::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 

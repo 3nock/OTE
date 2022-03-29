@@ -16,7 +16,7 @@
 
 HackerTargetFree::HackerTargetFree(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_HACKERTARGET;
 
     if(args.output_Raw)
@@ -38,8 +38,8 @@ HackerTargetFree::~HackerTargetFree(){
 
 void HackerTargetFree::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case ASLOOKUP:
@@ -83,7 +83,7 @@ void HackerTargetFree::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_Domain){
@@ -92,7 +92,7 @@ void HackerTargetFree::start(){
             request.setAttribute(QNetworkRequest::User, HOSTSEARCH);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -102,14 +102,14 @@ void HackerTargetFree::start(){
             request.setAttribute(QNetworkRequest::User, ASLOOKUP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_Hostname){
             url.setUrl("https://api.hackertarget.com/reverseiplookup/?q="+target);
             request.setAttribute(QNetworkRequest::User, REVERSE_IPLOOKUP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -121,7 +121,7 @@ void HackerTargetFree::start(){
             request.setAttribute(QNetworkRequest::User, ASLOOKUP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -150,7 +150,7 @@ void HackerTargetFree::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
@@ -177,7 +177,7 @@ void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void HackerTargetFree::replyFinishedIp(QNetworkReply *reply){
@@ -197,7 +197,7 @@ void HackerTargetFree::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void HackerTargetFree::replyFinishedAsn(QNetworkReply *reply){
@@ -218,7 +218,7 @@ void HackerTargetFree::replyFinishedAsn(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void HackerTargetFree::replyFinishedCidr(QNetworkReply *reply){
@@ -240,5 +240,5 @@ void HackerTargetFree::replyFinishedCidr(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

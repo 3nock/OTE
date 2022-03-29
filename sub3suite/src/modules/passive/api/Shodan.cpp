@@ -20,7 +20,7 @@
 /* 1 request per second */
 Shodan::Shodan(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_SHODAN;
 
     if(args.output_Raw)
@@ -83,7 +83,6 @@ void Shodan::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -92,8 +91,7 @@ void Shodan::start(){
             url.setUrl("https://api.shodan.io/dns/domain/"+target+"?key="+m_key);
             request.setAttribute(QNetworkRequest::User, DNS_DOMAIN);
             request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -103,7 +101,7 @@ void Shodan::start(){
             request.setAttribute(QNetworkRequest::User, HOST_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -130,7 +128,7 @@ void Shodan::replyFinishedSubdomainIp(QNetworkReply *reply){
             }
         }
     }
-    end(reply);
+    this->end(reply);
 }
 
 void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
@@ -186,7 +184,7 @@ void Shodan::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Shodan::replyFinishedIp(QNetworkReply *reply){
@@ -216,7 +214,7 @@ void Shodan::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Shodan::replyFinishedAsn(QNetworkReply *reply){
@@ -237,5 +235,5 @@ void Shodan::replyFinishedAsn(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

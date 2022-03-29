@@ -96,7 +96,8 @@ void active::Scanner::lookup(){
     switch (getTarget(m_dns, m_args)) {
     case RETVAL::LOOKUP:
         m_dns->lookup();
-        s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
+        if(m_args->config->setTimeout)
+            s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
         break;
     default:
         emit quitThread();

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>716</width>
-    <height>448</height>
+    <width>657</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -736,7 +736,7 @@
               <x>0</x>
               <y>0</y>
               <width>177</width>
-              <height>1057</height>
+              <height>1136</height>
              </rect>
             </property>
             <attribute name="label">
@@ -781,6 +781,22 @@
               </widget>
              </item>
              <item>
+              <widget class="QGroupBox" name="groupBox_10">
+               <property name="title">
+                <string>Iana</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_14">
+                <item>
+                 <widget class="QCheckBox" name="moduleRipe">
+                  <property name="text">
+                   <string>RipeStat</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
               <widget class="QGroupBox" name="groupBox_2">
                <property name="title">
                 <string>API</string>
@@ -794,9 +810,16 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="moduleRipe">
+                 <widget class="QCheckBox" name="moduleASRank">
                   <property name="text">
-                   <string>RipeStat</string>
+                   <string>ASRank</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleCirclPublic">
+                  <property name="text">
+                   <string>Circl (public)</string>
                   </property>
                  </widget>
                 </item>
@@ -1102,8 +1125,8 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-152</y>
-              <width>167</width>
+              <y>0</y>
+              <width>158</width>
               <height>932</height>
              </rect>
             </property>

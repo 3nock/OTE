@@ -40,6 +40,7 @@
 #define CFG_VAL_NAMESERVER "nameserver_type"
 #define CFG_VAL_BUILDDATE "build_date"
 #define CFG_VAL_MAXPAGES "max_pages"
+#define CFG_VAL_SETTIMEOUT "set_timeout"
 
 /* groups */
 #define CFG_GRP_RECENT "recent_projects"

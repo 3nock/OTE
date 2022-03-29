@@ -7,7 +7,7 @@
  */
 Baidu::Baidu(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_BAIDU;
 
     if(args.output_Hostname)
@@ -23,22 +23,23 @@ Baidu::~Baidu(){
 
 void Baidu::start(){
     QNetworkRequest request;
+    QUrl url;
 
     if(args.input_Domain){
         if(args.output_Hostname){
-            QUrl url("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn=1");
+            url.setUrl("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn=1");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
 
         if(args.output_URL){
-            QUrl url("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn=1");
+            url.setUrl("https://www.baidu.com/s?wd=site:"+target+"&oq=site:"+target+"&pn=1");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
     }
 }
@@ -98,7 +99,7 @@ void Baidu::replyFinishedSubdomain(QNetworkReply *reply){
     if(m_firstRequest)
         this->sendRequests();
 
-    end(reply);
+    this->end(reply);
 }
 
 void Baidu::replyFinishedEmail(QNetworkReply *reply){
@@ -111,7 +112,7 @@ void Baidu::replyFinishedEmail(QNetworkReply *reply){
      * not yet implemented...
      */
 
-    end(reply);
+    this->end(reply);
 }
 
 void Baidu::replyFinishedUrl(QNetworkReply *reply){
@@ -167,7 +168,7 @@ void Baidu::replyFinishedUrl(QNetworkReply *reply){
     if(m_firstRequest)
         this->sendRequests();
 
-    end(reply);
+    this->end(reply);
 }
 
 void Baidu::sendRequests(){
@@ -194,7 +195,6 @@ void Baidu::sendRequests(){
                 request.setUrl(url);
                 manager->get(request);
                 m_firstRequest = false;
-                activeRequests++;
                 currentPage++;
             }
         }

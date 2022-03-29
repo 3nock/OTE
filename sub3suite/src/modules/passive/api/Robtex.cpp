@@ -12,7 +12,7 @@
 
 Robtex::Robtex(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ROBTEX;
 
     if(args.output_Raw)
@@ -39,8 +39,8 @@ Robtex::~Robtex(){
 void Robtex::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ASQUERY:
@@ -57,7 +57,6 @@ void Robtex::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -67,7 +66,7 @@ void Robtex::start(){
             request.setAttribute(QNetworkRequest::User, IPQUERY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
@@ -75,7 +74,7 @@ void Robtex::start(){
             request.setAttribute(QNetworkRequest::User, PDNS_REVERSE);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -85,7 +84,6 @@ void Robtex::start(){
             request.setAttribute(QNetworkRequest::User, PDNS_FORWARD);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -96,7 +94,7 @@ void Robtex::start(){
             request.setAttribute(QNetworkRequest::User, ASQUERY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -138,7 +136,7 @@ void Robtex::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Robtex::replyFinishedIp(QNetworkReply *reply){
@@ -172,7 +170,7 @@ void Robtex::replyFinishedIp(QNetworkReply *reply){
     }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Robtex::replyFinishedAsn(QNetworkReply *reply){
@@ -192,7 +190,7 @@ void Robtex::replyFinishedAsn(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Robtex::replyFinishedCidr(QNetworkReply *reply){
@@ -218,7 +216,7 @@ void Robtex::replyFinishedCidr(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Robtex::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -246,5 +244,5 @@ void Robtex::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

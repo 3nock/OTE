@@ -8,10 +8,12 @@
 #define TECHNOLOGY_LIST 4
 #define WP_THEME_DETECTION 5
 
-
+/*
+ * for onw only raw results
+ */
 Whatcms::Whatcms(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_WHATCMS;
 
     if(args.output_Raw)
@@ -26,8 +28,8 @@ Whatcms::~Whatcms(){
 
 void Whatcms::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case TECHNOLOGY_DETECTION:
@@ -51,6 +53,5 @@ void Whatcms::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }

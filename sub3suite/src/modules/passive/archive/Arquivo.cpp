@@ -13,7 +13,7 @@
  */
 Arquivo::Arquivo(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ARQUIVO;
 
     if(args.output_Raw)
@@ -29,8 +29,8 @@ Arquivo::~Arquivo(){
 
 void Arquivo::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case CDX_SERVER:
@@ -42,7 +42,6 @@ void Arquivo::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -51,13 +50,13 @@ void Arquivo::start(){
             url.setUrl("https://arquivo.pt/textsearch?q="+target+"/*&prettyPrint=false&maxItems=100");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_Hostname){
             url.setUrl("https://arquivo.pt/textsearch?q=*."+target+"&prettyPrint=false&maxItems=100");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -66,13 +65,13 @@ void Arquivo::start(){
             url.setUrl("https://arquivo.pt/textsearch?q="+target+"&prettyPrint=false&maxItems=100");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_URL){
             url.setUrl("https://arquivo.pt/textsearch?q="+target+"*&prettyPrint=false&maxItems=100");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -81,7 +80,7 @@ void Arquivo::start(){
             url.setUrl("https://arquivo.pt/textsearch?q="+target+"&prettyPrint=false&maxItems=100");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -101,7 +100,7 @@ void Arquivo::replyFinishedUrl(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Arquivo::replyFinishedSubdomain(QNetworkReply *reply){
@@ -128,5 +127,5 @@ void Arquivo::replyFinishedSubdomain(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }

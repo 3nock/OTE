@@ -23,7 +23,7 @@
  */
 SecurityTrails::SecurityTrails(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_SECURITYTRAILS;
 
     if(args.output_Raw)
@@ -47,8 +47,8 @@ void SecurityTrails::start(){
     QNetworkRequest request;
     request.setRawHeader("APIKEY", m_key.toUtf8());
     request.setRawHeader("Accept", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case HISTORY_DNS:
@@ -92,7 +92,6 @@ void SecurityTrails::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -102,7 +101,7 @@ void SecurityTrails::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAIN);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_IP){
@@ -111,7 +110,7 @@ void SecurityTrails::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_CIDR){
@@ -119,7 +118,7 @@ void SecurityTrails::start(){
             request.setAttribute(QNetworkRequest::User, COMPANY_ASSOCIATED_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -129,7 +128,7 @@ void SecurityTrails::start(){
             request.setAttribute(QNetworkRequest::User, IP_NEIGHBOURS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -165,7 +164,7 @@ void SecurityTrails::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void SecurityTrails::replyFinishedIp(QNetworkReply *reply){
@@ -196,7 +195,7 @@ void SecurityTrails::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void SecurityTrails::replyFinishedCidr(QNetworkReply *reply){
@@ -216,5 +215,5 @@ void SecurityTrails::replyFinishedCidr(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

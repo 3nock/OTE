@@ -12,7 +12,7 @@
 
 Censys::Censys(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_CENSYS;
 
     if(args.output_Raw)
@@ -37,8 +37,8 @@ void Censys::start(){
     QByteArray credentialsArray = credentialsString.toLocal8Bit().toBase64();
     QString headerData = "Basic " + credentialsArray;
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ACCOUNT:
@@ -56,7 +56,6 @@ void Censys::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -65,7 +64,6 @@ void Censys::start(){
             url.setUrl("https://censys.io/api/v1/view/websites/"+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -75,7 +73,6 @@ void Censys::start(){
             url.setUrl("https://censys.io/api/v1/view/ipv4/"+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -85,7 +82,6 @@ void Censys::start(){
             url.setUrl("https://censys.io/api/v1/view/certificates/"+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -101,7 +97,7 @@ void Censys::replyFinishedSSL(QNetworkReply *reply){
 
     /* not yet implemented */
 
-    end(reply);
+    this->end(reply);
 }
 
 void Censys::replyFinishedSubdomain(QNetworkReply *reply){
@@ -115,5 +111,5 @@ void Censys::replyFinishedSubdomain(QNetworkReply *reply){
 
     /* not yet implemented */
 
-    end(reply);
+    this->end(reply);
 }

@@ -17,7 +17,7 @@
 /* email reverse-whois */
 Threatminer::Threatminer(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_THREATMINER;
 
     if(args.output_Raw)
@@ -41,8 +41,8 @@ Threatminer::~Threatminer(){
 
 void Threatminer::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id){
         case DOMAIN_WHOIS:
@@ -75,7 +75,6 @@ void Threatminer::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -86,7 +85,7 @@ void Threatminer::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_Email){
@@ -94,7 +93,7 @@ void Threatminer::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_WHOIS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_IP){
@@ -102,7 +101,7 @@ void Threatminer::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_PASSIVE_DNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_URL){
@@ -110,7 +109,7 @@ void Threatminer::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_QUERY_URI);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -121,7 +120,7 @@ void Threatminer::start(){
             request.setAttribute(QNetworkRequest::User, IP_WHOIS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_Hostname){
@@ -129,7 +128,7 @@ void Threatminer::start(){
             request.setAttribute(QNetworkRequest::User, IP_PASSIVE_DNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_SSL){
@@ -137,7 +136,7 @@ void Threatminer::start(){
             request.setAttribute(QNetworkRequest::User, IP_SSL_CERTS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -148,7 +147,7 @@ void Threatminer::start(){
             request.setAttribute(QNetworkRequest::User, SSL_HOSTS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -180,7 +179,7 @@ void Threatminer::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Threatminer::replyFinishedIp(QNetworkReply *reply){
@@ -210,7 +209,7 @@ void Threatminer::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Threatminer::replyFinishedEmail(QNetworkReply *reply){
@@ -236,7 +235,7 @@ void Threatminer::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Threatminer::replyFinishedAsn(QNetworkReply *reply){
@@ -259,7 +258,7 @@ void Threatminer::replyFinishedAsn(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Threatminer::replyFinishedUrl(QNetworkReply *reply){
@@ -281,7 +280,7 @@ void Threatminer::replyFinishedUrl(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Threatminer::replyFinishedSSL(QNetworkReply *reply){
@@ -302,5 +301,5 @@ void Threatminer::replyFinishedSSL(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

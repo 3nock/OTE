@@ -10,7 +10,7 @@
 
 Omnisint::Omnisint(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_OMNISINT;
 
     if(args.output_Raw)
@@ -26,8 +26,8 @@ Omnisint::~Omnisint(){
 
 void Omnisint::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case ALL:
@@ -46,7 +46,7 @@ void Omnisint::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_IP){
@@ -55,7 +55,7 @@ void Omnisint::start(){
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -65,7 +65,7 @@ void Omnisint::start(){
             request.setAttribute(QNetworkRequest::User, ALL);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -75,7 +75,7 @@ void Omnisint::start(){
             request.setAttribute(QNetworkRequest::User, REVERSE_IPCIDR);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -110,7 +110,7 @@ void Omnisint::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Omnisint::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -133,5 +133,5 @@ void Omnisint::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

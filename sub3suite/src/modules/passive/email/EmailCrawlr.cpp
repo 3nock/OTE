@@ -14,7 +14,7 @@
  */
 EmailCrawlr::EmailCrawlr(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_EMAILCRAWLR;
 
     if(args.output_Raw)
@@ -32,8 +32,8 @@ EmailCrawlr::~EmailCrawlr(){
 void EmailCrawlr::start(){
     QNetworkRequest request;
     request.setRawHeader("x-api-key", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case ACCOUNT:
@@ -51,7 +51,6 @@ void EmailCrawlr::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -60,7 +59,6 @@ void EmailCrawlr::start(){
             url.setUrl("https://api.emailcrawlr.com/v2/domain?domain="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -80,5 +78,5 @@ void EmailCrawlr::replyFinishedEmail(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }

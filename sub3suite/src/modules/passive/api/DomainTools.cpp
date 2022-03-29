@@ -36,7 +36,7 @@
 
 DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_DOMAINTOOLS;
 
     if(args.output_Raw)
@@ -59,8 +59,8 @@ DomainTools::~DomainTools(){
 
 void DomainTools::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case BRAND_MONITOR:
@@ -147,7 +147,6 @@ void DomainTools::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -157,7 +156,6 @@ void DomainTools::start(){
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -168,7 +166,6 @@ void DomainTools::start(){
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -179,13 +176,12 @@ void DomainTools::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_SEARCH);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
 
     ///
-    /// Info...
+    /// For Enums...
     ///
 
     if(args.output_EnumMX){
@@ -193,7 +189,6 @@ void DomainTools::start(){
         request.setAttribute(QNetworkRequest::User, REVERSE_MX_MX);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -202,7 +197,6 @@ void DomainTools::start(){
         request.setAttribute(QNetworkRequest::User, REVERSE_NAMESERVER);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 }
@@ -229,7 +223,7 @@ void DomainTools::replyFinishedSubdomainIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void DomainTools::replyFinishedSubdomain(QNetworkReply *reply){
@@ -264,7 +258,7 @@ void DomainTools::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void DomainTools::replyFinishedIp(QNetworkReply *reply){
@@ -286,7 +280,7 @@ void DomainTools::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void DomainTools::replyFinishedEnumMX(QNetworkReply *reply){
@@ -313,7 +307,7 @@ void DomainTools::replyFinishedEnumMX(QNetworkReply *reply){
 
     emit resultEnumMX(mx);
 
-    end(reply);
+    this->end(reply);
 }
 
 void DomainTools::replyFinishedEnumNS(QNetworkReply *reply){
@@ -335,5 +329,5 @@ void DomainTools::replyFinishedEnumNS(QNetworkReply *reply){
 
     emit resultEnumNS(ns);
 
-    end(reply);
+    this->end(reply);
 }

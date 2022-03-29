@@ -104,6 +104,7 @@ void Raw::initConfigValues(){
     m_scanConfig->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
     m_scanConfig->autosaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
     m_scanConfig->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
+    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
     CONFIG.endGroup();
 }
 
@@ -112,13 +113,15 @@ void Raw::on_lineEditTarget_returnPressed(){
 }
 
 void Raw::on_buttonStart_clicked(){
-    if(ui->checkBoxMultipleTargets->isChecked() && ui->targets->getlistModel()->rowCount() == 0){
-        QMessageBox::warning(this, tr("Error!"), tr("Please Enter Target For Enumerations!"));
-        return;
-    }
-    if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
-        QMessageBox::warning(this, tr("Error!"), tr("Please Enter Targets For Enumerations!"));
-        return;
+    if(ui->lineEditTarget->placeholderText() != PLACEHOLDERTEXT_NONE){
+        if(ui->checkBoxMultipleTargets->isChecked() && ui->targets->getlistModel()->rowCount() == 0){
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter Target For Enumerations!"));
+            return;
+        }
+        if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
+            QMessageBox::warning(this, tr("Error!"), tr("Please Enter Targets For Enumerations!"));
+            return;
+        }
     }
 
     /* getting the targets */

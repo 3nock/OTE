@@ -152,6 +152,10 @@ class Raw : public AbstractEngine{
 
         void on_moduleIpfy_clicked();
 
+        void on_moduleCirclPublic_clicked();
+
+        void on_moduleASRank_clicked();
+
 private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;

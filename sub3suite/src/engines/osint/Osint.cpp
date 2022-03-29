@@ -307,5 +307,6 @@ void Osint::initConfigValues(){
     m_scanConfig->maxPage = CONFIG.value(CFG_VAL_MAXPAGES).toInt();
     m_scanConfig->autosaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
     m_scanConfig->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
+    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
     CONFIG.endGroup();
 }

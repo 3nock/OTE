@@ -142,10 +142,6 @@ void ActiveConfigDialog::m_initWidgets(){
     ui->lineEditTimeout->setPlaceholderText("e.g. 3");
     ui->lineEditThreads->setPlaceholderText("e.g. 100");
 
-    /* setting validators... */
-    ui->lineEditTimeout->setValidator(new QIntValidator(1, 1000, this));
-    ui->lineEditThreads->setValidator(new QIntValidator(1, 200, this));
-
     /* custom-nameserver list */
     ui->customNameservers->setListName("Namerserver");
     ui->customNameservers->setListModel(m_customNameserverListModel);
@@ -162,6 +158,7 @@ void ActiveConfigDialog::m_loadConfigBrute(){
     ui->checkBoxWildcards->setChecked(CONFIG.value(CFG_VAL_WILDCARD).toBool());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();
     QString nsType = CONFIG.value(CFG_VAL_NAMESERVER).toString();
     CONFIG.endGroup();
@@ -198,6 +195,7 @@ void ActiveConfigDialog::m_loadConfigActive(){
     ui->lineEditThreads->setText(CONFIG.value(CFG_VAL_THREADS).toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();
     QString nsType = CONFIG.value(CFG_VAL_NAMESERVER).toString();
     CONFIG.endGroup();
@@ -234,6 +232,7 @@ void ActiveConfigDialog::m_loadConfigDns(){
     ui->lineEditTimeout->setText(CONFIG.value(CFG_VAL_TIMEOUT).toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     QString nsType = CONFIG.value(CFG_VAL_NAMESERVER).toString();
     CONFIG.endGroup();
 
@@ -262,6 +261,7 @@ void ActiveConfigDialog::m_loadConfigSSL(){
     ui->lineEditThreads->setText(CONFIG.value(CFG_VAL_THREADS).toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     CONFIG.endGroup();
 }
 
@@ -271,6 +271,7 @@ void ActiveConfigDialog::m_loadConfigURL(){
     ui->lineEditThreads->setText(CONFIG.value(CFG_VAL_THREADS).toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     CONFIG.endGroup();
 }
 
@@ -287,6 +288,7 @@ void ActiveConfigDialog::m_saveBrute(){
     bool wildcard = ui->checkBoxWildcards->isChecked();
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+    bool setTimeout = ui->groupBoxTimeout->isChecked();
 
     bool recordA = ui->radioButtonA->isChecked();
     bool recordAAAA = ui->radioButtonAAAA->isChecked();
@@ -297,6 +299,7 @@ void ActiveConfigDialog::m_saveBrute(){
     bool nsCustom = ui->radioButtonCustomNameservers->isChecked();
 
 
+
     /* saving values to config file... */
 
     CONFIG.beginGroup(CFG_BRUTE);
@@ -305,6 +308,7 @@ void ActiveConfigDialog::m_saveBrute(){
     CONFIG.setValue(CFG_VAL_WILDCARD, wildcard);
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
+    CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
     CONFIG.setValue("nameserver", ui->comboBoxSingleNameserver->currentText());
 
     if(nsSingle)
@@ -338,6 +342,7 @@ void ActiveConfigDialog::m_saveBrute(){
     m_configBrute->checkWildcard =  wildcard;
     m_configBrute->noDuplicates = noDuplicates;
     m_configBrute->autoSaveToProject = autosaveToProject;
+    m_configBrute->setTimeout = setTimeout;
 
     if(recordA)
         m_configBrute->recordType = QDnsLookup::A;
@@ -382,6 +387,7 @@ void ActiveConfigDialog::m_saveActive(){
 
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+    bool setTimeout = ui->groupBoxTimeout->isChecked();
 
     bool recordA = ui->radioButtonA->isChecked();
     bool recordAAAA = ui->radioButtonAAAA->isChecked();
@@ -398,6 +404,7 @@ void ActiveConfigDialog::m_saveActive(){
     CONFIG.setValue(CFG_VAL_TIMEOUT, timeout);
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
+    CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
 
     if(nsSingle)
         CONFIG.setValue(CFG_VAL_NAMESERVER, "single");
@@ -428,6 +435,7 @@ void ActiveConfigDialog::m_saveActive(){
     m_configActive->threads = thread.toInt();
     m_configActive->noDuplicates = noDuplicates;
     m_configActive->autoSaveToProject = autosaveToProject;
+    m_configActive->setTimeout = setTimeout;
 
     if(recordA)
         m_configActive->recordType = QDnsLookup::A;
@@ -472,6 +480,7 @@ void ActiveConfigDialog::m_saveDns(){
 
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+    bool setTimeout = ui->groupBoxTimeout->isChecked();
 
     bool nsSingle = ui->radioButtonSingleNameserver->isChecked();
     bool nsRandom = ui->radioButtonRandomNameservers->isChecked();
@@ -484,6 +493,7 @@ void ActiveConfigDialog::m_saveDns(){
     CONFIG.setValue(CFG_VAL_TIMEOUT, timeout);
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
+    CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
     CONFIG.setValue("nameserver", ui->comboBoxSingleNameserver->currentText());
 
     if(nsSingle)
@@ -508,6 +518,7 @@ void ActiveConfigDialog::m_saveDns(){
     m_configDns->timeout = timeout.toInt();
     m_configDns->noDuplicates = noDuplicates;
     m_configDns->autoSaveToProject = autosaveToProject;
+    m_configDns->setTimeout = setTimeout;
 
     m_configDns->nameservers.clear();
     if(nsSingle){
@@ -545,6 +556,7 @@ void ActiveConfigDialog::m_saveSSL(){
 
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+    bool setTimeout = ui->groupBoxTimeout->isChecked();
 
     /* saving values to config file... */
 
@@ -553,6 +565,7 @@ void ActiveConfigDialog::m_saveSSL(){
     CONFIG.setValue(CFG_VAL_TIMEOUT, timeout);
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
+    CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
     CONFIG.endGroup();
 
     /* saving to ssl::ScanConfig structure... */
@@ -561,6 +574,7 @@ void ActiveConfigDialog::m_saveSSL(){
     m_configSSL->threads = thread.toInt();
     m_configSSL->noDuplicates = noDuplicates;
     m_configSSL->autoSaveToProject = autosaveToProject;
+    m_configSSL->setTimeout = setTimeout;
 }
 
 void ActiveConfigDialog::m_saveURL(){
@@ -571,6 +585,7 @@ void ActiveConfigDialog::m_saveURL(){
 
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+    bool setTimeout = ui->groupBoxTimeout->isChecked();
 
     /* saving values to config file... */
 
@@ -579,6 +594,7 @@ void ActiveConfigDialog::m_saveURL(){
     CONFIG.setValue(CFG_VAL_TIMEOUT, timeout);
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
+    CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
     CONFIG.endGroup();
 
     /* saving to ssl::ScanConfig structure... */
@@ -587,4 +603,5 @@ void ActiveConfigDialog::m_saveURL(){
     m_configURL->threads = thread.toInt();
     m_configURL->noDuplicates = noDuplicates;
     m_configURL->autoSaveToProject = autosaveToProject;
+    m_configURL->setTimeout = setTimeout;
 }

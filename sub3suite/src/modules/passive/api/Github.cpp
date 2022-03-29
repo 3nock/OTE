@@ -6,9 +6,12 @@
 
 #define CODE 0
 
+/*
+ * for now only raw results
+ */
 Github::Github(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_GITHUB;
 
     if(args.output_Raw)
@@ -28,8 +31,8 @@ void Github::start(){
     QNetworkRequest request;
     request.setRawHeader("Authorization", "token "+m_key.toUtf8());
     request.setRawHeader("Content-Type", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case CODE:
@@ -38,7 +41,6 @@ void Github::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -47,9 +49,8 @@ void Github::start(){
         request.setUrl(url);
         request.setAttribute(QNetworkRequest::User, CODE);
         manager->get(request);
-        activeRequests++;
+        return;
     }
-
 }
 
 void Github::replyFinishedSubdomain(QNetworkReply *reply){
@@ -60,5 +61,5 @@ void Github::replyFinishedSubdomain(QNetworkReply *reply){
     /*
      * Not Yet Implemented...
      */
-    end(reply);
+    this->end(reply);
 }

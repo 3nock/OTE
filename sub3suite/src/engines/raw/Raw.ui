@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>661</width>
-    <height>545</height>
+    <height>619</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -896,9 +896,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-215</y>
+              <y>0</y>
               <width>177</width>
-              <height>650</height>
+              <height>696</height>
              </rect>
             </property>
             <attribute name="label">
@@ -916,6 +916,9 @@
                   <property name="text">
                    <string>Afrinic</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -923,6 +926,9 @@
                   <property name="text">
                    <string>Apnic</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -930,6 +936,9 @@
                   <property name="text">
                    <string>Arin</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -937,6 +946,9 @@
                   <property name="text">
                    <string>Ripe</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                </layout>
@@ -953,6 +965,9 @@
                   <property name="text">
                    <string>ArchiveIt</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -960,6 +975,9 @@
                   <property name="text">
                    <string>Arquivo</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -967,6 +985,9 @@
                   <property name="text">
                    <string>UKWebArchive</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -974,6 +995,9 @@
                   <property name="text">
                    <string>WaybackMachine</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                </layout>
@@ -990,6 +1014,9 @@
                   <property name="text">
                    <string>TruMail</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                </layout>
@@ -1006,6 +1033,19 @@
                   <property name="text">
                    <string>Anubis</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleASRank">
+                  <property name="text">
+                   <string>ASRank</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1013,6 +1053,19 @@
                   <property name="text">
                    <string>CertSpotter(Free)</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCirclPublic">
+                  <property name="text">
+                   <string>Circl (public)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1020,6 +1073,9 @@
                   <property name="text">
                    <string>Maltiverse (Free)</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1027,6 +1083,9 @@
                   <property name="text">
                    <string>N45HT</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1034,6 +1093,9 @@
                   <property name="text">
                    <string>Sublist3r</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1041,6 +1103,9 @@
                   <property name="text">
                    <string>Bgpview</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1048,6 +1113,9 @@
                   <property name="text">
                    <string>ThreatMiner</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1055,6 +1123,9 @@
                   <property name="text">
                    <string>ThreatCrowd</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1062,6 +1133,9 @@
                   <property name="text">
                    <string>HackerTarget (Free)</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1069,6 +1143,9 @@
                   <property name="text">
                    <string>DnsBufferOverRun</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1076,6 +1153,9 @@
                   <property name="text">
                    <string>GoogleCert</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1083,6 +1163,9 @@
                   <property name="text">
                    <string>Omnisint</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1090,6 +1173,9 @@
                   <property name="text">
                    <string>UrlScan</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                </layout>
@@ -1123,7 +1209,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-347</y>
+              <y>0</y>
               <width>176</width>
               <height>1547</height>
              </rect>
@@ -1143,6 +1229,9 @@
                   <property name="text">
                    <string>AbuseIPDB</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1150,6 +1239,9 @@
                   <property name="text">
                    <string>BotScout</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1157,6 +1249,9 @@
                   <property name="text">
                    <string>FraudGuard</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1164,6 +1259,9 @@
                   <property name="text">
                    <string>HybridAnalysis</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1171,6 +1269,9 @@
                   <property name="text">
                    <string>IpQualityScore</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1178,6 +1279,19 @@
                   <property name="text">
                    <string>Leak-Lookup</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleVirusTotal">
+                  <property name="text">
+                   <string>VirusTotal</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                </layout>
@@ -1194,6 +1308,9 @@
                   <property name="text">
                    <string>Debounce</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1201,6 +1318,9 @@
                   <property name="text">
                    <string>EmailCrawlr</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1208,6 +1328,9 @@
                   <property name="text">
                    <string>EmailFormat</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1215,6 +1338,9 @@
                   <property name="text">
                    <string>EmailRep</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1222,6 +1348,9 @@
                   <property name="text">
                    <string>Hunter</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1229,6 +1358,9 @@
                   <property name="text">
                    <string>Snov</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                </layout>
@@ -1245,6 +1377,9 @@
                   <property name="text">
                    <string>IpApi</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1252,6 +1387,9 @@
                   <property name="text">
                    <string>IpInfo</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1259,6 +1397,9 @@
                   <property name="text">
                    <string>IpData</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1266,6 +1407,9 @@
                   <property name="text">
                    <string>Ipfy</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1273,6 +1417,9 @@
                   <property name="text">
                    <string>IpGeoLocation</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1280,6 +1427,9 @@
                   <property name="text">
                    <string>IpRegistry</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1287,6 +1437,9 @@
                   <property name="text">
                    <string>IpStack</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                </layout>
@@ -1303,6 +1456,9 @@
                   <property name="text">
                    <string>Builtwith</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1310,6 +1466,9 @@
                   <property name="text">
                    <string>Censys</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1317,6 +1476,9 @@
                   <property name="text">
                    <string>Certspotter</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1324,6 +1486,9 @@
                   <property name="text">
                    <string>DNSlytics</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1331,6 +1496,9 @@
                   <property name="text">
                    <string>DomainTools</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1338,6 +1506,9 @@
                   <property name="text">
                    <string>FullHunt</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1345,6 +1516,9 @@
                   <property name="text">
                    <string>HaveIBeenPawned</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1352,6 +1526,9 @@
                   <property name="text">
                    <string>Host</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1359,6 +1536,9 @@
                   <property name="text">
                    <string>JsonWhois</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1366,6 +1546,9 @@
                   <property name="text">
                    <string>LeakIX</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1373,6 +1556,9 @@
                   <property name="text">
                    <string>Networksdb</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1380,6 +1566,9 @@
                   <property name="text">
                    <string>ProjectDiscovery</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1387,6 +1576,9 @@
                   <property name="text">
                    <string>WhoisXmlApi</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1394,6 +1586,9 @@
                   <property name="text">
                    <string>Robtex (Pro)</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1401,6 +1596,9 @@
                   <property name="text">
                    <string>SpamHaus</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1408,6 +1606,9 @@
                   <property name="text">
                    <string>Robtex</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1415,6 +1616,9 @@
                   <property name="text">
                    <string>Spyse</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1422,6 +1626,9 @@
                   <property name="text">
                    <string>ZoomEye</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1429,6 +1636,9 @@
                   <property name="text">
                    <string>Github</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1436,6 +1646,9 @@
                   <property name="text">
                    <string>BinaryEdge</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1443,6 +1656,9 @@
                   <property name="text">
                    <string>RiskIq</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1450,6 +1666,9 @@
                   <property name="text">
                    <string>WhatCMS</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1457,6 +1676,9 @@
                   <property name="text">
                    <string>Shodan</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1464,6 +1686,9 @@
                   <property name="text">
                    <string>Mnemonic (Free)</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1471,6 +1696,9 @@
                   <property name="text">
                    <string>Mnemonic (Paid)</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1478,6 +1706,9 @@
                   <property name="text">
                    <string>SpyOnWeb</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1485,6 +1716,9 @@
                   <property name="text">
                    <string>Whoxy</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1492,6 +1726,9 @@
                   <property name="text">
                    <string>C99</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1499,13 +1736,9 @@
                   <property name="text">
                    <string>Seon</string>
                   </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleVirusTotal">
-                  <property name="text">
-                   <string>VirusTotal</string>
-                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1513,6 +1746,9 @@
                   <property name="text">
                    <string>WebResolver</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1520,6 +1756,9 @@
                   <property name="text">
                    <string>HackerTarget (Paid)</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1527,6 +1766,9 @@
                   <property name="text">
                    <string>Wappalyzer</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1534,6 +1776,9 @@
                   <property name="text">
                    <string>ViewDns</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1541,6 +1786,9 @@
                   <property name="text">
                    <string>ThreatBook</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1548,6 +1796,9 @@
                   <property name="text">
                    <string>PassiveTotal</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1555,6 +1806,9 @@
                   <property name="text">
                    <string>SecurityTrails</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1562,6 +1816,9 @@
                   <property name="text">
                    <string>Circl</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1569,6 +1826,9 @@
                   <property name="text">
                    <string>ZETALytics</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1576,6 +1836,9 @@
                   <property name="text">
                    <string>Onyphe</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1583,6 +1846,9 @@
                   <property name="text">
                    <string>NeutrinoApi</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                 <item>
@@ -1590,6 +1856,9 @@
                   <property name="text">
                    <string>Otx</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
                  </widget>
                 </item>
                </layout>
@@ -1617,4 +1886,7 @@
  </customwidgets>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

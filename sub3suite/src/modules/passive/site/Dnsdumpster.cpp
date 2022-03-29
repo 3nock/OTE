@@ -6,7 +6,7 @@
  */
 Dnsdumpster::Dnsdumpster(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_DNSDUMPSTER;
 
     if(args.output_HostnameIP)
@@ -29,7 +29,6 @@ void Dnsdumpster::start(){
     request.setUrl(url);
     m_queryToGetToken = true;
     manager->get(request);
-    activeRequests++;
 }
 
 void Dnsdumpster::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -76,7 +75,7 @@ void Dnsdumpster::replyFinishedSubdomainIp(QNetworkReply *reply){
         gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnsdumpster::replyFinishedSubdomain(QNetworkReply *reply){
@@ -125,7 +124,7 @@ void Dnsdumpster::replyFinishedSubdomain(QNetworkReply *reply){
         gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnsdumpster::replyFinishedIp(QNetworkReply *reply){
@@ -173,7 +172,7 @@ void Dnsdumpster::replyFinishedIp(QNetworkReply *reply){
         gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 ///
@@ -222,5 +221,4 @@ void Dnsdumpster::m_getToken(QNetworkReply *reply){
 
     manager->post(request, data);
     m_queryToGetToken = false;
-    activeRequests++;
 }

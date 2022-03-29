@@ -16,7 +16,7 @@
  */
 Whoxy::Whoxy(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_WHOXY;
 
     if(args.output_Raw)
@@ -31,8 +31,8 @@ Whoxy::~Whoxy(){
 
 void Whoxy::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ACCOUNT_BALANCE_CHECK:
@@ -59,6 +59,5 @@ void Whoxy::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }

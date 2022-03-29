@@ -8,7 +8,7 @@
  */
 Yahoo::Yahoo(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_YAHOO;
 
     if(args.output_Hostname)
@@ -24,22 +24,23 @@ Yahoo::~Yahoo(){
 
 void Yahoo::start(){
     QNetworkRequest request;
+    QUrl url;
 
     if(args.input_Domain){
         if(args.output_Hostname){
-            QUrl url("https://search.yahoo.com/search?p=site:"+target+"&b=1&pz=10&bct=0&xargs=0");
+            url.setUrl("https://search.yahoo.com/search?p=site:"+target+"&b=1&pz=10&bct=0&xargs=0");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
 
         if(args.output_URL){
-            QUrl url("https://search.yahoo.com/search?p=site:"+target+"&b=1&pz=10&bct=0&xargs=0");
+            url.setUrl("https://search.yahoo.com/search?p=site:"+target+"&b=1&pz=10&bct=0&xargs=0");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
     }
 }
@@ -97,7 +98,7 @@ void Yahoo::replyFinishedSubdomain(QNetworkReply *reply){
     if(m_firstRequest)
         this->sendRequests();
 
-    end(reply);
+    this->end(reply);
 }
 
 void Yahoo::replyFinishedEmail(QNetworkReply *reply){
@@ -110,7 +111,7 @@ void Yahoo::replyFinishedEmail(QNetworkReply *reply){
      * not yet implemented...
      */
 
-    end(reply);
+    this->end(reply);
 }
 
 void Yahoo::replyFinishedUrl(QNetworkReply *reply){
@@ -166,7 +167,7 @@ void Yahoo::replyFinishedUrl(QNetworkReply *reply){
     if(m_firstRequest)
         this->sendRequests();
 
-    end(reply);
+    this->end(reply);
 }
 
 void Yahoo::sendRequests(){
@@ -195,7 +196,6 @@ void Yahoo::sendRequests(){
                 request.setUrl(url);
                 manager->get(request);
                 m_firstRequest = false;
-                activeRequests++;
                 currentPage++;
                 first += 10;
             }

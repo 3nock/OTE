@@ -4,7 +4,7 @@
 
 Pkey::Pkey(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_PKEY;
 
     if(args.output_HostnameIP)
@@ -20,19 +20,17 @@ Pkey::~Pkey(){
 
 void Pkey::start(){
     QNetworkRequest request;
+    QUrl url;
+    QByteArray data;
 
-    QUrl url("https://www.pkey.in/tools-i/search-subdomains");
+    url.setUrl("https://www.pkey.in/tools-i/search-subdomains");
     request.setUrl(url);
     request.setRawHeader("Origin", "https://www.pkey.in");
     request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
-    //...
-    QByteArray data;
     data.append("zone="+target+"&");
     data.append("submit=");
 
-    /* send request */
     manager->post(request, data);
-    activeRequests++;
 }
 
 void Pkey::replyFinishedSubdomain(QNetworkReply *reply){
@@ -74,7 +72,7 @@ void Pkey::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }
 
 void Pkey::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -133,7 +131,7 @@ void Pkey::replyFinishedSubdomainIp(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }
 
 void Pkey::replyFinishedIp(QNetworkReply *reply){
@@ -183,5 +181,5 @@ void Pkey::replyFinishedIp(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }

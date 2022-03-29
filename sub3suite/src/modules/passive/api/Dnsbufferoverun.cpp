@@ -9,7 +9,7 @@
 
 Dnsbufferoverun::Dnsbufferoverun(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_DNSBUFFEROVERRUN;
 
     if(args.output_Raw)
@@ -27,8 +27,8 @@ Dnsbufferoverun::~Dnsbufferoverun(){
 
 void Dnsbufferoverun::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case SUBOMAINS:
@@ -37,7 +37,6 @@ void Dnsbufferoverun::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -46,7 +45,6 @@ void Dnsbufferoverun::start(){
             url.setUrl("https://dns.bufferover.run/dns?q="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -71,7 +69,7 @@ void Dnsbufferoverun::replyFinishedSubdomain(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnsbufferoverun::replyFinishedIp(QNetworkReply *reply){
@@ -94,7 +92,7 @@ void Dnsbufferoverun::replyFinishedIp(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnsbufferoverun::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -119,5 +117,5 @@ void Dnsbufferoverun::replyFinishedSubdomainIp(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }

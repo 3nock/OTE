@@ -4,7 +4,7 @@
 
 Ask::Ask(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ASK;
 
     if(args.output_Hostname)
@@ -20,30 +20,31 @@ Ask::~Ask(){
 
 void Ask::start(){
     QNetworkRequest request;
+    QUrl url;
 
     if(args.input_Domain){
         if(args.output_Hostname){
-            QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+            url.setUrl("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
 
         if(args.output_URL){
-            QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+            url.setUrl("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
 
         if(args.output_Email){
-            QUrl url("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
+            url.setUrl("https://www.ask.com/web?q=site:"+target+"&page=1&qid=8D6EE6BF52E0C04527E51A64F22C4534&o=0&l=dir&qsrc=998&qo=pagination");
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
     }
 }
@@ -102,7 +103,7 @@ void Ask::replyFinishedSubdomain(QNetworkReply *reply){
     if(m_firstRequest)
         this->sendRequests();
 
-    end(reply);
+    this->end(reply);
 }
 
 void Ask::replyFinishedEmail(QNetworkReply *reply){
@@ -115,7 +116,7 @@ void Ask::replyFinishedEmail(QNetworkReply *reply){
      * not yet implemented...
      */
 
-    end(reply);
+    this->end(reply);
 }
 
 void Ask::replyFinishedUrl(QNetworkReply *reply){
@@ -170,7 +171,7 @@ void Ask::replyFinishedUrl(QNetworkReply *reply){
     if(m_firstRequest)
         this->sendRequests();
 
-    end(reply);
+    this->end(reply);
 }
 
 void Ask::sendRequests(){
@@ -197,7 +198,6 @@ void Ask::sendRequests(){
                 request.setUrl(url);
                 manager->get(request);
                 m_firstRequest = false;
-                activeRequests++;
                 currentPage++;
             }
         }

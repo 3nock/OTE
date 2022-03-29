@@ -6,7 +6,7 @@
 
 HybridAnalysis::HybridAnalysis(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_HYBRIDANALYSIS;
 
     if(args.output_Raw)
@@ -25,8 +25,8 @@ void HybridAnalysis::start(){
     request.setRawHeader("accept", "application/json");
     request.setRawHeader("user-agent", "Falcon Sandbox");
     request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case URL_QUICKSCAN:
@@ -36,7 +36,6 @@ void HybridAnalysis::start(){
             data.append("url="+target);
             request.setUrl(url);
             manager->post(request, data);
-            activeRequests++;
             break;
         }
     }

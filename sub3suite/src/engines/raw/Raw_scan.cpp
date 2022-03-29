@@ -49,6 +49,7 @@ void Raw::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
+    m_failedScans.clear();
 
     /* setting status */
     status->isRunning = true;
@@ -313,6 +314,12 @@ void Raw::startScan(){
 
     if(ui->moduleIpfy->isChecked())
         this->startScanThread(new Ipfy(*m_scanArgs));
+
+    if(ui->moduleCirclPublic->isChecked())
+        this->startScanThread(new CirclPublic(*m_scanArgs));
+
+    if(ui->moduleASRank->isChecked())
+        this->startScanThread(new ASRank(*m_scanArgs));
 }
 
 void Raw::startScanThread(AbstractOsintModule *module){

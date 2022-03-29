@@ -99,7 +99,9 @@ struct Ripe{
     QMap<int, QList<int>> input_output = {{IN_IP,
                                            {OUT_ASN}},
                                           {IN_ASN,
-                                           {OUT_CIDR}}};
+                                           {OUT_CIDR}},
+                                          {IN_CIDR,
+                                           {OUT_CIDR, OUT_ASN}}};
 };
 }
 

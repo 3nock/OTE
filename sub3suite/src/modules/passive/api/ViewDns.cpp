@@ -24,7 +24,7 @@
  */
 ViewDns::ViewDns(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_VIEWDNS;
 
     if(args.output_Raw)
@@ -49,8 +49,8 @@ ViewDns::~ViewDns(){
 
 void ViewDns::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ABUSE_CONTACT_LOOKUP:
@@ -98,7 +98,6 @@ void ViewDns::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -108,7 +107,7 @@ void ViewDns::start(){
             request.setAttribute(QNetworkRequest::User, DNS_RECORD_LOOKUP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_IP){
@@ -116,7 +115,7 @@ void ViewDns::start(){
             request.setAttribute(QNetworkRequest::User, IP_HISTORY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_Email){
@@ -124,7 +123,7 @@ void ViewDns::start(){
             request.setAttribute(QNetworkRequest::User, ABUSE_CONTACT_LOOKUP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -134,7 +133,7 @@ void ViewDns::start(){
             request.setAttribute(QNetworkRequest::User, REVERSE_IP_LOOKUP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -144,7 +143,7 @@ void ViewDns::start(){
             request.setAttribute(QNetworkRequest::User, REVERSE_WHOIS_LOOKUP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -157,7 +156,7 @@ void ViewDns::start(){
         request.setAttribute(QNetworkRequest::User, REVERSE_MX_LOOKUP);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.output_EnumNS){
@@ -165,7 +164,7 @@ void ViewDns::start(){
         request.setAttribute(QNetworkRequest::User, REVERSE_NS_LOOKUP);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 
@@ -232,7 +231,7 @@ void ViewDns::replyFinishedSubdomain(QNetworkReply *reply){
     }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void ViewDns::replyFinishedEmail(QNetworkReply *reply){
@@ -251,7 +250,7 @@ void ViewDns::replyFinishedEmail(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void ViewDns::replyFinishedIp(QNetworkReply *reply){
@@ -291,7 +290,7 @@ void ViewDns::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 ///
@@ -316,7 +315,7 @@ void ViewDns::replyFinishedEnumNS(QNetworkReply *reply){
 
     emit resultEnumNS(ns);
 
-    end(reply);
+    this->end(reply);
 }
 
 void ViewDns::replyFinishedEnumMX(QNetworkReply *reply){
@@ -337,5 +336,5 @@ void ViewDns::replyFinishedEnumMX(QNetworkReply *reply){
 
     emit resultEnumMX(mx);
 
-    end(reply);
+    this->end(reply);
 }

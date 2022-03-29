@@ -22,7 +22,7 @@
 
 Dnslytics::Dnslytics(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_DNSLYTICS;
 
     if(args.output_Raw)
@@ -44,7 +44,7 @@ Dnslytics::Dnslytics(ScanArgs args): AbstractOsintModule(args)
     if(args.output_EnumNS)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Dnslytics::replyFinishedEnumNS);
 
-    /* getting api key... */
+    /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_DNSLYTICS).toString();
     
 }
@@ -54,8 +54,8 @@ Dnslytics::~Dnslytics(){
 
 void Dnslytics::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ACCOUNTINFO:
@@ -99,18 +99,17 @@ void Dnslytics::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
     ///
-    /// for info output...
+    /// for Enums...
     ///
+
     if(args.output_EnumIP){
         url.setUrl("https://api.dnslytics.net/v1/reverseip/"+target+"?apikey="+m_key);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -118,7 +117,6 @@ void Dnslytics::start(){
         url.setUrl("https://api.dnslytics.net/v1/reversens/"+target+"?apikey="+m_key);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -126,20 +124,19 @@ void Dnslytics::start(){
         url.setUrl("https://api.dnslytics.net/v1/reversemx/"+target+"?apikey="+m_key);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
     ///
     /// for osint output...
     ///
+
     if(args.input_Search){
         if(args.output_Hostname){
             url.setUrl("https://api.dnslytics.net/v1/domainsearch/"+target+"?apikey="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAINSEARCH);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -150,7 +147,6 @@ void Dnslytics::start(){
             request.setAttribute(QNetworkRequest::User, DOMAINSEARCH);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
         if(args.output_IP){
@@ -158,7 +154,6 @@ void Dnslytics::start(){
             request.setAttribute(QNetworkRequest::User, HOSTINGHISTORY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -169,7 +164,6 @@ void Dnslytics::start(){
             request.setAttribute(QNetworkRequest::User, REVERSEIP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
         if(args.output_ASN || args.output_CIDR){
@@ -177,7 +171,6 @@ void Dnslytics::start(){
             request.setAttribute(QNetworkRequest::User, IP2ASN);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -188,7 +181,7 @@ void Dnslytics::start(){
             request.setAttribute(QNetworkRequest::User, ASINFO);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -198,7 +191,7 @@ void Dnslytics::start(){
             request.setAttribute(QNetworkRequest::User, SUBNETINFO);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -248,7 +241,7 @@ void Dnslytics::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnslytics::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -284,7 +277,7 @@ void Dnslytics::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnslytics::replyFinishedAsn(QNetworkReply *reply){
@@ -331,7 +324,7 @@ void Dnslytics::replyFinishedAsn(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnslytics::replyFinishedIp(QNetworkReply *reply){
@@ -378,7 +371,7 @@ void Dnslytics::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
@@ -422,7 +415,7 @@ void Dnslytics::replyFinishedCidr(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 ///
@@ -446,7 +439,7 @@ void Dnslytics::replyFinishedEnumMX(QNetworkReply *reply){
 
     emit resultEnumMX(mx);
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnslytics::replyFinishedEnumNS(QNetworkReply *reply){
@@ -466,7 +459,7 @@ void Dnslytics::replyFinishedEnumNS(QNetworkReply *reply){
 
     emit resultEnumNS(ns);
 
-    end(reply);
+    this->end(reply);
 }
 
 void Dnslytics::replyFinishedEnumIP(QNetworkReply *reply){
@@ -486,5 +479,5 @@ void Dnslytics::replyFinishedEnumIP(QNetworkReply *reply){
 
     emit resultEnumIP(ip);
 
-    end(reply);
+    this->end(reply);
 }

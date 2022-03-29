@@ -92,6 +92,9 @@ void Osint::onResultURL(QString url){
 }
 
 void Osint::onResultASN(QString asn, QString name){
+    if(asn.startsWith("AS", Qt::CaseInsensitive))
+        asn = asn.remove(0, 2);
+
     if(set_asn.contains(asn))
         return;
 

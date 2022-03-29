@@ -10,7 +10,7 @@
  */
 Apnic::Apnic(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_APNIC;
 
     if(args.output_Raw)
@@ -22,8 +22,8 @@ Apnic::~Apnic(){
 
 void Apnic::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case IP:
@@ -32,7 +32,6 @@ void Apnic::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 }

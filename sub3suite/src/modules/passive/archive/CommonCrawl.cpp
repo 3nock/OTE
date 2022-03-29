@@ -8,7 +8,7 @@
  */
 CommonCrawl::CommonCrawl(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_COMMONCRAWL;
 }
 CommonCrawl::~CommonCrawl(){
@@ -24,7 +24,6 @@ void CommonCrawl::start(){
     QUrl url("https://index.commoncrawl.org/collinfo.json");
     request.setUrl(url);
     manager->get(request);
-    activeRequests++;
 }
 
 void CommonCrawl::replyFinishedIndex(QNetworkReply *reply){
@@ -59,15 +58,12 @@ void CommonCrawl::replyFinishedIndex(QNetworkReply *reply){
             url.setUrl(urlList.at(0)+"?url=*."+target+"&output=json&fl=url");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
         if(args.output_URL){
             url.setUrl(urlList.at(0)+"?url="+target+"/*&output=json&fl=url");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
-
     }
 
     if(args.input_Domain){
@@ -75,18 +71,15 @@ void CommonCrawl::replyFinishedIndex(QNetworkReply *reply){
             url.setUrl(urlList.at(0)+"?url="+target+"&output=json&fl=url");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
         if(args.output_URL){
             url.setUrl(urlList.at(0)+"?url="+target+"/*&output=json&fl=url");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
-
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void CommonCrawl::replyFinishedUrl(QNetworkReply *reply){
@@ -106,7 +99,7 @@ void CommonCrawl::replyFinishedUrl(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void CommonCrawl::replyFinishedSubdomain(QNetworkReply *reply){
@@ -136,5 +129,5 @@ void CommonCrawl::replyFinishedSubdomain(QNetworkReply *reply){
 
     }
 
-    end(reply);
+    this->end(reply);
 }

@@ -30,6 +30,7 @@ struct ScanConfig { // scan configurations
     int threads = 50;
     int timeout = 1000;
 
+    bool setTimeout = false;
     bool noDuplicates = false;
     bool autoSaveToProject = false;
 };

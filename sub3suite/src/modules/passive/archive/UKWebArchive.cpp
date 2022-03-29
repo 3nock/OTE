@@ -12,7 +12,7 @@
  */
 UKWebArchive::UKWebArchive(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_UKWEBARCHIVE;
 
     if(args.output_Raw)
@@ -28,8 +28,8 @@ UKWebArchive::~UKWebArchive(){
 
 void UKWebArchive::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case URL:
@@ -38,7 +38,6 @@ void UKWebArchive::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -47,7 +46,7 @@ void UKWebArchive::start(){
             url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -56,7 +55,7 @@ void UKWebArchive::start(){
             url.setUrl("https://www.webarchive.org.uk/wayback/archive/cdx?matchType=domain&output=json&url="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -83,7 +82,7 @@ void UKWebArchive::replyFinishedUrl(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void UKWebArchive::replyFinishedSubdomain(QNetworkReply *reply){
@@ -116,5 +115,5 @@ void UKWebArchive::replyFinishedSubdomain(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }

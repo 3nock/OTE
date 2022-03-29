@@ -12,7 +12,7 @@
 /*  limit all requests to no more than one request every ten seconds */
 Threatcrowd::Threatcrowd(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_THREATCROWD;
 
     if(args.output_Raw)
@@ -30,8 +30,8 @@ Threatcrowd::~Threatcrowd(){
 
 void Threatcrowd::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case EMAIL:
@@ -52,7 +52,6 @@ void Threatcrowd::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -61,7 +60,6 @@ void Threatcrowd::start(){
         request.setAttribute(QNetworkRequest::User, DOMAINS);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -70,7 +68,6 @@ void Threatcrowd::start(){
         request.setAttribute(QNetworkRequest::User, EMAIL);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -79,7 +76,6 @@ void Threatcrowd::start(){
         request.setAttribute(QNetworkRequest::User, IP);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }
 
@@ -122,7 +118,7 @@ void Threatcrowd::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Threatcrowd::replyFinishedIp(QNetworkReply *reply){
@@ -144,7 +140,7 @@ void Threatcrowd::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Threatcrowd::replyFinishedEmail(QNetworkReply *reply){
@@ -167,5 +163,5 @@ void Threatcrowd::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

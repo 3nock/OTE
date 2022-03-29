@@ -51,7 +51,7 @@
  */
 Ripe::Ripe(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_RIPE;
 
     if(args.output_Raw)
@@ -67,8 +67,8 @@ Ripe::~Ripe(){
 
 void Ripe::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ABUSE_CONTACT_FINDER:
@@ -182,17 +182,16 @@ void Ripe::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
     if(args.input_IP){
-        if(args.output_ASN){
+        if(args.output_ASN || args.output_CIDR){
             url.setUrl("https://stat.ripe.net/data/network-info/data.json?resource="+target);
             request.setAttribute(QNetworkRequest::User, NETWORK_INFO);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -202,7 +201,17 @@ void Ripe::start(){
             request.setAttribute(QNetworkRequest::User, RIS_PREFIXES);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
+        }
+    }
+
+    if(args.input_CIDR){
+        if(args.output_CIDR || args.output_ASN){
+            url.setUrl("https://stat.ripe.net/data/prefix-overview/data.json?resource="+target+"&list_prefixes=true");
+            request.setAttribute(QNetworkRequest::User, PREFIX_OVERVIEW);
+            request.setUrl(url);
+            manager->get(request);
+            return;
         }
     }
 }
@@ -223,9 +232,17 @@ void Ripe::replyFinishedAsn(QNetworkReply *reply){
             emit resultASN(value.toString(), "");
             log.resultsCount++;
         }
+        break;
+
+    case PREFIX_OVERVIEW:
+        foreach(const QJsonValue &value, asns){
+            QJsonObject asn = value.toObject();
+            emit resultASN(QString::number(asn["asn"].toInt()), asn["holder"].toString());
+            log.resultsCount++;
+        }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Ripe::replyFinishedCidr(QNetworkReply *reply){
@@ -239,6 +256,7 @@ void Ripe::replyFinishedCidr(QNetworkReply *reply){
     switch (reply->property(REQUEST_TYPE).toInt())
     {
     case RIS_PREFIXES:
+    {
         QJsonObject prefixes = document.object()["data"].toObject()["prefixes"].toObject();
 
         /* for ipv4 */
@@ -254,16 +272,36 @@ void Ripe::replyFinishedCidr(QNetworkReply *reply){
         }
         /* for ipv6 */
         QJsonArray v6_originating = prefixes["v6"].toObject()["originating"].toArray();
-        foreach(const QJsonValue &value, v4_originating){
+        foreach(const QJsonValue &value, v6_originating){
             emit resultCIDR(value.toString());
             log.resultsCount++;
         }
         QJsonArray v6_transiting = prefixes["v6"].toObject()["transiting"].toArray();
-        foreach(const QJsonValue &value, v4_transiting){
+        foreach(const QJsonValue &value, v6_transiting){
             emit resultCIDR(value.toString());
             log.resultsCount++;
         }
     }
+        break;
 
-    end(reply);
+    case PREFIX_OVERVIEW:
+    {
+        QJsonArray prefixes = document.object()["data"].toObject()["related_prefixes"].toArray();
+        foreach(const QJsonValue &prefix, prefixes){
+            emit resultCIDR(prefix.toString());
+            log.resultsCount++;
+        }
+    }
+        break;
+
+    case NETWORK_INFO:
+    {
+        QString prefix = document.object()["data"].toObject()["prefix"].toString();
+        emit resultCIDR(prefix);
+        log.resultsCount++;
+    }
+        break;
+    }
+
+    this->end(reply);
 }

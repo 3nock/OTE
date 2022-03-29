@@ -1,21 +1,19 @@
 #include "Circl.h"
+#include "src/utils/Config.h"
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define PASSIVE_DNS 0
+#define PASSIVE_SSL 1
+#define PASSIVE_SSL_FETCH 2
+#define PASSIVE_SSL_QUERY 3
 
-#define IP_2_ASN 0
-#define PASSIVE_DNS 1
-#define PASSIVE_SSL 2
-#define PASSIVE_SSL_FETCH 3
-#define PASSIVE_SSL_QUERY 4
 
-/*
- * login not yet implemented
- */
 Circl::Circl(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_CIRCL;
 
     if(args.output_Raw)
@@ -26,10 +24,10 @@ Circl::Circl(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedIp);
     if(args.output_SSL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSSL);
-    if(args.output_ASN)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedAsn);
 
-    /* get login credentials... */
+    /* get login credentials */
+    m_id = APIKEY.value("circlUser").toString();
+    m_password = APIKEY.value("circlPwd").toString();
 }
 Circl::~Circl(){
     delete manager;
@@ -37,105 +35,63 @@ Circl::~Circl(){
 
 void Circl::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
-        case IP_2_ASN:
-            url.setUrl("https://bgpranking-ng.circl.lu/ipasn_history/asn_meta");
-            break;
         case PASSIVE_DNS:
-            url.setUrl("https://www.circl.lu/pdns/query/"+target);
+            url.setUrl("https://www.circl.lu/pdns/query/"+target+"?id="+m_id+"&pass="+m_password);
             break;
         case PASSIVE_SSL:
-            url.setUrl("https://www.circl.lu/v2pssl/query/"+target);
+            url.setUrl("https://www.circl.lu/v2pssl/query/"+target+"?id="+m_id+"&pass="+m_password);
             break;
         case PASSIVE_SSL_FETCH:
-            url.setUrl("https://www.circl.lu/v2pssl/cfetch/"+target);
+            url.setUrl("https://www.circl.lu/v2pssl/cfetch/"+target+"?id="+m_id+"&pass="+m_password);
             break;
         case PASSIVE_SSL_QUERY:
-            url.setUrl("https://www.circl.lu/v2pssl/cquery/"+target);
+            url.setUrl("https://www.circl.lu/v2pssl/cquery/"+target+"?id="+m_id+"&pass="+m_password);
             break;
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
     if(args.input_Domain){
         if(args.output_IP || args.output_Hostname){
-            url.setUrl("https://www.circl.lu/pdns/query/"+target);
+            url.setUrl("https://www.circl.lu/pdns/query/"+target+"?id="+m_id+"&pass="+m_password);
             request.setAttribute(QNetworkRequest::User, PASSIVE_DNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
 
     if(args.input_IP){
         if(args.output_IP || args.output_Hostname){
-            url.setUrl("https://www.circl.lu/pdns/query/"+target);
+            url.setUrl("https://www.circl.lu/pdns/query/"+target+"?id="+m_id+"&pass="+m_password);
             request.setAttribute(QNetworkRequest::User, PASSIVE_DNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
-            return;
-        }
-        if(args.output_ASN){
-            url.setUrl("https://bgpranking-ng.circl.lu/ipasn_history/asn_meta");
-            request.setAttribute(QNetworkRequest::User, IP_2_ASN);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
             return;
         }
         if(args.output_SSL){
-            url.setUrl("https://www.circl.lu/pdns/query/"+target);
+            url.setUrl("https://www.circl.lu/pdns/query/"+target+"?id="+m_id+"&pass="+m_password);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
 
     if(args.input_SSL){
         if(args.output_IP){
-            url.setUrl("https://www.circl.lu/v2pssl/cquery/"+target);
+            url.setUrl("https://www.circl.lu/v2pssl/cquery/"+target+"?id="+m_id+"&pass="+m_password);
             request.setAttribute(QNetworkRequest::User, PASSIVE_SSL_QUERY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
-}
-
-void Circl::replyFinishedSSL(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    QJsonObject jsonObject = document.object();
-
-    switch (reply->property(REQUEST_TYPE).toInt())
-    {
-    case PASSIVE_SSL:
-        foreach(const QString &key, jsonObject.keys()){
-            QJsonArray certificates = jsonObject[key].toObject()["certificates"].toArray();
-            foreach(const QJsonValue &value, certificates)
-            {
-                emit resultSSL(value.toString());
-                log.resultsCount++;
-            }
-        }
-        break;
-    }
-
-    end(reply);
 }
 
 void Circl::replyFinishedSubdomain(QNetworkReply *reply){
@@ -169,7 +125,7 @@ void Circl::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Circl::replyFinishedIp(QNetworkReply *reply){
@@ -200,10 +156,10 @@ void Circl::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
-void Circl::replyFinishedAsn(QNetworkReply *reply){
+void Circl::replyFinishedSSL(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -214,9 +170,15 @@ void Circl::replyFinishedAsn(QNetworkReply *reply){
 
     switch (reply->property(REQUEST_TYPE).toInt())
     {
-    case IP_2_ASN:
-        emit resultASN(QString::number(jsonObject["asn"].toInt()), "");
-        log.resultsCount++;
+    case PASSIVE_SSL:
+        foreach(const QString &key, jsonObject.keys()){
+            QJsonArray certificates = jsonObject[key].toObject()["certificates"].toArray();
+            foreach(const QJsonValue &value, certificates)
+            {
+                emit resultSSL(value.toString());
+                log.resultsCount++;
+            }
+        }
         break;
     }
 

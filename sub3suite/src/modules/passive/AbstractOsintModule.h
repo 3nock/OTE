@@ -6,7 +6,6 @@
 #include <QQueue>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QNetworkAccessManager>
 
 #include "ParserMethods.h"
 #include "src/utils/s3s.h"
@@ -56,6 +55,7 @@ struct ScanLog {
 
 struct ScanConfig {
     int maxPage = 50;
+    bool setTimeout = false;
     bool noDuplicates = false;
     bool autosaveToProject = false;
     int timeout = 2000;
@@ -213,7 +213,7 @@ class AbstractOsintModule : public QObject {
                 emit resultRawJSON(raw);
             }
 
-            end(reply);
+            this->end(reply);
         }
 
         virtual void replyFinishedRawJson(QNetworkReply *reply) // returns raw json results
@@ -229,7 +229,7 @@ class AbstractOsintModule : public QObject {
                 emit resultRawJSON(raw);
             }
 
-            end(reply);
+            this->end(reply);
         }
 
         virtual void replyFinishedRawTxt(QNetworkReply *reply) // returns raw txt results
@@ -245,17 +245,16 @@ class AbstractOsintModule : public QObject {
                 emit resultRawTXT(raw);
             }
 
-            end(reply);
+            this->end(reply);
         }
 
     protected:
         ScanLog log;
         ScanArgs args;
         QString target;
-        int activeRequests = 0;
         s3sNetworkAccessManager *manager = nullptr;
 
-        void onError(QNetworkReply *reply){
+        void onError(QNetworkReply *reply) {
             switch(reply->error()){
             case QNetworkReply::OperationCanceledError:
                 log.target = target;
@@ -273,36 +272,35 @@ class AbstractOsintModule : public QObject {
                 break;
             }
 
-            /* has its own end */
             reply->close();
             reply->deleteLater();
-            activeRequests--;
-            if(activeRequests == 0)
-                emit quitThread();
+            this->next();
         }
 
-        void end(QNetworkReply *reply){
+        void end(QNetworkReply *reply) {
             log.target = target;
             log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            emit scanLog(log);
+
             reply->close();
             reply->deleteLater();
-            activeRequests--;
-            if(activeRequests == 0)
-            {
-                args.config->progress++;
-                emit scanProgress(args.config->progress);
-                emit scanLog(log);
+            this->next();
+        }
 
-                /* enumerate next target if there are still targets available */
-                if(args.targets.length()){
-                    target = args.targets.dequeue();
-                    emit nextTarget();
-                }
+        void next() {
+            args.config->progress++;
+            emit scanProgress(args.config->progress);
 
-                /* if no targets available quit the scanThread */
-                else
-                    emit quitThread();
+            /*
+             * enumerate next target if there are still targets available
+             * if no targets available quit the scanThread.
+             */
+            if(args.targets.length()){
+                target = args.targets.dequeue();
+                emit nextTarget();
             }
+            else
+                emit quitThread();
         }
 };
 

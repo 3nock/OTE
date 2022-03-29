@@ -18,7 +18,7 @@
 
 WebResolver::WebResolver(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_WEBRESOLVER;
 
     if(args.output_Raw)
@@ -39,8 +39,8 @@ WebResolver::~WebResolver(){
 
 void WebResolver::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case GEOIP:
@@ -76,7 +76,6 @@ void WebResolver::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -85,7 +84,7 @@ void WebResolver::start(){
         request.setAttribute(QNetworkRequest::User, DNSRESOLVER);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 
@@ -113,7 +112,7 @@ void WebResolver::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void WebResolver::replyFinishedIp(QNetworkReply *reply){
@@ -135,7 +134,7 @@ void WebResolver::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void WebResolver::replyFinishedSubdomain(QNetworkReply *reply){
@@ -176,5 +175,5 @@ void WebResolver::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

@@ -25,7 +25,7 @@
  */
 RiskIq::RiskIq(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_RISKIQ;
 
     if(args.output_Raw)
@@ -53,8 +53,8 @@ void RiskIq::start(){
     QString concatenated = m_key+":"+m_secret;
     QByteArray data = concatenated.toLocal8Bit().toBase64();
     request.setRawHeader("Authorization", "Basic "+data);
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case CERT_HOST:
@@ -105,7 +105,6 @@ void RiskIq::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -115,14 +114,14 @@ void RiskIq::start(){
             request.setAttribute(QNetworkRequest::User, PDNS_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_SSL){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -132,14 +131,14 @@ void RiskIq::start(){
             request.setAttribute(QNetworkRequest::User, PDNS_NAME);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_SSL){
             url.setUrl("https://api.riskiq.net/v1/ssl/cert/hos?host="+target);
             request.setAttribute(QNetworkRequest::User, CERT_HOST);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -149,7 +148,7 @@ void RiskIq::start(){
             request.setAttribute(QNetworkRequest::User, CERT_SHA1);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -180,7 +179,7 @@ void RiskIq::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void RiskIq::replyFinishedSubdomain(QNetworkReply *reply){
@@ -242,7 +241,7 @@ void RiskIq::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void RiskIq::replyFinishedIp(QNetworkReply *reply){
@@ -290,7 +289,7 @@ void RiskIq::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void RiskIq::replyFinishedSSL(QNetworkReply *reply){
@@ -314,5 +313,5 @@ void RiskIq::replyFinishedSSL(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

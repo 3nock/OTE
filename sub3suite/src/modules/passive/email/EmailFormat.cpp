@@ -8,7 +8,7 @@
 
 EmailFormat::EmailFormat(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_EMAILFORMAT;
 
     if(args.output_Raw)
@@ -25,8 +25,8 @@ void EmailFormat::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("Authorization", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case FORMATS:
@@ -41,6 +41,5 @@ void EmailFormat::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }

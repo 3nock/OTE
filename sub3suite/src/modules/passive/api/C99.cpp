@@ -35,12 +35,12 @@
 
 
 /*
- * Others not yet implemented...
+ * for now only raw results
  */
 C99::C99(ScanArgs args):
     AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_C99;
 
     if(args.output_Raw)
@@ -57,8 +57,8 @@ C99::~C99(){
 
 void C99::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ALEXA_RANK:
@@ -145,7 +145,6 @@ void C99::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 
     if(args.input_Domain){
@@ -153,7 +152,6 @@ void C99::start(){
             request.setUrl(url);
             request.setAttribute(QNetworkRequest::User, SUBDOMAIN_FINDER);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -179,5 +177,5 @@ void C99::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }

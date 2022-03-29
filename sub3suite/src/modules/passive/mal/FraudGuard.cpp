@@ -15,7 +15,7 @@
  */
 FraudGuard::FraudGuard(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_FRAUDGUARD;
 
     if(args.output_Raw)
@@ -36,8 +36,8 @@ void FraudGuard::start(){
     QByteArray credentialsArray = credentialsString.toLocal8Bit().toBase64();
     QString headerData = "Basic " + credentialsArray;
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case GET_CUSTOM_GEOBLOCK:
@@ -64,6 +64,6 @@ void FraudGuard::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }

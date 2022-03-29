@@ -116,6 +116,7 @@ void NSEnum::initConfigValues(){
     CONFIG.beginGroup(CFG_ENUM);
     m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_ns").toBool();
     m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_ns").toBool();
+    m_scanConfig->setTimeout = CONFIG.value("set_timeout_ns").toBool();
     m_scanConfig->timeout = CONFIG.value("timeout_ns").toInt();
     CONFIG.endGroup();
 }

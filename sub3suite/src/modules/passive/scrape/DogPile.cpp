@@ -8,7 +8,7 @@
  */
 DogPile::DogPile(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_DOGPILE;
 
     if(args.output_Hostname)
@@ -24,22 +24,23 @@ DogPile::~DogPile(){
 
 void DogPile::start(){
     QNetworkRequest request;
+    QUrl url;
 
     if(args.input_Domain){
         if(args.output_Hostname){
-            QUrl url("https://www.dogpile.com/serp?q="+target);
+            url.setUrl("https://www.dogpile.com/serp?q="+target);
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
 
         if(args.output_URL){
-            QUrl url("https://www.dogpile.com/serp?q="+target);
+            url.setUrl("https://www.dogpile.com/serp?q="+target);
             request.setUrl(url);
             manager->get(request);
             m_firstRequest = true;
-            activeRequests++;
+            return;
         }
     }
 }
@@ -94,7 +95,7 @@ void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }
 
 void DogPile::replyFinishedEmail(QNetworkReply *reply){
@@ -107,7 +108,7 @@ void DogPile::replyFinishedEmail(QNetworkReply *reply){
      * not yet implemented...
      */
 
-    end(reply);
+    this->end(reply);
 }
 
 void DogPile::replyFinishedUrl(QNetworkReply *reply){
@@ -159,7 +160,7 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }
 
 void DogPile::sendRequests(QString anotherPage){
@@ -172,7 +173,6 @@ void DogPile::sendRequests(QString anotherPage){
                 request.setUrl(url);
                 manager->get(request);
                 m_firstRequest = false;
-                activeRequests++;
                 m_sentPages++;
             }
         }

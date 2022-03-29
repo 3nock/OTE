@@ -7,12 +7,12 @@
 
 
 /*
- * can query multiple urls at a time.
- * for now only query with default options.
+ * can query multiple urls at a time
+ * for now only raw results with default options
  */
 Wappalyzer::Wappalyzer(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_WAPPALYZER;
 
     if(args.output_Raw)
@@ -28,8 +28,8 @@ Wappalyzer::~Wappalyzer(){
 void Wappalyzer::start(){
     QNetworkRequest request;
     request.setRawHeader("x-api-key", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case BALANCE:
@@ -42,10 +42,9 @@ void Wappalyzer::start(){
             url.setUrl("https://api.wappalyzer.com/v2/lookup/?urls="+target);
             break;
         }
-
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 

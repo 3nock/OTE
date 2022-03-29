@@ -14,7 +14,7 @@
  */
 FullHunt::FullHunt(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_FULLHUNT;
 
     if(args.output_Raw)
@@ -37,8 +37,8 @@ FullHunt::~FullHunt(){
 void FullHunt::start(){
     QNetworkRequest request;
     request.setRawHeader("X-API-KEY", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case DOMAIN_DETAILS:
@@ -53,7 +53,6 @@ void FullHunt::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -63,14 +62,14 @@ void FullHunt::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_ASN){
             url.setUrl("https://fullhunt.io/api/v1/domain/"+target+"/details");
             request.setAttribute(QNetworkRequest::User, DOMAIN_DETAILS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -92,7 +91,7 @@ void FullHunt::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void FullHunt::replyFinishedAsn(QNetworkReply *reply){
@@ -115,7 +114,7 @@ void FullHunt::replyFinishedAsn(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void FullHunt::replyFinishedIp(QNetworkReply *reply){
@@ -142,6 +141,6 @@ void FullHunt::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 

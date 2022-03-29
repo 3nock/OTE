@@ -27,7 +27,7 @@
  */
 WhoisXmlApi::WhoisXmlApi(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_WHOISXMLAPI;
 
     if(args.output_Raw)
@@ -57,8 +57,8 @@ WhoisXmlApi::~WhoisXmlApi(){
 void WhoisXmlApi::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id){
         case WHOIS:
@@ -120,7 +120,6 @@ void WhoisXmlApi::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -130,7 +129,7 @@ void WhoisXmlApi::start(){
             request.setAttribute(QNetworkRequest::User, SUBDOMAIN_LOOKUP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_Email){
@@ -138,7 +137,7 @@ void WhoisXmlApi::start(){
             request.setAttribute(QNetworkRequest::User, WEBSITE_CONTACTS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
 
             /*
             url.setUrl("https://whois-history.whoisxmlapi.com/api/v1?apiKey="+m_key+"&domainName="+target);
@@ -156,7 +155,7 @@ void WhoisXmlApi::start(){
             request.setAttribute(QNetworkRequest::User, REVERSE_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_ASN || args.output_CIDR || args.output_Email){
@@ -164,7 +163,7 @@ void WhoisXmlApi::start(){
             request.setAttribute(QNetworkRequest::User, IP_NETBLOCKS_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -174,7 +173,7 @@ void WhoisXmlApi::start(){
             request.setAttribute(QNetworkRequest::User, IP_NETBLOCKS_ASN);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -186,7 +185,7 @@ void WhoisXmlApi::start(){
             request.setAttribute(QNetworkRequest::User, IP_NETBLOCKS_ASN);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -199,7 +198,7 @@ void WhoisXmlApi::start(){
         request.setAttribute(QNetworkRequest::User, REVERSE_MX);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.output_EnumNS){
@@ -207,7 +206,7 @@ void WhoisXmlApi::start(){
         request.setAttribute(QNetworkRequest::User, REVERSE_NS);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 
@@ -273,7 +272,7 @@ void WhoisXmlApi::replyFinishedSubdomain(QNetworkReply *reply){
     }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void WhoisXmlApi::replyFinishedAsn(QNetworkReply *reply){
@@ -300,7 +299,7 @@ void WhoisXmlApi::replyFinishedAsn(QNetworkReply *reply){
     }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void WhoisXmlApi::replyFinishedCidr(QNetworkReply *reply){
@@ -326,7 +325,7 @@ void WhoisXmlApi::replyFinishedCidr(QNetworkReply *reply){
     }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void WhoisXmlApi::replyFinishedEmail(QNetworkReply *reply){
@@ -400,7 +399,7 @@ void WhoisXmlApi::replyFinishedEmail(QNetworkReply *reply){
     */
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 ///
@@ -424,7 +423,7 @@ void WhoisXmlApi::replyFinishedEnumNS(QNetworkReply *reply){
 
     emit resultEnumNS(ns);
 
-    end(reply);
+    this->end(reply);
 }
 
 void WhoisXmlApi::replyFinishedEnumMX(QNetworkReply *reply){
@@ -444,5 +443,5 @@ void WhoisXmlApi::replyFinishedEnumMX(QNetworkReply *reply){
 
     emit resultEnumMX(mx);
 
-    end(reply);
+    this->end(reply);
 }

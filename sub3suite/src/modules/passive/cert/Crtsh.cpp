@@ -6,7 +6,7 @@
  */
 Crtsh::Crtsh(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_CRTSH;
 
     if(args.output_SSL)
@@ -25,7 +25,6 @@ void Crtsh::start(){
     QUrl url("https://crt.sh/?q="+target);
     request.setUrl(url);
     manager->get(request);
-    activeRequests++;
 }
 
 void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
@@ -87,7 +86,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Crtsh::replyFinishedSSL(QNetworkReply *reply){
@@ -103,7 +102,7 @@ void Crtsh::replyFinishedSSL(QNetworkReply *reply){
 
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Crtsh::replyFinishedEnumSSL(QNetworkReply *reply){
@@ -117,7 +116,7 @@ void Crtsh::replyFinishedEnumSSL(QNetworkReply *reply){
     else
         emit resultRawSSL(reply->readAll()); // get and send the raw certificate for analysis
 
-    end(reply);
+    this->end(reply);
 }
 
 void Crtsh::m_getCertId(QNetworkReply *reply){
@@ -155,7 +154,6 @@ void Crtsh::m_getCertId(QNetworkReply *reply){
                 QUrl url("https://crt.sh/?d="+certId);
                 request.setUrl(url);
                 manager->get(request);
-                activeRequests++;
                 m_queryToGetId = false;
                 break;
             }

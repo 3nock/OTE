@@ -109,7 +109,8 @@ void brute::Scanner::lookup(){
         switch(brute::getTarget_reScan(m_dns, m_args)){
         case RETVAL::LOOKUP:
             m_dns->lookup();
-            s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
             return;
         default:
             emit quitThread();
@@ -123,7 +124,8 @@ void brute::Scanner::lookup(){
         switch(brute::getTarget_subdomain(this, m_dns, m_args)){
         case RETVAL::LOOKUP:
             m_dns->lookup();
-            s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
             break;
         case RETVAL::NEXT:
             emit next();
@@ -138,7 +140,8 @@ void brute::Scanner::lookup(){
         switch(brute::getTarget_tld(m_dns, m_args)){
         case RETVAL::LOOKUP:
             m_dns->lookup();
-            s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
             break;
         case RETVAL::NEXT:
             emit next();
@@ -158,7 +161,8 @@ void brute::Scanner::lookup_wildcard(){
     m_dns_wildcard->setNameserver(m_dns->nameserver());
     m_dns_wildcard->setName(m_args->currentTarget);
     m_dns_wildcard->lookup();
-    s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
+    if(m_args->config->setTimeout)
+        s3s_LookupTimeout::set(m_dns, m_args->config->timeout);
 }
 
 void brute::Scanner::lookupFinished_wildcard(){

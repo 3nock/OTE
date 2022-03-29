@@ -48,6 +48,7 @@ void EnumConfigDialog::loadConfig_asn(){
     ui->lineEditTimeout->setText(CONFIG.value("timeout_asn").toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value("autosave_to_Project_asn").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value("no_duplicates_asn").toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value("set_timeout_asn").toBool());
     CONFIG.endGroup();
 
     asn = true;
@@ -58,6 +59,7 @@ void EnumConfigDialog::loadConfig_cidr(){
     ui->lineEditTimeout->setText(CONFIG.value("timeout_cidr").toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value("autosave_to_Project_cidr").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value("no_duplicates_cidr").toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value("set_timeout_cidr").toBool());
     CONFIG.endGroup();
 
     cidr = true;
@@ -68,6 +70,7 @@ void EnumConfigDialog::loadConfig_ip(){
     ui->lineEditTimeout->setText(CONFIG.value("timeout_ip").toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value("autosave_to_Project_ip").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value("no_duplicates_ip").toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value("set_timeout_ip").toBool());
     CONFIG.endGroup();
 
     ip = true;
@@ -78,6 +81,7 @@ void EnumConfigDialog::loadConfig_ns(){
     ui->lineEditTimeout->setText(CONFIG.value("timeout_ns").toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value("autosave_to_Project_ns").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value("no_duplicates_ns").toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value("set_timeout_ns").toBool());
     CONFIG.endGroup();
 
     ns = true;
@@ -88,6 +92,7 @@ void EnumConfigDialog::loadConfig_mx(){
     ui->lineEditTimeout->setText(CONFIG.value("timeout_mx").toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value("autosave_to_Project_mx").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value("no_duplicates_mx").toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value("set_timeout_mx").toBool());
     CONFIG.endGroup();
 
     mx = true;
@@ -98,6 +103,7 @@ void EnumConfigDialog::loadConfig_ssl(){
     ui->lineEditTimeout->setText(CONFIG.value("timeout_ssl").toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value("autosave_to_Project_ssl").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value("no_duplicates_ssl").toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value("set_timeout_ssl").toBool());
     CONFIG.endGroup();
 
     ssl = true;
@@ -108,6 +114,7 @@ void EnumConfigDialog::loadConfig_email(){
     ui->lineEditTimeout->setText(CONFIG.value("timeout_email").toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value("autosave_to_Project_email").toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value("no_duplicates_email").toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value("set_timeout_email").toBool());
     CONFIG.endGroup();
 
     email = true;
@@ -121,12 +128,14 @@ void EnumConfigDialog::saveConfig_asn(){
     CONFIG.beginGroup(CFG_ENUM);
     CONFIG.setValue("autosave_to_Project_asn", ui->checkBoxAutosave->isChecked());
     CONFIG.setValue("no_duplicates_asn", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue("set_timeout_asn", ui->groupBoxTimeout->isChecked());
     CONFIG.setValue("timeout_asn", ui->lineEditTimeout->text());
     CONFIG.endGroup();
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
     m_config->timeout = ui->lineEditTimeout->text().toInt();
 }
 
@@ -135,12 +144,14 @@ void EnumConfigDialog::saveConfig_cidr(){
     CONFIG.beginGroup(CFG_ENUM);
     CONFIG.setValue("autosave_to_Project_cidr", ui->checkBoxAutosave->isChecked());
     CONFIG.setValue("no_duplicates_cidr", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue("set_timeout_cidr", ui->groupBoxTimeout->isChecked());
     CONFIG.setValue("timeout_cidr", ui->lineEditTimeout->text());
     CONFIG.endGroup();
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
     m_config->timeout = ui->lineEditTimeout->text().toInt();
 }
 
@@ -149,12 +160,14 @@ void EnumConfigDialog::saveConfig_ip(){
     CONFIG.beginGroup(CFG_ENUM);
     CONFIG.setValue("autosave_to_Project_ip", ui->checkBoxAutosave->isChecked());
     CONFIG.setValue("no_duplicates_ip", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue("set_timeout_ip", ui->groupBoxTimeout->isChecked());
     CONFIG.setValue("timeout_ip", ui->lineEditTimeout->text());
     CONFIG.endGroup();
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
     m_config->timeout = ui->lineEditTimeout->text().toInt();
 }
 
@@ -163,12 +176,14 @@ void EnumConfigDialog::saveConfig_ns(){
     CONFIG.beginGroup(CFG_ENUM);
     CONFIG.setValue("autosave_to_Project_ns", ui->checkBoxAutosave->isChecked());
     CONFIG.setValue("no_duplicates_ns", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue("set_timeout_ns", ui->groupBoxTimeout->isChecked());
     CONFIG.setValue("timeout_ns", ui->lineEditTimeout->text());
     CONFIG.endGroup();
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
     m_config->timeout = ui->lineEditTimeout->text().toInt();
 }
 
@@ -177,12 +192,14 @@ void EnumConfigDialog::saveConfig_mx(){
     CONFIG.beginGroup(CFG_ENUM);
     CONFIG.setValue("autosave_to_Project_mx", ui->checkBoxAutosave->isChecked());
     CONFIG.setValue("no_duplicates_mx", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue("set_timeout_mx", ui->groupBoxTimeout->isChecked());
     CONFIG.setValue("timeout_mx", ui->lineEditTimeout->text());
     CONFIG.endGroup();
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
     m_config->timeout = ui->lineEditTimeout->text().toInt();
 }
 
@@ -191,12 +208,14 @@ void EnumConfigDialog::saveConfig_ssl(){
     CONFIG.beginGroup(CFG_ENUM);
     CONFIG.setValue("autosave_to_Project_ssl", ui->checkBoxAutosave->isChecked());
     CONFIG.setValue("no_duplicates_ssl", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue("set_timeout_ssl", ui->groupBoxTimeout->isChecked());
     CONFIG.setValue("timeout_ssl", ui->lineEditTimeout->text());
     CONFIG.endGroup();
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
     m_config->timeout = ui->lineEditTimeout->text().toInt();
 }
 
@@ -205,11 +224,13 @@ void EnumConfigDialog::saveConfig_email(){
     CONFIG.beginGroup(CFG_ENUM);
     CONFIG.setValue("autosave_to_Project_email", ui->checkBoxAutosave->isChecked());
     CONFIG.setValue("no_duplicates_email", ui->checkBoxNoDuplicates->isChecked());
+    CONFIG.setValue("set_timeout_email", ui->groupBoxTimeout->isChecked());
     CONFIG.setValue("timeout_email", ui->lineEditTimeout->text());
     CONFIG.endGroup();
 
     /* save to config structure */
     m_config->autosaveToProject = ui->checkBoxAutosave->isChecked();
     m_config->noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    m_config->setTimeout = ui->groupBoxTimeout->isChecked();
     m_config->timeout = ui->lineEditTimeout->text().toInt();
 }

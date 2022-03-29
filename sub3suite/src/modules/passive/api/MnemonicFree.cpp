@@ -18,7 +18,7 @@
  */
 MnemonicFree::MnemonicFree(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_MNEMONIC;
 
     if(args.output_Raw)
@@ -34,8 +34,8 @@ MnemonicFree::~MnemonicFree(){
 
 void MnemonicFree::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case IP_ANY_RECORD:
@@ -59,7 +59,7 @@ void MnemonicFree::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_IP){
@@ -68,7 +68,7 @@ void MnemonicFree::start(){
             request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -78,7 +78,7 @@ void MnemonicFree::start(){
             request.setAttribute(QNetworkRequest::User, IP_ANY_RECORD);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -108,7 +108,7 @@ void MnemonicFree::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void MnemonicFree::replyFinishedSubdomain(QNetworkReply *reply){
@@ -129,5 +129,5 @@ void MnemonicFree::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

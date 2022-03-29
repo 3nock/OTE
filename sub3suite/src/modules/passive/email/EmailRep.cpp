@@ -6,7 +6,7 @@
 
 EmailRep::EmailRep(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_EMAILREP;
 
     if(args.output_Raw)
@@ -23,8 +23,8 @@ void EmailRep::start(){
     QNetworkRequest request;
     request.setRawHeader("Key", m_key.toUtf8());
     // request.setRawHeader("User-Agent", userAget);
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case EMAIL_QUERY:
@@ -33,7 +33,6 @@ void EmailRep::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }
 

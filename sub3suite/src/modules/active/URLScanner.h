@@ -30,6 +30,7 @@ struct ScanConfig { // scan configurations
     int threads = 50;
     int timeout = 1000;
 
+    bool setTimeout = false;
     bool noDuplicates = false;
     bool autoSaveToProject = false;
 };
@@ -43,8 +44,9 @@ struct ScanArgs { // scan arguments
 
 class NetworkAccessManager: public QNetworkAccessManager {
     public:
-        NetworkAccessManager(QObject *parent = nullptr, int timeout = 1000): QNetworkAccessManager(parent),
-            m_timeout(timeout)
+        NetworkAccessManager(QObject *parent = nullptr, int timeout = 1000, bool use_timer = false): QNetworkAccessManager(parent),
+            m_timeout(timeout),
+            m_use_timer(use_timer)
         {
         }
 
@@ -54,13 +56,15 @@ class NetworkAccessManager: public QNetworkAccessManager {
             QNetworkReply *reply = QNetworkAccessManager::createRequest(op, request, data);
 
             /* set timeout */
-            s3s_ReplyTimeout::set(reply, m_timeout);
+            if(m_use_timer)
+                s3s_ReplyTimeout::set(reply, m_timeout);
 
             return reply;
         }
 
     private:
         int m_timeout;
+        bool m_use_timer;
 };
 
 class Scanner : public AbstractScanner{

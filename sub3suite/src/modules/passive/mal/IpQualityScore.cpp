@@ -12,7 +12,7 @@
  */
 IpQualityScore::IpQualityScore(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_IPQUALITYSCORE;
 
     if(args.output_Raw)
@@ -29,8 +29,8 @@ void IpQualityScore::start(){
     QNetworkRequest request;
     request.setRawHeader("Key", m_key.toUtf8());
     request.setRawHeader("Accept", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case EMAIL_VALIDATION:
@@ -48,7 +48,7 @@ void IpQualityScore::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 

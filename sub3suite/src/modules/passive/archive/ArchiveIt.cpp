@@ -5,7 +5,7 @@
 
 ArchiveIt::ArchiveIt(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ARCHIVEIT;
 
     if(args.output_Raw)
@@ -21,8 +21,8 @@ ArchiveIt::~ArchiveIt(){
 
 void ArchiveIt::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case URL:
@@ -31,7 +31,6 @@ void ArchiveIt::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -40,7 +39,7 @@ void ArchiveIt::start(){
             url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -49,7 +48,6 @@ void ArchiveIt::start(){
             url.setUrl("https://wayback.archive-it.org/all/timemap/cdx?matchType=domain&fl=original&collapse=urlkey&url="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -68,7 +66,7 @@ void ArchiveIt::replyFinishedUrl(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void ArchiveIt::replyFinishedSubdomain(QNetworkReply *reply){
@@ -94,5 +92,5 @@ void ArchiveIt::replyFinishedSubdomain(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }

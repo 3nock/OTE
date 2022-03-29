@@ -11,7 +11,7 @@
  */
 GoogleCert::GoogleCert(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_GOOGLECERT;
 
     if(args.output_Raw)
@@ -32,7 +32,6 @@ void GoogleCert::start(){
     request.setRawHeader("Connection", "close");
     request.setRawHeader("Referer", "https://transparencyreport.google.com/https/certificates");
     manager->get(request);
-    activeRequests++;
 }
 
 void GoogleCert::replyFinishedSubdomain(QNetworkReply *reply){
@@ -60,7 +59,7 @@ void GoogleCert::replyFinishedSubdomain(QNetworkReply *reply){
     QJsonArray tokenArray = subArray.toArray()[3].toArray();
     m_getToken(tokenArray);
 
-    end(reply);
+    this->end(reply);
 }
 
 void GoogleCert::replyFinishedSSL(QNetworkReply *reply){
@@ -89,7 +88,7 @@ void GoogleCert::replyFinishedSSL(QNetworkReply *reply){
     QJsonArray tokenArray = subArray.toArray()[3].toArray();
     m_getToken(tokenArray);
 
-    end(reply);
+    this->end(reply);
 }
 
 void GoogleCert::m_getToken(QJsonArray tokenArray){
@@ -104,6 +103,5 @@ void GoogleCert::m_getToken(QJsonArray tokenArray){
         request.setUrl(url);
         request.setRawHeader("Connection", "close");
         manager->get(request);
-        activeRequests++;
     }
 }

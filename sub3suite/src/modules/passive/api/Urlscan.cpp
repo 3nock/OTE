@@ -9,7 +9,7 @@
  */
 Urlscan::Urlscan(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_URLSCAN;
 
     if(args.output_Raw)
@@ -29,20 +29,20 @@ Urlscan::~Urlscan(){
 
 void Urlscan::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+target);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_Domain){
         url.setUrl("https://urlscan.io/api/v1/search/?q=domain:"+target);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 
@@ -60,7 +60,7 @@ void Urlscan::replyFinishedSubdomain(QNetworkReply *reply){
         emit resultSubdomain(page["domain"].toString());
         log.resultsCount++;
     }
-    end(reply);
+    this->end(reply);
 }
 
 void Urlscan::replyFinishedIp(QNetworkReply *reply){
@@ -77,7 +77,7 @@ void Urlscan::replyFinishedIp(QNetworkReply *reply){
         emit resultIP(page["ptr"].toString());
         log.resultsCount++;
     }
-    end(reply);
+    this->end(reply);
 }
 
 void Urlscan::replyFinishedUrl(QNetworkReply *reply){
@@ -94,7 +94,7 @@ void Urlscan::replyFinishedUrl(QNetworkReply *reply){
         emit resultURL(page["url"].toString());
         log.resultsCount++;
     }
-    end(reply);
+    this->end(reply);
 }
 
 void Urlscan::replyFinishedAsn(QNetworkReply *reply){
@@ -111,5 +111,5 @@ void Urlscan::replyFinishedAsn(QNetworkReply *reply){
         emit resultASN(page["asn"].toString(), "");
         log.resultsCount++;
     }
-    end(reply);
+    this->end(reply);
 }

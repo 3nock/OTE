@@ -372,7 +372,8 @@ void dns::Scanner::lookup(){
         switch(dns::getTarget_srv(m_dns_srv, m_args)){
         case RETVAL::LOOKUP:
             m_dns_srv->lookup();
-            s3s_LookupTimeout::set(m_dns_srv, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns_srv, m_args->config->timeout);
             break;
         case RETVAL::NEXT:
             emit next();
@@ -406,42 +407,49 @@ void dns::Scanner::lookup(){
             m_activeLookups++;
             m_dns_a->setName(m_currentTarget);
             m_dns_a->lookup();
-            s3s_LookupTimeout::set(m_dns_a, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns_a, m_args->config->timeout);
         }
         if(m_args->RecordType_aaaa){
             m_activeLookups++;
             m_dns_aaaa->setName(m_currentTarget);
             m_dns_aaaa->lookup();
-            s3s_LookupTimeout::set(m_dns_aaaa, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns_aaaa, m_args->config->timeout);
         }
         if(m_args->RecordType_ns){
             m_activeLookups++;
             m_dns_ns->setName(m_currentTarget);
             m_dns_ns->lookup();
-            s3s_LookupTimeout::set(m_dns_ns, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns_ns, m_args->config->timeout);
         }
         if(m_args->RecordType_mx){
             m_activeLookups++;
             m_dns_mx->setName(m_currentTarget);
             m_dns_mx->lookup();
-            s3s_LookupTimeout::set(m_dns_mx, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns_mx, m_args->config->timeout);
         }
         if(m_args->RecordType_cname){
             m_activeLookups++;
             m_dns_cname->setName(m_currentTarget);
             m_dns_cname->lookup();
-            s3s_LookupTimeout::set(m_dns_cname, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns_cname, m_args->config->timeout);
         }
         if(m_args->RecordType_txt){
             m_activeLookups++;
             m_dns_txt->setName(m_currentTarget);
             m_dns_txt->lookup();
-            s3s_LookupTimeout::set(m_dns_txt, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns_txt, m_args->config->timeout);
         }
         if(m_args->RecordType_any){
             m_dns_any->setName(m_currentTarget);
             m_dns_any->lookup();
-            s3s_LookupTimeout::set(m_dns_any, m_args->config->timeout);
+            if(m_args->config->setTimeout)
+                s3s_LookupTimeout::set(m_dns_any, m_args->config->timeout);
         }
     }
 }

@@ -20,7 +20,7 @@
 
 BinaryEdge::BinaryEdge(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_BINARYEDGE;
 
     if(args.output_Raw)
@@ -43,8 +43,8 @@ void BinaryEdge::start(){
     QNetworkRequest request;
     request.setRawHeader("X-KEY", m_key.toUtf8());
     request.setRawHeader("Content-Type", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case DOMAIN_DNS:
@@ -82,7 +82,6 @@ void BinaryEdge::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -92,7 +91,6 @@ void BinaryEdge::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -103,7 +101,6 @@ void BinaryEdge::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAIN);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
 
         if(args.output_HostnameIP || args.output_IP){
@@ -111,7 +108,6 @@ void BinaryEdge::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_DNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -154,7 +150,7 @@ void BinaryEdge::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void BinaryEdge::replyFinishedIp(QNetworkReply *reply){
@@ -186,7 +182,7 @@ void BinaryEdge::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void BinaryEdge::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -219,5 +215,5 @@ void BinaryEdge::replyFinishedSubdomainIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }

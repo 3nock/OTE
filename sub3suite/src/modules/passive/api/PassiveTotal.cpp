@@ -24,7 +24,7 @@
 
 PassiveTotal::PassiveTotal(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_RISKIQ;
 
     if(args.output_Raw)
@@ -52,8 +52,8 @@ void PassiveTotal::start(){
     QString concatenated = m_key+":"+m_username;
     QByteArray data = concatenated.toLocal8Bit().toBase64();
     request.setRawHeader("Authorization", "Basic "+data);
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ACCOUNT:
@@ -107,7 +107,6 @@ void PassiveTotal::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -117,7 +116,7 @@ void PassiveTotal::start(){
             request.setAttribute(QNetworkRequest::User, PASSIVE_DNS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -127,7 +126,7 @@ void PassiveTotal::start(){
             request.setAttribute(QNetworkRequest::User, CERTIFICATE_HISTORY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -137,7 +136,7 @@ void PassiveTotal::start(){
             request.setAttribute(QNetworkRequest::User, CERTIFICATE_HISTORY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -147,14 +146,14 @@ void PassiveTotal::start(){
             request.setAttribute(QNetworkRequest::User, PASSIVE_DNS_SEARCH);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_SSL){
             url.setUrl("https://api.riskiq.net/pt/v2/ssl-certificate/search/keyword?query="+target);
             request.setAttribute(QNetworkRequest::User, CERTIFICATE_KEYWORD);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -186,7 +185,7 @@ void PassiveTotal::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void PassiveTotal::replyFinishedSubdomain(QNetworkReply *reply){
@@ -207,7 +206,7 @@ void PassiveTotal::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void PassiveTotal::replyFinishedIp(QNetworkReply *reply){
@@ -238,7 +237,7 @@ void PassiveTotal::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void PassiveTotal::replyFinishedSSL(QNetworkReply *reply){
@@ -266,5 +265,5 @@ void PassiveTotal::replyFinishedSSL(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

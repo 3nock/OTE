@@ -26,6 +26,7 @@ void Url::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
+    m_failedScans.clear();
 
     /*
      if the numner of threads is greater than the number of wordlists, set the
@@ -78,7 +79,6 @@ void Url::onReScan(QQueue<QString> targets){
         return;
 
     /* clear */
-    m_failedScans.clear();
     m_scanArgs->targets.clear();
 
     /* get targets */

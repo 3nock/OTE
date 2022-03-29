@@ -9,7 +9,7 @@
  */
 Netcraft::Netcraft(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_NETCRAFT;
 
     if(args.output_Hostname)
@@ -24,7 +24,6 @@ void Netcraft::start(){
     QUrl url("https://searchdns.netcraft.com/?restriction=site+contains&host="+target);
     request.setUrl(url);
     manager->get(request);
-    activeRequests++;
 }
 
 void Netcraft::replyFinishedSubdomain(QNetworkReply *reply){
@@ -69,5 +68,5 @@ void Netcraft::replyFinishedSubdomain(QNetworkReply *reply){
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }

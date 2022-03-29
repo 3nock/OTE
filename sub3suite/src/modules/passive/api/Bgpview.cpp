@@ -17,7 +17,7 @@
 
 Bgpview::Bgpview(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_BGPVIEW;
 
     if(args.output_Raw)
@@ -48,9 +48,12 @@ Bgpview::~Bgpview(){
 void Bgpview::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
-
     QUrl url;
-    /* for raw output */
+
+    ///
+    /// for raw...
+    ///
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case ASN_:
@@ -83,18 +86,18 @@ void Bgpview::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
-    /* for info output */
+    ///
+    /// for enums...
+    ///
 
     if(args.output_EnumCIDR){
         url.setUrl("https://api.bgpview.io/prefix/"+target);
         request.setAttribute(QNetworkRequest::User, IP_PREFIXES);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -103,7 +106,6 @@ void Bgpview::start(){
         request.setAttribute(QNetworkRequest::User, ASN_);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -112,7 +114,6 @@ void Bgpview::start(){
         request.setAttribute(QNetworkRequest::User, ASN_PEERS);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -121,18 +122,19 @@ void Bgpview::start(){
         request.setAttribute(QNetworkRequest::User, ASN_PREFIXES);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
-    /* for normal output */
+    ///
+    /// for osint..
+    ///
+
     if(args.input_Search){
         if(args.output_ASN || args.output_CIDR || args.output_Email){
             url.setUrl("https://api.bgpview.io/search?query_term="+target);
             request.setAttribute(QNetworkRequest::User, QUERY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -143,7 +145,6 @@ void Bgpview::start(){
             request.setAttribute(QNetworkRequest::User, IP);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -154,7 +155,6 @@ void Bgpview::start(){
             request.setAttribute(QNetworkRequest::User, ASN_);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
         if(args.output_Email){
@@ -162,7 +162,6 @@ void Bgpview::start(){
             request.setAttribute(QNetworkRequest::User, ASN_);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
         if(args.output_IP){
@@ -170,7 +169,6 @@ void Bgpview::start(){
             request.setAttribute(QNetworkRequest::User, ASN_PREFIXES);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
         if(args.output_CIDR){
@@ -178,7 +176,6 @@ void Bgpview::start(){
             request.setAttribute(QNetworkRequest::User, ASN_PREFIXES);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
         if(args.output_ASN){
@@ -186,7 +183,6 @@ void Bgpview::start(){
             request.setAttribute(QNetworkRequest::User, ASN_PEERS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
     }
@@ -197,7 +193,6 @@ void Bgpview::start(){
             request.setAttribute(QNetworkRequest::User, IP_PREFIXES);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -240,7 +235,7 @@ void Bgpview::replyFinishedIp(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bgpview::replyFinishedAsn(QNetworkReply *reply){
@@ -279,7 +274,7 @@ void Bgpview::replyFinishedAsn(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bgpview::replyFinishedEmail(QNetworkReply *reply){
@@ -339,7 +334,7 @@ void Bgpview::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bgpview::replyFinishedSubdomain(QNetworkReply *reply){
@@ -361,7 +356,7 @@ void Bgpview::replyFinishedSubdomain(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bgpview::replyFinishedCidr(QNetworkReply *reply){
@@ -389,7 +384,7 @@ void Bgpview::replyFinishedCidr(QNetworkReply *reply){
     }
 
 
-    end(reply);
+    this->end(reply);
 }
 
 ///
@@ -442,7 +437,7 @@ void Bgpview::replyFinishedEnumASN(QNetworkReply *reply){
         break;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bgpview::replyFinishedEnumASNPeers(QNetworkReply *reply){
@@ -472,7 +467,7 @@ void Bgpview::replyFinishedEnumASNPeers(QNetworkReply *reply){
         emit resultEnumASN(asn);
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bgpview::replyFinishedEnumASNPrefixes(QNetworkReply *reply){
@@ -502,7 +497,7 @@ void Bgpview::replyFinishedEnumASNPrefixes(QNetworkReply *reply){
         emit resultEnumASN(asn);
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Bgpview::replyFinishedEnumCIDR(QNetworkReply *reply){
@@ -559,5 +554,5 @@ void Bgpview::replyFinishedEnumCIDR(QNetworkReply *reply){
         emit resultEnumCIDR(cidr);
     }
 
-    end(reply);
+    this->end(reply);
 }

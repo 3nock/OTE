@@ -7,7 +7,7 @@
  */
 Rapiddns::Rapiddns(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_RAPIDDNS;
 
     if(args.output_Hostname)
@@ -29,21 +29,21 @@ void Rapiddns::start(){
         url.setUrl("https://rapiddns.io/subdomain/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_IP){
         url.setUrl("https://rapiddns.io/sameip/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_CIDR){
         url.setUrl("https://rapiddns.io/s/"+target+"?full=1#result");
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 
@@ -85,7 +85,7 @@ void Rapiddns::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }
 
 void Rapiddns::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -136,7 +136,7 @@ void Rapiddns::replyFinishedSubdomainIp(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }
 
 void Rapiddns::replyFinishedIp(QNetworkReply *reply){
@@ -185,5 +185,5 @@ void Rapiddns::replyFinishedIp(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }

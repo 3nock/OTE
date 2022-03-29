@@ -25,6 +25,7 @@ void Dns::startScan(){
     /* ressetting and setting new values */
     ui->progressBar->show();
     ui->progressBar->reset();
+    m_failedScans.clear();
 
     /* getting srv wordlist if checked &
      if the numner of threads is greater than the number of wordlists, set the
@@ -105,7 +106,6 @@ void Dns::onReScan(QQueue<QString> targets){
         return;
 
     /* clear */
-    m_failedScans.clear();
     m_scanArgs->targets.clear();
     m_scanArgs->srvWordlist.clear();
 

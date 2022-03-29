@@ -13,10 +13,12 @@
 #define IPV6 6
 #define SSL_CERT 7
 
-/* 100 queries for a free account */
+/*
+ * 100 queries for a free account
+ */
 Spyse::Spyse(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_SPYSE;
 
     if(args.output_Raw)
@@ -46,8 +48,8 @@ void Spyse::start(){
     request.setRawHeader("accept", "application/json");
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case DOMAINS:
@@ -74,7 +76,6 @@ void Spyse::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -83,7 +84,6 @@ void Spyse::start(){
         request.setAttribute(QNetworkRequest::User, DOMAINS);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -92,7 +92,6 @@ void Spyse::start(){
         request.setAttribute(QNetworkRequest::User, IPV4);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -101,7 +100,6 @@ void Spyse::start(){
         request.setAttribute(QNetworkRequest::User, SSL_CERT);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -110,7 +108,6 @@ void Spyse::start(){
         request.setAttribute(QNetworkRequest::User, AS);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -119,7 +116,6 @@ void Spyse::start(){
         request.setAttribute(QNetworkRequest::User, EMAILS);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }
 
@@ -162,7 +158,7 @@ void Spyse::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Spyse::replyFinishedIp(QNetworkReply *reply){
@@ -214,7 +210,7 @@ void Spyse::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Spyse::replyFinishedSSL(QNetworkReply *reply){
@@ -236,7 +232,7 @@ void Spyse::replyFinishedSSL(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
-    end(reply);
+    this->end(reply);
 }
 
 void Spyse::replyFinishedAsn(QNetworkReply *reply){
@@ -284,7 +280,7 @@ void Spyse::replyFinishedAsn(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Spyse::replyFinishedUrl(QNetworkReply *reply){
@@ -308,7 +304,7 @@ void Spyse::replyFinishedUrl(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Spyse::replyFinishedSubdomain(QNetworkReply *reply){
@@ -353,5 +349,5 @@ void Spyse::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

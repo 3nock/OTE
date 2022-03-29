@@ -7,7 +7,7 @@
  */
 ArchiveToday::ArchiveToday(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ARCHIVETODAY;
 
     if(args.output_URL)
@@ -24,7 +24,6 @@ void ArchiveToday::start(){
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36");
     request.setRawHeader("Connection", "close");
-
     QUrl url;
 
     if(args.input_Domain){
@@ -32,13 +31,13 @@ void ArchiveToday::start(){
             url.setUrl("https://archive.md/*."+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_URL){
             url.setUrl("https://archive.md/*."+target+"/*");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -47,14 +46,14 @@ void ArchiveToday::start(){
             url.setUrl("https://archive.md/"+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_URL){
             url.setUrl("https://archive.md/"+target+"*");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -100,7 +99,7 @@ void ArchiveToday::replyFinishedSubdomain(QNetworkReply *reply){
     /* finilizing... */
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }
 
 void ArchiveToday::replyFinishedUrl(QNetworkReply *reply){
@@ -144,5 +143,5 @@ void ArchiveToday::replyFinishedUrl(QNetworkReply *reply){
     /* finilizing... */
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }

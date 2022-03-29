@@ -198,6 +198,7 @@ void Dns::initConfigValues(){
     m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
     m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
+    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
     CONFIG.endGroup();
 
     int size = CONFIG.beginReadArray(CFG_ARR_NAMESERVERS);

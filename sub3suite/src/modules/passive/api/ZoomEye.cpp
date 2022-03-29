@@ -16,7 +16,7 @@
  */
 ZoomEye::ZoomEye(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ZOOMEYE;
 
     if(args.output_Raw)
@@ -41,8 +41,8 @@ void ZoomEye::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("API-KEY", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case HOST_ASN:
@@ -63,7 +63,6 @@ void ZoomEye::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -72,7 +71,7 @@ void ZoomEye::start(){
         request.setAttribute(QNetworkRequest::User, HOST_HOSTNAME);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_IP){
@@ -80,7 +79,7 @@ void ZoomEye::start(){
         request.setAttribute(QNetworkRequest::User, HOST_IP);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_ASN){
@@ -88,7 +87,7 @@ void ZoomEye::start(){
         request.setAttribute(QNetworkRequest::User, HOST_ASN);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.input_CIDR){
@@ -96,7 +95,7 @@ void ZoomEye::start(){
         request.setAttribute(QNetworkRequest::User, HOST_CIDR);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 
@@ -121,7 +120,7 @@ void ZoomEye::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void ZoomEye::replyFinishedIp(QNetworkReply *reply){
@@ -145,7 +144,7 @@ void ZoomEye::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void ZoomEye::replyFinishedAsn(QNetworkReply *reply){
@@ -171,7 +170,7 @@ void ZoomEye::replyFinishedAsn(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void ZoomEye::replyFinishedSubdomain(QNetworkReply *reply){
@@ -193,5 +192,5 @@ void ZoomEye::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

@@ -7,7 +7,7 @@
  */
 Exalead::Exalead(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_EXALEAD;
 
     if(args.output_Hostname)
@@ -23,20 +23,21 @@ Exalead::~Exalead(){
 
 void Exalead::start(){
     QNetworkRequest request;
+    QUrl url;
 
     if(args.input_Domain){
         if(args.output_Hostname){
-            QUrl url("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
+            url.setUrl("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_URL){
-            QUrl url("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
+            url.setUrl("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -76,7 +77,7 @@ void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }
 
 void Exalead::replyFinishedEmail(QNetworkReply *reply){
@@ -89,7 +90,7 @@ void Exalead::replyFinishedEmail(QNetworkReply *reply){
      * not yet implemented...
      */
 
-    end(reply);
+    this->end(reply);
 }
 
 void Exalead::replyFinishedUrl(QNetworkReply *reply){
@@ -127,5 +128,5 @@ void Exalead::replyFinishedUrl(QNetworkReply *reply){
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
-    end(reply);
+    this->end(reply);
 }

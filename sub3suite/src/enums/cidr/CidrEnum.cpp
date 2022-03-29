@@ -117,6 +117,7 @@ void CidrEnum::initConfigValues(){
     CONFIG.beginGroup(CFG_ENUM);
     m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_cidr").toBool();
     m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_cidr").toBool();
+    m_scanConfig->setTimeout = CONFIG.value("set_timeout_cidr").toBool();
     m_scanConfig->timeout = CONFIG.value("timeout_cidr").toInt();
     CONFIG.endGroup();
 }

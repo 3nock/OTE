@@ -1,5 +1,6 @@
 #include "VirusTotal.h"
 #include "src/utils/Config.h"
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -23,12 +24,12 @@
 #define V2_DOMAIN 16
 #define V2_IPADDRESS 17
 
-/* has a well detailed whois --> historical whois */
-/* also nice resolution from ip -> subdomains */
-/* has api v2 and v3 */
+/*
+ * has api v2 and v3
+ */
 VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_VIRUSTOTAL;
 
     if(args.output_Raw)
@@ -51,8 +52,8 @@ VirusTotal::~VirusTotal(){
 
 void VirusTotal::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case DOMAIN_HISTORICAL_WHOIS:
@@ -107,19 +108,16 @@ void VirusTotal::start(){
             url.setUrl("https://www.virustotal.com/vtapi/v2/domain/report?apikey="+m_key+"&domain="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         case V2_IPADDRESS:
             url.setUrl("https://www.virustotal.com/vtapi/v2/ip-address/report?apikey="+m_key+"&ip="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
             return;
         }
         request.setRawHeader("x-apikey", m_key.toUtf8());
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -129,33 +127,15 @@ void VirusTotal::start(){
             request.setAttribute(QNetworkRequest::User, V2_DOMAIN);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
-        //...
-        request.setRawHeader("x-apikey", m_key.toUtf8());
-        //...
-        if(args.output_Hostname || args.output_SSL){
+        if(args.output_SSL){
+            request.setRawHeader("x-apikey", m_key.toUtf8());
             url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/historical_ssl_certificates");
             request.setAttribute(QNetworkRequest::User, DOMAIN_HISTORICAL_SSL_CERTS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
-        }
-
-        if(args.output_IP){
-            url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/resolutions");
-            request.setAttribute(QNetworkRequest::User, DOMAIN_RESOLUTIONS);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
-        }
-
-        if(args.output_IP || args.output_Hostname || args.output_SSL){
-            url.setUrl("https://www.virustotal.com/api/v3/domains/"+target+"/subdomains");
-            request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -165,25 +145,15 @@ void VirusTotal::start(){
             request.setAttribute(QNetworkRequest::User, V2_IPADDRESS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
-        //...
-        request.setRawHeader("x-apikey", m_key.toUtf8());
-        //...
-        if(args.output_Hostname || args.output_SSL){
+        if(args.output_SSL){
+            request.setRawHeader("x-apikey", m_key.toUtf8());
             url.setUrl("https://www.virustotal.com/api/v3/ip_addresses/"+target+"/historical_ssl_certificates");
             request.setAttribute(QNetworkRequest::User, IP_HISTORICAL_SSL_CERTS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
-        }
-
-        if(args.output_Hostname){
-            url.setUrl("https://www.virustotal.com/api/v3/ip_addresses/"+target+"/resolutions");
-            request.setAttribute(QNetworkRequest::User, IP_RESOLUTIONS);
-            request.setUrl(url);
-            manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -201,81 +171,16 @@ void VirusTotal::replyFinishedSubdomain(QNetworkReply *reply){
     {
     case V2_DOMAIN:
     case V2_IPADDRESS:
-    {
         QJsonArray subdomains = document.object()["subdomains"].toArray();
         foreach(const QJsonValue &value, subdomains){
             QString hostname = value.toString();
             emit resultSubdomain(hostname);
             log.resultsCount++;
         }
-    }
         break;
-
-    case DOMAIN_HISTORICAL_SSL_CERTS:
-    case IP_HISTORICAL_SSL_CERTS:
-    {
-        foreach(const QJsonValue &value, data){
-            QJsonArray subject_alternative_name = value.toObject()["attributes"].toObject()["extensions"].toObject()["subject_alternative_name"].toArray();
-            foreach(const QJsonValue &alt_name, subject_alternative_name){
-                QString hostname = alt_name.toString();
-                emit resultSubdomain(hostname);
-                log.resultsCount++;
-            }
-        }
-    }
-        break;
-
-    case DOMAIN_SUBDOMAINS:
-    {
-        foreach(const QJsonValue &value, data){
-           /* from id */
-           QString hostname = value.toObject()["id"].toString();
-           emit resultSubdomain(hostname);
-           log.resultsCount++;
-
-           /* from last dns records */
-           QJsonArray last_dns_records = value.toObject()["attributes"].toObject()["last_dns_records"].toArray();
-           foreach(const QJsonValue &dnsRecord, last_dns_records){
-               QString type = dnsRecord.toObject()["type"].toString();
-
-               if(type == "NS"){
-                   QString hostname = dnsRecord.toObject()["value"].toString();
-                   emit resultNS(hostname);
-                   log.resultsCount++;
-               }
-               if(type == "MX"){
-                   QString hostname = dnsRecord.toObject()["value"].toString();
-                   emit resultMX(hostname);
-                   log.resultsCount++;
-               }
-               if(type == "CNAME"){
-                   QString hostname = dnsRecord.toObject()["value"].toString();
-                   emit resultCNAME(hostname);
-                   log.resultsCount++;
-               }
-           }
-
-           /* from ssl cert alternative name */
-           QJsonObject last_https_certificate = value.toObject()["attributes"].toObject()["last_https_certificate"].toObject();
-           QJsonArray subject_alternative_name = last_https_certificate["extensions"].toObject()["subject_alternative_name"].toArray();
-           foreach(const QJsonValue &altName, subject_alternative_name){
-               QString hostname = altName.toString();
-               emit resultSubdomain(hostname);
-               log.resultsCount++;
-           }
-        }
-    }
-        break;
-
-    case IP_RESOLUTIONS:
-        foreach(const QJsonValue &value, data){
-            QString hostname = value.toObject()["attributes"].toObject()["host_name"].toString();
-            emit resultSubdomain(hostname);
-            log.resultsCount++;
-        }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void VirusTotal::replyFinishedIp(QNetworkReply *reply){
@@ -291,50 +196,16 @@ void VirusTotal::replyFinishedIp(QNetworkReply *reply){
     {
     case V2_DOMAIN:
     case V2_IPADDRESS:
-    {
         QJsonArray resolutions = document.object()["resolutions"].toArray();
         foreach(const QJsonValue &value, resolutions){
             QString address = value.toObject()["ip_address"].toString();
             emit resultIP(address);
             log.resultsCount++;
         }
-    }
         break;
-
-    case DOMAIN_RESOLUTIONS:
-    {
-        foreach(const QJsonValue &value, data){
-            QString address = value.toObject()["attributes"].toObject()["ip_address"].toString();
-            emit resultIP(address);
-            log.resultsCount++;
-        }
-    }
-        break;
-
-    case DOMAIN_SUBDOMAINS:
-    {
-        foreach(const QJsonValue &value, data){
-           /* from last dns records */
-           QJsonArray last_dns_records = value.toObject()["attributes"].toObject()["last_dns_records"].toArray();
-           foreach(const QJsonValue &dnsRecord, last_dns_records){
-               QString type = dnsRecord.toObject()["type"].toString();
-
-               if(type == "A"){
-                   QString address = dnsRecord.toObject()["value"].toString();
-                   emit resultA(address);
-                   log.resultsCount++;
-               }
-               if(type == "AAAA"){
-                   QString address = dnsRecord.toObject()["value"].toString();
-                   emit resultAAAA(address);
-                   log.resultsCount++;
-               }
-           }
-        }
-    }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
@@ -350,7 +221,6 @@ void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
     {
     case V2_DOMAIN:
     case V2_IPADDRESS:
-    {
         QJsonArray detected_urls = document.object()["detected_urls"].toArray();
         foreach(const QJsonValue &value, detected_urls){
             QString detected_url = value.toArray().at(0).toString();
@@ -365,9 +235,8 @@ void VirusTotal::replyFinishedUrl(QNetworkReply *reply){
             log.resultsCount++;
         }
     }
-    }
 
-    end(reply);
+    this->end(reply);
 }
 
 void VirusTotal::replyFinishedSSL(QNetworkReply *reply){
@@ -389,16 +258,7 @@ void VirusTotal::replyFinishedSSL(QNetworkReply *reply){
             log.resultsCount++;
         }
         break;
-
-    case DOMAIN_SUBDOMAINS:
-        foreach(const QJsonValue &value, data){
-           /* from ssl cert alternative name */
-           QJsonObject last_https_certificate = value.toObject()["attributes"].toObject()["last_https_certificate"].toObject();
-           QString thumbprint = last_https_certificate["thumbprint"].toString();
-           emit resultSSL(thumbprint);
-           log.resultsCount++;
-        }
     }
 
-    end(reply);
+    this->end(reply);
 }

@@ -9,7 +9,7 @@
 SiteDossier::SiteDossier(ScanArgs args): AbstractOsintModule(args)
 {
 
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_SITEDOSSIER;
 
     if(args.output_Hostname)
@@ -24,7 +24,6 @@ void SiteDossier::start(){
     QUrl url("http://www.sitedossier.com/parentdomain/"+target+"/1");
     request.setUrl(url);
     manager->get(request);
-    activeRequests++;
 }
 
 void SiteDossier::replyFinishedSubdomain(QNetworkReply *reply){
@@ -63,5 +62,5 @@ void SiteDossier::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    end(reply);
+    this->end(reply);
 }

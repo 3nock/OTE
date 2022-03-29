@@ -9,7 +9,7 @@
 
 Ipfy::Ipfy(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_IPFY;
 
     if(args.output_Raw)
@@ -32,8 +32,8 @@ Ipfy::~Ipfy(){
 
 void Ipfy::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case PUBLIC_IPV4:
@@ -54,7 +54,6 @@ void Ipfy::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -63,7 +62,7 @@ void Ipfy::start(){
             url.setUrl("https://geo.ipify.org/api/v2/country?apiKey="+m_key+"&ipAddress="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -72,7 +71,7 @@ void Ipfy::start(){
             url.setUrl("https://geo.ipify.org/api/v2/country?apiKey="+m_key+"&domain="+target);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -91,7 +90,7 @@ void Ipfy::replyFinishedSubdomain(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Ipfy::replyFinishedAsn(QNetworkReply *reply){
@@ -106,7 +105,7 @@ void Ipfy::replyFinishedAsn(QNetworkReply *reply){
     emit resultASN(QString::number(as["asn"].toInt()), as["name"].toString());
     log.resultsCount++;
 
-    end(reply);
+    this->end(reply);
 }
 
 void Ipfy::replyFinishedIp(QNetworkReply *reply){
@@ -121,7 +120,7 @@ void Ipfy::replyFinishedIp(QNetworkReply *reply){
     emit resultIP(mainObj["ip"].toString());
     log.resultsCount++;
 
-    end(reply);
+    this->end(reply);
 }
 
 void Ipfy::replyFinishedCidr(QNetworkReply *reply){
@@ -136,5 +135,5 @@ void Ipfy::replyFinishedCidr(QNetworkReply *reply){
     emit resultCIDR(as["route"].toString());
     log.resultsCount++;
 
-    end(reply);
+    this->end(reply);
 }

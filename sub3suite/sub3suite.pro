@@ -126,6 +126,8 @@ SOURCES += \
     src/models/ExplorerModel.cpp \
     src/modules/active/URLScanner.cpp \
     src/modules/passive/ParserMethods.cpp \
+    src/modules/passive/api/ASRank.cpp \
+    src/modules/passive/api/CirclPublic.cpp \
     src/modules/passive/api/HackerTarget.cpp \
     src/modules/passive/api/Mnemonic.cpp \
     src/modules/passive/api/Otx.cpp \
@@ -288,6 +290,8 @@ HEADERS += \
     src/models/ExplorerModel.h \
     src/modules/active/URLScanner.h \
     src/modules/passive/ParserMethods.h \
+    src/modules/passive/api/ASRank.h \
+    src/modules/passive/api/CirclPublic.h \
     src/modules/passive/api/HackerTarget.h \
     src/modules/passive/api/Mnemonic.h \
     src/modules/passive/api/Otx.h \

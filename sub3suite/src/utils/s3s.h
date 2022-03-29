@@ -104,8 +104,9 @@ protected:
 ///
 class s3sNetworkAccessManager: public QNetworkAccessManager {
     public:
-        s3sNetworkAccessManager(QObject *parent = nullptr, int timeout = 1000): QNetworkAccessManager(parent),
-            m_timeout(timeout)
+        s3sNetworkAccessManager(QObject *parent = nullptr, int timeout = 1000, bool use_timer = false): QNetworkAccessManager(parent),
+            m_timeout(timeout),
+            m_use_timer(use_timer)
         {
         }
 
@@ -115,7 +116,8 @@ class s3sNetworkAccessManager: public QNetworkAccessManager {
             QNetworkReply *reply = QNetworkAccessManager::createRequest(op, request, data);
 
             /* set timeout */
-            s3s_ReplyTimeout::set(reply, m_timeout);
+            if(m_use_timer)
+                s3s_ReplyTimeout::set(reply, m_timeout);
 
             /* set property */
             reply->setProperty(REQUEST_TYPE, request.attribute(QNetworkRequest::User));
@@ -125,6 +127,7 @@ class s3sNetworkAccessManager: public QNetworkAccessManager {
 
     private:
         int m_timeout;
+        bool m_use_timer;
 };
 
 #endif // S3S_H

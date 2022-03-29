@@ -11,7 +11,7 @@
 
 RobtexFree::RobtexFree(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ROBTEX;
 
     if(args.output_Raw)
@@ -34,8 +34,8 @@ RobtexFree::~RobtexFree(){
 void RobtexFree::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ASQUERY:
@@ -52,7 +52,6 @@ void RobtexFree::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -62,7 +61,7 @@ void RobtexFree::start(){
             request.setAttribute(QNetworkRequest::User, IPQUERY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
 
         if(args.output_IP || args.output_Hostname || args.output_HostnameIP){
@@ -70,7 +69,7 @@ void RobtexFree::start(){
             request.setAttribute(QNetworkRequest::User, PDNS_REVERSE);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -80,7 +79,7 @@ void RobtexFree::start(){
             request.setAttribute(QNetworkRequest::User, PDNS_FORWARD);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -90,7 +89,7 @@ void RobtexFree::start(){
             request.setAttribute(QNetworkRequest::User, ASQUERY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -132,7 +131,7 @@ void RobtexFree::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void RobtexFree::replyFinishedIp(QNetworkReply *reply){
@@ -166,7 +165,7 @@ void RobtexFree::replyFinishedIp(QNetworkReply *reply){
     }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void RobtexFree::replyFinishedAsn(QNetworkReply *reply){
@@ -186,7 +185,7 @@ void RobtexFree::replyFinishedAsn(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void RobtexFree::replyFinishedCidr(QNetworkReply *reply){
@@ -212,7 +211,7 @@ void RobtexFree::replyFinishedCidr(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void RobtexFree::replyFinishedSubdomainIp(QNetworkReply *reply){
@@ -240,5 +239,5 @@ void RobtexFree::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

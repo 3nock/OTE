@@ -8,7 +8,7 @@
 
 Seon::Seon(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_SEON;
 
     if(args.output_Raw)
@@ -24,8 +24,8 @@ Seon::~Seon(){
 void Seon::start(){
     QNetworkRequest request;
     request.setRawHeader("X-API-KEY", m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case EMAIL:
@@ -43,6 +43,5 @@ void Seon::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }

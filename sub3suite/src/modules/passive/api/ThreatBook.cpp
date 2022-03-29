@@ -13,7 +13,7 @@
 
 ThreatBook::ThreatBook(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_THREATBOOK;
 
     if(args.output_Raw)
@@ -35,8 +35,8 @@ ThreatBook::~ThreatBook(){
 void ThreatBook::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case SUBDOMAINS:
@@ -57,7 +57,6 @@ void ThreatBook::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -67,14 +66,14 @@ void ThreatBook::start(){
             request.setAttribute(QNetworkRequest::User, SUBDOMAINS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_IP){
             url.setUrl("https://api.threatbook.cn/v3/domain/query?apikey="+m_key+"&resource="+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_QUERY);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
 
             /*
             url.setUrl("https://api.threatbook.cn/v3/domain/adv_query?apikey="+m_key+"&resource="+target);
@@ -91,7 +90,7 @@ void ThreatBook::start(){
         request.setAttribute(QNetworkRequest::User, IP_QUERY);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
 
         /*
         url.setUrl("https://api.threatbook.cn/v3/ip/adv_query?apikey="+m_key+"&resource="+target);
@@ -137,7 +136,7 @@ void ThreatBook::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void ThreatBook::replyFinishedAsn(QNetworkReply *reply){
@@ -158,7 +157,7 @@ void ThreatBook::replyFinishedAsn(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void ThreatBook::replyFinishedIp(QNetworkReply *reply){
@@ -192,5 +191,5 @@ void ThreatBook::replyFinishedIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

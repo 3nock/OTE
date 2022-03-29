@@ -14,7 +14,7 @@
  */
 IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_IPINFO;
 
     if(args.output_Raw)
@@ -34,8 +34,8 @@ IpInfo::~IpInfo(){
 void IpInfo::start(){
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case IP:
@@ -53,7 +53,6 @@ void IpInfo::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -61,7 +60,6 @@ void IpInfo::start(){
         url.setUrl("https://ipinfo.io/"+target+"/json?token="+m_key);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -71,7 +69,7 @@ void IpInfo::start(){
             request.setAttribute(QNetworkRequest::User, HOSTED_DOMAINS);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -82,18 +80,19 @@ void IpInfo::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    QUERY_TYPE = reply->property(REQUEST_TYPE).toInt();
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonArray domains = document.object()["domains"].toArray();
 
-    if(QUERY_TYPE == HOSTED_DOMAINS){
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case HOSTED_DOMAINS:
         foreach(const QJsonValue &value, domains){
             emit resultSubdomain(value.toString());
             log.resultsCount++;
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void IpInfo::replyFinishedEnumIP(QNetworkReply *reply){

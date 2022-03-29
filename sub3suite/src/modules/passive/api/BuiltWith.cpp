@@ -4,7 +4,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-
 #define COMPANY_API 0
 #define DOMAIN_API 1
 #define FREE_API 2
@@ -18,12 +17,12 @@
 
 
 /*
- * for now only raw results...
+ * for now only raw results
  * for free api, 1 request per second...
  */
 BuiltWith::BuiltWith(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_BUILTWITH;
 
     if(args.output_Raw)
@@ -38,8 +37,8 @@ BuiltWith::~BuiltWith(){
 
 void BuiltWith::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case FREE_API:
@@ -74,6 +73,5 @@ void BuiltWith::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }

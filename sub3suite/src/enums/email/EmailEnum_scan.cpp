@@ -50,6 +50,7 @@ void EmailEnum::startScan(){
     ui->progressBar->show();
     ui->progressBar->reset();
     ui->progressBar->clearMask();
+    m_failedScans.clear();
 
     /* enabling/disabling widgets... */
     ui->buttonStop->setEnabled(true);

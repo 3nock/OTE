@@ -11,11 +11,12 @@
 #define URL_INFO 7
 
 /*
- * 50 free request per day...
+ * 50 free request per day
+ * for now only raw results...
  */
 NeutrinoApi::NeutrinoApi(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_NEUTRINOAPI;
 
     if(args.output_Raw)
@@ -24,7 +25,6 @@ NeutrinoApi::NeutrinoApi(ScanArgs args): AbstractOsintModule(args)
     /* getting api key */
     m_key = APIKEY.value("neutrinoapi_key").toString();
     m_userId = APIKEY.value("neutrinoapi_uid").toString();
-    
 }
 NeutrinoApi::~NeutrinoApi(){
     delete manager;
@@ -32,8 +32,8 @@ NeutrinoApi::~NeutrinoApi(){
 
 void NeutrinoApi::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case EMAIL_VALIDATE:
@@ -63,7 +63,7 @@ void NeutrinoApi::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 

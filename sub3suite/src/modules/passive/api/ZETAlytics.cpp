@@ -7,7 +7,7 @@
 
 ZETAlytics::ZETAlytics(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_ZETALYTICS;
 
     if(args.output_Raw)
@@ -23,13 +23,12 @@ ZETAlytics::~ZETAlytics(){
 void ZETAlytics::start(){
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
-
     QUrl url;
+
     if(args.output_Raw){
         url.setUrl("https://zonecruncher.com/api/v1/subdomains?q="+target+"&token="+m_key);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 }

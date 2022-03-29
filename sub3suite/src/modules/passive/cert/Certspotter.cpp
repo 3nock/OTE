@@ -9,7 +9,7 @@
 
 Certspotter::Certspotter(ScanArgs args) : AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_CERTSPOTTER;
 
     if(args.output_Raw)
@@ -29,8 +29,8 @@ Certspotter::~Certspotter(){
 void Certspotter::start(){
     QNetworkRequest request;
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case ISSUEANCES:
@@ -39,7 +39,6 @@ void Certspotter::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -48,13 +47,13 @@ void Certspotter::start(){
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=dns_names&match_wildcards=true");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
         if(args.output_SSL){
             url.setUrl("https://api.certspotter.com/v1/issuances?domain="+target+"&include_subdomains=true&expand=cert");
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 }
@@ -76,7 +75,7 @@ void Certspotter::replyFinishedSubdomain(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void Certspotter::replyFinishedSSL(QNetworkReply *reply){
@@ -96,5 +95,5 @@ void Certspotter::replyFinishedSSL(QNetworkReply *reply){
         log.resultsCount++;
     }
 
-    end(reply);
+    this->end(reply);
 }

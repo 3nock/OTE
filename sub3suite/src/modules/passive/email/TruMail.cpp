@@ -5,7 +5,7 @@
 
 TruMail::TruMail(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_TRUMAIL;
 
     if(args.output_Raw)
@@ -19,8 +19,8 @@ TruMail::~TruMail(){
 
 void TruMail::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case EMAIL:
@@ -29,14 +29,13 @@ void TruMail::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 
     if(args.output_EnumEmail){
         url.setUrl("https://api.trumail.io/v2/lookups/json?email="+target);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
     }
 }
 
@@ -61,5 +60,5 @@ void TruMail::replyFinishedEnumEmail(QNetworkReply *reply){
         emit resultEnumEmail(email);
     }
 
-    end(reply);
+    this->end(reply);
 }

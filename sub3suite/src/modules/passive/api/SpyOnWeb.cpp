@@ -15,7 +15,7 @@
 
 SpyOnWeb::SpyOnWeb(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_SPYONWEB;
 
     if(args.output_Raw)
@@ -38,8 +38,8 @@ SpyOnWeb::~SpyOnWeb(){
 
 void SpyOnWeb::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case DOMAIN_API:
@@ -66,7 +66,6 @@ void SpyOnWeb::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 
@@ -76,7 +75,7 @@ void SpyOnWeb::start(){
             request.setAttribute(QNetworkRequest::User, IP_API);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -86,7 +85,7 @@ void SpyOnWeb::start(){
             request.setAttribute(QNetworkRequest::User, DOMAIN_API);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
+            return;
         }
     }
 
@@ -99,7 +98,7 @@ void SpyOnWeb::start(){
         request.setAttribute(QNetworkRequest::User, DOMAINS_ON_NAMESERVER);
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
 }
 
@@ -126,7 +125,7 @@ void SpyOnWeb::replyFinishedSubdomainIp(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void SpyOnWeb::replyFinishedSubdomain(QNetworkReply *reply){
@@ -172,7 +171,7 @@ void SpyOnWeb::replyFinishedSubdomain(QNetworkReply *reply){
     }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void SpyOnWeb::replyFinishedIp(QNetworkReply *reply){
@@ -195,7 +194,7 @@ void SpyOnWeb::replyFinishedIp(QNetworkReply *reply){
     }
     }
 
-    end(reply);
+    this->end(reply);
 }
 
 void SpyOnWeb::replyFinishedEnumNS(QNetworkReply *reply){
@@ -217,5 +216,5 @@ void SpyOnWeb::replyFinishedEnumNS(QNetworkReply *reply){
 
     emit resultEnumNS(ns);
 
-    end(reply);
+    this->end(reply);
 }

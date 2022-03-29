@@ -30,7 +30,7 @@
       <string>Timeout</string>
      </property>
      <property name="checkable">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -69,13 +69,6 @@
        <widget class="QCheckBox" name="checkBoxNoDuplicates">
         <property name="text">
          <string>No Duplicates</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBoxOverride">
-        <property name="text">
-         <string>Override Values</string>
         </property>
        </widget>
       </item>

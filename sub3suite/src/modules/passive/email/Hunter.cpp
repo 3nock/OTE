@@ -13,7 +13,7 @@
 
 Hunter::Hunter(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_HUNTER;
 
     if(args.output_Raw)
@@ -30,8 +30,8 @@ Hunter::~Hunter(){
 
 void Hunter::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch(args.raw_query_id){
         case ACCOUNT_INFO:
@@ -55,15 +55,15 @@ void Hunter::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
+        return;
     }
+
     if(args.input_Domain){
         if(args.output_Email){
             url.setUrl("https://api.hunter.io/v2/domain-search?domain="+target+"&api_key="+m_key);
             request.setAttribute(QNetworkRequest::User, DOMAIN_SEARCH);
             request.setUrl(url);
             manager->get(request);
-            activeRequests++;
         }
     }
 }
@@ -86,5 +86,5 @@ void Hunter::replyFinishedEmail(QNetworkReply *reply){
         }
     }
 
-    end(reply);
+    this->end(reply);
 }

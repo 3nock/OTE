@@ -127,6 +127,9 @@ void Osint::startScan(){
     if(ui->moduleAnubis->isChecked())
         this->startScanThread(new Anubis(*m_scanArgs));
 
+    if(ui->moduleASRank->isChecked())
+        this->startScanThread(new ASRank(*m_scanArgs));
+
     if(ui->moduleBgpview->isChecked())
         this->startScanThread(new Bgpview(*m_scanArgs));
 
@@ -138,6 +141,9 @@ void Osint::startScan(){
 
     if(ui->moduleCircl->isChecked())
         this->startScanThread(new Circl(*m_scanArgs));
+
+    if(ui->moduleCirclPublic->isChecked())
+        this->startScanThread(new CirclPublic(*m_scanArgs));
 
     if(ui->moduleDnsbufferoverrun->isChecked())
         this->startScanThread(new Dnsbufferoverun(*m_scanArgs));

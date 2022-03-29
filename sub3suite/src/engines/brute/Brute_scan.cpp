@@ -38,6 +38,9 @@ void Brute::startScan(){
     ui->buttonStop->setEnabled(true);
     ui->buttonStart->setText(tr("Pause"));
 
+    /* clear */
+    m_failedScans.clear();
+
     /* status */
     status->isRunning = true;
     status->isNotActive = false;
@@ -90,7 +93,6 @@ void Brute::onReScan(QQueue<QString> targets){
         return;
 
     /* clear */
-    m_failedScans.clear();
     m_scanArgs->targets.clear();
 
     /* get output type */

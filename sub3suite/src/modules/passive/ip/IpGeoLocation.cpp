@@ -9,7 +9,7 @@
  */
 IpGeoLocation::IpGeoLocation(ScanArgs args): AbstractOsintModule(args)
 {
-    manager = new s3sNetworkAccessManager(this, args.config->timeout);
+    manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
     log.moduleName = OSINT_MODULE_IPGEOLOCATION;
 
     if(args.output_Raw)
@@ -24,8 +24,8 @@ IpGeoLocation::~IpGeoLocation(){
 
 void IpGeoLocation::start(){
     QNetworkRequest request;
-
     QUrl url;
+
     if(args.output_Raw){
         switch (args.raw_query_id) {
         case IP_GEOLOCATION:
@@ -37,7 +37,6 @@ void IpGeoLocation::start(){
         }
         request.setUrl(url);
         manager->get(request);
-        activeRequests++;
         return;
     }
 }
