@@ -448,7 +448,7 @@
               <number>50</number>
              </attribute>
              <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>250</number>
+              <number>200</number>
              </attribute>
              <attribute name="horizontalHeaderStretchLastSection">
               <bool>true</bool>

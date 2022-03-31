@@ -28,14 +28,16 @@ class PassiveConfigDialog : public QDialog{
 
     private slots:
         void on_buttonOk_clicked();
-        void on_checkBoxNoDuplicates_clicked(bool checked);
         void on_buttonCancel_clicked();
+        void on_checkBoxNoDuplicates_clicked(bool checked);
 
     private:
         Ui::PassiveConfigDialog *ui;
         ScanConfig *m_config;
+
         bool osint = false;
         bool raw = false;
+
         void saveConfig_osint();
         void saveConfig_raw();
 };

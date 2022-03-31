@@ -71,22 +71,22 @@ class Project : public QWidget{
     private:
         Ui::Project *ui;
 
-        QItemSelectionModel *m_selectionModel;
-        JsonSyntaxHighlighter *m_jsonHighlighter;
-
         ProjectModel *model;
         QSortFilterProxyModel *proxyModel;
+
+        QItemSelectionModel *m_selectionModel = nullptr;
+        JsonSyntaxHighlighter *m_jsonHighlighter = nullptr;
 
         QString m_projectFile;
         QString *item_comment = nullptr;
 
-        QMenuBar *menubar_tree;
-        QMenuBar *menubar_project;
+        QMenuBar *menubar_tree = nullptr;
+        QMenuBar *menubar_project = nullptr;
 
-        QMenu *menu_send;
-        QMenu *menu_copy;
-        QMenu *menu_save;
-        QMenu *menu_extract;
+        QMenu *menu_send = nullptr;
+        QMenu *menu_copy = nullptr;
+        QMenu *menu_save = nullptr;
+        QMenu *menu_extract = nullptr;
 
         /* main actions */
         QAction a_copy;

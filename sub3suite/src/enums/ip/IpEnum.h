@@ -9,7 +9,7 @@
 #define IPENUM_H
 
 #include "../AbstractEnum.h"
-#include "src/modules/passive/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintHeaders.h"
 
 #include <QAction>
 
@@ -43,10 +43,9 @@ class IpEnum : public AbstractEnum{
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditFilter_textChanged(const QString &arg1);
         void on_buttonAction_clicked();
-
         void on_comboBoxOutput_currentIndexChanged(int index);
 
-private:
+    private:
         Ui::IpEnum *ui;
 
         QStandardItemModel *m_model;

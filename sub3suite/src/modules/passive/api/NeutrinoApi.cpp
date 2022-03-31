@@ -31,6 +31,9 @@ NeutrinoApi::~NeutrinoApi(){
 }
 
 void NeutrinoApi::start(){
+    this->checkAPIKey(m_key);
+    this->checkAPIKey(m_userId);
+
     QNetworkRequest request;
     QUrl url;
 

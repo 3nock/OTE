@@ -38,6 +38,8 @@ ZoomEye::~ZoomEye(){
 }
 
 void ZoomEye::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("API-KEY", m_key.toUtf8());

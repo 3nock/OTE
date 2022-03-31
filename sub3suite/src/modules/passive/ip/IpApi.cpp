@@ -29,6 +29,8 @@ IpApi::~IpApi(){
 }
 
 void IpApi::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

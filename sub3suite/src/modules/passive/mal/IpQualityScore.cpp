@@ -26,6 +26,8 @@ IpQualityScore::~IpQualityScore(){
 }
 
 void IpQualityScore::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Key", m_key.toUtf8());
     request.setRawHeader("Accept", "application/json");

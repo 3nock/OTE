@@ -44,6 +44,8 @@ Spyse::~Spyse(){
 }
 
 void Spyse::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("accept", "application/json");
     request.setRawHeader("Content-Type", "application/json");

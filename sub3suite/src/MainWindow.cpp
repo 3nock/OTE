@@ -12,7 +12,6 @@
 #include <QPushButton>
 #include <QDesktopServices>
 
-#include "src/dialogs/StartupDialog.h"
 #include "src/dialogs/AboutDialog.h"
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/LogViewerDialog.h"
@@ -45,7 +44,7 @@ void MainWindow::initUI(){
     ui->setupUi(this);
 
     /* build info */
-    QAction* buildInfo = new QAction(tr("(%2)").arg("BETA"), this);
+    QAction* buildInfo = new QAction(tr("(%1)").arg("BETA"), this);
     buildInfo->setEnabled(false);
     ui->menubar->addAction(buildInfo);
 
@@ -123,11 +122,9 @@ void MainWindow::initActions(){
     ui->actionAboutQt->setIcon(QIcon(":/img/res/icons/qt-logo.png"));
     ui->actionApiKeys->setIcon(QIcon(":/img/res/icons/key.png"));
     ui->actionTwitter->setIcon(QIcon(":/img/res/icons/twitter.png"));
-    /*ui->actionLanguage->setIcon(QIcon(":/img/res/icons/"));*/
     ui->actionlogViewer->setIcon(QIcon(":/img/res/icons/log.png"));
     ui->actionSourceCode->setIcon(QIcon(":/img/res/icons/source.png"));
     ui->actionOpenProject->setIcon(QIcon(":/img/res/icons/open.png"));
-    /*ui->actionPreferences->setIcon(QIcon(":/img/res/icons/preferences.png"));*/
     ui->actionDocumentation->setIcon(QIcon(":/img/res/icons/doc.png"));
     ui->actionRecentProjects->setIcon(QIcon(":/img/res/icons/recent.png"));
     ui->actionCheckUpdates->setIcon(QIcon(":/img/res/icons/updates.png"));

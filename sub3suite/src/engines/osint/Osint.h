@@ -14,7 +14,7 @@
 #include <QAction>
 
 
-enum INPUT{
+enum INPUT {
     HOSTNAME = 0,
     IP = 1,
     EMAIL = 2,
@@ -25,9 +25,8 @@ enum INPUT{
     QUERY_TERM =7
 };
 
-namespace osint{
-
-enum OUTPUT{
+namespace osint {
+enum OUTPUT {
     SUBDOMAIN = 0,
     SUBDOMAINIP = 1,
     IP = 2,
@@ -37,7 +36,6 @@ enum OUTPUT{
     CERT = 6,
     CIDR = 7
 };
-
 }
 
 namespace Ui {
@@ -90,6 +88,7 @@ class Osint : public AbstractEngine{
         Ui::Osint *ui;
         ScanConfig *m_scanConfig;
         ScanArgs *m_scanArgs;
+
         /* target listmodels */
         QStringListModel *m_targetListModel_host;
         QStringListModel *m_targetListModel_ip;

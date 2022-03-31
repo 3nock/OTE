@@ -19,8 +19,6 @@ CirclPublic::CirclPublic(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CirclPublic::replyFinishedCidr);
     if(args.output_ASN)
         connect(manager, &s3sNetworkAccessManager::finished, this, &CirclPublic::replyFinishedAsn);
-
-
 }
 CirclPublic::~CirclPublic(){
     delete manager;

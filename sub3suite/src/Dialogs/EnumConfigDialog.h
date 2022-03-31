@@ -31,6 +31,7 @@ class EnumConfigDialog : public QDialog{
     private:
         Ui::EnumConfigDialog *ui;
         ScanConfig *m_config;
+
         bool asn = false;
         bool cidr = false;
         bool ip = false;

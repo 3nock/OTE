@@ -39,7 +39,7 @@ class AbstractEngine : public QWidget{
         ScanStatus *status;
         ProjectModel *project;
         QSortFilterProxyModel *proxyModel;
-        QItemSelectionModel *selectionModel;
+        QItemSelectionModel *selectionModel = nullptr;
 
     signals:
         /* signals to scanner threads */

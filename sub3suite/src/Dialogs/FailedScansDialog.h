@@ -9,7 +9,6 @@
 #define FAILEDSCANSDIALOG_H
 
 #include <QDialog>
-#include <QMap>
 #include <QQueue>
 #include <QStandardItemModel>
 
@@ -31,12 +30,10 @@ class FailedScansDialog : public QDialog{
     private slots:
         void on_buttonReScan_clicked();
         void on_buttonCancel_clicked();
-
+        void on_buttonCopy_clicked();
         void on_tableView_customContextMenuRequested(const QPoint &pos);
 
-        void on_buttonCopy_clicked();
-
-private:
+    private:
         Ui::FailedScansDialog *ui;
         QStandardItemModel *m_model;
 };

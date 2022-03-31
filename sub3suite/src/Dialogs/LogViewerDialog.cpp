@@ -37,6 +37,7 @@ LogViewerDialog::LogViewerDialog(QWidget *parent): QDialog(parent),
     m_logsSyntaxHighlighter = new LogsSyntaxHighlighter(ui->plainTextEdit->document());
 }
 LogViewerDialog::~LogViewerDialog(){
+    delete m_logsSyntaxHighlighter;
     delete ui;
 }
 

@@ -394,7 +394,7 @@
            <number>50</number>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>250</number>
+           <number>150</number>
           </attribute>
           <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
            <bool>true</bool>

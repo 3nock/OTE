@@ -27,6 +27,8 @@ Certspotter::~Certspotter(){
 }
 
 void Certspotter::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());
     QUrl url;

@@ -26,17 +26,13 @@ class ApiKeysDialog : public QDialog{
         void on_buttonSave_clicked();
         void on_buttonCancel_clicked();
 
-        /* the button to visit site for acquiring api keys... */
+        /* visit site for acquiring api keys */
         void on_buttonGetCensys_clicked();
         void on_buttonGetVirusTotal_clicked();
         void on_buttonGetGithub_clicked();
         void on_buttonGetShodan_clicked();
-        void on_buttonGetCloudflare_clicked();
-        void on_buttonGetBing_clicked();
-        void on_buttonGetGoogle_clicked();
         void on_buttonGetHunter_clicked();
         void on_buttonGetCertspotter_clicked();
-        void on_buttonGetIntelX_clicked();
         void on_buttonGetSecurityTrails_clicked();
         void on_buttonGetSpyse_clicked();
         void on_buttonGetRiskIq_clicked();
@@ -88,12 +84,10 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetIpQualityScore_clicked();
         void on_buttonGetLeakLookup_clicked();
         void on_buttonGetWappalyzer_clicked();
-
         void on_buttonGetPassiveTotal_clicked();
-
         void on_buttonGetIpfy_clicked();
 
-private:
+    private:
         Ui::ApiKeysDialog *ui;
         void m_loadApiKeys();
 };

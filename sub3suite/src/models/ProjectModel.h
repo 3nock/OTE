@@ -29,10 +29,7 @@
 
 #include "ExplorerModel.h"
 
-/* TODO:
- *      compress & decompress data before saving and loading project,
- *      use a fast compression library eg https://github.com/lz4/lz4
- */
+
 struct ProjectStruct{
     QString name;
     QString path;
@@ -47,7 +44,6 @@ struct ProjectStruct{
 
 class ProjectModel
 {
-
 public:
     ProjectModel();
     ~ProjectModel();

@@ -1,9 +1,7 @@
 #ifndef PROJECTCONFIGDIALOG_H
 #define PROJECTCONFIGDIALOG_H
 
-#include <QMap>
 #include <QDialog>
-
 #include "src/models/ProjectModel.h"
 
 namespace Ui {

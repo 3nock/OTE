@@ -1,35 +1,31 @@
-#ifndef BING_H
-#define BING_H
+#ifndef BINGSEARCH_H
+#define BINGSEARCH_H
 
 #include "../AbstractOsintModule.h"
 
 namespace ModuleInfo {
-struct Bing{
-    QString name = OSINT_MODULE_BING;
+struct BingSearch{
+    QString name = OSINT_MODULE_BINGSEARCH;
     QString url = "https://bing.com/";
     QString url_apiDoc = "";
     QString summary = "";
     QMap<QString, QStringList> flags = {};
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                           {OUT_SUBDOMAIN, OUT_URL, OUT_EMAIL}}};
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_QUERYTERM,
+                                           {OUT_SUBDOMAIN, OUT_URL}}};
 };
 }
 
-class Bing: public AbstractOsintModule{
+class BingSearch: public AbstractOsintModule{
 
     public:
-        Bing(ScanArgs args);
-        ~Bing() override;
+        BingSearch(ScanArgs args);
+        ~BingSearch() override;
 
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedUrl(QNetworkReply *reply) override;
-
-    private:
-        bool m_firstRequest = false;
-        int m_lastPage = 1;
-        void sendRequests();
 };
 #endif // BING_H

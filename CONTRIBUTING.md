@@ -4,7 +4,7 @@ Welcome to Sub3 Suite! This document is relevant for you if you want to contribu
 
 ## Overview
 
-This is a list of things you can do to help us out (in no particular order). Each item will be expanded upon later in the document.
+This is a list of things you can do to help out (in no particular order). Each item will be expanded upon later in the document.
 
 - [Compile sub3suite](COMPILING.md) and add new features and/or solving current [issues](https://github.com/3nock/sub3suite).
 - Design an even more intuitive UI, Logos and Icons.
@@ -14,7 +14,7 @@ This is a list of things you can do to help us out (in no particular order). Eac
 - [Contact us](CONTACTS.md) and talk about sub3suite.
 - Send a [donation](https://3nock.github.io/sub3suite/donations.html) to support the project.
 - [Translate](https://3nock.github.io/sub3suite/translations.html) sub3suite (contact us if your language isn't listed).
-- Help us improve the [documentation](https://github.com/sub3suite/docs/issues).
+- Help us improve the [documentation](https://github.com/3nock/s3s_doc).
 
 ### Compile sub3suite
 

@@ -37,6 +37,8 @@ SpyOnWeb::~SpyOnWeb(){
 }
 
 void SpyOnWeb::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

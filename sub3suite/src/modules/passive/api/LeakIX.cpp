@@ -22,13 +22,14 @@ LeakIX::LeakIX(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_LEAKIX).toString();
-    
 }
 LeakIX::~LeakIX(){
     delete manager;
 }
 
 void LeakIX::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("api-key", m_key.toUtf8());

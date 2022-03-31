@@ -22,6 +22,8 @@ Seon::~Seon(){
 }
 
 void Seon::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("X-API-KEY", m_key.toUtf8());
     QUrl url;

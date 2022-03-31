@@ -30,6 +30,8 @@ EmailCrawlr::~EmailCrawlr(){
 }
 
 void EmailCrawlr::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("x-api-key", m_key.toUtf8());
     QUrl url;

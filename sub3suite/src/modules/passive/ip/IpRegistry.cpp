@@ -24,6 +24,8 @@ IpRegistry::~IpRegistry(){
 }
 
 void IpRegistry::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

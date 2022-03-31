@@ -30,6 +30,9 @@ FraudGuard::~FraudGuard(){
 }
 
 void FraudGuard::start(){
+    this->checkAPIKey(m_user);
+    this->checkAPIKey(m_pass);
+
     QNetworkRequest request;
     /* Basic Authentication */
     QString credentialsString = QString("%1:%2").arg(m_user).arg(m_pass);

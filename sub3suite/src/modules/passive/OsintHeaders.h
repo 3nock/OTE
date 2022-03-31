@@ -124,12 +124,13 @@
 ///
 /// scrape
 ///
-#include "src/modules/passive/scrape/Bing.h"
-#include "src/modules/passive/scrape/Yahoo.h"
+#include "src/modules/passive/scrape/BingSearch.h"
+#include "src/modules/passive/scrape/YahooSearch.h"
 #include "src/modules/passive/scrape/Exalead.h"
 #include "src/modules/passive/scrape/DuckDuckGo.h"
 #include "src/modules/passive/scrape/DogPile.h"
 #include "src/modules/passive/scrape/Baidu.h"
 #include "src/modules/passive/scrape/Ask.h"
+#include "src/modules/passive/scrape/GoogleSearch.h"
 
 #endif // OSINTMODULESHEADERS_H

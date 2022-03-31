@@ -28,16 +28,11 @@ ApiKeysDialog::~ApiKeysDialog(){
 }
 
 void ApiKeysDialog::on_buttonSave_clicked(){
-    APIKEY.setValue("bing", ui->lineEditBing->text());
     APIKEY.setValue("censys_id", ui->lineEditCensysId->text());
     APIKEY.setValue("censys_secret", ui->lineEditCensysSecret->text());
     APIKEY.setValue(OSINT_MODULE_CERTSPOTTER, ui->lineEditCertspotter->text());
-    APIKEY.setValue("cloudflare", ui->lineEditCloudflare->text());
     APIKEY.setValue(OSINT_MODULE_GITHUB, ui->lineEditGithub->text());
-    APIKEY.setValue("google", ui->lineEditGoogle->text());
     APIKEY.setValue(OSINT_MODULE_HUNTER, ui->lineEditHunter->text());
-    APIKEY.setValue("intelx", ui->lineEditIntelX->text());
-    APIKEY.setValue("pentesttools", ui->lineEditPentestTools->text());
     APIKEY.setValue(OSINT_MODULE_PROJECTDISCOVERY, ui->lineEditProjectDiscovery->text());
     APIKEY.setValue("riskiq_key", ui->lineEditRiskIqKey->text());
     APIKEY.setValue("riskiq_secret", ui->lineEditRiskIqSecret->text());
@@ -109,11 +104,6 @@ void ApiKeysDialog::m_loadApiKeys(){
     QString key;
 
     /* loading the keys.... */
-    key = APIKEY.value("bing").toString();
-    if(!key.isEmpty()){
-        ui->lineEditBing->setText(key);
-        ui->buttonGetBing->hide();
-    }
     key = APIKEY.value("censys_id").toString();
     if(!key.isEmpty()){
         ui->lineEditCensysId->setText(key);
@@ -129,35 +119,15 @@ void ApiKeysDialog::m_loadApiKeys(){
         ui->lineEditCertspotter->setText(key);
         ui->buttonGetCertspotter->hide();
     }
-    key = APIKEY.value("cloudflare").toString();
-    if(!key.isEmpty()){
-        ui->lineEditCloudflare->setText(key);
-        ui->buttonGetCloudflare->hide();
-    }
     key = APIKEY.value(OSINT_MODULE_GITHUB).toString();
     if(!key.isEmpty()){
         ui->lineEditGithub->setText(key);
         ui->buttonGetGithub->hide();
     }
-    key = APIKEY.value("google").toString();
-    if(!key.isEmpty()){
-        ui->lineEditGoogle->setText(key);
-        ui->buttonGetGoogle->hide();
-    }
     key = APIKEY.value(OSINT_MODULE_HUNTER).toString();
     if(!key.isEmpty()){
         ui->lineEditHunter->setText(key);
         ui->buttonGetHunter->hide();
-    }
-    key = APIKEY.value("intelx").toString();
-    if(!key.isEmpty()){
-        ui->lineEditIntelX->setText(key);
-        ui->buttonGetIntelX->hide();
-    }
-    key = APIKEY.value("pentesttools").toString();
-    if(!key.isEmpty()){
-        ui->lineEditPentestTools->setText(key);
-        ui->buttonGetPentestTools->hide();
     }
     key = APIKEY.value(OSINT_MODULE_PROJECTDISCOVERY).toString();
     if(!key.isEmpty()){
@@ -475,28 +445,12 @@ void ApiKeysDialog::on_buttonGetShodan_clicked(){
     QDesktopServices::openUrl(QUrl("https://developer.shodan.io/api/requirements", QUrl::TolerantMode));
 }
 
-void ApiKeysDialog::on_buttonGetCloudflare_clicked(){
-    QDesktopServices::openUrl(QUrl("https://dash.cloudflare.com/profile/api-tokens", QUrl::TolerantMode));
-}
-
-void ApiKeysDialog::on_buttonGetBing_clicked(){
-    QDesktopServices::openUrl(QUrl("https://www.microsoft.com/en-us/bing/apis/bing-web-search-api", QUrl::TolerantMode));
-}
-
-void ApiKeysDialog::on_buttonGetGoogle_clicked(){
-    QDesktopServices::openUrl(QUrl("https://developers.google.com/maps/documentation/places/web-service/get-api-key", QUrl::TolerantMode));
-}
-
 void ApiKeysDialog::on_buttonGetHunter_clicked(){
     QDesktopServices::openUrl(QUrl("https://hunter.io/api", QUrl::TolerantMode));
 }
 
 void ApiKeysDialog::on_buttonGetCertspotter_clicked(){
     QDesktopServices::openUrl(QUrl("https://sslmate.com/certspotter/api/", QUrl::TolerantMode));
-}
-
-void ApiKeysDialog::on_buttonGetIntelX_clicked(){
-    QDesktopServices::openUrl(QUrl("https://intelx.io/signup", QUrl::TolerantMode));
 }
 
 void ApiKeysDialog::on_buttonGetSecurityTrails_clicked(){

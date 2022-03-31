@@ -24,6 +24,8 @@ IpStack::~IpStack(){
 }
 
 void IpStack::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

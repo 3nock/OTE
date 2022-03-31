@@ -33,6 +33,8 @@ ThreatBook::~ThreatBook(){
 }
 
 void ThreatBook::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     QUrl url;

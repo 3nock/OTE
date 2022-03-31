@@ -133,7 +133,6 @@ void ActiveConfigDialog::on_buttonOk_clicked(){
     if(url)
         this->m_saveURL();
 
-    /* close the dialog */
     accept();
 }
 

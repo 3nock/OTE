@@ -40,6 +40,8 @@ BinaryEdge::~BinaryEdge(){
 }
 
 void BinaryEdge::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("X-KEY", m_key.toUtf8());
     request.setRawHeader("Content-Type", "application/json");

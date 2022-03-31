@@ -1,7 +1,6 @@
 #include "Exalead.h"
 #include <QStack>
 
-
 /*
  * not very accurate...
  */
@@ -12,8 +11,6 @@ Exalead::Exalead(ScanArgs args): AbstractOsintModule(args)
 
     if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedSubdomain);
-    if(args.output_Email)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedEmail);
     if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Exalead::replyFinishedUrl);
 }
@@ -26,14 +23,16 @@ void Exalead::start(){
     QUrl url;
 
     if(args.input_Domain){
-        if(args.output_Hostname){
+        if(args.output_Hostname || args.output_URL){
             url.setUrl("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
             request.setUrl(url);
             manager->get(request);
             return;
         }
+    }
 
-        if(args.output_URL){
+    if(args.input_Search){
+        if(args.output_Hostname || args.output_URL){
             url.setUrl("https://www.exalead.com/search/web/results/?q="+target+"&collapsing=off");
             request.setUrl(url);
             manager->get(request);
@@ -65,7 +64,8 @@ void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
             if(QString::fromUtf8(classAttribute->value) == "ellipsis")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                emit resultSubdomain(QString::fromUtf8(child->v.text.text));
+                QString url(child->v.text.text);
+                emit resultSubdomain(url.split("/")[0]);
                 log.resultsCount++;
             }
         }
@@ -76,19 +76,6 @@ void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-
-    this->end(reply);
-}
-
-void Exalead::replyFinishedEmail(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    /*
-     * not yet implemented...
-     */
 
     this->end(reply);
 }
@@ -116,7 +103,7 @@ void Exalead::replyFinishedUrl(QNetworkReply *reply){
             if(QString::fromUtf8(classAttribute->value) == "ellipsis")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                emit resultURL(QString::fromUtf8(child->v.text.text));
+                emit resultURL(child->v.text.text);
                 log.resultsCount++;
             }
         }

@@ -56,6 +56,8 @@ C99::~C99(){
 }
 
 void C99::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

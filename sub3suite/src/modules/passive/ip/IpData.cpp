@@ -26,6 +26,8 @@ IpData::~IpData(){
 }
 
 void IpData::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

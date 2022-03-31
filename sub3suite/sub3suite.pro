@@ -125,7 +125,6 @@ SOURCES += \
     src/items/NSItem.cpp \
     src/models/ExplorerModel.cpp \
     src/modules/active/URLScanner.cpp \
-    src/modules/passive/ParserMethods.cpp \
     src/modules/passive/api/ASRank.cpp \
     src/modules/passive/api/CirclPublic.cpp \
     src/modules/passive/api/HackerTarget.cpp \
@@ -134,6 +133,9 @@ SOURCES += \
     src/modules/passive/api/PassiveTotal.cpp \
     src/modules/passive/api/Robtex.cpp \
     src/modules/passive/ip/Ipfy.cpp \
+    src/modules/passive/scrape/BingSearch.cpp \
+    src/modules/passive/scrape/GoogleSearch.cpp \
+    src/modules/passive/scrape/YahooSearch.cpp \
     src/project/Project_contextmenu.cpp \
     src/models/ProjectModel.cpp \
     src/models/ProjectModel_serialization.cpp \
@@ -238,11 +240,9 @@ SOURCES += \
     src/modules/passive/cert/CensysFree.cpp \
     src/modules/passive/scrape/Ask.cpp \
     src/modules/passive/scrape/Baidu.cpp \
-    src/modules/passive/scrape/Bing.cpp \
     src/modules/passive/scrape/DogPile.cpp \
     src/modules/passive/scrape/DuckDuckGo.cpp \
     src/modules/passive/scrape/Exalead.cpp \
-    src/modules/passive/scrape/Yahoo.cpp \
     src/modules/passive/site/Dnsdumpster.cpp \
     src/modules/passive/site/Netcraft.cpp \
     src/modules/passive/site/PagesInventory.cpp \
@@ -289,7 +289,7 @@ HEADERS += \
     src/items/NSItem.h \
     src/models/ExplorerModel.h \
     src/modules/active/URLScanner.h \
-    src/modules/passive/ParserMethods.h \
+    src/modules/passive/OsintHeaders.h \
     src/modules/passive/api/ASRank.h \
     src/modules/passive/api/CirclPublic.h \
     src/modules/passive/api/HackerTarget.h \
@@ -320,7 +320,6 @@ HEADERS += \
     src/modules/passive/cert/Certspotter.h \
     src/modules/passive/cert/CertspotterFree.h \
     src/modules/passive/email/EmailCrawlr.h \
-    src/modules/passive/OsintModulesHeaders.h \
     src/modules/passive/email/Debounce.h \
     src/modules/passive/api/FullHunt.h \
     src/modules/passive/email/EmailFormat.h \
@@ -358,6 +357,9 @@ HEADERS += \
     src/modules/passive/mal/LeakLookup.h \
     src/modules/active/DNSScanner.h \
     src/modules/active/SSLScanner.h \
+    src/modules/passive/scrape/BingSearch.h \
+    src/modules/passive/scrape/GoogleSearch.h \
+    src/modules/passive/scrape/YahooSearch.h \
     src/project/Project.h \
     src/enums/AbstractEnum.h \
     src/enums/asn/ASNEnum.h \
@@ -404,11 +406,9 @@ HEADERS += \
     src/modules/passive/cert/CensysFree.h \
     src/modules/passive/scrape/Ask.h \
     src/modules/passive/scrape/Baidu.h \
-    src/modules/passive/scrape/Bing.h \
     src/modules/passive/scrape/DogPile.h \
     src/modules/passive/scrape/DuckDuckGo.h \
     src/modules/passive/scrape/Exalead.h \
-    src/modules/passive/scrape/Yahoo.h \
     src/modules/passive/site/Dnsdumpster.h \
     src/modules/passive/site/Netcraft.h \
     src/modules/passive/site/PagesInventory.h \

@@ -31,6 +31,8 @@ Snov::~Snov(){
 }
 
 void Snov::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

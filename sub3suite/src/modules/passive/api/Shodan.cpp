@@ -42,6 +42,8 @@ Shodan::~Shodan(){
 }
 
 void Shodan::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
 
     QUrl url;

@@ -29,6 +29,8 @@ Hunter::~Hunter(){
 }
 
 void Hunter::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

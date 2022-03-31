@@ -31,6 +31,8 @@ Ipfy::~Ipfy(){
 }
 
 void Ipfy::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

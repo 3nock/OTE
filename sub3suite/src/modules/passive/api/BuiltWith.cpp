@@ -36,6 +36,8 @@ BuiltWith::~BuiltWith(){
 }
 
 void BuiltWith::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

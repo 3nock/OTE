@@ -27,9 +27,6 @@ PassiveConfigDialog::PassiveConfigDialog(QWidget *parent, ScanConfig *config) : 
     /* setting placeholder texts.. */
     ui->lineEditTimeout->setPlaceholderText("e.g. 1000");
     ui->lineEditMaxPages->setPlaceholderText("e.g. 100");
-
-    /* validators... */
-    ui->lineEditMaxPages->setValidator(new QIntValidator(1, 1000, this));
 }
 PassiveConfigDialog::~PassiveConfigDialog(){
     delete ui;

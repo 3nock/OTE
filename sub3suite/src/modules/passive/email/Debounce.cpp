@@ -23,6 +23,8 @@ Debounce::~Debounce(){
 }
 
 void Debounce::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

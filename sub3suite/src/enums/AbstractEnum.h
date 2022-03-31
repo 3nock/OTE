@@ -32,8 +32,8 @@ class AbstractEnum : public QWidget{
     protected:
         ScanStatus *status;
         ProjectModel *project;
-        QItemSelectionModel *selectionModel;
         QSortFilterProxyModel *proxyModel;
+        QItemSelectionModel *selectionModel = nullptr;
 
     signals:
         /* signals to scanning threads */

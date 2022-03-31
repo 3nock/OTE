@@ -15,7 +15,7 @@
 
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
-#include "src/modules/passive/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintHeaders.h"
 #include "src/utils/JsonSyntaxHighlighter.h"
 
 
@@ -149,14 +149,11 @@ class Raw : public AbstractEngine{
         void on_moduleLeakLookup_clicked();
         void on_moduleWappalyzer_clicked();
         void on_modulePassiveTotal_clicked();
-
         void on_moduleIpfy_clicked();
-
         void on_moduleCirclPublic_clicked();
-
         void on_moduleASRank_clicked();
 
-private:
+    private:
         Ui::Raw *ui;
         QStandardItemModel *m_model;
         QStringListModel *m_targetListModel;

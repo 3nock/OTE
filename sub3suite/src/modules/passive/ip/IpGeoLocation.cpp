@@ -23,6 +23,8 @@ IpGeoLocation::~IpGeoLocation(){
 }
 
 void IpGeoLocation::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

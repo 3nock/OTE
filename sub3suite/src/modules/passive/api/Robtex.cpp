@@ -30,13 +30,14 @@ Robtex::Robtex(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_ROBTEX).toString();
-    
 }
 Robtex::~Robtex(){
     delete manager;
 }
 
 void Robtex::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     QUrl url;

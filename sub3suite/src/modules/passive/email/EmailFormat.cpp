@@ -22,6 +22,8 @@ EmailFormat::~EmailFormat(){
 }
 
 void EmailFormat::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("Authorization", m_key.toUtf8());

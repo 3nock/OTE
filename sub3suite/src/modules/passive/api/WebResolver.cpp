@@ -38,6 +38,8 @@ WebResolver::~WebResolver(){
 }
 
 void WebResolver::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

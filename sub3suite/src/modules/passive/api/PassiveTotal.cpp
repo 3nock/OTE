@@ -47,6 +47,9 @@ PassiveTotal::~PassiveTotal(){
 }
 
 void PassiveTotal::start(){
+    this->checkAPIKey(m_key);
+    this->checkAPIKey(m_username);
+
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
     QString concatenated = m_key+":"+m_username;

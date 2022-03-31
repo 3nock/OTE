@@ -1,7 +1,7 @@
 #include "EmailEnum.h"
 #include "ui_EmailEnum.h"
 
-#include "src/modules/passive/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintHeaders.h"
 #include "src/dialogs/FailedScansDialog.h"
 
 

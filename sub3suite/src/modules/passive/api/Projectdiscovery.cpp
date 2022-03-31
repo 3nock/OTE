@@ -26,6 +26,8 @@ Projectdiscovery::~Projectdiscovery(){
 }
 
 void Projectdiscovery::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Authorization", m_key.toUtf8());
     QUrl url;

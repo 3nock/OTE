@@ -24,6 +24,7 @@
 /// logging device informations...
 ///
 void log_device_info(){
+    /* display info */
     qDebug() << "physical dpi value X: " << qApp->desktop()->physicalDpiX();
     qDebug() << "physical dpi value Y: " << qApp->desktop()->physicalDpiY();
     qDebug() << "Logical dpi value X: " << qApp->desktop()->logicalDpiX();
@@ -74,10 +75,6 @@ void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
         break;
     }
 
-    /*
-     * since the messagehandler isn't thread safe
-     * introducing mutex lock
-     */
     QMutex mutex;
     mutex.lock();
 

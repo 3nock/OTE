@@ -12,7 +12,9 @@ struct Ask{
     QString summary = "";
     QMap<QString, QStringList> flags = {};
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                           {OUT_SUBDOMAIN, OUT_URL, OUT_EMAIL}}};
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_QUERYTERM,
+                                           {OUT_SUBDOMAIN, OUT_URL}}};
 };
 }
 
@@ -25,13 +27,10 @@ class Ask: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedUrl(QNetworkReply *reply) override;
 
     private:
-        bool m_firstRequest = false;
-        int m_lastPage = 1;
-        void sendRequests();
+        int m_page= 0;
 };
 
 #endif // ASK_H

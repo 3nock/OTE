@@ -20,6 +20,8 @@ HybridAnalysis::~HybridAnalysis(){
 }
 
 void HybridAnalysis::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("api-key", m_key.toUtf8());
     request.setRawHeader("accept", "application/json");

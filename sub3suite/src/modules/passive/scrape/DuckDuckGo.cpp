@@ -12,8 +12,6 @@ DuckDuckGo::DuckDuckGo(ScanArgs args): AbstractOsintModule(args)
 
     if(args.output_Hostname)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedSubdomain);
-    if(args.output_Email)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedEmail);
     if(args.output_URL)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DuckDuckGo::replyFinishedUrl);
 }
@@ -26,14 +24,7 @@ void DuckDuckGo::start(){
     QUrl url;
 
     if(args.input_Domain){
-        if(args.output_Hostname){
-            url.setUrl("https://html.duckduckgo.com/html/?q=site:"+target);
-            request.setUrl(url);
-            manager->get(request);
-            return;
-        }
-
-        if(args.output_URL){
+        if(args.output_Hostname || args.output_URL){
             url.setUrl("https://html.duckduckgo.com/html/?q=site:"+target);
             request.setUrl(url);
             manager->get(request);
@@ -77,19 +68,6 @@ void DuckDuckGo::replyFinishedSubdomain(QNetworkReply *reply){
     }
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-
-    this->end(reply);
-}
-
-void DuckDuckGo::replyFinishedEmail(QNetworkReply *reply){
-    if(reply->error()){
-        this->onError(reply);
-        return;
-    }
-
-    /*
-     * not yet implemented...
-     */
 
     this->end(reply);
 }

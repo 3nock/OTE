@@ -32,6 +32,7 @@ void url::Scanner::lookupFinished(QNetworkReply *reply){
         emit scanLog(log);
     }
         break;
+
     case QNetworkReply::NoError:
     {
         s3s_struct::URL url;
@@ -42,6 +43,7 @@ void url::Scanner::lookupFinished(QNetworkReply *reply){
         emit scanResult(url);
     }
         break;
+
     default:
     {
         scan::Log log;

@@ -18,13 +18,14 @@ JsonWhois::JsonWhois(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_JSONWHOIS).toString();
-    
 }
 JsonWhois::~JsonWhois(){
     delete manager;
 }
 
 void JsonWhois::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("Authorization", "Token token="+m_key.toUtf8());

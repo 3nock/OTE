@@ -8,7 +8,7 @@
 #include "Osint.h"
 #include "ui_Osint.h"
 
-#include "src/modules/passive/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintHeaders.h"
 
 
 void Osint::initModules(){
@@ -417,13 +417,13 @@ void Osint::initModules(){
     else
         ui->moduleExalead->hide();
 
-    ModuleInfo::Yahoo yahoo;
+    ModuleInfo::YahooSearch yahoo;
     if(yahoo.input_output.contains(INPUT_TYPE) && yahoo.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
         ui->moduleYahoo->show();
     else
         ui->moduleYahoo->hide();
 
-    ModuleInfo::Bing bing;
+    ModuleInfo::BingSearch bing;
     if(bing.input_output.contains(INPUT_TYPE) && bing.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
         ui->moduleBing->show();
     else
@@ -458,6 +458,12 @@ void Osint::initModules(){
         ui->moduleASRank->show();
     else
         ui->moduleASRank->hide();
+
+    ModuleInfo::GoogleSearch googlesearch;
+    if(googlesearch.input_output.contains(INPUT_TYPE) && googlesearch.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
+        ui->moduleGoogleSearch->show();
+    else
+        ui->moduleGoogleSearch->hide();
 
     /* uncheck all modules */
     this->uncheckAllModules();
@@ -538,4 +544,5 @@ void Osint::uncheckAllModules(){
     ui->moduleDnsbufferoverrun->setChecked(false);
     ui->moduleCirclPublic->setChecked(false);
     ui->moduleASRank->setChecked(false);
+    ui->moduleGoogleSearch->setChecked(false);
 }

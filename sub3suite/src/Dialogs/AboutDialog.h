@@ -34,6 +34,7 @@ class AboutDialog : public QDialog{
         QStandardItemModel *m_authorsModel;
         QStandardItemModel *m_modulesModel;
         QStandardItemModel *m_foldersModel;
+        QStandardItemModel *m_sponsorsModel;
 };
 
 #endif // ABOUTDIALOG_H

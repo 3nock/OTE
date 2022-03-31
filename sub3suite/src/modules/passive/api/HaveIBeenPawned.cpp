@@ -19,13 +19,14 @@ HaveIBeenPawned::HaveIBeenPawned(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_HAVEIBEENPAWNED).toString();
-    
 }
 HaveIBeenPawned::~HaveIBeenPawned(){
     delete manager;
 }
 
 void HaveIBeenPawned::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("hibp-api-key", m_key.toUtf8());
     QUrl url;

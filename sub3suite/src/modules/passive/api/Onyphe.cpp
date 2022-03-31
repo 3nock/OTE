@@ -57,6 +57,8 @@ Onyphe::~Onyphe(){
 }
 
 void Onyphe::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("Authorization", "apikey "+m_key.toUtf8());

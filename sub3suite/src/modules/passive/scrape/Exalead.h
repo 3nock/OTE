@@ -11,7 +11,9 @@ struct Exalead{
     QString summary = "";
     QMap<QString, QStringList> flags = {};
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                           {OUT_SUBDOMAIN, OUT_URL, OUT_EMAIL}}};
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_QUERYTERM,
+                                           {OUT_SUBDOMAIN, OUT_URL}}};
 };
 }
 
@@ -24,7 +26,6 @@ class Exalead: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedUrl(QNetworkReply *reply) override;
 };
 #endif // EXALEAD_H

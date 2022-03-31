@@ -71,7 +71,7 @@
        </item>
        <item>
         <property name="text">
-         <string> Ip</string>
+         <string> IP</string>
         </property>
        </item>
        <item>
@@ -81,22 +81,22 @@
        </item>
        <item>
         <property name="text">
-         <string> Url</string>
+         <string> URL</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Asn</string>
+         <string> ASN</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> SSL Cert</string>
+         <string> SSL</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Cidr</string>
+         <string> CIDR</string>
         </property>
        </item>
        <item>
@@ -155,37 +155,37 @@
        </item>
        <item>
         <property name="text">
-         <string> Subdomain &amp; Ip</string>
+         <string> Subdomain &amp; IP</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Ip</string>
+         <string> IP</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Emails</string>
+         <string> Email</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Urls</string>
+         <string> URL</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Asn</string>
+         <string> ASN</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> SSL Certs</string>
+         <string> SSL</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string> Cidr</string>
+         <string> CIDR</string>
         </property>
        </item>
       </widget>
@@ -601,7 +601,7 @@
            <number>50</number>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>250</number>
+           <number>300</number>
           </attribute>
           <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
            <bool>true</bool>
@@ -734,9 +734,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-763</y>
               <width>177</width>
-              <height>1136</height>
+              <height>1159</height>
              </rect>
             </property>
             <attribute name="label">
@@ -997,7 +997,7 @@
                 <item>
                  <widget class="QCheckBox" name="moduleBing">
                   <property name="text">
-                   <string>Bing</string>
+                   <string>Bing Search</string>
                   </property>
                  </widget>
                 </item>
@@ -1023,9 +1023,16 @@
                  </widget>
                 </item>
                 <item>
+                 <widget class="QCheckBox" name="moduleGoogleSearch">
+                  <property name="text">
+                   <string>Google Search</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QCheckBox" name="moduleYahoo">
                   <property name="text">
-                   <string>Yahoo</string>
+                   <string>Yahoo Search</string>
                   </property>
                  </widget>
                 </item>

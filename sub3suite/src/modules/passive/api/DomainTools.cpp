@@ -58,6 +58,8 @@ DomainTools::~DomainTools(){
 }
 
 void DomainTools::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

@@ -19,13 +19,14 @@ Host::Host(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_HOST).toString();
-    
 }
 Host::~Host(){
     delete manager;
 }
 
 void Host::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

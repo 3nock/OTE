@@ -1,29 +1,29 @@
-#include "DogPile.h"
+#include "BingSearch.h"
 #include <QStack>
 
-DogPile::DogPile(ScanArgs args): AbstractOsintModule(args)
+BingSearch::BingSearch(ScanArgs args): AbstractOsintModule(args)
 {
     manager = new s3sNetworkAccessManager(this, args.config->timeout, args.config->setTimeout);
-    log.moduleName = OSINT_MODULE_DOGPILE;
+    log.moduleName = OSINT_MODULE_BINGSEARCH;
 
     if(args.output_Hostname)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &DogPile::replyFinishedSubdomain);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &BingSearch::replyFinishedSubdomain);
     if(args.output_URL)
-        connect(manager, &s3sNetworkAccessManager::finished, this, &DogPile::replyFinishedUrl);
+        connect(manager, &s3sNetworkAccessManager::finished, this, &BingSearch::replyFinishedUrl);
 }
-DogPile::~DogPile(){
+BingSearch::~BingSearch(){
     delete manager;
 }
 
-void DogPile::start(){
+void BingSearch::start(){
     QNetworkRequest request;
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36");
     QUrl url;
 
     if(args.input_Domain){
-        if(args.output_Hostname || args.output_URL){
-            url.setUrl("https://www.dogpile.com/serp?q="+target);
+        if(args.output_Hostname){
+            url.setUrl("https://www.bing.com/search?q=site:"+target+"&first=1&FORM=PORE&count=50");
             request.setUrl(url);
             manager->get(request);
             return;
@@ -31,8 +31,8 @@ void DogPile::start(){
     }
 
     if(args.input_Search){
-        if(args.output_Hostname || args.output_URL){
-            url.setUrl("https://www.dogpile.com/serp?q=*"+target+"*");
+        if(args.output_URL || args.output_Hostname){
+            url.setUrl("https://www.bing.com/search?q=*"+target+"*&first=1&FORM=PORE&count=50");
             request.setUrl(url);
             manager->get(request);
             return;
@@ -40,7 +40,7 @@ void DogPile::start(){
     }
 }
 
-void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
+void BingSearch::replyFinishedSubdomain(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -51,23 +51,19 @@ void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
     nodes.push(getBody(output->root));
 
     GumboNode *node;
-    while(!nodes.isEmpty())
+    while(!nodes.isEmpty()) // backtracking loop
     {
         node = nodes.pop();
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length > 4)
+        if(node->v.element.tag == GUMBO_TAG_CITE)
         {
-            GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            if(QString::fromUtf8(classAttribute->value) == "web-bing__title")
-            {
-                GumboAttribute *hrefAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[1]);
-                QString url(hrefAttribute->value);
-                url = url.remove("http://").remove("https://");
-                emit resultSubdomain(url.split("/")[0]);
-                log.resultsCount++;
-            }
+            GumboNode *urlNode = static_cast<GumboNode*>(node->v.element.children.data[0]);
+            QString url(urlNode->v.text.text);
+            url = url.remove("https://").remove("http://").split("/")[0];
+            emit resultSubdomain(url);
+            log.resultsCount++;
         }
 
         GumboVector *children = &node->v.element.children;
@@ -80,7 +76,7 @@ void DogPile::replyFinishedSubdomain(QNetworkReply *reply){
     this->end(reply);
 }
 
-void DogPile::replyFinishedUrl(QNetworkReply *reply){
+void BingSearch::replyFinishedUrl(QNetworkReply *reply){
     if(reply->error()){
         this->onError(reply);
         return;
@@ -91,21 +87,17 @@ void DogPile::replyFinishedUrl(QNetworkReply *reply){
     nodes.push(getBody(output->root));
 
     GumboNode *node;
-    while(!nodes.isEmpty())
+    while(!nodes.isEmpty()) // backtracking loop
     {
         node = nodes.pop();
         if(node->type != GUMBO_NODE_ELEMENT)
             continue;
 
-        if(node->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length > 4)
+        if(node->v.element.tag == GUMBO_TAG_CITE)
         {
-            GumboAttribute *classAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[0]);
-            if(QString::fromUtf8(classAttribute->value) == "web-bing__title")
-            {
-                GumboAttribute *hrefAttribute = static_cast<GumboAttribute*>(node->v.element.attributes.data[1]);
-                emit resultSubdomain(hrefAttribute->value);
-                log.resultsCount++;
-            }
+            GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+            emit resultURL(child->v.text.text);
+            log.resultsCount++;
         }
 
         GumboVector *children = &node->v.element.children;

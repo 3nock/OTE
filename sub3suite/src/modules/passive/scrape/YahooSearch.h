@@ -4,33 +4,29 @@
 #include "../AbstractOsintModule.h"
 
 namespace ModuleInfo {
-struct Yahoo{
-    QString name = OSINT_MODULE_YAHOO;
+struct YahooSearch{
+    QString name = OSINT_MODULE_YAHOOSEARCH;
     QString url = "https://yahoo.com/";
     QString url_apiDoc = "";
     QString summary = "";
     QMap<QString, QStringList> flags = {};
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                           {OUT_SUBDOMAIN, OUT_URL, OUT_EMAIL}}};
+                                           {OUT_SUBDOMAIN, OUT_URL}},
+                                          {IN_QUERYTERM,
+                                           {OUT_SUBDOMAIN, OUT_URL}}};
 };
 }
 
 
-class Yahoo: public AbstractOsintModule{
+class YahooSearch: public AbstractOsintModule{
 
     public:
-        Yahoo(ScanArgs args);
-        ~Yahoo() override;
+        YahooSearch(ScanArgs args);
+        ~YahooSearch() override;
 
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedEmail(QNetworkReply *reply) override;
         void replyFinishedUrl(QNetworkReply *reply) override;
-
-    private:
-        bool m_firstRequest = false;
-        int m_lastPage = 1;
-        void sendRequests();
 };
 #endif // YAHOO_H

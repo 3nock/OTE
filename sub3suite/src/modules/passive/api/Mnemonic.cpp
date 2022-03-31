@@ -26,13 +26,14 @@ Mnemonic::Mnemonic(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_MNEMONIC).toString();
-    
 }
 Mnemonic::~Mnemonic(){
     delete manager;
 }
 
 void Mnemonic::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Argus-API-Key", m_key.toUtf8());
     QUrl url;

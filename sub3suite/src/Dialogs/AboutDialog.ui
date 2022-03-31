@@ -305,7 +305,7 @@
      </widget>
      <widget class="QWidget" name="tabDonations">
       <attribute name="title">
-       <string>Donations</string>
+       <string>Sponsors</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>

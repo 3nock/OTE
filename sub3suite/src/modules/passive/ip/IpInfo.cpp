@@ -32,6 +32,8 @@ IpInfo::~IpInfo(){
 }
 
 void IpInfo::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
     QUrl url;

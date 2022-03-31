@@ -9,7 +9,6 @@
 #define ACTIVECONFIGDIALOG_H
 
 #include <QDialog>
-#include <QSettings>
 #include <QStringListModel>
 #include "src/modules/active/BruteScanner.h"
 #include "src/modules/active/ActiveScanner.h"
@@ -55,6 +54,7 @@ class ActiveConfigDialog : public QDialog{
         QStringListModel *m_customNameserverListModel;
 
         void m_initWidgets();
+
         void m_loadConfigBrute();
         void m_loadConfigActive();
         void m_loadConfigDns();
@@ -66,7 +66,6 @@ class ActiveConfigDialog : public QDialog{
         void m_saveDns();
         void m_saveSSL();
         void m_saveURL();
-
 };
 
 #endif // ACTIVECONFIGDIALOG_H

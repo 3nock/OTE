@@ -20,6 +20,8 @@ EmailRep::~EmailRep(){
 }
 
 void EmailRep::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Key", m_key.toUtf8());
     // request.setRawHeader("User-Agent", userAget);

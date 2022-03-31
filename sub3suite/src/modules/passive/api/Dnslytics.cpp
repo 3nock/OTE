@@ -46,13 +46,14 @@ Dnslytics::Dnslytics(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_DNSLYTICS).toString();
-    
 }
 Dnslytics::~Dnslytics(){
     delete manager;
 }
 
 void Dnslytics::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

@@ -10,7 +10,7 @@
 
 #include "../AbstractEnum.h"
 #include "src/items/CIDRItem.h"
-#include "src/modules/passive/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintHeaders.h"
 
 
 namespace Ui {

@@ -21,7 +21,8 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     ui(new Ui::AboutDialog),
     m_authorsModel(new QStandardItemModel),
     m_modulesModel(new QStandardItemModel),
-    m_foldersModel(new QStandardItemModel)
+    m_foldersModel(new QStandardItemModel),
+    m_sponsorsModel(new QStandardItemModel)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/img/res/icons/about.png"));
@@ -73,15 +74,15 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     ui->tableViewModules->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     ///
-    /// for donations...
+    /// for sponsors...
     ///
 
     foreach(const QString &donor, DONORS.allKeys())
-        m_authorsModel->appendRow({new QStandardItem(donor),
+        m_sponsorsModel->appendRow({new QStandardItem(donor),
                                    new QStandardItem(DONORS.value(donor).toString())});
 
-    m_foldersModel->setHorizontalHeaderLabels({tr(" Name"), tr(" Contact")});
-    ui->tableViewDonations->setModel(m_foldersModel);
+    m_sponsorsModel->setHorizontalHeaderLabels({tr(" Name"), tr(" Contact")});
+    ui->tableViewDonations->setModel(m_sponsorsModel);
     ui->tableViewDonations->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     ///
@@ -107,6 +108,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     }
 }
 AboutDialog::~AboutDialog(){
+    delete m_sponsorsModel;
     delete m_foldersModel;
     delete m_modulesModel;
     delete m_authorsModel;
@@ -117,14 +119,14 @@ AboutDialog::~AboutDialog(){
 void AboutDialog::on_tableViewModules_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
 
-    /* check if user right clicked on items else dont show the context menu... */
+    /* check if user right clicked on items else dont show the context menu */
     if(!ui->tableViewModules->selectionModel()->isSelected(ui->tableViewModules->currentIndex()))
         return;
 
     if(ui->tableViewModules->currentIndex().column() == 0)
         return;
 
-    /* creating the context menu... */
+    /* creating the context menu */
     QMenu menu(this);
 
     menu.addAction("Copy", this, [=](){
@@ -135,18 +137,18 @@ void AboutDialog::on_tableViewModules_customContextMenuRequested(const QPoint &p
         QDesktopServices::openUrl(QUrl(ui->tableViewModules->currentIndex().data().toString(), QUrl::TolerantMode));
     });
 
-    /* showing the context menu... */
+    /* showing the context menu */
     menu.exec(QCursor::pos());
 }
 
 void AboutDialog::on_tableViewContributors_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
 
-    /* check if user right clicked on items else dont show the context menu... */
+    /* check if user right clicked on items else dont show the context menu */
     if(!ui->tableViewContributors->selectionModel()->isSelected(ui->tableViewContributors->currentIndex()))
         return;
 
-    /* creating the context menu... */
+    /* creating the context menu */
     QMenu menu(this);
 
     menu.addAction("Copy", this, [=](){
@@ -154,18 +156,18 @@ void AboutDialog::on_tableViewContributors_customContextMenuRequested(const QPoi
         clipboard->setText(ui->tableViewContributors->currentIndex().data().toString());
     });
 
-    /* showing the context menu... */
+    /* showing the context menu */
     menu.exec(QCursor::pos());
 }
 
 void AboutDialog::on_tableViewDonations_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
 
-    /* check if user right clicked on items else dont show the context menu... */
+    /* check if user right clicked on items else dont show the context menu */
     if(!ui->tableViewDonations->selectionModel()->isSelected(ui->tableViewDonations->currentIndex()))
         return;
 
-    /* creating the context menu... */
+    /* creating the context menu */
     QMenu menu(this);
 
     menu.addAction("Copy", this, [=](){
@@ -173,7 +175,7 @@ void AboutDialog::on_tableViewDonations_customContextMenuRequested(const QPoint 
         clipboard->setText(ui->tableViewDonations->currentIndex().data().toString());
     });
 
-    /* showing the context menu... */
+    /* showing the context menu */
     menu.exec(QCursor::pos());
 }
 

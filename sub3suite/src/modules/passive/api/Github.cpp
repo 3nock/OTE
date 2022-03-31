@@ -21,13 +21,14 @@ Github::Github(ScanArgs args): AbstractOsintModule(args)
 
     /* getting the api-key */
     m_key = APIKEY.value(OSINT_MODULE_GITHUB).toString();
-    
 }
 Github::~Github(){
     delete manager;
 }
 
 void Github::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Authorization", "token "+m_key.toUtf8());
     request.setRawHeader("Content-Type", "application/json");

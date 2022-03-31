@@ -27,6 +27,8 @@ Whatcms::~Whatcms(){
 }
 
 void Whatcms::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

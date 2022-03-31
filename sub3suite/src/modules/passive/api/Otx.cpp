@@ -59,6 +59,8 @@ Otx::~Otx(){
 }
 
 void Otx::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("X-OTX-API-KEY", m_key.toUtf8());
     QUrl url;

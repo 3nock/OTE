@@ -72,7 +72,7 @@ class MainWindow : public QMainWindow{
         void onChangeTabToEmailEnum();
 
     private slots:
-        /* get documentation */
+        /* documentation clickable label */
         void onGetDocumentation();
 
         /* file menu */

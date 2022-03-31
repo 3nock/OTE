@@ -30,6 +30,8 @@ Whoxy::~Whoxy(){
 }
 
 void Whoxy::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

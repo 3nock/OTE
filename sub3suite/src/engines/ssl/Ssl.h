@@ -32,12 +32,12 @@ class Ssl : public AbstractEngine{
     public slots:
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
-        /* scan results */
+
         void onScanResultSHA1(QString sha1);
         void onScanResultSHA256(QString sha256);
         void onScanResultSubdomain(QStringList subdomain);
         void onScanResultRaw(QString target, QSslCertificate certificate);
-        /* ... */
+
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */

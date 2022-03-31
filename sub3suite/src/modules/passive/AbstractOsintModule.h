@@ -7,7 +7,6 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-#include "ParserMethods.h"
 #include "src/utils/s3s.h"
 #include "src/utils/utils.h"
 #include "OsintDefinitions.h"
@@ -21,7 +20,6 @@
 #include "src/items/MXItem.h"
 #include "src/items/NSItem.h"
 #include "src/items/RawItem.h"
-
 
 /* input option */
 #define IN_DOMAIN 0
@@ -102,206 +100,233 @@ struct ScanArgs {
     QString raw_query_name;
 };
 
+///
+/// getting html body node...
+///
+
+GumboNode* getBody(GumboNode *node) {
+    for(unsigned int i = 0; i < node->v.element.children.length; i++)
+    {
+        GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[i]);
+        if(child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_BODY)
+            return child;
+    }
+    return nullptr;
+}
+
+///
+/// \brief The AbstractOsintModule class
+///
 
 class AbstractOsintModule : public QObject {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
-        explicit AbstractOsintModule(ScanArgs args)
-            : QObject(nullptr),
-              args(args)
+public:
+    explicit AbstractOsintModule(ScanArgs args)
+        : QObject(nullptr),
+          args(args)
+    {
+    }
+    ~AbstractOsintModule()
+    {
+    }
+
+    void startScan(QThread* cThread)
+    {
+        connect(cThread, &QThread::started, this, &AbstractOsintModule::start);
+        connect(this, &AbstractOsintModule::nextTarget, this, &AbstractOsintModule::start);
+        connect(this, &AbstractOsintModule::quitThread, cThread, &QThread::quit);
+
+        /* first target */
+        target = args.targets.dequeue();
+        log.target = target;
+    }
+
+signals:
+    void quitThread();
+    void nextTarget();
+
+    void scanProgress(int progress);
+    void scanLog(ScanLog);
+
+    void resultSubdomain(QString subdomain);
+    void resultSubdomainIp(QString subdomain, QString ip);
+    void resultIP(QString ip);
+    void resultA(QString ip);
+    void resultAAAA(QString ip);
+    void resultNS(QString NS);
+    void resultMX(QString MX);
+    void resultCNAME(QString CNAME);
+    void resultTXT(QString TXT);
+    void resultSSL(QString certId);
+    void resultEmail(QString email);
+    void resultCIDR(QString cidr);
+    void resultURL(QString url);
+    void resultASN(QString asn, QString name);
+
+    void resultRawSSL(QByteArray);
+    void resultRawTXT(s3s_struct::RAW);
+    void resultRawJSON(s3s_struct::RAW);
+
+    void resultEnumASN(s3s_struct::ASN);
+    void resultEnumCIDR(s3s_struct::CIDR);
+    void resultEnumMX(s3s_struct::MX);
+    void resultEnumNS(s3s_struct::NS);
+    void resultEnumIP(s3s_struct::IP);
+    void resultEnumEmail(s3s_struct::Email);
+
+public slots:
+    void onStop(){
+        log.statusCode = 0;
+        log.message = "Stopped...";
+        emit scanLog(log);
+        emit quitThread();
+    }
+
+protected slots:
+    virtual void start() = 0;
+    virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
+    virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains
+    virtual void replyFinishedCidr(QNetworkReply *){} // returns ip/cidr
+    virtual void replyFinishedSSL(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
+    virtual void replyFinishedIp(QNetworkReply*){} // returns ip-addresses
+    virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
+    virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails
+    virtual void replyFinishedUrl(QNetworkReply*){} // returns URLs
+
+    virtual void replyFinishedEnumASN(QNetworkReply*){} // returns multiple info on asn
+    virtual void replyFinishedEnumASNPeers(QNetworkReply*){} // returns multiple info on asn peers
+    virtual void replyFinishedEnumASNPrefixes(QNetworkReply*){} // returns multiple info on asn prefixes
+
+    virtual void replyFinishedEnumIP(QNetworkReply*){} // returns multiple info on ip
+    virtual void replyFinishedEnumCIDR(QNetworkReply*){} // returns multiple info on cidr
+    virtual void replyFinishedEnumSSL(QNetworkReply*){} // returns multiple info on ssl cert
+
+    virtual void replyFinishedEnumMX(QNetworkReply*){} // returns MX records info
+    virtual void replyFinishedEnumNS(QNetworkReply*){} // returns NS records info
+
+    virtual void replyFinishedEnumEmail(QNetworkReply*){} // returns Email info
+
+    virtual void replyFinishedRawNdjson(QNetworkReply *reply) // returns raw json results from ndjson
+    {
+        if(reply->error())
+            this->onError(reply);
+        else
         {
+            /* converting ndjson to json array document */
+            QByteArray byteDocument = reply->readAll();
+            byteDocument = byteDocument.simplified();
+            byteDocument.replace("\n", ",");
+            byteDocument.push_back("]");
+            byteDocument.push_front("[");
+
+            s3s_struct::RAW raw;
+            raw.module = log.moduleName;
+            raw.query_option = args.raw_query_name;
+            raw.target = target;
+            raw.results = byteDocument;
+            emit resultRawJSON(raw);
         }
-        ~AbstractOsintModule()
-        {
+
+        this->end(reply);
+    }
+
+    virtual void replyFinishedRawJson(QNetworkReply *reply) // returns raw json results
+    {
+        if(reply->error())
+            this->onError(reply);
+        else{
+            s3s_struct::RAW raw;
+            raw.module = log.moduleName;
+            raw.query_option = args.raw_query_name;
+            raw.target = target;
+            raw.results = reply->readAll();
+            emit resultRawJSON(raw);
         }
 
-        void startScan(QThread* cThread)
-        {
-            connect(cThread, &QThread::started, this, &AbstractOsintModule::start);
-            connect(this, &AbstractOsintModule::nextTarget, this, &AbstractOsintModule::start);
-            connect(this, &AbstractOsintModule::quitThread, cThread, &QThread::quit);
+        this->end(reply);
+    }
 
-            /* first target */
-            target = args.targets.dequeue();
-            log.target = target;
+    virtual void replyFinishedRawTxt(QNetworkReply *reply) // returns raw txt results
+    {
+        if(reply->error())
+            this->onError(reply);
+        else{
+            s3s_struct::RAW raw;
+            raw.module = log.moduleName;
+            raw.query_option = args.raw_query_name;
+            raw.target = target;
+            raw.results = reply->readAll();
+            emit resultRawTXT(raw);
         }
 
-    signals:
-        void quitThread();
-        void nextTarget();
+        this->end(reply);
+    }
 
-        void scanProgress(int progress);
-        void scanLog(ScanLog);
+protected:
+    ScanLog log;
+    ScanArgs args;
+    QString target;
+    s3sNetworkAccessManager *manager = nullptr;
 
-        void resultSubdomain(QString subdomain);
-        void resultSubdomainIp(QString subdomain, QString ip);
-        void resultIP(QString ip);
-        void resultA(QString ip);
-        void resultAAAA(QString ip);
-        void resultNS(QString NS);
-        void resultMX(QString MX);
-        void resultCNAME(QString CNAME);
-        void resultTXT(QString TXT);
-        void resultSSL(QString certId);
-        void resultEmail(QString email);
-        void resultCIDR(QString cidr);
-        void resultURL(QString url);
-        void resultASN(QString asn, QString name);
-
-        void resultRawSSL(QByteArray);
-        void resultRawTXT(s3s_struct::RAW);
-        void resultRawJSON(s3s_struct::RAW);
-
-        void resultEnumASN(s3s_struct::ASN);
-        void resultEnumCIDR(s3s_struct::CIDR);
-        void resultEnumMX(s3s_struct::MX);
-        void resultEnumNS(s3s_struct::NS);
-        void resultEnumIP(s3s_struct::IP);
-        void resultEnumEmail(s3s_struct::Email);
-
-    public slots:
-        void onStop(){
+    void checkAPIKey(QString key){
+        if(key.isNull() || key.isEmpty()){
+            log.message = "API key Required!";
             log.statusCode = 0;
-            log.message = "Stopped...";
+            log.error = true;
             emit scanLog(log);
             emit quitThread();
         }
+    }
 
-    protected slots:
-        virtual void start() = 0;
-        virtual void replyFinishedSubdomainIp(QNetworkReply*){} // returns subdomain and ip
-        virtual void replyFinishedSubdomain(QNetworkReply*){} // returns subdomains
-        virtual void replyFinishedCidr(QNetworkReply *){} // returns ip/cidr
-        virtual void replyFinishedSSL(QNetworkReply*){} // returns SSL Cert Sha1 fingerprint
-        virtual void replyFinishedIp(QNetworkReply*){} // returns ip-addresses
-        virtual void replyFinishedAsn(QNetworkReply*){} // returns ASN
-        virtual void replyFinishedEmail(QNetworkReply*){} // returns Emails
-        virtual void replyFinishedUrl(QNetworkReply*){} // returns URLs
-
-        virtual void replyFinishedEnumASN(QNetworkReply*){} // returns multiple info on asn
-        virtual void replyFinishedEnumASNPeers(QNetworkReply*){} // returns multiple info on asn peers
-        virtual void replyFinishedEnumASNPrefixes(QNetworkReply*){} // returns multiple info on asn prefixes
-
-        virtual void replyFinishedEnumIP(QNetworkReply*){} // returns multiple info on ip
-        virtual void replyFinishedEnumCIDR(QNetworkReply*){} // returns multiple info on cidr
-        virtual void replyFinishedEnumSSL(QNetworkReply*){} // returns multiple info on ssl cert
-
-        virtual void replyFinishedEnumMX(QNetworkReply*){} // returns MX records info
-        virtual void replyFinishedEnumNS(QNetworkReply*){} // returns NS records info
-
-        virtual void replyFinishedEnumEmail(QNetworkReply*){} // returns Email info
-
-        virtual void replyFinishedRawNdjson(QNetworkReply *reply) // returns raw json results from ndjson
-        {
-            if(reply->error())
-                this->onError(reply);
-            else
-            {
-                /* converting ndjson to json array document */
-                QByteArray byteDocument = reply->readAll();
-                byteDocument = byteDocument.simplified();
-                byteDocument.replace("\n", ",");
-                byteDocument.push_back("]");
-                byteDocument.push_front("[");
-
-                s3s_struct::RAW raw;
-                raw.module = log.moduleName;
-                raw.query_option = args.raw_query_name;
-                raw.target = target;
-                raw.results = byteDocument;
-                emit resultRawJSON(raw);
-            }
-
-            this->end(reply);
-        }
-
-        virtual void replyFinishedRawJson(QNetworkReply *reply) // returns raw json results
-        {
-            if(reply->error())
-                this->onError(reply);
-            else{
-                s3s_struct::RAW raw;
-                raw.module = log.moduleName;
-                raw.query_option = args.raw_query_name;
-                raw.target = target;
-                raw.results = reply->readAll();
-                emit resultRawJSON(raw);
-            }
-
-            this->end(reply);
-        }
-
-        virtual void replyFinishedRawTxt(QNetworkReply *reply) // returns raw txt results
-        {
-            if(reply->error())
-                this->onError(reply);
-            else{
-                s3s_struct::RAW raw;
-                raw.module = log.moduleName;
-                raw.query_option = args.raw_query_name;
-                raw.target = target;
-                raw.results = reply->readAll();
-                emit resultRawTXT(raw);
-            }
-
-            this->end(reply);
-        }
-
-    protected:
-        ScanLog log;
-        ScanArgs args;
-        QString target;
-        s3sNetworkAccessManager *manager = nullptr;
-
-        void onError(QNetworkReply *reply) {
-            switch(reply->error()){
-            case QNetworkReply::OperationCanceledError:
-                log.target = target;
-                log.message = "Operation Cancelled due to Timeout";
-                log.statusCode = 0;
-                log.error = true;
-                emit scanLog(log);
-                break;
-            default:
-                log.target = target;
-                log.message = reply->errorString();
-                log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-                log.error = true;
-                emit scanLog(log);
-                break;
-            }
-
-            reply->close();
-            reply->deleteLater();
-            this->next();
-        }
-
-        void end(QNetworkReply *reply) {
+    void onError(QNetworkReply *reply) {
+        switch(reply->error()){
+        case QNetworkReply::OperationCanceledError:
             log.target = target;
-            log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            log.message = "Operation Cancelled due to Timeout";
+            log.statusCode = 0;
+            log.error = true;
             emit scanLog(log);
-
-            reply->close();
-            reply->deleteLater();
-            this->next();
+            break;
+        default:
+            log.target = target;
+            log.message = reply->errorString();
+            log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            log.error = true;
+            emit scanLog(log);
+            break;
         }
 
-        void next() {
-            args.config->progress++;
-            emit scanProgress(args.config->progress);
+        reply->close();
+        reply->deleteLater();
+        this->next();
+    }
 
-            /*
-             * enumerate next target if there are still targets available
-             * if no targets available quit the scanThread.
-             */
-            if(args.targets.length()){
-                target = args.targets.dequeue();
-                emit nextTarget();
-            }
-            else
-                emit quitThread();
+    void end(QNetworkReply *reply) {
+        log.target = target;
+        log.statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        emit scanLog(log);
+
+        reply->close();
+        reply->deleteLater();
+        this->next();
+    }
+
+    void next() {
+        args.config->progress++;
+        emit scanProgress(args.config->progress);
+
+        /*
+         * enumerate next target if there are still targets available
+         * if no targets available quit the scanThread.
+         */
+        if(args.targets.length()){
+            target = args.targets.dequeue();
+            emit nextTarget();
         }
+        else
+            emit quitThread();
+    }
 };
 
 #endif // ABSTRACTOSINTMODULE_H

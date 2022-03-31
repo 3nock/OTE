@@ -8,7 +8,7 @@
 #include "Osint.h"
 #include "ui_Osint.h"
 
-#include "src/modules/passive/OsintModulesHeaders.h"
+#include "src/modules/passive/OsintHeaders.h"
 
 
 void Osint::onScanThreadEnded(){
@@ -353,10 +353,13 @@ void Osint::startScan(){
         this->startScanThread(new Exalead(*m_scanArgs));
 
     if(ui->moduleYahoo->isChecked())
-        this->startScanThread(new Yahoo(*m_scanArgs));
+        this->startScanThread(new YahooSearch(*m_scanArgs));
 
     if(ui->moduleBing->isChecked())
-        this->startScanThread(new Bing(*m_scanArgs));
+        this->startScanThread(new BingSearch(*m_scanArgs));
+
+    if(ui->moduleGoogleSearch->isChecked())
+        this->startScanThread(new GoogleSearch(*m_scanArgs));
 
     ///
     /// ip...

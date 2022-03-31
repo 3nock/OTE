@@ -41,20 +41,20 @@ class WordListDialog : public QDialog{
         void on_comboBoxSubstituteFrom_currentIndexChanged(int index);
         void on_comboBoxSubstituteTo_currentIndexChanged(int index);
 
-private:
+    private:
         Ui::WordListDialog *ui;
         QStringListModel *m_wordlistModel;
 
         /* for choose */
         void m_initChoose();
         QStringListModel *m_listModel_choose;
-        QStringListModel *m_listModel_generate;
         QString m_defaultWordlist;
         QString m_specialWordlist;
         bool TLD = false;
         bool Subdomain = false;
 
         /* for generate */
+        QStringListModel *m_listModel_generate;
         void m_initGenerate();
         void m_generateAZ();
         void m_generateNumbers();

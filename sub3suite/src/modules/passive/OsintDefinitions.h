@@ -98,14 +98,15 @@
 #define OSINT_MODULE_LEAKLOOKUP "LeakLookup"
 #define OSINT_MODULE_VIRUSTOTAL "VirusTotal"
 
-/* Scrape */
+/* scrape */
 #define OSINT_MODULE_ASK "Ask"
 #define OSINT_MODULE_BAIDU "Baidu"
-#define OSINT_MODULE_BING "Bing"
+#define OSINT_MODULE_BINGSEARCH "BingSearch"
 #define OSINT_MODULE_DOGPILE "DogPile"
 #define OSINT_MODULE_DUCKDUCKGO "DuckDuckGo"
 #define OSINT_MODULE_EXALEAD "Exalead"
-#define OSINT_MODULE_YAHOO "Yahoo"
+#define OSINT_MODULE_YAHOOSEARCH "YahooSearch"
+#define OSINT_MODULE_GOOGLESEARCH "GoogleSearch"
 
 /* site */
 #define OSINT_MODULE_DNSDUMPSTER "DnsDumpster"

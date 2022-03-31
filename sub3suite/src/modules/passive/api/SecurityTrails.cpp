@@ -37,13 +37,14 @@ SecurityTrails::SecurityTrails(ScanArgs args): AbstractOsintModule(args)
 
     /* get api key */
     m_key = APIKEY.value(OSINT_MODULE_SECURITYTRAILS).toString();
-    
 }
 SecurityTrails::~SecurityTrails(){
     delete manager;
 }
 
 void SecurityTrails::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("APIKEY", m_key.toUtf8());
     request.setRawHeader("Accept", "application/json");

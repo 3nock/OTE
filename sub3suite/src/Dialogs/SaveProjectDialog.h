@@ -2,7 +2,6 @@
 #define SAVEPROJECTDIALOG_H
 
 #include <QDialog>
-
 #include "src/models/ProjectModel.h"
 
 

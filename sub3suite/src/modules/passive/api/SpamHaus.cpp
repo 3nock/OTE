@@ -23,6 +23,8 @@ SpamHaus::~SpamHaus(){
 }
 
 void SpamHaus::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader("Authorization", "Bearer "+m_key.toUtf8());

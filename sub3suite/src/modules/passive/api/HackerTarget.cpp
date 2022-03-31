@@ -38,13 +38,14 @@ HackerTarget::HackerTarget(ScanArgs args): AbstractOsintModule(args)
 
     /* getting api key */
     m_key = APIKEY.value(OSINT_MODULE_HACKERTARGET).toString();
-    
 }
 HackerTarget::~HackerTarget(){
     delete manager;
 }
 
 void HackerTarget::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     QUrl url;
 

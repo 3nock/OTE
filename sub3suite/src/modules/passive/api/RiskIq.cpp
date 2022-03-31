@@ -48,6 +48,9 @@ RiskIq::~RiskIq(){
 }
 
 void RiskIq::start(){
+    this->checkAPIKey(m_key);
+    this->checkAPIKey(m_secret);
+
     QNetworkRequest request;
     request.setRawHeader("Accept", "application/json");
     QString concatenated = m_key+":"+m_secret;

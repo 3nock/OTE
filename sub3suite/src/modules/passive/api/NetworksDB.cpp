@@ -44,6 +44,8 @@ NetworksDB::~NetworksDB(){
 }
 
 void NetworksDB::start(){
+    this->checkAPIKey(m_key);
+
     QNetworkRequest request;
     request.setRawHeader("X-Api-Key", m_key.toUtf8());
     QUrl url;

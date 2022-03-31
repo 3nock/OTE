@@ -31,6 +31,9 @@ Censys::~Censys(){
 }
 
 void Censys::start(){
+    this->checkAPIKey(m_key);
+    this->checkAPIKey(m_uid);
+
     QNetworkRequest request;
     /* Basic Authentication */
     QString credentialsString = QString("%1:%2").arg(m_uid).arg(m_key);

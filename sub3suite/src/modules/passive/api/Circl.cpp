@@ -34,6 +34,9 @@ Circl::~Circl(){
 }
 
 void Circl::start(){
+    this->checkAPIKey(m_id);
+    this->checkAPIKey(m_password);
+
     QNetworkRequest request;
     QUrl url;
 
