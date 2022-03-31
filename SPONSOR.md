@@ -1,20 +1,27 @@
-# Sponsor Sub3 Suite
+# Become a sponsor of [Sub3 Suite](https://github.com/3nock/sub3suite)
 
-Become a sponsor of [Sub3 Suite](https://github.com/3nock/sub3suite)
+Your donations support the development & advancement of **Sub3 Suite**. 
+Any donation amount is acceptable & will help attain the goal of making Sub3 Suite the de facto tool for cyber intelligence gathering.
 
-## Sponsor on Liberapay
+Feel free to [contact us](CONTACTS.md] for any further inquiries.
+
+## Sponsor via PayPal
+
+[![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://paypal.me/sub3suite)
+
+## Sponsor via Liberapay
 
 [![ko-fi](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/sub3suite/donate)
 
-## Sponsor on ko-fi
+## Sponsor via ko-fi
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U5AMY6J)
 
-## Sponsor on PayPal
-
-[![PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/sub3suite)
-
-## Sponsor by Bitcoin
+## Sponsor via Bitcoin
 
 <img src="docs/images/bitcoin_address.png" width=300/>
-bitcoin address: `18taNLpWFJc7mwJsitaKArvpUfpqBPHSkm`
+
+Bitcoin address: `18taNLpWFJc7mwJsitaKArvpUfpqBPHSkm`
+
+
+*Thank you!*

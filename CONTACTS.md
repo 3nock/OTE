@@ -1,9 +1,11 @@
-# CONTACTS
+# CONTACT us
 
-Ways to contact us.
+Contact Information for **Sub3 Suite**.
+
+*Feel free to contact us for any inquiries.*
 
 ## Emails
-1. `sub3suite@protonmail.com`
+1. `sub3suite@gmail.com`
 2. `3nock@protonmail.com`
 
 ## Social
@@ -12,6 +14,3 @@ Ways to contact us.
 
 ## Chat
 1. [Telegram](https://telegram.me/sub3suite)
-
-## Phone
-1. +255754000000
