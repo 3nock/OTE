@@ -24,7 +24,7 @@ struct CensysFree{
 class CensysFree: public AbstractOsintModule{
 
     public:
-        CensysFree(ScanArgs args);
+        explicit CensysFree(ScanArgs args);
         ~CensysFree() override;
 
     public slots:

@@ -37,7 +37,7 @@ struct SpyOnWeb{
 class SpyOnWeb: public AbstractOsintModule{
 
     public:
-        SpyOnWeb(ScanArgs args);
+        explicit SpyOnWeb(ScanArgs args);
         ~SpyOnWeb() override;
 
     public slots:

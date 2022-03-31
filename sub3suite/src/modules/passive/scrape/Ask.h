@@ -21,7 +21,7 @@ struct Ask{
 class Ask: public AbstractOsintModule{
 
     public:
-        Ask(ScanArgs args);
+        explicit Ask(ScanArgs args);
         ~Ask() override;
 
     public slots:

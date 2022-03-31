@@ -21,7 +21,7 @@ struct YahooSearch{
 class YahooSearch: public AbstractOsintModule{
 
     public:
-        YahooSearch(ScanArgs args);
+        explicit YahooSearch(ScanArgs args);
         ~YahooSearch() override;
 
     public slots:

@@ -67,7 +67,7 @@ void GoogleSearch::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty()) // backtrack loop
@@ -109,7 +109,7 @@ void GoogleSearch::replyFinishedUrl(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty()) // backtrack loop
@@ -124,7 +124,7 @@ void GoogleSearch::replyFinishedUrl(QNetworkReply *reply){
             if(QString::fromUtf8(classAttribute->value) == "egMi0 kCrYT")
             {
                 GumboNode *child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-                if(child->v.element.tag == GUMBO_TAG_A && node->v.element.attributes.length == 1)
+                if(child->v.element.tag == GUMBO_TAG_A && child->v.element.attributes.length == 1)
                 {
                     GumboAttribute *hrefAttribute = static_cast<GumboAttribute*>(child->v.element.attributes.data[0]);
                     QString url(hrefAttribute->value);

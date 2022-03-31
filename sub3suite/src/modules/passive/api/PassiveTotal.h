@@ -61,7 +61,7 @@ struct PassiveTotal{
 class PassiveTotal: public AbstractOsintModule{
 
     public:
-        PassiveTotal(ScanArgs args);
+        explicit PassiveTotal(ScanArgs args);
         ~PassiveTotal() override;
 
     public slots:

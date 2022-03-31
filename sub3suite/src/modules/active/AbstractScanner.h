@@ -33,7 +33,7 @@ class AbstractScanner : public QObject{
     Q_OBJECT
 
     public:
-        AbstractScanner(QObject *parent = nullptr)
+        explicit AbstractScanner(QObject *parent = nullptr)
             : QObject(parent)
         {
         }

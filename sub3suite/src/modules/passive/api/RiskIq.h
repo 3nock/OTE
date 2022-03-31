@@ -55,7 +55,7 @@ struct RiskIq{
 class RiskIq: public AbstractOsintModule{
 
     public:
-        RiskIq(ScanArgs args);
+        explicit RiskIq(ScanArgs args);
         ~RiskIq() override;
 
     public slots:

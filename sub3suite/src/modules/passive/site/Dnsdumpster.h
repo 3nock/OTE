@@ -19,7 +19,7 @@ struct Dnsdumpster{
 class Dnsdumpster: public AbstractOsintModule{
 
     public:
-        Dnsdumpster(ScanArgs args);
+        explicit Dnsdumpster(ScanArgs args);
         ~Dnsdumpster() override;
 
     public slots:

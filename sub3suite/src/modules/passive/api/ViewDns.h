@@ -54,7 +54,7 @@ struct ViewDns{
 class ViewDns: public AbstractOsintModule{
 
     public:
-        ViewDns(ScanArgs args);
+        explicit ViewDns(ScanArgs args);
         ~ViewDns() override;
 
     public slots:

@@ -73,7 +73,7 @@ struct C99{
 class C99: public AbstractOsintModule{
 
     public:
-        C99(ScanArgs args);
+        explicit C99(ScanArgs args);
         ~C99() override;
 
     public slots:

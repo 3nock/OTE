@@ -38,7 +38,7 @@ void Crtsh::replyFinishedSubdomain(QNetworkReply *reply){
         QStack<GumboNode*> m_nodes;
         /* getting the body node... */
         GumboOutput *output = gumbo_parse(reply->readAll());
-        m_nodes.push(getBody(output->root));
+        m_nodes.push(GumboMethods::getBody(output->root));
 
         /* loop to parse and obtain subdomains from the body node... */
         while(!m_nodes.isEmpty()){
@@ -125,7 +125,7 @@ void Crtsh::m_getCertId(QNetworkReply *reply){
     QStack<GumboNode*> m_nodes;
     /* getting the body node... */
     GumboOutput *output = gumbo_parse(reply->readAll());
-    m_nodes.push(getBody(output->root));
+    m_nodes.push(GumboMethods::getBody(output->root));
 
     /* loop to parse and obtain subdomains from the body node... */
     while(!m_nodes.isEmpty()){

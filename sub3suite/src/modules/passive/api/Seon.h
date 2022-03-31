@@ -29,7 +29,7 @@ struct Seon{
 class Seon: public AbstractOsintModule{
 
     public:
-        Seon(ScanArgs args);
+        explicit Seon(ScanArgs args);
         ~Seon() override;
 
     public slots:

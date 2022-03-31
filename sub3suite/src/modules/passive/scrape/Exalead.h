@@ -20,7 +20,7 @@ struct Exalead{
 class Exalead: public AbstractOsintModule{
 
     public:
-        Exalead(ScanArgs args);
+        explicit Exalead(ScanArgs args);
         ~Exalead() override;
 
     public slots:

@@ -31,7 +31,7 @@ struct IpQualityScore{
 class IpQualityScore: public AbstractOsintModule{
 
     public:
-        IpQualityScore(ScanArgs args);
+        explicit IpQualityScore(ScanArgs args);
         ~IpQualityScore() override;
 
     public slots:

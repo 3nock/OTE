@@ -41,7 +41,7 @@ void Pkey::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -83,7 +83,7 @@ void Pkey::replyFinishedSubdomainIp(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     QString hostname;
     GumboNode *node;
@@ -142,7 +142,7 @@ void Pkey::replyFinishedIp(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())

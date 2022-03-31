@@ -23,7 +23,7 @@ struct GoogleSearch{
 class GoogleSearch: public AbstractOsintModule{
 
     public:
-        GoogleSearch(ScanArgs args);
+        explicit GoogleSearch(ScanArgs args);
         ~GoogleSearch() override;
 
     public slots:

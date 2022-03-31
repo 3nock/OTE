@@ -76,7 +76,7 @@ struct Otx{
 class Otx: public AbstractOsintModule{
 
     public:
-        Otx(ScanArgs args);
+        explicit Otx(ScanArgs args);
         ~Otx() override;
 
     public slots:

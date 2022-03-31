@@ -51,7 +51,7 @@ struct BinaryEdge{
 class BinaryEdge: public AbstractOsintModule{
 
     public:
-        BinaryEdge(ScanArgs args);
+        explicit BinaryEdge(ScanArgs args);
         ~BinaryEdge() override;
 
     public slots:

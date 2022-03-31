@@ -19,7 +19,7 @@ struct SiteDossier{
 class SiteDossier: public AbstractOsintModule{
 
     public:
-        SiteDossier(ScanArgs args);
+        explicit SiteDossier(ScanArgs args);
         ~SiteDossier() override;
 
     public slots:

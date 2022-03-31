@@ -49,7 +49,7 @@ struct NetworksDB{
 class NetworksDB: public AbstractOsintModule{
 
     public:
-        NetworksDB(ScanArgs args);
+        explicit NetworksDB(ScanArgs args);
         ~NetworksDB() override;
 
     public slots:

@@ -32,7 +32,7 @@ struct RobtexFree{
 class RobtexFree: public AbstractOsintModule{
 
     public:
-        RobtexFree(ScanArgs args);
+        explicit RobtexFree(ScanArgs args);
         ~RobtexFree() override;
 
     public slots:

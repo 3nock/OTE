@@ -31,7 +31,7 @@ struct ThreatBook{
 class ThreatBook: public AbstractOsintModule{
 
     public:
-        ThreatBook(ScanArgs args);
+        explicit ThreatBook(ScanArgs args);
         ~ThreatBook() override;
 
     public slots:

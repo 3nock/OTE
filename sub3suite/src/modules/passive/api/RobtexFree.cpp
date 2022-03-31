@@ -157,7 +157,7 @@ void RobtexFree::replyFinishedIp(QNetworkReply *reply){
                 emit resultA(rrdata);
                 log.resultsCount++;
             }
-            if(rrtype == "A"){
+            if(rrtype == "AAAA"){
                 emit resultAAAA(rrdata);
                 log.resultsCount++;
             }

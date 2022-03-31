@@ -2034,8 +2034,8 @@ void Project::action_extract(bool subdomain, bool tld, bool url){
         if(tld)
             extracts.insert(item.split(".").last());
         if(url){
-            QString url = item;
-            extracts.insert(url.remove("https://").remove("http://").split("/").at(0));
+            QString _url = item;
+            extracts.insert(_url.remove("https://").remove("http://").split("/").at(0));
         }
     }
 
@@ -2061,8 +2061,8 @@ void Project::action_extract_selected(bool subdomain, bool tld, bool url){
         if(tld)
             extracts.insert(item.split(".").last());
         if(url){
-            QString url = item;
-            extracts.insert(url.remove("https://").remove("http://").split("/").at(0));
+            QString _url = item;
+            extracts.insert(_url.remove("https://").remove("http://").split("/").at(0));
         }
     }
 

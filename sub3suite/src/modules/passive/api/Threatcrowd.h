@@ -33,7 +33,7 @@ struct Threatcrowd{
 class Threatcrowd: public AbstractOsintModule{
 
     public:
-        Threatcrowd(ScanArgs args);
+        explicit Threatcrowd(ScanArgs args);
         ~Threatcrowd() override;
 
     public slots:

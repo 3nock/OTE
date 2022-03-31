@@ -34,7 +34,7 @@ struct ASRank{
 class ASRank: public AbstractOsintModule{
 
     public:
-        ASRank(ScanArgs args);
+        explicit ASRank(ScanArgs args);
         ~ASRank() override;
 
     public slots:

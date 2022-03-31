@@ -34,7 +34,7 @@ struct Circl{
 class Circl: public AbstractOsintModule{
 
     public:
-        Circl(ScanArgs args);
+        explicit Circl(ScanArgs args);
         ~Circl() override;
 
     public slots:

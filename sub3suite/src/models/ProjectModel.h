@@ -160,6 +160,7 @@ public:
 
 private:
     QByteArray getJson();
+    Q_DISABLE_COPY_MOVE(ProjectModel)
 };
 
 #endif // PROJECTMODEL_H

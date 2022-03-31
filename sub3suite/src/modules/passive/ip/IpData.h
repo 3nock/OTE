@@ -30,7 +30,7 @@ struct IpData{
 class IpData: public AbstractOsintModule{
 
     public:
-        IpData(ScanArgs args);
+        explicit IpData(ScanArgs args);
         ~IpData() override;
 
     public slots:

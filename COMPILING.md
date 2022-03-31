@@ -26,8 +26,8 @@ If you are familiar with Qt-Creator.
 ## Minor adjustment
 
 Minor adjustment to the gumbo-parser submodule. 
-1. Copy the `strings.h` file from `sub3suite/include/`
-2. Paste it to `sub3suite/include/gumbo-parser/src/`
+1. Copy the `strings.h` file from `sub3suite/sub3suite/include/`
+2. Paste it to `sub3suite/sub3suite/include/gumbo-parser/src/`
 3. Change the Include header file `#include <strings.h>` to `#include "strings.h"` for the following files;
 	- attribute.c
 	- parser.c
@@ -38,9 +38,9 @@ Minor adjustment to the gumbo-parser submodule.
 	- vector.c
 	
 Minor adjustment to the breakpad submodule.
-1. Create a folder `lss` inside `sub3suite/include/breakpad/src/third_party`.
+1. Create a folder `lss` inside `sub3suite/sub3suite/include/breakpad/src/third_party`.
 2. Copy `linux_syscall_support.h` file from `sub3suite/include`.
-3. Paste it to `sub3suite/include/breakpad/src/third_party/lss`.
+3. Paste it to `sub3suite/sub3suite/include/breakpad/src/third_party/lss`.
 	
 ## Build
 

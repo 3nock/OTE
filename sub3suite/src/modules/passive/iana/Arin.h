@@ -61,7 +61,7 @@ struct Arin{
 class Arin: public AbstractOsintModule{
 
     public:
-        Arin(ScanArgs args);
+        explicit Arin(ScanArgs args);
         ~Arin() override;
 
     public slots:

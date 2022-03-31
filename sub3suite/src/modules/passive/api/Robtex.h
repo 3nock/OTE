@@ -32,7 +32,7 @@ struct Robtex{
 class Robtex: public AbstractOsintModule{
 
     public:
-        Robtex(ScanArgs args);
+        explicit Robtex(ScanArgs args);
         ~Robtex() override;
 
     public slots:

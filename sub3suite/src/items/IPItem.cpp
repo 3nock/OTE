@@ -22,7 +22,6 @@ s3s_struct::IP ip_to_struct(s3s_item::IP *item){
     ip.info_geoLocation = item->info_geoLocation->text();
     ip.info_organization = item->info_organization->text();
     ip.info_timezone = item->info_timezone->text();
-    ip.info_currency = item->info_currency->text();
 
     /* asn info */
     ip.asnInfo_asn = item->asnInfo_asn->text();
@@ -78,7 +77,6 @@ QJsonObject ip_to_json(s3s_item::IP *item){
     ip.insert("info_geoLocation", item->info_geoLocation->text());
     ip.insert("info_organization", item->info_organization->text());
     ip.insert("info_timezone", item->info_timezone->text());
-    ip.insert("info_currency", item->info_currency->text());
 
     /* asnInfo */
     ip.insert("asnInfo_asn", item->asnInfo_asn->text());
@@ -132,7 +130,6 @@ void json_to_ip(const QJsonObject &ip, s3s_item::IP *item){
     item->info_geoLocation->setText(ip.value("info_geoLocation").toString());
     item->info_organization->setText(ip.value("info_organization").toString());
     item->info_timezone->setText(ip.value("info_timezone").toString());
-    item->info_currency->setText(ip.value("info_currency").toString());
 
     /* asnInfo */
     item->asnInfo_asn->setText(ip.value("asnInfo_asn").toString());

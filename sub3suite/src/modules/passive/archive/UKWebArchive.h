@@ -26,7 +26,7 @@ struct UKWebArchive{
 class UKWebArchive: public AbstractOsintModule{
 
     public:
-        UKWebArchive(ScanArgs args);
+        explicit UKWebArchive(ScanArgs args);
         ~UKWebArchive() override;
 
     public slots:

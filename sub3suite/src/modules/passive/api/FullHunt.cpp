@@ -59,7 +59,7 @@ void FullHunt::start(){
 
     if(args.input_Domain){
         if(args.output_Hostname){
-            QUrl url("https://jldc.me/FullHunt/subdomains/"+target);
+            url.setUrl("https://jldc.me/FullHunt/subdomains/"+target);
             request.setAttribute(QNetworkRequest::User, DOMAIN_SUBDOMAINS);
             request.setUrl(url);
             manager->get(request);

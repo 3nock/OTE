@@ -24,7 +24,7 @@ struct JsonWhois{
 class JsonWhois: public AbstractOsintModule{
 
     public:
-        JsonWhois(ScanArgs args);
+        explicit JsonWhois(ScanArgs args);
         ~JsonWhois() override;
 
     public slots:

@@ -46,7 +46,7 @@ struct Bgpview{
 class Bgpview: public AbstractOsintModule{
 
     public:
-        Bgpview(ScanArgs args);
+        explicit Bgpview(ScanArgs args);
         ~Bgpview() override;
 
     public slots:

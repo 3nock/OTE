@@ -18,7 +18,7 @@ struct DuckDuckGo{
 class DuckDuckGo: public AbstractOsintModule{
 
     public:
-        DuckDuckGo(ScanArgs args);
+        explicit DuckDuckGo(ScanArgs args);
         ~DuckDuckGo() override;
 
     public slots:

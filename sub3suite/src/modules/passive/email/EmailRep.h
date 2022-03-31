@@ -20,7 +20,7 @@ struct EmailRep{
 class EmailRep: public AbstractOsintModule{
 
     public:
-        EmailRep(ScanArgs args);
+        explicit EmailRep(ScanArgs args);
         ~EmailRep() override;
 
     public slots:

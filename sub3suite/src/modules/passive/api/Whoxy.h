@@ -33,7 +33,7 @@ struct Whoxy{
 class Whoxy: public AbstractOsintModule{
 
     public:
-        Whoxy(ScanArgs args);
+        explicit Whoxy(ScanArgs args);
         ~Whoxy() override;
 
     public slots:

@@ -20,7 +20,7 @@ struct Sublist3r{
 class Sublist3r: public AbstractOsintModule{
 
     public:
-        Sublist3r(ScanArgs args);
+        explicit Sublist3r(ScanArgs args);
         ~Sublist3r() override;
 
     public slots:

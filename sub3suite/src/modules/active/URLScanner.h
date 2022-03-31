@@ -71,7 +71,7 @@ class Scanner : public AbstractScanner{
     Q_OBJECT
 
     public:
-        Scanner(url::ScanArgs *args);
+        explicit Scanner(url::ScanArgs *args);
         ~Scanner() override;
 
     private slots:

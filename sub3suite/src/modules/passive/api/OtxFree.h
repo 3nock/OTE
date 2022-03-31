@@ -76,7 +76,7 @@ struct OtxFree{
 class OtxFree: public AbstractOsintModule{
 
     public:
-        OtxFree(ScanArgs args);
+        explicit OtxFree(ScanArgs args);
         ~OtxFree() override;
 
     public slots:

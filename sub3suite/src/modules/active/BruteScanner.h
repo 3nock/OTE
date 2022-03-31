@@ -63,7 +63,7 @@ class Scanner : public AbstractScanner{
     Q_OBJECT
 
     public:
-        Scanner(brute::ScanArgs *args);
+        explicit Scanner(brute::ScanArgs *args);
         ~Scanner() override;
 
         void lookup_wildcard();

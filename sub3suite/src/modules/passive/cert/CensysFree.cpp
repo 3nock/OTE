@@ -51,7 +51,7 @@ void CensysFree::replyFinishedSSL(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     /* loop to parse and obtain subdomains from the body node */
     while(!nodes.isEmpty()){
@@ -133,7 +133,7 @@ void CensysFree::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     /* loop to parse and obtain subdomains from the body node */
     while(!nodes.isEmpty()){

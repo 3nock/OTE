@@ -27,7 +27,7 @@ struct CommonCrawl{
 class CommonCrawl: public AbstractOsintModule{
 
     public:
-        CommonCrawl(ScanArgs args);
+        explicit CommonCrawl(ScanArgs args);
         ~CommonCrawl() override;
 
     public slots:

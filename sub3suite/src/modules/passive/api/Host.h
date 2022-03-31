@@ -27,7 +27,7 @@ struct Host{
 class Host: public AbstractOsintModule{
 
     public:
-        Host(ScanArgs args);
+        explicit Host(ScanArgs args);
         ~Host() override;
 
     public slots:

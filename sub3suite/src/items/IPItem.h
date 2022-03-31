@@ -31,7 +31,6 @@ struct IP {
     QString info_geoLocation;
     QString info_organization;
     QString info_timezone;
-    QString info_currency;
 
     /* asnInfo */
     QString asnInfo_asn;
@@ -214,7 +213,6 @@ public:
     QStandardItem *info_geoLocation;
     QStandardItem *info_organization;
     QStandardItem *info_timezone;
-    QStandardItem *info_currency;
 
     /* asnInfo */
     QStandardItem *asnInfo_asn;
@@ -263,7 +261,6 @@ public:
         info_geoLocation->setText(ip.info_geoLocation);
         info_organization->setText(ip.info_organization);
         info_timezone->setText(ip.info_timezone);
-        info_currency->setText(ip.info_currency);
 
         /* asn info */
         asnInfo_asn->setText(ip.asnInfo_asn);

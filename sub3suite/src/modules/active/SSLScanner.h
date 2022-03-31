@@ -67,7 +67,7 @@ class Scanner : public AbstractScanner{
     Q_OBJECT
 
     public:
-        Scanner(ssl::ScanArgs *args);
+        explicit Scanner(ssl::ScanArgs *args);
         ~Scanner() override;
 
     signals:

@@ -21,7 +21,7 @@ struct Urlscan{
 class Urlscan: public AbstractOsintModule{
 
     public:
-        Urlscan(ScanArgs args);
+        explicit Urlscan(ScanArgs args);
         ~Urlscan() override;
 
     public slots:

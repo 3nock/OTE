@@ -27,7 +27,7 @@ struct Maltiverse{
 class Maltiverse: public AbstractOsintModule{
 
     public:
-        Maltiverse(ScanArgs args);
+        explicit Maltiverse(ScanArgs args);
         ~Maltiverse() override;
 
     public slots:

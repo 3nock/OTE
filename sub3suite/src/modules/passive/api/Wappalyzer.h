@@ -28,7 +28,7 @@ struct Wappalyzer{
 class Wappalyzer: public AbstractOsintModule{
 
     public:
-        Wappalyzer(ScanArgs args);
+        explicit Wappalyzer(ScanArgs args);
         ~Wappalyzer() override;
 
     public slots:

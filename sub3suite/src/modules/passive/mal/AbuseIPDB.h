@@ -26,7 +26,7 @@ struct AbuseIPDB{
 class AbuseIPDB: public AbstractOsintModule{
 
     public:
-        AbuseIPDB(ScanArgs args);
+        explicit AbuseIPDB(ScanArgs args);
         ~AbuseIPDB() override;
 
     public slots:

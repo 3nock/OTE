@@ -49,7 +49,7 @@ void Exalead::replyFinishedSubdomain(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())
@@ -88,7 +88,7 @@ void Exalead::replyFinishedUrl(QNetworkReply *reply){
 
     QStack<GumboNode*> nodes;
     GumboOutput *output = gumbo_parse(reply->readAll());
-    nodes.push(getBody(output->root));
+    nodes.push(GumboMethods::getBody(output->root));
 
     GumboNode *node;
     while(!nodes.isEmpty())

@@ -35,7 +35,7 @@ struct MnemonicFree{
 class MnemonicFree: public AbstractOsintModule{
 
     public:
-        MnemonicFree(ScanArgs args);
+        explicit MnemonicFree(ScanArgs args);
         ~MnemonicFree() override;
 
     public slots:

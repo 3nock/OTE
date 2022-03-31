@@ -33,7 +33,7 @@ struct FraudGuard{
 class FraudGuard: public AbstractOsintModule{
 
     public:
-        FraudGuard(ScanArgs args);
+        explicit FraudGuard(ScanArgs args);
         ~FraudGuard() override;
 
     public slots:

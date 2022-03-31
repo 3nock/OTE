@@ -36,7 +36,7 @@ struct Ipfy{
 class Ipfy: public AbstractOsintModule{
 
     public:
-        Ipfy(ScanArgs args);
+        explicit Ipfy(ScanArgs args);
         ~Ipfy() override;
 
     public slots:

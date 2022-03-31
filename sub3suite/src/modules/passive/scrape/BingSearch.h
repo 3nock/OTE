@@ -20,7 +20,7 @@ struct BingSearch{
 class BingSearch: public AbstractOsintModule{
 
     public:
-        BingSearch(ScanArgs args);
+        explicit BingSearch(ScanArgs args);
         ~BingSearch() override;
 
     public slots:

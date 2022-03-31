@@ -35,7 +35,7 @@ struct Mnemonic{
 class Mnemonic: public AbstractOsintModule{
 
     public:
-        Mnemonic(ScanArgs args);
+        explicit Mnemonic(ScanArgs args);
         ~Mnemonic() override;
 
     public slots:

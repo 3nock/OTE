@@ -21,7 +21,7 @@ struct TruMail{
 class TruMail: public AbstractOsintModule{
 
     public:
-        TruMail(ScanArgs args);
+        explicit TruMail(ScanArgs args);
         ~TruMail() override;
 
     public slots:

@@ -25,7 +25,7 @@ struct ArchiveToday{
 class ArchiveToday: public AbstractOsintModule{
 
     public:
-        ArchiveToday(ScanArgs args);
+        explicit ArchiveToday(ScanArgs args);
         ~ArchiveToday() override;
 
     public slots:

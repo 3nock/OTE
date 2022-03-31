@@ -21,7 +21,7 @@ struct Github{
 class Github: public AbstractOsintModule{
 
     public:
-        Github(ScanArgs args);
+        explicit Github(ScanArgs args);
         ~Github() override;
 
     public slots:

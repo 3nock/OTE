@@ -29,7 +29,7 @@ struct IpInfo{
 class IpInfo: public AbstractOsintModule{
 
     public:
-        IpInfo(ScanArgs args);
+        explicit IpInfo(ScanArgs args);
         ~IpInfo() override;
 
     public slots:

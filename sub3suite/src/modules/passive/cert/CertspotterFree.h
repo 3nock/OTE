@@ -22,7 +22,7 @@ struct CertspotterFree{
 
 class CertspotterFree : public AbstractOsintModule {
     public:
-        CertspotterFree(ScanArgs args);
+        explicit CertspotterFree(ScanArgs args);
         ~CertspotterFree() override;
 
     public slots:

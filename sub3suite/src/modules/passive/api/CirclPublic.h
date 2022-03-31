@@ -23,7 +23,7 @@ struct CirclPublic{
 class CirclPublic: public AbstractOsintModule{
 
     public:
-        CirclPublic(ScanArgs args);
+        explicit CirclPublic(ScanArgs args);
         ~CirclPublic() override;
 
     public slots:

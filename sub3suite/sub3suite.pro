@@ -39,8 +39,8 @@ unix {
 }
 
 # included external libraries
-include(../include/gumbo-parser.pri)
-include(../include/breakpad.pri)
+include(include/gumbo-parser.pri)
+include(include/breakpad.pri)
 
 SOURCES += \
     src/dialogs/DocumentationDialog.cpp \

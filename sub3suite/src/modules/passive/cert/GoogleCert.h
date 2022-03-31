@@ -23,7 +23,7 @@ struct GoogleCert{
 class GoogleCert: public AbstractOsintModule{
 
     public:
-        GoogleCert(ScanArgs args);
+        explicit GoogleCert(ScanArgs args);
         ~GoogleCert() override;
 
     public slots:

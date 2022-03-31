@@ -55,7 +55,7 @@ struct HackerTarget{
 class HackerTarget: public AbstractOsintModule{
 
     public:
-        HackerTarget(ScanArgs args);
+        explicit HackerTarget(ScanArgs args);
         ~HackerTarget() override;
 
     public slots:
