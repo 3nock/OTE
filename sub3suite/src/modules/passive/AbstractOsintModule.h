@@ -184,7 +184,7 @@ public:
     }
 
 private:
-    Q_DISABLE_COPY(GumboMethods)
+    Q_DISABLE_COPY_MOVE(GumboMethods)
 
 };
 

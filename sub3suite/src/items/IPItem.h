@@ -22,7 +22,6 @@ struct IP {
     /* info */
     QString info_ip;
     QString info_type;
-    QString info_host;
     QString info_city;
     QString info_region;
     QString info_countryName;
@@ -35,30 +34,20 @@ struct IP {
     /* asnInfo */
     QString asnInfo_asn;
     QString asnInfo_name;
-    QString asnInfo_domain;
     QString asnInfo_route;
-    QString asnInfo_type;
 
     /* companyInfo */
     QString companyInfo_name;
     QString companyInfo_domain;
-    QString companyInfo_type;
 
     /* privacyInfo */
-    QString privacyInfo_vpn;
-    QString privacyInfo_proxy;
-    QString privacyInfo_tor;
-    QString privacyInfo_hosting;
-    QString privacyInfo_relay;
-    QString privacyInfo_threatLevel;
-
-    /* abuseInfo */
-    QString abuseInfo_address;
-    QString abuseInfo_country;
-    QString abuseInfo_email;
-    QString abuseInfo_name;
-    QString abuseInfo_network;
-    QString abuseInfo_phone;
+    bool privacyInfo_vpn;
+    bool privacyInfo_proxy;
+    bool privacyInfo_anonymous;
+    bool privacyInfo_tor;
+    bool privacyInfo_attacker;
+    bool privacyInfo_abuser;
+    bool privacyInfo_threat;
 
     /* ... */
     QSet<QString> domains;
@@ -77,13 +66,11 @@ public:
         asnInfo(new QStandardItem("ASN information")),
         companyInfo(new QStandardItem("Company Information")),
         privacyInfo(new QStandardItem("Privacy Information")),
-        abuseInfo(new QStandardItem("Abuse Information")),
         domains(new QStandardItem("Domains")),
 
         /* info */
         info_ip(new QStandardItem),
         info_type(new QStandardItem),
-        info_host(new QStandardItem),
         info_city(new QStandardItem),
         info_region(new QStandardItem),
         info_countryName(new QStandardItem),
@@ -96,30 +83,20 @@ public:
         /* asnInfo */
         asnInfo_asn(new QStandardItem),
         asnInfo_name(new QStandardItem),
-        asnInfo_domain(new QStandardItem),
         asnInfo_route(new QStandardItem),
-        asnInfo_type(new QStandardItem),
 
         /* companyInfo */
         companyInfo_name(new QStandardItem),
         companyInfo_domain(new QStandardItem),
-        companyInfo_type(new QStandardItem),
 
         /* privacy info */
         privacyInfo_vpn(new QStandardItem),
         privacyInfo_proxy(new QStandardItem),
+        privacyInfo_anonymous(new QStandardItem),
         privacyInfo_tor(new QStandardItem),
-        privacyInfo_hosting(new QStandardItem),
-        privacyInfo_relay(new QStandardItem),
-        privacyInfo_threatLevel(new QStandardItem),
-
-        /* abuse info */
-        abuseInfo_address(new QStandardItem),
-        abuseInfo_country(new QStandardItem),
-        abuseInfo_email(new QStandardItem),
-        abuseInfo_name(new QStandardItem),
-        abuseInfo_network(new QStandardItem),
-        abuseInfo_phone(new QStandardItem)
+        privacyInfo_attacker(new QStandardItem),
+        privacyInfo_abuser(new QStandardItem),
+        privacyInfo_threat(new QStandardItem)
     {
         this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
@@ -128,26 +105,22 @@ public:
         asnInfo->setForeground(Qt::white);
         companyInfo->setForeground(Qt::white);
         privacyInfo->setForeground(Qt::white);
-        abuseInfo->setForeground(Qt::white);
         domains->setForeground(Qt::white);
 
         info->setWhatsThis(JSON_OBJECT);
         asnInfo->setWhatsThis(JSON_OBJECT);
         companyInfo->setWhatsThis(JSON_OBJECT);
         privacyInfo->setWhatsThis(JSON_OBJECT);
-        abuseInfo->setWhatsThis(JSON_OBJECT);
         domains->setWhatsThis(JSON_ARRAY);
 
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
         asnInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
         companyInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
         privacyInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
-        abuseInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
         domains->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
         info->appendRow({new QStandardItem("Ip"), info_ip});
         info->appendRow({new QStandardItem("Type"), info_type});
-        info->appendRow({new QStandardItem("Hostname"), info_host});
         info->appendRow({new QStandardItem("City"), info_city});
         info->appendRow({new QStandardItem("Region"), info_region});
         info->appendRow({new QStandardItem("Country Code"), info_countryCode});
@@ -159,34 +132,24 @@ public:
 
         asnInfo->appendRow({new QStandardItem("ASN"), asnInfo_asn});
         asnInfo->appendRow({new QStandardItem("Name"), asnInfo_name});
-        asnInfo->appendRow({new QStandardItem("Domain"), asnInfo_domain});
         asnInfo->appendRow({new QStandardItem("Route"), asnInfo_route});
-        asnInfo->appendRow({new QStandardItem("Type"), asnInfo_type});
 
         companyInfo->appendRow({new QStandardItem("Name"), companyInfo_name});
-        companyInfo->appendRow({new QStandardItem("Type"), companyInfo_type});
         companyInfo->appendRow({new QStandardItem("Domain"), companyInfo_domain});
 
-        privacyInfo->appendRow({new QStandardItem("VPN"), privacyInfo_vpn});
-        privacyInfo->appendRow({new QStandardItem("Proxy"), privacyInfo_proxy});
-        privacyInfo->appendRow({new QStandardItem("Tor"), privacyInfo_tor});
-        privacyInfo->appendRow({new QStandardItem("Hosting"), privacyInfo_hosting});
-        privacyInfo->appendRow({new QStandardItem("Relay"), privacyInfo_relay});
-        privacyInfo->appendRow({new QStandardItem("ThreatLevel"), privacyInfo_threatLevel});
-
-        abuseInfo->appendRow({new QStandardItem("Address"), abuseInfo_address});
-        abuseInfo->appendRow({new QStandardItem("Country"), abuseInfo_country});
-        abuseInfo->appendRow({new QStandardItem("Email"), abuseInfo_email});
-        abuseInfo->appendRow({new QStandardItem("Name"), abuseInfo_name});
-        abuseInfo->appendRow({new QStandardItem("Network"), abuseInfo_network});
-        abuseInfo->appendRow({new QStandardItem("Phone"), abuseInfo_phone});
+        privacyInfo->appendRow({new QStandardItem("is VPN"), privacyInfo_vpn});
+        privacyInfo->appendRow({new QStandardItem("is Proxy"), privacyInfo_proxy});
+        privacyInfo->appendRow({new QStandardItem("is Anonymous"), privacyInfo_anonymous});
+        privacyInfo->appendRow({new QStandardItem("is Attacker"), privacyInfo_attacker});
+        privacyInfo->appendRow({new QStandardItem("is Abuser"), privacyInfo_abuser});
+        privacyInfo->appendRow({new QStandardItem("is Threat"), privacyInfo_threat});
+        privacyInfo->appendRow({new QStandardItem("is Tor"), privacyInfo_tor});
 
         /* append to the IP */
         this->appendRow(info);
         this->appendRow(asnInfo);
         this->appendRow(companyInfo);
         this->appendRow(privacyInfo);
-        this->appendRow(abuseInfo);
         this->appendRow(domains);
     }
     ~IP()
@@ -198,13 +161,11 @@ public:
     QStandardItem *asnInfo;
     QStandardItem *companyInfo;
     QStandardItem *privacyInfo;
-    QStandardItem *abuseInfo;
     QStandardItem *domains;
 
     /* info */
     QStandardItem *info_ip;
     QStandardItem *info_type;
-    QStandardItem *info_host;
     QStandardItem *info_city;
     QStandardItem *info_region;
     QStandardItem *info_countryName;
@@ -217,30 +178,20 @@ public:
     /* asnInfo */
     QStandardItem *asnInfo_asn;
     QStandardItem *asnInfo_name;
-    QStandardItem *asnInfo_domain;
     QStandardItem *asnInfo_route;
-    QStandardItem *asnInfo_type;
 
     /* companyInfo */
     QStandardItem *companyInfo_name;
     QStandardItem *companyInfo_domain;
-    QStandardItem *companyInfo_type;
 
     /* privacyInfo */
     QStandardItem *privacyInfo_vpn;
     QStandardItem *privacyInfo_proxy;
+    QStandardItem *privacyInfo_anonymous;
     QStandardItem *privacyInfo_tor;
-    QStandardItem *privacyInfo_hosting;
-    QStandardItem *privacyInfo_relay;
-    QStandardItem *privacyInfo_threatLevel;
-
-    /* abuseInfo */
-    QStandardItem *abuseInfo_address;
-    QStandardItem *abuseInfo_country;
-    QStandardItem *abuseInfo_email;
-    QStandardItem *abuseInfo_name;
-    QStandardItem *abuseInfo_network;
-    QStandardItem *abuseInfo_phone;
+    QStandardItem *privacyInfo_attacker;
+    QStandardItem *privacyInfo_abuser;
+    QStandardItem *privacyInfo_threat;
 
     /* summary */
     QString last_modified;
@@ -252,7 +203,6 @@ public:
         /* ip info */
         info_ip->setText(ip.info_ip);
         info_type->setText(ip.info_type);
-        info_host->setText(ip.info_host);
         info_city->setText(ip.info_city);
         info_region->setText(ip.info_region);
         info_countryName->setText(ip.info_countryName);
@@ -265,32 +215,100 @@ public:
         /* asn info */
         asnInfo_asn->setText(ip.asnInfo_asn);
         asnInfo_name->setText(ip.asnInfo_name);
-        asnInfo_domain->setText(ip.asnInfo_domain);
         asnInfo_route->setText(ip.asnInfo_route);
-        asnInfo_type->setText(ip.asnInfo_type);
 
         /* company info */
         companyInfo_name->setText(ip.companyInfo_name);
         companyInfo_domain->setText(ip.companyInfo_domain);
-        companyInfo_type->setText(ip.companyInfo_type);
 
         /* privacy info */
-        privacyInfo_vpn->setText(ip.privacyInfo_vpn);
-        privacyInfo_proxy->setText(ip.privacyInfo_proxy);
-        privacyInfo_tor->setText(ip.privacyInfo_tor);
-        privacyInfo_hosting->setText(ip.privacyInfo_hosting);
-        privacyInfo_relay->setText(ip.privacyInfo_relay);
-        privacyInfo_threatLevel->setText(ip.privacyInfo_threatLevel);
-
-        /* abuse info */
-        abuseInfo_address->setText(ip.abuseInfo_address);
-        abuseInfo_country->setText(ip.abuseInfo_country);
-        abuseInfo_email->setText(ip.abuseInfo_email);
-        abuseInfo_name->setText(ip.abuseInfo_name);
-        abuseInfo_network->setText(ip.abuseInfo_network);
-        abuseInfo_phone->setText(ip.abuseInfo_phone);
+        privacyInfo_vpn->setText(QVariant(ip.privacyInfo_vpn).toString());
+        privacyInfo_proxy->setText(QVariant(ip.privacyInfo_proxy).toString());
+        privacyInfo_anonymous->setText(QVariant(ip.privacyInfo_anonymous).toString());
+        privacyInfo_tor->setText(QVariant(ip.privacyInfo_tor).toString());
+        privacyInfo_attacker->setText(QVariant(ip.privacyInfo_attacker).toString());
+        privacyInfo_abuser->setText(QVariant(ip.privacyInfo_abuser).toString());
+        privacyInfo_threat->setText(QVariant(ip.privacyInfo_threat).toString());
 
         /* domains */
+        int count = domains->rowCount();
+        foreach(const QString &domain, ip.domains){
+            domains->appendRow({new QStandardItem(QString::number(count)),
+                                new QStandardItem(domain)});
+            count++;
+        }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
+    }
+
+    void addValues(const s3s_struct::IP &ip){
+        /* ip info */
+        if(info_ip->text().isEmpty())
+            info_ip->setText(ip.info_ip);
+        if(info_type->text().isEmpty())
+            info_type->setText(ip.info_type);
+        if(info_city->text().isEmpty())
+            info_city->setText(ip.info_city);
+        if(info_region->text().isEmpty())
+            info_region->setText(ip.info_region);
+        if(info_countryName->text().isEmpty())
+            info_countryName->setText(ip.info_countryName);
+        if(info_countryCode->text().isEmpty())
+            info_countryCode->setText(ip.info_countryCode);
+        if(info_zip->text().isEmpty())
+            info_zip->setText(ip.info_zip);
+        if(info_geoLocation->text().isEmpty())
+            info_geoLocation->setText(ip.info_geoLocation);
+        if(info_organization->text().isEmpty())
+            info_organization->setText(ip.info_organization);
+        if(info_timezone->text().isEmpty())
+            info_timezone->setText(ip.info_timezone);
+
+        /* asn info */
+        if(asnInfo_asn->text().isEmpty())
+            asnInfo_asn->setText(ip.asnInfo_asn);
+        if(asnInfo_name->text().isEmpty())
+            asnInfo_name->setText(ip.asnInfo_name);
+        if(asnInfo_route->text().isEmpty())
+            asnInfo_route->setText(ip.asnInfo_route);
+
+        /* company info */
+        if(companyInfo_name->text().isEmpty())
+            companyInfo_name->setText(ip.companyInfo_name);
+        if(companyInfo_domain->text().isEmpty())
+            companyInfo_domain->setText(ip.companyInfo_domain);
+
+        /* privacy info */
+        if(privacyInfo_vpn->text().isEmpty())
+            privacyInfo_vpn->setText(QVariant(ip.privacyInfo_vpn).toString());
+        if(privacyInfo_proxy->text().isEmpty())
+            privacyInfo_proxy->setText(QVariant(ip.privacyInfo_proxy).toString());
+        if(privacyInfo_anonymous->text().isEmpty())
+            privacyInfo_anonymous->setText(QVariant(ip.privacyInfo_anonymous).toString());
+        if(privacyInfo_tor->text().isEmpty())
+            privacyInfo_tor->setText(QVariant(ip.privacyInfo_tor).toString());
+        if(privacyInfo_attacker->text().isEmpty())
+            privacyInfo_attacker->setText(QVariant(ip.privacyInfo_attacker).toString());
+        if(privacyInfo_abuser->text().isEmpty())
+            privacyInfo_abuser->setText(QVariant(ip.privacyInfo_abuser).toString());
+        if(privacyInfo_threat->text().isEmpty())
+            privacyInfo_threat->setText(QVariant(ip.privacyInfo_threat).toString());
+
+        /* domains */
+        int count = domains->rowCount();
+        foreach(const QString &domain, ip.domains){
+            domains->appendRow({new QStandardItem(QString::number(count)),
+                                new QStandardItem(domain)});
+            count++;
+        }
+
+        /* last modified */
+        last_modified = QDate::currentDate().toString();
+    }
+
+    void addDomains(const s3s_struct::IP &ip){
+        this->setText(ip.ip);
         int count = domains->rowCount();
         foreach(const QString &domain, ip.domains){
             domains->appendRow({new QStandardItem(QString::number(count)),

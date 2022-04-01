@@ -76,10 +76,11 @@ void Url::extractSelected(){
 }
 
 void Url::removeResults(){
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        set_results.remove(model_index.data().toString());
-        m_model->removeRow(model_index.row());
+    auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
+    QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
+    for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+        set_results.remove(i->data().toString());
+        m_model->removeRow(i->row());
     }
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());

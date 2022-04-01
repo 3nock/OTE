@@ -5,6 +5,11 @@
 #include <QFileDialog>
 #include <QClipboard>
 
+/*
+ * TODO:
+ *      refactor remove action, for items
+ *      when you remove one an entire s3s_item is gone hence modelindexes isn't down by one
+ */
 
 void Project::action_clear(){
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -454,7 +459,7 @@ void Project::action_save(const RESULT_TYPE &result_type){
         QJsonArray array;
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::IP *item = static_cast<s3s_item::IP*>(model->activeHost->itemFromIndex(model_index));
+            s3s_item::IP *item = static_cast<s3s_item::IP*>(model->enumIP->itemFromIndex(model_index));
             array.append(ip_to_json(item));
         }
         QJsonDocument document;
@@ -789,7 +794,7 @@ void Project::action_copy(const RESULT_TYPE &result_type){
         QJsonArray array;
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::IP *item = static_cast<s3s_item::IP*>(model->activeHost->itemFromIndex(model_index));
+            s3s_item::IP *item = static_cast<s3s_item::IP*>(model->enumIP->itemFromIndex(model_index));
             array.append(ip_to_json(item));
         }
         QJsonDocument document;
@@ -1246,7 +1251,7 @@ void Project::action_send_cidr(const ENGINE &engine){
         for(int i = 0; i < proxyModel->rowCount(); i++)
             cidr.insert(proxyModel->index(i, 0).data().toString());
         break;
-    case ExplorerType::enum_NS:
+    case ExplorerType::enum_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
@@ -1509,7 +1514,7 @@ void Project::action_send_cidr(){
         for(int i = 0; i < proxyModel->rowCount(); i++)
             cidr.insert(proxyModel->index(i, 0).data().toString());
         break;
-    case ExplorerType::enum_NS:
+    case ExplorerType::enum_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
@@ -1704,250 +1709,194 @@ void Project::action_send_selected_toEngine(const ENGINE &engine, const RESULT_T
 }
 
 void Project::action_remove_selected(){
+    auto model_selectedIndexes = proxyModel->mapSelectionToSource(m_selectionModel->selection());
+    QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
+
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::activeHost:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            if(proxyIndex.column())
-                model->map_activeHost.remove(proxyModel->index(proxyIndex.row(), 0).data().toString());
-            else
-                model->map_activeHost.remove(proxyIndex.data().toString());
-
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeHost->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->activeHost->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_activeHost.remove(i->data().toString());
+                model->activeHost->removeRow(i->row());
+            }
         }
         break;
     case ExplorerType::activeWildcard:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            if(proxyIndex.column())
-                model->map_activeWildcard.remove(proxyModel->index(proxyIndex.row(), 0).data().toString());
-            else
-                model->map_activeWildcard.remove(proxyIndex.data().toString());
-
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeWildcard->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->activeWildcard->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_activeWildcard.remove(i->data().toString());
+                model->activeWildcard->removeRow(i->row());
+            }
         }
         break;
     case ExplorerType::activeDNS:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->activeDNS->invisibleRootItem()->index()){
-                model->map_activeDNS.remove(proxyIndex.data().toString());
-                model->activeDNS->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->activeDNS->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_activeDNS.remove(i->data().toString());
+                model->activeDNS->removeRow(i->row());
             }
         }
         break;
     case ExplorerType::activeDNS_A:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeA->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeA->removeRow(i->row());
         break;
     case ExplorerType::activeDNS_AAAA:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeAAAA->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeAAAA->removeRow(i->row());
         break;
     case ExplorerType::activeDNS_NS:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeNS->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeNS->removeRow(i->row());
         break;
     case ExplorerType::activeDNS_MX:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeHost->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeMX->removeRow(i->row());
         break;
     case ExplorerType::activeDNS_TXT:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeTXT->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeTXT->removeRow(i->row());
         break;
     case ExplorerType::activeDNS_CNAME:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeCNAME->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeCNAME->removeRow(i->row());
         break;
     case ExplorerType::activeSSL:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->activeSSL->invisibleRootItem()->index())
-                model->activeSSL->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->activeSSL->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_activeSSL.remove(i->data().toString());
+                model->activeSSL->removeRow(i->row());
+            }
         }
         break;
     case ExplorerType::activeSSL_sha1:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeSSL_sha1->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeSSL_sha1->removeRow(i->row());
         break;
     case ExplorerType::activeSSL_sha256:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeSSL_sha256->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeSSL_sha256->removeRow(i->row());
         break;
     case ExplorerType::activeSSL_altNames:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeSSL_altNames->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->activeSSL_altNames->removeRow(i->row());
         break;
     case ExplorerType::activeURL:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            if(proxyIndex.column())
-                model->map_activeURL.remove(proxyModel->index(proxyIndex.row(), 0).data().toString());
-            else
-                model->map_activeURL.remove(proxyIndex.data().toString());
-
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->activeURL->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->activeURL->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_activeURL.remove(i->data().toString());
+                model->activeURL->removeRow(i->row());
+            }
         }
         break;
     case ExplorerType::passive_subdomainIp:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveSubdomainIp->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveSubdomainIp->removeRow(i->row());
         break;
     case ExplorerType::passive_subdomain:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveSubdomain->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveSubdomain->removeRow(i->row());
         break;
     case ExplorerType::passive_A:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveA->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveA->removeRow(i->row());
         break;
     case ExplorerType::passive_AAAA:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveAAAA->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveAAAA->removeRow(i->row());
         break;
     case ExplorerType::passive_NS:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveNS->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveNS->removeRow(i->row());
         break;
     case ExplorerType::passive_MX:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveMX->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveMX->removeRow(i->row());
         break;
     case ExplorerType::passive_TXT:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveTXT->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveTXT->removeRow(i->row());
         break;
     case ExplorerType::passive_CNAME:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveCNAME->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveCNAME->removeRow(i->row());
         break;
     case ExplorerType::passive_Email:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveEmail->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveEmail->removeRow(i->row());
         break;
     case ExplorerType::passive_URL:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveURL->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveURL->removeRow(i->row());
         break;
     case ExplorerType::passive_ASN:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveASN->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveASN->removeRow(i->row());
         break;
     case ExplorerType::passive_SSL:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            model->passiveSSL->removeRow(index.row());
-        }
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
+            model->passiveSSL->removeRow(i->row());
         break;
     case ExplorerType::enum_IP:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumIP->invisibleRootItem()->index()){
-                model->map_enumIP.remove(proxyIndex.data().toString());
-                model->enumIP->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->enumIP->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_enumIP.remove(i->data().toString());
+                model->enumIP->removeRow(i->row());
             }
         }
         break;
     case ExplorerType::enum_ASN:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumASN->invisibleRootItem()->index()){
-                model->map_enumASN.remove(proxyIndex.data().toString());
-                model->enumASN->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->enumASN->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_enumASN.remove(i->data().toString());
+                model->enumASN->removeRow(i->row());
             }
         }
         break;
     case ExplorerType::enum_CIDR:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumCIDR->invisibleRootItem()->index()){
-                model->map_enumCIDR.remove(proxyIndex.data().toString());
-                model->enumCIDR->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->enumCIDR->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_enumCIDR.remove(i->data().toString());
+                model->enumCIDR->removeRow(i->row());
             }
         }
         break;
     case ExplorerType::enum_NS:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumNS->invisibleRootItem()->index()){
-                model->map_enumNS.remove(proxyIndex.data().toString());
-                model->enumNS->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->enumNS->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_enumNS.remove(i->data().toString());
+                model->enumNS->removeRow(i->row());
             }
         }
         break;
     case ExplorerType::enum_MX:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumMX->invisibleRootItem()->index()){
-                model->map_enumMX.remove(proxyIndex.data().toString());
-                model->enumMX->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->enumMX->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_enumMX.remove(i->data().toString());
+                model->enumMX->removeRow(i->row());
             }
         }
         break;
     case ExplorerType::enum_Email:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumEmail->invisibleRootItem()->index()){
-                model->map_enumEmail.remove(proxyIndex.data().toString());
-                model->enumEmail->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->enumEmail->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_enumEmail.remove(i->data().toString());
+                model->enumEmail->removeRow(i->row());
             }
         }
         break;
     case ExplorerType::enum_SSL:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->enumSSL->invisibleRootItem()->index()){
-                model->map_enumSSL.remove(proxyIndex.data().toString());
-                model->enumSSL->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->enumSSL->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_enumSSL.remove(i->data().toString());
+                model->enumSSL->removeRow(i->row());
             }
         }
         break;
     case ExplorerType::raw:
-        foreach(const QModelIndex &proxyIndex, m_selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            if(index.parent() == model->raw->invisibleRootItem()->index())
-                model->raw->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->raw->invisibleRootItem()->index()) && (i->column() == 0))
+                model->raw->removeRow(i->row());
         }
         break;
     }

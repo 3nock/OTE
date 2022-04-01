@@ -13,7 +13,6 @@ s3s_struct::IP ip_to_struct(s3s_item::IP *item){
     /* ip info */
     ip.info_ip = item->info_ip->text();
     ip.info_type = item->info_type->text();
-    ip.info_host = item->info_host->text();
     ip.info_city = item->info_city->text();
     ip.info_region = item->info_region->text();
     ip.info_countryName = item->info_countryName->text();
@@ -26,30 +25,20 @@ s3s_struct::IP ip_to_struct(s3s_item::IP *item){
     /* asn info */
     ip.asnInfo_asn = item->asnInfo_asn->text();
     ip.asnInfo_name = item->asnInfo_name->text();
-    ip.asnInfo_domain = item->asnInfo_domain->text();
     ip.asnInfo_route = item->asnInfo_route->text();
-    ip.asnInfo_type = item->asnInfo_type->text();
 
     /* company info */
     ip.companyInfo_name = item->companyInfo_name->text();
     ip.companyInfo_domain = item->companyInfo_domain->text();
-    ip.companyInfo_type = item->companyInfo_type->text();
 
     /* privacy info */
-    ip.privacyInfo_vpn = item->privacyInfo_vpn->text();
-    ip.privacyInfo_proxy = item->privacyInfo_proxy->text();
-    ip.privacyInfo_tor = item->privacyInfo_tor->text();
-    ip.privacyInfo_hosting = item->privacyInfo_hosting->text();
-    ip.privacyInfo_relay = item->privacyInfo_relay->text();
-    ip.privacyInfo_threatLevel = item->privacyInfo_threatLevel->text();
-
-    /* abuse info */
-    ip.abuseInfo_address = item->abuseInfo_address->text();
-    ip.abuseInfo_country = item->abuseInfo_country->text();
-    ip.abuseInfo_email = item->abuseInfo_email->text();
-    ip.abuseInfo_name = item->abuseInfo_name->text();
-    ip.abuseInfo_network = item->abuseInfo_network->text();
-    ip.abuseInfo_phone = item->abuseInfo_phone->text();
+    ip.privacyInfo_vpn = QVariant(item->privacyInfo_vpn->text()).toBool();
+    ip.privacyInfo_proxy = QVariant(item->privacyInfo_proxy->text()).toBool();
+    ip.privacyInfo_anonymous = QVariant(item->privacyInfo_anonymous->text()).toBool();
+    ip.privacyInfo_tor = QVariant(item->privacyInfo_tor->text()).toBool();
+    ip.privacyInfo_attacker = QVariant(item->privacyInfo_attacker->text()).toBool();
+    ip.privacyInfo_abuser = QVariant(item->privacyInfo_abuser->text()).toBool();
+    ip.privacyInfo_threat = QVariant(item->privacyInfo_threat->text()).toBool();
 
     /* domains */
     for(int i = 0; i < item->domains->rowCount(); i++)
@@ -66,9 +55,9 @@ QJsonObject ip_to_json(s3s_item::IP *item){
     QJsonObject ip;
 
     /* info */
+    ip.insert("ip", item->text());
     ip.insert("info_ip", item->info_ip->text());
     ip.insert("info_type", item->info_type->text());
-    ip.insert("info_host", item->info_host->text());
     ip.insert("info_city", item->info_city->text());
     ip.insert("info_region", item->info_region->text());
     ip.insert("info_countryName", item->info_countryName->text());
@@ -81,30 +70,20 @@ QJsonObject ip_to_json(s3s_item::IP *item){
     /* asnInfo */
     ip.insert("asnInfo_asn", item->asnInfo_asn->text());
     ip.insert("asnInfo_name", item->asnInfo_name->text());
-    ip.insert("asnInfo_domain", item->asnInfo_domain->text());
     ip.insert("asnInfo_route", item->asnInfo_route->text());
-    ip.insert("asnInfo_type", item->asnInfo_type->text());
 
     /* companyInfo */
     ip.insert("companyInfo_name", item->companyInfo_name->text());
     ip.insert("companyInfo_domain", item->companyInfo_domain->text());
-    ip.insert("companyInfo_type", item->companyInfo_type->text());
 
     /* privacyInfo */
     ip.insert("privacyInfo_vpn", item->privacyInfo_vpn->text());
     ip.insert("privacyInfo_proxy", item->privacyInfo_proxy->text());
+    ip.insert("privacyInfo_anonymous", item->privacyInfo_anonymous->text());
     ip.insert("privacyInfo_tor", item->privacyInfo_tor->text());
-    ip.insert("privacyInfo_hosting", item->privacyInfo_hosting->text());
-    ip.insert("privacyInfo_relay", item->privacyInfo_relay->text());
-    ip.insert("privacyInfo_threatLevel", item->privacyInfo_threatLevel->text());
-
-    /* abuseInfo */
-    ip.insert("abuseInfo_address", item->abuseInfo_address->text());
-    ip.insert("abuseInfo_country", item->abuseInfo_country->text());
-    ip.insert("abuseInfo_email", item->abuseInfo_email->text());
-    ip.insert("abuseInfo_name", item->abuseInfo_name->text());
-    ip.insert("abuseInfo_network", item->abuseInfo_network->text());
-    ip.insert("abuseInfo_phone", item->abuseInfo_phone->text());
+    ip.insert("privacyInfo_attacker", item->privacyInfo_attacker->text());
+    ip.insert("privacyInfo_abuser", item->privacyInfo_abuser->text());
+    ip.insert("privacyInfo_threat", item->privacyInfo_threat->text());
 
     /* domains */
     QJsonArray domains;
@@ -119,9 +98,9 @@ QJsonObject ip_to_json(s3s_item::IP *item){
 
 void json_to_ip(const QJsonObject &ip, s3s_item::IP *item){
     /* info */
+    item->setText(ip.value("ip").toString());
     item->info_ip->setText(ip.value("info_ip").toString());
     item->info_type->setText(ip.value("info_type").toString());
-    item->info_host->setText(ip.value("info_host").toString());
     item->info_city->setText(ip.value("info_city").toString());
     item->info_region->setText(ip.value("info_region").toString());
     item->info_countryName->setText(ip.value("info_countryName").toString());
@@ -134,30 +113,20 @@ void json_to_ip(const QJsonObject &ip, s3s_item::IP *item){
     /* asnInfo */
     item->asnInfo_asn->setText(ip.value("asnInfo_asn").toString());
     item->asnInfo_name->setText(ip.value("asnInfo_name").toString());
-    item->asnInfo_domain->setText(ip.value("asnInfo_domain").toString());
     item->asnInfo_route->setText(ip.value("asnInfo_route").toString());
-    item->asnInfo_type->setText(ip.value("asnInfo_type").toString());
 
     /* companyInfo */
     item->companyInfo_name->setText(ip.value("companyInfo_name").toString());
     item->companyInfo_domain->setText(ip.value("companyInfo_domain").toString());
-    item->companyInfo_type->setText(ip.value("companyInfo_type").toString());
 
     /* privacyInfo */
     item->privacyInfo_vpn->setText(ip.value("privacyInfo_vpn").toString());
     item->privacyInfo_proxy->setText(ip.value("privacyInfo_proxy").toString());
+    item->privacyInfo_anonymous->setText(ip.value("privacyInfo_anonymous").toString());
     item->privacyInfo_tor->setText(ip.value("privacyInfo_tor").toString());
-    item->privacyInfo_hosting->setText(ip.value("privacyInfo_hosting").toString());
-    item->privacyInfo_relay->setText(ip.value("privacyInfo_relay").toString());
-    item->privacyInfo_threatLevel->setText(ip.value("privacyInfo_threatLevel").toString());
-
-    /* abuseInfo */
-    item->abuseInfo_address->setText(ip.value("abuseInfo_address").toString());
-    item->abuseInfo_country->setText(ip.value("abuseInfo_country").toString());
-    item->abuseInfo_email->setText(ip.value("abuseInfo_email").toString());
-    item->abuseInfo_name->setText(ip.value("abuseInfo_name").toString());
-    item->abuseInfo_network->setText(ip.value("abuseInfo_network").toString());
-    item->abuseInfo_phone->setText(ip.value("abuseInfo_phone").toString());
+    item->privacyInfo_attacker->setText(ip.value("privacyInfo_attacker").toString());
+    item->privacyInfo_abuser->setText(ip.value("privacyInfo_abuser").toString());
+    item->privacyInfo_threat->setText(ip.value("privacyInfo_threat").toString());
 
     /* domains */
     int count = 0;

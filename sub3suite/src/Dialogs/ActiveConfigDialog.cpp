@@ -80,6 +80,8 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
     this->m_initWidgets();
     this->m_loadConfigSSL();
 
+    ui->groupBoxTimeout->setCheckable(false);
+
     /* hiding unused widgets */
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
@@ -180,7 +182,7 @@ void ActiveConfigDialog::m_loadConfigBrute(){
     ui->comboBoxSingleNameserver->addItems(CONFIG.allKeys());
     CONFIG.endGroup();
 
-    int size = CONFIG.beginReadArray(CFG_ARR_CUSTOM_NS);
+    int size = CONFIG.beginReadArray("custom_nameservers_brute");
     for (int i = 0; i < size; ++i) {
         CONFIG.setArrayIndex(i);
         ui->customNameservers->add(CONFIG.value("value").toString());
@@ -217,7 +219,7 @@ void ActiveConfigDialog::m_loadConfigActive(){
     ui->comboBoxSingleNameserver->addItems(CONFIG.allKeys());
     CONFIG.endGroup();
 
-    int size = CONFIG.beginReadArray(CFG_ARR_CUSTOM_NS);
+    int size = CONFIG.beginReadArray("custom_nameservers_active");
     for (int i = 0; i < size; ++i) {
         CONFIG.setArrayIndex(i);
         ui->customNameservers->add(CONFIG.value("value").toString());
@@ -246,7 +248,7 @@ void ActiveConfigDialog::m_loadConfigDns(){
     ui->comboBoxSingleNameserver->addItems(CONFIG.allKeys());
     CONFIG.endGroup();
 
-    int size = CONFIG.beginReadArray(CFG_ARR_CUSTOM_NS);
+    int size = CONFIG.beginReadArray("custom_nameservers_dns");
     for (int i = 0; i < size; ++i) {
         CONFIG.setArrayIndex(i);
         ui->customNameservers->add(CONFIG.value("value").toString());
@@ -325,7 +327,7 @@ void ActiveConfigDialog::m_saveBrute(){
         CONFIG.setValue(CFG_VAL_RECORD, "ANY");
     CONFIG.endGroup();
 
-    CONFIG.beginWriteArray(CFG_ARR_CUSTOM_NS);
+    CONFIG.beginWriteArray("custom_nameservers_brute");
     QStringList customNameservers = m_customNameserverListModel->stringList();
     for (int i = 0; i < customNameservers.length(); ++i) {
         CONFIG.setArrayIndex(i);
@@ -370,7 +372,7 @@ void ActiveConfigDialog::m_saveBrute(){
     }
 
     /* save used nameservers to config file */
-    CONFIG.beginWriteArray(CFG_ARR_NAMESERVERS);
+    CONFIG.beginWriteArray("nameservers_brute");
     for (int i = 0; i < m_configBrute->nameservers.length(); ++i) {
         CONFIG.setArrayIndex(i);
         CONFIG.setValue("value", m_configBrute->nameservers.at(i));
@@ -420,7 +422,7 @@ void ActiveConfigDialog::m_saveActive(){
         CONFIG.setValue(CFG_VAL_RECORD, "ANY");
     CONFIG.endGroup();
 
-    CONFIG.beginWriteArray(CFG_ARR_CUSTOM_NS);
+    CONFIG.beginWriteArray("custom_nameservers_active");
     QStringList customNameservers = m_customNameserverListModel->stringList();
     for (int i = 0; i < customNameservers.length(); ++i) {
         CONFIG.setArrayIndex(i);
@@ -463,7 +465,7 @@ void ActiveConfigDialog::m_saveActive(){
     }
 
     /* save used nameservers to config file */
-    CONFIG.beginWriteArray(CFG_ARR_NAMESERVERS);
+    CONFIG.beginWriteArray("nameservers_active");
     for (int i = 0; i < m_configActive->nameservers.length(); ++i) {
         CONFIG.setArrayIndex(i);
         CONFIG.setValue("value", m_configActive->nameservers.at(i));
@@ -503,7 +505,7 @@ void ActiveConfigDialog::m_saveDns(){
         CONFIG.setValue(CFG_VAL_NAMESERVER, "custom");
     CONFIG.endGroup();
 
-    CONFIG.beginWriteArray(CFG_ARR_CUSTOM_NS);
+    CONFIG.beginWriteArray("custom_nameservers_dns");
     QStringList customNameservers = m_customNameserverListModel->stringList();
     for (int i = 0; i < customNameservers.length(); ++i) {
         CONFIG.setArrayIndex(i);
@@ -539,7 +541,7 @@ void ActiveConfigDialog::m_saveDns(){
     }
 
     /* save used nameservers to config file */
-    CONFIG.beginWriteArray(CFG_ARR_NAMESERVERS);
+    CONFIG.beginWriteArray("nameservers_dns");
     for (int i = 0; i < m_configDns->nameservers.length(); ++i) {
         CONFIG.setArrayIndex(i);
         CONFIG.setValue("value", m_configDns->nameservers.at(i));

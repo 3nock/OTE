@@ -34,7 +34,7 @@ Dns::Dns(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
 
     /* result model */
     ui->treeViewResults->setHeaderHidden(false);
-    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Values"), tr(" Values")});
+    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Record"), tr(" SRV Port")});
     proxyModel->setSourceModel(m_model);
     ui->treeViewResults->setModel(proxyModel);
 
@@ -201,7 +201,7 @@ void Dns::initConfigValues(){
     m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
     CONFIG.endGroup();
 
-    int size = CONFIG.beginReadArray(CFG_ARR_NAMESERVERS);
+    int size = CONFIG.beginReadArray("nameservers_dns");
     for (int i = 0; i < size; ++i) {
         CONFIG.setArrayIndex(i);
         m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());

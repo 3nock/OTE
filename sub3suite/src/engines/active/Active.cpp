@@ -193,7 +193,7 @@ void Active::initConfigValues(){
     if(record == "ANY")
         m_scanArgs->config->recordType = QDnsLookup::ANY;
 
-    int size = CONFIG.beginReadArray(CFG_ARR_NAMESERVERS);
+    int size = CONFIG.beginReadArray("nameservers_active");
     for (int i = 0; i < size; ++i) {
         CONFIG.setArrayIndex(i);
         m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());

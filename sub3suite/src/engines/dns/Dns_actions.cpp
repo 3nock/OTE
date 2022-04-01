@@ -15,7 +15,7 @@
 void Dns::clearResults(){
     /* clear the results... */
     m_model->clear();
-    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Values"), tr(" Values")});
+    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Record"), tr(" SRV Port")});
     ui->labelResultsCount->clear();
     m_resultSet.clear();
 
@@ -31,11 +31,13 @@ void Dns::openInBrowser(){
 }
 
 void Dns::removeResults(){
-    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        QModelIndex index = proxyModel->mapToSource(proxyIndex);
-        m_resultSet.remove(index.data().toString());
-        m_model->removeRow(index.row());
+    auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
+    QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
+    for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+        m_resultSet.remove(i->data().toString());
+        m_model->removeRow(i->row());
     }
+
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 

@@ -8,9 +8,14 @@
 #include "PortScanner.h"
 
 
+/*
+ * TODO:
+ *      this is a very simplified port scanner which is connection based,
+ *      modify to SYN scanner
+ */
 port::Scanner::Scanner(active::ScanArgs *args): AbstractScanner(nullptr),
     m_args(args),
-    m_socket(new QTcpSocket)
+    m_socket(new QTcpSocket(this))
 {
 }
 port::Scanner::~Scanner(){

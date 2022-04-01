@@ -45,21 +45,23 @@ void Brute::openInBrowser(){
 }
 
 void Brute::removeResults(){
+    auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
+    QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
+
     switch (ui->comboBoxOutput->currentIndex()) {
     case brute::OUTPUT::SUBDOMAIN:
-        foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            set_subdomain.remove(index.data().toString());
-            m_model_subdomain->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            set_subdomain.remove(i->data().toString());
+            m_model_subdomain->removeRow(i->row());
         }
         break;
     case brute::OUTPUT::TLD:
-        foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            set_tld.remove(index.data().toString());
-            m_model_tld->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            set_tld.remove(i->data().toString());
+            m_model_tld->removeRow(i->row());
         }
     }
+
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 

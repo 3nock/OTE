@@ -6,14 +6,13 @@ Welcome to Sub3 Suite! This document is relevant for you if you want to contribu
 
 This is a list of things you can do to help out (in no particular order). Each item will be expanded upon later in the document.
 
-- [Compile sub3suite](COMPILING.md) and add new features and/or solving current [issues](https://github.com/3nock/sub3suite).
+- [Compile sub3suite](COMPILING.md) and add new features and/or solving current [issues](https://github.com/3nock/sub3suite/issues).
 - Design an even more intuitive UI, Logos and Icons.
-- Report [bugs](https://github.com/3nock/sub3suite) at the issue tracker.
-- Add feature requests to the [issue tracker](https://github.com/3nock/sub3suite).
-- [Write a blogpost](https://3nock.github.io/Looking-for-writers.html) about sub3suite in any blog.
+- Report [bugs](https://github.com/3nock/sub3suite/issues) at the issue tracker.
+- Add feature requests to the [issue tracker](https://github.com/3nock/sub3suite/issues).
+- Write a blog post about sub3suite in any blog and you can inform us of the post so we can share it.
 - [Contact us](CONTACTS.md) and talk about sub3suite.
-- Send a [donation](https://3nock.github.io/sub3suite/donations.html) to support the project.
-- [Translate](https://3nock.github.io/sub3suite/translations.html) sub3suite (contact us if your language isn't listed).
+- Send a [donation](SPONSOR.md) to support the project.
 - Help us improve the [documentation](https://github.com/3nock/s3s_doc).
 
 ### Compile sub3suite
@@ -66,10 +65,6 @@ Please [contact us](CONTACTS.md) and inform us about your post and we will try o
 ### Contact us
 
 There are several ways to reach out to the community of sub3suite developers, contributors and users. [Telegram](https://telegram.me/sub3suite) & [Twitter](http://twitter.com/sub3suite). Most questions regarding contributing, developing and using sub3suite can be answered there.
-
-### Translate
-
-To help translate sub3suite, just head over to https://3nock.github.io/sub3suite/translations click a language you want to translate and start filling in entries.
 
 ### Credits
 

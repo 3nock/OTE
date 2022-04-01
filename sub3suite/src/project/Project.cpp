@@ -60,7 +60,10 @@ void Project::initProject(){
     ui->label_project_created->setText(model->info.date_created);
     ui->label_project_modified->setText(model->info.last_modified);
     ui->label_project_items->setNum(model->getItemsCount());
-    ui->plainTextEditNotes->setDocument(&model->notes);
+
+    /* project's notes */
+    model->notes_document = ui->plainTextEditNotes->document();
+    ui->plainTextEditNotes->setPlainText(model->notes);
 }
 
 void Project::initUI(){

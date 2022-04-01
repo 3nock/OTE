@@ -13,7 +13,7 @@ void IpEnum::onResult(s3s_struct::IP results){
     if(m_resultsSet.contains(results.ip))
     {
         s3s_item::IP *item = m_resultsSet.value(results.ip);
-        item->setValues(results);
+        item->addValues(results);
     }else {
         s3s_item::IP *item = new s3s_item::IP;
         item->setValues(results);
@@ -26,8 +26,21 @@ void IpEnum::onResult(s3s_struct::IP results){
         project->addEnumIP(results);
 }
 
-void IpEnum::onResult_reverse(s3s_struct::IP ip){
+void IpEnum::onResult_reverse(s3s_struct::IP results){
+    if(m_resultsSet.contains(results.ip))
+    {
+        s3s_item::IP *item = m_resultsSet.value(results.ip);
+        item->addDomains(results);
+    }else {
+        s3s_item::IP *item = new s3s_item::IP;
+        item->addDomains(results);
+        m_model->appendRow(item);
+        m_resultsSet.insert(results.ip, item);
+        ui->labelResultsCount->setNum(proxyModel->rowCount());
+    }
 
+    if(m_scanConfig->autosaveToProject)
+        project->addEnumIP_domains(results);
 }
 
 void IpEnum::onScanLog(ScanLog log){

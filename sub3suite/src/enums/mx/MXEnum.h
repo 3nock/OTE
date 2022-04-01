@@ -42,7 +42,9 @@ class MXEnum : public AbstractEnum {
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditFilter_textChanged(const QString &arg1);
 
-    private:
+        void on_buttoApiKeys_clicked();
+
+private:
         Ui::MXEnum *ui;
 
         QStandardItemModel *m_model;

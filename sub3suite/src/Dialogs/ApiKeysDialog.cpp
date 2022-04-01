@@ -465,10 +465,6 @@ void ApiKeysDialog::on_buttonGetRiskIq_clicked(){
     QDesktopServices::openUrl(QUrl("https://api.riskiq.net/api/", QUrl::TolerantMode));
 }
 
-void ApiKeysDialog::on_buttonGetPentestTools_clicked(){
-    QDesktopServices::openUrl(QUrl("https://pentest-tools.com/pricing", QUrl::TolerantMode));
-}
-
 void ApiKeysDialog::on_buttonGetProjectDiscovery_clicked(){
     QDesktopServices::openUrl(QUrl("https://chaos.projectdiscovery.io/", QUrl::TolerantMode));
 }

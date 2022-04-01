@@ -113,11 +113,13 @@ void Osint::removeResults(){
         set = set_cidr;
     }
 
-    foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-        QModelIndex index = proxyModel->mapToSource(proxyIndex);
-        set.remove(index.data().toString());
-        model->removeRow(index.row());
+    auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
+    QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
+    for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+        set.remove(i->data().toString());
+        model->removeRow(i->row());
     }
+
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 

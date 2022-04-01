@@ -898,13 +898,182 @@
               <x>0</x>
               <y>0</y>
               <width>177</width>
-              <height>696</height>
+              <height>742</height>
              </rect>
             </property>
             <attribute name="label">
              <string>API Keys not Required</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_18">
+             <item>
+              <widget class="QGroupBox" name="groupBox_3">
+               <property name="title">
+                <string>API</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <widget class="QRadioButton" name="moduleAnubis">
+                  <property name="text">
+                   <string>Anubis</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleASRank">
+                  <property name="text">
+                   <string>ASRank</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleBgpview">
+                  <property name="text">
+                   <string>Bgpview</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCertspotterFree">
+                  <property name="text">
+                   <string>CertSpotter(Free)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCirclPublic">
+                  <property name="text">
+                   <string>Circl (public)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleDnsBufferOverRun">
+                  <property name="text">
+                   <string>DnsBufferOverRun</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHackerTargetFree">
+                  <property name="text">
+                   <string>HackerTarget (Free)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleMaltiverseFree">
+                  <property name="text">
+                   <string>Maltiverse (Free)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleMnemonicFree">
+                  <property name="text">
+                   <string>Mnemonic (Free)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleN45HT">
+                  <property name="text">
+                   <string>N45HT</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleOmnisint">
+                  <property name="text">
+                   <string>Omnisint</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleRobtex">
+                  <property name="text">
+                   <string>Robtex</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSublist3r">
+                  <property name="text">
+                   <string>Sublist3r</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleThreatCrowd">
+                  <property name="text">
+                   <string>ThreatCrowd</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleThreatMiner">
+                  <property name="text">
+                   <string>ThreatMiner</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleUrlScan">
+                  <property name="text">
+                   <string>UrlScan</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
              <item>
               <widget class="QGroupBox" name="groupBox">
                <property name="title">
@@ -955,6 +1124,25 @@
               </widget>
              </item>
              <item>
+              <widget class="QGroupBox" name="groupBox_8">
+               <property name="title">
+                <string>Email</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_11">
+                <item>
+                 <widget class="QRadioButton" name="moduleTruMail">
+                  <property name="text">
+                   <string>TruMail</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
               <widget class="QGroupBox" name="groupBox_2">
                <property name="title">
                 <string>Archives</string>
@@ -981,6 +1169,16 @@
                  </widget>
                 </item>
                 <item>
+                 <widget class="QRadioButton" name="moduleGoogleCert">
+                  <property name="text">
+                   <string>GoogleCert</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QRadioButton" name="moduleUKWebArchive">
                   <property name="text">
                    <string>UKWebArchive</string>
@@ -994,184 +1192,6 @@
                  <widget class="QRadioButton" name="moduleWaybackMachine">
                   <property name="text">
                    <string>WaybackMachine</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QGroupBox" name="groupBox_8">
-               <property name="title">
-                <string>Email</string>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_11">
-                <item>
-                 <widget class="QRadioButton" name="moduleTruMail">
-                  <property name="text">
-                   <string>TruMail</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QGroupBox" name="groupBox_3">
-               <property name="title">
-                <string>API</string>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_13">
-                <item>
-                 <widget class="QRadioButton" name="moduleAnubis">
-                  <property name="text">
-                   <string>Anubis</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleASRank">
-                  <property name="text">
-                   <string>ASRank</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleCertspotterFree">
-                  <property name="text">
-                   <string>CertSpotter(Free)</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleCirclPublic">
-                  <property name="text">
-                   <string>Circl (public)</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleMaltiverseFree">
-                  <property name="text">
-                   <string>Maltiverse (Free)</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleN45HT">
-                  <property name="text">
-                   <string>N45HT</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleSublist3r">
-                  <property name="text">
-                   <string>Sublist3r</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleBgpview">
-                  <property name="text">
-                   <string>Bgpview</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleThreatMiner">
-                  <property name="text">
-                   <string>ThreatMiner</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleThreatCrowd">
-                  <property name="text">
-                   <string>ThreatCrowd</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleHackerTargetFree">
-                  <property name="text">
-                   <string>HackerTarget (Free)</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleDnsBufferOverRun">
-                  <property name="text">
-                   <string>DnsBufferOverRun</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleGoogleCert">
-                  <property name="text">
-                   <string>GoogleCert</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleOmnisint">
-                  <property name="text">
-                   <string>Omnisint</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleUrlScan">
-                  <property name="text">
-                   <string>UrlScan</string>
                   </property>
                   <attribute name="buttonGroup">
                    <string notr="true">buttonGroup</string>
@@ -1211,13 +1231,491 @@
               <x>0</x>
               <y>0</y>
               <width>176</width>
-              <height>1547</height>
+              <height>1501</height>
              </rect>
             </property>
             <attribute name="label">
              <string>API Keys Required</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <widget class="QGroupBox" name="groupBox_7">
+               <property name="title">
+                <string>API</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_17">
+                <item>
+                 <widget class="QRadioButton" name="moduleBinaryEdge">
+                  <property name="text">
+                   <string>BinaryEdge</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleBuiltWith">
+                  <property name="text">
+                   <string>Builtwith</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleC99">
+                  <property name="text">
+                   <string>C99</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCensys">
+                  <property name="text">
+                   <string>Censys</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCertspotter">
+                  <property name="text">
+                   <string>Certspotter</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleCircl">
+                  <property name="text">
+                   <string>Circl</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleDnslytics">
+                  <property name="text">
+                   <string>DNSlytics</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleDomainTools">
+                  <property name="text">
+                   <string>DomainTools</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleFullHunt">
+                  <property name="text">
+                   <string>FullHunt</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleGithub">
+                  <property name="text">
+                   <string>Github</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHackerTarget">
+                  <property name="text">
+                   <string>HackerTarget (Paid)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHaveIBeenPawned">
+                  <property name="text">
+                   <string>HaveIBeenPawned</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleHost">
+                  <property name="text">
+                   <string>Host</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleJsonWhois">
+                  <property name="text">
+                   <string>JsonWhois</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleLeakIX">
+                  <property name="text">
+                   <string>LeakIX</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleMnemonic">
+                  <property name="text">
+                   <string>Mnemonic (Paid)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleNetworksDB">
+                  <property name="text">
+                   <string>Networksdb</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleNeutrinoApi">
+                  <property name="text">
+                   <string>NeutrinoApi</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleOnyphe">
+                  <property name="text">
+                   <string>Onyphe</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleOtx">
+                  <property name="text">
+                   <string>Otx</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="modulePassiveTotal">
+                  <property name="text">
+                   <string>PassiveTotal</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleProjectDiscovery">
+                  <property name="text">
+                   <string>ProjectDiscovery</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleRiskIq">
+                  <property name="text">
+                   <string>RiskIq</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleRobtexPaid">
+                  <property name="text">
+                   <string>Robtex (Pro)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSecurityTrails">
+                  <property name="text">
+                   <string>SecurityTrails</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSeon">
+                  <property name="text">
+                   <string>Seon</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleShodan">
+                  <property name="text">
+                   <string>Shodan</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSpamHaus">
+                  <property name="text">
+                   <string>SpamHaus</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSpyse">
+                  <property name="text">
+                   <string>Spyse</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleSpyOnWeb">
+                  <property name="text">
+                   <string>SpyOnWeb</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleThreatBook">
+                  <property name="text">
+                   <string>ThreatBook</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleViewDns">
+                  <property name="text">
+                   <string>ViewDns</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWappalyzer">
+                  <property name="text">
+                   <string>Wappalyzer</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWebResolver">
+                  <property name="text">
+                   <string>WebResolver</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWhatcms">
+                  <property name="text">
+                   <string>WhatCMS</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWhoisXmlApi">
+                  <property name="text">
+                   <string>WhoisXmlApi</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleWhoxy">
+                  <property name="text">
+                   <string>Whoxy</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleZETALytics">
+                  <property name="text">
+                   <string>ZETALytics</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleZoomEye">
+                  <property name="text">
+                   <string>ZoomEye</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_6">
+               <property name="title">
+                <string>IP</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_16">
+                <item>
+                 <widget class="QRadioButton" name="moduleIpApi">
+                  <property name="text">
+                   <string>IpApi</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpData">
+                  <property name="text">
+                   <string>IpData</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpfy">
+                  <property name="text">
+                   <string>Ipfy</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpGeoLocation">
+                  <property name="text">
+                   <string>IpGeoLocation</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpInfo">
+                  <property name="text">
+                   <string>IpInfo</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpRegistry">
+                  <property name="text">
+                   <string>IpRegistry</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="moduleIpStack">
+                  <property name="text">
+                   <string>IpStack</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
              <item>
               <widget class="QGroupBox" name="groupBox_4">
                <property name="title">
@@ -1357,504 +1855,6 @@
                  <widget class="QRadioButton" name="moduleSnov">
                   <property name="text">
                    <string>Snov</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QGroupBox" name="groupBox_6">
-               <property name="title">
-                <string>IP</string>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_16">
-                <item>
-                 <widget class="QRadioButton" name="moduleIpApi">
-                  <property name="text">
-                   <string>IpApi</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleIpInfo">
-                  <property name="text">
-                   <string>IpInfo</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleIpData">
-                  <property name="text">
-                   <string>IpData</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleIpfy">
-                  <property name="text">
-                   <string>Ipfy</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleIpGeoLocation">
-                  <property name="text">
-                   <string>IpGeoLocation</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleIpRegistry">
-                  <property name="text">
-                   <string>IpRegistry</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleIpStack">
-                  <property name="text">
-                   <string>IpStack</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QGroupBox" name="groupBox_7">
-               <property name="title">
-                <string>API</string>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_17">
-                <item>
-                 <widget class="QRadioButton" name="moduleBuiltWith">
-                  <property name="text">
-                   <string>Builtwith</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleCensys">
-                  <property name="text">
-                   <string>Censys</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleCertspotter">
-                  <property name="text">
-                   <string>Certspotter</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleDnslytics">
-                  <property name="text">
-                   <string>DNSlytics</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleDomainTools">
-                  <property name="text">
-                   <string>DomainTools</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleFullHunt">
-                  <property name="text">
-                   <string>FullHunt</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleHaveIBeenPawned">
-                  <property name="text">
-                   <string>HaveIBeenPawned</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleHost">
-                  <property name="text">
-                   <string>Host</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleJsonWhois">
-                  <property name="text">
-                   <string>JsonWhois</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleLeakIX">
-                  <property name="text">
-                   <string>LeakIX</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleNetworksDB">
-                  <property name="text">
-                   <string>Networksdb</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleProjectDiscovery">
-                  <property name="text">
-                   <string>ProjectDiscovery</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleWhoisXmlApi">
-                  <property name="text">
-                   <string>WhoisXmlApi</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleRobtexPaid">
-                  <property name="text">
-                   <string>Robtex (Pro)</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleSpamHaus">
-                  <property name="text">
-                   <string>SpamHaus</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleRobtex">
-                  <property name="text">
-                   <string>Robtex</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleSpyse">
-                  <property name="text">
-                   <string>Spyse</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleZoomEye">
-                  <property name="text">
-                   <string>ZoomEye</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleGithub">
-                  <property name="text">
-                   <string>Github</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleBinaryEdge">
-                  <property name="text">
-                   <string>BinaryEdge</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleRiskIq">
-                  <property name="text">
-                   <string>RiskIq</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleWhatcms">
-                  <property name="text">
-                   <string>WhatCMS</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleShodan">
-                  <property name="text">
-                   <string>Shodan</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleMnemonicFree">
-                  <property name="text">
-                   <string>Mnemonic (Free)</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleMnemonic">
-                  <property name="text">
-                   <string>Mnemonic (Paid)</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleSpyOnWeb">
-                  <property name="text">
-                   <string>SpyOnWeb</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleWhoxy">
-                  <property name="text">
-                   <string>Whoxy</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleC99">
-                  <property name="text">
-                   <string>C99</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleSeon">
-                  <property name="text">
-                   <string>Seon</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleWebResolver">
-                  <property name="text">
-                   <string>WebResolver</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleHackerTarget">
-                  <property name="text">
-                   <string>HackerTarget (Paid)</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleWappalyzer">
-                  <property name="text">
-                   <string>Wappalyzer</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleViewDns">
-                  <property name="text">
-                   <string>ViewDns</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleThreatBook">
-                  <property name="text">
-                   <string>ThreatBook</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="modulePassiveTotal">
-                  <property name="text">
-                   <string>PassiveTotal</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleSecurityTrails">
-                  <property name="text">
-                   <string>SecurityTrails</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleCircl">
-                  <property name="text">
-                   <string>Circl</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleZETALytics">
-                  <property name="text">
-                   <string>ZETALytics</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleOnyphe">
-                  <property name="text">
-                   <string>Onyphe</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleNeutrinoApi">
-                  <property name="text">
-                   <string>NeutrinoApi</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="moduleOtx">
-                  <property name="text">
-                   <string>Otx</string>
                   </property>
                   <attribute name="buttonGroup">
                    <string notr="true">buttonGroup</string>

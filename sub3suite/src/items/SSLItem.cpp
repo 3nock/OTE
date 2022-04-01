@@ -12,7 +12,7 @@ QJsonObject ssl_to_json(s3s_item::SSL *item){
 
     QJsonObject ssl;
 
-    ssl.insert("target", item->text());
+    ssl.insert("ssl", item->text());
 
     ssl.insert("info_verison", item->info_verison->text());
     ssl.insert("info_serialNumber", item->info_serialNumber->text());
@@ -54,7 +54,7 @@ QJsonObject ssl_to_json(s3s_item::SSL *item){
 }
 
 void json_to_ssl(const QJsonObject &ssl, s3s_item::SSL *item){
-    item->setText(ssl.value("target").toString());
+    item->setText(ssl.value("ssl").toString());
 
     /* info */
     item->info_verison->setText(ssl.value("info_verison").toString());

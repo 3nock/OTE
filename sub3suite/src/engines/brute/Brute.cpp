@@ -148,7 +148,6 @@ void Brute::on_buttonStart_clicked(){
         else
             status->activeScanThreads = m_scanArgs->config->threads;
 
-        m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
         m_scanArgs->currentWordlist = 0;
         m_scanArgs->progress = 0;
         m_scanArgs->reScan = false;
@@ -296,7 +295,7 @@ void Brute::initConfigValues(){
     if(record == "ANY")
         m_scanArgs->config->recordType = QDnsLookup::ANY;
 
-    int size = CONFIG.beginReadArray(CFG_ARR_NAMESERVERS);
+    int size = CONFIG.beginReadArray("nameservers_brute");
     for (int i = 0; i < size; ++i) {
         CONFIG.setArrayIndex(i);
         m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());

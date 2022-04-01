@@ -46,10 +46,6 @@
 #define CFG_GRP_RECENT "recent_projects"
 #define CFG_GRP_DEFAULT_NS "default_nameservers"
 
-/* arrays */
-#define CFG_ARR_NAMESERVERS "nameservers"
-#define CFG_ARR_CUSTOM_NS "custom_nameservers"
-
 /* wordlist */
 #define CFG_WL_SUBDOMAIN "subdomain_wordlist"
 #define CFG_WL_SUBDOMAIN_SPECIAL "subdomain_special_wordlist"

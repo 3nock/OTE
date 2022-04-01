@@ -51,4 +51,4 @@ You can also [compile](COMPILING.md) sub3suite yourself with a few easy steps!
 
 ## Developers
 
-- [3nock](https://3nock.github.io)
+- [3nock](https://twitter.com/3nock_)

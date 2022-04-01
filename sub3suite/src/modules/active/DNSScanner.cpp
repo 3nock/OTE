@@ -9,7 +9,11 @@
 #include "DNSScanner.h"
 #include "src/utils/s3s.h"
 
-
+/*
+ * BUG:
+ *      line: 352
+ *      info: the current target might be already changed at this point
+ */
 dns::Scanner::Scanner(dns::ScanArgs *args): AbstractScanner (nullptr),
       m_args(args),
       m_dns_a(new QDnsLookup(this)),

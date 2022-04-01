@@ -91,6 +91,7 @@ public:
     void addEnumASN(const s3s_struct::ASN &asn);
     void addEnumCIDR(const s3s_struct::CIDR &cidr);
     void addEnumIP(const s3s_struct::IP &ip);
+    void addEnumIP_domains(const s3s_struct::IP &ip);
     void addEnumNS(const s3s_struct::NS &ns);
     void addEnumMX(const s3s_struct::MX &xm);
     void addEnumSSL(const QString &target, const QSslCertificate &ssl);
@@ -100,7 +101,8 @@ public:
 
 public:
     bool modified = false;
-    QTextDocument notes;
+    QString notes;
+    QTextDocument *notes_document = nullptr;
     ExplorerModel *explorer;
 
     /* active Results Model */

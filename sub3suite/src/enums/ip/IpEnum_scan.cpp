@@ -73,10 +73,16 @@ void IpEnum::startScan(){
     case 0: // IP informations
         switch (ui->comboBoxEngine->currentIndex())
         {
-        case 0: // IPINFO
+        case 0: // IPDATA
+            this->startScanThread(new IpData(*m_scanArgs));
+            break;
+        case 1: // IPREGISTRY
+            this->startScanThread(new IpRegistry(*m_scanArgs));
+            break;
+        case 2: // IPINFO
             this->startScanThread(new IpInfo(*m_scanArgs));
             break;
-        case 1: // IPAPI
+        case 3: // IPAPI
             this->startScanThread(new IpApi(*m_scanArgs));
             break;
         }
@@ -85,8 +91,8 @@ void IpEnum::startScan(){
     case 1: // Rerverse IP-Address
         switch (ui->comboBoxEngine->currentIndex())
         {
-        case 0: // DNSLytics
-            this->startScanThread_reverseIP(new Dnslytics(*m_scanArgs));
+        case 0: // Omnisint
+            this->startScanThread_reverseIP(new Omnisint(*m_scanArgs));
             break;
         }
     }

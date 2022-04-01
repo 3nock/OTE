@@ -45,12 +45,12 @@
        </property>
        <item>
         <property name="text">
-         <string>IP Info</string>
+         <string>IP INFO</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Reverse IP</string>
+         <string>REVERSE IP</string>
         </property>
        </item>
       </widget>
@@ -70,6 +70,16 @@
          <height>0</height>
         </size>
        </property>
+       <item>
+        <property name="text">
+         <string>IpData</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>IpRegistry</string>
+        </property>
+       </item>
        <item>
         <property name="text">
          <string>IpInfo</string>
@@ -141,12 +151,6 @@
       <enum>QFrame::Sunken</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <property name="leftMargin">
-       <number>9</number>
-      </property>
-      <property name="rightMargin">
-       <number>9</number>
-      </property>
       <item>
        <widget class="QCheckBox" name="checkBoxMultipleTargets">
         <property name="text">
@@ -180,6 +184,20 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_17">
+        <property name="text">
+         <string>*API Keys</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="buttoApiKeys">
+        <property name="text">
+         <string>Keys...</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

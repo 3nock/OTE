@@ -21,21 +21,15 @@ void IpEnum::clearResults(){
 }
 
 void IpEnum::removeResults(){
-    /* loop to delete all selected items */
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes())
-    {
-        QModelIndex model_index = proxyModel->mapToSource(index);
-
-        /* remove entire ip */
-        if(model_index.parent() == m_model->invisibleRootItem()->index()){
-            m_resultsSet.remove(model_index.data().toString());
-            m_model->removeRow(model_index.row());
-        }
-        /* remove a certain row in the ip item */
-        else{
-            m_model->removeRow(model_index.row());
+    auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
+    QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
+    for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+        if(i->parent() == m_model->invisibleRootItem()->index()){
+            m_resultsSet.remove(i->data().toString());
+            m_model->removeRow(i->row());
         }
     }
+
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 

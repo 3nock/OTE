@@ -31,16 +31,14 @@ StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(
     CONFIG.beginGroup(CFG_GRP_RECENT);
     QStringList projects = CONFIG.childKeys();
 
-    foreach(const QString &project, projects){
-        if(project == "none")
-            continue;
-
+    foreach(const QString &project, projects)
+    {
         QString projectfile = CONFIG.value(project).toString();
 
         /* check if project file exists if it doesnt delete in recents */
         QFile file(projectfile);
         if(!file.exists()){
-            qDebug() << "Project File: " << projectfile << " doesnt exists. Deleting from existing Projects";
+            qWarning() << "Project File: " << projectfile << " doesnt exists. Deleting from existing Projects";
             CONFIG.remove(project);
             continue;
         }

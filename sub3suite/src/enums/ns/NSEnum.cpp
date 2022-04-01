@@ -9,6 +9,7 @@
 #include "ui_NSEnum.h"
 
 #include "src/utils/Config.h"
+#include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/EnumConfigDialog.h"
 
 
@@ -136,4 +137,10 @@ void NSEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
 
     ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
+}
+
+void NSEnum::on_buttoApiKeys_clicked(){
+    ApiKeysDialog *apiKeysDialog = new ApiKeysDialog(this);
+    apiKeysDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    apiKeysDialog->show();
 }

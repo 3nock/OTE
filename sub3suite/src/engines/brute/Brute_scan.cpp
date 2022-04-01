@@ -58,6 +58,10 @@ void Brute::startScan(){
     /* start timer */
     m_timer.start();
 
+    /* get first target */
+    if(!m_scanArgs->reScan)
+        m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
+
     /* loop to create threads for scan... */
     for(int i = 0; i < status->activeScanThreads; i++)
     {

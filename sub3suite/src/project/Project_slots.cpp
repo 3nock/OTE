@@ -11,7 +11,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     ui->comboBoxFilter->hide();
 
     ui->treeViewTree->setIndentation(0);
-    ui->treeViewTree->setSortingEnabled(true);
+    ui->treeViewTree->setSortingEnabled(false);
 
     ui->label_project_items->setNum(model->getItemsCount());
 
@@ -31,8 +31,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     a_remove_duplicates.setEnabled(true);
     a_cancel.setEnabled(true);
 
-    ui->treeViewTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
     if(parent_index == model->explorer->active->index()){
         a_remove_duplicates.setDisabled(true);
 
@@ -44,10 +42,10 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
 
             a_expand.setDisabled(true);
             a_collapse.setDisabled(true);
+            ui->treeViewTree->setSortingEnabled(true);
         }
         if(index == model->explorer->activeDNS->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             a_extract.setDisabled(true);
 
@@ -63,10 +61,10 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             a_expand.setDisabled(true);
             a_collapse.setDisabled(true);
             a_extract.setDisabled(true);
+            ui->treeViewTree->setSortingEnabled(true);
         }
         if(index == model->explorer->activeSSL->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             a_extract.setDisabled(true);
 
@@ -83,6 +81,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
 
             a_expand.setDisabled(true);
             a_collapse.setDisabled(true);
+            ui->treeViewTree->setSortingEnabled(true);
         }
     }
 
@@ -124,6 +123,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->comboBoxFilter->addItems({"Name", "Target", "Port"});
             ui->comboBoxFilter->show();
         }
+        ui->treeViewTree->setSortingEnabled(true);
     }
 
     if(parent_index == model->explorer->activeSSL->index()){
@@ -145,6 +145,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             proxyModel->setSourceModel(model->activeSSL_altNames);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeSSL_altNames);
         }
+        ui->treeViewTree->setSortingEnabled(true);
     }
 
     if(parent_index == model->explorer->passive->index()){
@@ -215,6 +216,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::passive_SSL);
             a_extract.setDisabled(true);
         }
+        ui->treeViewTree->setSortingEnabled(true);
     }
 
     if(parent_index == model->explorer->enums->index()){
@@ -223,7 +225,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
 
         if(index == model->explorer->enumIP->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             proxyModel->setSourceModel(model->enumIP);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::enum_IP);
@@ -232,7 +233,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         }
         if(index == model->explorer->enumMX->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             proxyModel->setSourceModel(model->enumMX);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::enum_MX);
@@ -241,7 +241,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         }
         if(index == model->explorer->enumASN->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             proxyModel->setSourceModel(model->enumASN);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::enum_ASN);
@@ -250,7 +249,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         }
         if(index == model->explorer->enumCIDR->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             proxyModel->setSourceModel(model->enumCIDR);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::enum_CIDR);
@@ -259,7 +257,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         }
         if(index == model->explorer->enumNS->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             proxyModel->setSourceModel(model->enumNS);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::enum_NS);
@@ -268,7 +265,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         }
         if(index == model->explorer->enumSSL->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             proxyModel->setSourceModel(model->enumSSL);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::enum_SSL);
@@ -277,7 +273,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         }
         if(index == model->explorer->enumEmail->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             proxyModel->setSourceModel(model->enumEmail);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::enum_Email);
@@ -289,7 +284,6 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     if(parent_index == model->explorer->custom->index()){
         if(index == model->explorer->raw->index()){
             ui->treeViewTree->setIndentation(15);
-            ui->treeViewTree->setSortingEnabled(false);
 
             a_send.setDisabled(true);
 
@@ -303,12 +297,21 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
     ui->comboBoxFilter->setCurrentIndex(0);
     ui->labelCount->setNum(proxyModel->rowCount());
 
+    /* set equal section sizes */
+
+    int columnCount = ui->treeViewTree->model()->columnCount();
+    if(columnCount > 1){
+        int width = ui->treeViewTree->width();
+        int size = width/columnCount;
+        size -= 10;
+        for(int i = 0; i < columnCount; i++)
+            ui->treeViewTree->setColumnWidth(i, size);
+    }
+
     this->init_action_copy();
     this->init_action_save();
     this->init_action_send();
     this->init_action_extract();
-
-    ui->treeViewTree->header()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 void Project::on_lineEditFilter_textChanged(const QString &filterKeyword){

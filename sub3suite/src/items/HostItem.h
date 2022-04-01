@@ -12,7 +12,6 @@ struct HOST {
     QString host;
     QString ipv4;
     QString ipv6;
-    int ping_time;
 
     /* for open ports */
     QList<quint16> ports;

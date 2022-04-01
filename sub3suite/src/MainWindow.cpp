@@ -57,7 +57,7 @@ void MainWindow::initUI(){
     hbox_donate->setContentsMargins(0, 0, 15, 2);
     ui->tabWidgetMain->setCornerWidget(cornerWidget_donate);
     connect(donate, &s3s_ClickableLabel::clicked, this, [=](){
-        QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite/SPONSOR.md", QUrl::TolerantMode));
+        QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite/blob/main/SPONSOR.md", QUrl::TolerantMode));
     });
 
     /* documentation */
@@ -152,15 +152,10 @@ void MainWindow::initActions(){
 void MainWindow::setRecentProjects(){
     m_menuRecents = new QMenu(this);
 
-    CONFIG.beginGroup("recent_projects");
+    CONFIG.beginGroup(CFG_GRP_RECENT);
     QStringList recentList =  CONFIG.allKeys();
 
-    if(recentList.count() < 2)
-        return;
-
     foreach(const QString &project_name, CONFIG.allKeys()){
-        if(project_name == "none")
-            continue;
         QString project_path = CONFIG.value(project_name).toString();
         m_menuRecents->addAction(project_name, this, [=](){projectModel->openExistingProject(project_name, project_path);});
     }

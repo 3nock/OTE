@@ -1,11 +1,12 @@
 #include "IpData.h"
 #include "src/utils/Config.h"
 
-#define ASN_DATA 0
-#define CURRENCY_DETECTION 1
-#define MOBILE_CARRIER_DETECTION 2
-#define PROXY_TOR_THREAT_DETECTION 3
-#define TIMEZONE_DETECTION 4
+#define ASN_API 0
+#define ASN_DATA 1
+#define CURRENCY_DETECTION 2
+#define MOBILE_CARRIER_DETECTION 3
+#define PROXY_TOR_THREAT_DETECTION 4
+#define TIMEZONE_DETECTION 5
 
 /*
  * 1,500/day for free-tier...
@@ -17,6 +18,8 @@ IpData::IpData(ScanArgs args): AbstractOsintModule(args)
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpData::replyFinishedRawJson);
+    if(args.output_EnumIP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpData::replyFinishedEnumIP);
 
     /* get api key */
     m_key = APIKEY.value(OSINT_MODULE_IPDATA).toString();
@@ -33,6 +36,9 @@ void IpData::start(){
 
     if(args.output_Raw){
         switch (args.raw_query_id) {
+        case ASN_API:
+            url.setUrl("https://api.ipdata.co/"+target+"/asn?api-key="+m_key);
+            break;
         case ASN_DATA:
             url.setUrl("https://api.ipdata.co/"+target+"/asn?api-key="+m_key);
             break;
@@ -53,4 +59,55 @@ void IpData::start(){
         manager->get(request);
         return;
     }
+
+    if(args.output_EnumIP){
+        url.setUrl("https://api.ipdata.co/"+target+"?api-key="+m_key);
+        request.setUrl(url);
+        manager->get(request);
+        return;
+    }
 }
+
+void IpData::replyFinishedEnumIP(QNetworkReply *reply){
+    if(reply->error()){
+        quitThread();
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    s3s_struct::IP ip;
+    ip.ip = target;
+
+    ip.info_ip = mainObj["ip"].toString();
+    ip.info_region = mainObj["region"].toString();
+    ip.info_city = mainObj["city"].toString();
+    ip.info_countryCode = mainObj["country_code"].toString();
+    ip.info_countryName = mainObj["country_name"].toString();
+
+    QString latitude = QString::number(mainObj["latitude"].toDouble());
+    QString longitude = QString::number(mainObj["longitude"].toDouble());
+    ip.info_geoLocation = latitude+","+longitude;
+
+    QJsonObject time_zone = mainObj["time_zone"].toObject();
+    ip.info_timezone = time_zone["name"].toString();
+
+    QJsonObject asn = mainObj["asn"].toObject();
+    ip.asnInfo_asn = QString::number(asn["asn"].toInt());
+    ip.asnInfo_name = asn["name"].toString();
+    ip.asnInfo_route = asn["route"].toString();
+    ip.info_organization = asn["name"].toString();
+
+    QJsonObject privacy = mainObj["security"].toObject();
+    ip.privacyInfo_tor = privacy["is_tor"].toBool();
+    ip.privacyInfo_proxy = privacy["is_proxy"].toBool();
+    ip.privacyInfo_anonymous = privacy["is_anonymous"].toBool();
+    ip.privacyInfo_attacker = privacy["is_known_attacker"].toBool();
+    ip.privacyInfo_abuser = privacy["is_known_abuser"].toBool();
+    ip.privacyInfo_threat = privacy["is_threat"].toBool();
+    emit resultEnumIP(ip);
+
+    end(reply);
+}
+

@@ -49,26 +49,26 @@ void Ssl::openInBrowser(){
 }
 
 void Ssl::removeResults(){
+    auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
+    QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
+
     switch (ui->comboBoxOutput->currentIndex()) {
     case 0: // subdomain
-        foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            set_subdomain.remove(index.data().toString());
-            m_model_subdomain->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            set_subdomain.remove(i->data().toString());
+            m_model_subdomain->removeRow(i->row());
         }
         break;
     case 1: // cert hash
-        foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            set_hash.remove(index.data().toString());
-            m_model_hash->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            set_hash.remove(i->data().toString());
+            m_model_hash->removeRow(i->row());
         }
         break;
     case 2: // ssl
-        foreach(const QModelIndex &proxyIndex, selectionModel->selectedIndexes()){
-            QModelIndex index = proxyModel->mapToSource(proxyIndex);
-            set_ssl.remove(index.data().toString());
-            m_model_ssl->removeRow(index.row());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            set_ssl.remove(i->data().toString());
+            m_model_ssl->removeRow(i->row());
         }
     }
 

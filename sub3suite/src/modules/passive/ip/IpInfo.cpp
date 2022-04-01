@@ -6,11 +6,12 @@
 
 #define ASN 0
 #define HOSTED_DOMAINS 1
-#define IP 2
+#define IPINFO 2
 #define RANGES 3
 
 /*
- * 50,000 requests per month
+ * 50,000 requests per month...
+ * has different plans and different response for each plan...
  */
 IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
 {
@@ -40,7 +41,7 @@ void IpInfo::start(){
 
     if(args.output_Raw){
         switch (args.raw_query_id) {
-        case IP:
+        case IPINFO:
             url.setUrl("https://ipinfo.io/"+target+"/json?token="+m_key);
             break;
         case ASN:
@@ -106,68 +107,33 @@ void IpInfo::replyFinishedEnumIP(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    /*
+    s3s_struct::IP ip;
+    ip.ip = target;
 
-    args.ipModel->info_ip->setText(mainObj["ip"].toString());
-    args.ipModel->info_city->setText(mainObj["city"].toString());
-    args.ipModel->info_region->setText(mainObj["region"].toString());
-    args.ipModel->info_countryCode->setText(mainObj["country"].toString());
-    args.ipModel->info_geoLocation->setText(mainObj["loc"].toString());
-    args.ipModel->info_timezone->setText(mainObj["timezone"].toString());
-    args.ipModel->info_organization->setText(mainObj["org"].toString());
+    ip.info_ip = mainObj["ip"].toString();
+    ip.info_city = mainObj["city"].toString();
+    ip.info_region = mainObj["region"].toString();
+    ip.info_countryCode = mainObj["country"].toString();
+    ip.info_geoLocation = mainObj["loc"].toString();
+    ip.info_timezone = mainObj["timezone"].toString();
+    ip.info_organization = mainObj["org"].toString();
 
-    ///
-    /// if basic plan or higher...
-    ///
-    if(!mainObj["asn"].isNull() || !mainObj["asn"].isUndefined()){
-        QJsonObject asn = mainObj["asn"].toObject();
+    /* if basic plan or higher... */
+    QJsonObject asn = mainObj["asn"].toObject();
+    ip.asnInfo_asn = asn["asn"].toString();
+    ip.asnInfo_name = asn["name"].toString();
+    ip.asnInfo_route = asn["route"].toString();
 
-        args.ipModel->asnInfo_asn->setText(asn["asn"].toString());
-        args.ipModel->asnInfo_name->setText(asn["name"].toString());
-        args.ipModel->asnInfo_domain->setText(asn["domain"].toString());
-        args.ipModel->asnInfo_route->setText(asn["route"].toString());
-        args.ipModel->asnInfo_type->setText(asn["type"].toString());
-    }
+    /* if bussiness plan or higher... */
+    QJsonObject company = mainObj["company"].toObject();
+    ip.companyInfo_name = company["name"].toString();
+    ip.companyInfo_domain = company["domain"].toString();
 
-    ///
-    /// if bussiness plan or higher...
-    ///
-    if(!mainObj["company"].isNull() || !mainObj["company"].isUndefined()){
-        QJsonObject company = mainObj["company"].toObject();
+    QJsonObject privacy = mainObj["privacy"].toObject();
+    ip.privacyInfo_vpn = privacy["vpn"].toBool();
+    ip.privacyInfo_proxy = privacy["proxy"].toBool();
+    ip.privacyInfo_tor = privacy["tor"].toBool();
+    emit resultEnumIP(ip);
 
-        args.ipModel->companyInfo_name->setText(company["name"].toString());
-        args.ipModel->companyInfo_domain->setText(company["domain"].toString());
-        args.ipModel->companyInfo_type->setText(company["type"].toString());
-    }
-
-    if(!mainObj["privacy"].isNull() || !mainObj["privacy"].isUndefined()){
-        QJsonObject privacy = mainObj["privacy"].toObject();
-
-        args.ipModel->privacyInfo_tor->setText(privacy["tor"].toString());
-        args.ipModel->privacyInfo_vpn->setText(privacy["vpn"].toString());
-        args.ipModel->privacyInfo_proxy->setText(privacy["proxy"].toString());
-        args.ipModel->privacyInfo_relay->setText(privacy["relay"].toString());
-        args.ipModel->privacyInfo_hosting->setText(privacy["hosting"].toString());
-    }
-
-    if(!mainObj["abuse"].isNull() || !mainObj["abuse"].isUndefined()){
-        QJsonObject abuse = mainObj["abuse"].toObject();
-
-        args.ipModel->abuseInfo_name->setText(abuse["name"].toString());
-        args.ipModel->abuseInfo_email->setText(abuse["email"].toString());
-        args.ipModel->abuseInfo_phone->setText(abuse["phone"].toString());
-        args.ipModel->abuseInfo_address->setText(abuse["address"].toString());
-        args.ipModel->abuseInfo_country->setText(abuse["country"].toString());
-        args.ipModel->abuseInfo_network->setText(abuse["network"].toString());
-    }
-
-    if(!mainObj["domains"].isNull() || !mainObj["domains"].isUndefined()){
-        QJsonArray domains = mainObj["domains"].toObject()["domains"].toArray();
-        foreach(const QJsonValue &value, domains){
-            args.ipModel->domains->appendRow(new QStandardItem(value.toString()));
-        }
-    }
-    */
-
-    emit quitThread();
+    end(reply);
 }

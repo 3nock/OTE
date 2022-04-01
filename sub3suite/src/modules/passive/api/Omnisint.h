@@ -45,6 +45,7 @@ class Omnisint: public AbstractOsintModule{
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
         void replyFinishedSubdomainIp(QNetworkReply *reply) override;
+        void replyFinishedEnumIP(QNetworkReply *reply) override;
 };
 
 #endif // OMNISINT_H

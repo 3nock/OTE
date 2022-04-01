@@ -57,17 +57,17 @@
        </property>
        <item>
         <property name="text">
-         <string>Alt Names</string>
+         <string>Alternative Names</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Cert Hash</string>
+         <string>Certificate Hash</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Cert Info</string>
+         <string>SSL CERTIFICATE</string>
         </property>
        </item>
       </widget>

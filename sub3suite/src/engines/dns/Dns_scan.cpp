@@ -40,7 +40,6 @@ void Dns::startScan(){
         else
             status->activeScanThreads = m_scanArgs->config->threads;
 
-        m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
         /* set progressbar maximum value */
         ui->progressBar->setMaximum(m_scanArgs->targets.length()*m_scanArgs->srvWordlist.length());
     }
@@ -74,6 +73,10 @@ void Dns::startScan(){
 
     /* start timer */
     m_timer.start();
+
+    /* get first target */
+    if(m_scanArgs->RecordType_srv)
+        m_scanArgs->currentTarget = m_scanArgs->targets.dequeue();
 
     /* loop to create threads for scan... */
     for(int i = 0; i < status->activeScanThreads; i++)

@@ -219,12 +219,26 @@ void ProjectModel::addEnumCIDR(const s3s_struct::CIDR &cidr){
 void ProjectModel::addEnumIP(const s3s_struct::IP &ip){
     if(map_enumASN.contains(ip.ip)){
         s3s_item::IP *item = map_enumIP.value(ip.ip);
-        item->setValues(ip);
+        item->addValues(ip);
         return;
     }
 
     s3s_item::IP *item = new s3s_item::IP;
     item->setValues(ip);
+    enumIP->appendRow(item);
+    map_enumIP.insert(ip.ip, item);
+    modified = true;
+}
+
+void ProjectModel::addEnumIP_domains(const s3s_struct::IP &ip){
+    if(map_enumASN.contains(ip.ip)){
+        s3s_item::IP *item = map_enumIP.value(ip.ip);
+        item->addDomains(ip);
+        return;
+    }
+
+    s3s_item::IP *item = new s3s_item::IP;
+    item->addDomains(ip);
     enumIP->appendRow(item);
     map_enumIP.insert(ip.ip, item);
     modified = true;

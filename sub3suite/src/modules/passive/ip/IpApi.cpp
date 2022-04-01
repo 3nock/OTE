@@ -67,55 +67,36 @@ void IpApi::replyFinishedEnumIP(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
-    /*
-    args.ipModel->info_ip->setText(mainObj["ip"].toString());
-    args.ipModel->info_type->setText(mainObj["type"].toString());
-    args.ipModel->info_host->setText(mainObj["hostname"].toString());
-    args.ipModel->info_city->setText(mainObj["city"].toString());
-    args.ipModel->info_region->setText(mainObj["region_name"].toString());
-    args.ipModel->info_countryCode->setText(mainObj["country_code"].toString());
-    args.ipModel->info_countryName->setText(mainObj["country_name"].toString());
-    args.ipModel->info_zip->setText(mainObj["zip"].toString());
-    ///
-    /// for location...
-    ///
+    s3s_struct::IP ip;
+    ip.ip = target;
+
+    ip.info_ip = mainObj["ip"].toString();
+    ip.info_type = mainObj["type"].toString();
+    ip.info_city = mainObj["city"].toString();
+    ip.info_region = mainObj["region_name"].toString();
+    ip.info_countryCode = mainObj["country_code"].toString();
+    ip.info_countryName = mainObj["country_name"].toString();
+    ip.info_zip = mainObj["zip"].toString();
+
+    /* for location... */
     QString latitude = QString::number(mainObj["latitude"].toDouble());
     QString longitude = QString::number(mainObj["longitude"].toDouble());
-    args.ipModel->info_geoLocation->setText(latitude+","+longitude);
+    ip.info_geoLocation = latitude+","+longitude;
 
-    ///
-    /// for timezone...
-    ///
-    if(!mainObj["time_zone"].isNull() || !mainObj["time_zone"].isUndefined()){
-        QString timezone = mainObj["time_zone"].toObject()["id"].toString();
-        args.ipModel->info_timezone->setText(timezone);
-    }
-    ///
-    /// for currency...
-    ///
-    if(!mainObj["currency"].isNull() || !mainObj["currency"].isUndefined()){
-        QString currency = mainObj["currency"].toObject()["name"].toString();
-        args.ipModel->info_currency->setText(currency);
-    }
+    /* for timezone... */
+    QString timezone = mainObj["time_zone"].toObject()["id"].toString();
+    ip.info_timezone = timezone;
 
-    ///
-    /// for connection...
-    ///
-    if(!mainObj["connection"].isNull() || !mainObj["connection"].isUndefined()){
-        QString asn = QString::number(mainObj["connection"].toObject()["asn"].toInt());
-        args.ipModel->asnInfo_asn->setText(asn);
-    }
+    /* for connection... */
+    QString asn = QString::number(mainObj["connection"].toObject()["asn"].toInt());
+    ip.asnInfo_asn = asn;
 
-    ///
-    /// for privacy...
-    ///
-    if(!mainObj["security"].isNull() || !mainObj["security"].isUndefined()){
-        QJsonObject security = mainObj["security"].toObject();
-        args.ipModel->privacyInfo_proxy->setText(security["is_proxy"].toString());
-        args.ipModel->privacyInfo_tor->setText(security["is_tor"].toString());
-        args.ipModel->privacyInfo_threatLevel->setText(security["threat_level"].toString());
-    }
-    */
+    /* for privacy... */
+    QJsonObject security = mainObj["security"].toObject();
+    ip.privacyInfo_proxy = security["is_proxy"].toBool();
+    ip.privacyInfo_tor = security["is_tor"].toBool();
 
-    emit quitThread();
+    emit resultEnumIP(ip);
+
+    this->end(reply);
 }

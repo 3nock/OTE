@@ -10,6 +10,7 @@
 
 #include "src/utils/Config.h"
 #include <QSpacerItem>
+#include <QFile>
 
 
 void WordListDialog::m_initChoose(){
@@ -28,14 +29,26 @@ void WordListDialog::initTLDWordlist(){
     QStringList keys;
     CONFIG.beginGroup(m_defaultWordlist);
     keys = CONFIG.childKeys();
-    for(int i = 0; i < keys.count(); i++)
-        ui->comboBoxDefaultWordlist->addItem(keys.at(i));
+    for(int i = 0; i < keys.count(); i++){
+        QString wl_filename(keys.at(i));
+        QString wl_file(QApplication::applicationDirPath()+CONFIG.value(wl_filename).toString());
+        if(QFile::exists(wl_file))
+            ui->comboBoxDefaultWordlist->addItem(wl_filename);
+        else
+            CONFIG.remove(wl_filename);
+    }
     CONFIG.endGroup();
 
     CONFIG.beginGroup(m_specialWordlist);
     keys = CONFIG.childKeys();
-    for(int i = 0; i < keys.count(); i++)
-        ui->comboBoxSpecialWordlist->addItem(keys.at(i));
+    for(int i = 0; i < keys.count(); i++){
+        QString wl_filename(keys.at(i));
+        QString wl_file(QApplication::applicationDirPath()+CONFIG.value(wl_filename).toString());
+        if(QFile::exists(wl_file))
+            ui->comboBoxSpecialWordlist->addItem(wl_filename);
+        else
+            CONFIG.remove(wl_filename);
+    }
     CONFIG.endGroup();
 
     TLD = true;
@@ -49,14 +62,26 @@ void WordListDialog::initSubdomainWordlist(){
     QStringList keys;
     CONFIG.beginGroup(m_defaultWordlist);
     keys = CONFIG.childKeys();
-    for(int i = 0; i < keys.count(); i++)
-        ui->comboBoxDefaultWordlist->addItem(keys.at(i));
+    for(int i = 0; i < keys.count(); i++){
+        QString wl_filename(keys.at(i));
+        QString wl_file(QApplication::applicationDirPath()+CONFIG.value(wl_filename).toString());
+        if(QFile::exists(wl_file))
+            ui->comboBoxDefaultWordlist->addItem(wl_filename);
+        else
+            CONFIG.remove(wl_filename);
+    }
     CONFIG.endGroup();
 
     CONFIG.beginGroup(m_specialWordlist);
     keys = CONFIG.childKeys();
-    for(int i = 0; i < keys.count(); i++)
-        ui->comboBoxSpecialWordlist->addItem(keys.at(i));
+    for(int i = 0; i < keys.count(); i++){
+        QString wl_filename(keys.at(i));
+        QString wl_file(QApplication::applicationDirPath()+CONFIG.value(wl_filename).toString());
+        if(QFile::exists(wl_file))
+            ui->comboBoxSpecialWordlist->addItem(wl_filename);
+        else
+            CONFIG.remove(wl_filename);
+    }
     CONFIG.endGroup();
 
     Subdomain = true;

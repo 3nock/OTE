@@ -32,6 +32,7 @@ class IpRegistry: public AbstractOsintModule{
 
     public slots:
         void start() override;
+        void replyFinishedEnumIP(QNetworkReply *reply) override;
 
     private:
         QString m_key;

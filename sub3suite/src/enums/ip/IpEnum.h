@@ -45,7 +45,9 @@ class IpEnum : public AbstractEnum{
         void on_buttonAction_clicked();
         void on_comboBoxOutput_currentIndexChanged(int index);
 
-    private:
+        void on_buttoApiKeys_clicked();
+
+private:
         Ui::IpEnum *ui;
 
         QStandardItemModel *m_model;

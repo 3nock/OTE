@@ -9,7 +9,10 @@
 
 #include <QNetworkReply>
 
-
+/*
+ * BUG:
+ *      info: for a very large data set, at some point the scanner crashes on lookup
+ */
 url::Scanner::Scanner(url::ScanArgs *args): AbstractScanner(nullptr),
       m_args(args)
 {

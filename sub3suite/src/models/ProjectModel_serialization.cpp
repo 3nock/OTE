@@ -135,7 +135,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     /// project notes...
     ///
 
-    notes.setPlainText(mainObj["notes"].toString());
+    notes = mainObj["notes"].toString();
 
     ///
     /// project data
@@ -538,7 +538,7 @@ QByteArray ProjectModel::getJson(){
 
     QJsonObject mainObj;
     mainObj.insert("data", data);
-    mainObj.insert("notes", notes.toPlainText());
+    mainObj.insert("notes", notes_document->toPlainText());
     mainObj.insert("info", info_json);
 
     QJsonDocument document;

@@ -9,6 +9,7 @@
 #include "ui_IpEnum.h"
 
 #include "src/utils/Config.h"
+#include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/EnumConfigDialog.h"
 
 #define ALL 0
@@ -146,9 +147,15 @@ void IpEnum::on_comboBoxOutput_currentIndexChanged(int index){
     ui->comboBoxEngine->clear();
     switch(index){
     case 0:
-        ui->comboBoxEngine->addItems({"IPINFO", "IPAPI"});
+        ui->comboBoxEngine->addItems({"IpData", "IpRegistry", "IpInfo", "IpAPI" });
         break;
     case 1:
-        ui->comboBoxEngine->addItems({"DNSLytics"});
+        ui->comboBoxEngine->addItems({"Omnisint"});
     }
+}
+
+void IpEnum::on_buttoApiKeys_clicked(){
+    ApiKeysDialog *apiKeysDialog = new ApiKeysDialog(this);
+    apiKeysDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    apiKeysDialog->show();
 }

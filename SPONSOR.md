@@ -1,9 +1,9 @@
 # Become a sponsor of [Sub3 Suite](https://github.com/3nock/sub3suite)
 
 Your donations support the development & advancement of **Sub3 Suite**. 
-Any donation amount is acceptable & will help attain the goal of making Sub3 Suite the de facto tool for cyber intelligence gathering.
+Any donation amount is acceptable and will help attain the goal of making **Sub3 Suite** the de facto tool for cyber intelligence gathering.
 
-Feel free to [contact us](CONTACTS.md] for any further inquiries.
+Feel free to [contact us](CONTACTS.md) for any further inquiries.
 
 ## Sponsor via PayPal
 

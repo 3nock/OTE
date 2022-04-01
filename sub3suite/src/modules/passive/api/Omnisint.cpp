@@ -19,6 +19,8 @@ Omnisint::Omnisint(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Omnisint::replyFinishedSubdomain);
     if(args.output_HostnameIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Omnisint::replyFinishedSubdomainIp);
+    if(args.output_EnumIP)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &Omnisint::replyFinishedEnumIP);
 }
 Omnisint::~Omnisint(){
     delete manager;
@@ -44,6 +46,13 @@ void Omnisint::start(){
             url.setUrl("https://sonar.omnisint.io/tlds/"+target);
             break;
         }
+        request.setUrl(url);
+        manager->get(request);
+        return;
+    }
+
+    if(args.output_EnumIP){
+        url.setUrl("https://sonar.omnisint.io/reverse/"+target);
         request.setUrl(url);
         manager->get(request);
         return;
@@ -132,6 +141,24 @@ void Omnisint::replyFinishedSubdomainIp(QNetworkReply *reply){
             }
         }
     }
+
+    this->end(reply);
+}
+
+void Omnisint::replyFinishedEnumIP(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    s3s_struct::IP ip;
+    ip.ip = target;
+
+    foreach(const QJsonValue &value, document.array())
+        ip.domains.insert(value.toString());
+
+    emit resultEnumIP(ip);
 
     this->end(reply);
 }

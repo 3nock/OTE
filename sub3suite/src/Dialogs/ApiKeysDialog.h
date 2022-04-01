@@ -36,7 +36,6 @@ class ApiKeysDialog : public QDialog{
         void on_buttonGetSecurityTrails_clicked();
         void on_buttonGetSpyse_clicked();
         void on_buttonGetRiskIq_clicked();
-        void on_buttonGetPentestTools_clicked();
         void on_buttonGetProjectDiscovery_clicked();
         void on_buttonGetBinaryEdge_clicked();
         void on_buttonGetC99_clicked();

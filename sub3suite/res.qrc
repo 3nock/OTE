@@ -99,8 +99,6 @@
         <file>res/documentation/enums/email.html</file>
         <file>res/documentation/index.html</file>
         <file>res/documentation/engines/osint.html</file>
-        <file>res/documentation/engines/images/osint_1.png</file>
-        <file>res/documentation/engines/images/osint_2.png</file>
         <file>res/documentation/engines/url.html</file>
     </qresource>
 </RCC>
