@@ -69,5 +69,3 @@ There are several ways to reach out to the community of sub3suite developers, co
 ### Credits
 
 This `CONTRIBUTING.md` File is a our simplified version of the [x64dbg's](https://github.com/x64dbg/x64dbg) `CONTRIBUTING.md` File :)
-
-

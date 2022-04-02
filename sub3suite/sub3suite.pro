@@ -2,7 +2,7 @@
 #
 #                Project created by QtCreator 2020-11-07T00:44:51
 #
-# Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+# Copyright 2020-2022 Enock Nicholaus Michael <3nock@protonmail.com>. All rights reserved.
 #
 #----------------------------------------------------------------------------------
 

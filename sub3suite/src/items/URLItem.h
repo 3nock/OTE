@@ -1,7 +1,6 @@
 #ifndef URLITEM_H
 #define URLITEM_H
 
-
 #include <QStandardItem>
 #include <QJsonObject>
 #include <QString>

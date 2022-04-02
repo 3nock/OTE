@@ -13,6 +13,7 @@ manual and automated analysis on variety of target types with many available fea
 <img src="docs/images/screenshot_project.png"/>
 
 ## Preface
+
 If you're just getting started with subdomain enumeration, osint information gathering & attack surface mapping, read [primer guide](PRIMER.md).
 
 ## Contributing 

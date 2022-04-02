@@ -6,7 +6,6 @@
 #include <QMap>
 #include <QSet>
 
-
 namespace s3s_struct {
 struct HOST {
     QString host;

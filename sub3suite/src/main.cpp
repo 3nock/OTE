@@ -68,10 +68,8 @@ void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
         log = QString("[%1] WARNING: %2").arg(time).arg(msg);
         break;
     case QtCriticalMsg:
-        log = QString("[%1] CRITICAL: %2").arg(time).arg(msg);
-        break;
-    case QtFatalMsg:
-        log = QString("[%1] FATAL: %2").arg(time).arg(msg);
+	case QtFatalMsg:
+        log = QString("[%1] ERROR: %2").arg(time).arg(msg);
         break;
     }
 

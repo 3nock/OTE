@@ -6,6 +6,7 @@
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_WIN32)
 
+
 namespace Breakpad {
     class CrashHandlerPrivate;
     class CrashHandler

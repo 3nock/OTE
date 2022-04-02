@@ -10,6 +10,7 @@
 #include "client/windows/handler/exception_handler.h"
 #endif
 
+
 #if defined(Q_OS_LINUX) || defined(Q_OS_WIN32)
 namespace Breakpad {
 

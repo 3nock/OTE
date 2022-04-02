@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 
 
+
 s3s_struct::IP ip_to_struct(s3s_item::IP *item){
     s3s_struct::IP ip;
 

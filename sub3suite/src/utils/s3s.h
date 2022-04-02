@@ -14,7 +14,6 @@
 
 #define REQUEST_TYPE "type"
 
-
 ///
 /// a clickable label for icon-buttons
 ///

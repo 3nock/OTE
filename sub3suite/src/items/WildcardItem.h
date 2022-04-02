@@ -5,6 +5,7 @@
 #include <QDate>
 
 
+
 namespace s3s_struct {
 struct Wildcard {
     QString wildcard;
