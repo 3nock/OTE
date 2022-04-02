@@ -998,15 +998,20 @@ void Project::action_send_host(const ENGINE &engine){
         break;
     case ExplorerType::activeDNS:
         for(int i = 0; i < proxyModel->rowCount(); i++){
+            /* itselft first */
+            hostnames.insert(proxyModel->index(i,0).data().toString());
+
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                hostnames.insert(item->CNAME->child(i, 1)->text());
+                hostnames.insert(item->CNAME->child(j, 1)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                hostnames.insert(item->NS->child(i, 1)->text());
+                hostnames.insert(item->NS->child(j, 1)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                hostnames.insert(item->MX->child(i, 1)->text());
+                hostnames.insert(item->MX->child(j, 1)->text());
+            for(int j = 0; j < item->SRV->rowCount(); j++)
+                hostnames.insert(item->SRV->child(j, 1)->text());
         }
         break;
     case ExplorerType::activeSSL:
@@ -1015,7 +1020,7 @@ void Project::action_send_host(const ENGINE &engine){
             s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->activeSSL->itemFromIndex(model_index));
 
             for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
-                hostnames.insert(item->subjectAltNames->child(i, 1)->text());
+                hostnames.insert(item->subjectAltNames->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_MX:
@@ -1024,7 +1029,7 @@ void Project::action_send_host(const ENGINE &engine){
             s3s_item::MX *item = static_cast<s3s_item::MX*>(model->enumMX->itemFromIndex(model_index));
 
             for(int j = 0; j < item->domains->rowCount(); j++)
-                hostnames.insert(item->domains->child(i, 1)->text());
+                hostnames.insert(item->domains->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_NS:
@@ -1033,7 +1038,7 @@ void Project::action_send_host(const ENGINE &engine){
             s3s_item::NS *item = static_cast<s3s_item::NS*>(model->enumNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->domains->rowCount(); j++)
-                hostnames.insert(item->domains->child(i, 1)->text());
+                hostnames.insert(item->domains->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_SSL:
@@ -1042,7 +1047,7 @@ void Project::action_send_host(const ENGINE &engine){
             s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->enumSSL->itemFromIndex(model_index));
 
             for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
-                hostnames.insert(item->subjectAltNames->child(i, 1)->text());
+                hostnames.insert(item->subjectAltNames->child(j, 1)->text());
         }
         break;
     }
@@ -1085,6 +1090,7 @@ void Project::action_send_ip(const ENGINE &engine){
     case ExplorerType::activeDNS_AAAA:
     case ExplorerType::passive_A:
     case ExplorerType::passive_AAAA:
+    case ExplorerType::enum_IP:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             ip.insert(proxyModel->index(i, 0).data().toString());
         break;
@@ -1105,9 +1111,9 @@ void Project::action_send_ip(const ENGINE &engine){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                ip.insert(item->A->child(i, 1)->text());
+                ip.insert(item->A->child(j, 1)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                ip.insert(item->AAAA->child(i, 1)->text());
+                ip.insert(item->AAAA->child(j, 1)->text());
         }
         break;
     }
@@ -1159,6 +1165,7 @@ void Project::action_send_email(const ENGINE &engine){
     QSet<QString> emails;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::enum_Email:
     case ExplorerType::passive_Email:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             emails.insert(proxyModel->index(i, 0).data().toString());
@@ -1169,9 +1176,9 @@ void Project::action_send_email(const ENGINE &engine){
             s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
 
             for(int j = 0; j < item->abuseContacts->rowCount(); j++)
-                emails.insert(item->abuseContacts->child(i, 1)->text());
+                emails.insert(item->abuseContacts->child(j, 1)->text());
             for(int j = 0; j < item->emailContacts->rowCount(); j++)
-                emails.insert(item->emailContacts->child(i, 1)->text());
+                emails.insert(item->emailContacts->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_CIDR:
@@ -1180,9 +1187,9 @@ void Project::action_send_email(const ENGINE &engine){
             s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
 
             for(int j = 0; j < item->abuseContacts->rowCount(); j++)
-                emails.insert(item->abuseContacts->child(i, 1)->text());
+                emails.insert(item->abuseContacts->child(j, 1)->text());
             for(int j = 0; j < item->emailContacts->rowCount(); j++)
-                emails.insert(item->emailContacts->child(i, 1)->text());
+                emails.insert(item->emailContacts->child(j, 1)->text());
         }
         break;
     }
@@ -1211,11 +1218,14 @@ void Project::action_send_asn(const ENGINE &engine){
         break;
     case ExplorerType::enum_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
+            /* itsefl first */
+            asn.insert(proxyModel->index(i, 0).data().toString());
+
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
 
             for(int j = 0; j < item->peers->rowCount(); j++)
-                asn.insert(item->peers->child(i, 1)->text());
+                asn.insert(item->peers->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_CIDR:
@@ -1224,7 +1234,7 @@ void Project::action_send_asn(const ENGINE &engine){
             s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
 
             for(int j = 0; j < item->asns->rowCount(); j++)
-                asn.insert(item->asns->child(i, 1)->text());
+                asn.insert(item->asns->child(j, 1)->text());
         }
         break;
     }
@@ -1248,6 +1258,7 @@ void Project::action_send_cidr(const ENGINE &engine){
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_CIDR:
+    case ExplorerType::enum_CIDR:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             cidr.insert(proxyModel->index(i, 0).data().toString());
         break;
@@ -1257,7 +1268,7 @@ void Project::action_send_cidr(const ENGINE &engine){
             s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
 
             for(int j = 0; j < item->prefixes->rowCount(); j++)
-                cidr.insert(item->prefixes->child(i, 1)->text());
+                cidr.insert(item->prefixes->child(j, 1)->text());
         }
         break;
     }
@@ -1303,7 +1314,7 @@ void Project::action_send_ns(const ENGINE &engine){
     QSet<QString> ns;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
-    case ExplorerType::activeDNS_NS:
+    case ExplorerType::enum_NS:
     case ExplorerType::passive_NS:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             ns.insert(proxyModel->index(i, 0).data().toString());
@@ -1314,7 +1325,7 @@ void Project::action_send_ns(const ENGINE &engine){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->NS->rowCount(); j++)
-                ns.insert(item->NS->child(i, 1)->text());
+                ns.insert(item->NS->child(j, 1)->text());
         }
         break;
     }
@@ -1353,7 +1364,7 @@ void Project::action_send_mx(const ENGINE &engine){
     QSet<QString> mx;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
-    case ExplorerType::activeDNS_MX:
+    case ExplorerType::enum_MX:
     case ExplorerType::passive_MX:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             mx.insert(proxyModel->index(i, 0).data().toString());
@@ -1364,7 +1375,7 @@ void Project::action_send_mx(const ENGINE &engine){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->MX->rowCount(); j++)
-                mx.insert(item->MX->child(i, 1)->text());
+                mx.insert(item->MX->child(j, 1)->text());
         }
         break;
     }
@@ -1427,9 +1438,9 @@ void Project::action_send_ip(){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                ip.insert(item->A->child(i, 1)->text());
+                ip.insert(item->A->child(j, 1)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                ip.insert(item->AAAA->child(i, 1)->text());
+                ip.insert(item->AAAA->child(j, 1)->text());
         }
         break;
     }
@@ -1442,6 +1453,7 @@ void Project::action_send_email(){
     QSet<QString> emails;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
+    case ExplorerType::enum_Email:
     case ExplorerType::passive_Email:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             emails.insert(proxyModel->index(i, 0).data().toString());
@@ -1452,9 +1464,9 @@ void Project::action_send_email(){
             s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
 
             for(int j = 0; j < item->abuseContacts->rowCount(); j++)
-                emails.insert(item->abuseContacts->child(i, 1)->text());
+                emails.insert(item->abuseContacts->child(j, 1)->text());
             for(int j = 0; j < item->emailContacts->rowCount(); j++)
-                emails.insert(item->emailContacts->child(i, 1)->text());
+                emails.insert(item->emailContacts->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_CIDR:
@@ -1463,9 +1475,9 @@ void Project::action_send_email(){
             s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
 
             for(int j = 0; j < item->abuseContacts->rowCount(); j++)
-                emails.insert(item->abuseContacts->child(i, 1)->text());
+                emails.insert(item->abuseContacts->child(j, 1)->text());
             for(int j = 0; j < item->emailContacts->rowCount(); j++)
-                emails.insert(item->emailContacts->child(i, 1)->text());
+                emails.insert(item->emailContacts->child(j, 1)->text());
         }
         break;
     }
@@ -1484,11 +1496,14 @@ void Project::action_send_asn(){
         break;
     case ExplorerType::enum_ASN:
         for(int i = 0; i < proxyModel->rowCount(); i++){
+            /* itsefl first */
+            asn.insert(proxyModel->index(i, 0).data().toString());
+
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
 
             for(int j = 0; j < item->peers->rowCount(); j++)
-                asn.insert(item->peers->child(i, 1)->text());
+                asn.insert(item->peers->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_CIDR:
@@ -1497,7 +1512,7 @@ void Project::action_send_asn(){
             s3s_item::CIDR *item = static_cast<s3s_item::CIDR*>(model->enumCIDR->itemFromIndex(model_index));
 
             for(int j = 0; j < item->asns->rowCount(); j++)
-                asn.insert(item->asns->child(i, 1)->text());
+                asn.insert(item->asns->child(j, 1)->text());
         }
         break;
     }
@@ -1511,6 +1526,7 @@ void Project::action_send_cidr(){
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_CIDR:
+    case ExplorerType::enum_CIDR:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             cidr.insert(proxyModel->index(i, 0).data().toString());
         break;
@@ -1520,7 +1536,7 @@ void Project::action_send_cidr(){
             s3s_item::ASN *item = static_cast<s3s_item::ASN*>(model->enumASN->itemFromIndex(model_index));
 
             for(int j = 0; j < item->prefixes->rowCount(); j++)
-                cidr.insert(item->prefixes->child(i, 1)->text());
+                cidr.insert(item->prefixes->child(j, 1)->text());
         }
         break;
     }
@@ -1546,7 +1562,7 @@ void Project::action_send_ns(){
     QSet<QString> ns;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
-    case ExplorerType::activeDNS_NS:
+    case ExplorerType::enum_NS:
     case ExplorerType::passive_NS:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             ns.insert(proxyModel->index(i, 0).data().toString());
@@ -1557,7 +1573,7 @@ void Project::action_send_ns(){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->NS->rowCount(); j++)
-                ns.insert(item->NS->child(i, 1)->text());
+                ns.insert(item->NS->child(j, 1)->text());
         }
         break;
     }
@@ -1570,7 +1586,7 @@ void Project::action_send_mx(){
     QSet<QString> mx;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
-    case ExplorerType::activeDNS_MX:
+    case ExplorerType::enum_MX:
     case ExplorerType::passive_MX:
         for(int i = 0; i < proxyModel->rowCount(); i++)
             mx.insert(proxyModel->index(i, 0).data().toString());
@@ -1581,7 +1597,7 @@ void Project::action_send_mx(){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->MX->rowCount(); j++)
-                mx.insert(item->MX->child(i, 1)->text());
+                mx.insert(item->MX->child(j, 1)->text());
         }
         break;
     }
@@ -1930,11 +1946,13 @@ void Project::action_extract(bool subdomain, bool tld, bool url){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                items.insert(item->CNAME->child(i, 1)->text());
+                items.insert(item->CNAME->child(j, 1)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                items.insert(item->NS->child(i, 1)->text());
+                items.insert(item->NS->child(j, 1)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                items.insert(item->MX->child(i, 1)->text());
+                items.insert(item->MX->child(j, 1)->text());
+            for(int j = 0; j < item->SRV->rowCount(); j++)
+                items.insert(item->SRV->child(j, 1)->text());
         }
         break;
     case ExplorerType::activeSSL:
@@ -1943,7 +1961,7 @@ void Project::action_extract(bool subdomain, bool tld, bool url){
             s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->activeSSL->itemFromIndex(model_index));
 
             for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
-                items.insert(item->subjectAltNames->child(i, 1)->text());
+                items.insert(item->subjectAltNames->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_MX:
@@ -1952,7 +1970,7 @@ void Project::action_extract(bool subdomain, bool tld, bool url){
             s3s_item::MX *item = static_cast<s3s_item::MX*>(model->enumMX->itemFromIndex(model_index));
 
             for(int j = 0; j < item->domains->rowCount(); j++)
-                items.insert(item->domains->child(i, 1)->text());
+                items.insert(item->domains->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_NS:
@@ -1961,7 +1979,7 @@ void Project::action_extract(bool subdomain, bool tld, bool url){
             s3s_item::NS *item = static_cast<s3s_item::NS*>(model->enumNS->itemFromIndex(model_index));
 
             for(int j = 0; j < item->domains->rowCount(); j++)
-                items.insert(item->domains->child(i, 1)->text());
+                items.insert(item->domains->child(j, 1)->text());
         }
         break;
     case ExplorerType::enum_SSL:
@@ -1970,7 +1988,7 @@ void Project::action_extract(bool subdomain, bool tld, bool url){
             s3s_item::SSL *item = static_cast<s3s_item::SSL*>(model->enumSSL->itemFromIndex(model_index));
 
             for(int j = 0; j < item->subjectAltNames->rowCount(); j++)
-                items.insert(item->subjectAltNames->child(i, 1)->text());
+                items.insert(item->subjectAltNames->child(j, 1)->text());
         }
         break;
     }

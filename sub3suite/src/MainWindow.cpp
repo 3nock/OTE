@@ -166,15 +166,16 @@ void MainWindow::setRecentProjects(){
 }
 
 void MainWindow::initProject(ProjectStruct project_info){
-    ui->statusbar->showMessage("Opening Project \""+project_info.name+"\"", 6000);
+    ui->statusbar->showMessage("Opening Project \""+project_info.name+"\"");
     projectModel->openProject(project_info);
-    project->initProject();
 }
 
 void MainWindow::initEngines(){
     /* Project */
-    projectModel = new ProjectModel;
+    projectModel = new ProjectModel(this);
     project = new Project(this, projectModel);
+
+    connect(projectModel, &ProjectModel::projectLoaded, project, &Project::onProjectLoaded);
 
     /* Engines */
     osint = new Osint(this, projectModel);
@@ -563,7 +564,7 @@ void MainWindow::on_actionSourceCode_triggered(){
 }
 
 void MainWindow::on_actionDonate_triggered(){
-    QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite/SPONSOR.md", QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl("https://github.com/3nock/sub3suite/blob/main/SPONSOR.md", QUrl::TolerantMode));
 }
 
 void MainWindow::on_actionCheckUpdates_triggered(){

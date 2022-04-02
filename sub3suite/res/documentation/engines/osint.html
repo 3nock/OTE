@@ -1,4 +1,9 @@
-<h1> OSINT ENGINE </h1>
+<h1> OSINT ENGINE </h1><br>
+
+<i><b> Disclaimer 1:</b> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
+Help improve the <a href=https://github.com/3nock/s3s_doc> documentation </a>.</i><br><br>
+
+<i><b> Disclaimer 2:</b> Incase of an unexpected error or erronous results please reach out by openning an <a href=https://github.com/3nock/sub3suite/issues>issue</a> on the repo or on Telegram chat</i>.
 
 <h2> What is? </h2>
 The Osint engine is used for obtaining different types of osint data from different input types.<br>
@@ -43,11 +48,23 @@ They are further categorized into different sub-groups depending on the type tha
 7. SSL Certificate Hash.<br>
 8. CIDR.<br>
 
-<h2> Usage & Examples </h2><br>
+<h2> Scan Configuration values: </h2><br>
+<b> Timeout - </b> Time for performing the lookup in milliseconds (terminates connection if timeout). It is advised for the timeout to be greater than 1000<br>
+<b> No Duplicates - </b> Check to avoid duplicated results of the target<br>
+<b> AutoSave To Project - </b> Sends the obtained results directly to the project explorer as the scan progresses<br>
 
-<h2> References </h2>
-1. <a href=https://blog.appsecco.com/a-penetration-testers-guide-to-sub-domain-enumeration-7d842d5570f6>https://blog.appsecco.com/a-penetration-testers-guide-to-sub-domain-enumeration-7d842d5570f6</a>
+<h2> Actions: </h2>
 
-<h2> NOTE: </h2><br>
-<i> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
-Help improve the <a href=https://github.com/3nock/s3s_doc> documentation </a>.</i>
+Details on the actions for the obtained results.<br>
+
+ - The Actions on Results are accessible via the <b>Actions ></b> button and <b>Right-Click</b> on the Results. & are only active when the results are present<br>
+
+1. <b> Clear: </b> Clears the results and the progress bar.<br>
+2. <b> Expand & Collapse: </b> Expands the all areas of the result tree and Collapse all areas of the result tree respectively<br>
+3. <b> Save: </b> Saves the obtained Results To a File. Saves in Json format<br>
+4. <b> Copy: </b> Copies the results on the clipboard. Copies in Json format<br>
+5. <b> Send To Project: </b> Sends the Obtained results to the project explorer.<br>
+5. <b> Send * To *: </b> Sends the Result Type to the choosen Engine/Enumerator.<br><br>
+
+<b> NOTE: </b><br>
+	If you have filtered the results using the filter. the above actions will only be performed on the remaing results after filter<br>

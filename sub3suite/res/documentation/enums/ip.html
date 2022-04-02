@@ -1,13 +1,58 @@
-<h1> IP Enumerator </h1>
+<h1> IP Enumerator </h1><br>
 
-<h2> What is? </h2>
+<i><b> Disclaimer:</b> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
+Help improve the <a href=https://github.com/3nock/s3s_doc> documentation </a>.</i><br><br>
 
-<h2> Features </h2>
+<i><b> Disclaimer 2:</b> Incase of an unexpected error or erronous results please reach out by openning an <a href=https://github.com/3nock/sub3suite/issues>issue</a> on the repo or on Telegram chat</i>.
 
-<h2> Usage & Examples </h2>
+<h2> What is? </h2><br>
 
-<h2> References </h2>
+<b> IP Address - </b> An Internet Protocol address (IP address) is a numerical label such as 192.0.2.1 that is connected to a computer network that uses the Internet Protocol for communication.[1][2] An IP address serves two main functions: network interface identification and location addressing.
+Internet Protocol version 4 (IPv4) defines an IP address as a 32-bit number.[2] However, because of the growth of the Internet and the depletion of available IPv4 addresses, a new version of IP (IPv6), using 128 bits for the IP address, was standardized in 1998.
+<a href=https://en.wikipedia.org/wiki/IP_address> reference </a>.<br><br>
 
-<h2> NOTE: </h2><br>
-<i> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
-Help improve the <a href=https://github.com/3nock/s3s_doc> documentation </a>.</i>
+You can obtain IP from the <a href=../engines/osint.html>OSINT Engine</a>, <a href=../engines/brute.html>BRUTE Engine</a> and <a href=../engines/active.html>ACTIVE Engine</a> of Sub3 Suite<br><br>
+
+<b> IP Enumerator - </b> Is Used to return list useful information about the IP. <br>
+sub3suite's IP Enumerator queries this data from OSINT sources that provide Reverse IP Info lookup.<br>
+
+<h2> Input Output </h2><br>
+
+<b> Input: </b> IP Address<br>
+<b> Output: </b> IP Address Info: owner's address, location, company, ASN, privacy info and Route<br>
+
+<h2> Features: </h2><br>
+
+<b> Multiple Targets search: </b> Search mulitple targets and the enumerator will provide the results for every targets.
+
+
+<h2> Scan Configuration values: </h2><br>
+
+<b> Timeout - </b> Time for performing the lookup in milliseconds (terminates connection if timeout). It is advised for the timeout to be greater than 1000<br>
+<b> No Duplicates - </b> Check to avoid duplicated results of the target<br>
+<b> AutoSave To Project - </b> Sends the obtained results directly to the project explorer as the scan progresses<br>
+
+
+<h2> Usage: </h2>
+
+1. Set the scan configuration by clicking the <b>config</b> button, setting the values and save.<br>
+2. <b>If single Target:</b> enter target (IP) on the LineEdit. <b>If multiple Targets:</b> check the <b>Multile Targes</b> checkbox and enter the target values (IP) on the ListView marked by <b> Targets </b>. <br>
+3. Start The scan<br>
+
+<h2> Actions: </h2>
+
+Details on the actions for the obtained results.<br>
+
+ - The Actions on Results are accessible via the <b>Actions ></b> button and <b>Right-Click</b> on the Results. & are only active when the results are present<br>
+
+1. <b> Clear: </b> Clears the results and the progress bar.<br>
+2. <b> Expand & Collapse: </b> Expands the all areas of the result tree and Collapse all areas of the result tree respectively<br>
+3. <b> Save: </b> Saves the obtained Results To a File. Saves in Json format<br>
+4. <b> Copy: </b> Copies the results on the clipboard. Copies in Json format<br>
+5. <b> Send To Project: </b> Sends the Obtained results to the project explorer.<br>
+
+<b> NOTE: </b><br>
+	If you have filtered the results using the filter. the above actions will only be performed on the remaing results after filter<br>
+	
+<h2> References: </h2><br>
+1. <a href=https://www.kaspersky.com/resource-center/definitions/what-is-an-ip-address> what is an ip address</a>

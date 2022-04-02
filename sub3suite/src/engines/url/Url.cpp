@@ -29,12 +29,10 @@ Url::Url(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
     this->initUI();
 
     /* result model */
-    ui->tableViewResults->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_model->setHorizontalHeaderLabels({tr(" URL"), tr(" Status"), tr(" Server"), tr(" Content Type")});
     proxyModel->setSourceModel(m_model);
     ui->tableViewResults->setModel(proxyModel);
 
-    ui->tableViewResults->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* config... */

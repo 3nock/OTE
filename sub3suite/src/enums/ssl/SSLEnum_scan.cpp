@@ -69,7 +69,7 @@ void SSLEnum::startScan(){
         Crtsh *crtsh = new Crtsh(*m_scanArgs);
         crtsh->startScan(cThread);
         crtsh->moveToThread(cThread);
-        connect(crtsh, &Crtsh::resultRawSSL, this, &SSLEnum::onResult);
+        connect(crtsh, &Crtsh::resultEnumSSL, this, &SSLEnum::onResult);
         connect(crtsh, &Crtsh::scanLog, this, &SSLEnum::onScanLog);
         connect(crtsh, &Crtsh::scanProgress, ui->progressBar, &QProgressBar::setValue);
         connect(this, &SSLEnum::stopScanThread, crtsh, &AbstractOsintModule::onStop);

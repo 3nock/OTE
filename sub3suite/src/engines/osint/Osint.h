@@ -96,6 +96,7 @@ class Osint : public AbstractEngine{
         QStringListModel *m_targetListModel_cidr;
         QStringListModel *m_targetListModel_ssl;
         QStringListModel *m_targetListModel_email;
+        QStringListModel *m_targetListModel_url;
         QStringListModel *m_targetListModel_query;
         /* results models */
         QStandardItemModel *m_model_subdomainIp;

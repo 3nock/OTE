@@ -24,7 +24,7 @@ class SSLEnum : public AbstractEnum {
         ~SSLEnum();
 
     public slots:
-        void onResult(QByteArray);
+        void onResult(QString target, QSslCertificate ssl);
 
         void onScanThreadEnded();
         void onScanLog(ScanLog log);

@@ -100,9 +100,6 @@ class ExplorerModel: public QStandardItemModel {
         QStandardItem *enumEmail;
 
         QStandardItem *raw;
-
-    private:
-        Q_DISABLE_COPY_MOVE(ExplorerModel)
 };
 
 #endif // EXPLORERMODEL_H

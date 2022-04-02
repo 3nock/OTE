@@ -313,6 +313,9 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     }
 
     qDebug() << "Project " << info.name << " Opened.";
+
+    /* signal that the project is loaded */
+    emit projectLoaded();
 }
 
 QByteArray ProjectModel::getJson(){

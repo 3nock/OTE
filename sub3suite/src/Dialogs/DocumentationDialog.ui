@@ -42,9 +42,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QToolButton" name="buttonBack">
+      <widget class="QPushButton" name="buttonBack">
        <property name="text">
-        <string>  &lt;---  </string>
+        <string>Back</string>
        </property>
       </widget>
      </item>

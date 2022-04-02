@@ -52,6 +52,12 @@ class Dns : public AbstractEngine{
 
         void on_checkBoxANY_toggled(bool checked);
         void on_checkBoxSRV_toggled(bool checked);
+        void on_checkBoxA_clicked(bool checked);
+        void on_checkBoxAAAA_clicked(bool checked);
+        void on_checkBoxMX_clicked(bool checked);
+        void on_checkBoxNS_clicked(bool checked);
+        void on_checkBoxCNAME_clicked(bool checked);
+        void on_checkBoxTXT_clicked(bool checked);
 
     private:
         Ui::Dns *ui;

@@ -1,13 +1,57 @@
-<h1> MX Enumerator </h1>
+<h1> MX Enumerator </h1><br>
 
-<h2> What is? </h2>
+<i><b> Disclaimer:</b> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
+Help improve the <a href=https://github.com/3nock/s3s_doc> documentation </a>.</i><br><br>
 
-<h2> Features </h2>
+<i><b> Disclaimer 2:</b> Incase of an unexpected error or erronous results please reach out by openning an <a href=https://github.com/3nock/sub3suite/issues>issue</a> on the repo or on Telegram chat</i>.
 
-<h2> Usage & Examples </h2>
+<h2> What is? </h2><br>
 
-<h2> References </h2>
+<b> MailServer(MX) - </b> A mail server (or email server) is a computer system that sends and receives email. In many cases, web servers and mail servers are combined in a single machine. However, large ISPs and public email services (such as Gmail and Hotmail) may use dedicated hardware for sending and receiving email.
+In order for a computer system to function as a mail server, it must include mail server software. This software allows the system administrator to create and manage email accounts for any domains hosted on the server. 
+For example, if the server hosts the domain name "techterms.com," it can provide email accounts ending in "@techterms.com.".
+<a href=https://techterms.com/definition/mail_server> reference </a>.<br><br>
 
-<h2> NOTE: </h2><br>
-<i> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
-Help improve the <a href=https://github.com/3nock/s3s_doc> documentation </a>.</i>
+You can obtain MailServer of a domain using the <a href=../engines/dns.html>DNS Engine</a> of Sub3 Suite<br><br>
+
+<b> MX Enumerator - </b> Is Used to return list  of domains that share the same primary mail server. <br>
+sub3suite's MX Enumerator queries this data from OSINT sources that provide reverse MailServer lookup.<br>
+
+<h2> Input Output </h2><br>
+
+<b> Input: </b> MailServer<br>
+<b> Output: </b> Domains<br>
+
+<h2> Features: </h2><br>
+
+<b> Multiple Targets search: </b> Search mulitple targets and the enumerator will provide the results for every targets.
+
+
+<h2> Scan Configuration values: </h2><br>
+
+<b> Timeout - </b> Time for performing the lookup in milliseconds (terminates connection if timeout). It is advised for the timeout to be greater than 1000<br>
+<b> No Duplicates - </b> Check to avoid duplicated results of the target<br>
+<b> AutoSave To Project - </b> Sends the obtained results directly to the project explorer as the scan progresses<br>
+
+
+<h2> Usage: </h2>
+
+1. Set the scan configuration by clicking the <b>config</b> button, setting the values and save.<br>
+2. <b>If single Target:</b> enter target (mail_server) on the LineEdit. <b>If multiple Targets:</b> check the <b>Multile Targes</b> checkbox and enter the target values (mail_server) on the ListView marked by <b> Targets </b>. <br>
+3. Start The scan<br>
+
+<h2> Actions: </h2>
+
+Details on the actions for the obtained results.<br>
+
+ - The Actions on Results are accessible via the <b>Actions ></b> button and <b>Right-Click</b> on the Results. & are only active when the results are present<br>
+
+1. <b> Clear: </b> Clears the results and the progress bar.<br>
+2. <b> Expand & Collapse: </b> Expands the all areas of the result tree and Collapse all areas of the result tree respectively<br>
+3. <b> Save: </b> Saves the obtained Results To a File. Saves in Json format<br>
+4. <b> Copy: </b> Copies the results on the clipboard. Copies in Json format<br>
+5. <b> Send To Project: </b> Sends the Obtained results to the project explorer.<br>
+5. <b> Send Hostname To ENGINE*: </b> Sends the Obtained hostnames/domains to the choosen Engine.<br><br>
+
+<b> NOTE: </b><br>
+	If you have filtered the results using the filter. the above actions will only be performed on the remaing results after filter<br>

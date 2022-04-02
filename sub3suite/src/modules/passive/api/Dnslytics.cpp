@@ -438,7 +438,8 @@ void Dnslytics::replyFinishedEnumMX(QNetworkReply *reply){
     foreach(const QJsonValue &value, data["domains"].toArray())
         mx.domains.insert(value.toString());
 
-    emit resultEnumMX(mx);
+    if(!mx.domains.isEmpty())
+        emit resultEnumMX(mx);
 
     this->end(reply);
 }
@@ -458,7 +459,8 @@ void Dnslytics::replyFinishedEnumNS(QNetworkReply *reply){
     foreach(const QJsonValue &value, data["domains"].toArray())
         ns.domains.insert(value.toString());
 
-    emit resultEnumNS(ns);
+    if(!ns.domains.isEmpty())
+        emit resultEnumNS(ns);
 
     this->end(reply);
 }
@@ -478,7 +480,8 @@ void Dnslytics::replyFinishedEnumIP(QNetworkReply *reply){
     foreach(const QJsonValue &value, data["domains"].toArray())
         ip.domains.insert(value.toString());
 
-    emit resultEnumIP(ip);
+    if(!ip.domains.isEmpty())
+        emit resultEnumIP(ip);
 
     this->end(reply);
 }

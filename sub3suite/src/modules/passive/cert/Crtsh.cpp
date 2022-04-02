@@ -95,12 +95,9 @@ void Crtsh::replyFinishedSSL(QNetworkReply *reply){
         return;
     }
 
-    if(m_queryToGetId)
-        this->m_getCertId(reply);
-
-    else{
-
-    }
+    /*
+     * not yet implemented
+     */
 
     this->end(reply);
 }
@@ -111,12 +108,16 @@ void Crtsh::replyFinishedEnumSSL(QNetworkReply *reply){
         return;
     }
 
-    if(m_queryToGetId)
+    if(m_queryToGetId){
         m_getCertId(reply); // get the crtsh certificate id and request to download the certificate...
-    else
-        emit resultRawSSL(reply->readAll()); // get and send the raw certificate for analysis
-
-    this->end(reply);
+        reply->close();
+        reply->deleteLater();
+    }
+    else{
+        foreach(const QSslCertificate &cert, QSslCertificate::fromData(reply->readAll(), QSsl::Pem))
+            emit resultEnumSSL(target, cert);
+        this->end(reply);
+    }
 }
 
 void Crtsh::m_getCertId(QNetworkReply *reply){
@@ -147,9 +148,8 @@ void Crtsh::m_getCertId(QNetworkReply *reply){
             GumboNode *id = static_cast<GumboNode*>(a->v.element.children.data[0]);
             if(id->type == GUMBO_NODE_TEXT){
                 QString certId = QString::fromUtf8(id->v.text.text);
-                ///
-                /// sending request to download the ssl cert...
-                ///
+
+                /* sending request to download the ssl cert... */
                 QNetworkRequest request;
                 QUrl url("https://crt.sh/?d="+certId);
                 request.setUrl(url);
@@ -167,4 +167,7 @@ void Crtsh::m_getCertId(QNetworkReply *reply){
 
     /* finilizing... */
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    if(m_queryToGetId)
+        end(reply);
 }

@@ -144,7 +144,7 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
         }
         break;
     case ExplorerType::activeDNS:
-        if(m_selectionModel->columnIntersectsSelection(0, m_selectionModel->currentIndex().parent())){
+        if(m_selectionModel->columnIntersectsSelection(1, m_selectionModel->currentIndex().parent())){
             menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->action_send_selected_toEngine(ENGINE::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
             menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->action_send_selected_toEngine(ENGINE::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
             menu.addSeparator();
@@ -262,6 +262,13 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->action_send_selected_toEnum(ENUMERATOR::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         break;
     case ExplorerType::raw:
+    case ExplorerType::enum_IP:
+    case ExplorerType::enum_ASN:
+    case ExplorerType::enum_CIDR:
+    case ExplorerType::enum_NS:
+    case ExplorerType::enum_MX:
+    case ExplorerType::enum_Email:
+    case ExplorerType::enum_SSL:
         menu.addMenu(&send_menu);
         break;
     default:
@@ -318,6 +325,7 @@ void Project::init_action_send(){
     case ExplorerType::activeDNS_AAAA:
     case ExplorerType::passive_A:
     case ExplorerType::passive_AAAA:
+    case ExplorerType::enum_IP:
         menu_send->addAction(tr("Send IpAddress to OSINT"), this, [=](){this->action_send_ip(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         menu_send->addAction(tr("Send IpAddress to RAW"), this, [=](){this->action_send_ip(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         menu_send->addSeparator();
@@ -325,6 +333,7 @@ void Project::init_action_send(){
         break;
     case ExplorerType::activeDNS_NS:
     case ExplorerType::passive_NS:
+    case ExplorerType::enum_NS:
         menu_send->addAction(tr("Send NS to OSINT"), this, [=](){this->action_send_host(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/ns.png"));
         menu_send->addAction(tr("Send NS to RAW"), this, [=](){this->action_send_host(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/ns.png"));
         menu_send->addAction(tr("Send NS to BRUTE"), this, [=](){this->action_send_host(ENGINE::BRUTE);})->setIcon(QIcon(":/img/res/icons/ns.png"));
@@ -336,6 +345,7 @@ void Project::init_action_send(){
         break;
     case ExplorerType::activeDNS_MX:
     case ExplorerType::passive_MX:
+    case ExplorerType::enum_MX:
         menu_send->addAction(tr("Send MX to OSINT"), this, [=](){this->action_send_mx(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/mx.png"));
         menu_send->addAction(tr("Send MX to RAW"), this, [=](){this->action_send_mx(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/mx.png"));
         menu_send->addAction(tr("Send MX to BRUTE"), this, [=](){this->action_send_mx(ENGINE::BRUTE);})->setIcon(QIcon(":/img/res/icons/mx.png"));
@@ -381,18 +391,21 @@ void Project::init_action_send(){
         menu_send->addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->action_send_ip();})->setIcon(QIcon(":/img/res/icons/ip.png"));
         break;
     case ExplorerType::passive_Email:
+    case ExplorerType::enum_Email:
         menu_send->addAction(tr("Send Email to OSINT"), this, [=](){this->action_send_email(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu_send->addAction(tr("Send Email to RAW"), this, [=](){this->action_send_email(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu_send->addSeparator();
         menu_send->addAction(tr("Send Email to Email-Enum"), this, [=](){this->action_send_email();})->setIcon(QIcon(":/img/res/icons/email.png"));
         break;
     case ExplorerType::passive_ASN:
+    case ExplorerType::enum_ASN:
         menu_send->addAction(tr("Send ASN to OSINT"), this, [=](){this->action_send_asn(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         menu_send->addAction(tr("Send ASN to RAW"), this, [=](){this->action_send_asn(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         menu_send->addSeparator();
         menu_send->addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->action_send_asn();})->setIcon(QIcon(":/img/res/icons/asn.png"));
         break;
     case ExplorerType::passive_CIDR:
+    case ExplorerType::enum_CIDR:
         menu_send->addAction(tr("Send CIDR to OSINT"), this, [=](){this->action_send_cidr(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
         menu_send->addAction(tr("Send CIDR to RAW"), this, [=](){this->action_send_cidr(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
         menu_send->addSeparator();

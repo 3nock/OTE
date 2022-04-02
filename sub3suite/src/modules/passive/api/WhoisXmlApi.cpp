@@ -423,7 +423,8 @@ void WhoisXmlApi::replyFinishedEnumNS(QNetworkReply *reply){
     foreach(const QJsonValue &domain, result)
         ns.domains.insert(domain.toObject()["name"].toString());
 
-    emit resultEnumNS(ns);
+    if(!ns.domains.isEmpty())
+        emit resultEnumNS(ns);
 
     this->end(reply);
 }
@@ -443,7 +444,8 @@ void WhoisXmlApi::replyFinishedEnumMX(QNetworkReply *reply){
     foreach(const QJsonValue &domain, result)
         mx.domains.insert(domain.toObject()["name"].toString());
 
-    emit resultEnumMX(mx);
+    if(!mx.domains.isEmpty())
+        emit resultEnumMX(mx);
 
     this->end(reply);
 }

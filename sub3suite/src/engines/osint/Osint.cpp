@@ -26,6 +26,7 @@ Osint::Osint(QWidget *parent, ProjectModel *project): AbstractEngine(parent, pro
     m_targetListModel_cidr(new QStringListModel),
     m_targetListModel_ssl(new QStringListModel),
     m_targetListModel_email(new QStringListModel),
+    m_targetListModel_url(new QStringListModel),
     m_targetListModel_query(new QStringListModel),
     m_model_subdomainIp(new QStandardItemModel),
     m_model_subdomain(new QStandardItemModel),
@@ -73,6 +74,7 @@ Osint::~Osint(){
     delete m_targetListModel_query;
     delete m_targetListModel_host;
     delete m_targetListModel_email;
+    delete m_targetListModel_url;
     delete m_targetListModel_cidr;
     delete m_targetListModel_ssl;
     delete m_targetListModel_asn;
@@ -210,6 +212,7 @@ void Osint::on_comboBoxInput_currentIndexChanged(int index){
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_EMAIL));
         break;
     case INPUT::URL:
+        ui->targets->setListModel(m_targetListModel_url);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_URL));
         break;
     case INPUT::ASN:

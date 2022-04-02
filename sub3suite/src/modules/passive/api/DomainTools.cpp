@@ -307,7 +307,8 @@ void DomainTools::replyFinishedEnumMX(QNetworkReply *reply){
         mx.mx_servers.insert(mx_server.toString());
     */
 
-    emit resultEnumMX(mx);
+    if(!(mx.domains.isEmpty() && mx.ip.isEmpty()))
+        emit resultEnumMX(mx);
 
     this->end(reply);
 }
@@ -329,7 +330,8 @@ void DomainTools::replyFinishedEnumNS(QNetworkReply *reply){
     foreach(const QJsonValue &domain, response["secondary_domains"].toArray())
         ns.domains.insert(domain.toString());
 
-    emit resultEnumNS(ns);
+    if(!ns.domains.isEmpty())
+        emit resultEnumNS(ns);
 
     this->end(reply);
 }

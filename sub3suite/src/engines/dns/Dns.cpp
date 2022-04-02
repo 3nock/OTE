@@ -224,6 +224,10 @@ void Dns::on_lineEditFilter_textChanged(const QString &filterKeyword){
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
+///
+/// Check state...
+///
+
 void Dns::on_checkBoxANY_toggled(bool checked){
     if(checked){
         ui->checkBoxA->setChecked(false);
@@ -246,5 +250,47 @@ void Dns::on_checkBoxSRV_toggled(bool checked){
         ui->checkBoxTXT->setChecked(false);
         ui->checkBoxAAAA->setChecked(false);
         ui->checkBoxCNAME->setChecked(false);
+    }
+}
+
+void Dns::on_checkBoxA_clicked(bool checked){
+    if(checked){
+        ui->checkBoxSRV->setChecked(false);
+        ui->checkBoxANY->setChecked(false);
+    }
+}
+
+void Dns::on_checkBoxAAAA_clicked(bool checked){
+    if(checked){
+        ui->checkBoxSRV->setChecked(false);
+        ui->checkBoxANY->setChecked(false);
+    }
+}
+
+void Dns::on_checkBoxMX_clicked(bool checked){
+    if(checked){
+        ui->checkBoxSRV->setChecked(false);
+        ui->checkBoxANY->setChecked(false);
+    }
+}
+
+void Dns::on_checkBoxNS_clicked(bool checked){
+    if(checked){
+        ui->checkBoxSRV->setChecked(false);
+        ui->checkBoxANY->setChecked(false);
+    }
+}
+
+void Dns::on_checkBoxCNAME_clicked(bool checked){
+    if(checked){
+        ui->checkBoxSRV->setChecked(false);
+        ui->checkBoxANY->setChecked(false);
+    }
+}
+
+void Dns::on_checkBoxTXT_clicked(bool checked){
+    if(checked){
+        ui->checkBoxSRV->setChecked(false);
+        ui->checkBoxANY->setChecked(false);
     }
 }

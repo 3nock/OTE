@@ -21,8 +21,6 @@ class Project : public QWidget{
         Project(QWidget *parent = nullptr, ProjectModel *projectModel = nullptr);
         ~Project();
 
-        void initProject();
-
     signals:
         void changeTabToOsint();
         void changeTabToRaw();
@@ -55,6 +53,9 @@ class Project : public QWidget{
         void sendToMXEnum(QSet<QString>, RESULT_TYPE);
         void sendToSSLEnum(QSet<QString>, RESULT_TYPE);
         void sendToEmailEnum(QSet<QString>, RESULT_TYPE);
+
+    public slots:
+        void onProjectLoaded();
 
     private slots:
         void on_treeViewExplorer_clicked(const QModelIndex &index);

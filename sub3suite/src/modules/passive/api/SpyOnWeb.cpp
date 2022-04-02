@@ -216,7 +216,8 @@ void SpyOnWeb::replyFinishedEnumNS(QNetworkReply *reply){
     foreach(const QString domain, nameserver["items"].toObject().keys())
         ns.domains.insert(domain);
 
-    emit resultEnumNS(ns);
+    if(!ns.domains.isEmpty())
+        emit resultEnumNS(ns);
 
     this->end(reply);
 }

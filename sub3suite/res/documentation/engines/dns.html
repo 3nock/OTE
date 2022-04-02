@@ -1,4 +1,9 @@
-<h1> DNS ENGINE </h1>
+<h1> DNS ENGINE </h1><br>
+
+<i><b> Disclaimer 1:</b> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
+Help improve the <a href=https://github.com/3nock/s3s_doc> documentation </a>.</i><br><br>
+
+<i><b> Disclaimer 2:</b> Incase of an unexpected error or erronous results please reach out by openning an <a href=https://github.com/3nock/sub3suite/issues>issue</a> on the repo or on Telegram chat</i>.
 
 <h2> What is? </h2>
 The DNS Engine resolves targets into specified DNS Records.<br>
@@ -15,7 +20,9 @@ Records Supported by DNS Engine:<br>
 --> <b> SRV Records </b>: Service Records.<br><br>
 
 NOTE:<br>
---> SOA and PTR DNS records are not supported for now.
+--> SOA and PTR DNS records are not supported for now.<br><br>
+
+You can obtain Passive Domains/Hostnames from the <a href=../engines/osint.html>OSINT Engine</a> of Sub3 Suite
 
 <h2> Features </h2>
 1. Supports use of multiple nameservers.<br>
@@ -23,10 +30,29 @@ NOTE:<br>
 3. Supports multiple Targets lookup in one scan.<br>
 4. SRV wordlist is also provided and can be modified as per user's liking<br>
 
-<h2> Usage & Examples </h2>
+<h2> Input Output: </h2><br>
+<b> Input: </b> Domain/Hostname<br>
+<b> Output: </b> DNS Records: A,AAAA,NS,MX,SRV,TXT,CNAME,ANY
 
-<h2> References </h2>
+<h2> Scan Configuration values: </h2><br>
+<b> Threads - </b> Number of threads to use for quering the targets. If number of threads is greater that the number of targets, then one thread per target will be used.
+<b> Timeout - </b> Time for performing the lookup in milliseconds (terminates connection if timeout). It is advised for the timeout to be greater than 1000<br>
+<b> Nameserver - </b> - Nameservers to use for DNS lookup.<br>
+<b> No Duplicates - </b> Check to avoid duplicated results of the target<br>
+<b> AutoSave To Project - </b> Sends the obtained results directly to the project explorer as the scan progresses<br>
 
-<h2> NOTE: </h2><br>
-<i> This is a very simple documentation on the Tool. It still doesn't contain many information on the many features of the tool & on how to effectively use the tool.<br>
-Help improve the <a href=https://github.com/3nock/s3s_doc> documentation </a>.</i>
+<h2> Actions: </h2>
+
+Details on the actions for the obtained results.<br>
+
+ - The Actions on Results are accessible via the <b>Actions ></b> button and <b>Right-Click</b> on the Results. & are only active when the results are present<br>
+
+1. <b> Clear: </b> Clears the results and the progress bar.<br>
+2. <b> Expand & Collapse: </b> Expands the all areas of the result tree and Collapse all areas of the result tree respectively<br>
+3. <b> Save: </b> Saves the obtained Results To a File. Saves in Json format<br>
+4. <b> Copy: </b> Copies the results on the clipboard. Copies in Json format<br>
+5. <b> Send To Project: </b> Sends the Obtained results to the project explorer.<br>
+5. <b> Send * To *: </b> Sends the Result Type to the choosen Engine/Enumerator.<br><br>
+
+<b> NOTE: </b><br>
+	If you have filtered the results using the filter. the above actions will only be performed on the remaing results after filter<br>

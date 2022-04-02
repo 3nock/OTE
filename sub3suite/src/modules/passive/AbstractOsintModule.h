@@ -182,10 +182,6 @@ public:
         gumbo_destroy_output(&kGumboDefaultOptions, output);
         return links;
     }
-
-private:
-    Q_DISABLE_COPY_MOVE(GumboMethods)
-
 };
 
 ///
@@ -238,10 +234,10 @@ signals:
     void resultURL(QString url);
     void resultASN(QString asn, QString name);
 
-    void resultRawSSL(QByteArray);
     void resultRawTXT(s3s_struct::RAW);
     void resultRawJSON(s3s_struct::RAW);
 
+    void resultEnumSSL(QString target, QSslCertificate Cert);
     void resultEnumASN(s3s_struct::ASN);
     void resultEnumCIDR(s3s_struct::CIDR);
     void resultEnumMX(s3s_struct::MX);

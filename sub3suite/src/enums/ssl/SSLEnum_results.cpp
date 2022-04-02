@@ -2,21 +2,18 @@
 #include "ui_SSLEnum.h"
 
 
-void SSLEnum::onResult(QByteArray rawCert){
-    foreach(const QSslCertificate &cert, QSslCertificate::fromData(rawCert, QSsl::Pem))
-    {
-        QString hash(cert.digest(QCryptographicHash::Sha1));
-        if(m_resultsSet.contains(hash))
-            continue;
+void SSLEnum::onResult(QString target, QSslCertificate ssl){
+    if(m_resultsSet.contains(target))
+        return;
 
-        s3s_item::SSL *item = new s3s_item::SSL;
-        item->setValues(hash, cert);
-        m_model->appendRow(item);
-        m_resultsSet.insert(hash, item);
+    s3s_item::SSL *item = new s3s_item::SSL;
+    item->setValues(target, ssl);
 
-        if(m_scanConfig->autosaveToProject)
-            project->addEnumSSL(hash, cert);
-    }
+    m_model->invisibleRootItem()->appendRow(item);
+    m_resultsSet.insert(target, item);
+
+    if(m_scanConfig->autosaveToProject)
+        project->addEnumSSL(target, ssl);
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }

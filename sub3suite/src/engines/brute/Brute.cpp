@@ -36,13 +36,11 @@ Brute::Brute(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, pr
     ui->wordlist->setListModel(m_wordlistModel);
 
     /* results models */
-    ui->tableViewResults->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_model_subdomain->setHorizontalHeaderLabels({tr(" Subdomain"), tr(" Ipv4"), tr(" Ipv6")});
     m_model_tld->setHorizontalHeaderLabels({tr(" TLD"), tr(" Ipv4"), tr(" Ipv6")});
     proxyModel->setSourceModel(m_model_subdomain);
     ui->tableViewResults->setModel(proxyModel);
 
-    ui->tableViewResults->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     m_scanArgs->config = m_scanConfig;

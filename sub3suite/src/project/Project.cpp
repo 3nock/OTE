@@ -44,8 +44,6 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     proxyModel->setFilterKeyColumn(0);
     ui->treeViewTree->setModel(proxyModel);
 
-    ui->treeViewTree->header()->setSectionResizeMode(QHeaderView::Interactive);
-
     this->init_menubar_tree();
     this->init_menubar_project();
 }
@@ -55,7 +53,7 @@ Project::~Project(){
     delete ui;
 }
 
-void Project::initProject(){
+void Project::onProjectLoaded(){
     ui->label_project_name->setText(model->info.name);
     ui->label_project_created->setText(model->info.date_created);
     ui->label_project_modified->setText(model->info.last_modified);

@@ -315,7 +315,8 @@ void ViewDns::replyFinishedEnumNS(QNetworkReply *reply){
     foreach(const QJsonValue &domain, domains)
         ns.domains.insert(domain.toObject()["domain"].toString());
 
-    emit resultEnumNS(ns);
+    if(!ns.domains.isEmpty())
+        emit resultEnumNS(ns);
 
     this->end(reply);
 }
@@ -336,7 +337,8 @@ void ViewDns::replyFinishedEnumMX(QNetworkReply *reply){
     foreach(const QJsonValue &domain, domains)
         mx.domains.insert(domain.toString());
 
-    emit resultEnumMX(mx);
+    if(!mx.domains.isEmpty())
+        emit resultEnumMX(mx);
 
     this->end(reply);
 }

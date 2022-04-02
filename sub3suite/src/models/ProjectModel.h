@@ -9,6 +9,7 @@
 #define PROJECTMODEL_H
 
 #include <QSet>
+#include <QObject>
 #include <QStandardItemModel>
 #include <QTextDocument>
 
@@ -42,10 +43,11 @@ struct ProjectStruct{
 };
 
 
-class ProjectModel
-{
+class ProjectModel: public QObject {
+    Q_OBJECT
+
 public:
-    ProjectModel();
+    ProjectModel(QObject *parent = nullptr);
     ~ProjectModel();
 
     /* serialization */
@@ -60,44 +62,11 @@ public:
     int getItemsCount();
     void setHeaderLabels();
 
+    /* project  information */
     ProjectStruct info;
 
-    /* for active results */
-    void addActiveHost(const s3s_struct::HOST &host);
-    void addActiveWildcard(const s3s_struct::Wildcard &wildcard);
-    void addActiveDNS(const s3s_struct::DNS &dns);
-    void addActiveURL(const s3s_struct::URL &url);
-    void addActiveSSL(const QString &target, const QSslCertificate &cert);
-    void addActiveSSL_hash(const QString &hash);
-    void addActiveSSL_sha1(const QString &sha1);
-    void addActiveSSL_sha256(const QString &sha256);
-    void addActiveSSL_altNames(const QString &alternative_names);
-    /* for passive results */
-    void addPassiveSubdomainIp(const QString &subdomain, const QString &ip);
-    void addPassiveSubdomain(const QString &subdomain);
-    void addPassiveIp(const QString &ip);
-    void addPassiveA(const QString &ipv4);
-    void addPassiveAAAA(const QString &ipv6);
-    void addPassiveCidr(const QString &cidr);
-    void addPassiveNS(const QString &ns);
-    void addPassiveMX(const QString &mx);
-    void addPassiveTXT(const QString &txt);
-    void addPassiveCNAME(const QString &cname);
-    void addPassiveEMail(const QString &email);
-    void addPassiveUrl(const QString &url);
-    void addPassiveAsn(const QString &asn, const QString &name);
-    void addPassiveSSL(const QString &ssl);
-    /* for enum */
-    void addEnumASN(const s3s_struct::ASN &asn);
-    void addEnumCIDR(const s3s_struct::CIDR &cidr);
-    void addEnumIP(const s3s_struct::IP &ip);
-    void addEnumIP_domains(const s3s_struct::IP &ip);
-    void addEnumNS(const s3s_struct::NS &ns);
-    void addEnumMX(const s3s_struct::MX &xm);
-    void addEnumSSL(const QString &target, const QSslCertificate &ssl);
-    void addEnumEmail(const s3s_struct::Email &email);
-    /* for raw */
-    void addRaw(const s3s_struct::RAW &raw);
+signals:
+    void projectLoaded();
 
 public:
     bool modified = false;
@@ -160,9 +129,42 @@ public:
     QMap<QString, s3s_item::SSL*> map_enumSSL;
     QMap<QString, s3s_item::Email*> map_enumEmail;
 
-private:
-    QByteArray getJson();
-    Q_DISABLE_COPY_MOVE(ProjectModel)
+    /* for active results */
+    void addActiveHost(const s3s_struct::HOST &host);
+    void addActiveWildcard(const s3s_struct::Wildcard &wildcard);
+    void addActiveDNS(const s3s_struct::DNS &dns);
+    void addActiveURL(const s3s_struct::URL &url);
+    void addActiveSSL(const QString &target, const QSslCertificate &cert);
+    void addActiveSSL_hash(const QString &hash);
+    void addActiveSSL_sha1(const QString &sha1);
+    void addActiveSSL_sha256(const QString &sha256);
+    void addActiveSSL_altNames(const QString &alternative_names);
+    /* for passive results */
+    void addPassiveSubdomainIp(const QString &subdomain, const QString &ip);
+    void addPassiveSubdomain(const QString &subdomain);
+    void addPassiveIp(const QString &ip);
+    void addPassiveA(const QString &ipv4);
+    void addPassiveAAAA(const QString &ipv6);
+    void addPassiveCidr(const QString &cidr);
+    void addPassiveNS(const QString &ns);
+    void addPassiveMX(const QString &mx);
+    void addPassiveTXT(const QString &txt);
+    void addPassiveCNAME(const QString &cname);
+    void addPassiveEMail(const QString &email);
+    void addPassiveUrl(const QString &url);
+    void addPassiveAsn(const QString &asn, const QString &name);
+    void addPassiveSSL(const QString &ssl);
+    /* for enum */
+    void addEnumASN(const s3s_struct::ASN &asn);
+    void addEnumCIDR(const s3s_struct::CIDR &cidr);
+    void addEnumIP(const s3s_struct::IP &ip);
+    void addEnumIP_domains(const s3s_struct::IP &ip);
+    void addEnumNS(const s3s_struct::NS &ns);
+    void addEnumMX(const s3s_struct::MX &xm);
+    void addEnumSSL(const QString &target, const QSslCertificate &ssl);
+    void addEnumEmail(const s3s_struct::Email &email);
+    /* for raw */
+    void addRaw(const s3s_struct::RAW &raw);
 };
 
 #endif // PROJECTMODEL_H

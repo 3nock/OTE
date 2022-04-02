@@ -11,7 +11,7 @@
 
 /*
  * BUG:
- *      line: 352
+ *      line: 354
  *      info: the current target might be already changed at this point
  */
 dns::Scanner::Scanner(dns::ScanArgs *args): AbstractScanner (nullptr),

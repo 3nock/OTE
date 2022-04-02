@@ -8,7 +8,7 @@
  * TODO:
  *      QJsonDocument size limit is 128mb. find a workaround or an alternative for serialization.
  */
-ProjectModel::ProjectModel():
+ProjectModel::ProjectModel(QObject *parent): QObject (parent),
     explorer(new ExplorerModel),
     /* active Results Model */
     activeHost(new QStandardItemModel),
