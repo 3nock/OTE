@@ -165,6 +165,9 @@ public:
     void addEnumEmail(const s3s_struct::Email &email);
     /* for raw */
     void addRaw(const s3s_struct::RAW &raw);
+
+private:
+    QByteArray getJson();
 };
 
 #endif // PROJECTMODEL_H
