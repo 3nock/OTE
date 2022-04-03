@@ -7,15 +7,11 @@ The Steps are easy since the project doesn't have many dependancies for now & on
 
 1. Download [Qt5.13.0](https://download.qt.io/archive/qt/5.13/5.13.0) & install. (other versions can be used, i've only tested in Qt5.13 & Qt5.12).
 2. Download [Qt Creator 4.9.1](https://www.qt.io/offline-installers) & install. (not a must to use version 4.9.1).
-3. Clone the repository (`main or dev branch`) to your local drive. Make sure to include the submodules in your clone command!
+3. Clone the repository (`main branch`) to your local drive. Make sure to include the submodules in your clone command!
 
  **For main-branch (stable)**
  
 `git clone --recurse-submodules -b main https://github.com/3nock/sub3suite.git`
-
- **For dev-branch (development)**
- 
-`git clone --recurse-submodules -b dev https://github.com/3nock/sub3suite.git`
 
 ## Project
 
