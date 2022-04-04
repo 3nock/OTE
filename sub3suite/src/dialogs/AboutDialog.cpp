@@ -38,7 +38,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     ui->labelLogo->setScaledContents(true);
 
     /* setting up version info */
-    ui->labelVersion->setText("Version 0.0.1 (BETA)");
+    ui->labelVersion->setText("Version 0.0.3 (BETA)");
 
     /* setting up description */
     ui->textBrowserDescription->setOpenExternalLinks(true);

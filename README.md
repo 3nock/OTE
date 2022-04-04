@@ -28,7 +28,7 @@ You can help design an even more intuitive UI, Logos & Icons.
 
 **Not a developer?**
 
-You can help by reporting [bugs](https://github.com/3nock/sub3suite), requesting [features](https://github.com/3nock/sub3suite), improving the [documentation](https://github.com/3nock/s3s_doc), [sponsoring](SPONSOR.md) the project, writing blog posts & sharing this project to peers.
+You can help by reporting [bugs](https://github.com/3nock/sub3suite/issues), requesting [features](https://github.com/3nock/sub3suite/issues), improving the [documentation](https://github.com/3nock/s3s_doc), [sponsoring](SPONSOR.md) the project, writing blog posts & sharing this project to peers.
 
 For More information see [contribution guide](CONTRIBUTING.md).
 
@@ -38,10 +38,11 @@ For More information see [contribution guide](CONTRIBUTING.md).
 2. Unzip.
 3. Run.
 
-**NOTE:**
+**NOTE on windows:**
 
-On windows install the msvc-redistributable package `sub3suite/vcredist_x64.exe` or `sub3suite/vcredist_x86.exe` if the program fails to run on first try.
+1. Install the MSVC-redistributable package `sub3suite/vcredist_x64.exe` or `sub3suite/vcredist_x86.exe` if the program fails to run on first try.
 
+2. Install the OpenSSL libraries using OpenSSL package `sub3suite/Win32 OpenSSL v1.1.1n Light.msi` or `sub3suite/Win64 OpenSSL v1.1.1n Light.msi` in your system incase of SSL errors when using sub3suite.
 
 You can also [compile](COMPILING.md) sub3suite yourself with a few easy steps!
 
