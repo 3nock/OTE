@@ -44,6 +44,11 @@ For More information see [contribution guide](CONTRIBUTING.md).
 
 2. Install the OpenSSL libraries using OpenSSL package `sub3suite/Win32 OpenSSL v1.1.1n Light.msi` or `sub3suite/Win64 OpenSSL v1.1.1n Light.msi` in your system incase of SSL errors when using sub3suite.
 
+**NOTE on Linux:**
+
+After download:
+Extract archive with command `tar -xvf sub3suite-<version>-linux.tar.gz`, then `cd sub3suite` and run sub3suite `./sub3suite`.
+
 You can also [compile](COMPILING.md) sub3suite yourself with a few easy steps!
 
 ## Credits
