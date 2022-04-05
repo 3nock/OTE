@@ -6,7 +6,7 @@
 
 # Subdomain Enumeration Suite
 Sub3 Suite is a research-grade suite of tools for Subdomain Enumeration, OSINT Information gathering & Attack Surface Mapping. Supports both
-manual and automated analysis on variety of target types with many available features & tools.
+manual and automated analysis on variety of target types with many available features & tools. For more information checkout the [documentation](https://github.com/3nock/s3s_doc/blob/main/md/index.md)
 
 ## Screenshots
 <img src="docs/images/screenshot_osint.png"/>
@@ -46,8 +46,7 @@ For More information see [contribution guide](CONTRIBUTING.md).
 
 **NOTE on Linux:**
 
-After download:
-Extract archive with command `tar -xvf sub3suite-<version>-linux.tar.gz`, then `cd sub3suite` and run sub3suite `./sub3suite`.
+**After download:** Extract archive with command `tar -xvf sub3suite-<version>-linux.tar.gz`, then `cd sub3suite` and run sub3suite `./sub3suite`.
 
 You can also [compile](COMPILING.md) sub3suite yourself with a few easy steps!
 
