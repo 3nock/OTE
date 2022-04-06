@@ -30,6 +30,8 @@ Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     textCursor_analysis.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor,1);
     ui->textBrowserGraph->setTextCursor(textCursor_graph);
     ui->textBrowserAnalysis->setTextCursor(textCursor_analysis);
+    ui->textBrowserGraph->setProperty("documentation", true);
+    ui->textBrowserAnalysis->setProperty("documentation", true);
 
     /* resolve external links in default browser */
     ui->textBrowserGraph->setOpenExternalLinks(true);

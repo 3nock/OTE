@@ -8,11 +8,13 @@ DocumentationDialog::DocumentationDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/img/res/icons/doc.png"));
+    ui->textBrowser->setProperty("documentation", true);
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
-    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation/engines"
-                                                  << ":/documentation/res/documentation");
+    ui->textBrowser->setSearchPaths(QStringList() << QCoreApplication::applicationDirPath()+"/doc"
+                                                  << QCoreApplication::applicationDirPath()+"/doc/engines"
+                                                  << QCoreApplication::applicationDirPath()+"/doc/enums");
 
     this->setWindowTitle("Documentation");
     ui->textBrowser->setSource(QUrl("index.html"));
@@ -24,11 +26,12 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/img/res/icons/doc.png"));
+    ui->textBrowser->setProperty("documentation", true);
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
-    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation/engines"
-                                                  << ":/documentation/res/documentation");
+    ui->textBrowser->setSearchPaths(QStringList() << QCoreApplication::applicationDirPath()+"/doc/engines"
+                                                  << QCoreApplication::applicationDirPath()+"/doc");
 
     switch(engine){
     case ENGINE::OSINT:
@@ -73,8 +76,8 @@ DocumentationDialog::DocumentationDialog(ENUMERATOR enumerator, QWidget *parent)
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
-    ui->textBrowser->setSearchPaths(QStringList() << ":/documentation/res/documentation/enums"
-                                                  << ":/documentation/res/documentation");
+    ui->textBrowser->setSearchPaths(QStringList() << QCoreApplication::applicationDirPath()+"doc/enums"
+                                                  << QCoreApplication::applicationDirPath()+"/doc");
 
     switch(enumerator){
     case ENUMERATOR::IP:

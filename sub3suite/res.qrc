@@ -84,22 +84,4 @@
     <qresource prefix="/themes">
         <file>res/themes/default.css</file>
     </qresource>
-    <qresource prefix="/documentation">
-        <file>res/documentation/engines/active.html</file>
-        <file>res/documentation/engines/brute.html</file>
-        <file>res/documentation/engines/dns.html</file>
-        <file>res/documentation/engines/raw.html</file>
-        <file>res/documentation/engines/ssl.html</file>
-        <file>res/documentation/enums/asn.html</file>
-        <file>res/documentation/enums/cidr.html</file>
-        <file>res/documentation/enums/ip.html</file>
-        <file>res/documentation/enums/ns.html</file>
-        <file>res/documentation/enums/ssl.html</file>
-        <file>res/documentation/enums/mx.html</file>
-        <file>res/documentation/enums/email.html</file>
-        <file>res/documentation/index.html</file>
-        <file>res/documentation/engines/osint.html</file>
-        <file>res/documentation/engines/url.html</file>
-    </qresource>
 </RCC>
-

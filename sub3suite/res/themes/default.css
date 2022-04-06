@@ -460,6 +460,14 @@ QPlainTextEdit {
     border-width: 1px;
 }
 
+QTextEdit[documentation="true"] {
+    background-color: black;
+    color: rgb(180,180,140);
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+}
+
 QListView,
 QListView[inside_toolbox="true"] {
     background-color: rgb(25,25,25);
