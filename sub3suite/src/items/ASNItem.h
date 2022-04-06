@@ -148,19 +148,28 @@ public:
         this->setText(asn.asn);
 
         /* info */
-        info_asn->setText(asn.info_asn);
-        info_name->setText(asn.info_name);
-        info_description->setText(asn.info_description);
-        info_country->setText(asn.info_country);
-        info_website->setText(asn.info_website);
-        info_ownerAddress->setText(asn.info_ownerAddress);
+        if(info_asn->text().isEmpty())
+            info_asn->setText(asn.info_asn);
+        if(info_name->text().isEmpty())
+            info_name->setText(asn.info_name);
+        if(info_description->text().isEmpty())
+            info_description->setText(asn.info_description);
+        if(info_country->text().isEmpty())
+            info_country->setText(asn.info_country);
+        if(info_website->text().isEmpty())
+            info_website->setText(asn.info_website);
+        if(info_ownerAddress->text().isEmpty())
+            info_ownerAddress->setText(asn.info_ownerAddress);
 
         /* rir */
-        rir_name->setText(asn.rir_name);
-        rir_country->setText(asn.rir_country);
-        rir_dateAllocated->setText(asn.rir_dateallocated);
+        if(rir_name->text().isEmpty())
+            rir_name->setText(asn.rir_name);
+        if(rir_country->text().isEmpty())
+            rir_country->setText(asn.rir_country);
+        if(rir_dateAllocated->text().isEmpty())
+            rir_dateAllocated->setText(asn.rir_dateallocated);
 
-        int count = 0;
+        int count = emailContacts->rowCount();
         /* email contacts */
         foreach(const QString &value, asn.emailcontacts){
             emailContacts->appendRow({new QStandardItem(QString::number(count)),
@@ -169,7 +178,7 @@ public:
         }
 
         /* abuse contacts */
-        count = 0;
+        count = abuseContacts->rowCount();
         foreach(const QString &value, asn.abusecontacts){
             abuseContacts->appendRow({new QStandardItem(QString::number(count)),
                                       new QStandardItem(value)});
@@ -177,7 +186,7 @@ public:
         }
 
         /* peers */
-        count = 0;
+        count = peers->rowCount();
         foreach(const QString &peer, asn.peers){
             peers->appendRow({new QStandardItem(QString::number(count)),
                               new QStandardItem(peer)});
@@ -185,7 +194,7 @@ public:
         }
 
         /* prefixes */
-        count = 0;
+        count = prefixes->rowCount();
         foreach(const QString &prefix, asn.prefixes){
             prefixes->appendRow({new QStandardItem(QString::number(count)),
                                  new QStandardItem(prefix)});
@@ -197,7 +206,7 @@ public:
     }
 
     void setPeers(const QSet<QString> &peersList){
-        int count = 0;
+        int count = peers->rowCount();
         foreach(const QString &peer, peersList){
             peers->appendRow({new QStandardItem(QString::number(count)),
                               new QStandardItem(peer)});
@@ -209,7 +218,7 @@ public:
     }
 
     void setPrefixes(const QSet<QString> &prefixList){
-        int count = 0;
+        int count = prefixes->rowCount();
         foreach(const QString &prefix, prefixList){
             prefixes->appendRow({new QStandardItem(QString::number(count)),
                                  new QStandardItem(prefix)});

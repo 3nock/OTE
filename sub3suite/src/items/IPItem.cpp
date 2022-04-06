@@ -33,7 +33,6 @@ s3s_struct::IP ip_to_struct(s3s_item::IP *item){
     ip.companyInfo_domain = item->companyInfo_domain->text();
 
     /* privacy info */
-    ip.privacyInfo_vpn = QVariant(item->privacyInfo_vpn->text()).toBool();
     ip.privacyInfo_proxy = QVariant(item->privacyInfo_proxy->text()).toBool();
     ip.privacyInfo_anonymous = QVariant(item->privacyInfo_anonymous->text()).toBool();
     ip.privacyInfo_tor = QVariant(item->privacyInfo_tor->text()).toBool();
@@ -78,7 +77,6 @@ QJsonObject ip_to_json(s3s_item::IP *item){
     ip.insert("companyInfo_domain", item->companyInfo_domain->text());
 
     /* privacyInfo */
-    ip.insert("privacyInfo_vpn", item->privacyInfo_vpn->text());
     ip.insert("privacyInfo_proxy", item->privacyInfo_proxy->text());
     ip.insert("privacyInfo_anonymous", item->privacyInfo_anonymous->text());
     ip.insert("privacyInfo_tor", item->privacyInfo_tor->text());
@@ -121,7 +119,6 @@ void json_to_ip(const QJsonObject &ip, s3s_item::IP *item){
     item->companyInfo_domain->setText(ip.value("companyInfo_domain").toString());
 
     /* privacyInfo */
-    item->privacyInfo_vpn->setText(ip.value("privacyInfo_vpn").toString());
     item->privacyInfo_proxy->setText(ip.value("privacyInfo_proxy").toString());
     item->privacyInfo_anonymous->setText(ip.value("privacyInfo_anonymous").toString());
     item->privacyInfo_tor->setText(ip.value("privacyInfo_tor").toString());

@@ -16,7 +16,7 @@ void Raw::onScanThreadEnded(){
     /* check if no active thread */
     status->activeScanThreads--;
     if(status->activeScanThreads)
-
+        return;
 
     /* set the progress bar to 100% just in case */
     if(!status->isStopped)

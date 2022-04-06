@@ -60,7 +60,7 @@ void IpApi::start(){
 
 void IpApi::replyFinishedEnumIP(QNetworkReply *reply){
     if(reply->error()){
-        quitThread();
+        this->onError(reply);
         return;
     }
 

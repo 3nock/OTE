@@ -98,6 +98,8 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         explorer->project->setText(info.name);
         info.date_created = QDate::currentDate().toString();
         info.last_modified = QDate::currentDate().toString();
+
+        emit projectLoaded();
         return;
     }
 

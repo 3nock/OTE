@@ -38,6 +38,9 @@ class IpData: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedEnumIP(QNetworkReply *reply) override;
+        void replyFinishedEnumASN(QNetworkReply *reply) override;
+        void replyFinishedEnumASNPeers(QNetworkReply *reply) override;
+        void replyFinishedEnumASNPrefixes(QNetworkReply *reply) override;
 
     private:
         QString m_key;

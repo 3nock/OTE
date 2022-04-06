@@ -58,7 +58,7 @@ void IpRegistry::start(){
 
 void IpRegistry::replyFinishedEnumIP(QNetworkReply *reply){
     if(reply->error()){
-        quitThread();
+        this->onError(reply);
         return;
     }
 

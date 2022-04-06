@@ -100,7 +100,7 @@ void IpInfo::replyFinishedSubdomain(QNetworkReply *reply){
 
 void IpInfo::replyFinishedEnumIP(QNetworkReply *reply){
     if(reply->error()){
-        quitThread();
+        this->onError(reply);
         return;
     }
 
@@ -130,7 +130,6 @@ void IpInfo::replyFinishedEnumIP(QNetworkReply *reply){
     ip.companyInfo_domain = company["domain"].toString();
 
     QJsonObject privacy = mainObj["privacy"].toObject();
-    ip.privacyInfo_vpn = privacy["vpn"].toBool();
     ip.privacyInfo_proxy = privacy["proxy"].toBool();
     ip.privacyInfo_tor = privacy["tor"].toBool();
     emit resultEnumIP(ip);

@@ -42,7 +42,6 @@ struct IP {
     QString companyInfo_domain;
 
     /* privacyInfo */
-    bool privacyInfo_vpn;
     bool privacyInfo_proxy;
     bool privacyInfo_anonymous;
     bool privacyInfo_tor;
@@ -91,7 +90,6 @@ public:
         companyInfo_domain(new QStandardItem),
 
         /* privacy info */
-        privacyInfo_vpn(new QStandardItem),
         privacyInfo_proxy(new QStandardItem),
         privacyInfo_anonymous(new QStandardItem),
         privacyInfo_tor(new QStandardItem),
@@ -138,7 +136,6 @@ public:
         companyInfo->appendRow({new QStandardItem("Name"), companyInfo_name});
         companyInfo->appendRow({new QStandardItem("Domain"), companyInfo_domain});
 
-        privacyInfo->appendRow({new QStandardItem("is VPN"), privacyInfo_vpn});
         privacyInfo->appendRow({new QStandardItem("is Proxy"), privacyInfo_proxy});
         privacyInfo->appendRow({new QStandardItem("is Anonymous"), privacyInfo_anonymous});
         privacyInfo->appendRow({new QStandardItem("is Attacker"), privacyInfo_attacker});
@@ -186,7 +183,6 @@ public:
     QStandardItem *companyInfo_domain;
 
     /* privacyInfo */
-    QStandardItem *privacyInfo_vpn;
     QStandardItem *privacyInfo_proxy;
     QStandardItem *privacyInfo_anonymous;
     QStandardItem *privacyInfo_tor;
@@ -223,7 +219,6 @@ public:
         companyInfo_domain->setText(ip.companyInfo_domain);
 
         /* privacy info */
-        privacyInfo_vpn->setText(QVariant(ip.privacyInfo_vpn).toString());
         privacyInfo_proxy->setText(QVariant(ip.privacyInfo_proxy).toString());
         privacyInfo_anonymous->setText(QVariant(ip.privacyInfo_anonymous).toString());
         privacyInfo_tor->setText(QVariant(ip.privacyInfo_tor).toString());
@@ -281,8 +276,6 @@ public:
             companyInfo_domain->setText(ip.companyInfo_domain);
 
         /* privacy info */
-        if(privacyInfo_vpn->text().isEmpty())
-            privacyInfo_vpn->setText(QVariant(ip.privacyInfo_vpn).toString());
         if(privacyInfo_proxy->text().isEmpty())
             privacyInfo_proxy->setText(QVariant(ip.privacyInfo_proxy).toString());
         if(privacyInfo_anonymous->text().isEmpty())

@@ -89,6 +89,9 @@ void ASNEnum::startScan(){
     case 0: // Bgpview
         this->startScanThread(new Bgpview(*m_scanArgs));
         break;
+    case 1: // IpData
+        this->startScanThread(new IpData(*m_scanArgs));
+        break;
     }
 }
 
