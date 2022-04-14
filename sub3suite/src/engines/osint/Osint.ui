@@ -1123,9 +1123,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-148</y>
               <width>158</width>
-              <height>899</height>
+              <height>922</height>
              </rect>
             </property>
             <attribute name="label">
@@ -1191,6 +1191,13 @@
                  <widget class="QCheckBox" name="moduleHackerTargetPaid">
                   <property name="text">
                    <string>HackerTarget</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="moduleIpData">
+                  <property name="text">
+                   <string>IpData</string>
                   </property>
                  </widget>
                 </item>

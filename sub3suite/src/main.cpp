@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
 #endif
 
     /* setting stylesheets */
-    QFile stylesheet(":/themes/res/themes/default.css");
+    QFile stylesheet(":/themes/res/themes/light.css");
     if(stylesheet.open(QFile::ReadOnly)){
         qApp->setStyleSheet(QLatin1String(stylesheet.readAll()));
         stylesheet.close();

@@ -10,6 +10,7 @@
 
 #include "src/utils/Config.h"
 #include "src/utils/utils.h"
+#include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/EnumConfigDialog.h"
 
 
@@ -137,4 +138,10 @@ void ASNEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
 
     ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
+}
+
+void ASNEnum::on_buttonAPIKeys_clicked(){
+    ApiKeysDialog *apiKeysDialog = new ApiKeysDialog(this);
+    apiKeysDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    apiKeysDialog->show();
 }

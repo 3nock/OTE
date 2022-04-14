@@ -24,4 +24,9 @@ Feel free to [contact us](CONTACTS.md) for any further inquiries.
 Bitcoin address: `18taNLpWFJc7mwJsitaKArvpUfpqBPHSkm`
 
 
+## Sponsors
+
+1. [s00x3r](https://github.com/s00x3r)
+
+
 *Thank you!*

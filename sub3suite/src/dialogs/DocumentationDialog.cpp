@@ -73,10 +73,11 @@ DocumentationDialog::DocumentationDialog(ENUMERATOR enumerator, QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/img/res/icons/doc.png"));
+    ui->textBrowser->setProperty("documentation", true);
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
-    ui->textBrowser->setSearchPaths(QStringList() << QCoreApplication::applicationDirPath()+"doc/enums"
+    ui->textBrowser->setSearchPaths(QStringList() << QCoreApplication::applicationDirPath()+"/doc/enums"
                                                   << QCoreApplication::applicationDirPath()+"/doc");
 
     switch(enumerator){

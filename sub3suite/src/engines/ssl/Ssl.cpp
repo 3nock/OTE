@@ -69,6 +69,8 @@ void Ssl::initUI(){
     /* placeholdertxt */
     ui->lineEditFilter->setPlaceholderText(tr("filter..."));
     ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
+    ui->plainTextEditCert->setPlaceholderText("Double click on certificate at \"Results\" Tab to view the certificate in pem format");
+    ui->plainTextEditKey->setPlaceholderText("Double click on certificate at \"Results\" Tab to view its key in pem format");
 
     /* equally seperate the widgets */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))

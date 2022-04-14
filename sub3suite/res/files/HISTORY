@@ -1,4 +1,16 @@
 SUB3-SUITE VERSION HISTORY
 
-1.0.0
+0.0.4 (beta release)
+-fix: unwanted selection in results tree views
+
+0.0.3 (beta release)
+-added: ipdata module for ASN enumeration
+-added: more detailed documentation
+-fix: urlscan osint-module erroraneous results
+-fix: Temporary project information display
+
+0.0.2 (beta release)
+-fix: update dialog popup error
+
+0.0.1 (beta release)
 - First Release (Beta)

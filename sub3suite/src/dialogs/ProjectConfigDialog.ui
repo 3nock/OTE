@@ -102,7 +102,7 @@
      <item>
       <widget class="QPushButton" name="buttonOk">
        <property name="text">
-        <string>OK</string>
+        <string>Save</string>
        </property>
       </widget>
      </item>

@@ -4,9 +4,10 @@
 #define ASN_API 0
 #define ASN_DATA 1
 #define CURRENCY_DETECTION 2
-#define MOBILE_CARRIER_DETECTION 3
-#define PROXY_TOR_THREAT_DETECTION 4
-#define TIMEZONE_DETECTION 5
+#define IP_DATA 3
+#define MOBILE_CARRIER_DETECTION 4
+#define PROXY_TOR_THREAT_DETECTION 5
+#define TIMEZONE_DETECTION 6
 
 /*
  * 1,500/day for free-tier...
@@ -18,6 +19,10 @@ IpData::IpData(ScanArgs args): AbstractOsintModule(args)
 
     if(args.output_Raw)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpData::replyFinishedRawJson);
+    if(args.output_ASN)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpData::replyFinishedAsn);
+    if(args.output_CIDR)
+        connect(manager, &s3sNetworkAccessManager::finished, this, &IpData::replyFinishedCidr);
     if(args.output_EnumIP)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpData::replyFinishedEnumIP);
     if(args.output_EnumASN)
@@ -48,6 +53,9 @@ void IpData::start(){
         case ASN_DATA:
             url.setUrl("https://api.ipdata.co/"+target+"/asn?api-key="+m_key);
             break;
+        case IP_DATA:
+            url.setUrl("https://api.ipdata.co/"+target+"?api-key="+m_key);
+            break;
         case CURRENCY_DETECTION:
             url.setUrl("https://api.ipdata.co/"+target+"/currency?api-key="+m_key);
             break;
@@ -66,6 +74,10 @@ void IpData::start(){
         return;
     }
 
+    ///
+    /// for enums
+    ///
+
     if(args.output_EnumIP){
         url.setUrl("https://api.ipdata.co/"+target+"?api-key="+m_key);
         request.setUrl(url);
@@ -79,6 +91,74 @@ void IpData::start(){
         manager->get(request);
         return;
     }
+
+    ///
+    /// for OSINT
+    ///
+
+    if(args.input_ASN){
+        if(args.output_ASN || args.output_CIDR){
+            url.setUrl("https://api.ipdata.co/AS"+target+"/?api-key="+m_key);
+            request.setAttribute(QNetworkRequest::User, ASN_API);
+            request.setUrl(url);
+            manager->get(request);
+            return;
+        }
+    }
+
+    if(args.input_IP){
+        if(args.output_ASN){
+            // url.setUrl("https://api.ipdata.co/"+target+"/asn?api-key="+m_key);
+            url.setUrl("https://api.ipdata.co/"+target+"?api-key="+m_key);
+            request.setAttribute(QNetworkRequest::User, IP_DATA);
+            request.setUrl(url);
+            manager->get(request);
+            return;
+        }
+    }
+}
+
+void IpData::replyFinishedAsn(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    switch (reply->property(REQUEST_TYPE).toInt())
+    {
+    case ASN_API:
+        foreach(const QJsonValue &value, mainObj["peers"].toArray())
+            emit resultASN(value.toString(), "");
+        break;
+
+    case IP_DATA:
+        QJsonObject asn = mainObj["asn"].toObject();
+        emit resultASN(QString::number(asn["asn"].toInt()), asn["name"].toString());
+        break;
+    }
+
+    end(reply);
+}
+
+void IpData::replyFinishedCidr(QNetworkReply *reply){
+    if(reply->error()){
+        this->onError(reply);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject mainObj = document.object();
+
+    foreach(const QJsonValue &value, mainObj["ipv4_prefixes"].toArray())
+        emit resultCIDR(value.toString());
+
+    foreach(const QJsonValue &value, mainObj["ipv6_prefixes"].toArray())
+        emit resultCIDR(value.toString());
+
+    end(reply);
 }
 
 void IpData::replyFinishedEnumIP(QNetworkReply *reply){

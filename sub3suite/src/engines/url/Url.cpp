@@ -67,7 +67,7 @@ void Url::initUI(){
 
     /* placeholdertext */
     ui->lineEditFilter->setPlaceholderText(tr("filter..."));
-    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
+    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_URL));
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))

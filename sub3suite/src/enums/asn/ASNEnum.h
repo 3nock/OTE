@@ -44,7 +44,9 @@ class ASNEnum : public AbstractEnum{
         void on_treeViewResults_customContextMenuRequested(const QPoint &pos);
         void on_lineEditTarget_returnPressed();
 
-    private:
+        void on_buttonAPIKeys_clicked();
+
+private:
         Ui::ASNEnum *ui;
         QStandardItemModel *m_model;
         QStringListModel *m_targetsListModel;

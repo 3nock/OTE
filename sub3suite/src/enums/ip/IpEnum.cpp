@@ -147,7 +147,7 @@ void IpEnum::on_comboBoxOutput_currentIndexChanged(int index){
     ui->comboBoxEngine->clear();
     switch(index){
     case 0:
-        ui->comboBoxEngine->addItems({"IpData", "IpRegistry", "IpInfo", "IpAPI" });
+        ui->comboBoxEngine->addItems({"IpRegistry", "IpData", "IpInfo", "IpAPI" });
         break;
     case 1:
         ui->comboBoxEngine->addItems({"Omnisint"});

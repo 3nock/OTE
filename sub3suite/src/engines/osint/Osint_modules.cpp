@@ -465,6 +465,12 @@ void Osint::initModules(){
     else
         ui->moduleGoogleSearch->hide();
 
+    ModuleInfo::IpData ipdata;
+    if(ipdata.input_output.contains(INPUT_TYPE) && ipdata.input_output[INPUT_TYPE].contains(OUTPUT_TYPE))
+        ui->moduleIpData->show();
+    else
+        ui->moduleIpData->hide();
+
     /* uncheck all modules */
     this->uncheckAllModules();
 }

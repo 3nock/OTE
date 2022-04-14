@@ -73,11 +73,11 @@ void IpEnum::startScan(){
     case 0: // IP informations
         switch (ui->comboBoxEngine->currentIndex())
         {
-        case 0: // IPDATA
-            this->startScanThread(new IpData(*m_scanArgs));
-            break;
-        case 1: // IPREGISTRY
+        case 0: // IPREGISTRY
             this->startScanThread(new IpRegistry(*m_scanArgs));
+            break;
+        case 1: // IPDATA
+            this->startScanThread(new IpData(*m_scanArgs));
             break;
         case 2: // IPINFO
             this->startScanThread(new IpInfo(*m_scanArgs));

@@ -81,15 +81,23 @@ void Dnsbufferoverun::replyFinishedIp(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
+    QRegExp ipv4("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
+
     /* for forward dns */
     foreach(const QJsonValue &value, mainObj["FDNS_A"].toArray()){
-        emit resultIP(value.toString().split(",")[0]);
-        log.resultsCount++;
+        QString ip(value.toString().split(",")[0]);
+        if(ipv4.exactMatch(ip)){
+            emit resultIP(ip);
+            log.resultsCount++;
+        }
     }
     /* for reverse dns */
     foreach(const QJsonValue &value, mainObj["RDNS"].toArray()){
-        emit resultIP(value.toString().split(",")[0]);
-        log.resultsCount++;
+        QString ip(value.toString().split(",")[0]);
+        if(ipv4.exactMatch(ip)){
+            emit resultIP(ip);
+            log.resultsCount++;
+        }
     }
 
     this->end(reply);
@@ -104,17 +112,25 @@ void Dnsbufferoverun::replyFinishedSubdomainIp(QNetworkReply *reply){
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     QJsonObject mainObj = document.object();
 
+    QRegExp ipv4("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
+
     /* for forward dns */
     foreach(const QJsonValue &value, mainObj["FDNS_A"].toArray()){
         QStringList subdomainAndIp = value.toString().split(","); // ip-address,subdomain
-        emit resultSubdomainIp(subdomainAndIp[1], subdomainAndIp[0]);
-        log.resultsCount++;
+        QString ip(subdomainAndIp[0]);
+        if(ipv4.exactMatch(ip)){
+            emit resultSubdomainIp(subdomainAndIp[1], ip);
+            log.resultsCount++;
+        }
     }
     /* for reverse dns */
     foreach(const QJsonValue &value, mainObj["RDNS"].toArray()){
         QStringList subdomainAndIp = value.toString().split(","); // ip-address,subdomain
-        emit resultSubdomainIp(subdomainAndIp[1], subdomainAndIp[0]);
-        log.resultsCount++;
+        QString ip(subdomainAndIp[0]);
+        if(ipv4.exactMatch(ip)){
+            emit resultSubdomainIp(subdomainAndIp[1], ip);
+            log.resultsCount++;
+        }
     }
 
     this->end(reply);

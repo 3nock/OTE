@@ -106,6 +106,8 @@ void SSLEnum::initUI(){
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText(tr("Filter..."));
     ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_SSLCERT));
+    ui->plainTextEditRawCert->setPlaceholderText("Double click on certificate at \"Results\" Tab to view the certificate in pem format");
+    ui->plainTextEditRawKey->setPlaceholderText("Double click on certificate at \"Results\" Tab to view its key in pem format");
 
     /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))

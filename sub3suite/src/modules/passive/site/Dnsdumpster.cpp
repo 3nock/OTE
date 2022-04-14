@@ -20,9 +20,7 @@ Dnsdumpster::~Dnsdumpster(){
     delete manager;
 }
 
-///
-/// first scan is to get the crsf token...
-///
+/* first scan is to get the crsf token... */
 void Dnsdumpster::start(){
     QNetworkRequest request;
     QUrl url("https://dnsdumpster.com");
@@ -37,9 +35,10 @@ void Dnsdumpster::replyFinishedSubdomainIp(QNetworkReply *reply){
         return;
     }
 
-    if(m_queryToGetToken)
+    if(m_queryToGetToken){
         this->m_getToken(reply);
-
+        return;
+    }
     else{
         QStack<GumboNode*> nodes;
         GumboOutput *output = gumbo_parse(reply->readAll());
@@ -84,9 +83,10 @@ void Dnsdumpster::replyFinishedSubdomain(QNetworkReply *reply){
         return;
     }
 
-    if(m_queryToGetToken)
+    if(m_queryToGetToken){
         this->m_getToken(reply);
-
+        return;
+    }
     else{
         QStack<GumboNode*> nodes;
         GumboOutput *output = gumbo_parse(reply->readAll());
@@ -133,9 +133,10 @@ void Dnsdumpster::replyFinishedIp(QNetworkReply *reply){
         return;
     }
 
-    if(m_queryToGetToken)
+    if(m_queryToGetToken){
         this->m_getToken(reply);
-
+        return;
+    }
     else{
         QStack<GumboNode*> nodes;
         GumboOutput *output = gumbo_parse(reply->readAll());
@@ -175,9 +176,7 @@ void Dnsdumpster::replyFinishedIp(QNetworkReply *reply){
     this->end(reply);
 }
 
-///
-/// after obtaining the csrf token, send the request to obtain results...
-///
+/* after obtaining the csrf token, send the request with target. */
 void Dnsdumpster::m_getToken(QNetworkReply *reply){
     QString token;
     QStack<GumboNode*> nodes;
@@ -206,6 +205,8 @@ void Dnsdumpster::m_getToken(QNetworkReply *reply){
         for(unsigned int i = 0; i < children->length; i++)
             nodes.push(static_cast<GumboNode*>(children->data[i]));
     }
+
+    reply->deleteLater();
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 
     /* Request to obtain the Results */

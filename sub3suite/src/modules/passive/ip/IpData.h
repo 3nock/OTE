@@ -23,9 +23,14 @@ struct IpData{
                                         {"ASN API",
                                          {PLACEHOLDERTEXT_ASN, "We now offer an endpoint to query ASN information. The ASN number may be used at the end of the base URL to return information pertinent to the ASN."}},
                                         {"ASN Data",
-                                         {PLACEHOLDERTEXT_IP, "We provide detailed ASN data for all IP Addresses with the following fields: AS Name, AS Number, AS Route, the AS Organization's domain and the usage type."}}};
+                                         {PLACEHOLDERTEXT_IP, "We provide detailed ASN data for all IP Addresses with the following fields: AS Name, AS Number, AS Route, the AS Organization's domain and the usage type."}},
+                                        {"IP Data",
+                                         {PLACEHOLDERTEXT_IP, "IP address data"}}};
 
-    QMap<int, QList<int>> input_output = {};
+    QMap<int, QList<int>> input_output = {{IN_ASN,
+                                           {OUT_ASN, OUT_CIDR}},
+                                          {IN_IP,
+                                           {OUT_ASN}}};
 };
 }
 
@@ -37,6 +42,8 @@ class IpData: public AbstractOsintModule{
 
     public slots:
         void start() override;
+        void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedCidr(QNetworkReply *reply) override;
         void replyFinishedEnumIP(QNetworkReply *reply) override;
         void replyFinishedEnumASN(QNetworkReply *reply) override;
         void replyFinishedEnumASNPeers(QNetworkReply *reply) override;

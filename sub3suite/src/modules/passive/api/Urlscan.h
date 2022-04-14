@@ -11,9 +11,21 @@ struct Urlscan{
     QString url_apiDoc = "https://urlscan.io/docs/api/";
     QString summary = "Our APIs allow you to submit URLs for scanning and retrieve the results once the scan has finished. Furthermore, you can use an API for searching existing scans by attributes such as domains, IPs, Autonomous System (AS) numbers, hashes, etc";
     QMap<QString, QStringList> flags = {{"domain",
-                                         {PLACEHOLDERTEXT_DOMAIN, "Search by domain name"}}};
+                                         {PLACEHOLDERTEXT_DOMAIN, "Search by domain name"}},
+                                        {"asn",
+                                         {PLACEHOLDERTEXT_ASN, "Search by asn"}},
+                                        {"ip",
+                                         {PLACEHOLDERTEXT_IP, "Search by ipaddress"}},
+                                        {"url",
+                                         {PLACEHOLDERTEXT_URL, "Search by url"}}};
 
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
+                                           {OUT_SUBDOMAIN, OUT_IP, OUT_URL, OUT_ASN}},
+                                          {IN_IP,
+                                           {OUT_SUBDOMAIN, OUT_IP, OUT_URL, OUT_ASN}},
+                                          {IN_ASN,
+                                           {OUT_SUBDOMAIN, OUT_IP, OUT_URL, OUT_ASN}},
+                                          {IN_URL,
                                            {OUT_SUBDOMAIN, OUT_IP, OUT_URL, OUT_ASN}}};
 };
 }
@@ -27,9 +39,9 @@ class Urlscan: public AbstractOsintModule{
     public slots:
         void start() override;
         void replyFinishedSubdomain(QNetworkReply *reply) override;
-        void replyFinishedIp(QNetworkReply *reply) override;
         void replyFinishedUrl(QNetworkReply *reply) override;
         void replyFinishedAsn(QNetworkReply *reply) override;
+        void replyFinishedIp(QNetworkReply *reply) override;
 };
 
 #endif // URLSCAN_H

@@ -21,6 +21,7 @@ Netcraft::~Netcraft(){
 
 void Netcraft::start(){
     QNetworkRequest request;
+    request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36");
     QUrl url("https://searchdns.netcraft.com/?restriction=site+contains&host="+target);
     request.setUrl(url);
     manager->get(request);

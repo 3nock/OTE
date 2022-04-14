@@ -364,8 +364,12 @@ void Osint::startScan(){
     ///
     /// ip...
     ///
+    if(ui->moduleIpInfo->isChecked())
+        this->startScanThread(new IpInfo(*m_scanArgs));
     if(ui->moduleIpfy->isChecked())
         this->startScanThread(new Ipfy(*m_scanArgs));
+    if(ui->moduleIpData->isChecked())
+        this->startScanThread(new IpData(*m_scanArgs));
 
     /* set progressBar */
     ui->progressBar->setMaximum(total_modules*m_scanArgs->targets.length());

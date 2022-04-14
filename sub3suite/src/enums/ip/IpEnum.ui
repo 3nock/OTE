@@ -72,12 +72,12 @@
        </property>
        <item>
         <property name="text">
-         <string>IpData</string>
+         <string>IpRegistry</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>IpRegistry</string>
+         <string>IpData</string>
         </property>
        </item>
        <item>
@@ -295,7 +295,10 @@
            <bool>true</bool>
           </property>
           <property name="selectionMode">
-           <enum>QAbstractItemView::SingleSelection</enum>
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectItems</enum>
           </property>
           <attribute name="headerCascadingSectionResizes">
            <bool>true</bool>

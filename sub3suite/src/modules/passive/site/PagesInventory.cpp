@@ -4,7 +4,6 @@
 
 /*
  * next page implementation not yet...
- * also has a reverse-ip...
  */
 PagesInventory::PagesInventory(ScanArgs args): AbstractOsintModule(args)
 {
@@ -24,6 +23,10 @@ PagesInventory::~PagesInventory(){
 
 void PagesInventory::start(){
     QNetworkRequest request;
+    request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36");
+    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+
+    /* ip and domain input */
     QUrl url("https://www.pagesinventory.com/search/?s="+target);
     request.setUrl(url);
     manager->get(request);

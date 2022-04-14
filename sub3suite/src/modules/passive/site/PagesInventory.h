@@ -12,7 +12,9 @@ struct PagesInventory{
     QString summary = "";
     QMap<QString, QStringList> flags = {};
     QMap<int, QList<int>> input_output = {{IN_DOMAIN,
-                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}}};
+                                           {OUT_SUBDOMAINIP, OUT_SUBDOMAIN, OUT_IP}},
+                                          {IN_IP,
+                                           {OUT_SUBDOMAIN}}};
 };
 }
 
