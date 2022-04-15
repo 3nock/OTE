@@ -162,6 +162,45 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBoxScheme">
+         <property name="title">
+          <string>Force Scheme</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QRadioButton" name="radioButtonHTTPS">
+            <property name="text">
+             <string>https</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonHTTP">
+            <property name="text">
+             <string>http</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonFTP">
+            <property name="text">
+             <string>ftp</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBoxResult">
          <property name="title">
           <string>Results</string>

@@ -1,5 +1,5 @@
 QTabWidget::pane {
-    border-color: rgb(30,30,30);
+    border-color: rgb(150,150,150);
     background-color: transparent;
     border-style: solid;
     border-top-width: 1px;
@@ -25,14 +25,12 @@ QTabBar::tab {
     padding-top: 3.5px;
     padding-bottom: 3.5px;
     border-style: outset;
-    border-width: 2px;
-    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:0.6, x2:0.5, y2:0.4, stop:0 rgba(175, 175, 175, 255), stop:1 rgba(122, 122, 122, 255));
-    border-right-color: qlineargradient(spread:pad, x1:0.4, y1:0.5, x2:0.6, y2:0.5, stop:0 rgba(175, 175, 175, 255), stop:1 rgba(122, 122, 122, 255));
-    border-left-color: qlineargradient(spread:pad, x1:0.6, y1:0.5, x2:0.4, y2:0.5, stop:0 rgba(175, 175, 175, 255), stop:1 rgba(122, 122, 122, 255));
+    border-width: 1px;
+    border-color: rgb(150,150,150);
     border-style: solid;
     border-bottom-width: 0px;
-    color: white;
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(137, 137, 137, 255), stop:1 rgba(157, 157, 157, 255));
+    color: rgb(101, 101, 86);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(250, 250, 250),stop: 0.4 rgb(200,200,200), stop: 0.5 rgb(200,200,200) stop:1 rgb(200, 200, 200));
 }
 
 QTabBar::tab:hover {
@@ -47,10 +45,11 @@ QTabBar::tab:selected {
 QTextEdit,
 QTableView,
 QTreeView,
+QListView,
 QPlainTextEdit {
     color: black;
     border-style: inset solid;
-    border-color: rgb(30,30,30);
+    border-color: rgb(150,150,150);
     border-width: 1px;
 }
 
@@ -58,10 +57,7 @@ QFrame[default_frame="true"] {
     height: 45px;
     max-height: 45px;
     min-height: 45px;
-}
-
-QPushButton {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
+    background: rgb(200,200,200);
 }
 
 QProgressBar {
@@ -69,9 +65,8 @@ QProgressBar {
     max-width: 200px;
     min-height: 22px;
     text-align: center;
-    color: rgb(240, 240, 240);
+    color: black;
     border-width: 1px;
-    border-radius: 10px;
     border-color: rgb(30,30,30);
     border-style: solid;
     background-color:rgb(207,207,207);
@@ -79,7 +74,6 @@ QProgressBar {
 
 QProgressBar::chunk {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 0.3 rgb(170, 170, 127));
-    border-radius: 10px;
 }
 
 /****************************** ToolButton ******************************/
@@ -90,7 +84,7 @@ QToolButton {
     border-style: outset;
     border-style: solid;
     border-radius: 5px;
-    border-color: rgb(78, 78, 78);
+    border-color: rgb(150,150,150);
     color: white;
     background: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(117, 117, 117, 255), stop:1 rgba(137, 137, 137, 255));
 }
@@ -99,18 +93,72 @@ QPushButton{
     min-height: 20px;
     min-width: 73px;
     padding: 1px;
-    border-style: outset;
-    border-width: 2px;
-    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:0.6, x2:0.5, y2:0.4, stop:0 rgba(155, 155, 155, 255), stop:1 rgba(102, 102, 102, 255));
-    border-right-color: qlineargradient(spread:pad, x1:0.4, y1:0.5, x2:0.6, y2:0.5, stop:0 rgba(155, 155, 155, 255), stop:1 rgba(102, 102, 102, 255));
-    border-left-color: qlineargradient(spread:pad, x1:0.6, y1:0.5, x2:0.4, y2:0.5, stop:0 rgba(155, 155, 155, 255), stop:1 rgba(102, 102, 102, 255));
-    border-bottom-color: rgb(78, 78, 78);
-    border-bottom-width: 1px;
+    border-style: inset;
+    border-width: 1px;
+    border-color: rgb(150,150,150);
     border-style: solid;
-    color: rgb(255, 255, 255);
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(117, 117, 117, 255), stop:1 rgba(137, 137, 137, 255));
+    color: rgb(20,20,20);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(250, 250, 250),stop: 0.4 rgb(200,200,200), stop: 0.5 rgb(200,200,200) stop:1 rgb(200, 200, 200));
 }
 
 QAction {
     background: transparent;
+}
+
+QComboBox {
+    min-height: 19px;
+    min-width: 90px;
+    padding-left: 5px;
+    padding-right: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+QStatusBar {
+    border-style: solid;
+    border-style: outset;
+    border-width: 1px;
+    border-top-color: grey;
+    border-right-color: grey;
+    border-left-color: grey;
+    border-bottom-color: transparent;
+}
+
+QMenuBar[project="true"] {
+    margin-top: 1px;
+    background: transparent;
+}
+
+QMenuBar::item:disabled {
+    color: grey;
+}
+
+QLabel[dark="true"] {
+    border-style: outset;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(150,150,150);
+    background-color: transparent;
+}
+
+QScrollArea {
+    border-style: inset;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(150,150,150);
+}
+
+QToolBox QScrollArea {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(150,150,150);
+}
+
+QToolBox::tab {
+    padding-left: 12px;
+    color: rgb(101, 101, 86);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(250, 250, 250),stop: 0.4 rgb(200,200,200), stop: 0.5 rgb(200,200,200) stop:1 rgb(200, 200, 200));
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(150,150,150);
 }

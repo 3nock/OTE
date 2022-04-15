@@ -37,7 +37,7 @@
      <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>0</number>
+     <number>2</number>
     </property>
     <item>
      <widget class="QTabWidget" name="tabWidgetMain">

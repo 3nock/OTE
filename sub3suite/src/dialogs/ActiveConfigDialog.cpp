@@ -24,6 +24,9 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, brute::ScanConfig *confi
     brute = true;
     this->m_initWidgets();
     this->m_loadConfigBrute();
+
+    /* hiding unused widgets */
+    ui->groupBoxScheme->hide();
 }
 
 /* for active... */
@@ -42,6 +45,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, active::ScanConfig *conf
 
     /* hiding unused widgets */
     ui->checkBoxWildcards->hide();
+    ui->groupBoxScheme->hide();
 }
 
 /* for records... */
@@ -59,6 +63,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config)
     this->m_loadConfigDns();
 
     /* hiding unused widgets */
+    ui->groupBoxScheme->hide();
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
     ui->radioButtonAAAA->hide();
@@ -83,6 +88,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
     ui->groupBoxTimeout->setCheckable(false);
 
     /* hiding unused widgets */
+    ui->groupBoxScheme->hide();
     ui->checkBoxWildcards->hide();
     ui->radioButtonA->hide();
     ui->radioButtonAAAA->hide();
@@ -273,6 +279,16 @@ void ActiveConfigDialog::m_loadConfigURL(){
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
     ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
+    ui->groupBoxScheme->setChecked(CONFIG.value(CFG_VAL_FORCESCHEME).toBool());
+
+    QString scheme(CONFIG.value(CFG_VAL_SCHEME).toString());
+    if(scheme == "https")
+        ui->radioButtonHTTPS->setChecked(true);
+    if(scheme == "http")
+        ui->radioButtonHTTP->setChecked(true);
+    if(scheme == "ftp")
+        ui->radioButtonFTP->setChecked(true);
+
     CONFIG.endGroup();
 }
 
@@ -584,9 +600,18 @@ void ActiveConfigDialog::m_saveURL(){
     QString thread = ui->lineEditThreads->text();
     QString timeout = ui->lineEditTimeout->text();
 
+    QString scheme;
+    if(ui->radioButtonHTTP->isChecked())
+        scheme = "http";
+    if(ui->radioButtonHTTPS->isChecked())
+        scheme = "https";
+    if(ui->radioButtonFTP->isChecked())
+        scheme = "ftp";
+
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
     bool setTimeout = ui->groupBoxTimeout->isChecked();
+    bool force_scheme = ui->groupBoxScheme->isChecked();
 
     /* saving values to config file... */
 
@@ -596,12 +621,16 @@ void ActiveConfigDialog::m_saveURL(){
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
     CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
+    CONFIG.setValue(CFG_VAL_SCHEME, scheme);
+    CONFIG.setValue(CFG_VAL_FORCESCHEME, force_scheme);
     CONFIG.endGroup();
 
     /* saving to ssl::ScanConfig structure... */
 
     m_configURL->timeout = timeout.toInt();
     m_configURL->threads = thread.toInt();
+    m_configURL->scheme = scheme;
+    m_configURL->force_scheme = force_scheme;
     m_configURL->noDuplicates = noDuplicates;
     m_configURL->autoSaveToProject = autosaveToProject;
     m_configURL->setTimeout = setTimeout;

@@ -29,7 +29,9 @@ struct ScanStat {  // scan statistics
 struct ScanConfig { // scan configurations
     int threads = 50;
     int timeout = 1000;
+    QString scheme = "https";
 
+    bool force_scheme = false;
     bool setTimeout = false;
     bool noDuplicates = false;
     bool autoSaveToProject = false;

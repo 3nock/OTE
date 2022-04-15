@@ -93,6 +93,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="labelProtocal">
+       <property name="text">
+        <string>PROTOCAL:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboBoxProtocal">
        <property name="minimumSize">
         <size>

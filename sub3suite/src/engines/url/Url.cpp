@@ -67,7 +67,14 @@ void Url::initUI(){
 
     /* placeholdertext */
     ui->lineEditFilter->setPlaceholderText(tr("filter..."));
-    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_URL));
+    ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_URL_DOMAIN));
+
+    /* underdevelopment txt */
+    QFile file(":/files/res/files/under_development.html");
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        ui->textBrowserScreenshots->append(file.readAll());
+        file.close();
+    }
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -178,6 +185,8 @@ void Url::initConfigValues(){
     m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
     m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
+    m_scanArgs->config->force_scheme = CONFIG.value(CFG_VAL_FORCESCHEME).toBool();
+    m_scanArgs->config->scheme = CONFIG.value(CFG_VAL_SCHEME).toString();
     CONFIG.endGroup();
 }
 

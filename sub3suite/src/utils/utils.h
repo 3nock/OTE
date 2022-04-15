@@ -62,6 +62,7 @@
 #define PLACEHOLDERTEXT_NAME "name e.g. john doe"
 #define PLACEHOLDERTEXT_UA "User-Agent"
 #define PLACEHOLDERTEXT_BULK_IP "ip,ip e.g. 8.8.8.8,1.1.1.1"
+#define PLACEHOLDERTEXT_URL_DOMAIN "url e.g https://example.com or hostname e.g example.com"
 
 struct ScanStatus {
     bool isNotActive = true;

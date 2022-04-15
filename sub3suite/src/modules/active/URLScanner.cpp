@@ -68,6 +68,17 @@ void url::Scanner::lookup(){
 
     switch (url::getTarget(m_args, url)) {
     case RETVAL::LOOKUP:
+        /* checks */
+        if(url.isRelative())
+            url.setUrl(m_args->config->scheme+"://"+url.url());
+        if(!url.isValid())
+            emit next();
+
+        /* scheme change */
+        if(m_args->config->force_scheme)
+            url.setScheme(m_args->config->scheme);
+
+        /* lookup */
         request.setUrl(url);
         m_manager->get(request);
         break;

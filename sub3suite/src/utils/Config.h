@@ -42,6 +42,8 @@
 #define CFG_VAL_BUILDDATE "build_date"
 #define CFG_VAL_MAXPAGES "max_pages"
 #define CFG_VAL_SETTIMEOUT "set_timeout"
+#define CFG_VAL_SCHEME "scheme"
+#define CFG_VAL_FORCESCHEME "force_scheme"
 
 /* groups */
 #define CFG_GRP_RECENT "recent_projects"

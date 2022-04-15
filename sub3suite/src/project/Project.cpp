@@ -143,6 +143,8 @@ void Project::init_menubar_tree(){
     a_extract.setMenu(menu_extract);
 
     menubar_tree = new QMenuBar(this);
+    menubar_tree->setProperty("project", true);
+
     menubar_tree->addAction(&a_save);
     menubar_tree->addAction(&a_copy);
     menubar_tree->addAction(&a_send);
@@ -168,6 +170,8 @@ void Project::init_menubar_tree(){
 
 void Project::init_menubar_project(){
     menubar_project = new QMenuBar(this);
+    menubar_project->setProperty("project", true);
+
     menubar_project->addAction("Save", this, [=](){model->saveProject();})->setIcon(QIcon(":/img/res/icons/save.png"));
     menubar_project->addAction("Clear", this, [=](){model->clearModels();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     ui->horizontalLayout_summary_project->insertWidget(0, menubar_project);
