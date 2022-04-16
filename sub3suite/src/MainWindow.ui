@@ -202,7 +202,6 @@
     <addaction name="actionApiKeys"/>
     <addaction name="actionTheme"/>
     <addaction name="actionFont"/>
-    <addaction name="actionLanguage"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -320,11 +319,6 @@
    </property>
    <property name="text">
     <string>Twitter</string>
-   </property>
-  </action>
-  <action name="actionLanguage">
-   <property name="text">
-    <string>Language</string>
    </property>
   </action>
   <action name="actionSourceCode">

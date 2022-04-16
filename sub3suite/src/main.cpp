@@ -155,19 +155,8 @@ int main(int argc, char *argv[])
 #endif
 
     qInfo() << "**************************************************************************************";
-    qInfo() << "";
+    qInfo() << "*                                     Sub3 Suite                                     *";
     qInfo() << "**************************************************************************************";
-
-    /* loading translations
-    QString language = CONFIG.value("language").toString();
-    QTranslator translator;
-    if(translator.load(QString("s3s_%1").arg(language), QGuiApplication::applicationDirPath()+"/translations")){
-         if(s3s_app.installTranslator(&translator))
-             qDebug() << "Translator Installed successfully!";
-    }
-    else
-        qWarning() << "Failed to load translation file.";
-    */
 
     log_device_info();
 
