@@ -199,35 +199,35 @@ void Osint::on_comboBoxInput_currentIndexChanged(int index){
 
     /* setting a respective placeholdertext on the target line edit */
     switch (index) {
-    case INPUT::HOSTNAME:
+    case OSINT_INPUT::HOSTNAME:
         ui->targets->setListModel(m_targetListModel_host);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_DOMAIN));
         break;
-    case INPUT::IP:
+    case OSINT_INPUT::IP:
         ui->targets->setListModel(m_targetListModel_ip);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_IP));
         break;
-    case INPUT::EMAIL:
+    case OSINT_INPUT::EMAIL:
         ui->targets->setListModel(m_targetListModel_email);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_EMAIL));
         break;
-    case INPUT::URL:
+    case OSINT_INPUT::URL:
         ui->targets->setListModel(m_targetListModel_url);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_URL));
         break;
-    case INPUT::ASN:
+    case OSINT_INPUT::ASN:
         ui->targets->setListModel(m_targetListModel_asn);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_ASN));
         break;
-    case INPUT::CERT:
+    case OSINT_INPUT::CERT:
         ui->targets->setListModel(m_targetListModel_ssl);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_SSLCERT));
         break;
-    case INPUT::CIDR:
+    case OSINT_INPUT::CIDR:
         ui->targets->setListModel(m_targetListModel_cidr);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_CIDR));
         break;
-    case INPUT::QUERY_TERM:
+    case OSINT_INPUT::QUERY_TERM:
         ui->targets->setListModel(m_targetListModel_query);
         ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_QUERY));
     }

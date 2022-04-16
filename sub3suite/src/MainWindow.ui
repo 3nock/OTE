@@ -200,6 +200,8 @@
      <string>Options</string>
     </property>
     <addaction name="actionApiKeys"/>
+    <addaction name="actionTheme"/>
+    <addaction name="actionFont"/>
     <addaction name="actionLanguage"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -351,6 +353,16 @@
   <action name="actionSaveCopy">
    <property name="text">
     <string>Save copy</string>
+   </property>
+  </action>
+  <action name="actionTheme">
+   <property name="text">
+    <string>Theme</string>
+   </property>
+  </action>
+  <action name="actionFont">
+   <property name="text">
+    <string>Font Size</string>
    </property>
   </action>
  </widget>

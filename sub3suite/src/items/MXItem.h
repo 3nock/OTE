@@ -31,11 +31,7 @@ public:
         ip(new QStandardItem("IPs")),
         domains(new QStandardItem("Domains"))
     {
-        this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
-
-        ip->setForeground(Qt::white);
-        domains->setForeground(Qt::white);
 
         ip->setWhatsThis(JSON_ARRAY);
         domains->setWhatsThis(JSON_ARRAY);

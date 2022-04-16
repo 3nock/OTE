@@ -97,14 +97,7 @@ public:
         privacyInfo_abuser(new QStandardItem),
         privacyInfo_threat(new QStandardItem)
     {
-        this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
-
-        info->setForeground(Qt::white);
-        asnInfo->setForeground(Qt::white);
-        companyInfo->setForeground(Qt::white);
-        privacyInfo->setForeground(Qt::white);
-        domains->setForeground(Qt::white);
 
         info->setWhatsThis(JSON_OBJECT);
         asnInfo->setWhatsThis(JSON_OBJECT);

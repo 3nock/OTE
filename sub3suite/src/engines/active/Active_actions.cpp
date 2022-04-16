@@ -314,6 +314,10 @@ void Active::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
         emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
         break;
+    case ENGINE::URL:
+        emit sendToUrl(targets, result_type);
+        emit changeTabToURL();
+        break;
     default:
         break;
     }
@@ -365,6 +369,10 @@ void Active::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &resul
     case ENGINE::SSL:
         emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
+        break;
+    case ENGINE::URL:
+        emit sendToUrl(targets, result_type);
+        emit changeTabToURL();
         break;
     default:
         break;

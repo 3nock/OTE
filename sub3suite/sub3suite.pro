@@ -255,8 +255,6 @@ SOURCES += \
     src/engines/osint/Osint.cpp \
     src/project/Project_actions.cpp \
     src/project/Project_slots.cpp \
-    src/utils/JsonSyntaxHighlighter.cpp \
-    src/utils/LogsSyntaxHighlighter.cpp \
     src/utils/UpdateChecker.cpp \
     src/utils/CrashHandler.cpp \
     src/widgets/InputWidget.cpp \

@@ -116,6 +116,12 @@ public:
     }
 };
 
+namespace s3s {
+    bool is_dark_theme = false;
+    bool is_light_theme = false;
+    int font_size = 0;
+}
+
 int main(int argc, char *argv[])
 {
     /* dpi scalling */
@@ -169,17 +175,39 @@ int main(int argc, char *argv[])
     registerMetaTypes();
 
     /* setting font */
-#if defined(Q_OS_LINUX)
-    if(qApp->desktop()->physicalDpiX() == 112 && qApp->desktop()->logicalDpiX() == 96)
+    switch (CONFIG.value(CFG_VAL_FONT).toInt()) {
+    case 11:
     {
         QFont font = qApp->font();
         font.setPixelSize(11);
         qApp->setFont(font);
+        s3s::font_size = 11;
     }
-#endif
+        break;
+    case 12:
+    {
+        QFont font = qApp->font();
+        font.setPixelSize(12);
+        qApp->setFont(font);
+        s3s::font_size = 12;
+    }
+        break;
+    default:
+        s3s::font_size = 0;
+        break;
+    }
 
     /* setting stylesheets */
-    QFile stylesheet(":/themes/res/themes/light.css");
+    QFile stylesheet;
+    if(CONFIG.value(CFG_VAL_THEME).toString() == "dark"){
+        stylesheet.setFileName(":/themes/res/themes/default.css");
+        s3s::is_dark_theme = true;
+    }
+    if(CONFIG.value(CFG_VAL_THEME).toString() == "light"){
+        stylesheet.setFileName(":/themes/res/themes/light.css");
+        s3s::is_light_theme = true;
+    }
+
     if(stylesheet.open(QFile::ReadOnly)){
         qApp->setStyleSheet(QLatin1String(stylesheet.readAll()));
         stylesheet.close();

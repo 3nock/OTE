@@ -90,6 +90,14 @@ void Raw::initUI(){
     /* json syntax higlighting */
     m_resultsHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditResults->document());
     m_jsonHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditJson->document());
+    if(s3s::is_dark_theme){
+        m_resultsHighlighter->forDarkTheme();
+        m_jsonHighlighter->forDarkTheme();
+    }
+    if(s3s::is_light_theme){
+        m_resultsHighlighter->forLightTheme();
+        m_jsonHighlighter->forLightTheme();
+    }
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))

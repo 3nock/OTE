@@ -10,6 +10,7 @@
 
 #include <QThread>
 #include <QDateTime>
+
 #include "src/utils/Config.h"
 #include "src/utils/utils.h"
 #include "src/dialogs/ActiveConfigDialog.h"
@@ -205,4 +206,12 @@ void Url::on_lineEditFilter_textChanged(const QString &filterKeyword){
 
     ui->tableViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
+}
+
+void Url::on_tableViewResults_doubleClicked(const QModelIndex &index){
+    if(index.column())
+        return;
+
+    s3s_item::URL *item = static_cast<s3s_item::URL*>(m_model->itemFromIndex(proxyModel->mapToSource(index)));
+    ui->textBrowserScreenshots->setHtml(item->document);
 }

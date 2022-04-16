@@ -630,25 +630,25 @@ void Osint::sendSelectedToEnum(const ENUMERATOR &tool , const RESULT_TYPE &resul
 void Osint::onReceiveTargets(QSet<QString> targets, RESULT_TYPE result_type){
     switch (result_type) {
     case RESULT_TYPE::SUBDOMAIN:
-        ui->comboBoxInput->setCurrentIndex(INPUT::HOSTNAME);
+        ui->comboBoxInput->setCurrentIndex(OSINT_INPUT::HOSTNAME);
         break;
     case RESULT_TYPE::IP:
-        ui->comboBoxInput->setCurrentIndex(INPUT::IP);
+        ui->comboBoxInput->setCurrentIndex(OSINT_INPUT::IP);
         break;
     case RESULT_TYPE::ASN:
-        ui->comboBoxInput->setCurrentIndex(INPUT::ASN);
+        ui->comboBoxInput->setCurrentIndex(OSINT_INPUT::ASN);
         break;
     case RESULT_TYPE::CIDR:
-        ui->comboBoxInput->setCurrentIndex(INPUT::CIDR);
+        ui->comboBoxInput->setCurrentIndex(OSINT_INPUT::CIDR);
         break;
     case RESULT_TYPE::CERT_ID:
-        ui->comboBoxInput->setCurrentIndex(INPUT::CERT);
+        ui->comboBoxInput->setCurrentIndex(OSINT_INPUT::CERT);
         break;
     case RESULT_TYPE::EMAIL:
-        ui->comboBoxInput->setCurrentIndex(INPUT::EMAIL);
+        ui->comboBoxInput->setCurrentIndex(OSINT_INPUT::EMAIL);
         break;
     case RESULT_TYPE::URL:
-        ui->comboBoxInput->setCurrentIndex(INPUT::URL);
+        ui->comboBoxInput->setCurrentIndex(OSINT_INPUT::URL);
         break;
     default:
         break;

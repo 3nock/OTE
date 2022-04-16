@@ -56,19 +56,14 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     ///
     QFont font("Segoe UI", 9, QFont::Bold);
     project->setFont(font);
-    project->setForeground(Qt::white);
     project->setIcon(QIcon(":/img/res/icons/project.png"));
     active->setFont(font);
-    active->setForeground(Qt::white);
     active->setIcon(QIcon(":/img/res/icons/gear.png"));
     passive->setFont(font);
-    passive->setForeground(Qt::white);
     passive->setIcon(QIcon(":/img/res/icons/gear.png"));
     enums->setFont(font);
-    enums->setForeground(Qt::white);
     enums->setIcon(QIcon(":/img/res/icons/gear.png"));
     custom->setFont(font);
-    custom->setForeground(Qt::white);
     custom->setIcon(QIcon(":/img/res/icons/gear.png"));
 
     activeHost->setIcon(QIcon(":/img/res/icons/domain.png"));
@@ -107,46 +102,6 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     enumSSL->setIcon(QIcon(":/img/res/icons/ssl.png"));
     enumEmail->setIcon(QIcon(":/img/res/icons/email.png"));
     raw->setIcon(QIcon(":/img/res/icons/raw.png"));
-
-    ///
-    /// setting foreground
-    ///
-    activeHost->setForeground(Qt::white);
-    activeWildcard->setForeground(Qt::white);
-    activeDNS->setForeground(Qt::white);
-    activeA->setForeground(Qt::white);
-    activeAAAA->setForeground(Qt::white);
-    activeNS->setForeground(Qt::white);
-    activeMX->setForeground(Qt::white);
-    activeTXT->setForeground(Qt::white);
-    activeCNAME->setForeground(Qt::white);
-    activeSRV->setForeground(Qt::white);
-    activeSSL->setForeground(Qt::white);
-    activeSSL_sha1->setForeground(Qt::white);
-    activeSSL_sha256->setForeground(Qt::white);
-    activeSSL_altNames->setForeground(Qt::white);
-    activeURL->setForeground(Qt::white);
-    passiveSubdomain->setForeground(Qt::white);
-    passiveSubdomainIp->setForeground(Qt::white);
-    passiveA->setForeground(Qt::white);
-    passiveAAAA->setForeground(Qt::white);
-    passiveCIDR->setForeground(Qt::white);
-    passiveNS->setForeground(Qt::white);
-    passiveMX->setForeground(Qt::white);
-    passiveTXT->setForeground(Qt::white);
-    passiveCNAME->setForeground(Qt::white);
-    passiveEmail->setForeground(Qt::white);
-    passiveURL->setForeground(Qt::white);
-    passiveASN->setForeground(Qt::white);
-    passiveSSL->setForeground(Qt::white);
-    enumIP->setForeground(Qt::white);
-    enumASN->setForeground(Qt::white);
-    enumCIDR->setForeground(Qt::white);
-    enumNS->setForeground(Qt::white);
-    enumMX->setForeground(Qt::white);
-    enumSSL->setForeground(Qt::white);
-    enumEmail->setForeground(Qt::white);
-    raw->setForeground(Qt::white);
 
     ///
     /// appending items...

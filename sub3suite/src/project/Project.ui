@@ -56,8 +56,8 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
-         <bold>true</bold>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="tabSpacing">
@@ -94,12 +94,15 @@
             <font>
              <family>MS Shell Dlg 2</family>
              <pointsize>8</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>false</bool>
            </property>
            <property name="indentation">
             <number>15</number>
@@ -430,8 +433,8 @@
       </property>
       <property name="font">
        <font>
-        <weight>75</weight>
-        <bold>true</bold>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="tabSpacing">
@@ -442,7 +445,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>103</width>
+         <width>102</width>
          <height>411</height>
         </rect>
        </property>
@@ -610,7 +613,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>103</width>
+         <width>102</width>
          <height>411</height>
         </rect>
        </property>

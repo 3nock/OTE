@@ -882,8 +882,8 @@
            </property>
            <property name="font">
             <font>
-             <weight>75</weight>
-             <bold>true</bold>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="currentIndex">
@@ -897,7 +897,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>177</width>
+              <width>159</width>
               <height>742</height>
              </rect>
             </property>
@@ -1215,8 +1215,8 @@
            </property>
            <property name="font">
             <font>
-             <weight>75</weight>
-             <bold>true</bold>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="currentIndex">
@@ -1230,7 +1230,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>176</width>
+              <width>157</width>
               <height>1501</height>
              </rect>
             </property>

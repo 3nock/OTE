@@ -55,16 +55,7 @@ public:
         key_type(new QStandardItem),
         key_algorithm(new QStandardItem)
     {
-        this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
-
-        info->setForeground(Qt::white);
-        fingerprint->setForeground(Qt::white);
-        issuer->setForeground(Qt::white);
-        validity->setForeground(Qt::white);
-        subject->setForeground(Qt::white);
-        key->setForeground(Qt::white);
-        subjectAltNames->setForeground(Qt::white);
 
         info->setWhatsThis(JSON_OBJECT);
         fingerprint->setWhatsThis(JSON_OBJECT);

@@ -39,7 +39,6 @@
         <file>res/icons/open.png</file>
         <file>res/icons/recent.png</file>
         <file>res/icons/folder2.png</file>
-        <file>res/icons/folder.png</file>
         <file>res/icons/exit.png</file>
         <file>res/icons/key.png</file>
         <file>res/icons/about.png</file>
@@ -69,6 +68,8 @@
         <file>res/icons/copy.png</file>
         <file>res/icons/duplicate.png</file>
         <file>res/icons/splash.png</file>
+        <file>res/icons/light_down.png</file>
+        <file>res/icons/folder.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>
@@ -84,5 +85,15 @@
     <qresource prefix="/themes">
         <file>res/themes/default.css</file>
         <file>res/themes/light.css</file>
+    </qresource>
+    <qresource prefix="/light_theme">
+        <file>res/themes/light/down.png</file>
+        <file>res/themes/light/down_on.png</file>
+        <file>res/themes/light/left.png</file>
+        <file>res/themes/light/left_on.png</file>
+        <file>res/themes/light/right.png</file>
+        <file>res/themes/light/right_on.png</file>
+        <file>res/themes/light/up.png</file>
+        <file>res/themes/light/up_on.png</file>
     </qresource>
 </RCC>

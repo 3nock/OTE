@@ -14,7 +14,7 @@
 #include <QAction>
 
 
-enum INPUT {
+enum OSINT_INPUT {
     HOSTNAME = 0,
     IP = 1,
     EMAIL = 2,

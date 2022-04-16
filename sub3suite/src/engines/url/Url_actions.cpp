@@ -270,7 +270,7 @@ void Url::sendSelectedToEngine(const ENGINE &engine){
 ///
 
 void Url::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
-    if(resultType == RESULT_TYPE::URL)
+    if(resultType == RESULT_TYPE::URL || resultType == RESULT_TYPE::SUBDOMAIN)
         ui->targets->add(targets);
 
     /* set multiple targets checkbox checked */

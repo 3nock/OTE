@@ -716,9 +716,9 @@
            </property>
            <property name="font">
             <font>
-             <weight>75</weight>
+             <weight>50</weight>
              <italic>false</italic>
-             <bold>true</bold>
+             <bold>false</bold>
             </font>
            </property>
            <property name="frameShape">
@@ -735,7 +735,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>177</width>
+              <width>160</width>
               <height>1126</height>
              </rect>
             </property>
@@ -1108,9 +1108,9 @@
            </property>
            <property name="font">
             <font>
-             <weight>75</weight>
+             <weight>50</weight>
              <italic>false</italic>
-             <bold>true</bold>
+             <bold>false</bold>
             </font>
            </property>
            <property name="currentIndex">
@@ -1123,8 +1123,8 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-148</y>
-              <width>158</width>
+              <y>0</y>
+              <width>143</width>
               <height>922</height>
              </rect>
             </property>

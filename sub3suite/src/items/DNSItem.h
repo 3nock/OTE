@@ -40,16 +40,7 @@ public:
         TXT(new QStandardItem("TXT")),
         SRV(new QStandardItem("SRV"))
     {
-        this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
-
-        A->setForeground(Qt::white);
-        AAAA->setForeground(Qt::white);
-        CNAME->setForeground(Qt::white);
-        NS->setForeground(Qt::white);
-        MX->setForeground(Qt::white);
-        TXT->setForeground(Qt::white);
-        SRV->setForeground(Qt::white);
 
         A->setWhatsThis(JSON_ARRAY);
         AAAA->setWhatsThis(JSON_ARRAY);

@@ -12,6 +12,8 @@ struct URL {
     QString url;
     QString banner;
     QString content_type;
+    QByteArray document;
+
     int status_code;
 };
 }
@@ -35,6 +37,8 @@ public:
     QStandardItem *content_type;
     QStandardItem *status_code;
 
+    QByteArray document;
+
     /* summary */
     QString last_modified;
     QString comment;
@@ -44,6 +48,7 @@ public:
         banner->setText(url.banner);
         content_type->setText(url.content_type);
         status_code->setText(QString::number(url.status_code));
+        document = url.document;
 
         /* last modified */
         last_modified = QDate::currentDate().toString();

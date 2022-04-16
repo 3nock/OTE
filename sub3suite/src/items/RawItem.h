@@ -25,7 +25,6 @@ class RAW: public QStandardItem {
 public:
     RAW(): QStandardItem()
     {
-        this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
     }
     ~RAW()
@@ -74,7 +73,6 @@ public:
         QStringList keys = object.keys();
         if(item != this){
             item->setWhatsThis(JSON_OBJECT);
-            item->setForeground(Qt::white);
             item->setIcon(QIcon(":/img/res/icons/folder2.png"));
         }
         foreach(const QString &key, keys)
@@ -112,7 +110,6 @@ public:
         int count = 0;
         if(item != this){
             item->setWhatsThis(JSON_ARRAY);
-            item->setForeground(Qt::white);
             item->setIcon(QIcon(":/img/res/icons/folder2.png"));
         }
         foreach(const QJsonValue &value, array)

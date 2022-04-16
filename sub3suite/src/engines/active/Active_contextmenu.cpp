@@ -66,6 +66,7 @@ void Active::on_buttonAction_clicked(){
     menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to URL"), this, [=](){this->sendToEngine(ENGINE::URL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     menu.addSeparator();
     menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
 
@@ -116,6 +117,7 @@ void Active::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::SSL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to URL"), this, [=](){this->sendSelectedToEngine(ENGINE::URL, RESULT_TYPE::SUBDOMAIN);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addSeparator();
     }
     if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent()) ||

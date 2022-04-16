@@ -11,6 +11,7 @@
 #include <QScreen>
 #include <QPushButton>
 #include <QDesktopServices>
+#include <QActionGroup>
 
 #include "src/dialogs/AboutDialog.h"
 #include "src/dialogs/ApiKeysDialog.h"
@@ -147,6 +148,87 @@ void MainWindow::initActions(){
     ui->menuTools->addAction("MX Enumerator", this, [=](){this->onChangeTabToMXEnum();})->setIcon(QIcon(":/img/res/icons/mx.png"));
     ui->menuTools->addAction("SSL Enumerator", this, [=](){this->onChangeTabToSSLEnum();})->setIcon(QIcon(":/img/res/icons/ssl.png"));
     ui->menuTools->addAction("Email Enumerator", this, [=](){this->onChangeTabToEmailEnum();})->setIcon(QIcon(":/img/res/icons/email.png"));
+
+    ///
+    /// theme actions...
+    ///
+    QAction *light_theme = new QAction(this);
+    QAction *dark_theme = new QAction(this);
+    light_theme->setText(tr("Light"));
+    dark_theme->setText(tr("Dark"));
+    light_theme->setCheckable(true);
+    dark_theme->setCheckable(true);
+
+    connect(light_theme, &QAction::triggered, this, [=](){
+        CONFIG.setValue(CFG_VAL_THEME, "light");
+        QMessageBox::information(this, "Info", "The theme will be applied after re-start");
+    });
+    connect(dark_theme, &QAction::triggered, this, [=](){
+        CONFIG.setValue(CFG_VAL_THEME, "dark");
+        QMessageBox::information(this, "Info", "The theme will be applied after re-start");
+    });
+
+    QActionGroup *theme_group = new QActionGroup(this);
+    theme_group->addAction(light_theme);
+    theme_group->addAction(dark_theme);
+    theme_group->setExclusive(true);
+
+    QMenu *themes = new QMenu(this);
+    themes->addAction(light_theme);
+    themes->addAction(dark_theme);
+
+    if(s3s::is_dark_theme)
+        dark_theme->setChecked(true);
+    if(s3s::is_light_theme)
+        light_theme->setChecked(true);
+
+    ui->actionTheme->setMenu(themes);
+
+    ///
+    /// theme actions...
+    ///
+    QAction *font_11 = new QAction(this);
+    QAction *font_12 = new QAction(this);
+    QAction *font_none = new QAction(this);
+    font_11->setText(tr("11"));
+    font_12->setText(tr("12"));
+    font_none->setText(tr("none"));
+    font_11->setCheckable(true);
+    font_12->setCheckable(true);
+    font_none->setCheckable(true);
+
+    connect(font_11, &QAction::triggered, this, [=](){
+        CONFIG.setValue(CFG_VAL_FONT, 11);
+        QMessageBox::information(this, "Info", "The font size will be applied after re-start");
+    });
+    connect(font_12, &QAction::triggered, this, [=](){
+        CONFIG.setValue(CFG_VAL_FONT, 12);
+        QMessageBox::information(this, "Info", "The font size will be applied after re-start");
+    });
+    connect(font_none, &QAction::triggered, this, [=](){
+        CONFIG.setValue(CFG_VAL_FONT, 0);
+        QMessageBox::information(this, "Info", "The font size will be applied after re-start");
+    });
+
+    QActionGroup *font_group = new QActionGroup(this);
+    font_group->addAction(font_11);
+    font_group->addAction(font_12);
+    font_group->addAction(font_none);
+    font_group->setExclusive(true);
+
+    QMenu *fonts = new QMenu(this);
+    fonts->addAction(font_11);
+    fonts->addAction(font_12);
+    fonts->addAction(font_none);
+
+    if(s3s::font_size == 11)
+        font_11->setChecked(true);
+    if(s3s::font_size == 12)
+        font_12->setChecked(true);
+    if(s3s::font_size == 0)
+        font_none->setChecked(true);
+
+    ui->actionFont->setMenu(fonts);
 }
 
 void MainWindow::setRecentProjects(){
@@ -166,7 +248,7 @@ void MainWindow::setRecentProjects(){
 }
 
 void MainWindow::initProject(ProjectStruct project_info){
-    ui->statusbar->showMessage("Opening Project \""+project_info.name+"\"");
+    ui->statusbar->showMessage("Opening Project \""+project_info.name+"\"", 3000);
     projectModel->openProject(project_info);
 }
 
@@ -419,7 +501,7 @@ void MainWindow::onGetDocumentation(){
 ///
 
 void MainWindow::onReceiveStatus(QString status){
-    ui->statusbar->showMessage(status, 5000);
+    ui->statusbar->showMessage(status, 3000);
 }
 
 void MainWindow::onChangeTabToOsint(){

@@ -71,14 +71,7 @@ public:
         rir_country(new QStandardItem),
         rir_dateAllocated(new QStandardItem)
     {
-        this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
-
-        info->setForeground(Qt::white);
-        emailContacts->setForeground(Qt::white);
-        abuseContacts->setForeground(Qt::white);
-        rir->setForeground(Qt::white);
-        asns->setForeground(Qt::white);
 
         info->setWhatsThis(JSON_OBJECT);
         emailContacts->setWhatsThis(JSON_ARRAY);

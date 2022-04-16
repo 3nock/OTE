@@ -1,7 +1,11 @@
 SUB3-SUITE VERSION HISTORY
 
 0.0.4 (beta release)
+-added: light theme
+-added: hostname querying in URL Tool
 -fix: unwanted selection in results tree views
+-fix: json highlighter
+-fix:
 
 0.0.3 (beta release)
 -added: ipdata module for ASN enumeration

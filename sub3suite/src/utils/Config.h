@@ -32,6 +32,8 @@
 #define CFG_ENUM "enums"
 
 /* general group values */
+#define CFG_VAL_FONT "font"
+#define CFG_VAL_THEME "theme"
 #define CFG_VAL_THREADS "threads"
 #define CFG_VAL_TIMEOUT "timeout"
 #define CFG_VAL_RECORD "record"
@@ -55,6 +57,12 @@
 #define CFG_WL_TLD "tld_wordlist"
 #define CFG_WL_TLD_SPECIAL "tld_special_wordlist"
 #define CFG_WL_SUBSTITUTIONS "wordlist_substitutions"
+
+namespace s3s {
+extern bool is_dark_theme;
+extern bool is_light_theme;
+extern int font_size;
+}
 
 class Config
 {

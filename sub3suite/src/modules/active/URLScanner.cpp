@@ -43,6 +43,7 @@ void url::Scanner::lookupFinished(QNetworkReply *reply){
         url.status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         url.banner = reply->header(QNetworkRequest::ServerHeader).toString();
         url.content_type = reply->header(QNetworkRequest::ContentTypeHeader).toString();
+        url.document = reply->readAll();
         emit scanResult(url);
     }
         break;

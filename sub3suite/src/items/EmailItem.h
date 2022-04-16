@@ -38,10 +38,8 @@ public:
         disposable(new QStandardItem),
         deliverable(new QStandardItem)
     {
-        this->setForeground(Qt::white);
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
 
-        info->setForeground(Qt::white);
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
 
         info->appendRow({new QStandardItem("Domain"), domain});

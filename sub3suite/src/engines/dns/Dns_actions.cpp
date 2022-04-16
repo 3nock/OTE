@@ -427,6 +427,10 @@ void Dns::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
         emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
         break;
+    case ENGINE::URL:
+        emit sendToUrl(targets, result_type);
+        emit changeTabToURL();
+        break;
     default:
         break;
     }
@@ -466,6 +470,10 @@ void Dns::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_t
     case ENGINE::SSL:
         emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
+        break;
+    case ENGINE::URL:
+        emit sendToUrl(targets, result_type);
+        emit changeTabToURL();
         break;
     default:
         break;

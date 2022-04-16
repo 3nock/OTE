@@ -46,6 +46,8 @@ class Url : public AbstractEngine{
         void on_lineEditTarget_returnPressed();
         void on_lineEditFilter_textChanged(const QString &arg1);
 
+        void on_tableViewResults_doubleClicked(const QModelIndex &index);
+
     private:
         Ui::Url *ui;
         QElapsedTimer m_timer;

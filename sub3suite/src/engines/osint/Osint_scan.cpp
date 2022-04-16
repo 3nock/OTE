@@ -67,28 +67,28 @@ void Osint::startScan(){
 
     /* getting input type as specified by user */
     switch(ui->comboBoxInput->currentIndex()){
-    case INPUT::HOSTNAME:
+    case OSINT_INPUT::HOSTNAME:
         m_scanArgs->input_Domain = true;
         break;
-    case INPUT::IP:
+    case OSINT_INPUT::IP:
         m_scanArgs->input_IP = true;
         break;
-    case INPUT::EMAIL:
+    case OSINT_INPUT::EMAIL:
         m_scanArgs->input_Email = true;
         break;
-    case INPUT::URL:
+    case OSINT_INPUT::URL:
         m_scanArgs->input_URL = true;
         break;
-    case INPUT::ASN:
+    case OSINT_INPUT::ASN:
         m_scanArgs->input_ASN = true;
         break;
-    case INPUT::CERT:
+    case OSINT_INPUT::CERT:
         m_scanArgs->input_SSL = true;
         break;
-    case INPUT::CIDR:
+    case OSINT_INPUT::CIDR:
         m_scanArgs->input_CIDR = true;
         break;
-    case INPUT::QUERY_TERM:
+    case OSINT_INPUT::QUERY_TERM:
         m_scanArgs->input_Search = true;
         break;
     }

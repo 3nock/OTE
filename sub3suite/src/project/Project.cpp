@@ -6,6 +6,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+#include "src/utils/Config.h"
+
 
 Project::Project(QWidget *parent, ProjectModel *projectModel) :QWidget(parent),
     ui(new Ui::Project),
@@ -99,6 +101,10 @@ void Project::initUI(){
                              << static_cast<int>((this->width() * 0.20)));
 
     m_jsonHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditJson->document());
+    if(s3s::is_dark_theme)
+        m_jsonHighlighter->forDarkTheme();
+    if(s3s::is_light_theme)
+        m_jsonHighlighter->forLightTheme();
 }
 
 void Project::init_menubar_tree(){
