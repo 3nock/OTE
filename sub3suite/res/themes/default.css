@@ -609,6 +609,7 @@ QFrame[default_frame="true"] {
 }
 
 QFrame[dark_frame="true"] {
+    margin-right: 82px;
     background-color: rgb(40, 40, 40);
 }
 

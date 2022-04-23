@@ -14,21 +14,21 @@
 
 
 void IP::clearResults(){
-    /* clear the results... */
-    if(ui->comboBoxOption->currentIndex() == 2){
-        m_model_ping->clear();
-        m_model_ping->setHorizontalHeaderLabels({tr(" Host"), tr(" IP"), tr(" Bytes"), tr(" Time(ms)"), tr(" TTL")});
-    }
-    else{
-        m_model->clear();
-        m_model->setHorizontalHeaderLabels({tr(" Host"), tr(" Ipv4"), tr(" Ipv6"), tr(" Ports")});
+    /* clear the results */
+    switch (ui->comboBoxOption->currentIndex()) {
+    case 0: // DNS
+        m_model_dns->clear();
+        m_model_dns->setHorizontalHeaderLabels({tr(" IP"), tr(" Hostname")});
         set_subdomain.clear();
-
-        ui->tableViewResults->horizontalHeader()->resizeSection(0, 200);
-        ui->tableViewResults->horizontalHeader()->resizeSection(1, 100);
-        ui->tableViewResults->horizontalHeader()->resizeSection(2, 150);
-        ui->tableViewResults->horizontalHeader()->resizeSection(3, 100);
-        ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        break;
+    case 1:
+        m_model_port->clear();
+        m_model_ping->setHorizontalHeaderLabels({tr(" IP"), tr(" Open Ports")});
+        break;
+    case 2:
+        m_model_ping->clear();
+        m_model_ping->setHorizontalHeaderLabels({tr(" IP"), tr(" Bytes"), tr(" Time(ms)"), tr(" TTL")});
+        break;
     }
     ui->labelResultsCount->clear();
 
@@ -46,9 +46,24 @@ void IP::openInBrowser(){
 void IP::removeResults(){
     auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
     QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
-    for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
-        set_subdomain.remove(i->data().toString());
-        m_model->removeRow(i->row());
+    switch (ui->comboBoxOption->currentIndex()) {
+    case 0: // DNS
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            set_subdomain.remove(i->data().toString());
+            m_model_dns->removeRow(i->row());
+        }
+        break;
+    case 1: // PORT
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            set_subdomain.remove(i->data().toString());
+            m_model_port->removeRow(i->row());
+        }
+        break;
+    case 2: // PING
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            set_subdomain.remove(i->data().toString());
+            m_model_ping->removeRow(i->row());
+        }
     }
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());
@@ -106,7 +121,7 @@ void IP::saveResults(const RESULT_TYPE &result_type){
         QJsonArray array;
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model->itemFromIndex(model_index));
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
             array.append(host_to_json(item));
         }
         document.setArray(array);
@@ -186,7 +201,7 @@ void IP::copyResults(const RESULT_TYPE &result_type){
         QJsonArray array;
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model->itemFromIndex(model_index));
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
             array.append(host_to_json(item));
         }
         document.setArray(array);
@@ -260,7 +275,7 @@ void IP::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model->itemFromIndex(index));
+        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(index));
         project->addActiveHost(host_to_struct(item));
     }
 }
@@ -270,7 +285,7 @@ void IP::sendSelectedToProject(){
         if(index.column())
             continue;
         QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model->itemFromIndex(model_index));
+        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
         project->addActiveHost(host_to_struct(item));
     }
 }

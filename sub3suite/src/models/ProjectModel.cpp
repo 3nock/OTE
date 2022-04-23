@@ -97,8 +97,8 @@ ProjectModel::~ProjectModel(){
 }
 
 void ProjectModel::setHeaderLabels(){
-    activeHost->setHorizontalHeaderLabels({QObject::tr(" Host"), QObject::tr(" IpV4"), QObject::tr(" IpV6"), QObject::tr(" Ports")});
-    activeWildcard->setHorizontalHeaderLabels({QObject::tr(" Wildcard"), QObject::tr(" IpV4"), QObject::tr(" IpV6")});
+    activeHost->setHorizontalHeaderLabels({QObject::tr(" Host"), QObject::tr(" IPv4"), QObject::tr(" IPv6"), QObject::tr(" Ports")});
+    activeWildcard->setHorizontalHeaderLabels({QObject::tr(" Wildcard"), QObject::tr(" IPv4"), QObject::tr(" IPv6")});
     activeDNS->setHorizontalHeaderLabels({QObject::tr(" DNS"), QObject::tr(" Records"), QObject::tr(" SRV Port")});
     activeA->setHorizontalHeaderLabels({QObject::tr(" A DNS Records")});
     activeAAAA->setHorizontalHeaderLabels({QObject::tr(" AAAA DNS Records")});
@@ -111,7 +111,7 @@ void ProjectModel::setHeaderLabels(){
     activeSSL_sha1->setHorizontalHeaderLabels({QObject::tr(" SSL Certificates SHA-1 Fingerprints")});
     activeSSL_sha256->setHorizontalHeaderLabels({QObject::tr(" SSL Certificates SHA-256 Fingerprints")});
     activeSSL_altNames->setHorizontalHeaderLabels({QObject::tr(" Alternative Names")});
-    activeURL->setHorizontalHeaderLabels({QObject::tr(" URL"), QObject::tr(" Status"), QObject::tr(" Server"), QObject::tr(" Content Type")});
+    activeURL->setHorizontalHeaderLabels({QObject::tr(" URL"), QObject::tr(" Status"), QObject::tr(" Title"), QObject::tr(" Server"), QObject::tr(" Content Type")});
 
     /* passive results model */
     passiveSubdomainIp->setHorizontalHeaderLabels({QObject::tr(" Subdomains"), QObject::tr(" IpAddress")});

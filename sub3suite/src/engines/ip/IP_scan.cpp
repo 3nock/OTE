@@ -92,19 +92,19 @@ void IP::startScan(){
         switch (ui->comboBoxOption->currentIndex()) {
         case 0: // ACTIVE DNS
         {
-            active::Scanner *scanner = new active::Scanner(m_scanArgs);
+            ip::Scanner *scanner = new ip::Scanner(m_scanArgs);
             QThread *cThread = new QThread;
             scanner->startScan(cThread);
             scanner->moveToThread(cThread);
-            connect(scanner, &active::Scanner::scanResult, this, &IP::onScanResult_dns);
-            connect(scanner, &active::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-            connect(scanner, &active::Scanner::scanLog, this, &IP::onScanLog);
+            connect(scanner, &ip::Scanner::scanResult, this, &IP::onScanResult_dns);
+            connect(scanner, &ip::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+            connect(scanner, &ip::Scanner::scanLog, this, &IP::onScanLog);
             connect(cThread, &QThread::finished, this, &IP::onScanThreadEnded);
-            connect(cThread, &QThread::finished, scanner, &active::Scanner::deleteLater);
+            connect(cThread, &QThread::finished, scanner, &ip::Scanner::deleteLater);
             connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-            connect(this, &IP::stopScanThread, scanner, &active::Scanner::onStopScan);
-            connect(this, &IP::pauseScanThread, scanner, &active::Scanner::onPauseScan);
-            connect(this, &IP::resumeScanThread, scanner, &active::Scanner::onResumeScan, Qt::DirectConnection);
+            connect(this, &IP::stopScanThread, scanner, &ip::Scanner::onStopScan);
+            connect(this, &IP::pauseScanThread, scanner, &ip::Scanner::onPauseScan);
+            connect(this, &IP::resumeScanThread, scanner, &ip::Scanner::onResumeScan, Qt::DirectConnection);
             cThread->start();
             break;
         }
@@ -114,7 +114,7 @@ void IP::startScan(){
             QThread *cThread = new QThread;
             scanner->startScan(cThread);
             scanner->moveToThread(cThread);
-            connect(scanner, &port::Scanner::scanResult, this, &IP::onScanResult_port);
+            connect(scanner, &port::Scanner::scanResult_ip, this, &IP::onScanResult_port);
             connect(scanner, &port::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
             connect(scanner, &port::Scanner::scanLog, this, &IP::onScanLog);
             connect(cThread, &QThread::finished, this, &IP::onScanThreadEnded);
@@ -132,7 +132,7 @@ void IP::startScan(){
             QThread *cThread = new QThread;
             scanner->startScan(cThread);
             scanner->moveToThread(cThread);
-            connect(scanner, &ping::Scanner::scanResult, this, &IP::onScanResult_ping);
+            connect(scanner, &ping::Scanner::scanResult_ip, this, &IP::onScanResult_ping);
             connect(scanner, &ping::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
             connect(scanner, &ping::Scanner::scanLog, this, &IP::onScanLog);
             connect(cThread, &QThread::finished, this, &IP::onScanThreadEnded);

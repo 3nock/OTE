@@ -16,11 +16,7 @@
 #include <QStandardItemModel>
 #include <QSortFilterProxyModel>
 
-
 #define NEWLINE "\n"
-#define TRUE "1"
-#define FALSE "0"
-
 
 ///
 /// placeholder texts...

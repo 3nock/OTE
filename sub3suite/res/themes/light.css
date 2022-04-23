@@ -54,6 +54,14 @@ QFrame[default_frame="true"] {
     border-width: 1px;
 }
 
+QFrame[dark_frame="true"] {
+    margin-right: 82px;
+    background-color: rgba(170, 170, 127, 100);
+    border-style: solid;
+    border-color: rgb(150,150,150);
+    border-width: 1px;
+}
+
 QProgressBar {
     min-width: 200px;
     max-width: 200px;
@@ -179,7 +187,7 @@ QScrollArea {
 }
 
 QToolBox QWidget {
-    background-color: rgba(240,240,240);
+    background-color: rgb(240,240,240);
 }
 
 QToolBox QScrollArea {

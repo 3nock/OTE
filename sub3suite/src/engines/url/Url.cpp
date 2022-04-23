@@ -30,7 +30,7 @@ Url::Url(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, projec
     this->initUI();
 
     /* result model */
-    m_model->setHorizontalHeaderLabels({tr(" URL"), tr(" Status"), tr(" Server"), tr(" Content Type")});
+    m_model->setHorizontalHeaderLabels({tr(" URL"), tr(" Status"), tr(" Title"), tr(" Server"), tr(" Content Type")});
     proxyModel->setSourceModel(m_model);
     ui->tableViewResults->setModel(proxyModel);
 
@@ -69,13 +69,6 @@ void Url::initUI(){
     /* placeholdertext */
     ui->lineEditFilter->setPlaceholderText(tr("filter..."));
     ui->lineEditTarget->setPlaceholderText(tr(PLACEHOLDERTEXT_URL_DOMAIN));
-
-    /* underdevelopment txt */
-    QFile file(":/files/res/files/under_development.html");
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        ui->textBrowserScreenshots->append(file.readAll());
-        file.close();
-    }
 
     /* equally seperate the widgets... */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
@@ -188,6 +181,9 @@ void Url::initConfigValues(){
     m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
     m_scanArgs->config->force_scheme = CONFIG.value(CFG_VAL_FORCESCHEME).toBool();
     m_scanArgs->config->scheme = CONFIG.value(CFG_VAL_SCHEME).toString();
+    m_scanArgs->config->follow_redirect = CONFIG.value("follow_redirects").toBool();
+    m_scanArgs->config->take_screenshots = CONFIG.value("take_screenshots").toBool();
+    m_scanArgs->config->get_title = CONFIG.value("get_title").toBool();
     CONFIG.endGroup();
 }
 
@@ -212,6 +208,9 @@ void Url::on_tableViewResults_doubleClicked(const QModelIndex &index){
     if(index.column())
         return;
 
-    s3s_item::URL *item = static_cast<s3s_item::URL*>(m_model->itemFromIndex(proxyModel->mapToSource(index)));
-    ui->textBrowserScreenshots->setHtml(item->document);
+    QString url = index.data().toString();
+    /*
+     * TODO:
+     *      open <url_name>.png from a Temporary folder
+     */
 }

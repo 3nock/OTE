@@ -456,28 +456,6 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tabScreenshot">
-          <attribute name="title">
-           <string>Screenshot</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>2</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QTextBrowser" name="textBrowserScreenshots"/>
-           </item>
-          </layout>
-         </widget>
          <widget class="QWidget" name="tabLogs">
           <attribute name="title">
            <string>Logs</string>

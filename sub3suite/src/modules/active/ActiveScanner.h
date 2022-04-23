@@ -42,8 +42,6 @@ struct ScanArgs { // scan arguments
     QQueue<QString> targets;
     QHostAddress nameserver;
     int progress;
-
-    QSet<quint16> ports;
 };
 
 

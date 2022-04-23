@@ -22,7 +22,7 @@ void Url::clearResults(){
     /* clear the results */
     m_model->clear();
     ui->labelResultsCount->clear();
-    m_model->setHorizontalHeaderLabels({tr(" URL"), tr(" Status code"), tr(" banner"), tr(" Content type")});
+    m_model->setHorizontalHeaderLabels({tr(" URL"), tr(" Status"), tr(" Title"), tr(" banner"), tr(" Content type")});
     set_results.clear();
 
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);

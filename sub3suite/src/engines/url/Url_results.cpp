@@ -29,7 +29,7 @@ void Url::onScanResult(s3s_struct::URL url){
 
     s3s_item::URL *item = new s3s_item::URL;
     item->setValues(url);
-    m_model->appendRow({item, item->status_code, item->banner, item->content_type});
+    m_model->appendRow({item, item->status_code, item->title, item->banner, item->content_type});
     set_results.insert(url.url, item);
 
     if(m_scanConfig->autoSaveToProject)

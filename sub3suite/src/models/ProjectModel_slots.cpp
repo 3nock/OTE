@@ -103,7 +103,7 @@ void ProjectModel::addActiveURL(const s3s_struct::URL &url){
 
     s3s_item::URL *item = new s3s_item::URL;
     item->setValues(url);
-    activeURL->appendRow({item, item->status_code, item->banner, item->content_type});
+    activeURL->appendRow({item, item->status_code, item->title, item->banner, item->content_type});
     map_activeURL.insert(url.url, item);
     modified = true;
 }

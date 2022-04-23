@@ -58,7 +58,7 @@ void Url::on_tableViewResults_customContextMenuRequested(const QPoint &pos){
     extractMenu.addAction(tr("Domain"), this, [=](){this->extractSelected();});
 
     QMenu menu(this);
-    menu.addAction(tr("Remove"), this, [=](){this->saveSelectedResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
+    menu.addAction(tr("Remove"), this, [=](){this->removeResults();})->setIcon(QIcon(":/img/res/icons/delete.png"));
     menu.addAction(tr("Open in Browser"), this, [=](){this->openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
     menu.addMenu(&extractMenu);
     menu.addSeparator();

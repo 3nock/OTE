@@ -37,7 +37,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->activeHost->index()){
             proxyModel->setSourceModel(model->activeHost);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeHost);
-            ui->comboBoxFilter->addItems({"Hostname", "IpV4", "IpV6", "Ports"});
+            ui->comboBoxFilter->addItems({"Hostname", "IPv4", "IPv6", "Ports"});
             ui->comboBoxFilter->show();
 
             a_expand.setDisabled(true);
@@ -55,7 +55,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->activeWildcard->index()){
             proxyModel->setSourceModel(model->activeWildcard);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeWildcard);
-            ui->comboBoxFilter->addItems({"Wildcard", "IpV4", "IpV6"});
+            ui->comboBoxFilter->addItems({"Wildcard", "IPv4", "IPv6"});
             ui->comboBoxFilter->show();
 
             a_expand.setDisabled(true);
@@ -76,7 +76,7 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
         if(index == model->explorer->activeURL->index()){
             proxyModel->setSourceModel(model->activeURL);
             ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeURL);
-            ui->comboBoxFilter->addItems({"URL", "Value"});
+            ui->comboBoxFilter->addItems({"URL", "Status code", "Title", "Server", "Content type"});
             ui->comboBoxFilter->show();
 
             a_expand.setDisabled(true);

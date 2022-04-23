@@ -10,9 +10,9 @@
 namespace s3s_struct {
 struct URL {
     QString url;
+    QString title;
     QString banner;
     QString content_type;
-    QByteArray document;
 
     int status_code;
 };
@@ -23,6 +23,7 @@ namespace s3s_item {
 class URL: public QStandardItem {
 public:
     URL(): QStandardItem(),
+        title(new QStandardItem),
         banner(new QStandardItem),
         content_type(new QStandardItem),
         status_code(new QStandardItem)
@@ -33,11 +34,10 @@ public:
     }
 
 public:
+    QStandardItem *title;
     QStandardItem *banner;
     QStandardItem *content_type;
     QStandardItem *status_code;
-
-    QByteArray document;
 
     /* summary */
     QString last_modified;
@@ -45,10 +45,10 @@ public:
 
     void setValues(const s3s_struct::URL &url){
         this->setText(url.url);
+        title->setText(url.title);
         banner->setText(url.banner);
         content_type->setText(url.content_type);
         status_code->setText(QString::number(url.status_code));
-        document = url.document;
 
         /* last modified */
         last_modified = QDate::currentDate().toString();

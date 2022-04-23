@@ -16,6 +16,9 @@
 #include <QMutex>
 #include <QQueue>
 
+#include <Ultralight/Ultralight.h>
+#include <AppCore/Platform.h>
+
 
 namespace url {
 
@@ -31,6 +34,9 @@ struct ScanConfig { // scan configurations
     int timeout = 1000;
     QString scheme = "https";
 
+    bool get_title = false;
+    bool take_screenshots = false;
+    bool follow_redirect = false;
     bool force_scheme = false;
     bool setTimeout = false;
     bool noDuplicates = false;
@@ -43,6 +49,64 @@ struct ScanArgs { // scan arguments
     QQueue<QString> targets;
     int progress;
 };
+
+///
+/// ultralight for screenshots...
+///
+
+class Screenshot : public ultralight::LoadListener {
+
+    ultralight::RefPtr<ultralight::Renderer> renderer_;
+    ultralight::RefPtr<ultralight::View> view_;
+    bool done_ = false;
+
+public:
+    Screenshot()
+    {
+        ultralight::Config config;
+        config.device_scale = 2.0;
+        config.font_family_standard = "Arial";
+
+        config.use_gpu_renderer = false;
+        ultralight::Platform::instance().set_config(config);
+        ultralight::Platform::instance().set_font_loader(ultralight::GetPlatformFontLoader());
+        ultralight::Platform::instance().set_file_system(ultralight::GetPlatformFileSystem("."));
+        renderer_ = ultralight::Renderer::Create();
+        view_ = renderer_->CreateView(800, 800, false, nullptr);
+        view_->set_load_listener(this);
+    }
+    virtual ~Screenshot() override {
+        view_ = nullptr;
+        renderer_ = nullptr;
+    }
+
+    void take_screenshot(QString url, const char* html){
+        view_->LoadHTML(html);
+
+        while (!done_) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(10));
+          renderer_->Update();
+          renderer_->Render();
+        }
+        ultralight::BitmapSurface* bitmap_surface = static_cast<ultralight::BitmapSurface*>(view_->surface());
+        ultralight::RefPtr<ultralight::Bitmap> bitmap = bitmap_surface->bitmap();
+        bitmap->SwapRedBlueChannels();
+        bitmap->WritePNG(url.append(".png").toUtf8());
+        done_ = false;
+    }
+
+    virtual void OnFinishLoading(ultralight::View* caller, uint64_t frame_id, bool is_main_frame, const ultralight::String& url) override {
+        Q_UNUSED(caller);
+        Q_UNUSED(frame_id);
+        Q_UNUSED(url);
+        if (is_main_frame)
+          done_ = true;
+    }
+};
+
+///
+/// custom networkaccessmanager for URL engine...
+///
 
 class NetworkAccessManager: public QNetworkAccessManager {
     public:
@@ -69,6 +133,10 @@ class NetworkAccessManager: public QNetworkAccessManager {
         bool m_use_timer;
 };
 
+///
+/// \brief The Scanner class
+///
+
 class Scanner : public AbstractScanner{
     Q_OBJECT
 
@@ -86,7 +154,8 @@ class Scanner : public AbstractScanner{
 
     private:
         url::ScanArgs *m_args;
-        NetworkAccessManager *m_manager;
+        url::NetworkAccessManager *m_manager;
+        void get_title(s3s_struct::URL &url, QNetworkReply *reply);
 };
 
 RETVAL getTarget(url::ScanArgs *args, QUrl &url);

@@ -96,8 +96,18 @@ void MainWindow::initUI(){
 }
 
 void MainWindow::closeEvent(QCloseEvent *event){
+    int retVal = QMessageBox::warning(nullptr, "Close",
+                               "Do you want to close Sub3 Suite?",
+                                   QMessageBox::Close |
+                                   QMessageBox::Cancel,
+                                   QMessageBox::Close);
+    if(retVal == QMessageBox::Cancel){
+        event->ignore();
+        return;
+    }
+
     /* check if project is configured, if not prompt to save project */
-    if(projectModel->info.isNew ||  projectModel->info.isTemporary){
+    if(projectModel->info.isNew){
         if(!projectModel->info.isConfigured)
         {
             /* configure project */
@@ -267,6 +277,7 @@ void MainWindow::initEngines(){
     ssl = new Ssl(this, projectModel);
     raw = new Raw(this, projectModel);
     url = new Url(this, projectModel);
+    ip = new class IP(this, projectModel);
 
     /* Enumerators */
     ipEnum = new IpEnum(this, projectModel);
@@ -285,6 +296,7 @@ void MainWindow::initEngines(){
     this->connectSignals(ssl);
     this->connectSignals(raw);
     this->connectSignals(url);
+    this->connectSignals(ip);
 
     /* connecting signals from enumerators */
     this->connectSignals(ipEnum);
@@ -304,10 +316,11 @@ void MainWindow::initEngines(){
     ui->tabWidgetPassive->setCurrentIndex(0);
     /* active tabwidget */
     ui->tabWidgetActive->insertTab(0, brute, "BRUTE");
-    ui->tabWidgetActive->insertTab(1, active, "ACTIVE");
-    ui->tabWidgetActive->insertTab(2, dns, "DNS");
-    ui->tabWidgetActive->insertTab(3, ssl, "SSL");
-    ui->tabWidgetActive->insertTab(4, url, "URL");
+    ui->tabWidgetActive->insertTab(1, active, "HOST");
+    ui->tabWidgetActive->insertTab(2, ip, "IP");
+    ui->tabWidgetActive->insertTab(3, dns, "DNS");
+    ui->tabWidgetActive->insertTab(4, ssl, "SSL");
+    ui->tabWidgetActive->insertTab(5, url, "URL");
     ui->tabWidgetActive->setCurrentIndex(0);
     /* tools tabwidget */
     ui->tabWidgetEnums->insertTab(0, ipEnum, "IP");

@@ -20,26 +20,29 @@ void Active::onScanLog(scan::Log log){
     m_scanStats->failed++;
 }
 
-void Active::onScanResult_port(s3s_struct::HOST host){
-    if(set_subdomain.contains(host.host)) // for existing entry...
-    {
-        s3s_item::HOST *item = set_subdomain.value(host.host);
-        item->setValue_ports(host);
-    }
-    else // for new entry...
-    {
-        s3s_item::HOST *item = new s3s_item::HOST;
-        item->setValue_ports(host);
-        m_model->appendRow({item, item->ipv4, item->ipv6, item->ports});
-        set_subdomain.insert(host.host, item);
+void Active::onScanResult_ping(QString host, QString ip, int bytes, int time, int ttl){
+    m_model_ping->appendRow({new QStandardItem(host),
+                             new QStandardItem(ip),
+                             new QStandardItem(QString::number(bytes)),
+                             new QStandardItem(QString::number(time)),
+                             new QStandardItem(QString::number(ttl))});
 
-        ui->labelResultsCount->setNum(proxyModel->rowCount());
-        m_scanStats->resolved++;
-    }
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
+}
 
-    /* save to Project model */
-    if(m_scanConfig->autoSaveToProject)
-        project->addActiveHost(host);
+void Active::onScanResult_port(QString hostname, QString ip, QList<u_short> ports){
+    QString port_list = nullptr;
+    foreach(const u_short &port, ports)
+        port_list.append(port).append(",");
+    port_list.chop(1);
+
+    m_model_port->appendRow({new QStandardItem(hostname),
+                             new QStandardItem(ip),
+                             new QStandardItem(port_list)});
+
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
 }
 
 void Active::onScanResult_dns(s3s_struct::HOST host){
@@ -65,7 +68,7 @@ void Active::onScanResult_dns(s3s_struct::HOST host){
     {
         s3s_item::HOST *item = new s3s_item::HOST;
         item->setValues(host);
-        m_model->appendRow({item, item->ipv4, item->ipv6, item->ports});
+        m_model_dns->appendRow({item, item->ipv4, item->ipv6, item->ports});
         set_subdomain.insert(host.host, item);
 
         ui->labelResultsCount->setNum(proxyModel->rowCount());

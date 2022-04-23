@@ -182,7 +182,7 @@
       </property>
       <widget class="QWidget" name="tabResult">
        <attribute name="title">
-        <string>Result</string>
+        <string>Results</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="spacing">

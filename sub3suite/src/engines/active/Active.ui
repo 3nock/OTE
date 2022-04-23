@@ -32,13 +32,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
-      <widget class="QLabel" name="labelOUT">
-       <property name="text">
-        <string>OUT:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="comboBoxOption">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -60,12 +53,17 @@
        </property>
        <item>
         <property name="text">
-         <string>Active DNS</string>
+         <string>Resolve</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Active PORT</string>
+         <string>Port Scan</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ping Scan</string>
         </property>
        </item>
       </widget>
@@ -263,7 +261,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Active Subdomains:</string>
+             <string>Results:</string>
             </property>
            </widget>
           </item>

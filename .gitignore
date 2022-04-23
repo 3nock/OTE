@@ -34,6 +34,10 @@ ui_*
 *.so.*
 *.dll
 *.dylib
+src/include/ultralight
+src/include/npcap
+src/include/ultralight/*
+src/include/npcap/*
 
 # Qt-es
 object_script.*.Release

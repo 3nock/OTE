@@ -20,69 +20,33 @@ void IP::onScanLog(scan::Log log){
     m_scanStats->failed++;
 }
 
-void IP::onScanResult_ping(QString host, QString ip, int bytes, int time, int ttl){
-    m_model_ping->appendRow({new QStandardItem(host),
-                             new QStandardItem(ip),
+void IP::onScanResult_ping(QString ip, int bytes, int time, int ttl){
+    m_model_ping->appendRow({new QStandardItem(ip),
                              new QStandardItem(QString::number(bytes)),
                              new QStandardItem(QString::number(time)),
                              new QStandardItem(QString::number(ttl))});
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
 }
 
-void IP::onScanResult_port(s3s_struct::HOST host){
-    if(set_subdomain.contains(host.host)) // for existing entry...
-    {
-        s3s_item::HOST *item = set_subdomain.value(host.host);
-        item->setValue_ports(host);
-    }
-    else // for new entry...
-    {
-        s3s_item::HOST *item = new s3s_item::HOST;
-        item->setValue_ports(host);
-        m_model->appendRow({item, item->ipv4, item->ipv6, item->ports});
-        set_subdomain.insert(host.host, item);
+void IP::onScanResult_port(QString ip, QList<u_short> ports){
+    QString port_list = nullptr;
+    foreach(const u_short &port, ports)
+        port_list.append(port).append(",");
+    port_list.chop(1);
 
-        ui->labelResultsCount->setNum(proxyModel->rowCount());
-        m_scanStats->resolved++;
-    }
+    m_model_port->appendRow({new QStandardItem(ip),
+                             new QStandardItem(port_list)});
 
-    /* save to Project model */
-    if(m_scanConfig->autoSaveToProject)
-        project->addActiveHost(host);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
 }
 
-void IP::onScanResult_dns(s3s_struct::HOST host){
-    if(set_subdomain.contains(host.host)) // for existing entry...
-    {
-        s3s_item::HOST *item = set_subdomain.value(host.host);
-        switch (m_scanConfig->recordType) {
-        case QDnsLookup::A:
-            item->setValue_ipv4(host.ipv4);
-            break;
-        case QDnsLookup::AAAA:
-            item->setValue_ipv6(host.ipv6);
-            break;
-        case QDnsLookup::ANY:
-            item->setValue_ipv4(host.ipv4);
-            item->setValue_ipv6(host.ipv6);
-            break;
-        default:
-            break;
-        }
-    }
-    else // for new entry...
-    {
-        s3s_item::HOST *item = new s3s_item::HOST;
-        item->setValues(host);
-        m_model->appendRow({item, item->ipv4, item->ipv6, item->ports});
-        set_subdomain.insert(host.host, item);
+void IP::onScanResult_dns(QString ip, QString hostname){
+    m_model_dns->appendRow({new QStandardItem(ip),
+                             new QStandardItem(hostname)});
 
-        ui->labelResultsCount->setNum(proxyModel->rowCount());
-        m_scanStats->resolved++;
-    }
-
-    /* save to Project model */
-    if(m_scanConfig->autoSaveToProject)
-        project->addActiveHost(host);
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
 }

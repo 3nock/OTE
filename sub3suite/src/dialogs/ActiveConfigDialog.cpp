@@ -27,6 +27,13 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, brute::ScanConfig *confi
 
     /* hiding unused widgets */
     ui->groupBoxScheme->hide();
+    ui->checkBoxRedirects->hide();
+    ui->checkBoxScreenshot->hide();
+    ui->checkBoxTitle->hide();
+    ui->groupBoxPingScan->hide();
+    ui->groupBoxPortScan->hide();
+
+    this->adjustSize();
 }
 
 /* for active... */
@@ -46,6 +53,39 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, active::ScanConfig *conf
     /* hiding unused widgets */
     ui->checkBoxWildcards->hide();
     ui->groupBoxScheme->hide();
+    ui->checkBoxRedirects->hide();
+    ui->checkBoxScreenshot->hide();
+    ui->checkBoxTitle->hide();
+
+    this->adjustSize();
+}
+
+/* for ip... */
+ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ip::ScanConfig *config) :
+    QDialog(parent),
+    ui(new Ui::ActiveConfigDialog),
+    m_configIP(config),
+    m_customNameserverListModel(new QStringListModel)
+{
+    ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
+
+    ip = true;
+    this->m_initWidgets();
+    this->m_loadConfigIP();
+
+    /* hiding unused widgets */
+    ui->checkBoxWildcards->hide();
+    ui->groupBoxScheme->hide();
+    ui->checkBoxRedirects->hide();
+    ui->checkBoxScreenshot->hide();
+    ui->checkBoxTitle->hide();
+    ui->radioButtonA->hide();
+    ui->radioButtonAAAA->hide();
+    ui->radioButtonANY->hide();
+    ui->labelRecordType->hide();
+
+    this->adjustSize();
 }
 
 /* for records... */
@@ -69,6 +109,13 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config)
     ui->radioButtonAAAA->hide();
     ui->radioButtonANY->hide();
     ui->labelRecordType->hide();
+    ui->checkBoxRedirects->hide();
+    ui->checkBoxScreenshot->hide();
+    ui->checkBoxTitle->hide();
+    ui->groupBoxPingScan->hide();
+    ui->groupBoxPortScan->hide();
+
+    this->adjustSize();
 }
 
 /* for SSL... */
@@ -95,9 +142,16 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ssl::ScanConfig *config)
     ui->radioButtonANY->hide();
     ui->labelRecordType->hide();
     ui->tabWidget->removeTab(1);
+    ui->checkBoxRedirects->hide();
+    ui->checkBoxScreenshot->hide();
+    ui->checkBoxTitle->hide();
+    ui->groupBoxPingScan->hide();
+    ui->groupBoxPortScan->hide();
+
+    this->adjustSize();
 }
 
-/* for SSL... */
+/* for URL... */
 ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, url::ScanConfig *config) :
     QDialog(parent),
     ui(new Ui::ActiveConfigDialog),
@@ -118,6 +172,10 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, url::ScanConfig *config)
     ui->radioButtonANY->hide();
     ui->labelRecordType->hide();
     ui->tabWidget->removeTab(1);
+    ui->groupBoxPingScan->hide();
+    ui->groupBoxPortScan->hide();
+
+    this->adjustSize();
 }
 
 ActiveConfigDialog::~ActiveConfigDialog(){
@@ -140,6 +198,8 @@ void ActiveConfigDialog::on_buttonOk_clicked(){
         this->m_saveSSL();
     if(url)
         this->m_saveURL();
+    if(ip)
+        this->m_saveIP();
 
     accept();
 }
@@ -278,6 +338,9 @@ void ActiveConfigDialog::m_loadConfigURL(){
     ui->lineEditThreads->setText(CONFIG.value(CFG_VAL_THREADS).toString());
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->checkBoxRedirects->setChecked(CONFIG.value("follow_redirects").toBool());
+    ui->checkBoxScreenshot->setChecked(CONFIG.value("take_screenshots").toBool());
+    ui->checkBoxTitle->setChecked(CONFIG.value("get_title").toBool());
     ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     ui->groupBoxScheme->setChecked(CONFIG.value(CFG_VAL_FORCESCHEME).toBool());
 
@@ -290,6 +353,35 @@ void ActiveConfigDialog::m_loadConfigURL(){
         ui->radioButtonFTP->setChecked(true);
 
     CONFIG.endGroup();
+}
+
+void ActiveConfigDialog::m_loadConfigIP(){
+    CONFIG.beginGroup(CFG_IP);
+    ui->lineEditTimeout->setText(CONFIG.value(CFG_VAL_TIMEOUT).toString());
+    ui->lineEditThreads->setText(CONFIG.value(CFG_VAL_THREADS).toString());
+    ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
+    ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
+    ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
+    QString nsType = CONFIG.value(CFG_VAL_NAMESERVER).toString();
+    CONFIG.endGroup();
+
+    if(nsType == "single")
+        ui->radioButtonSingleNameserver->setChecked(true);
+    if(nsType == "random")
+        ui->radioButtonRandomNameservers->setChecked(true);
+    if(nsType == "custom")
+        ui->radioButtonCustomNameservers->setChecked(true);
+
+    CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
+    ui->comboBoxSingleNameserver->addItems(CONFIG.allKeys());
+    CONFIG.endGroup();
+
+    int size = CONFIG.beginReadArray("custom_nameservers_active");
+    for (int i = 0; i < size; ++i) {
+        CONFIG.setArrayIndex(i);
+        ui->customNameservers->add(CONFIG.value("value").toString());
+    }
+    CONFIG.endArray();
 }
 
 ///
@@ -612,6 +704,9 @@ void ActiveConfigDialog::m_saveURL(){
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
     bool setTimeout = ui->groupBoxTimeout->isChecked();
     bool force_scheme = ui->groupBoxScheme->isChecked();
+    bool redirect = ui->checkBoxRedirects->isChecked();
+    bool screenshot = ui->checkBoxScreenshot->isChecked();
+    bool title = ui->checkBoxTitle->isChecked();
 
     /* saving values to config file... */
 
@@ -623,6 +718,9 @@ void ActiveConfigDialog::m_saveURL(){
     CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
     CONFIG.setValue(CFG_VAL_SCHEME, scheme);
     CONFIG.setValue(CFG_VAL_FORCESCHEME, force_scheme);
+    CONFIG.setValue("take_screenshots", screenshot);
+    CONFIG.setValue("follow_redirects", redirect);
+    CONFIG.setValue("get_title", title);
     CONFIG.endGroup();
 
     /* saving to ssl::ScanConfig structure... */
@@ -634,4 +732,81 @@ void ActiveConfigDialog::m_saveURL(){
     m_configURL->noDuplicates = noDuplicates;
     m_configURL->autoSaveToProject = autosaveToProject;
     m_configURL->setTimeout = setTimeout;
+    m_configURL->follow_redirect = redirect;
+    m_configURL->take_screenshots = screenshot;
+    m_configURL->get_title = title;
+}
+
+void ActiveConfigDialog::m_saveIP(){
+    /* get values... */
+    QString thread = ui->lineEditThreads->text();
+    QString timeout = ui->lineEditTimeout->text();
+
+    bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
+    bool autosaveToProject = ui->checkBoxAutosave->isChecked();
+    bool setTimeout = ui->groupBoxTimeout->isChecked();
+
+    bool nsSingle = ui->radioButtonSingleNameserver->isChecked();
+    bool nsRandom = ui->radioButtonRandomNameservers->isChecked();
+    bool nsCustom = ui->radioButtonCustomNameservers->isChecked();
+
+    /* saving values to config file... */
+    CONFIG.beginGroup(CFG_IP);
+    CONFIG.setValue(CFG_VAL_THREADS, thread);
+    CONFIG.setValue(CFG_VAL_TIMEOUT, timeout);
+    CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
+    CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
+    CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
+
+    if(nsSingle)
+        CONFIG.setValue(CFG_VAL_NAMESERVER, "single");
+    if(nsRandom)
+        CONFIG.setValue(CFG_VAL_NAMESERVER, "random");
+    if(nsCustom)
+        CONFIG.setValue(CFG_VAL_NAMESERVER, "custom");
+
+    CONFIG.endGroup();
+
+    CONFIG.beginWriteArray("custom_nameservers_active");
+    QStringList customNameservers = m_customNameserverListModel->stringList();
+    for (int i = 0; i < customNameservers.length(); ++i) {
+        CONFIG.setArrayIndex(i);
+        CONFIG.setValue("value", customNameservers.at(i));
+    }
+    CONFIG.endArray();
+
+    /* saving to brute::ScanConfig structure... */
+
+    m_configIP->timeout = timeout.toInt();
+    m_configIP->threads = thread.toInt();
+    m_configIP->noDuplicates = noDuplicates;
+    m_configIP->autoSaveToProject = autosaveToProject;
+    m_configIP->setTimeout = setTimeout;
+
+    m_configIP->nameservers.clear();
+    if(nsSingle){
+        CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
+        QString nameserver = CONFIG.value(ui->comboBoxSingleNameserver->currentText()).toString();
+        m_configIP->nameservers.enqueue(nameserver);
+        CONFIG.endGroup();
+    }
+    if(nsRandom){
+        CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
+        QStringList nameservers = CONFIG.childKeys();
+        foreach(const QString &key, nameservers)
+            m_configIP->nameservers.enqueue(CONFIG.value(key).toString());
+        CONFIG.endGroup();
+    }
+    if(nsCustom){
+        foreach(const QString &nameserver, m_customNameserverListModel->stringList())
+            m_configIP->nameservers.enqueue(nameserver);
+    }
+
+    /* save used nameservers to config file */
+    CONFIG.beginWriteArray("nameservers_active");
+    for (int i = 0; i < m_configIP->nameservers.length(); ++i) {
+        CONFIG.setArrayIndex(i);
+        CONFIG.setValue("value", m_configIP->nameservers.at(i));
+    }
+    CONFIG.endArray();
 }

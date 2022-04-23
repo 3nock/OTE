@@ -11,7 +11,6 @@
 #include <QTime>
 #include <QThread>
 #include "src/dialogs/FailedScansDialog.h"
-#include "src/modules/active/PortScanner.h"
 
 
 void Active::startScan(){
@@ -53,24 +52,38 @@ void Active::startScan(){
     /* start timer */
     m_timer.start();
 
-    /* getting ports for port-scan */
-    if(ui->comboBoxOption->currentIndex()){
-        m_scanArgs->ports.clear();
+    switch(ui->comboBoxOption->currentIndex()){
+    case 1: // PORT SCAN
+    {
+        m_portscannerArgs->target_ports.clear();
+        m_portscannerArgs->target_ips.clear();
+        m_portscannerArgs->progress = 0;
 
         if(ui->radioButtonDefault->isChecked())
-            m_scanArgs->ports << 80 << 443 << 21 << 990 << 22 << 25 << 465 << 587 << 2525 ;
+            m_portscannerArgs->target_ports << 80 << 443 << 21 << 990 << 22 << 25 << 465 << 587 << 2525 ;
 
         if(ui->radioButtonCustom->isChecked()){
             foreach(const QString &port, ui->lineEditCustom->text().split(","))
-                m_scanArgs->ports << port.toUShort();
+                m_portscannerArgs->target_ports << port.toUShort();
         }
-
         if(ui->radioButtonRange->isChecked()){
             ushort from = ui->lineEditFrom->text().toUShort();
             ushort to = ui->lineEditTo->text().toUShort();
             for(ushort i = from; i < to; i++)
-                m_scanArgs->ports << i;
+                m_portscannerArgs->target_ports << i;
         }
+        m_portscannerArgs->timeout = m_scanArgs->config->timeout;
+        m_portscannerArgs->target_ips = m_scanArgs->targets;
+        m_portscannerArgs->scan_type = port::ScanType::SYN;
+    }
+        break;
+
+    case 2: // PING SCAN
+    {
+        m_pingscannerArgs->targets = m_scanArgs->targets;
+        m_pingscannerArgs->progress = 0;
+        m_pingscannerArgs->timeout = m_scanArgs->config->timeout;
+    }
     }
 
     /* loop to create threads for enumeration... */
@@ -97,11 +110,11 @@ void Active::startScan(){
         }
         case 1: // ACTIVE PORT
         {
-            port::Scanner *scanner = new port::Scanner(m_scanArgs);
+            port::Scanner *scanner = new port::Scanner(m_portscannerArgs);
             QThread *cThread = new QThread;
             scanner->startScan(cThread);
             scanner->moveToThread(cThread);
-            connect(scanner, &port::Scanner::scanResult, this, &Active::onScanResult_port);
+            connect(scanner, &port::Scanner::scanResult_host, this, &Active::onScanResult_port);
             connect(scanner, &port::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
             connect(scanner, &port::Scanner::scanLog, this, &Active::onScanLog);
             connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
@@ -110,6 +123,24 @@ void Active::startScan(){
             connect(this, &Active::stopScanThread, scanner, &port::Scanner::onStopScan);
             connect(this, &Active::pauseScanThread, scanner, &port::Scanner::onPauseScan);
             connect(this, &Active::resumeScanThread, scanner, &port::Scanner::onResumeScan, Qt::DirectConnection);
+            cThread->start();
+            break;
+        }
+        case 2: // ACTIVE PING
+        {
+            ping::Scanner *scanner = new ping::Scanner(m_pingscannerArgs);
+            QThread *cThread = new QThread;
+            scanner->startScan(cThread);
+            scanner->moveToThread(cThread);
+            connect(scanner, &ping::Scanner::scanResult_host, this, &Active::onScanResult_ping);
+            connect(scanner, &ping::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+            connect(scanner, &ping::Scanner::scanLog, this, &Active::onScanLog);
+            connect(cThread, &QThread::finished, this, &Active::onScanThreadEnded);
+            connect(cThread, &QThread::finished, scanner, &ping::Scanner::deleteLater);
+            connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
+            connect(this, &Active::stopScanThread, scanner, &ping::Scanner::onStopScan);
+            connect(this, &Active::pauseScanThread, scanner, &ping::Scanner::onPauseScan);
+            connect(this, &Active::resumeScanThread, scanner, &ping::Scanner::onResumeScan, Qt::DirectConnection);
             cThread->start();
         }
         }

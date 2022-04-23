@@ -15,6 +15,8 @@
 
 #include "../AbstractEngine.h"
 #include "src/utils/utils.h"
+#include "src/modules/active/PortScanner.h"
+#include "src/modules/active/PingScanner.h"
 #include "src/modules/active/ActiveScanner.h"
 
 
@@ -33,7 +35,8 @@ class Active : public AbstractEngine{
         void onScanThreadEnded();
         void onScanLog(scan::Log log);
         void onScanResult_dns(s3s_struct::HOST host);
-        void onScanResult_port(s3s_struct::HOST host);
+        void onScanResult_port(QString hostname, QString ip, QList<u_short> ports);
+        void onScanResult_ping(QString host, QString ip, int bytes, int time, int ttl);
         void onReScan(QQueue<QString> targets);
 
         /* receiving targets from other engines */
@@ -57,8 +60,12 @@ class Active : public AbstractEngine{
         active::ScanConfig *m_scanConfig;
         active::ScanArgs *m_scanArgs;
         active::ScanStat *m_scanStats;
+        port::ScanArgs *m_portscannerArgs;
+        ping::ScanArgs *m_pingscannerArgs;
         QStringListModel *m_targetListModel;
-        QStandardItemModel *m_model;
+        QStandardItemModel *m_model_dns;
+        QStandardItemModel *m_model_port;
+        QStandardItemModel *m_model_ping;
 
         void initUI();
         void initConfigValues();

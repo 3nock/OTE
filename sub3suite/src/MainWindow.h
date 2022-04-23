@@ -26,6 +26,7 @@
 #include "src/engines/raw/Raw.h"
 #include "src/engines/ssl/Ssl.h"
 #include "src/engines/url/Url.h"
+#include "src/engines/ip/IP.h"
 
 /* Enumerators */
 #include "src/enums/ip/IpEnum.h"
@@ -112,6 +113,7 @@ class MainWindow : public QMainWindow{
         Raw *raw = nullptr;
         Ssl *ssl = nullptr;
         Url *url = nullptr;
+        class IP *ip = nullptr;
 
         /* enumerators */
         IpEnum *ipEnum = nullptr;

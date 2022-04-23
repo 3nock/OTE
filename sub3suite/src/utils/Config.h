@@ -15,11 +15,11 @@
 #include <QDebug>
 
 
-#define APIKEY Config::apiKeys()
-#define CONFIG Config::general()
-#define DONORS Config::donors()
-#define AUTHORS Config::authors()
-#define MODULES Config::modules()
+#define APIKEY s3s::Config::apiKeys()
+#define CONFIG s3s::Config::general()
+#define DONORS s3s::Config::donors()
+#define AUTHORS s3s::Config::authors()
+#define MODULES s3s::Config::modules()
 
 /* config groups */
 #define CFG_OSINT "osint"
@@ -29,6 +29,7 @@
 #define CFG_DNS "dns"
 #define CFG_SSL "ssl"
 #define CFG_URL "url"
+#define CFG_IP "ip"
 #define CFG_ENUM "enums"
 
 /* general group values */
@@ -62,7 +63,6 @@ namespace s3s {
 extern bool is_dark_theme;
 extern bool is_light_theme;
 extern int font_size;
-}
 
 class Config
 {
@@ -94,5 +94,7 @@ class Config
         Config &operator=(Config const&) = delete;
         Config &operator=(Config &&) = delete;
 };
+
+}
 
 #endif // CONFIG_H

@@ -1,0 +1,112 @@
+ce24902 Improve anti-aliased font rendering in CPU renderer (improved alpha-correction when compositing brighter-colored fonts).
+29d845f Fix image scaling issue in CPU renderer. Fix memory growth issue with large, shortly-lived images.
+248b91b Fix issue with CPU renderer not clearing alpha channel when displaying pages with transparent backgrounds. Fix memory leak in frame loader. Fix issue with mouse cursor not being set properly on mouse enter on Windows.
+5350360 Update Web Browser sample, display error description when a network error is encountered while loading.
+982539f Rename Browser as 'Sample 8 - Web Browser'
+d2f141e Update README
+9f8e052 Update README
+5cc61dc Update README and logo.
+c864ad5 Enable HTML5 IndexedDB. Closes #281.
+d1b1648 Fix bug with Bitmap::WritePNG ignoring internal row bytes configuration.
+7bca39b *API Breaking Change*: ulCreateView and Renderer::CreateView have a new parameter, 'force_cpu_renderer' that allow you to force a View render to an offscreen Surface even when the GPU renderer is enabled in the Config. (Needed for issue #271)
+8e54998 Merge branch 'master' of https://github.com/ultralight-ux/Ultralight
+f7407d1 Disable UWP build.
+3d6e652 Fix cURL compression issue (now supports deflate, gzip, brotli), remove ICU dynamic libs, switch to ICU data archive (reduces size by 20MB), reduce binary size, remove SSE 4.1/4.2 requirement on macos/linux, improve CPU renderer performance.
+330cab3 Update README.md
+bc829f4 Fix issue when painting glyphs with complex transforms with the GPU renderer. (closes #274)
+715c641 Extend JavaScriptCore C API: JSClassDefinition now supports optional version 1000 with extended class information in callback signatures (thanks Janrupf!)
+dafa753 Fix issue in C API: crash in ulEvaluateScript with non-null exception string.
+7594196 Update third-party license notices.
+51f6aea Update header documentation, fix missing define in <JavaScriptCore/JSRetainPtr.h>
+6cbd5a0 Update Sample 7, clean up code and add more in-comment documentation.
+f36771a Update Sample 7 for macOS compatibility.
+1504797 Added Sample 7 (OpenGL integration), renamed Tutorials to 'Samples'.
+3cbddb8 Hide verbose log messages for hidden utility Views (cluttering up log needlessly).
+e6659a3 Fix issue in C API (ulApplyProjection wasn't applying projection, lol)
+daec3db Updated C API, made it easier to port GPUDriver-related structs to other languages by limiting custom byte alignment to vertex declarations.
+8f4fa26 Update C API, ensure all callback names end in 'Callback'
+e007039 Bump scroll timer up to 90 FPS in Browser sample for smoother experience.
+49dab1a Update 1.2.0 Release Notes
+d8c1175 Fix issue when using C API with AppCore on Windows with CPU fallback enabled (we use a custom DIB SurfaceFactory in this case, we need to make sure we don't override it in C API wrapper)
+4f7a921 Fix build error with C API (uint32_t -> unsigned int)
+d2de2b0 Merge pull request #231 from lkingsford/master
+e21c944 Update README
+8fa5513 Expose GPUDriver and Clipboard to C API
+b3dcbc0 Fix Tutorial 6 on macOS (default file system in AppCore expects resources to be in Resources/assets/)
+e3a0f8a Update README.
+e1983c8 Fix crash on Linux when trying to create MSAA FBOs (commonly encountered when trying to run on a Linux VM).
+0ea6317 Update C API: expose FileSystem and Logger, add ulCreateOverlayWithView, update BitmapFormat, update docs. Also make App::Create() respect existing platform defines (won't override file system, font loader, or logger if one is already defined).
+8533f20 Expose missing View focus management methods to C API.
+d36d9dc Fix bug in WebCore causing wrong thread stack boundaries to be reported on Windows (fixes issue when running Ultralight with JNI from an externally-created thread, thanks Janrupf!)
+dedfc6c Extend LoadListener API, add Window::native_handle, update C API, fix iframe bug.
+1a2a3a5 Update samples for new API. Update Browser sample to support child views (eg, target='_blank' URLs), and make the omnibox gracefully detect valid URLs, fixup URLs, and perform search when applicable in manner similar to other browser.
+ca1c3b5 Replace View::js_context with View::LockJSContext (users should acquire the JSContext to lock the execution state for the current thread to avoid race conditions when web workers are active). In the same vein of thread safety, View::EvaluateScript now returns a string instead of raw JSValue and also takes an optional out-param to store exceptions in, if any.
+2f3a8ed Improve HTML Canvas API support.
+4ffa257 Add two new params to View::LoadHTML (for spoofing request URL), add ViewListener::OnCreateChildView, LoadListener::onFailLoading, and LoadListener::OnWindowObjectReady. Closes #266. Closes #187. Closes #154.
+3073b0e Implement support for native dropdowns (select), progress bars, and sliders (range).
+42dcb06 Re-enable pattern gradient fills, add support for Canvas painting. Improve box shadows and semi-transparent font glyph compositing in CPU renderer. Fix bug with rounded rects clipping paths (bottom radii were swapped).
+a5b05f0 Add CAPI alternative example for Tutorial 1 (see main_capi.cpp)
+50d849c Update C API to include new Surface API and Config options. Also expose default FontLoader, FileSystem, and Logger to C API from AppCore.
+0a9198b Update Tutorial 1, add extra documentation for Config::resource_path, file system, and add log message handling.
+c3ade21 Update Tutorial 1 documentation.
+31d03cb Update Tutorial 1 to use the new CPU renderer / Surface API.
+90b9b57 Enable new CPU renderer (pure-CPU, SSE2 accelerated backend), uses even less memory than GPU backend and is much more convenient for integrating into games. Supports painting directly to a user-supplied pixel buffer, see the Surface and SurfaceFactory API.
+24bd440 Fix heap corruption issue due to mismatched inter-module interfaces, fix several UWP port issues preventing Windows Store certification.
+6541d16 Fix several core issues in the UWP port.
+d6de68a Generate SDK for UWP, update links in README. Remove debug bins.
+6ed1a4e Fix Linux build errors, update dependencies.
+8c76d8e Update build scripts for macOS/Linux
+0a50e8b Update buildbot script.
+fac19bc Update buildbot script and README, remove link to 32-bit bins.
+d9914ba Update to latest 1.2 branch-- major engine update, now current with latest WebKit. Tweak samples for new API (Tutorial 1 is disabled until new bitmap() API is available).
+6ae71a2 Fix license link in README
+be41d8a Update logo.
+8714b60 Fix painting issue with focus rings.
+0aca776 Update GPUDriver documentation.
+09a3d2e Strip macOS shared libs when creating release SDK package (removes ~10MB of debug symbols)
+8db0588 Update README
+652cd35 Update README, add new logo and build status badge
+8972637 Update README
+afa2aec Update Tutorial 2
+67e3403 Fixed some macOS/Metal driver issues on older MacBook Pros, lowered repaint timer to 60Hz.
+9b3b88b Update release notes.
+8eba3cf Bump version string to 1.1.0
+f2ca461 Update Browser sample.
+c069d69 Enable MSAA on macOS/Retina, make sure drawable is cleared after flipping to avoid flash of red in backbuffer.
+df46618 Make overlays defocus properly after mouse clicks on other overlays.
+ae45adf Update Browser sample.
+bd462d3 Fix crash in View::set_needs_paint, update JSHelpers documentation and add set_context methods.
+d8a9bf3 Add Tutorial 6 (Intro to C API), tweak other samples
+e9c30fc Search executable path for shared libs on Linux.
+315df41 Tweaked styles in Tutorial 4
+12f2bdf Add support for simple CSS text shadows (no blurs yet). Update samples (new Tutorial 4 and Tutorial 5).
+c97a9eb Update Tutorial 2 (use native OS fonts to match platform look-and-feel)
+b34b91b Update Tutorial 2 (more documentation, also designed a simple to-do list app mockup)
+c757e2b Update Tutorial 1 (more documentation and fancier gradients!)
+b1d134f Fix issue when using default offscreen GL GPUDriver with scaled DPI (View::bitmap was being clipped to unscaled resolution)
+c89e5c9 Fix scrolling issue when multiple scroll containers are on page. (closes #191)
+2a237bd Add radial gradient support. Add native themed drawing for buttons, radio buttons, and checkboxes. Fix issue drawing stroked paths (mitered joins not handled correctly). Fix issue drawing complex box borders. Fix compositing issue with transparent gradients. Fix rendering issues with fractional DPI scaling (closes #185). Downgrade metal version for wider macOS compatibility (closes #180).
+ab9922f Rewrote macOS/Metal driver and CAMetalLayer implementation. Much faster and smoother now, especially during resize. Takes better advantage of discrete GPU hardware via triple-buffering. Also fixed DPI issue when window and monitor have different backingScaleFactors.
+d724e7f Fix missing inspector assets in Browser sample on macOS
+946f78c Make all rounded rects (except hairline strokes) use MSAA path rendering for more accurate anti-aliasing. Also fix issue where SVG paths were clipped incorrectly when CSS opacity was applied.
+0d4de33 Fix repaint issues on Windows (window not repainting when dragged offscreen then dragged back). Fix crash when overlay is resized to zero width/height. Fix issue where WindowFlags were not being interpreted correctly and added fixed padding to content area.
+2eddb30 Merge branch 'master' of https://github.com/ultralight-ux/Ultralight
+44e542c Implement live resize on Windows and macOS, fix black bar resizing issue when compositor layers are active. fixes #176. fixes #177.
+0343d8c Update README.md
+326d28d Re-enable fast allocator strategy for path tesselator, fixed crash issues on x64 platform
+077cdcc Temporarily disable tesselator's fast allocator to mitigate crash on Windows x64 platform.
+a62b4a8 Merging 1.1 branch into master. Adds significant rendering, performance, and memory-usage improvements and fixes several critical crash bugs. Several more fixes and updates are coming before final 1.1 release.
+4f91a4a Enabled bmalloc (WebKit's native slab allocator, should give slight performance improvement. Also fixed link error when using standalone SDK on Windows.
+7a80403 Moved deps dir to CMAKE_CURRENT_BINARY_DIR so we don't pollute non-build directories.
+c341ea7 Fix crash in MemoryPool when allocating more elements than the BlockSize. (UltralightCore @ 4f6930f)
+93902db Adding explicit 16px font size to root element in default stylsheet to match Chrome desktop behavior (also explicit transparent background color). (WebCore @ ac8a715)
+6124acf Fixed rendering issue in path stroke tessellator, added support for stroked SVG rects.
+8a74816 Rewrote tessellator for stroked paths, now handles degenerate collinear cases more gracefully. Fixes #118
+c371f66 Fix crash when clicking on select elements (dropdowns), please note select elements are only stubbed out for now and will not display. Need to provide a Platform API for users to display floating popup menus. Fixes #121.
+0d58e08 Fixed link error on Linux: undefined reference to ultralight::CreatePlatformFontLoader(), updated README
+46aabe8 Updating README with instructions to download latest SDK.
+2ccf477 Updating Jenkinsfile (working on continous delivery).
+44f23c5 Updating packager scripts.
+d80a9a5 Added inspector support to the Browser sample, updated deps.
+7e9cf3a Updating UltralightCore revision, fixes #119
+fbe253b Pruned repo history to get rid of 200MB of stale binaries. Repo has now been restructured to pull binaries in from S3 buckets during CMake build.

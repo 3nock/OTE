@@ -53,6 +53,11 @@ SOURCES += \
     src/dialogs/EnumConfigDialog.cpp \
     src/dialogs/WordlistDialog_choose.cpp \
     src/dialogs/WordlistDialog_generate.cpp \
+    src/engines/ip/IP.cpp \
+    src/engines/ip/IP_actions.cpp \
+    src/engines/ip/IP_contextmenu.cpp \
+    src/engines/ip/IP_results.cpp \
+    src/engines/ip/IP_scan.cpp \
     src/engines/url/Url.cpp \
     src/engines/url/Url_actions.cpp \
     src/engines/url/Url_contextmenu.cpp \
@@ -124,7 +129,10 @@ SOURCES += \
     src/items/MXItem.cpp \
     src/items/NSItem.cpp \
     src/models/ExplorerModel.cpp \
+    src/modules/active/IPScanner.cpp \
+    src/modules/active/PingScanner.cpp \
     src/modules/active/URLScanner.cpp \
+    src/modules/active/utils/resolve.cpp \
     src/modules/passive/api/ASRank.cpp \
     src/modules/passive/api/CirclPublic.cpp \
     src/modules/passive/api/HackerTarget.cpp \
@@ -274,6 +282,7 @@ HEADERS += \
     src/dialogs/SaveProjectDialog.h \
     src/dialogs/StartupDialog.h \
     src/dialogs/EnumConfigDialog.h \
+    src/engines/ip/IP.h \
     src/engines/url/Url.h \
     src/engines/ssl/Ssl.h \
     src/engines/dns/Dns.h \
@@ -286,7 +295,11 @@ HEADERS += \
     src/items/MXItem.h \
     src/items/NSItem.h \
     src/models/ExplorerModel.h \
+    src/modules/active/IPScanner.h \
+    src/modules/active/PingScanner.h \
     src/modules/active/URLScanner.h \
+    src/modules/active/utils/iphdr.h \
+    src/modules/active/utils/resolve.h \
     src/modules/passive/OsintHeaders.h \
     src/modules/passive/api/ASRank.h \
     src/modules/passive/api/CirclPublic.h \
@@ -442,6 +455,7 @@ FORMS += \
     src/dialogs/SaveProjectDialog.ui \
     src/dialogs/StartupDialog.ui \
     src/dialogs/EnumConfigDialog.ui \
+    src/engines/ip/IP.ui \
     src/engines/url/Url.ui \
     src/engines/ssl/Ssl.ui \
     src/project/Project.ui \
@@ -466,6 +480,14 @@ FORMS += \
 
 RESOURCES += \
     res.qrc
+
+# for ultralight
+INCLUDEPATH += include/ultralight/include
+LIBS += -L"lib" -lUltralight -lAppCore -lUltralightCore -lWebCore
+
+# for winpcap
+INCLUDEPATH += include/npcap/include
+LIBS += -L"lib" -lPacket -lwpcap
 
 # setting the icon...
 RC_ICONS = res/icons/main_logo.ico

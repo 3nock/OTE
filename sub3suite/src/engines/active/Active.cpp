@@ -20,8 +20,12 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
     m_scanConfig(new active::ScanConfig),
     m_scanArgs(new active::ScanArgs),
     m_scanStats(new active::ScanStat),
+    m_portscannerArgs(new port::ScanArgs),
+    m_pingscannerArgs(new ping::ScanArgs),
     m_targetListModel(new QStringListModel),
-    m_model(new QStandardItemModel)
+    m_model_dns(new QStandardItemModel),
+    m_model_port(new QStandardItemModel),
+    m_model_ping(new QStandardItemModel)
 {
     this->initUI();
 
@@ -30,20 +34,28 @@ Active::Active(QWidget *parent, ProjectModel *project) : AbstractEngine(parent, 
     ui->targets->setListModel(m_targetListModel);
 
     /* result model */
-    m_model->setHorizontalHeaderLabels({tr(" Host"), tr(" Ipv4"), tr(" Ipv6"), tr(" Ports")});
-    proxyModel->setSourceModel(m_model);
+    m_model_ping->setHorizontalHeaderLabels({tr(" Host"), tr(" IP"), tr(" Bytes"), tr(" Time(ms)"), tr(" TTL")});
+    m_model_port->setHorizontalHeaderLabels({tr(" Host"), tr(" IP"), tr(" Open Ports")});
+    m_model_dns->setHorizontalHeaderLabels({tr(" Host"), tr(" Ipv4"), tr(" Ipv6"), tr(" Ports")});
+    proxyModel->setSourceModel(m_model_dns);
     ui->tableViewResults->setModel(proxyModel);
 
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     /* config... */
     m_scanArgs->config = m_scanConfig;
+    m_pingscannerArgs->is_host = true;
+    m_portscannerArgs->is_host = true;
 
     this->initConfigValues();
 }
 Active::~Active(){
-    delete m_model;
+    delete m_model_ping;
+    delete m_model_port;
+    delete m_model_dns;
     delete m_targetListModel;
+    delete m_pingscannerArgs;
+    delete m_portscannerArgs;
     delete m_scanStats;
     delete m_scanArgs;
     delete m_scanConfig;
@@ -57,7 +69,6 @@ void Active::initUI(){
     ui->frame->setProperty("default_frame", true);
     ui->framePort->setProperty("dark_frame",true);
     ui->labelResultsCount->setProperty("dark", true);
-    ui->labelOUT->setProperty("s3s_color", true);
 
     /* hiding widgets */
     ui->framePort->hide();
@@ -220,9 +231,16 @@ void Active::on_comboBoxOption_currentIndexChanged(int index){
     switch (index) {
     case 0: // ACTIVE DNS
         ui->framePort->hide();
+        proxyModel->setSourceModel(m_model_dns);
         break;
     case 1: // ACTIVE PORT
         ui->framePort->show();
+        proxyModel->setSourceModel(m_model_port);
+        break;
+    case 2: // ACTIVE PING
+        ui->framePort->hide();
+        proxyModel->setSourceModel(m_model_ping);
         break;
     }
+    ui->tableViewResults->setModel(proxyModel);
 }

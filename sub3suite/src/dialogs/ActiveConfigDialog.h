@@ -15,6 +15,7 @@
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 #include "src/modules/active/URLScanner.h"
+#include "src/modules/active/IPScanner.h"
 
 
 namespace Ui {
@@ -30,6 +31,7 @@ class ActiveConfigDialog : public QDialog{
         ActiveConfigDialog(QWidget *parent = nullptr, dns::ScanConfig *config = nullptr);
         ActiveConfigDialog(QWidget *parent = nullptr, ssl::ScanConfig *config = nullptr);
         ActiveConfigDialog(QWidget *parent = nullptr, url::ScanConfig *config = nullptr);
+        ActiveConfigDialog(QWidget *parent = nullptr, ip::ScanConfig *config = nullptr);
         ~ActiveConfigDialog();
 
     private slots:
@@ -44,12 +46,14 @@ class ActiveConfigDialog : public QDialog{
         bool dns = false;
         bool ssl = false;
         bool url = false;
+        bool ip = false;
 
         brute::ScanConfig *m_configBrute = nullptr;
         active::ScanConfig *m_configActive = nullptr;
         dns::ScanConfig *m_configDns = nullptr;
         ssl::ScanConfig *m_configSSL = nullptr;
         url::ScanConfig *m_configURL = nullptr;
+        ip::ScanConfig *m_configIP = nullptr;
 
         QStringListModel *m_customNameserverListModel;
 
@@ -60,12 +64,14 @@ class ActiveConfigDialog : public QDialog{
         void m_loadConfigDns();
         void m_loadConfigSSL();
         void m_loadConfigURL();
+        void m_loadConfigIP();
 
         void m_saveBrute();
         void m_saveActive();
         void m_saveDns();
         void m_saveSSL();
         void m_saveURL();
+        void m_saveIP();
 };
 
 #endif // ACTIVECONFIGDIALOG_H

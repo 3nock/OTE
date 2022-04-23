@@ -16,7 +16,6 @@
 #include "src/utils/utils.h"
 #include "src/modules/active/URLScanner.h"
 
-
 namespace Ui {
     class Url;
 }
