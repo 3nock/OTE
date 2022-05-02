@@ -16,9 +16,6 @@
 #include <QMutex>
 #include <QQueue>
 
-#include <Ultralight/Ultralight.h>
-#include <AppCore/Platform.h>
-
 
 namespace url {
 
@@ -50,9 +47,11 @@ struct ScanArgs { // scan arguments
     int progress;
 };
 
-///
-/// ultralight for screenshots...
-///
+/*
+ * ultralight for screenshots...
+
+#include <Ultralight/Ultralight.h>
+#include <AppCore/Platform.h>
 
 class Screenshot : public ultralight::LoadListener {
 
@@ -103,6 +102,7 @@ public:
           done_ = true;
     }
 };
+*/
 
 ///
 /// custom networkaccessmanager for URL engine...

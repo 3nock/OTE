@@ -20,48 +20,48 @@ public:
     void forDarkTheme(){
         HighlightingRule rule;
 
-        /* keys */
-        rule.pattern = QRegExp ("(\"[^\"]*\")");
-        rule.format.setForeground(Qt::cyan);
-        rules.append(rule);
-
         /* numbers */
         rule.pattern = QRegExp("([-0-9.]+)(?!([^\"]*\"[\\s]*\\:))");
         rule.format.setForeground(Qt::green);
-        rules.append(rule);
-
-        /* strings */
-        rule.pattern = QRegExp(":\\s*([\"](?:[^\"])*[\"])");
-        rule.format.setForeground(Qt::white);
         rules.append(rule);
 
         /* special strings */
         rule.pattern = QRegExp("(true|false|null)(?!\"[^\"]*\")");
         rule.format.setForeground(Qt::magenta);
         rules.append(rule);
+
+        /* keys */
+        rule.pattern = QRegExp ("(\"[^\"]*\")");
+        rule.format.setForeground(Qt::cyan);
+        rules.append(rule);
+
+        /* strings */
+        rule.pattern = QRegExp(":\\s*([\"](?:[^\"])*[\"])");
+        rule.format.setForeground(Qt::white);
+        rules.append(rule);
     }
 
     void forLightTheme(){
         HighlightingRule rule;
-
-        /* keys */
-        rule.pattern = QRegExp ("(\"[^\"]*\")");
-        rule.format.setForeground(Qt::blue);
-        rules.append(rule);
 
         /* numbers */
         rule.pattern = QRegExp("([-0-9.]+)(?!([^\"]*\"[\\s]*\\:))");
         rule.format.setForeground(Qt::darkRed);
         rules.append(rule);
 
-        /* strings */
-        rule.pattern = QRegExp(":\\s*([\"](?:[^\"])*[\"])");
-        rule.format.setForeground(Qt::black);
-        rules.append(rule);
-
         /* special strings */
         rule.pattern = QRegExp("(true|false|null)(?!\"[^\"]*\")");
         rule.format.setForeground(Qt::red);
+        rules.append(rule);
+
+        /* keys */
+        rule.pattern = QRegExp ("(\"[^\"]*\")");
+        rule.format.setForeground(Qt::blue);
+        rules.append(rule);
+
+        /* strings */
+        rule.pattern = QRegExp(":\\s*([\"](?:[^\"])*[\"])");
+        rule.format.setForeground(Qt::black);
         rules.append(rule);
     }
 

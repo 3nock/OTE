@@ -1,5 +1,5 @@
 #include "ExplorerModel.h"
-
+#include "src/utils/utils.h"
 
 ExplorerModel::ExplorerModel(): QStandardItemModel(),
     project(new QStandardItem),
@@ -65,6 +65,50 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     enums->setIcon(QIcon(":/img/res/icons/gear.png"));
     custom->setFont(font);
     custom->setIcon(QIcon(":/img/res/icons/gear.png"));
+
+    if(s3s_global::is_dark_theme){
+        project->setForeground(Qt::white);
+        active->setForeground(Qt::white);
+        passive->setForeground(Qt::white);
+        enums->setForeground(Qt::white);
+        custom->setForeground(Qt::white);
+        activeHost->setForeground(Qt::white);
+        activeWildcard->setForeground(Qt::white);
+        activeDNS->setForeground(Qt::white);
+        activeA->setForeground(Qt::white);
+        activeAAAA->setForeground(Qt::white);
+        activeNS->setForeground(Qt::white);
+        activeMX->setForeground(Qt::white);
+        activeTXT->setForeground(Qt::white);
+        activeCNAME->setForeground(Qt::white);
+        activeSRV->setForeground(Qt::white);
+        activeSSL->setForeground(Qt::white);
+        activeSSL_sha1->setForeground(Qt::white);
+        activeSSL_sha256->setForeground(Qt::white);
+        activeSSL_altNames->setForeground(Qt::white);
+        activeURL->setForeground(Qt::white);
+        passiveSubdomainIp->setForeground(Qt::white);
+        passiveSubdomain->setForeground(Qt::white);
+        passiveA->setForeground(Qt::white);
+        passiveAAAA->setForeground(Qt::white);
+        passiveCIDR->setForeground(Qt::white);
+        passiveNS->setForeground(Qt::white);
+        passiveMX->setForeground(Qt::white);
+        passiveTXT->setForeground(Qt::white);
+        passiveCNAME->setForeground(Qt::white);
+        passiveEmail->setForeground(Qt::white);
+        passiveURL->setForeground(Qt::white);
+        passiveASN->setForeground(Qt::white);
+        passiveSSL->setForeground(Qt::white);
+        enumIP->setForeground(Qt::white);
+        enumASN->setForeground(Qt::white);
+        enumCIDR->setForeground(Qt::white);
+        enumNS->setForeground(Qt::white);
+        enumMX->setForeground(Qt::white);
+        enumSSL->setForeground(Qt::white);
+        enumEmail->setForeground(Qt::white);
+        raw->setForeground(Qt::white);
+    }
 
     activeHost->setIcon(QIcon(":/img/res/icons/domain.png"));
     activeWildcard->setIcon(QIcon(":/img/res/icons/wildcard.png"));

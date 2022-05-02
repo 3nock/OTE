@@ -101,9 +101,9 @@ void Project::initUI(){
                              << static_cast<int>((this->width() * 0.20)));
 
     m_jsonHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditJson->document());
-    if(s3s::is_dark_theme)
+    if(s3s_global::is_dark_theme)
         m_jsonHighlighter->forDarkTheme();
-    if(s3s::is_light_theme)
+    if(s3s_global::is_light_theme)
         m_jsonHighlighter->forLightTheme();
 }
 

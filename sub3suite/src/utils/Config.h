@@ -47,6 +47,7 @@
 #define CFG_VAL_SETTIMEOUT "set_timeout"
 #define CFG_VAL_SCHEME "scheme"
 #define CFG_VAL_FORCESCHEME "force_scheme"
+#define CFG_VAL_PORTSCAN "port_scan"
 
 /* groups */
 #define CFG_GRP_RECENT "recent_projects"
@@ -60,9 +61,6 @@
 #define CFG_WL_SUBSTITUTIONS "wordlist_substitutions"
 
 namespace s3s {
-extern bool is_dark_theme;
-extern bool is_light_theme;
-extern int font_size;
 
 class Config
 {

@@ -20,7 +20,7 @@ DocumentationDialog::DocumentationDialog(QWidget *parent) :
     ui->textBrowser->setSource(QUrl("index.html"));
 }
 
-DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
+DocumentationDialog::DocumentationDialog(TOOL engine, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DocumentationDialog)
 {
@@ -34,31 +34,35 @@ DocumentationDialog::DocumentationDialog(ENGINE engine, QWidget *parent) :
                                                   << QCoreApplication::applicationDirPath()+"/doc");
 
     switch(engine){
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         this->setWindowTitle("About OSINT");
         ui->textBrowser->setSource(QUrl("engines/osint.html"));
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         this->setWindowTitle("About RAW");
         ui->textBrowser->setSource(QUrl("engines/raw.html"));
         break;
-    case ENGINE::BRUTE:
+    case TOOL::BRUTE:
         this->setWindowTitle("About BRUTE");
         ui->textBrowser->setSource(QUrl("engines/brute.html"));
         break;
-    case ENGINE::ACTIVE:
+    case TOOL::HOST:
         this->setWindowTitle("About ACTIVE");
-        ui->textBrowser->setSource(QUrl("engines/active.html"));
+        ui->textBrowser->setSource(QUrl("engines/host.html"));
         break;
-    case ENGINE::DNS:
+    case TOOL::IP:
+        this->setWindowTitle("About IP");
+        ui->textBrowser->setSource(QUrl("engines/ip.html"));
+        break;
+    case TOOL::DNS:
         this->setWindowTitle("About DNS");
         ui->textBrowser->setSource(QUrl("engines/dns.html"));
         break;
-    case ENGINE::SSL:
+    case TOOL::SSL:
         this->setWindowTitle("About SSL");
         ui->textBrowser->setSource(QUrl("engines/ssl.html"));
         break;
-    case ENGINE::URL:
+    case TOOL::URL:
         this->setWindowTitle("About URL");
         ui->textBrowser->setSource(QUrl("engines/url.html"));
         break;

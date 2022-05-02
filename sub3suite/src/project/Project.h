@@ -25,10 +25,11 @@ class Project : public QWidget{
         void changeTabToOsint();
         void changeTabToRaw();
         void changeTabToBrute();
-        void changeTabToActive();
+        void changeTabToHost();
         void changeTabToDns();
         void changeTabToSSL();
         void changeTabToURL();
+        void changeTabToIP();
         void changeTabToIpEnum();
         void changeTabToAsnEnum();
         void changeTabToCidrEnum();
@@ -41,10 +42,11 @@ class Project : public QWidget{
         void sendToOsint(QSet<QString>, RESULT_TYPE);
         void sendToRaw(QSet<QString>, RESULT_TYPE);
         void sendToBrute(QSet<QString>, RESULT_TYPE);
-        void sendToActive(QSet<QString>, RESULT_TYPE);
+        void sendToHost(QSet<QString>, RESULT_TYPE);
         void sendToDns(QSet<QString>, RESULT_TYPE);
         void sendToSsl(QSet<QString>, RESULT_TYPE);
         void sendToUrl(QSet<QString>, RESULT_TYPE);
+        void sendToIP(QSet<QString>, RESULT_TYPE);
         /* sending to an Enumerator */
         void sendToIpEnum(QSet<QString>, RESULT_TYPE);
         void sendToAsnEnum(QSet<QString>, RESULT_TYPE);
@@ -117,18 +119,18 @@ class Project : public QWidget{
         void action_copy(const RESULT_TYPE&);
         void action_save(const RESULT_TYPE&);
 
-        void action_sendToEngine(const ENGINE&, const RESULT_TYPE&);
+        void action_sendToEngine(const TOOL&, const RESULT_TYPE&);
         void action_sendToEnum(const ENUMERATOR&, const RESULT_TYPE&);
 
-        void action_send_host(const ENGINE&);
-        void action_send_ip(const ENGINE&);
-        void action_send_url(const ENGINE&);
-        void action_send_email(const ENGINE&);
-        void action_send_asn(const ENGINE&);
-        void action_send_cidr(const ENGINE&);
-        void action_send_ssl(const ENGINE&);
-        void action_send_ns(const ENGINE&);
-        void action_send_mx(const ENGINE&);
+        void action_send_host(const TOOL&);
+        void action_send_ip(const TOOL&);
+        void action_send_url(const TOOL&);
+        void action_send_email(const TOOL&);
+        void action_send_asn(const TOOL&);
+        void action_send_cidr(const TOOL&);
+        void action_send_ssl(const TOOL&);
+        void action_send_ns(const TOOL&);
+        void action_send_mx(const TOOL&);
 
         void action_send_ip();
         void action_send_email();
@@ -143,7 +145,7 @@ class Project : public QWidget{
         void action_copy_selected();
         void action_remove_selected();
         void action_send_selected_toEnum(const ENUMERATOR&);
-        void action_send_selected_toEngine(const ENGINE&, const RESULT_TYPE&);
+        void action_send_selected_toEngine(const TOOL&, const RESULT_TYPE&);
 
         void action_extract(bool subdomain, bool tld, bool hosts);
         void action_extract_selected(bool subdomain, bool tld, bool host);

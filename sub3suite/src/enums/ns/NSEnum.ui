@@ -245,7 +245,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Enumerated NS:</string>
+             <string>Results:</string>
             </property>
            </widget>
           </item>

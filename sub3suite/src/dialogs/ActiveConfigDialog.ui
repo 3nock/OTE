@@ -273,16 +273,6 @@
               </attribute>
              </widget>
             </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonStealth">
-              <property name="text">
-               <string>Stealth SCan</string>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">buttonGroup_2</string>
-              </attribute>
-             </widget>
-            </item>
            </layout>
           </item>
          </layout>
@@ -541,8 +531,8 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

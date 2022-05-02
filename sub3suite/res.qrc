@@ -19,7 +19,6 @@
         <file>res/icons/ssl.png</file>
         <file>res/icons/asn.png</file>
         <file>res/icons/cidr.png</file>
-        <file>res/icons/ip.png</file>
         <file>res/icons/ipv4.png</file>
         <file>res/icons/ipv6.png</file>
         <file>res/icons/domain.png</file>
@@ -70,6 +69,7 @@
         <file>res/icons/splash.png</file>
         <file>res/icons/light_down.png</file>
         <file>res/icons/folder.png</file>
+        <file>res/icons/ip.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/srv.txt</file>

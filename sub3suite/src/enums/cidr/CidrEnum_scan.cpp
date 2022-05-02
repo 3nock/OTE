@@ -1,10 +1,10 @@
-#include "CidrEnum.h"
-#include "ui_CidrEnum.h"
+#include "CIDREnum.h"
+#include "ui_CIDREnum.h"
 
 #include "src/dialogs/FailedScansDialog.h"
 
 
-void CidrEnum::onScanThreadEnded(){
+void CIDREnum::onScanThreadEnded(){
     status->activeScanThreads--;
 
     /* if all Scan Threads have finished... */
@@ -38,13 +38,13 @@ void CidrEnum::onScanThreadEnded(){
             FailedScansDialog *failedScansDialog = new FailedScansDialog(this, m_failedScans);
             failedScansDialog->setAttribute(Qt::WA_DeleteOnClose, true);
 
-            connect(failedScansDialog, &FailedScansDialog::reScan, this, &CidrEnum::onReScan);
+            connect(failedScansDialog, &FailedScansDialog::reScan, this, &CIDREnum::onReScan);
             failedScansDialog->show();
         }
     }
 }
 
-void CidrEnum::startScan(){
+void CIDREnum::startScan(){
     /* resetting */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -76,22 +76,22 @@ void CidrEnum::startScan(){
     }
 }
 
-void CidrEnum::startScanThread(AbstractOsintModule *module){
+void CIDREnum::startScanThread(AbstractOsintModule *module){
     QThread *cThread = new QThread;
     module->startScan(cThread);
     module->moveToThread(cThread);
-    connect(module, &AbstractOsintModule::resultEnumCIDR, this, &CidrEnum::onResult);
-    connect(this, &CidrEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::resultEnumCIDR, this, &CIDREnum::onResult);
+    connect(this, &CIDREnum::stopScanThread, module, &AbstractOsintModule::onStop);
     connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
-    connect(module, &AbstractOsintModule::scanLog, this, &CidrEnum::onScanLog);
-    connect(cThread, &QThread::finished, this, &CidrEnum::onScanThreadEnded);
+    connect(module, &AbstractOsintModule::scanLog, this, &CIDREnum::onScanLog);
+    connect(cThread, &QThread::finished, this, &CIDREnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
     cThread->start();
     status->activeScanThreads++;
 }
 
-void CidrEnum::onReScan(QQueue<QString> targets){
+void CIDREnum::onReScan(QQueue<QString> targets){
     if(targets.isEmpty())
         return;
 

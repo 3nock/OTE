@@ -18,22 +18,22 @@
 #include "src/project/Project.h"
 #include "src/utils/UpdateChecker.h"
 
-/* engines */
-#include "src/engines/dns/Dns.h"
-#include "src/engines/brute/Brute.h"
-#include "src/engines/osint/Osint.h"
-#include "src/engines/active/Active.h"
-#include "src/engines/raw/Raw.h"
-#include "src/engines/ssl/Ssl.h"
-#include "src/engines/url/Url.h"
-#include "src/engines/ip/IP.h"
+/* tools */
+#include "src/tools/dns/DNSTool.h"
+#include "src/tools/brute/BruteTool.h"
+#include "src/tools/osint/OsintTool.h"
+#include "src/tools/host/HostTool.h"
+#include "src/tools/raw/RawTool.h"
+#include "src/tools/ssl/SSLTool.h"
+#include "src/tools/url/URLTool.h"
+#include "src/tools/ip/IPTool.h"
 
 /* Enumerators */
-#include "src/enums/ip/IpEnum.h"
+#include "src/enums/ip/IPEnum.h"
 #include "src/enums/asn/ASNEnum.h"
 #include "src/enums/ssl/SSLEnum.h"
 #include "src/enums/email/EmailEnum.h"
-#include "src/enums/cidr/CidrEnum.h"
+#include "src/enums/cidr/CIDREnum.h"
 #include "src/enums/ns/NSEnum.h"
 #include "src/enums/mx/MXEnum.h"
 
@@ -59,12 +59,13 @@ class MainWindow : public QMainWindow{
 
         /* tab change */
         void onChangeTabToOsint();
-        void onChangeTabToActive();
+        void onChangeTabToHost();
         void onChangeTabToBrute();
         void onChangeTabToDns();
         void onChangeTabToRaw();
         void onChangeTabToSSL();
         void onChangeTabToURL();
+        void onChangeTabToIP();
         void onChangeTabToIpEnum();
         void onChangeTabToAsnEnum();
         void onChangeTabToCidrEnum();
@@ -105,20 +106,20 @@ class MainWindow : public QMainWindow{
         Project *project = nullptr;
         ProjectModel *projectModel = nullptr;
 
-        /* engines */
-        Osint *osint = nullptr;
-        Brute *brute = nullptr;
-        Active *active = nullptr;
-        Dns *dns = nullptr;
-        Raw *raw = nullptr;
-        Ssl *ssl = nullptr;
-        Url *url = nullptr;
-        class IP *ip = nullptr;
+        /* tools */
+        OsintTool *osintTool = nullptr;
+        BruteTool *bruteTool = nullptr;
+        HostTool *hostTool = nullptr;
+        DNSTool *dnsTool = nullptr;
+        RawTool *rawTool = nullptr;
+        SSLTool *sslTool = nullptr;
+        URLTool *urlTool = nullptr;
+        IPTool *ipTool = nullptr;
 
         /* enumerators */
-        IpEnum *ipEnum = nullptr;
+        IPEnum *ipEnum = nullptr;
         ASNEnum *asnEnum = nullptr;
-        CidrEnum *cidrEnum = nullptr;
+        CIDREnum *cidrEnum = nullptr;
         NSEnum *nsEnum = nullptr;
         MXEnum *mxEnum = nullptr;
         SSLEnum *sslEnum = nullptr;
@@ -130,7 +131,7 @@ class MainWindow : public QMainWindow{
         void initUI();
         void initActions();
         void initEngines();
-        void connectSignals(AbstractEngine *engine); // from Engines
+        void connectSignals(AbstractTool *engine); // from Engines
         void connectSignals(AbstractEnum *enumerator); // from Enumerators
         void connectSignals(); // from project
         void setRecentProjects();

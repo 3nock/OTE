@@ -903,37 +903,41 @@ void Project::action_copy(const RESULT_TYPE &result_type){
 /// Send...
 ///
 
-void Project::action_sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+void Project::action_sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
     QSet<QString> targets;
     foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
         targets.insert(index.data().toString());
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
-    case ENGINE::BRUTE:
+    case TOOL::BRUTE:
         emit sendToBrute(targets, result_type);
         emit changeTabToBrute();
         break;
-    case ENGINE::ACTIVE:
-        emit sendToActive(targets, result_type);
-        emit changeTabToActive();
+    case TOOL::HOST:
+        emit sendToHost(targets, result_type);
+        emit changeTabToHost();
         break;
-    case ENGINE::DNS:
+    case TOOL::IP:
+        emit sendToIP(targets, result_type);
+        emit changeTabToIP();
+        break;
+    case TOOL::DNS:
         emit sendToDns(targets, result_type);
         emit changeTabToDns();
         break;
-    case ENGINE::SSL:
+    case TOOL::SSL:
         emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
         break;
-    case ENGINE::URL:
+    case TOOL::URL:
         emit sendToUrl(targets, result_type);
         emit changeTabToURL();
         break;
@@ -979,7 +983,7 @@ void Project::action_sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &resul
     }
 }
 
-void Project::action_send_host(const ENGINE &engine){
+void Project::action_send_host(const TOOL &engine){
     QSet<QString> hostnames;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -1053,27 +1057,27 @@ void Project::action_send_host(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(hostnames, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(hostnames, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToRaw();
         break;
-    case ENGINE::BRUTE:
+    case TOOL::BRUTE:
         emit sendToBrute(hostnames, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToBrute();
         break;
-    case ENGINE::ACTIVE:
-        emit sendToActive(hostnames, RESULT_TYPE::SUBDOMAIN);
-        emit changeTabToActive();
+    case TOOL::HOST:
+        emit sendToHost(hostnames, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToHost();
         break;
-    case ENGINE::DNS:
+    case TOOL::DNS:
         emit sendToDns(hostnames, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToDns();
         break;
-    case ENGINE::SSL:
+    case TOOL::SSL:
         emit sendToSsl(hostnames, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToSSL();
         break;
@@ -1082,7 +1086,7 @@ void Project::action_send_host(const ENGINE &engine){
     }
 }
 
-void Project::action_send_ip(const ENGINE &engine){
+void Project::action_send_ip(const TOOL &engine){
     QSet<QString> ip;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -1119,20 +1123,24 @@ void Project::action_send_ip(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(ip, RESULT_TYPE::IP);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(ip, RESULT_TYPE::IP);
         emit changeTabToRaw();
+        break;
+    case TOOL::IP:
+        emit sendToIP(ip, RESULT_TYPE::IP);
+        emit changeTabToIP();
         break;
     default:
         break;
     }
 }
 
-void Project::action_send_url(const ENGINE &engine){
+void Project::action_send_url(const TOOL &engine){
     QSet<QString> url;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -1144,15 +1152,15 @@ void Project::action_send_url(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(url, RESULT_TYPE::URL);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(url, RESULT_TYPE::URL);
         emit changeTabToRaw();
         break;
-    case ENGINE::URL:
+    case TOOL::URL:
         emit sendToUrl(url, RESULT_TYPE::URL);
         emit changeTabToURL();
         break;
@@ -1161,7 +1169,7 @@ void Project::action_send_url(const ENGINE &engine){
     }
 }
 
-void Project::action_send_email(const ENGINE &engine){
+void Project::action_send_email(const TOOL &engine){
     QSet<QString> emails;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -1195,11 +1203,11 @@ void Project::action_send_email(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(emails, RESULT_TYPE::EMAIL);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(emails, RESULT_TYPE::EMAIL);
         emit changeTabToRaw();
         break;
@@ -1208,7 +1216,7 @@ void Project::action_send_email(const ENGINE &engine){
     }
 }
 
-void Project::action_send_asn(const ENGINE &engine){
+void Project::action_send_asn(const TOOL &engine){
     QSet<QString> asn;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -1240,11 +1248,11 @@ void Project::action_send_asn(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(asn, RESULT_TYPE::ASN);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(asn, RESULT_TYPE::ASN);
         emit changeTabToRaw();
         break;
@@ -1253,7 +1261,7 @@ void Project::action_send_asn(const ENGINE &engine){
     }
 }
 
-void Project::action_send_cidr(const ENGINE &engine){
+void Project::action_send_cidr(const TOOL &engine){
     QSet<QString> cidr;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -1274,11 +1282,11 @@ void Project::action_send_cidr(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(cidr, RESULT_TYPE::CIDR);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(cidr, RESULT_TYPE::CIDR);
         emit changeTabToRaw();
         break;
@@ -1287,7 +1295,7 @@ void Project::action_send_cidr(const ENGINE &engine){
     }
 }
 
-void Project::action_send_ssl(const ENGINE &engine){
+void Project::action_send_ssl(const TOOL &engine){
     QSet<QString> ssl;
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
     case ExplorerType::passive_SSL:
@@ -1297,11 +1305,11 @@ void Project::action_send_ssl(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(ssl, RESULT_TYPE::CERT_ID);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(ssl, RESULT_TYPE::CERT_ID);
         emit changeTabToRaw();
         break;
@@ -1310,7 +1318,7 @@ void Project::action_send_ssl(const ENGINE &engine){
     }
 }
 
-void Project::action_send_ns(const ENGINE &engine){
+void Project::action_send_ns(const TOOL &engine){
     QSet<QString> ns;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -1331,27 +1339,27 @@ void Project::action_send_ns(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(ns, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(ns, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToRaw();
         break;
-    case ENGINE::BRUTE:
+    case TOOL::BRUTE:
         emit sendToBrute(ns, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToBrute();
         break;
-    case ENGINE::ACTIVE:
-        emit sendToActive(ns, RESULT_TYPE::SUBDOMAIN);
-        emit changeTabToActive();
+    case TOOL::HOST:
+        emit sendToHost(ns, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToHost();
         break;
-    case ENGINE::DNS:
+    case TOOL::DNS:
         emit sendToDns(ns, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToDns();
         break;
-    case ENGINE::SSL:
+    case TOOL::SSL:
         emit sendToSsl(ns, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToSSL();
         break;
@@ -1360,7 +1368,7 @@ void Project::action_send_ns(const ENGINE &engine){
     }
 }
 
-void Project::action_send_mx(const ENGINE &engine){
+void Project::action_send_mx(const TOOL &engine){
     QSet<QString> mx;
 
     switch (ui->treeViewTree->property(SITEMAP_TYPE).toInt()) {
@@ -1381,27 +1389,27 @@ void Project::action_send_mx(const ENGINE &engine){
     }
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(mx, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(mx, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToRaw();
         break;
-    case ENGINE::BRUTE:
+    case TOOL::BRUTE:
         emit sendToBrute(mx, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToBrute();
         break;
-    case ENGINE::ACTIVE:
-        emit sendToActive(mx, RESULT_TYPE::SUBDOMAIN);
-        emit changeTabToActive();
+    case TOOL::HOST:
+        emit sendToHost(mx, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToHost();
         break;
-    case ENGINE::DNS:
+    case TOOL::DNS:
         emit sendToDns(mx, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToDns();
         break;
-    case ENGINE::SSL:
+    case TOOL::SSL:
         emit sendToSsl(mx, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToSSL();
         break;
@@ -1685,37 +1693,41 @@ void Project::action_send_selected_toEnum(const ENUMERATOR &tool){
     }
 }
 
-void Project::action_send_selected_toEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+void Project::action_send_selected_toEngine(const TOOL &engine, const RESULT_TYPE &result_type){
     QSet<QString> targets;
     foreach(const QModelIndex &index, m_selectionModel->selectedIndexes())
         targets.insert(index.data().toString());
 
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
-    case ENGINE::BRUTE:
+    case TOOL::BRUTE:
         emit sendToBrute(targets, result_type);
         emit changeTabToBrute();
         break;
-    case ENGINE::ACTIVE:
-        emit sendToActive(targets, result_type);
-        emit changeTabToActive();
+    case TOOL::HOST:
+        emit sendToHost(targets, result_type);
+        emit changeTabToHost();
         break;
-    case ENGINE::DNS:
+    case TOOL::IP:
+        emit sendToIP(targets, result_type);
+        emit changeTabToIP();
+        break;
+    case TOOL::DNS:
         emit sendToDns(targets, result_type);
         emit changeTabToDns();
         break;
-    case ENGINE::SSL:
+    case TOOL::SSL:
         emit sendToSsl(targets, result_type);
         emit changeTabToSSL();
         break;
-    case ENGINE::URL:
+    case TOOL::URL:
         emit sendToUrl(targets, result_type);
         emit changeTabToURL();
         break;

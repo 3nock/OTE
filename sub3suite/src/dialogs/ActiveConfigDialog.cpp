@@ -37,7 +37,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, brute::ScanConfig *confi
 }
 
 /* for active... */
-ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, active::ScanConfig *config) :
+ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, host::ScanConfig *config) :
     QDialog(parent),
     ui(new Ui::ActiveConfigDialog),
     m_configActive(config),
@@ -263,6 +263,7 @@ void ActiveConfigDialog::m_loadConfigActive(){
     ui->checkBoxAutosave->setChecked(CONFIG.value(CFG_VAL_AUTOSAVE).toBool());
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
     ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
+    QString portScan = CONFIG.value(CFG_VAL_PORTSCAN).toString();
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();
     QString nsType = CONFIG.value(CFG_VAL_NAMESERVER).toString();
     CONFIG.endGroup();
@@ -273,6 +274,11 @@ void ActiveConfigDialog::m_loadConfigActive(){
         ui->radioButtonAAAA->setChecked(true);
     if(record == "ANY")
         ui->radioButtonANY->setChecked(true);
+
+    if(portScan == "syn")
+        ui->radioButtonSYN->setChecked(true);
+    if(portScan == "connection")
+        ui->radioButtonConnection->setChecked(true);
 
     if(nsType == "single")
         ui->radioButtonSingleNameserver->setChecked(true);
@@ -363,6 +369,7 @@ void ActiveConfigDialog::m_loadConfigIP(){
     ui->checkBoxNoDuplicates->setChecked(CONFIG.value(CFG_VAL_DUPLICATES).toBool());
     ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     QString nsType = CONFIG.value(CFG_VAL_NAMESERVER).toString();
+    QString portScan = CONFIG.value(CFG_VAL_PORTSCAN).toString();
     CONFIG.endGroup();
 
     if(nsType == "single")
@@ -371,6 +378,11 @@ void ActiveConfigDialog::m_loadConfigIP(){
         ui->radioButtonRandomNameservers->setChecked(true);
     if(nsType == "custom")
         ui->radioButtonCustomNameservers->setChecked(true);
+
+    if(portScan == "syn")
+        ui->radioButtonSYN->setChecked(true);
+    if(portScan == "connection")
+        ui->radioButtonConnection->setChecked(true);
 
     CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
     ui->comboBoxSingleNameserver->addItems(CONFIG.allKeys());
@@ -506,6 +518,9 @@ void ActiveConfigDialog::m_saveActive(){
     bool nsRandom = ui->radioButtonRandomNameservers->isChecked();
     bool nsCustom = ui->radioButtonCustomNameservers->isChecked();
 
+    bool syn = ui->radioButtonSYN->isChecked();
+    bool connection = ui->radioButtonConnection->isChecked();
+
 
     /* saving values to config file... */
     CONFIG.beginGroup(CFG_ACTIVE);
@@ -528,6 +543,11 @@ void ActiveConfigDialog::m_saveActive(){
         CONFIG.setValue(CFG_VAL_RECORD, "AAAA");
     if(recordANY)
         CONFIG.setValue(CFG_VAL_RECORD, "ANY");
+
+    if(syn)
+        CONFIG.setValue(CFG_VAL_PORTSCAN, "syn");
+    if(connection)
+        CONFIG.setValue(CFG_VAL_PORTSCAN, "connection");
     CONFIG.endGroup();
 
     CONFIG.beginWriteArray("custom_nameservers_active");
@@ -552,6 +572,11 @@ void ActiveConfigDialog::m_saveActive(){
         m_configActive->recordType = QDnsLookup::AAAA;
     if(recordANY)
         m_configActive->recordType = QDnsLookup::ANY;
+
+    if(syn)
+        m_configActive->portScanConfig->scan_type = port::ScanType::SYN;
+    if(connection)
+        m_configActive->portScanConfig->scan_type = port::ScanType::CONNECTION;
 
     m_configActive->nameservers.clear();
     if(nsSingle){
@@ -750,6 +775,9 @@ void ActiveConfigDialog::m_saveIP(){
     bool nsRandom = ui->radioButtonRandomNameservers->isChecked();
     bool nsCustom = ui->radioButtonCustomNameservers->isChecked();
 
+    bool syn = ui->radioButtonSYN->isChecked();
+    bool connection = ui->radioButtonConnection->isChecked();
+
     /* saving values to config file... */
     CONFIG.beginGroup(CFG_IP);
     CONFIG.setValue(CFG_VAL_THREADS, thread);
@@ -765,6 +793,10 @@ void ActiveConfigDialog::m_saveIP(){
     if(nsCustom)
         CONFIG.setValue(CFG_VAL_NAMESERVER, "custom");
 
+    if(syn)
+        CONFIG.setValue(CFG_VAL_PORTSCAN, "syn");
+    if(connection)
+        CONFIG.setValue(CFG_VAL_PORTSCAN, "connection");
     CONFIG.endGroup();
 
     CONFIG.beginWriteArray("custom_nameservers_active");
@@ -782,6 +814,11 @@ void ActiveConfigDialog::m_saveIP(){
     m_configIP->noDuplicates = noDuplicates;
     m_configIP->autoSaveToProject = autosaveToProject;
     m_configIP->setTimeout = setTimeout;
+
+    if(syn)
+        m_configIP->portScanConfig->scan_type = port::ScanType::SYN;
+    if(connection)
+        m_configIP->portScanConfig->scan_type = port::ScanType::CONNECTION;
 
     m_configIP->nameservers.clear();
     if(nsSingle){

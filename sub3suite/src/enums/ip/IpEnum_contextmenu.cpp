@@ -5,13 +5,13 @@
  @brief :
 */
 
-#include "IpEnum.h"
-#include "ui_IpEnum.h"
+#include "IPEnum.h"
+#include "ui_IPEnum.h"
 
 #include <QMenu>
 
 
-void IpEnum::on_buttonAction_clicked(){
+void IPEnum::on_buttonAction_clicked(){
     /* check if there are results available else dont show the context menu */
     if(proxyModel->rowCount() < 1)
         return;
@@ -36,7 +36,7 @@ void IpEnum::on_buttonAction_clicked(){
     menu.exec(pos);
 }
 
-void IpEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
+void IPEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
 
     /* check if user right clicked on items else dont show the context menu... */

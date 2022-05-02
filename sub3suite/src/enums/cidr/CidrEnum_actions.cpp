@@ -1,5 +1,5 @@
-#include "CidrEnum.h"
-#include "ui_CidrEnum.h"
+#include "CIDREnum.h"
+#include "ui_CIDREnum.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -11,7 +11,7 @@
  *     validate if selected index is cidr...
  */
 
-void CidrEnum::clearResults(){
+void CIDREnum::clearResults(){
     /* clear the results... */
     m_model->clear();
     ui->labelResultsCount->clear();
@@ -24,7 +24,7 @@ void CidrEnum::clearResults(){
     ui->progressBar->hide();
 }
 
-void CidrEnum::removeResults(){
+void CIDREnum::removeResults(){
     auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
     QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
     for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
@@ -37,7 +37,7 @@ void CidrEnum::removeResults(){
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void CidrEnum::saveResults(){
+void CIDREnum::saveResults(){
     QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
     if(filename.isEmpty()){
         qDebug() << "CIDR-Enum: Failed to getSaveFileName";
@@ -66,7 +66,7 @@ void CidrEnum::saveResults(){
     file.close();
 }
 
-void CidrEnum::saveSelectedResults(){
+void CIDREnum::saveSelectedResults(){
     QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
     if(filename.isEmpty()){
         qDebug() << "CIDR-Enum: Failed to getSaveFileName";
@@ -100,7 +100,7 @@ void CidrEnum::saveSelectedResults(){
     file.close();
 }
 
-void CidrEnum::copyResults(){
+void CIDREnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     QJsonArray cidr_array;
@@ -118,7 +118,7 @@ void CidrEnum::copyResults(){
     clipboard->setText(document.toJson());
 }
 
-void CidrEnum::copySelectedResults(){
+void CIDREnum::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString clipboardData;
     QJsonArray cidr_array;
@@ -149,7 +149,7 @@ void CidrEnum::copySelectedResults(){
 /// Sending Results
 ///
 
-void CidrEnum::sendToProject(){
+void CIDREnum::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
@@ -158,7 +158,7 @@ void CidrEnum::sendToProject(){
     }
 }
 
-void CidrEnum::sendSelectedToProject(){
+void CIDREnum::sendSelectedToProject(){
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
         QModelIndex model_index = proxyModel->mapToSource(index);
@@ -169,7 +169,7 @@ void CidrEnum::sendSelectedToProject(){
     }
 }
 
-void CidrEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+void CIDREnum::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -200,11 +200,11 @@ void CidrEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type
 
     /* sending targets */
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
@@ -213,7 +213,7 @@ void CidrEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type
     }
 }
 
-void CidrEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+void CIDREnum::sendSelectedToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -223,11 +223,11 @@ void CidrEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &res
 
     /* sending targets */
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
@@ -236,7 +236,7 @@ void CidrEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &res
     }
 }
 
-void CidrEnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
+void CIDREnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -280,7 +280,7 @@ void CidrEnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type
     }
 }
 
-void CidrEnum::sendSelectedToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
+void CIDREnum::sendSelectedToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -307,7 +307,7 @@ void CidrEnum::sendSelectedToEnum(const ENUMERATOR &tool, const RESULT_TYPE &res
 /// Receiving Targets
 ///
 
-void CidrEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
+void CIDREnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::CIDR)
         ui->targets->add(targets);
 

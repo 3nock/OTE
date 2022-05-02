@@ -8,6 +8,8 @@
 #ifndef NSITEM_H
 #define NSITEM_H
 
+#include "src/utils/utils.h"
+
 #include <QStandardItem>
 #include <QDate>
 #include <QSet>
@@ -38,6 +40,12 @@ public:
 
         ip->setIcon(QIcon(":/img/res/icons/folder2.png"));
         domains->setIcon(QIcon(":/img/res/icons/folder2.png"));
+
+        if(s3s_global::is_dark_theme){
+            this->setForeground(Qt::white);
+            ip->setForeground(Qt::white);
+            domains->setForeground(Qt::white);
+        }
 
         /* append to the NS */
         this->appendRow(ip);

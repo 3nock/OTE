@@ -1,6 +1,8 @@
 #ifndef DNSITEM_H
 #define DNSITEM_H
 
+#include "src/utils/utils.h"
+
 #include <QStandardItem>
 #include <QJsonObject>
 #include <QDate>
@@ -57,6 +59,17 @@ public:
         MX->setIcon(QIcon(":/img/res/icons/folder2.png"));
         TXT->setIcon(QIcon(":/img/res/icons/folder2.png"));
         SRV->setIcon(QIcon(":/img/res/icons/folder2.png"));
+
+        if(s3s_global::is_dark_theme){
+            this->setForeground(Qt::white);
+            A->setForeground(Qt::white);
+            AAAA->setForeground(Qt::white);
+            CNAME->setForeground(Qt::white);
+            NS->setForeground(Qt::white);
+            MX->setForeground(Qt::white);
+            TXT->setForeground(Qt::white);
+            SRV->setForeground(Qt::white);
+        }
     }
     ~DNS()
     {

@@ -60,6 +60,13 @@
 #define PLACEHOLDERTEXT_BULK_IP "ip,ip e.g. 8.8.8.8,1.1.1.1"
 #define PLACEHOLDERTEXT_URL_DOMAIN "url e.g https://example.com or hostname e.g example.com"
 
+namespace s3s_global{
+extern bool is_priv;
+extern bool is_dark_theme;
+extern bool is_light_theme;
+extern int font_size;
+}
+
 struct ScanStatus {
     bool isNotActive = true;
     bool isRunning = false;
@@ -94,16 +101,17 @@ enum class RESULT_TYPE {
     IPV6
 };
 
-enum class ENGINE {
+enum class TOOL {
     BRUTE,
     TLDBRUTE,
     SUBBRUTE,
     DNS,
-    ACTIVE,
+    HOST,
     OSINT,
     RAW,
     SSL,
-    URL
+    URL,
+    IP
 };
 
 enum class ENUMERATOR {

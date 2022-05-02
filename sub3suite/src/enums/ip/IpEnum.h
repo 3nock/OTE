@@ -15,15 +15,15 @@
 
 
 namespace Ui {
-    class IpEnum;
+    class IPEnum;
 }
 
-class IpEnum : public AbstractEnum{
+class IPEnum : public AbstractEnum{
     Q_OBJECT
 
     public:
-        IpEnum(QWidget *parent = nullptr, ProjectModel *project = nullptr);
-        ~IpEnum();
+        IPEnum(QWidget *parent = nullptr, ProjectModel *project = nullptr);
+        ~IPEnum();
 
     public slots:
         void onResult(s3s_struct::IP);
@@ -48,7 +48,7 @@ class IpEnum : public AbstractEnum{
         void on_buttoApiKeys_clicked();
 
 private:
-        Ui::IpEnum *ui;
+        Ui::IPEnum *ui;
 
         QStandardItemModel *m_model;
         QStringListModel *m_targetsListModel;

@@ -1,10 +1,10 @@
-#include "CidrEnum.h"
-#include "ui_CidrEnum.h"
+#include "CIDREnum.h"
+#include "ui_CIDREnum.h"
 
 #include <QMenu>
 
 
-void CidrEnum::on_buttonAction_clicked(){
+void CIDREnum::on_buttonAction_clicked(){
     /* check if there are results available else dont show the context menu */
     if(proxyModel->rowCount() < 1)
         return;
@@ -25,10 +25,10 @@ void CidrEnum::on_buttonAction_clicked(){
     menu.addSeparator();
     menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
-    menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-    menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-    menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
-    menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+    menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+    menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
     menu.addSeparator();
     menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
     menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::EMAIL, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
@@ -37,7 +37,7 @@ void CidrEnum::on_buttonAction_clicked(){
     menu.exec(pos);
 }
 
-void CidrEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
+void CIDREnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     Q_UNUSED(pos);
 
     /* check if user right clicked on items else dont show the context menu... */
@@ -57,10 +57,10 @@ void CidrEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent()))
         menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent())){
-        menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-        menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-        menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
-        menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu.addSeparator();
         menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         menu.addAction(tr("Send Email to Email-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::EMAIL, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));

@@ -25,12 +25,12 @@ void ASNEnum::on_buttonAction_clicked(){
     menu.addSeparator();
     menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
-    menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-    menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-    menu.addAction(tr("Send CIDR to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
-    menu.addAction(tr("Send CIDR to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
-    menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
-    menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+    menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+    menu.addAction(tr("Send CIDR to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+    menu.addAction(tr("Send CIDR to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+    menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+    menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
     menu.addSeparator();
     menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
     menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::CIDR, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
@@ -60,12 +60,12 @@ void ASNEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent()))
         menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent())){
-        menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-        menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
-        menu.addAction(tr("Send CIDR to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
-        menu.addAction(tr("Send CIDR to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
-        menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
-        menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addAction(tr("Send ASN to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send ASN to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
+        menu.addAction(tr("Send CIDR to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+        menu.addAction(tr("Send CIDR to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));
+        menu.addAction(tr("Send Email to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
+        menu.addAction(tr("Send Email to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::EMAIL);})->setIcon(QIcon(":/img/res/icons/email.png"));
         menu.addSeparator();
         menu.addAction(tr("Send ASN to ASN-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::ASN, RESULT_TYPE::ASN);})->setIcon(QIcon(":/img/res/icons/asn.png"));
         menu.addAction(tr("Send CIDR to CIDR-Enum"), this, [=](){this->sendToEnum(ENUMERATOR::CIDR, RESULT_TYPE::CIDR);})->setIcon(QIcon(":/img/res/icons/cidr.png"));

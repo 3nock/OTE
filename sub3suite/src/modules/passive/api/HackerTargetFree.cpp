@@ -165,8 +165,11 @@ void HackerTargetFree::replyFinishedSubdomain(QNetworkReply *reply){
     {
     case HOSTSEARCH:
         foreach(const QString &item, results.split("\n")){
-            emit resultSubdomain(item.split(",").at(0));
-            log.resultsCount++;
+            QStringList lst = item.split(",");
+            if(!lst.isEmpty()){
+                emit resultSubdomain(lst.at(0));
+                log.resultsCount++;
+            }
         }
         break;
 
@@ -192,8 +195,11 @@ void HackerTargetFree::replyFinishedIp(QNetworkReply *reply){
     {
     case HOSTSEARCH:
         foreach(const QString &item, results.split("\n")){
-            emit resultIP(item.split(",").at(1));
-            log.resultsCount++;
+            QStringList host_ip = item.split(",");
+            if(host_ip.length() == 2){
+                emit resultIP(host_ip.at(1));
+                log.resultsCount++;
+            }
         }
     }
 
@@ -213,9 +219,10 @@ void HackerTargetFree::replyFinishedAsn(QNetworkReply *reply){
     case ASLOOKUP:
         result = result.remove("\"");
         QStringList resultList = result.split(",");
-
-        emit resultASN(resultList.at(1), resultList.at(3));
-        log.resultsCount++;
+        if(resultList.length() > 3){
+            emit resultASN(resultList.at(1), resultList.at(3));
+            log.resultsCount++;
+        }
     }
 
     this->end(reply);
@@ -233,10 +240,12 @@ void HackerTargetFree::replyFinishedCidr(QNetworkReply *reply){
     {
     case ASLOOKUP:
         QStringList cidrs = results.split("\n");
-        cidrs.removeAt(0);
-        foreach(const QString &cidr, cidrs){
-            emit resultCIDR(cidr);
-            log.resultsCount++;
+        if(!cidrs.isEmpty()){
+            cidrs.removeAt(0);
+            foreach(const QString &cidr, cidrs){
+                emit resultCIDR(cidr);
+                log.resultsCount++;
+            }
         }
     }
 

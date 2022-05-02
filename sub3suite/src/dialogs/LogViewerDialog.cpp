@@ -11,7 +11,7 @@
 #include <QDir>
 #include <QDateTime>
 
-#include "src/utils/Config.h"
+#include "src/utils/utils.h"
 
 
 LogViewerDialog::LogViewerDialog(QWidget *parent): QDialog(parent),
@@ -37,9 +37,9 @@ LogViewerDialog::LogViewerDialog(QWidget *parent): QDialog(parent),
 
     /* syntax higlighting... */
     m_logsSyntaxHighlighter = new LogsSyntaxHighlighter(ui->plainTextEdit->document());
-    if(s3s::is_dark_theme)
+    if(s3s_global::is_dark_theme)
         m_logsSyntaxHighlighter->forDarkTheme();
-    if(s3s::is_light_theme)
+    if(s3s_global::is_light_theme)
         m_logsSyntaxHighlighter->forLightTheme();
 }
 LogViewerDialog::~LogViewerDialog(){

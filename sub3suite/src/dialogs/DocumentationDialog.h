@@ -14,7 +14,7 @@ class DocumentationDialog : public QDialog{
 
     public:
         DocumentationDialog(QWidget *parent = nullptr); // for general documentation
-        DocumentationDialog(ENGINE engine, QWidget *parent = nullptr); // documentation for engines
+        DocumentationDialog(TOOL engine, QWidget *parent = nullptr); // documentation for engines
         DocumentationDialog(ENUMERATOR enumerator, QWidget *parent = nullptr); // documentation for enumerators
         ~DocumentationDialog();
 

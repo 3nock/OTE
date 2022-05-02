@@ -1,8 +1,8 @@
-#include "CidrEnum.h"
-#include "ui_CidrEnum.h"
+#include "CIDREnum.h"
+#include "ui_CIDREnum.h"
 
 
-void CidrEnum::onResult(s3s_struct::CIDR results){
+void CIDREnum::onResult(s3s_struct::CIDR results){
     if(m_resultsSet.contains(results.cidr))
         return;
 
@@ -15,7 +15,7 @@ void CidrEnum::onResult(s3s_struct::CIDR results){
         project->addEnumCIDR(results);
 }
 
-void CidrEnum::onScanLog(ScanLog log){
+void CIDREnum::onScanLog(ScanLog log){
     if(log.error){
         QString message("<font color=\"red\">"+log.message+"</font>");
         QString module("<font color=\"red\">"+log.moduleName+"</font>");

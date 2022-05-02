@@ -5,8 +5,8 @@
  @brief :
 */
 
-#include "IpEnum.h"
-#include "ui_IpEnum.h"
+#include "IPEnum.h"
+#include "ui_IPEnum.h"
 
 #include "src/utils/Config.h"
 #include "src/dialogs/ApiKeysDialog.h"
@@ -17,8 +17,8 @@
 #define IPAPI 2
 
 
-IpEnum::IpEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
-    ui(new Ui::IpEnum),
+IPEnum::IPEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
+    ui(new Ui::IPEnum),
     m_model(new QStandardItemModel),
     m_targetsListModel(new QStringListModel),
     m_scanConfig(new ScanConfig),
@@ -39,7 +39,7 @@ IpEnum::IpEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
     /* scan arguments */
     m_scanArgs->config = m_scanConfig;
 }
-IpEnum::~IpEnum(){
+IPEnum::~IPEnum(){
     delete m_scanArgs;
     delete m_scanConfig;
     delete m_targetsListModel;
@@ -47,11 +47,11 @@ IpEnum::~IpEnum(){
     delete ui;
 }
 
-void IpEnum::on_lineEditTarget_returnPressed(){
+void IPEnum::on_lineEditTarget_returnPressed(){
     this->on_buttonStart_clicked();
 }
 
-void IpEnum::on_buttonStart_clicked(){
+void IPEnum::on_buttonStart_clicked(){
     /* checks */
     if(!ui->checkBoxMultipleTargets->isChecked() && ui->lineEditTarget->text().isEmpty()){
         QMessageBox::warning(this, tr("Error!"), tr("Please Enter the Target for Enumeration!"));
@@ -79,7 +79,7 @@ void IpEnum::on_buttonStart_clicked(){
     qInfo() << "[IP-Enum] Scan Started";
 }
 
-void IpEnum::on_buttonStop_clicked(){
+void IPEnum::on_buttonStop_clicked(){
     emit stopScanThread();
 
     status->isStopped = true;
@@ -88,14 +88,14 @@ void IpEnum::on_buttonStop_clicked(){
     status->isRunning = false;
 }
 
-void IpEnum::on_buttonConfig_clicked(){
+void IPEnum::on_buttonConfig_clicked(){
     EnumConfigDialog *scanConfig = new EnumConfigDialog(this, m_scanConfig);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
     scanConfig->loadConfig_ip();
     scanConfig->show();
 }
 
-void IpEnum::initUI(){
+void IPEnum::initUI(){
     ui->setupUi(this);
 
     /* hiding & disabling some widgets */
@@ -117,7 +117,7 @@ void IpEnum::initUI(){
                            << static_cast<int>((this->width() * 0.50)));
 }
 
-void IpEnum::initConfigValues(){
+void IPEnum::initConfigValues(){
     CONFIG.beginGroup(CFG_ENUM);
     m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_ip").toBool();
     m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_ip").toBool();
@@ -126,12 +126,12 @@ void IpEnum::initConfigValues(){
     CONFIG.endGroup();
 }
 
-void IpEnum::log(QString log){
+void IPEnum::log(QString log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
 }
 
-void IpEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
+void IPEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
     proxyModel->setFilterKeyColumn(ui->comboBoxFilter->currentIndex());
 
     if(ui->checkBoxRegex->isChecked())
@@ -143,7 +143,7 @@ void IpEnum::on_lineEditFilter_textChanged(const QString &filterKeyword){
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void IpEnum::on_comboBoxOutput_currentIndexChanged(int index){
+void IPEnum::on_comboBoxOutput_currentIndexChanged(int index){
     ui->comboBoxEngine->clear();
     switch(index){
     case 0:
@@ -154,7 +154,7 @@ void IpEnum::on_comboBoxOutput_currentIndexChanged(int index){
     }
 }
 
-void IpEnum::on_buttoApiKeys_clicked(){
+void IPEnum::on_buttoApiKeys_clicked(){
     ApiKeysDialog *apiKeysDialog = new ApiKeysDialog(this);
     apiKeysDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     apiKeysDialog->show();

@@ -9,6 +9,8 @@
 #ifndef IPITEM_H
 #define IPITEM_H
 
+#include "src/utils/utils.h"
+
 #include <QStandardItem>
 #include <QDate>
 #include <QSet>
@@ -110,6 +112,15 @@ public:
         companyInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
         privacyInfo->setIcon(QIcon(":/img/res/icons/folder2.png"));
         domains->setIcon(QIcon(":/img/res/icons/folder2.png"));
+
+        if(s3s_global::is_dark_theme){
+            this->setForeground(Qt::white);
+            info->setForeground(Qt::white);
+            asnInfo->setForeground(Qt::white);
+            companyInfo->setForeground(Qt::white);
+            privacyInfo->setForeground(Qt::white);
+            domains->setForeground(Qt::white);
+        }
 
         info->appendRow({new QStandardItem("Ip"), info_ip});
         info->appendRow({new QStandardItem("Type"), info_type});

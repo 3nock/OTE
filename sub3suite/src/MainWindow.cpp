@@ -146,7 +146,7 @@ void MainWindow::initActions(){
     ui->menuTools->addAction("RAW Engine", this, [=](){this->onChangeTabToRaw();})->setIcon(QIcon(":/img/res/icons/raw.png"));
     ui->menuTools->addSeparator();
     ui->menuTools->addAction("BRUTE Engine", this, [=](){this->onChangeTabToBrute();})->setIcon(QIcon(":/img/res/icons/lock.png"));
-    ui->menuTools->addAction("ACTIVE Engine", this, [=](){this->onChangeTabToActive();})->setIcon(QIcon(":/img/res/icons/active.png"));
+    ui->menuTools->addAction("ACTIVE Engine", this, [=](){this->onChangeTabToHost();})->setIcon(QIcon(":/img/res/icons/active.png"));
     ui->menuTools->addAction("DNS Engine", this, [=](){this->onChangeTabToDns();})->setIcon(QIcon(":/img/res/icons/dns.png"));
     ui->menuTools->addAction("SSL Engine", this, [=](){this->onChangeTabToSSL();})->setIcon(QIcon(":/img/res/icons/ssl.png"));
     ui->menuTools->addAction("URL Engine", this, [=](){this->onChangeTabToURL();})->setIcon(QIcon(":/img/res/icons/url.png"));
@@ -187,9 +187,9 @@ void MainWindow::initActions(){
     themes->addAction(light_theme);
     themes->addAction(dark_theme);
 
-    if(s3s::is_dark_theme)
+    if(s3s_global::is_dark_theme)
         dark_theme->setChecked(true);
-    if(s3s::is_light_theme)
+    if(s3s_global::is_light_theme)
         light_theme->setChecked(true);
 
     ui->actionTheme->setMenu(themes);
@@ -231,11 +231,11 @@ void MainWindow::initActions(){
     fonts->addAction(font_12);
     fonts->addAction(font_none);
 
-    if(s3s::font_size == 11)
+    if(s3s_global::font_size == 11)
         font_11->setChecked(true);
-    if(s3s::font_size == 12)
+    if(s3s_global::font_size == 12)
         font_12->setChecked(true);
-    if(s3s::font_size == 0)
+    if(s3s_global::font_size == 0)
         font_none->setChecked(true);
 
     ui->actionFont->setMenu(fonts);
@@ -270,33 +270,33 @@ void MainWindow::initEngines(){
     connect(projectModel, &ProjectModel::projectLoaded, project, &Project::onProjectLoaded);
 
     /* Engines */
-    osint = new Osint(this, projectModel);
-    brute = new Brute(this, projectModel);
-    active = new Active(this, projectModel);
-    dns = new Dns(this, projectModel);
-    ssl = new Ssl(this, projectModel);
-    raw = new Raw(this, projectModel);
-    url = new Url(this, projectModel);
-    ip = new class IP(this, projectModel);
+    osintTool = new OsintTool(this, projectModel);
+    bruteTool = new BruteTool(this, projectModel);
+    hostTool = new HostTool(this, projectModel);
+    dnsTool = new DNSTool(this, projectModel);
+    sslTool = new SSLTool(this, projectModel);
+    rawTool = new RawTool(this, projectModel);
+    urlTool = new URLTool(this, projectModel);
+    ipTool = new IPTool(this, projectModel);
 
     /* Enumerators */
-    ipEnum = new IpEnum(this, projectModel);
+    ipEnum = new IPEnum(this, projectModel);
     asnEnum = new ASNEnum(this, projectModel);
-    cidrEnum = new CidrEnum(this, projectModel);
+    cidrEnum = new CIDREnum(this, projectModel);
     nsEnum = new NSEnum(this, projectModel);
     mxEnum = new MXEnum(this, projectModel);
     sslEnum = new SSLEnum(this, projectModel);
     emailEnum = new EmailEnum(this, projectModel);
 
     /* connecting signals from engines */
-    this->connectSignals(osint);
-    this->connectSignals(brute);
-    this->connectSignals(active);
-    this->connectSignals(dns);
-    this->connectSignals(ssl);
-    this->connectSignals(raw);
-    this->connectSignals(url);
-    this->connectSignals(ip);
+    this->connectSignals(osintTool);
+    this->connectSignals(bruteTool);
+    this->connectSignals(hostTool);
+    this->connectSignals(dnsTool);
+    this->connectSignals(sslTool);
+    this->connectSignals(rawTool);
+    this->connectSignals(urlTool);
+    this->connectSignals(ipTool);
 
     /* connecting signals from enumerators */
     this->connectSignals(ipEnum);
@@ -311,16 +311,16 @@ void MainWindow::initEngines(){
     this->connectSignals();
 
     /* passive tabwidget */
-    ui->tabWidgetPassive->insertTab(0, osint, "OSINT");
-    ui->tabWidgetPassive->insertTab(1, raw, "RAW");
+    ui->tabWidgetPassive->insertTab(0, osintTool, "OSINT");
+    ui->tabWidgetPassive->insertTab(1, rawTool, "RAW");
     ui->tabWidgetPassive->setCurrentIndex(0);
     /* active tabwidget */
-    ui->tabWidgetActive->insertTab(0, brute, "BRUTE");
-    ui->tabWidgetActive->insertTab(1, active, "HOST");
-    ui->tabWidgetActive->insertTab(2, ip, "IP");
-    ui->tabWidgetActive->insertTab(3, dns, "DNS");
-    ui->tabWidgetActive->insertTab(4, ssl, "SSL");
-    ui->tabWidgetActive->insertTab(5, url, "URL");
+    ui->tabWidgetActive->insertTab(0, bruteTool, "BRUTE");
+    ui->tabWidgetActive->insertTab(1, hostTool, "HOST");
+    ui->tabWidgetActive->insertTab(2, ipTool, "IP");
+    ui->tabWidgetActive->insertTab(3, dnsTool, "DNS");
+    ui->tabWidgetActive->insertTab(4, sslTool, "SSL");
+    ui->tabWidgetActive->insertTab(5, urlTool, "URL");
     ui->tabWidgetActive->setCurrentIndex(0);
     /* tools tabwidget */
     ui->tabWidgetEnums->insertTab(0, ipEnum, "IP");
@@ -335,15 +335,16 @@ void MainWindow::initEngines(){
     ui->tabWidgetMain->setCurrentIndex(0);
 }
 
-void MainWindow::connectSignals(AbstractEngine *engine){
+void MainWindow::connectSignals(AbstractTool *engine){
     /* sending results */
-    connect(engine, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendToActive(QSet<QString>, RESULT_TYPE)), active, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(engine, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), url, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osintTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToHost(QSet<QString>, RESULT_TYPE)), hostTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), bruteTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dnsTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), sslTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), rawTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), urlTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(engine, SIGNAL(sendToIP(QSet<QString>, RESULT_TYPE)), ipTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
     /* sending results enum */
     connect(engine, SIGNAL(sendToAsnEnum(QSet<QString>, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
     connect(engine, SIGNAL(sendToCidrEnum(QSet<QString>, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
@@ -355,12 +356,13 @@ void MainWindow::connectSignals(AbstractEngine *engine){
 
     /* change tab to Engine */
     connect(engine, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
-    connect(engine, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
+    connect(engine, SIGNAL(changeTabToHost()), this, SLOT(onChangeTabToHost()));
     connect(engine, SIGNAL(changeTabToBrute()), this, SLOT(onChangeTabToBrute()));
     connect(engine, SIGNAL(changeTabToDns()), this, SLOT(onChangeTabToDns()));
     connect(engine, SIGNAL(changeTabToRaw()), this, SLOT(onChangeTabToRaw()));
     connect(engine, SIGNAL(changeTabToSSL()), this, SLOT(onChangeTabToSSL()));
     connect(engine, SIGNAL(changeTabToURL()), this, SLOT(onChangeTabToURL()));
+    connect(engine, SIGNAL(changeTabToIP()), this, SLOT(onChangeTabToIP()));
     /* change tab to Enumerator */
     connect(engine, SIGNAL(changeTabToIpEnum()), this, SLOT(onChangeTabToIpEnum()));
     connect(engine, SIGNAL(changeTabToAsnEnum()), this, SLOT(onChangeTabToAsnEnum()));
@@ -373,13 +375,14 @@ void MainWindow::connectSignals(AbstractEngine *engine){
 
 void MainWindow::connectSignals(AbstractEnum *enumerator){
     /* sending results to engine */
-    connect(enumerator, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendToActive(QSet<QString>, RESULT_TYPE)), active, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(enumerator, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), url, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osintTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToHost(QSet<QString>, RESULT_TYPE)), hostTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), bruteTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dnsTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), sslTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), rawTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), urlTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(enumerator, SIGNAL(sendToIP(QSet<QString>, RESULT_TYPE)), ipTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
     /* sending results enum */
     connect(enumerator, SIGNAL(sendToAsnEnum(QSet<QString>, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
     connect(enumerator, SIGNAL(sendToCidrEnum(QSet<QString>, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
@@ -391,12 +394,13 @@ void MainWindow::connectSignals(AbstractEnum *enumerator){
 
     /* change tab to Engine */
     connect(enumerator, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
-    connect(enumerator, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
+    connect(enumerator, SIGNAL(changeTabToHost()), this, SLOT(onChangeTabToHost()));
     connect(enumerator, SIGNAL(changeTabToBrute()), this, SLOT(onChangeTabToBrute()));
     connect(enumerator, SIGNAL(changeTabToDns()), this, SLOT(onChangeTabToDns()));
     connect(enumerator, SIGNAL(changeTabToRaw()), this, SLOT(onChangeTabToRaw()));
     connect(enumerator, SIGNAL(changeTabToSSL()), this, SLOT(onChangeTabToSSL()));
     connect(enumerator, SIGNAL(changeTabToURL()), this, SLOT(onChangeTabToURL()));
+    connect(enumerator, SIGNAL(changeTabToIP()), this, SLOT(onChangeTabToIP()));
     /* change tab to Enumerator */
     connect(enumerator, SIGNAL(changeTabToIpEnum()), this, SLOT(onChangeTabToIpEnum()));
     connect(enumerator, SIGNAL(changeTabToAsnEnum()), this, SLOT(onChangeTabToAsnEnum()));
@@ -409,13 +413,14 @@ void MainWindow::connectSignals(AbstractEnum *enumerator){
 
 void MainWindow::connectSignals(){
     /* sending to engine */
-    connect(project, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osint, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(project, SIGNAL(sendToActive(QSet<QString>, RESULT_TYPE)), active, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(project, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), brute, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(project, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dns, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(project, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), ssl, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(project, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), raw, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
-    connect(project, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), url, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToOsint(QSet<QString>, RESULT_TYPE)), osintTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToHost(QSet<QString>, RESULT_TYPE)), hostTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToBrute(QSet<QString>, RESULT_TYPE)), bruteTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToDns(QSet<QString>, RESULT_TYPE)), dnsTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToSsl(QSet<QString>, RESULT_TYPE)), sslTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToRaw(QSet<QString>, RESULT_TYPE)), rawTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToUrl(QSet<QString>, RESULT_TYPE)), urlTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
+    connect(project, SIGNAL(sendToIP(QSet<QString>, RESULT_TYPE)), ipTool, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
     /* sending enum */
     connect(project, SIGNAL(sendToAsnEnum(QSet<QString>, RESULT_TYPE)), asnEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
     connect(project, SIGNAL(sendToCidrEnum(QSet<QString>, RESULT_TYPE)), cidrEnum, SLOT(onReceiveTargets(QSet<QString>, RESULT_TYPE)));
@@ -427,12 +432,13 @@ void MainWindow::connectSignals(){
 
     /* change tab to Engine */
     connect(project, SIGNAL(changeTabToOsint()), this, SLOT(onChangeTabToOsint()));
-    connect(project, SIGNAL(changeTabToActive()), this, SLOT(onChangeTabToActive()));
+    connect(project, SIGNAL(changeTabToHost()), this, SLOT(onChangeTabToHost()));
     connect(project, SIGNAL(changeTabToBrute()), this, SLOT(onChangeTabToBrute()));
     connect(project, SIGNAL(changeTabToDns()), this, SLOT(onChangeTabToDns()));
     connect(project, SIGNAL(changeTabToRaw()), this, SLOT(onChangeTabToRaw()));
     connect(project, SIGNAL(changeTabToSSL()), this, SLOT(onChangeTabToSSL()));
     connect(project, SIGNAL(changeTabToURL()), this, SLOT(onChangeTabToURL()));
+    connect(project, SIGNAL(changeTabToIP()), this, SLOT(onChangeTabToIP()));
     /* change tab to Enumerator */
     connect(project, SIGNAL(changeTabToIpEnum()), this, SLOT(onChangeTabToIpEnum()));
     connect(project, SIGNAL(changeTabToAsnEnum()), this, SLOT(onChangeTabToAsnEnum()));
@@ -451,10 +457,10 @@ void MainWindow::onGetDocumentation(){
     case 0: // Passive
         switch (ui->tabWidgetPassive->currentIndex()) {
         case 0:
-            documentationDialog = new DocumentationDialog(ENGINE::OSINT, this);
+            documentationDialog = new DocumentationDialog(TOOL::OSINT, this);
             break;
         case 1:
-            documentationDialog = new DocumentationDialog(ENGINE::RAW, this);
+            documentationDialog = new DocumentationDialog(TOOL::RAW, this);
             break;
         }
         break;
@@ -462,19 +468,22 @@ void MainWindow::onGetDocumentation(){
     case 1: // Active
         switch (ui->tabWidgetActive->currentIndex()) {
         case 0:
-            documentationDialog = new DocumentationDialog(ENGINE::BRUTE, this);
+            documentationDialog = new DocumentationDialog(TOOL::BRUTE, this);
             break;
         case 1:
-            documentationDialog = new DocumentationDialog(ENGINE::ACTIVE, this);
+            documentationDialog = new DocumentationDialog(TOOL::HOST, this);
             break;
         case 2:
-            documentationDialog = new DocumentationDialog(ENGINE::DNS, this);
+            documentationDialog = new DocumentationDialog(TOOL::IP, this);
             break;
         case 3:
-            documentationDialog = new DocumentationDialog(ENGINE::SSL, this);
+            documentationDialog = new DocumentationDialog(TOOL::DNS, this);
             break;
         case 4:
-            documentationDialog = new DocumentationDialog(ENGINE::URL, this);
+            documentationDialog = new DocumentationDialog(TOOL::SSL, this);
+            break;
+        case 5:
+            documentationDialog = new DocumentationDialog(TOOL::URL, this);
             break;
         }
         break;
@@ -532,24 +541,29 @@ void MainWindow::onChangeTabToBrute(){
     ui->tabWidgetActive->setCurrentIndex(0);
 }
 
-void MainWindow::onChangeTabToActive(){
+void MainWindow::onChangeTabToHost(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(1);
 }
 
-void MainWindow::onChangeTabToDns(){
+void MainWindow::onChangeTabToIP(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(2);
 }
 
-void MainWindow::onChangeTabToSSL(){
+void MainWindow::onChangeTabToDns(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(3);
 }
 
-void MainWindow::onChangeTabToURL(){
+void MainWindow::onChangeTabToSSL(){
     ui->tabWidgetMain->setCurrentIndex(1);
     ui->tabWidgetActive->setCurrentIndex(4);
+}
+
+void MainWindow::onChangeTabToURL(){
+    ui->tabWidgetMain->setCurrentIndex(1);
+    ui->tabWidgetActive->setCurrentIndex(5);
 }
 
 void MainWindow::onChangeTabToIpEnum(){

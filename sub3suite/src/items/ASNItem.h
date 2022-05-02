@@ -9,6 +9,8 @@
 #ifndef ASNITEM_H
 #define ASNITEM_H
 
+#include "src/utils/utils.h"
+
 #include <QStandardItem>
 #include <QJsonObject>
 #include <QDate>
@@ -86,6 +88,16 @@ public:
         rir->setIcon(QIcon(":/img/res/icons/folder2.png"));
         peers->setIcon(QIcon(":/img/res/icons/folder2.png"));
         prefixes->setIcon(QIcon(":/img/res/icons/folder2.png"));
+
+        if(s3s_global::is_dark_theme){
+            this->setForeground(Qt::white);
+            info->setForeground(Qt::white);
+            emailContacts->setForeground(Qt::white);
+            abuseContacts->setForeground(Qt::white);
+            rir->setForeground(Qt::white);
+            peers->setForeground(Qt::white);
+            prefixes->setForeground(Qt::white);
+        }
 
         info->appendRow({new QStandardItem("asn"), info_asn});
         info->appendRow({new QStandardItem("name"), info_name});

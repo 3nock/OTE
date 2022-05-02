@@ -5,11 +5,11 @@
  @brief :
 */
 
-#include "IpEnum.h"
-#include "ui_IpEnum.h"
+#include "IPEnum.h"
+#include "ui_IPEnum.h"
 
 
-void IpEnum::onResult(s3s_struct::IP results){
+void IPEnum::onResult(s3s_struct::IP results){
     if(m_resultsSet.contains(results.ip))
     {
         s3s_item::IP *item = m_resultsSet.value(results.ip);
@@ -26,7 +26,7 @@ void IpEnum::onResult(s3s_struct::IP results){
         project->addEnumIP(results);
 }
 
-void IpEnum::onResult_reverse(s3s_struct::IP results){
+void IPEnum::onResult_reverse(s3s_struct::IP results){
     if(m_resultsSet.contains(results.ip))
     {
         s3s_item::IP *item = m_resultsSet.value(results.ip);
@@ -43,7 +43,7 @@ void IpEnum::onResult_reverse(s3s_struct::IP results){
         project->addEnumIP_domains(results);
 }
 
-void IpEnum::onScanLog(ScanLog log){
+void IPEnum::onScanLog(ScanLog log){
     if(log.error){
         QString message("<font color=\"red\">"+log.message+"</font>");
         QString module("<font color=\"red\">"+log.moduleName+"</font>");

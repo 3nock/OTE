@@ -9,6 +9,8 @@
 #ifndef CERTITEM_H
 #define CERTITEM_H
 
+#include "src/utils/utils.h"
+
 #include <QStandardItem>
 #include <QSslCertificate>
 #include <QDate>
@@ -72,6 +74,17 @@ public:
         subject->setIcon(QIcon(":/img/res/icons/folder2.png"));
         key->setIcon(QIcon(":/img/res/icons/folder2.png"));
         subjectAltNames->setIcon(QIcon(":/img/res/icons/folder2.png"));
+
+        if(s3s_global::is_dark_theme){
+            this->setForeground(Qt::white);
+            info->setForeground(Qt::white);
+            fingerprint->setForeground(Qt::white);
+            issuer->setForeground(Qt::white);
+            validity->setForeground(Qt::white);
+            subject->setForeground(Qt::white);
+            key->setForeground(Qt::white);
+            subjectAltNames->setForeground(Qt::white);
+        }
 
         info->appendRow({new QStandardItem("Version"), info_verison});
         info->appendRow({new QStandardItem("signature Algorithm"), info_signatureAlgorithm});

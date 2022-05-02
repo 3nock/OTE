@@ -32,12 +32,12 @@ void NSEnum::on_buttonAction_clicked(){
     menu.addSeparator();
     menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
-    menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendToEngine(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-    menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendToEngine(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-    menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(ENGINE::BRUTE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-    menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendToEngine(ENGINE::ACTIVE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-    menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(ENGINE::DNS);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-    menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(ENGINE::SSL);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendToEngine(TOOL::RAW);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendToEngine(TOOL::BRUTE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to HOST"), this, [=](){this->sendToEngine(TOOL::HOST);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendToEngine(TOOL::DNS);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+    menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendToEngine(TOOL::SSL);})->setIcon(QIcon(":/img/res/icons/domain.png"));
 
     /* showing the context menu... */
     menu.exec(pos);
@@ -64,12 +64,12 @@ void NSEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
         menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent())){
         menu.addSeparator();
-        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendSelectedToEngine(ENGINE::OSINT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendSelectedToEngine(ENGINE::RAW);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendSelectedToEngine(ENGINE::BRUTE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to ACTIVE"), this, [=](){this->sendSelectedToEngine(ENGINE::ACTIVE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendSelectedToEngine(ENGINE::DNS);})->setIcon(QIcon(":/img/res/icons/domain.png"));
-        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(ENGINE::SSL);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendSelectedToEngine(TOOL::OSINT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendSelectedToEngine(TOOL::RAW);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to BRUTE"), this, [=](){this->sendSelectedToEngine(TOOL::BRUTE);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to HOST"), this, [=](){this->sendSelectedToEngine(TOOL::HOST);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to DNS"), this, [=](){this->sendSelectedToEngine(TOOL::DNS);})->setIcon(QIcon(":/img/res/icons/domain.png"));
+        menu.addAction(tr("Send Hostname to SSL"), this, [=](){this->sendSelectedToEngine(TOOL::SSL);})->setIcon(QIcon(":/img/res/icons/domain.png"));
     }
 
     /* showing the context menu... */

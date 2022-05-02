@@ -2,7 +2,7 @@
 #define IPSCANNER_H
 
 #include "AbstractScanner.h"
-
+#include "PortScanner.h"
 #include <QQueue>
 #include <QMutex>
 #include <QHostInfo>
@@ -19,6 +19,7 @@ struct ScanStat {  // scan statistics
 
 struct ScanConfig { // scan configurations
     QQueue<QString> nameservers;
+    port::ScanArgs *portScanConfig;
     int threads = 50;
     int timeout = 3000;
 

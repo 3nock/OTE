@@ -1,6 +1,8 @@
 #ifndef RAWITEM_H
 #define RAWITEM_H
 
+#include "src/utils/utils.h"
+
 #include <QStandardItem>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -26,6 +28,8 @@ public:
     RAW(): QStandardItem()
     {
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
+        if(s3s_global::is_dark_theme)
+            this->setForeground(Qt::white);
     }
     ~RAW()
     {
@@ -74,6 +78,8 @@ public:
         if(item != this){
             item->setWhatsThis(JSON_OBJECT);
             item->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            if(s3s_global::is_dark_theme)
+                item->setForeground(Qt::white);
         }
         foreach(const QString &key, keys)
         {
@@ -111,6 +117,8 @@ public:
         if(item != this){
             item->setWhatsThis(JSON_ARRAY);
             item->setIcon(QIcon(":/img/res/icons/folder2.png"));
+            if(s3s_global::is_dark_theme)
+                item->setForeground(Qt::white);
         }
         foreach(const QJsonValue &value, array)
         {

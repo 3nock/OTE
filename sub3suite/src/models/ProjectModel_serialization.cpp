@@ -151,8 +151,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         json_to_host(value.toObject(), item);
         activeHost->appendRow({item,
                                item->ipv4,
-                               item->ipv6,
-                               item->ports});
+                               item->ipv6});
         map_activeHost.insert(item->text(), item);
     }
 

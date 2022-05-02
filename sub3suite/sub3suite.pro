@@ -1,10 +1,10 @@
-#---------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------
 #
 #                Project created by QtCreator 2020-11-07T00:44:51
 #
 # Copyright 2020-2022 Enock Nicholaus Michael <3nock@protonmail.com>. All rights reserved.
 #
-#----------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------
 
 QT       += core gui
 QT       += network
@@ -53,61 +53,65 @@ SOURCES += \
     src/dialogs/EnumConfigDialog.cpp \
     src/dialogs/WordlistDialog_choose.cpp \
     src/dialogs/WordlistDialog_generate.cpp \
-    src/engines/ip/IP.cpp \
-    src/engines/ip/IP_actions.cpp \
-    src/engines/ip/IP_contextmenu.cpp \
-    src/engines/ip/IP_results.cpp \
-    src/engines/ip/IP_scan.cpp \
-    src/engines/url/Url.cpp \
-    src/engines/url/Url_actions.cpp \
-    src/engines/url/Url_contextmenu.cpp \
-    src/engines/url/Url_results.cpp \
-    src/engines/url/Url_scan.cpp \
-    src/engines/active/Active_actions.cpp \
-    src/engines/active/Active_contextmenu.cpp \
-    src/engines/active/Active_results.cpp \
-    src/engines/active/Active_scan.cpp \
-    src/engines/brute/Brute_actions.cpp \
-    src/engines/brute/Brute_contextmenu.cpp \
-    src/engines/brute/Brute_results.cpp \
-    src/engines/brute/Brute_scan.cpp \
-    src/engines/dns/Dns_actions.cpp \
-    src/engines/dns/Dns_contextmenu.cpp \
-    src/engines/dns/Dns_results.cpp \
-    src/engines/dns/Dns_scan.cpp \
-    src/engines/osint/Osint_actions.cpp \
-    src/engines/osint/Osint_contextmenu.cpp \
-    src/engines/osint/Osint_modules.cpp \
-    src/engines/osint/Osint_results.cpp \
-    src/engines/osint/Osint_scan.cpp \
-    src/engines/raw/Raw_actions.cpp \
-    src/engines/raw/Raw_contextmenu.cpp \
-    src/engines/raw/Raw_modules.cpp \
-    src/engines/raw/Raw_results.cpp \
-    src/engines/raw/Raw_scan.cpp \
-    src/engines/ssl/Ssl.cpp \
-    src/engines/dns/Dns.cpp \
-    src/engines/ssl/Ssl_actions.cpp \
-    src/engines/ssl/Ssl_contextmenu.cpp \
-    src/engines/ssl/Ssl_results.cpp \
-    src/engines/ssl/Ssl_scan.cpp \
+    src/tools/ip/IPTool_actions.cpp \
+    src/tools/ip/IPTool_contextmenu.cpp \
+    src/tools/ip/IPTool_results.cpp \
+    src/tools/ip/IPTool_scan.cpp \
+    src/tools/url/URLTool_actions.cpp \
+    src/tools/url/URLTool_contextmenu.cpp \
+    src/tools/url/URLTool_results.cpp \
+    src/tools/url/URLTool_scan.cpp \
+    src/tools/host/HostTool_actions.cpp \
+    src/tools/host/HostTool_contextmenu.cpp \
+    src/tools/host/HostTool_results.cpp \
+    src/tools/host/HostTool_scan.cpp \
+    src/tools/brute/BruteTool_actions.cpp \
+    src/tools/brute/BruteTool_contextmenu.cpp \
+    src/tools/brute/BruteTool_results.cpp \
+    src/tools/brute/BruteTool_scan.cpp \
+    src/tools/dns/DNSTool_actions.cpp \
+    src/tools/dns/DNSTool_contextmenu.cpp \
+    src/tools/dns/DNSTool_results.cpp \
+    src/tools/dns/DNsTool_scan.cpp \
+    src/tools/osint/OsintTool_actions.cpp \
+    src/tools/osint/OsintTool_contextmenu.cpp \
+    src/tools/osint/OsintTool_modules.cpp \
+    src/tools/osint/OsintTool_results.cpp \
+    src/tools/osint/OsintTool_scan.cpp \
+    src/tools/raw/RawTool_actions.cpp \
+    src/tools/raw/RawTool_contextmenu.cpp \
+    src/tools/raw/RawTool_modules.cpp \
+    src/tools/raw/RawTool_results.cpp \
+    src/tools/raw/RawTool_scan.cpp \
+    src/tools/ssl/SSLTool_actions.cpp \
+    src/tools/ssl/SSLTool_contextmenu.cpp \
+    src/tools/ssl/SSLTool_results.cpp \
+    src/tools/ssl/SSLTool_scan.cpp \
+    src/tools/ip/IPTool.cpp \
+    src/tools/url/URLTool.cpp \
+    src/tools/ssl/SSLTool.cpp \
+    src/tools/dns/DNSTool.cpp \
+    src/tools/raw/RawTool.cpp \
+    src/tools/host/HostTool.cpp \
+    src/tools/brute/BruteTool.cpp \
+    src/tools/osint/OsintTool.cpp \
     src/enums/asn/ASNEnum_actions.cpp \
     src/enums/asn/ASNEnum_contextmenu.cpp \
     src/enums/asn/ASNEnum_results.cpp \
     src/enums/asn/ASNEnum_scan.cpp \
-    src/enums/cidr/CidrEnum.cpp \
-    src/enums/cidr/CidrEnum_actions.cpp \
-    src/enums/cidr/CidrEnum_contextmenu.cpp \
-    src/enums/cidr/CidrEnum_results.cpp \
-    src/enums/cidr/CidrEnum_scan.cpp \
+    src/enums/cidr/CIDREnum.cpp \
+    src/enums/cidr/CIDREnum_actions.cpp \
+    src/enums/cidr/CIDREnum_contextmenu.cpp \
+    src/enums/cidr/CIDREnum_results.cpp \
+    src/enums/cidr/CIDREnum_scan.cpp \
     src/enums/email/EmailEnum_actions.cpp \
     src/enums/email/EmailEnum_contextmenu.cpp \
     src/enums/email/EmailEnum_results.cpp \
     src/enums/email/EmailEnum_scan.cpp \
-    src/enums/ip/IpEnum_actions.cpp \
-    src/enums/ip/IpEnum_contextmenu.cpp \
-    src/enums/ip/IpEnum_results.cpp \
-    src/enums/ip/IpEnum_scan.cpp \
+    src/enums/ip/IPEnum_actions.cpp \
+    src/enums/ip/IPEnum_contextmenu.cpp \
+    src/enums/ip/IPEnum_results.cpp \
+    src/enums/ip/IPEnum_scan.cpp \
     src/enums/mx/MXEnum_actions.cpp \
     src/enums/mx/MXEnum_contextmenu.cpp \
     src/enums/mx/MXEnum_results.cpp \
@@ -120,6 +124,12 @@ SOURCES += \
     src/enums/ssl/SSLEnum_contextmenu.cpp \
     src/enums/ssl/SSLEnum_results.cpp \
     src/enums/ssl/SSLEnum_scan.cpp \
+    src/enums/asn/ASNEnum.cpp \
+    src/enums/email/EmailEnum.cpp \
+    src/enums/ip/IpEnum.cpp \
+    src/enums/mx/MXEnum.cpp \
+    src/enums/ns/NSEnum.cpp \
+    src/enums/ssl/SSLEnum.cpp \
     src/items/ASNItem.cpp \
     src/items/CIDRItem.cpp \
     src/items/DNSItem.cpp \
@@ -131,8 +141,11 @@ SOURCES += \
     src/models/ExplorerModel.cpp \
     src/modules/active/IPScanner.cpp \
     src/modules/active/PingScanner.cpp \
+    src/modules/active/PingScanner_unix.cpp \
+    src/modules/active/PingScanner_win.cpp \
+    src/modules/active/PortScanner_unix.cpp \
+    src/modules/active/PortScanner_win.cpp \
     src/modules/active/URLScanner.cpp \
-    src/modules/active/utils/resolve.cpp \
     src/modules/passive/api/ASRank.cpp \
     src/modules/passive/api/CirclPublic.cpp \
     src/modules/passive/api/HackerTarget.cpp \
@@ -206,14 +219,8 @@ SOURCES += \
     src/modules/active/DNSScanner.cpp \
     src/modules/active/SSLScanner.cpp \
     src/project/Project.cpp \
-    src/enums/asn/ASNEnum.cpp \
-    src/enums/email/EmailEnum.cpp \
-    src/enums/ip/IpEnum.cpp \
-    src/enums/mx/MXEnum.cpp \
-    src/enums/ns/NSEnum.cpp \
-    src/enums/ssl/SSLEnum.cpp \
     src/modules/active/BruteScanner.cpp \
-    src/modules/active/ActiveScanner.cpp \
+    src/modules/active/HostScanner.cpp \
     src/modules/passive/api/Bgpview.cpp \
     src/modules/passive/api/BinaryEdge.cpp \
     src/modules/passive/api/C99.cpp \
@@ -257,10 +264,6 @@ SOURCES += \
     src/modules/passive/site/Pkey.cpp \
     src/modules/passive/site/Rapiddns.cpp \
     src/modules/passive/site/SiteDossier.cpp \
-    src/engines/raw/Raw.cpp \
-    src/engines/active/Active.cpp \
-    src/engines/brute/Brute.cpp \
-    src/engines/osint/Osint.cpp \
     src/project/Project_actions.cpp \
     src/project/Project_slots.cpp \
     src/utils/UpdateChecker.cpp \
@@ -282,10 +285,15 @@ HEADERS += \
     src/dialogs/SaveProjectDialog.h \
     src/dialogs/StartupDialog.h \
     src/dialogs/EnumConfigDialog.h \
-    src/engines/ip/IP.h \
-    src/engines/url/Url.h \
-    src/engines/ssl/Ssl.h \
-    src/engines/dns/Dns.h \
+    src/tools/ip/IPTool.h \
+    src/tools/url/URLTool.h \
+    src/tools/ssl/SSLTool.h \
+    src/tools/dns/DNSTool.h \
+    src/tools/raw/RawTool.h \
+    src/tools/host/HostTool.h \
+    src/tools/brute/BruteTool.h \
+    src/tools/osint/OsintTool.h \
+    src/tools/AbstractTool.h \
     src/items/ASNItem.h \
     src/items/CIDRItem.h \
     src/items/DNSItem.h \
@@ -299,7 +307,6 @@ HEADERS += \
     src/modules/active/PingScanner.h \
     src/modules/active/URLScanner.h \
     src/modules/active/utils/iphdr.h \
-    src/modules/active/utils/resolve.h \
     src/modules/passive/OsintHeaders.h \
     src/modules/passive/api/ASRank.h \
     src/modules/passive/api/CirclPublic.h \
@@ -374,14 +381,14 @@ HEADERS += \
     src/project/Project.h \
     src/enums/AbstractEnum.h \
     src/enums/asn/ASNEnum.h \
-    src/enums/cidr/CidrEnum.h \
+    src/enums/cidr/CIDREnum.h \
     src/enums/email/EmailEnum.h \
-    src/enums/ip/IpEnum.h \
+    src/enums/ip/IPEnum.h \
     src/enums/mx/MXEnum.h \
     src/enums/ns/NSEnum.h \
     src/enums/ssl/SSLEnum.h \
     src/modules/active/BruteScanner.h \
-    src/modules/active/ActiveScanner.h \
+    src/modules/active/HostScanner.h \
     src/modules/active/AbstractScanner.h \
     src/modules/passive/api/Bgpview.h \
     src/modules/passive/api/BinaryEdge.h \
@@ -427,11 +434,6 @@ HEADERS += \
     src/modules/passive/site/Rapiddns.h \
     src/modules/passive/site/SiteDossier.h \
     src/modules/passive/AbstractOsintModule.h \
-    src/engines/raw/Raw.h \
-    src/engines/active/Active.h \
-    src/engines/brute/Brute.h \
-    src/engines/osint/Osint.h \
-    src/engines/AbstractEngine.h \
     src/utils/CrashHandler.h \
     src/utils/s3s.h \
     src/utils/JsonSyntaxHighlighter.h \
@@ -455,22 +457,22 @@ FORMS += \
     src/dialogs/SaveProjectDialog.ui \
     src/dialogs/StartupDialog.ui \
     src/dialogs/EnumConfigDialog.ui \
-    src/engines/ip/IP.ui \
-    src/engines/url/Url.ui \
-    src/engines/ssl/Ssl.ui \
+    src/tools/ip/IPTool.ui \
+    src/tools/url/URLTool.ui \
+    src/tools/ssl/SSLTool.ui \
+    src/tools/raw/RawTool.ui \
+    src/tools/dns/DNSTool.ui \
+    src/tools/brute/BruteTool.ui \
+    src/tools/osint/OsintTool.ui \
+    src/tools/host/HostTool.ui \
     src/project/Project.ui \
     src/enums/asn/ASNEnum.ui \
-    src/enums/cidr/CidrEnum.ui \
+    src/enums/cidr/CIDREnum.ui \
     src/enums/email/EmailEnum.ui \
-    src/enums/ip/IpEnum.ui \
+    src/enums/ip/IPEnum.ui \
     src/enums/mx/MXEnum.ui \
     src/enums/ns/NSEnum.ui \
     src/enums/ssl/SSLEnum.ui \
-    src/engines/raw/Raw.ui \
-    src/engines/dns/Dns.ui \
-    src/engines/brute/Brute.ui \
-    src/engines/osint/Osint.ui \
-    src/engines/active/Active.ui \
     src/widgets/InputWidget.ui \
     src/dialogs/LogViewerDialog.ui \
     src/dialogs/AboutDialog.ui \
@@ -481,13 +483,16 @@ FORMS += \
 RESOURCES += \
     res.qrc
 
-# for ultralight
-INCLUDEPATH += include/ultralight/include
-LIBS += -L"lib" -lUltralight -lAppCore -lUltralightCore -lWebCore
+win32 {
+    INCLUDEPATH += ../vendor/npcap/include
+    LIBS += -L"lib" -lAdvapi32
 
-# for winpcap
-INCLUDEPATH += include/npcap/include
-LIBS += -L"lib" -lPacket -lwpcap
+    contains(QT_ARCH, i386) {
+        LIBS += -L"$$PWD/../vendor/npcap/lib" -lPacket -lwpcap
+    } else {
+        LIBS += -L"$$PWD/../vendor/npcap/lib/x64" -lPacket -lwpcap
+    }
+}
 
 # setting the icon...
 RC_ICONS = res/icons/main_logo.ico

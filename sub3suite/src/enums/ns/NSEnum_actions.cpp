@@ -170,7 +170,7 @@ void NSEnum::sendSelectedToProject(){
     }
 }
 
-void NSEnum::sendToEngine(const ENGINE &engine){
+void NSEnum::sendToEngine(const TOOL &engine){
     QSet<QString> targets;
 
     /* getting targets */
@@ -184,27 +184,27 @@ void NSEnum::sendToEngine(const ENGINE &engine){
 
     /* sending the targets */
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToRaw();
         break;
-    case ENGINE::BRUTE:
+    case TOOL::BRUTE:
         emit sendToBrute(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToBrute();
         break;
-    case ENGINE::ACTIVE:
-        emit sendToActive(targets, RESULT_TYPE::SUBDOMAIN);
-        emit changeTabToActive();
+    case TOOL::HOST:
+        emit sendToHost(targets, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToHost();
         break;
-    case ENGINE::DNS:
+    case TOOL::DNS:
         emit sendToDns(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToDns();
         break;
-    case ENGINE::SSL:
+    case TOOL::SSL:
         emit sendToSsl(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToSSL();
         break;
@@ -213,7 +213,7 @@ void NSEnum::sendToEngine(const ENGINE &engine){
     }
 }
 
-void NSEnum::sendSelectedToEngine(const ENGINE &engine){
+void NSEnum::sendSelectedToEngine(const TOOL &engine){
     QSet<QString> targets;
 
     /* getting targets */
@@ -223,27 +223,27 @@ void NSEnum::sendSelectedToEngine(const ENGINE &engine){
 
     /* sending the targets */
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToRaw();
         break;
-    case ENGINE::BRUTE:
+    case TOOL::BRUTE:
         emit sendToBrute(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToBrute();
         break;
-    case ENGINE::ACTIVE:
-        emit sendToActive(targets, RESULT_TYPE::SUBDOMAIN);
-        emit changeTabToActive();
+    case TOOL::HOST:
+        emit sendToHost(targets, RESULT_TYPE::SUBDOMAIN);
+        emit changeTabToHost();
         break;
-    case ENGINE::DNS:
+    case TOOL::DNS:
         emit sendToDns(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToDns();
         break;
-    case ENGINE::SSL:
+    case TOOL::SSL:
         emit sendToSsl(targets, RESULT_TYPE::SUBDOMAIN);
         emit changeTabToSSL();
         break;

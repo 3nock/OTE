@@ -9,6 +9,8 @@
 #ifndef CIDRITEM_H
 #define CIDRITEM_H
 
+#include "src/utils/utils.h"
+
 #include <QStandardItem>
 #include <QDate>
 #include <QSet>
@@ -84,6 +86,15 @@ public:
         abuseContacts->setIcon(QIcon(":/img/res/icons/folder2.png"));
         rir->setIcon(QIcon(":/img/res/icons/folder2.png"));
         asns->setIcon(QIcon(":/img/res/icons/folder2.png"));
+
+        if(s3s_global::is_dark_theme){
+            this->setForeground(Qt::white);
+            info->setForeground(Qt::white);
+            emailContacts->setForeground(Qt::white);
+            abuseContacts->setForeground(Qt::white);
+            rir->setForeground(Qt::white);
+            asns->setForeground(Qt::white);
+        }
 
         info->appendRow({new QStandardItem("prefix"), info_prefix});
         info->appendRow({new QStandardItem("ip"), info_ip});

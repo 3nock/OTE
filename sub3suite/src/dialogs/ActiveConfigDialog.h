@@ -11,7 +11,7 @@
 #include <QDialog>
 #include <QStringListModel>
 #include "src/modules/active/BruteScanner.h"
-#include "src/modules/active/ActiveScanner.h"
+#include "src/modules/active/HostScanner.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
 #include "src/modules/active/URLScanner.h"
@@ -27,7 +27,7 @@ class ActiveConfigDialog : public QDialog{
 
     public:
         ActiveConfigDialog(QWidget *parent = nullptr, brute::ScanConfig *config = nullptr);
-        ActiveConfigDialog(QWidget *parent = nullptr, active::ScanConfig *config = nullptr);
+        ActiveConfigDialog(QWidget *parent = nullptr, host::ScanConfig *config = nullptr);
         ActiveConfigDialog(QWidget *parent = nullptr, dns::ScanConfig *config = nullptr);
         ActiveConfigDialog(QWidget *parent = nullptr, ssl::ScanConfig *config = nullptr);
         ActiveConfigDialog(QWidget *parent = nullptr, url::ScanConfig *config = nullptr);
@@ -49,7 +49,7 @@ class ActiveConfigDialog : public QDialog{
         bool ip = false;
 
         brute::ScanConfig *m_configBrute = nullptr;
-        active::ScanConfig *m_configActive = nullptr;
+        host::ScanConfig *m_configActive = nullptr;
         dns::ScanConfig *m_configDns = nullptr;
         ssl::ScanConfig *m_configSSL = nullptr;
         url::ScanConfig *m_configURL = nullptr;

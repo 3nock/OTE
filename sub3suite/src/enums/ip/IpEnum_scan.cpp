@@ -1,10 +1,10 @@
-#include "IpEnum.h"
-#include "ui_IpEnum.h"
+#include "IPEnum.h"
+#include "ui_IPEnum.h"
 
 #include "src/dialogs/FailedScansDialog.h"
 
 
-void IpEnum::onScanThreadEnded(){
+void IPEnum::onScanThreadEnded(){
     status->activeScanThreads--;
 
     /* if all Scan Threads have finished... */
@@ -38,13 +38,13 @@ void IpEnum::onScanThreadEnded(){
             FailedScansDialog *failedScansDialog = new FailedScansDialog(this, m_failedScans);
             failedScansDialog->setAttribute(Qt::WA_DeleteOnClose, true);
 
-            connect(failedScansDialog, &FailedScansDialog::reScan, this, &IpEnum::onReScan);
+            connect(failedScansDialog, &FailedScansDialog::reScan, this, &IPEnum::onReScan);
             failedScansDialog->show();
         }
     }
 }
 
-void IpEnum::startScan(){
+void IPEnum::startScan(){
     /* resetting */
     ui->progressBar->show();
     ui->progressBar->reset();
@@ -98,37 +98,37 @@ void IpEnum::startScan(){
     }
 }
 
-void IpEnum::startScanThread(AbstractOsintModule *module){
+void IPEnum::startScanThread(AbstractOsintModule *module){
     QThread *cThread = new QThread;
     module->startScan(cThread);
     module->moveToThread(cThread);
-    connect(module, &AbstractOsintModule::resultEnumIP, this, &IpEnum::onResult);
-    connect(this, &IpEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::resultEnumIP, this, &IPEnum::onResult);
+    connect(this, &IPEnum::stopScanThread, module, &AbstractOsintModule::onStop);
     connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
-    connect(module, &AbstractOsintModule::scanLog, this, &IpEnum::onScanLog);
-    connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
+    connect(module, &AbstractOsintModule::scanLog, this, &IPEnum::onScanLog);
+    connect(cThread, &QThread::finished, this, &IPEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
     cThread->start();
     status->activeScanThreads++;
 }
 
-void IpEnum::startScanThread_reverseIP(AbstractOsintModule *module){
+void IPEnum::startScanThread_reverseIP(AbstractOsintModule *module){
     QThread *cThread = new QThread;
     module->startScan(cThread);
     module->moveToThread(cThread);
-    connect(module, &AbstractOsintModule::resultEnumIP, this, &IpEnum::onResult_reverse);
-    connect(this, &IpEnum::stopScanThread, module, &AbstractOsintModule::onStop);
+    connect(module, &AbstractOsintModule::resultEnumIP, this, &IPEnum::onResult_reverse);
+    connect(this, &IPEnum::stopScanThread, module, &AbstractOsintModule::onStop);
     connect(module, &AbstractOsintModule::scanProgress, ui->progressBar, &QProgressBar::setValue);
-    connect(module, &AbstractOsintModule::scanLog, this, &IpEnum::onScanLog);
-    connect(cThread, &QThread::finished, this, &IpEnum::onScanThreadEnded);
+    connect(module, &AbstractOsintModule::scanLog, this, &IPEnum::onScanLog);
+    connect(cThread, &QThread::finished, this, &IPEnum::onScanThreadEnded);
     connect(cThread, &QThread::finished, module, &AbstractOsintModule::deleteLater);
     connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
     cThread->start();
     status->activeScanThreads++;
 }
 
-void IpEnum::onReScan(QQueue<QString> targets){
+void IPEnum::onReScan(QQueue<QString> targets){
     if(targets.isEmpty())
         return;
 

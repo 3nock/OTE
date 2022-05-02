@@ -12,7 +12,11 @@
 
 #include "gumbo-parser/src/gumbo.h"
 
-
+/*
+ * TODO:
+ *      pull ssl certificate from the url
+ *      reply->sslConfiguration().peerCertificate();
+ */
 url::Scanner::Scanner(url::ScanArgs *args): AbstractScanner(nullptr),
       m_args(args)
 {

@@ -240,7 +240,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Enumerated MX:</string>
+             <string>Results:</string>
             </property>
            </widget>
           </item>

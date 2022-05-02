@@ -1,0 +1,85 @@
+/*
+ Copyright 2020-2022 Enock Nicholaus <3nock@protonmail.com>. All rights reserved.
+ Use of this source code is governed by GPL-3.0 LICENSE that can be found in the LICENSE file.
+
+ @brief :
+*/
+
+#include "SSLTool.h"
+#include "ui_SSLTool.h"
+
+#include <QSslKey>
+#include "src/items/SSLItem.h"
+
+
+void SSLTool::onScanLog(scan::Log log){
+    ui->plainTextEditLogs->appendHtml("[Error]      : <font color=\"red\">"+log.message+"</font>");
+    ui->plainTextEditLogs->appendHtml("[Target]     : <font color=\"red\">"+log.target+"</font>");
+    /* add a new line... */
+    ui->plainTextEditLogs->appendPlainText("");
+
+    m_failedScans.insert(log.target, log.message);
+    m_scanStats->failed++;
+}
+
+void SSLTool::onScanResultSHA1(QString sha1){
+    if(set_hash.contains(sha1))
+        return;
+
+    m_model_hash->appendRow(new QStandardItem(sha1));
+    set_hash.insert(sha1);
+
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveSSL_sha1(sha1);
+
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
+}
+
+void SSLTool::onScanResultSHA256(QString sha256){
+    if(set_hash.contains(sha256))
+        return;
+
+    m_model_hash->appendRow(new QStandardItem(sha256));
+    set_hash.insert(sha256);
+
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveSSL_sha256(sha256);
+
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
+}
+
+void SSLTool::onScanResultRaw(QString target, QSslCertificate ssl){
+    if(set_ssl.contains(target))
+        return;
+
+    s3s_item::SSL *item = new s3s_item::SSL;
+    item->setValues(target, ssl);
+
+    m_model_ssl->invisibleRootItem()->appendRow(item);
+    set_ssl.insert(target, item);
+
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveSSL(target, ssl);
+
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
+}
+
+void SSLTool::onScanResultSubdomain(QStringList subdomains){
+    foreach(const QString &subdomain, subdomains)
+    {
+        if(set_subdomain.contains(subdomain))
+            continue;
+
+        m_model_subdomain->appendRow(new QStandardItem(subdomain));
+        set_subdomain.insert(subdomain);
+
+        if(m_scanConfig->autoSaveToProject)
+            project->addActiveSSL_altNames(subdomain);
+    }
+
+    ui->labelResultsCount->setNum(proxyModel->rowCount());
+    m_scanStats->resolved++;
+}

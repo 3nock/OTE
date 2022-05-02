@@ -165,7 +165,7 @@ void ASNEnum::sendSelectedToProject(){
     }
 }
 
-void ASNEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+void ASNEnum::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -205,11 +205,11 @@ void ASNEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type)
 
     /* sending targets */
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;
@@ -218,7 +218,7 @@ void ASNEnum::sendToEngine(const ENGINE &engine, const RESULT_TYPE &result_type)
     }
 }
 
-void ASNEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &result_type){
+void ASNEnum::sendSelectedToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
     QSet<QString> targets;
 
     /* getting targets */
@@ -228,11 +228,11 @@ void ASNEnum::sendSelectedToEngine(const ENGINE &engine, const RESULT_TYPE &resu
 
     /* sending targets */
     switch (engine) {
-    case ENGINE::OSINT:
+    case TOOL::OSINT:
         emit sendToOsint(targets, result_type);
         emit changeTabToOsint();
         break;
-    case ENGINE::RAW:
+    case TOOL::RAW:
         emit sendToRaw(targets, result_type);
         emit changeTabToRaw();
         break;

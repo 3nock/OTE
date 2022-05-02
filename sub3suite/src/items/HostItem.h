@@ -11,9 +11,6 @@ struct HOST {
     QString host;
     QString ipv4;
     QString ipv6;
-
-    /* for open ports */
-    QList<quint16> ports;
 };
 }
 
@@ -22,8 +19,7 @@ class HOST: public QStandardItem {
 public:
     HOST(): QStandardItem(),
         ipv4(new QStandardItem),
-        ipv6(new QStandardItem),
-        ports(new QStandardItem)
+        ipv6(new QStandardItem)
     {
     }
     ~HOST()
@@ -33,10 +29,8 @@ public:
 public:
     QStandardItem *ipv4;
     QStandardItem *ipv6;
-    QStandardItem *ports;
 
     /* summary */
-    QSet<quint16> open_ports;
     QString last_modified;
     QString comment;
 
@@ -44,13 +38,6 @@ public:
         this->setText(host.host);
         ipv4->setText(host.ipv4);
         ipv6->setText(host.ipv6);
-
-        if(!host.ports.isEmpty()){
-            foreach(const quint16 &port, host.ports)
-                open_ports.insert(port);
-
-            this->update_ports();
-        }
 
         /* last modified */
         last_modified = QDate::currentDate().toString();
@@ -68,27 +55,6 @@ public:
 
         /* last modified */
         last_modified = QDate::currentDate().toString();
-    }
-
-    void setValue_ports(const s3s_struct::HOST &host){
-        this->setText(host.host);
-
-        foreach(const quint16 &port, host.ports)
-            open_ports.insert(port);
-
-        this->update_ports();
-
-        /* last modified */
-        last_modified = QDate::currentDate().toString();
-    }
-
-    void update_ports(){
-        QString port_list;
-        foreach(const quint16 &port, open_ports)
-            port_list.append(QString::number(port)).append(",");
-
-        port_list.chop(1);
-        ports->setText(port_list);
     }
 };
 }

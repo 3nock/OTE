@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>IpEnum</class>
- <widget class="QWidget" name="IpEnum">
+ <class>IPEnum</class>
+ <widget class="QWidget" name="IPEnum">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -245,7 +245,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Enumerated IP:</string>
+             <string>Results:</string>
             </property>
            </widget>
           </item>

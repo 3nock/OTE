@@ -20,11 +20,15 @@
 #include "src/utils/CrashHandler.h"
 #endif
 
+#if defined(Q_OS_WIN)
+#include <Windows.h>
+#endif
+
 ///
 /// logging device informations...
 ///
 void log_device_info(){
-    /* display info */
+    /* display info.. */
     qDebug() << "physical dpi value X: " << qApp->desktop()->physicalDpiX();
     qDebug() << "physical dpi value Y: " << qApp->desktop()->physicalDpiY();
     qDebug() << "Logical dpi value X: " << qApp->desktop()->logicalDpiX();
@@ -32,7 +36,40 @@ void log_device_info(){
     qDebug() << "device-pixel Ratio: " << qApp->desktop()->devicePixelRatio();
 }
 
+///
+/// Check Sub3 Suite permissions/privileges
+///
+void check_priv(){
+#if defined (Q_OS_WIN)
+    LUID priv_id;
+    HANDLE hToken = nullptr;
+    PRIVILEGE_SET privs;
+    if(LookupPrivilegeValue(nullptr, SE_CREATE_GLOBAL_NAME, &priv_id)){
+        privs.PrivilegeCount = 1;
+        privs.Control = PRIVILEGE_SET_ALL_NECESSARY;
+        privs.Privilege[0].Luid = priv_id;
+        privs.Privilege[0].Attributes = SE_PRIVILEGE_ENABLED;
+        if ( ! OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&hToken))
+            qWarning() << "can_switch_ids: OpenProcessToken failed error: " << GetLastError();
+        else {
+            BOOL fEnabled = false;
+            if (!PrivilegeCheck(hToken, &privs, &fEnabled))
+                qWarning() << "can_switch_ids: PrivilegeCheck failed error: " << GetLastError();
+            else
+                s3s_global::is_priv = fEnabled;
+            CloseHandle(hToken);
+        }
+    }
+#else
+    if (!geteuid())
+        s3s_global::is_priv = true;
+    else
+        s3s_global::is_priv = false;
+#endif
+}
+
 void registerMetaTypes(){
+    qRegisterMetaType<u_short>("u_short");
     qRegisterMetaType<ScanLog>("ScanLog");
     qRegisterMetaType<scan::Log>("scan::Log");
     qRegisterMetaType<s3s_struct::RAW>("s3s_struct::RAW");
@@ -116,11 +153,19 @@ public:
     }
 };
 
-namespace s3s {
+namespace s3s_global {
+    bool is_priv = false;
     bool is_dark_theme = false;
     bool is_light_theme = false;
-    int font_size = 0;
+    int font_size = NULL;
 }
+
+/*
+namespace s3s_tool {
+}
+namespace s3s_enum {
+}
+*/
 
 int main(int argc, char *argv[])
 {
@@ -155,12 +200,11 @@ int main(int argc, char *argv[])
 #endif
 
     qInfo() << "**************************************************************************************";
-    qInfo() << "*                                     Sub3 Suite                                     *";
+    qInfo() << "*                                             Sub3 Suite                              ";
     qInfo() << "**************************************************************************************";
 
+    check_priv();
     log_device_info();
-
-    /* registering meta-objects */
     registerMetaTypes();
 
     /* setting font */
@@ -170,7 +214,7 @@ int main(int argc, char *argv[])
         QFont font = qApp->font();
         font.setPixelSize(11);
         qApp->setFont(font);
-        s3s::font_size = 11;
+        s3s_global::font_size = 11;
     }
         break;
     case 12:
@@ -178,11 +222,11 @@ int main(int argc, char *argv[])
         QFont font = qApp->font();
         font.setPixelSize(12);
         qApp->setFont(font);
-        s3s::font_size = 12;
+        s3s_global::font_size = 12;
     }
         break;
     default:
-        s3s::font_size = 0;
+        s3s_global::font_size = 0;
         break;
     }
 
@@ -190,11 +234,11 @@ int main(int argc, char *argv[])
     QFile stylesheet;
     if(CONFIG.value(CFG_VAL_THEME).toString() == "dark"){
         stylesheet.setFileName(":/themes/res/themes/default.css");
-        s3s::is_dark_theme = true;
+        s3s_global::is_dark_theme = true;
     }
     if(CONFIG.value(CFG_VAL_THEME).toString() == "light"){
         stylesheet.setFileName(":/themes/res/themes/light.css");
-        s3s::is_light_theme = true;
+        s3s_global::is_light_theme = true;
     }
 
     if(stylesheet.open(QFile::ReadOnly)){

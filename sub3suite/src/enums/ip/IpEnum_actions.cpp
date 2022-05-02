@@ -1,5 +1,5 @@
-#include "IpEnum.h"
-#include "ui_IpEnum.h"
+#include "IPEnum.h"
+#include "ui_IPEnum.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -7,7 +7,7 @@
 #include <QClipboard>
 
 
-void IpEnum::clearResults(){
+void IPEnum::clearResults(){
     /* clear the results... */
     m_model->clear();
     ui->labelResultsCount->clear();
@@ -20,7 +20,7 @@ void IpEnum::clearResults(){
     ui->progressBar->hide();
 }
 
-void IpEnum::removeResults(){
+void IPEnum::removeResults(){
     auto model_selectedIndexes = proxyModel->mapSelectionToSource(selectionModel->selection());
     QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
     for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
@@ -33,7 +33,7 @@ void IpEnum::removeResults(){
     ui->labelResultsCount->setNum(proxyModel->rowCount());
 }
 
-void IpEnum::saveResults(){
+void IPEnum::saveResults(){
     QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
     if(filename.isEmpty()){
         qDebug() << "IP-Enum: Failed to getSaveFileName";
@@ -61,7 +61,7 @@ void IpEnum::saveResults(){
     file.close();
 }
 
-void IpEnum::saveSelectedResults(){
+void IPEnum::saveSelectedResults(){
     QString filename = QFileDialog::getSaveFileName(this, tr("Save To File"), "./");
     if(filename.isEmpty()){
         qDebug() << "IP-Enum: Failed to getSaveFileName";
@@ -98,7 +98,7 @@ void IpEnum::saveSelectedResults(){
     file.close();
 }
 
-void IpEnum::copyResults(){
+void IPEnum::copyResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     QJsonArray ip_array;
@@ -116,7 +116,7 @@ void IpEnum::copyResults(){
     clipboard->setText(document.toJson());
 }
 
-void IpEnum::copySelectedResults(){
+void IPEnum::copySelectedResults(){
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString clipboardData;
     QJsonArray ip_array;
@@ -150,7 +150,7 @@ void IpEnum::copySelectedResults(){
 /// sending results
 ///
 
-void IpEnum::sendToProject(){
+void IPEnum::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
@@ -159,7 +159,7 @@ void IpEnum::sendToProject(){
     }
 }
 
-void IpEnum::sendSelectedToProject(){
+void IPEnum::sendSelectedToProject(){
     foreach(const QModelIndex &index, selectionModel->selectedIndexes())
     {
         QModelIndex model_index = proxyModel->mapToSource(index);
@@ -174,7 +174,7 @@ void IpEnum::sendSelectedToProject(){
 /// receiving targets
 ///
 
-void IpEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
+void IPEnum::onReceiveTargets(QSet<QString> targets, RESULT_TYPE resultType){
     if(resultType == RESULT_TYPE::IP)
         ui->targets->add(targets);
 

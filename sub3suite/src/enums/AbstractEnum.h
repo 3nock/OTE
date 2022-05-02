@@ -48,10 +48,11 @@ class AbstractEnum : public QWidget{
         void changeTabToOsint();
         void changeTabToRaw();
         void changeTabToBrute();
-        void changeTabToActive();
+        void changeTabToHost();
         void changeTabToDns();
         void changeTabToSSL();
         void changeTabToURL();
+        void changeTabToIP();
         void changeTabToIpEnum();
         void changeTabToAsnEnum();
         void changeTabToCidrEnum();
@@ -65,10 +66,11 @@ class AbstractEnum : public QWidget{
         void sendToOsint(QSet<QString>, RESULT_TYPE);
         void sendToRaw(QSet<QString>, RESULT_TYPE);
         void sendToBrute(QSet<QString>, RESULT_TYPE);
-        void sendToActive(QSet<QString>, RESULT_TYPE);
+        void sendToHost(QSet<QString>, RESULT_TYPE);
         void sendToDns(QSet<QString>, RESULT_TYPE);
         void sendToSsl(QSet<QString>, RESULT_TYPE);
         void sendToUrl(QSet<QString>, RESULT_TYPE);
+        void sendToIP(QSet<QString>, RESULT_TYPE);
         /* sending to an Enumerator */
         void sendToIpEnum(QSet<QString>, RESULT_TYPE);
         void sendToAsnEnum(QSet<QString>, RESULT_TYPE);

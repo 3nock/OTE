@@ -74,8 +74,8 @@ private:
         /* sending results */
         void sendToProject();
         void sendSelectedToProject();
-        void sendToEngine(const ENGINE&);
-        void sendSelectedToEngine(const ENGINE&);
+        void sendToEngine(const TOOL&);
+        void sendSelectedToEngine(const TOOL&);
 };
 
 #endif // MXENUM_H

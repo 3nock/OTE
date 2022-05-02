@@ -14,15 +14,15 @@
 
 
 namespace Ui {
-class CidrEnum;
+class CIDREnum;
 }
 
-class CidrEnum : public AbstractEnum {
+class CIDREnum : public AbstractEnum {
         Q_OBJECT
 
     public:
-        CidrEnum(QWidget *parent = nullptr, ProjectModel *project = nullptr);
-        ~CidrEnum();
+        CIDREnum(QWidget *parent = nullptr, ProjectModel *project = nullptr);
+        ~CIDREnum();
 
     public slots:
         void onResult(s3s_struct::CIDR);
@@ -43,7 +43,7 @@ class CidrEnum : public AbstractEnum {
         void on_buttonAction_clicked();
 
     private:
-        Ui::CidrEnum *ui;
+        Ui::CIDREnum *ui;
 
         QStandardItemModel *m_model;
         QStringListModel *m_targetsListModel;
@@ -72,8 +72,8 @@ class CidrEnum : public AbstractEnum {
         /* sending results */
         void sendToProject();
         void sendSelectedToProject();
-        void sendToEngine(const ENGINE&, const RESULT_TYPE&);
-        void sendSelectedToEngine(const ENGINE&, const RESULT_TYPE&);
+        void sendToEngine(const TOOL&, const RESULT_TYPE&);
+        void sendSelectedToEngine(const TOOL&, const RESULT_TYPE&);
         void sendToEnum(const ENUMERATOR&, const RESULT_TYPE&);
         void sendSelectedToEnum(const ENUMERATOR&, const RESULT_TYPE&);
 };

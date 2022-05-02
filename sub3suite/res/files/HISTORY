@@ -1,11 +1,16 @@
 SUB3-SUITE VERSION HISTORY
 
 0.0.4 (beta release)
+-changed: ACTIVE Tool to HOST Tool.
+-changed: no longer using the term ENGINES now its TOOLS
+-added: IP Tool
+-added: SYN portscanner for HOST & IP Tools
+-added: Ping feature for HOST & IP tools.
 -added: light theme
 -added: hostname querying in URL Tool
 -fix: unwanted selection in results tree views
 -fix: json highlighter
--fix:
+-fix: hackertarget crashing OSINT Tool on hostsearch
 
 0.0.3 (beta release)
 -added: ipdata module for ASN enumeration

@@ -8,8 +8,10 @@
 #include <QQueue>
 #include <tchar.h>
 #include <QTcpSocket>
+#include <QWaitCondition>
 
 #if defined(Q_OS_WIN)
+
 #include <WinSock2.h>
 #include <Windows.h>
 #include <pcap.h>
@@ -20,7 +22,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "IPHLPAPI.lib")
 
-#endif //defined(Q_OS_WIN)
+#include "utils/iphdr.h"
 
 union time_union {
     FILETIME fileTime;
@@ -62,16 +64,49 @@ union time_union {
 #define IP_ADDRESS_LENGTH        4
 #define IP_ADDRESS_STRING_LENGTH 16
 #define PSEUDO_HEADER_SIZE       12
+#define SOURCE_PORT              54321
 
 #define MALLOC(x) HeapAlloc(GetProcessHeap(), 0, (x))
 #define FREE(x) HeapFree(GetProcessHeap(), 0, (x))
 
+#endif // WINDOWS
+
+#if defined(Q_OS_UNIX)
+
+#include <arpa/inet.h>
+#include <ctype.h>
+#include <errno.h>
+#include <inttypes.h>
+#include <limits.h>
+#include <math.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <pthread.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+struct pseudo_header { //Needed for checksum calculation
+    unsigned int source_address;
+    unsigned int dest_address;
+    unsigned char placeholder;
+    unsigned char protocol;
+    unsigned short tcp_length;
+
+    struct tcphdr tcp;
+};
+
+#endif // UNIX
 
 namespace port {
 
 enum ScanType{
     CONNECTION,
-    STEALTH,
     SYN
 };
 
@@ -87,7 +122,7 @@ struct ScanArgs {
     bool is_ip = false;
 };
 
-class Scanner: public AbstractScanner{
+class Scanner: public AbstractScanner {
     Q_OBJECT
 
     public:
@@ -95,8 +130,26 @@ class Scanner: public AbstractScanner{
         ~Scanner() override;
 
     signals:
-        void scanResult_ip(QString ip, QList<u_short> ports);
-        void scanResult_host(QString hostname, QString ip, QList<u_short> ports);
+        void scanResult_ip(QString ip, u_short port);
+        void scanResult_host(QString hostname, QString ip, u_short port);
+
+    public slots:
+        virtual void onStopScan() override {
+            stop = true;
+        }
+
+        void onPauseScan() override {
+            m_mutex.lock();
+            pause = true;
+            m_mutex.unlock();
+        }
+
+        void onResumeScan() override {
+            m_mutex.lock();
+            pause = false;
+            m_mutex.unlock();
+            m_wait.wakeAll();
+        }
 
     private slots:
         void lookup() override;
@@ -104,36 +157,66 @@ class Scanner: public AbstractScanner{
     private:
         port::ScanArgs *m_args;
         QString m_target;
+        bool stop = false;
+        bool pause = false;
+        QWaitCondition m_wait;
+        QMutex m_mutex;
 
         void scanner_connection();
-        void scanner_stealth();
         void scanner_syn();
 
         /* for syn scanner */
-        static s3s_struct::HOST host;
 
-        static pcap_t* fp;
-        static int total_ports;
-        static u_char source_ip_address[IP_ADDRESS_LENGTH];
-        static u_char dest_ip_address[IP_ADDRESS_LENGTH];
-        static SYSTEMTIME start_time;
-        static BOOL packets_received[MAX_PORTS];
+#if defined(Q_OS_WIN)
+        pcap_t* fp = nullptr;
+        char device_name[200];
+        char *source_ip_address = nullptr;
+        char *dest_ip_address = nullptr;
+        char *default_gateway = nullptr;
+        u_char src_ipv4[4];
+        u_char dest_ipv4[4];
+        u_char dest_mac_address[MAC_ADAPTER_LENGTH];
+        u_char source_mac_address[MAC_ADAPTER_LENGTH];
+        u_long src_ip = 0, dest_ip = 0, gate_ip = 0;
+        s3s_headers::iphdr *m_iph = nullptr;
         u_short packet_id = 1234;
+        int active_packets = 0;
+        u_short source_port = 54321;
 
-        void start_syn_scan(char *device, char *target_ip, QList<u_short> ports);
+        int start_syn_scan(QList<u_short> ports);
+        int init_syn_scan();
         bool load_npcap_dlls();
-        bool get_source_adaptor_details(char device[], u_char mac_address[], u_char ip_address[], u_char default_gateway[]);
-        bool get_source_adaptor_full_name(char device[], char device_full_name[]);
+        bool get_source_adaptor_details(char device[]);
+        bool get_source_adaptor_full_name(char device[]);
         void copy_u_short_to_array(u_char* array, int index, u_short val);
         void copy_u_long_to_array(u_char* array, int index, u_long val);
         u_short calculate_ip_checksum(u_char packet[PACKET_SIZE]);
         u_short calculate_tcp_checksum(u_char packet[PACKET_SIZE]);
-        void set_ethernet_fields(u_char packet[PACKET_SIZE], u_char source_mac_address[MAC_ADAPTER_LENGTH], u_char dest_mac_address[MAC_ADAPTER_LENGTH]);
+        void set_ethernet_fields(u_char packet[PACKET_SIZE]);
         void set_internet_protocol_fields(u_char packet[PACKET_SIZE]);
         void set_tcp_fields(u_char packet[PACKET_SIZE], u_short dest_port);
-        static void packet_handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
-        bool get_destination_adaptor_details(char* srcIP, char* destIP, u_char dest_mac_address[MAC_ADAPTER_LENGTH]);
-        static u_int64 calc_time_difference(SYSTEMTIME st1, SYSTEMTIME st2);
+        bool get_destination_adaptor_details();
+        u_int64 calc_time_difference(SYSTEMTIME st1, SYSTEMTIME st2);
+        bool get_address(SOCKADDR *sa, size_t salen, char* addr);
+#endif  // WINDOWS
+
+#if defined (Q_OS_UNIX)
+        int start_syn_unix(char *target, QList<u_short> ports);
+        unsigned short check_sum(unsigned short*, int);
+        const char* dotted_quad(const struct in_addr*);
+        char* hostname_to_ip(char*);
+        void ip_to_host(const char*, char*);
+        void* receive_ack(void*);
+        void process_packet(unsigned char*, int, char*);
+        void str_to_int(int*, char*, int);
+        void get_local_ip(char*);
+        void err_exit(char*, ...);
+        void prepare_datagram(char*, const char*, struct iphdr*, struct tcphdr*);
+        void parse_target(char*, struct in_addr*, int64_t*);
+        int parse_cidr(const char*, struct in_addr*, struct in_addr*);
+
+        struct in_addr dest_ip;
+#endif  // UNIX
 };
 
 QString getTarget(port::ScanArgs *args);

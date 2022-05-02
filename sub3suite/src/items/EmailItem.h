@@ -8,6 +8,8 @@
 #ifndef EMAILITEM_H
 #define EMAILITEM_H
 
+#include "src/utils/utils.h"
+
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QJsonObject>
@@ -41,6 +43,11 @@ public:
         this->setIcon(QIcon(":/img/res/icons/folder.png"));
 
         info->setIcon(QIcon(":/img/res/icons/folder2.png"));
+
+        if(s3s_global::is_dark_theme){
+            this->setForeground(Qt::white);
+            info->setForeground(Qt::white);
+        }
 
         info->appendRow({new QStandardItem("Domain"), domain});
         info->appendRow({new QStandardItem("Free"), free});

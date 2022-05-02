@@ -23,6 +23,12 @@ void ip::Scanner::lookupFinished(QHostInfo info){
         break;
 
     case QHostInfo::NoError:
+        if(info.addresses().isEmpty() || info.hostName().isNull())
+            break;
+
+        if(info.addresses().at(0).toString() == info.hostName())
+            break;
+
         emit scanResult(info.addresses().at(0).toString(), info.hostName());
         break;
 
@@ -42,7 +48,7 @@ void ip::Scanner::lookupFinished(QHostInfo info){
 void ip::Scanner::lookup(){
     QString target = getTarget(m_args);
 
-    if(!target.isNull())
+    if(!(target == nullptr))
         QHostInfo::lookupHost(target,this, &ip::Scanner::lookupFinished);
     else
         emit quitThread();
