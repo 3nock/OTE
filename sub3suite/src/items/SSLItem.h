@@ -232,12 +232,8 @@ public:
 #endif
 
         /* alternative names */
-        int count = 0;
-        foreach(const QString &value, cert.subjectAlternativeNames()){
-            subjectAltNames->appendRow({new QStandardItem(QString::number(count)),
-                                        new QStandardItem(value)});
-            count++;
-        }
+        foreach(const QString &value, cert.subjectAlternativeNames())
+            subjectAltNames->appendRow(new QStandardItem(value));
 
         raw = cert.toPem();
         raw_key = cert.publicKey().toPem();

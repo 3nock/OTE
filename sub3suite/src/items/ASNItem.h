@@ -173,61 +173,37 @@ public:
         if(rir_dateAllocated->text().isEmpty())
             rir_dateAllocated->setText(asn.rir_dateallocated);
 
-        int count = emailContacts->rowCount();
         /* email contacts */
-        foreach(const QString &value, asn.emailcontacts){
-            emailContacts->appendRow({new QStandardItem(QString::number(count)),
-                                      new QStandardItem(value)});
-            count++;
-        }
+        foreach(const QString &value, asn.emailcontacts)
+            emailContacts->appendRow(new QStandardItem(value));
 
         /* abuse contacts */
-        count = abuseContacts->rowCount();
-        foreach(const QString &value, asn.abusecontacts){
-            abuseContacts->appendRow({new QStandardItem(QString::number(count)),
-                                      new QStandardItem(value)});
-            count++;
-        }
+        foreach(const QString &value, asn.abusecontacts)
+            abuseContacts->appendRow(new QStandardItem(value));
 
         /* peers */
-        count = peers->rowCount();
-        foreach(const QString &peer, asn.peers){
-            peers->appendRow({new QStandardItem(QString::number(count)),
-                              new QStandardItem(peer)});
-            count++;
-        }
+        foreach(const QString &peer, asn.peers)
+            peers->appendRow(new QStandardItem(peer));
 
         /* prefixes */
-        count = prefixes->rowCount();
-        foreach(const QString &prefix, asn.prefixes){
-            prefixes->appendRow({new QStandardItem(QString::number(count)),
-                                 new QStandardItem(prefix)});
-            count++;
-        }
+        foreach(const QString &prefix, asn.prefixes)
+            prefixes->appendRow(new QStandardItem(prefix));
 
         /* last modified */
         last_modified = QDate::currentDate().toString();
     }
 
     void setPeers(const QSet<QString> &peersList){
-        int count = peers->rowCount();
-        foreach(const QString &peer, peersList){
-            peers->appendRow({new QStandardItem(QString::number(count)),
-                              new QStandardItem(peer)});
-            count++;
-        }
+        foreach(const QString &peer, peersList)
+            peers->appendRow(new QStandardItem(peer));
 
         /* last modified */
         last_modified = QDate::currentDate().toString();
     }
 
     void setPrefixes(const QSet<QString> &prefixList){
-        int count = prefixes->rowCount();
-        foreach(const QString &prefix, prefixList){
-            prefixes->appendRow({new QStandardItem(QString::number(count)),
-                                 new QStandardItem(prefix)});
-            count++;
-        }
+        foreach(const QString &prefix, prefixList)
+            prefixes->appendRow(new QStandardItem(prefix));
 
         /* last modified */
         last_modified = QDate::currentDate().toString();

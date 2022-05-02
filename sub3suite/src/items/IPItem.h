@@ -231,12 +231,8 @@ public:
         privacyInfo_threat->setText(QVariant(ip.privacyInfo_threat).toString());
 
         /* domains */
-        int count = domains->rowCount();
-        foreach(const QString &domain, ip.domains){
-            domains->appendRow({new QStandardItem(QString::number(count)),
-                                new QStandardItem(domain)});
-            count++;
-        }
+        foreach(const QString &domain, ip.domains)
+            domains->appendRow(new QStandardItem(domain));
 
         /* last modified */
         last_modified = QDate::currentDate().toString();
@@ -294,12 +290,8 @@ public:
             privacyInfo_threat->setText(QVariant(ip.privacyInfo_threat).toString());
 
         /* domains */
-        int count = domains->rowCount();
-        foreach(const QString &domain, ip.domains){
-            domains->appendRow({new QStandardItem(QString::number(count)),
-                                new QStandardItem(domain)});
-            count++;
-        }
+        foreach(const QString &domain, ip.domains)
+            domains->appendRow(new QStandardItem(domain));
 
         /* last modified */
         last_modified = QDate::currentDate().toString();
@@ -307,12 +299,8 @@ public:
 
     void addDomains(const s3s_struct::IP &ip){
         this->setText(ip.ip);
-        int count = domains->rowCount();
-        foreach(const QString &domain, ip.domains){
-            domains->appendRow({new QStandardItem(QString::number(count)),
-                                new QStandardItem(domain)});
-            count++;
-        }
+        foreach(const QString &domain, ip.domains)
+            domains->appendRow(new QStandardItem(domain));
 
         /* last modified */
         last_modified = QDate::currentDate().toString();

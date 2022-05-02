@@ -168,29 +168,17 @@ public:
         rir_prefix->setText(cidr.rir_prefix);
         rir_dateAllocated->setText(cidr.rir_dateallocated);
 
-        int count = 0;
         /* email contacts */
-        foreach(const QString &value, cidr.emailcontacts){
-            emailContacts->appendRow({new QStandardItem(QString::number(count)),
-                                      new QStandardItem(value)});
-            count++;
-        }
+        foreach(const QString &value, cidr.emailcontacts)
+            emailContacts->appendRow(new QStandardItem(value));
 
         /* abuse contacts */
-        count = 0;
-        foreach(const QString &value, cidr.abusecontacts){
-            abuseContacts->appendRow({new QStandardItem(QString::number(count)),
-                                      new QStandardItem(value)});
-            count++;
-        }
+        foreach(const QString &value, cidr.abusecontacts)
+            abuseContacts->appendRow(new QStandardItem(value));
 
         /* asns */
-        count = 0;
-        foreach(const QString &asn, cidr.asns){
-            asns->appendRow({new QStandardItem(QString::number(count)),
-                             new QStandardItem(asn)});
-            count++;
-        }
+        foreach(const QString &asn, cidr.asns)
+            asns->appendRow(new QStandardItem(asn));
 
         /* last modified */
         last_modified = QDate::currentDate().toString();

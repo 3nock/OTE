@@ -65,20 +65,12 @@ public:
         this->setText(mx.mx);
 
         /* ip */
-        int count = ip->rowCount();
-        foreach(const QString &ip_address, mx.ip){
-            ip->appendRow({new QStandardItem(QString::number(count)),
-                                new QStandardItem(ip_address)});
-            count++;
-        }
+        foreach(const QString &ip_address, mx.ip)
+            ip->appendRow(new QStandardItem(ip_address));
 
         /* domains */
-        count = domains->rowCount();
-        foreach(const QString &domain, mx.domains){
-            domains->appendRow({new QStandardItem(QString::number(count)),
-                                new QStandardItem(domain)});
-            count++;
-        }
+        foreach(const QString &domain, mx.domains)
+            domains->appendRow(new QStandardItem(domain));
 
         /* last modified */
         last_modified = QDate::currentDate().toString();

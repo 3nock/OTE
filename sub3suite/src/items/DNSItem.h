@@ -136,45 +136,26 @@ public:
         this->setText(dns.dns);
 
         /* enter results */
-        int count = 0;
-        foreach(const QString &a, dns.A){
-            A->appendRow({new QStandardItem(QString::number(count)),
-                          new QStandardItem(a)});
-            count++;
-        }
-        count = 0;
-        foreach(const QString &aaaa, dns.AAAA){
-            AAAA->appendRow({new QStandardItem(QString::number(count)),
-                             new QStandardItem(aaaa)});
-            count++;
-        }
-        count = 0;
-        foreach(const QString &cname, dns.CNAME){
-            CNAME->appendRow({new QStandardItem(QString::number(count)),
-                              new QStandardItem(cname)});
-            count++;
-        }
-        count = 0;
-        foreach(const QString &ns, dns.NS){
-            NS->appendRow({new QStandardItem(QString::number(count)),
-                           new QStandardItem(ns)});
-            count++;
-        }
-        count = 0;
-        foreach(const QString &mx, dns.MX){
-            MX->appendRow({new QStandardItem(QString::number(count)),
-                           new QStandardItem(mx)});
-            count++;
-        }
-        count = 0;
-        foreach(const QString &txt, dns.TXT){
-            TXT->appendRow({new QStandardItem(QString::number(count)),
-                            new QStandardItem(txt)});
-            count++;
-        }
+        foreach(const QString &a, dns.A)
+            A->appendRow(new QStandardItem(a));
+
+        foreach(const QString &aaaa, dns.AAAA)
+            AAAA->appendRow(new QStandardItem(aaaa));
+
+        foreach(const QString &cname, dns.CNAME)
+            CNAME->appendRow(new QStandardItem(cname));
+
+        foreach(const QString &ns, dns.NS)
+            NS->appendRow(new QStandardItem(ns));
+
+        foreach(const QString &mx, dns.MX)
+            MX->appendRow(new QStandardItem(mx));
+
+        foreach(const QString &txt, dns.TXT)
+            TXT->appendRow(new QStandardItem(txt));
+
         foreach(const QStringList &srv, dns.SRV){
-            SRV->appendRow({new QStandardItem(srv.at(0)),
-                           new QStandardItem(srv.at(1)),
+            SRV->appendRow({new QStandardItem(srv.at(1)),
                            new QStandardItem(srv.at(2))});
         }
 
