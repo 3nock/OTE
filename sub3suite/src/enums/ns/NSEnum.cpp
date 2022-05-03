@@ -101,7 +101,6 @@ void NSEnum::initUI(){
     /* setting specific properties */
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
-    ui->labelOut->setProperty("s3s_color", true);
     ui->labelModule->setProperty("s3s_color", true);
 
     /* placeholder texts... */

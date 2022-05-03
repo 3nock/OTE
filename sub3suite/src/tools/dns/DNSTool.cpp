@@ -34,7 +34,7 @@ DNSTool::DNSTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent, 
 
     /* result model */
     ui->treeViewResults->setHeaderHidden(false);
-    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Record"), tr(" SRV Port")});
+    m_model->setHorizontalHeaderLabels({tr(" DNS Record")});
     proxyModel->setSourceModel(m_model);
     ui->treeViewResults->setModel(proxyModel);
 

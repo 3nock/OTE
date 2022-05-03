@@ -12,11 +12,11 @@ s3s_struct::NS ns_to_struct(s3s_item::NS *item){
 
     /* ip */
     for(int i = 0; i < item->ip->rowCount(); i++)
-        ns.ip.insert(item->ip->child(i, 1)->text());
+        ns.ip.insert(item->ip->child(i, 0)->text());
 
     /* domains */
     for(int i = 0; i < item->domains->rowCount(); i++)
-        ns.domains.insert(item->domains->child(i, 1)->text());
+        ns.domains.insert(item->domains->child(i, 0)->text());
 
     return ns;
 }
@@ -32,13 +32,13 @@ QJsonObject ns_to_json(s3s_item::NS *item){
     /* ip */
     QJsonArray ip;
     for(int i = 0; i < item->ip->rowCount(); i++)
-        ip.append(item->ip->child(i, 1)->text());
+        ip.append(item->ip->child(i, 0)->text());
     ns.insert("ip", ip);
 
     /* domains */
     QJsonArray domains;
     for(int i = 0; i < item->domains->rowCount(); i++)
-        domains.append(item->domains->child(i, 1)->text());
+        domains.append(item->domains->child(i, 0)->text());
     ns.insert("domains", domains);
 
     ns.insert("item_info", item_info);
@@ -50,20 +50,12 @@ void json_to_ns(const QJsonObject &ns, s3s_item::NS *item){
     item->setText(ns.value("ns").toString());
 
     /* ip */
-    int count = 0;
-    foreach(const QJsonValue &value, ns.value("ip").toArray()){
-        item->ip->appendRow({new QStandardItem(QString::number(count)),
-                                  new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, ns.value("ip").toArray())
+        item->ip->appendRow(new QStandardItem(value.toString()));
 
     /* domains */
-    count = 0;
-    foreach(const QJsonValue &value, ns.value("domains").toArray()){
-        item->domains->appendRow({new QStandardItem(QString::number(count)),
-                                  new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, ns.value("domains").toArray())
+        item->domains->appendRow(new QStandardItem(value.toString()));
 
     QJsonObject item_info = ns.value("item_info").toObject();
     item->comment = item_info["comment"].toString();

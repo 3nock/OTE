@@ -23,16 +23,16 @@ s3s_struct::ASN asn_to_struct(s3s_item::ASN *item){
     asn_struct.rir_dateallocated = item->rir_dateAllocated->text();
 
     for(int i = 0; i < item->emailContacts->rowCount(); i++)
-        asn_struct.emailcontacts.insert(item->emailContacts->child(i, 1)->text());
+        asn_struct.emailcontacts.insert(item->emailContacts->child(i, 0)->text());
 
     for(int i = 0; i < item->abuseContacts->rowCount(); i++)
-        asn_struct.abusecontacts.insert(item->abuseContacts->child(i, 1)->text());
+        asn_struct.abusecontacts.insert(item->abuseContacts->child(i, 0)->text());
 
     for(int i = 0; i < item->peers->rowCount(); i++)
-        asn_struct.peers.insert(item->peers->child(i, 1)->text());
+        asn_struct.peers.insert(item->peers->child(i, 0)->text());
 
     for(int i = 0; i < item->prefixes->rowCount(); i++)
-        asn_struct.prefixes.insert(item->prefixes->child(i, 1)->text());
+        asn_struct.prefixes.insert(item->prefixes->child(i, 0)->text());
 
     return asn_struct;
 }
@@ -53,19 +53,19 @@ QJsonObject asn_to_json(s3s_item::ASN *item){
 
     QJsonArray emailContacts;
     for(int i = 0; i < item->emailContacts->rowCount(); i++)
-        emailContacts.append(item->emailContacts->child(i, 1)->text());
+        emailContacts.append(item->emailContacts->child(i, 0)->text());
 
     QJsonArray abuseContacts;
     for(int i = 0; i < item->abuseContacts->rowCount(); i++)
-        abuseContacts.append(item->abuseContacts->child(i, 1)->text());
+        abuseContacts.append(item->abuseContacts->child(i, 0)->text());
 
     QJsonArray peers;
     for(int i = 0; i < item->peers->rowCount(); i++)
-        peers.append(item->peers->child(i, 1)->text());
+        peers.append(item->peers->child(i, 0)->text());
 
     QJsonArray prefixes;
     for(int i = 0; i < item->prefixes->rowCount(); i++)
-        prefixes.append(item->prefixes->child(i, 1)->text());
+        prefixes.append(item->prefixes->child(i, 0)->text());
 
     QJsonObject item_info;
     item_info.insert("last_modified", item->last_modified);
@@ -100,37 +100,21 @@ void json_to_asn(const QJsonObject &asn, s3s_item::ASN *item){
     item->rir_country->setText(rir.value("country").toString());
     item->rir_dateAllocated->setText(rir.value("dateAllocated").toString());
 
-    int count = 0;
     QJsonArray emailContacts = asn.value("email_contacts").toArray();
-    foreach(const QJsonValue &value, emailContacts){
-        item->emailContacts->appendRow({new QStandardItem(QString::number(count)),
-                                            new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, emailContacts)
+        item->emailContacts->appendRow(new QStandardItem(value.toString()));
 
-    count = 0;
     QJsonArray abuseContacts = asn.value("abuse_contacts").toArray();
-    foreach(const QJsonValue &value, abuseContacts){
-        item->abuseContacts->appendRow({new QStandardItem(QString::number(count)),
-                                            new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, abuseContacts)
+        item->abuseContacts->appendRow(new QStandardItem(value.toString()));
 
-    count = 0;
     QJsonArray peers = asn.value("peers").toArray();
-    foreach(const QJsonValue &value, peers){
-        item->peers->appendRow({new QStandardItem(QString::number(count)),
-                                            new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, peers)
+        item->peers->appendRow(new QStandardItem(value.toString()));
 
-    count = 0;
     QJsonArray prefixes = asn.value("prefixes").toArray();
-    foreach(const QJsonValue &value, prefixes){
-        item->prefixes->appendRow({new QStandardItem(QString::number(count)),
-                                            new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, prefixes)
+        item->prefixes->appendRow(new QStandardItem(value.toString()));
 
     QJsonObject item_info = asn.value("item_info").toObject();
     item->comment = item_info["comment"].toString();

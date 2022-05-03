@@ -99,7 +99,7 @@ ProjectModel::~ProjectModel(){
 void ProjectModel::setHeaderLabels(){
     activeHost->setHorizontalHeaderLabels({QObject::tr(" Host"), QObject::tr(" IPv4"), QObject::tr(" IPv6")});
     activeWildcard->setHorizontalHeaderLabels({QObject::tr(" Wildcard"), QObject::tr(" IPv4"), QObject::tr(" IPv6")});
-    activeDNS->setHorizontalHeaderLabels({QObject::tr(" DNS"), QObject::tr(" Records"), QObject::tr(" SRV Port")});
+    activeDNS->setHorizontalHeaderLabels({QObject::tr(" DNS Records")});
     activeA->setHorizontalHeaderLabels({QObject::tr(" A DNS Records")});
     activeAAAA->setHorizontalHeaderLabels({QObject::tr(" AAAA DNS Records")});
     activeNS->setHorizontalHeaderLabels({QObject::tr(" NS DNS Records")});

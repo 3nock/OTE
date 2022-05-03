@@ -29,28 +29,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="labelOutput">
-       <property name="text">
-        <string>OUT:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBoxOption">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <item>
-        <property name="text">
-         <string>CIDR INFO</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="labelModule">
        <property name="text">
         <string>MODULE:</string>

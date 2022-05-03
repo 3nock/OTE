@@ -179,7 +179,7 @@ void NSEnum::sendToEngine(const TOOL &engine){
         s3s_item::NS *item = static_cast<s3s_item::NS*>(m_model->itemFromIndex(model_index));
 
         for(int j = 0; j < item->domains->rowCount(); j++)
-            targets.insert(item->domains->child(j, 1)->text());
+            targets.insert(item->domains->child(j, 0)->text());
     }
 
     /* sending the targets */

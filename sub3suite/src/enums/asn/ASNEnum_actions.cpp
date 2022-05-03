@@ -176,7 +176,7 @@ void ASNEnum::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->peers->rowCount(); j++)
-                targets.insert(asn->peers->child(j, 1)->text());
+                targets.insert(asn->peers->child(j, 0)->text());
         }
         break;
     case RESULT_TYPE::CIDR:
@@ -185,7 +185,7 @@ void ASNEnum::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                targets.insert(asn->prefixes->child(j, 1)->text());
+                targets.insert(asn->prefixes->child(j, 0)->text());
         }
         break;
     case RESULT_TYPE::EMAIL:
@@ -194,9 +194,9 @@ void ASNEnum::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->emailContacts->rowCount(); j++)
-                targets.insert(asn->emailContacts->child(j, 1)->text());
+                targets.insert(asn->emailContacts->child(j, 0)->text());
             for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
-                targets.insert(asn->abuseContacts->child(j, 1)->text());
+                targets.insert(asn->abuseContacts->child(j, 0)->text());
         }
         break;
     default:
@@ -252,7 +252,7 @@ void ASNEnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type)
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->peers->rowCount(); j++)
-                targets.insert(asn->peers->child(j, 1)->text());
+                targets.insert(asn->peers->child(j, 0)->text());
         }
         break;
     case RESULT_TYPE::CIDR:
@@ -261,7 +261,7 @@ void ASNEnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type)
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->prefixes->rowCount(); j++)
-                targets.insert(asn->prefixes->child(j, 1)->text());
+                targets.insert(asn->prefixes->child(j, 0)->text());
         }
         break;
     case RESULT_TYPE::EMAIL:
@@ -270,9 +270,9 @@ void ASNEnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type)
             s3s_item::ASN *asn = static_cast<s3s_item::ASN*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < asn->emailContacts->rowCount(); j++)
-                targets.insert(asn->emailContacts->child(j, 1)->text());
+                targets.insert(asn->emailContacts->child(j, 0)->text());
             for(int j = 0; j < asn->abuseContacts->rowCount(); j++)
-                targets.insert(asn->abuseContacts->child(j, 1)->text());
+                targets.insert(asn->abuseContacts->child(j, 0)->text());
         }
         break;
     default:

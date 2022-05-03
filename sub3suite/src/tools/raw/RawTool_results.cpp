@@ -38,7 +38,7 @@ void RawTool::onScanLog(ScanLog log){
 }
 
 void RawTool::onResults(s3s_struct::RAW raw){
-    if(raw.results.isEmpty())
+    if(raw.result.isEmpty())
         return;
 
     s3s_item::RAW *item = new s3s_item::RAW;
@@ -46,7 +46,7 @@ void RawTool::onResults(s3s_struct::RAW raw){
     m_model->appendRow(item);
     ui->labelResultsCountTree->setNum(proxyModel->rowCount());
 
-    QJsonDocument document = QJsonDocument::fromJson(raw.results);
+    QJsonDocument document = QJsonDocument::fromJson(raw.result);
     ui->plainTextEditResults->appendPlainText(document.toJson());
     m_resultsCountJson++;
     ui->labelResultsCount->setNum(m_resultsCountJson);
@@ -56,10 +56,10 @@ void RawTool::onResults(s3s_struct::RAW raw){
 }
 
 void RawTool::onResultsTxt(s3s_struct::RAW raw){
-    if(raw.results.isEmpty())
+    if(raw.result.isEmpty())
         return;
 
-    ui->plainTextEditResults->appendPlainText(raw.results);
+    ui->plainTextEditResults->appendPlainText(raw.result);
     m_resultsCountJson++;
     ui->labelResultsCount->setNum(m_resultsCountJson);
 }

@@ -180,7 +180,7 @@ void CIDREnum::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
             s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < cidr->asns->rowCount(); j++)
-                targets.insert(cidr->asns->child(j, 1)->text());
+                targets.insert(cidr->asns->child(j, 0)->text());
         }
         break;
     case RESULT_TYPE::EMAIL:
@@ -189,9 +189,9 @@ void CIDREnum::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
             s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
-                targets.insert(cidr->emailContacts->child(j, 1)->text());
+                targets.insert(cidr->emailContacts->child(j, 0)->text());
             for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
-                targets.insert(cidr->abuseContacts->child(j, 1)->text());
+                targets.insert(cidr->abuseContacts->child(j, 0)->text());
         }
         break;
     default:
@@ -247,7 +247,7 @@ void CIDREnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type
             s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < cidr->asns->rowCount(); j++)
-                targets.insert(cidr->asns->child(j, 1)->text());
+                targets.insert(cidr->asns->child(j, 0)->text());
         }
         break;
     case RESULT_TYPE::EMAIL:
@@ -256,9 +256,9 @@ void CIDREnum::sendToEnum(const ENUMERATOR &tool, const RESULT_TYPE &result_type
             s3s_item::CIDR *cidr = static_cast<s3s_item::CIDR*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < cidr->emailContacts->rowCount(); j++)
-                targets.insert(cidr->emailContacts->child(j, 1)->text());
+                targets.insert(cidr->emailContacts->child(j, 0)->text());
             for(int j = 0; j < cidr->abuseContacts->rowCount(); j++)
-                targets.insert(cidr->abuseContacts->child(j, 1)->text());
+                targets.insert(cidr->abuseContacts->child(j, 0)->text());
         }
         break;
     default:

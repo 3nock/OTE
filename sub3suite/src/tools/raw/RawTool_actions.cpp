@@ -62,7 +62,7 @@ void RawTool::saveResults(){
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
-        file.write(item->json);
+        file.write(item_to_json(item));
         file.write(NEWLINE);
     }
     file.close();
@@ -86,7 +86,7 @@ void RawTool::saveSelectedResults(){
     {
         QModelIndex index = proxyModel->mapToSource(proxyIndex);
         s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
-        file.write(item->json);
+        file.write(item_to_json(item));
         file.write(NEWLINE);
     }
     file.close();
@@ -118,7 +118,7 @@ void RawTool::copyResults(){
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
         s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
-        data.append(item->json);
+        data.append(item_to_json(item));
         data.append(NEWLINE);
     }
 
@@ -133,7 +133,7 @@ void RawTool::copySelectedResults(){
     {
         QModelIndex index = proxyModel->mapToSource(proxyIndex);
         s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->item(index.row(), index.column()));
-        data.append(item->json);
+        data.append(item_to_json(item));
         data.append(NEWLINE);
     }
 

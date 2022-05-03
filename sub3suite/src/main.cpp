@@ -199,6 +199,12 @@ int main(int argc, char *argv[])
     Breakpad::CrashHandler::instance()->Init(QGuiApplication::applicationDirPath()+"/logs");
 #endif
 
+    /* splash screen */
+    QPixmap splashImage = QPixmap(":/img/res/icons/splash.png");
+    splashImage.scaledToWidth(600);
+    QSplashScreen splash(splashImage);
+    splash.show();
+
     qInfo() << "**************************************************************************************";
     qInfo() << "*                                             Sub3 Suite                              ";
     qInfo() << "**************************************************************************************";
@@ -245,12 +251,6 @@ int main(int argc, char *argv[])
         qApp->setStyleSheet(QLatin1String(stylesheet.readAll()));
         stylesheet.close();
     }
-
-    /* splash screen */
-    QPixmap splashImage = QPixmap(":/img/res/icons/splash.png");
-    splashImage.scaledToWidth(600);
-    QSplashScreen splash(splashImage);
-    splash.show();
 
     /* project */
     ProjectStruct project;

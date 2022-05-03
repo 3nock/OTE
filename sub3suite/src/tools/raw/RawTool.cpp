@@ -238,7 +238,7 @@ void RawTool::on_treeViewResults_doubleClicked(const QModelIndex &index){
 
     if(model_index.parent() == m_model->invisibleRootItem()->index()){
         s3s_item::RAW *item = static_cast<s3s_item::RAW*>(m_model->itemFromIndex(model_index));
-        ui->plainTextEditJson->setPlainText(item->json);
+        ui->plainTextEditJson->setPlainText(item_to_json(item));
         return;
     }
 

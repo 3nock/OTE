@@ -231,10 +231,8 @@ protected slots:
             byteDocument.push_front("[");
 
             s3s_struct::RAW raw;
-            raw.module = log.moduleName;
-            raw.query_option = args.raw_query_name;
-            raw.target = target;
-            raw.results = byteDocument;
+            raw.raw = QString("%1 [%2] [%3]").arg(log.moduleName).arg(args.raw_query_name).arg(target);
+            raw.result = byteDocument;
             emit resultRawJSON(raw);
         }
 
@@ -247,10 +245,8 @@ protected slots:
             this->onError(reply);
         else{
             s3s_struct::RAW raw;
-            raw.module = log.moduleName;
-            raw.query_option = args.raw_query_name;
-            raw.target = target;
-            raw.results = reply->readAll();
+            raw.raw = QString("%1 [%2] [%3]").arg(log.moduleName).arg(args.raw_query_name).arg(target);
+            raw.result = reply->readAll();
             emit resultRawJSON(raw);
         }
 
@@ -263,10 +259,8 @@ protected slots:
             this->onError(reply);
         else{
             s3s_struct::RAW raw;
-            raw.module = log.moduleName;
-            raw.query_option = args.raw_query_name;
-            raw.target = target;
-            raw.results = reply->readAll();
+            raw.raw = QString("%1 [%2] [%3]").arg(log.moduleName).arg(args.raw_query_name).arg(target);
+            raw.result = reply->readAll();
             emit resultRawTXT(raw);
         }
 

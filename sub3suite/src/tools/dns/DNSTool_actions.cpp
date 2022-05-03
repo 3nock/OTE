@@ -15,7 +15,7 @@
 void DNSTool::clearResults(){
     /* clear the results... */
     m_model->clear();
-    m_model->setHorizontalHeaderLabels({tr(" DNS"), tr(" Record"), tr(" SRV Port")});
+    m_model->setHorizontalHeaderLabels({tr(" DNS Record")});
     ui->labelResultsCount->clear();
     m_resultSet.clear();
 
@@ -80,11 +80,11 @@ void DNSTool::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                set.insert(item->CNAME->child(j, 1)->text());
+                set.insert(item->CNAME->child(j, 0)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                set.insert(item->NS->child(j, 1)->text());
+                set.insert(item->NS->child(j, 0)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                set.insert(item->MX->child(j, 1)->text());
+                set.insert(item->MX->child(j, 0)->text());
         }
         break;
 
@@ -95,9 +95,9 @@ void DNSTool::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                set.insert(item->A->child(j, 1)->text());
+                set.insert(item->A->child(j, 0)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                set.insert(item->AAAA->child(j, 1)->text());
+                set.insert(item->AAAA->child(j, 0)->text());
         }
         break;
 
@@ -107,7 +107,7 @@ void DNSTool::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                set.insert(item->A->child(j, 1)->text());
+                set.insert(item->A->child(j, 0)->text());
         }
         break;
 
@@ -117,7 +117,7 @@ void DNSTool::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                set.insert(item->AAAA->child(j, 1)->text());
+                set.insert(item->AAAA->child(j, 0)->text());
         }
         break;
 
@@ -127,7 +127,7 @@ void DNSTool::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->NS->rowCount(); j++)
-                set.insert(item->NS->child(j, 1)->text());
+                set.insert(item->NS->child(j, 0)->text());
         }
         break;
 
@@ -138,7 +138,7 @@ void DNSTool::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->MX->rowCount(); j++)
-                set.insert(item->MX->child(j, 1)->text());
+                set.insert(item->MX->child(j, 0)->text());
         }
         break;
 
@@ -149,7 +149,7 @@ void DNSTool::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                set.insert(item->CNAME->child(j, 1)->text());
+                set.insert(item->CNAME->child(j, 0)->text());
         }
         break;
 
@@ -160,7 +160,7 @@ void DNSTool::saveResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->TXT->rowCount(); j++)
-                set.insert(item->TXT->child(j, 1)->text());
+                set.insert(item->TXT->child(j, 0)->text());
         }
         break;
 
@@ -234,11 +234,11 @@ void DNSTool::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                set.insert(item->CNAME->child(j, 1)->text());
+                set.insert(item->CNAME->child(j, 0)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                set.insert(item->NS->child(j, 1)->text());
+                set.insert(item->NS->child(j, 0)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                set.insert(item->MX->child(j, 1)->text());
+                set.insert(item->MX->child(j, 0)->text());
         }
         break;
 
@@ -249,9 +249,9 @@ void DNSTool::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                set.insert(item->A->child(j, 1)->text());
+                set.insert(item->A->child(j, 0)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                set.insert(item->AAAA->child(j, 1)->text());
+                set.insert(item->AAAA->child(j, 0)->text());
         }
         break;
 
@@ -261,7 +261,7 @@ void DNSTool::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                set.insert(item->A->child(j, 1)->text());
+                set.insert(item->A->child(j, 0)->text());
         }
         break;
 
@@ -271,7 +271,7 @@ void DNSTool::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                set.insert(item->AAAA->child(j, 1)->text());
+                set.insert(item->AAAA->child(j, 0)->text());
         }
         break;
 
@@ -281,7 +281,7 @@ void DNSTool::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->NS->rowCount(); j++)
-                set.insert(item->NS->child(j, 1)->text());
+                set.insert(item->NS->child(j, 0)->text());
         }
         break;
 
@@ -292,7 +292,7 @@ void DNSTool::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->MX->rowCount(); j++)
-                set.insert(item->MX->child(j, 1)->text());
+                set.insert(item->MX->child(j, 0)->text());
         }
         break;
 
@@ -303,7 +303,7 @@ void DNSTool::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                set.insert(item->CNAME->child(j, 1)->text());
+                set.insert(item->CNAME->child(j, 0)->text());
         }
         break;
 
@@ -314,7 +314,7 @@ void DNSTool::copyResults(const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(model_index));
 
             for(int j = 0; j < item->TXT->rowCount(); j++)
-                set.insert(item->TXT->child(j, 1)->text());
+                set.insert(item->TXT->child(j, 0)->text());
         }
         break;
 
@@ -379,9 +379,9 @@ void DNSTool::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                targets.insert(item->A->child(j, 1)->text());
+                targets.insert(item->A->child(j, 0)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                targets.insert(item->A->child(j, 1)->text());
+                targets.insert(item->A->child(j, 0)->text());
         }
         break;
     case RESULT_TYPE::SUBDOMAIN:
@@ -390,11 +390,11 @@ void DNSTool::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->CNAME->rowCount(); j++)
-                targets.insert(item->CNAME->child(j, 1)->text());
+                targets.insert(item->CNAME->child(j, 0)->text());
             for(int j = 0; j < item->NS->rowCount(); j++)
-                targets.insert(item->NS->child(j, 1)->text());
+                targets.insert(item->NS->child(j, 0)->text());
             for(int j = 0; j < item->MX->rowCount(); j++)
-                targets.insert(item->MX->child(j, 1)->text());
+                targets.insert(item->MX->child(j, 0)->text());
         }
         break;
     default:
@@ -495,9 +495,9 @@ void DNSTool::sendToEnum(const ENUMERATOR &tool){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->A->rowCount(); j++)
-                targets.insert(item->A->child(j, 1)->text());
+                targets.insert(item->A->child(j, 0)->text());
             for(int j = 0; j < item->AAAA->rowCount(); j++)
-                targets.insert(item->AAAA->child(j, 1)->text());
+                targets.insert(item->AAAA->child(j, 0)->text());
         }
         emit sendToIpEnum(targets, RESULT_TYPE::IP);
         emit changeTabToIpEnum();
@@ -509,7 +509,7 @@ void DNSTool::sendToEnum(const ENUMERATOR &tool){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->NS->rowCount(); j++)
-                targets.insert(item->NS->child(j, 1)->text());
+                targets.insert(item->NS->child(j, 0)->text());
         }
         emit sendToNSEnum(targets, RESULT_TYPE::NS);
         emit changeTabToNSEnum();
@@ -521,7 +521,7 @@ void DNSTool::sendToEnum(const ENUMERATOR &tool){
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(m_model->itemFromIndex(index));
 
             for(int j = 0; j < item->MX->rowCount(); j++)
-                targets.insert(item->MX->child(j, 1)->text());
+                targets.insert(item->MX->child(j, 0)->text());
         }
         emit sendToMXEnum(targets, RESULT_TYPE::MX);
         emit changeTabToMXEnum();

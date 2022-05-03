@@ -25,13 +25,13 @@ s3s_struct::CIDR cidr_to_struct(s3s_item::CIDR *item){
     cidr_struct.rir_dateallocated = item->rir_dateAllocated->text();
 
     for(int i = 0; i < item->emailContacts->rowCount(); i++)
-        cidr_struct.emailcontacts.insert(item->emailContacts->child(i, 1)->text());
+        cidr_struct.emailcontacts.insert(item->emailContacts->child(i, 0)->text());
 
     for(int i = 0; i < item->abuseContacts->rowCount(); i++)
-        cidr_struct.abusecontacts.insert(item->abuseContacts->child(i, 1)->text());
+        cidr_struct.abusecontacts.insert(item->abuseContacts->child(i, 0)->text());
 
     for(int i = 0; i < item->asns->rowCount(); i++)
-        cidr_struct.asns.insert(item->asns->child(i, 1)->text());
+        cidr_struct.asns.insert(item->asns->child(i, 0)->text());
 
     return cidr_struct;
 }
@@ -54,15 +54,15 @@ QJsonObject cidr_to_json(s3s_item::CIDR *item){
 
     QJsonArray emailContacts;
     for(int i = 0; i < item->emailContacts->rowCount(); i++)
-        emailContacts.append(item->emailContacts->child(i, 1)->text());
+        emailContacts.append(item->emailContacts->child(i, 0)->text());
 
     QJsonArray abuseContacts;
     for(int i = 0; i < item->abuseContacts->rowCount(); i++)
-        abuseContacts.append(item->abuseContacts->child(i, 1)->text());
+        abuseContacts.append(item->abuseContacts->child(i, 0)->text());
 
     QJsonArray asns;
     for(int i = 0; i < item->asns->rowCount(); i++)
-        asns.append(item->asns->child(i, 1)->text());
+        asns.append(item->asns->child(i, 0)->text());
 
     QJsonObject item_info;
     item_info.insert("last_modified", item->last_modified);
@@ -99,29 +99,17 @@ void json_to_cidr(const QJsonObject &cidr, s3s_item::CIDR *item){
     item->rir_country->setText(rir.value("country").toString());
     item->rir_dateAllocated->setText(rir.value("dateAllocated").toString());
 
-    int count = 0;
     QJsonArray emailContacts = cidr.value("email_contacts").toArray();
-    foreach(const QJsonValue &value, emailContacts){
-        item->emailContacts->appendRow({new QStandardItem(QString::number(count)),
-                                            new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, emailContacts)
+        item->emailContacts->appendRow(new QStandardItem(value.toString()));
 
-    count = 0;
     QJsonArray abuseContacts = cidr.value("abuse_contacts").toArray();
-    foreach(const QJsonValue &value, abuseContacts){
-        item->abuseContacts->appendRow({new QStandardItem(QString::number(count)),
-                                            new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, abuseContacts)
+        item->abuseContacts->appendRow(new QStandardItem(value.toString()));
 
-    count = 0;
     QJsonArray asns = cidr.value("asns").toArray();
-    foreach(const QJsonValue &value, asns){
-        item->asns->appendRow({new QStandardItem(QString::number(count)),
-                                            new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, asns)
+        item->asns->appendRow(new QStandardItem(value.toString()));
 
     QJsonObject item_info = cidr.value("item_info").toObject();
     item->comment = item_info["comment"].toString();

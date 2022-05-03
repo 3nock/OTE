@@ -39,6 +39,13 @@ public:
         rule.pattern = QRegExp(":\\s*([\"](?:[^\"])*[\"])");
         rule.format.setForeground(Qt::white);
         rules.append(rule);
+
+        /* urls
+        //9   @:%._\+~#=  ]
+        rule.pattern.setPattern("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})");
+        rule.format.setForeground(Qt::darkGreen);
+        rules.append(rule);
+        */
     }
 
     void forLightTheme(){
@@ -63,6 +70,13 @@ public:
         rule.pattern = QRegExp(":\\s*([\"](?:[^\"])*[\"])");
         rule.format.setForeground(Qt::black);
         rules.append(rule);
+
+        /* urls
+        //9   @:%._\+~#=  ]
+        rule.pattern.setPattern("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})");
+        rule.format.setForeground(Qt::darkGreen);
+        rules.append(rule);
+        */
     }
 
 private:

@@ -60,9 +60,8 @@ void MXEnum::on_treeViewResults_customContextMenuRequested(const QPoint &pos){
     menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
     menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
     menu.addSeparator();
-    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent()))
+    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent())){
         menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
-    if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent())){
         menu.addSeparator();
         menu.addAction(tr("Send Hostname to OSINT"), this, [=](){this->sendSelectedToEngine(TOOL::OSINT);})->setIcon(QIcon(":/img/res/icons/domain.png"));
         menu.addAction(tr("Send Hostname to RAW"), this, [=](){this->sendSelectedToEngine(TOOL::RAW);})->setIcon(QIcon(":/img/res/icons/domain.png"));

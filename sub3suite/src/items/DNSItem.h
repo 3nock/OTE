@@ -26,7 +26,7 @@ struct DNS {
     QSet<QString> NS;
     QSet<QString> MX;
     QSet<QString> TXT;
-    QSet<QStringList> SRV;
+    QSet<QString> SRV;
 };
 }
 
@@ -121,10 +121,8 @@ public:
     }
 
     void addSRV(const s3s_struct::DNS &dns){
-        foreach(const QStringList &srv, dns.SRV)
-            SRV->appendRow({new QStandardItem(srv.at(0)),
-                           new QStandardItem(srv.at(1)),
-                           new QStandardItem(srv.at(2))});
+        foreach(const QString &srv, dns.SRV)
+            SRV->appendRow(new QStandardItem(srv));
 
         this->update_items();
 
@@ -154,10 +152,8 @@ public:
         foreach(const QString &txt, dns.TXT)
             TXT->appendRow(new QStandardItem(txt));
 
-        foreach(const QStringList &srv, dns.SRV){
-            SRV->appendRow({new QStandardItem(srv.at(1)),
-                           new QStandardItem(srv.at(2))});
-        }
+        foreach(const QString &srv, dns.SRV)
+            SRV->appendRow(new QStandardItem(srv));
 
         this->update_items();
 

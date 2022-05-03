@@ -27,8 +27,6 @@ void OsintTool::onScanLog(ScanLog log){
             ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"green\">"+log.message+"</font>");
     }
 
-    qDebug() << "Logged out: " << log.moduleName;
-
     // add a new line...
     ui->plainTextEditLogs->appendPlainText("");
 }

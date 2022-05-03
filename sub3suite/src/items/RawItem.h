@@ -15,10 +15,8 @@
 
 namespace s3s_struct {
 struct RAW {
-    QString target;
-    QString module;
-    QString query_option;
-    QByteArray results;
+    QString raw;
+    QByteArray result;
 };
 }
 
@@ -36,23 +34,14 @@ public:
     }
 
 public:
-    QString module;
-    QString target;
-    QString query_option;
-    QByteArray json;
-
     /* summary */
     QString last_modified;
     QString comment;
 
     void setValues(const s3s_struct::RAW &raw){
-        this->setText(QString("%1 [%2] [%3]").arg(raw.module).arg(raw.query_option).arg(raw.target));
-        json = raw.results;
-        module = raw.module;
-        query_option = raw.query_option;
-        target = raw.target;
+        this->setText(raw.raw);
 
-        QJsonDocument document = QJsonDocument::fromJson(json);
+        QJsonDocument document = QJsonDocument::fromJson(raw.result);
         if(document.isArray())
             this->setArray(document.array(), this);
         if(document.isObject())
@@ -75,8 +64,8 @@ public:
 
     void setObject(const QJsonObject &object, QStandardItem *item){
         QStringList keys = object.keys();
+        item->setWhatsThis(JSON_OBJECT);
         if(item != this){
-            item->setWhatsThis(JSON_OBJECT);
             item->setIcon(QIcon(":/img/res/icons/folder2.png"));
             if(s3s_global::is_dark_theme)
                 item->setForeground(Qt::white);
@@ -114,8 +103,8 @@ public:
 
     void setArray(const QJsonArray &array, QStandardItem *item){
         int count = 0;
+        item->setWhatsThis(JSON_ARRAY);
         if(item != this){
-            item->setWhatsThis(JSON_ARRAY);
             item->setIcon(QIcon(":/img/res/icons/folder2.png"));
             if(s3s_global::is_dark_theme)
                 item->setForeground(Qt::white);

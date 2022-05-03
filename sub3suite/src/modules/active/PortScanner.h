@@ -6,7 +6,6 @@
 
 #include <QMutex>
 #include <QQueue>
-#include <tchar.h>
 #include <QTcpSocket>
 #include <QWaitCondition>
 
@@ -18,6 +17,7 @@
 #include <ws2def.h>
 #include <iphlpapi.h>
 #include <WS2tcpip.h>
+#include <tchar.h>
 
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "IPHLPAPI.lib")

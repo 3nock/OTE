@@ -374,6 +374,11 @@ QScrollBar::sub-page:vertical {
 QCheckBox {
     color: black;
     padding: 2px;
+    background-color: transparent;
+}
+
+QGroupBox {
+    background-color: rgba(230, 230, 230, 255);
 }
 
 QCheckBox:disabled {

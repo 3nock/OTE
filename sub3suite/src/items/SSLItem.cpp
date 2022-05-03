@@ -45,7 +45,7 @@ QJsonObject ssl_to_json(s3s_item::SSL *item){
     /* alternative names */
     QJsonArray alt_names;
     for(int i = 0; i < item->subjectAltNames->rowCount(); i++)
-        alt_names.append(item->subjectAltNames->child(i, 1)->text());
+        alt_names.append(item->subjectAltNames->child(i, 0)->text());
     ssl.insert("alt_names", alt_names);
 
     ssl.insert("item_info", item_info);
@@ -86,12 +86,8 @@ void json_to_ssl(const QJsonObject &ssl, s3s_item::SSL *item){
     item->key_algorithm->setText(ssl.value("key_algorithm").toString());
 
     /* alternative names */
-    int count = 0;
-    foreach(const QJsonValue &value, ssl.value("alt_names").toArray()){
-        item->subjectAltNames->appendRow({new QStandardItem(QString::number(count)),
-                                          new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, ssl.value("alt_names").toArray())
+        item->subjectAltNames->appendRow(new QStandardItem(value.toString()));
 
     QJsonObject item_info = ssl.value("item_info").toObject();
     item->comment = item_info["comment"].toString();
