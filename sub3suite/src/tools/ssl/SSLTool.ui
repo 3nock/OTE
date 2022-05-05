@@ -29,13 +29,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="labelOUT">
-       <property name="text">
-        <string>OUT:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="comboBoxOutput">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -57,7 +50,7 @@
        </property>
        <item>
         <property name="text">
-         <string>Alternative Names</string>
+         <string>Associated Names</string>
         </property>
        </item>
        <item>
@@ -102,37 +95,37 @@
        </property>
        <item>
         <property name="text">
-         <string>HTTPS</string>
+         <string>HTTPS connection</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>FTP</string>
+         <string>FTP connection</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>FTPs</string>
+         <string>FTPs connection</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>SSH</string>
+         <string>SSH connection</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>SMTP</string>
+         <string>SMTP connection</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>IMAP</string>
+         <string>IMAP connection</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>POP</string>
+         <string>POP connection</string>
         </property>
        </item>
       </widget>

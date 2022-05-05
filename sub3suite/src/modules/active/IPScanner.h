@@ -3,6 +3,7 @@
 
 #include "AbstractScanner.h"
 #include "PortScanner.h"
+#include "PingScanner.h"
 #include <QQueue>
 #include <QMutex>
 #include <QHostInfo>
@@ -20,6 +21,7 @@ struct ScanStat {  // scan statistics
 struct ScanConfig { // scan configurations
     QQueue<QString> nameservers;
     port::ScanArgs *portScanConfig;
+    ping::ScanArgs *pingScanConfig;
     int threads = 50;
     int timeout = 3000;
 

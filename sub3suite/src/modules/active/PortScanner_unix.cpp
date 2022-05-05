@@ -2,35 +2,50 @@
 
 #if defined(Q_OS_UNIX)
 
-int port::Scanner::start_syn_unix(char *target, QList<u_short> ports) {
-    double program_duration;
-    struct timespec start_time, finish_time;
-    clock_gettime(CLOCK_MONOTONIC, &start_time);
+struct in_addr port::Scanner::dest_ip;
+
+int port::Scanner::start_syn_scan(char *target, QList<u_short> ports) {
+    // if target is hostname. Resolve to IP
+    if(m_args->is_host){
+        struct addrinfo *dest = nullptr;
+        struct addrinfo hints;
+        hints.ai_family = AF_INET;
+        hints.ai_socktype = SOCK_RAW;
+        hints.ai_protocol = IPPROTO_TCP;
+        if(getaddrinfo(target,nullptr,&hints,&dest) != 0){
+            log.message = "getaddrinfo() failed!";
+            return -1;
+        }
+
+        inet_ntop(AF_INET, &(((sockaddr_in*)dest->ai_addr)->sin_addr), target, dest->ai_addrlen);
+    }
 
     //Get machine's local IP for IP header information in datagram packet
     char source_ip[INET6_ADDRSTRLEN];
     if(get_local_ip(source_ip) == -1)
-        goto EXIT;
+        return -1;
 
     //This is the main socket to send the SYN packet
     int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
     if (sockfd < 0){
-        log.message = "Error creating socket. Error number: "+QString::number(errno)+" Error message: "+strerror(errno));
-        goto EXIT;
+        log.message = "Error creating socket. Error number: "+QString::number(errno)+" Error message: "+strerror(errno);
+        return -1;
     }
 
     //Set IP_HDRINCL socket option to tell the kernel that headers are included in the packet
     int oneVal = 1;
     if (setsockopt(sockfd, IPPROTO_IP, IP_HDRINCL, &oneVal, sizeof(oneVal)) < 0){
-        log.message = "Error setting IP_HDRINCL. Error number: "+QString::number(errno)+" Error message: "+strerror(errno));
-        goto EXIT;
+        log.message = "Error setting IP_HDRINCL. Error number: "+QString::number(errno)+" Error message: "+strerror(errno);
+        close(sockfd);
+        return -1;
     }
 
     //Current iteration's target host address
     dest_ip.s_addr = inet_addr(target);
     if (dest_ip.s_addr == -1){
         log.message = "Invalid address";
-        goto EXIT;
+        close(sockfd);
+        return -1;
     }
 
     char datagram[4096];
@@ -42,12 +57,13 @@ int port::Scanner::start_syn_unix(char *target, QList<u_short> ports) {
     //Thread to listen for just one SYN-ACK packet from any of the selected ports
     pthread_t sniffer_thread;
     if (pthread_create(&sniffer_thread, NULL, receive_ack, NULL) < 0){
-        log.message = "Could not create sniffer thread. Error number: "+QString::number(errno)+" Error message: "+strerror(errno));
-        goto EXIT;
+        log.message = "Could not create sniffer thread. Error number: "+QString::number(errno)+" Error message: "+strerror(errno);
+        close(sockfd);
+        return -1;
     }
 
     //Iterate all selected ports and send SYN packet all at once
-    for(int i = 0; i < ports; i++) {
+    for(int i = 0; i < ports.length(); i++) {
         struct sockaddr_in dest;
         struct pseudo_header psh;
 
@@ -67,34 +83,16 @@ int port::Scanner::start_syn_unix(char *target, QList<u_short> ports) {
 
         tcph->check = check_sum((unsigned short*)&psh, sizeof(struct pseudo_header));
 
-        if (sendto(sockfd, datagram, sizeof(struct iphdr) + sizeof(struct tcphdr), 0, (struct sockaddr*)&dest, sizeof(dest)) < 0){
-            log.message = "Error sending syn packet. Error number: "+QString::number(errno)+" Error message: "+strerror(errno));
-            goto EXIT;
+        if(sendto(sockfd, datagram, sizeof(struct iphdr) + sizeof(struct tcphdr), 0, (struct sockaddr*)&dest, sizeof(dest)) < 0){
+            log.message = "Error sending syn packet. Error number: "+QString::number(errno)+" Error message: "+strerror(errno);
+            close(sockfd);
+            return -1;
         }
-
-        pch = strtok(NULL, ",");
     }
 
     //Will wait for the sniffer to receive a reply, host is considered closed if there aren't any
     pthread_join(sniffer_thread, NULL);
     close(sockfd);
-
-    /* time
-    clock_gettime(CLOCK_MONOTONIC, &finish_time);
-    program_duration = (finish_time.tv_sec - start_time.tv_sec);
-    program_duration += (finish_time.tv_nsec - start_time.tv_nsec) / 1000000000.0;
-
-    int hours_duration = program_duration / 3600;
-    int mins_duration = (int)(program_duration / 60) % 60;
-    double secs_duration = fmod(program_duration, 60);
-
-    printf("\nTotal active host: %d\n", total_open_host);
-    printf("Scan duration    : %d hour(s) %d min(s) %.05lf sec(s)\n", hours_duration, mins_duration, secs_duration);
-    */
-
-EXIT:
-    if(sockfd)
-        close(sockfd);
 
     return 0;
 }
@@ -137,50 +135,6 @@ void port::Scanner::prepare_datagram(char* datagram, const char* source_ip, stru
 }
 
 /**
-  Convert string s to integer
- */
-void port::Scanner::str_to_int(int* out, char* s, int base){
-    if (s[0] == '\0' || isspace((unsigned char)s[0]))
-        return;
-
-    char* end;
-    errno = 0;
-    long l = strtol(s, &end, base);
-
-    if (l > INT_MAX || (errno == ERANGE && l == LONG_MAX))
-        return;
-    if (l < INT_MIN || (errno == ERANGE && l == LONG_MIN))
-        return;
-    if (*end != '\0')
-        return;
-
-    *out = l;
-
-    return;
-}
-
-/**
-  Parse CIDR notation address.
-  Return the number of bits in the netmask if the string is valid.
-  Return -1 if the string is invalid.
- */
-int port::Scanner::parse_cidr(const char* cidr, struct in_addr* addr, struct in_addr* mask){
-    int bits = inet_net_pton(AF_INET, cidr, addr, sizeof addr);
-
-    mask->s_addr = htonl(~(bits == 32 ? 0 : ~0U >> bits));
-    return bits;
-}
-
-/**
-  Format the IPv4 address in dotted quad notation, using a static buffer.
- */
-const char* port::Scanner::dotted_quad(const struct in_addr* addr){
-    static char buf[INET_ADDRSTRLEN];
-    return inet_ntop(AF_INET, addr, buf, sizeof buf);
-}
-
-
-/**
   Method to sniff incoming packets and look for Ack replies
 */
 int port::Scanner::start_sniffer() {
@@ -194,6 +148,7 @@ int port::Scanner::start_sniffer() {
     //Create a raw socket that shall sniff
     sock_raw = socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
     if (sock_raw < 0) {
+        free(buffer);
         qWarning() << "Socket Error";
         return 1;
     }
@@ -201,6 +156,7 @@ int port::Scanner::start_sniffer() {
     saddr_size = sizeof(saddr);
 
     //Receive a packet
+    qDebug() << "receiving a packet";
     data_size = recvfrom(sock_raw, buffer, 65536, 0, (struct sockaddr*)&saddr, &saddr_size);
 
     if (data_size < 0) {
@@ -208,6 +164,7 @@ int port::Scanner::start_sniffer() {
         return 1;
     }
 
+    qDebug() << "processing a packet";
     process_packet(buffer, data_size, inet_ntoa(saddr.sin_addr));
     close(sock_raw);
 
@@ -219,7 +176,7 @@ int port::Scanner::start_sniffer() {
 */
 void* port::Scanner::receive_ack(void* ptr){
     start_sniffer();
-    return NULL;
+    return nullptr;
 }
 
 /**
@@ -229,6 +186,8 @@ void port::Scanner::process_packet(unsigned char* buffer, int size, char* source
     struct iphdr* iph = (struct iphdr*)buffer; //IP Header part of this packet
     struct sockaddr_in source, dest;
     unsigned short iphdrlen;
+
+    qDebug() << "Received!";
 
     if (iph->protocol == 6) {
         struct iphdr* iph = (struct iphdr*)buffer;
@@ -315,7 +274,7 @@ int port::Scanner::get_local_ip(char* buffer) {
     serv.sin_addr.s_addr = inet_addr(kGoogleDnsIp);
     serv.sin_port = htons(dns_port);
 
-    if (connect(sock, (const struct sockaddr*)&serv, sizeof(serv)) != 0){
+    if (::connect(sock, (const struct sockaddr*)&serv, sizeof(serv)) != 0){
         log.message = "Failed to get local IP\n";
         return -1;
     }
@@ -346,7 +305,7 @@ void port::Scanner::ip_to_host(const char* ip, char* buffer) {
     dest.sin_port = 0;
 
     if (getnameinfo((struct sockaddr*)&dest, sizeof(dest), buffer, NI_MAXHOST, NULL, 0, NI_NAMEREQD) != 0)
-        strcpy(buffer, "Hostname can't be determined");
+        qWarning() << "Hostname can't be determined";
 }
 
 #endif // UNIX

@@ -105,8 +105,6 @@ void IPEnum::initUI(){
     /* setting specific properties */
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
-    ui->labelOut->setProperty("s3s_color", true);
-    ui->labelModule->setProperty("s3s_color", true);
 
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText("Filter...");
@@ -147,7 +145,7 @@ void IPEnum::on_comboBoxOutput_currentIndexChanged(int index){
     ui->comboBoxEngine->clear();
     switch(index){
     case 0:
-        ui->comboBoxEngine->addItems({"IpRegistry", "IpData", "IpInfo", "IpAPI" });
+        ui->comboBoxEngine->addItems({"ipregistry Module", "ipdata Module", "ipinfo Module", "ipapi Module" });
         break;
     case 1:
         ui->comboBoxEngine->addItems({"Omnisint"});

@@ -894,7 +894,7 @@
                 <item>
                  <widget class="QCheckBox" name="moduleCrtsh">
                   <property name="text">
-                   <string>Crtsh</string>
+                   <string>crt.sh</string>
                   </property>
                  </widget>
                 </item>

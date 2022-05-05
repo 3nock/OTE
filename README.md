@@ -9,7 +9,7 @@ Sub3 Suite is a research-grade suite of tools for Subdomain Enumeration, OSINT I
 manual and automated analysis on variety of target types with many available features & tools. For more information checkout the [documentation](https://github.com/3nock/s3s_doc/blob/main/md/index.md)
 
 ## Screenshots
-<img src="docs/images/engines.gif"/>
+<img src="docs/images/tools.gif"/>
 <img src="docs/images/screenshot_project.png"/>
 
 ## Preface

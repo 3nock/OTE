@@ -29,13 +29,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="labelModule">
-       <property name="text">
-        <string>MODULE:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="comboBoxEngine">
        <property name="minimumSize">
         <size>
@@ -45,7 +38,7 @@
        </property>
        <item>
         <property name="text">
-         <string>TruMail</string>
+         <string>TruMail Module</string>
         </property>
        </item>
       </widget>

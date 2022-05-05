@@ -469,26 +469,6 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <item>
-              <widget class="QComboBox" name="comboBoxFilter">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <item>
-                <property name="text">
-                 <string>DNS</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Value</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item>
               <widget class="QLineEdit" name="lineEditFilter"/>
              </item>
              <item>

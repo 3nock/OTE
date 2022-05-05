@@ -162,7 +162,7 @@ void IPTool::onReScan(QQueue<QString> targets){
 
     /* logs */
     log("----------------- Re-Scan ---------------\n");
-    qInfo() << "[ACTIVE] Re-Scan Started";
+    qInfo() << "[IP] Re-Scan Started";
 }
 
 void IPTool::onScanThreadEnded(){
@@ -179,7 +179,7 @@ void IPTool::onScanThreadEnded(){
         else
             log("------------------ End --------------\n");
 
-        qInfo() << "[ACTIVE] Scan Ended";
+        qInfo() << "[IP] Scan Ended";
 
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)

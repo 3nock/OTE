@@ -244,6 +244,10 @@ QTreeView[no_item_border="true"] {
     border-width: 0px;
 }
 
+QTextBrowser {
+    background-color: rgba(170, 170, 127, 100);
+}
+
 /****************************** ScrollBar ******************************/
 QScrollBar:horizontal {
     height: 18px;
@@ -378,7 +382,7 @@ QCheckBox {
 }
 
 QGroupBox {
-    background-color: rgba(230, 230, 230, 255);
+    background-color: transparent;
 }
 
 QCheckBox:disabled {

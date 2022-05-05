@@ -74,20 +74,9 @@ typedef struct cmsghdr cmsghdr_t;
     #define ICMP6_ECHO_REPLY 129
 #endif
 
-#define REQUEST_TIMEOUT 1000000
-#define REQUEST_INTERVAL 1000000
-
 #define close_socket close
 
 #pragma pack(push, 1)
-
-struct icmp {
-    uint8_t icmp_type;
-    uint8_t icmp_code;
-    uint16_t icmp_cksum;
-    uint16_t icmp_id;
-    uint16_t icmp_seq;
-};
 
 struct ip6_pseudo_hdr {
     struct in6_addr src;
@@ -167,7 +156,7 @@ class Scanner: public AbstractScanner {
         int recvbuflen = MAX_RECV_BUF_LEN;    // Length of received packets.
         char recvbuf[MAX_RECV_BUF_LEN];       // For received packets
 
-        int ping_win();
+        int ping();
         int SetTtl(SOCKET s, int ttl);
         void SetIcmpSequence(char *buf);
         USHORT checksum(USHORT *buffer, int size);
@@ -180,8 +169,7 @@ class Scanner: public AbstractScanner {
 #endif // WINDOWS
 
 #if defined(Q_OS_UNIX)
-        void ping_unix();
-        uint64_t utime(void);
+        int ping();
         uint16_t compute_checksum(const char *buf, size_t size);
 #endif // UNIX
 };

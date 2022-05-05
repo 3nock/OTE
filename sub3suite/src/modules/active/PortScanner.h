@@ -90,6 +90,7 @@ union time_union {
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <sys/socket.h>
 
 struct pseudo_header { //Needed for checksum calculation
     unsigned int source_address;
@@ -201,21 +202,20 @@ class Scanner: public AbstractScanner {
 #endif  // WINDOWS
 
 #if defined (Q_OS_UNIX)
-        int start_syn_unix(char *target, QList<u_short> ports);
+        int start_syn_scan(char *target, QList<u_short> ports);
         unsigned short check_sum(unsigned short*, int);
-        const char* dotted_quad(const struct in_addr*);
         char* hostname_to_ip(char*);
-        void ip_to_host(const char*, char*);
-        void* receive_ack(void*);
-        void process_packet(unsigned char*, int, char*);
+        static void ip_to_host(const char*, char*);
+        static int start_sniffer();
+        static void* receive_ack(void*);
+        static void process_packet(unsigned char*, int, char*);
         void str_to_int(int*, char*, int);
-        void get_local_ip(char*);
+        int get_local_ip(char*);
         void err_exit(char*, ...);
         void prepare_datagram(char*, const char*, struct iphdr*, struct tcphdr*);
         void parse_target(char*, struct in_addr*, int64_t*);
-        int parse_cidr(const char*, struct in_addr*, struct in_addr*);
 
-        struct in_addr dest_ip;
+        static struct in_addr dest_ip;
 #endif  // UNIX
 };
 

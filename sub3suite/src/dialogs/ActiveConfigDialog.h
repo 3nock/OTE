@@ -42,14 +42,14 @@ class ActiveConfigDialog : public QDialog{
         Ui::ActiveConfigDialog *ui;
 
         bool brute = false;
-        bool active = false;
+        bool host = false;
         bool dns = false;
         bool ssl = false;
         bool url = false;
         bool ip = false;
 
         brute::ScanConfig *m_configBrute = nullptr;
-        host::ScanConfig *m_configActive = nullptr;
+        host::ScanConfig *m_configHost = nullptr;
         dns::ScanConfig *m_configDns = nullptr;
         ssl::ScanConfig *m_configSSL = nullptr;
         url::ScanConfig *m_configURL = nullptr;
@@ -60,14 +60,14 @@ class ActiveConfigDialog : public QDialog{
         void m_initWidgets();
 
         void m_loadConfigBrute();
-        void m_loadConfigActive();
+        void m_loadConfigHost();
         void m_loadConfigDns();
         void m_loadConfigSSL();
         void m_loadConfigURL();
         void m_loadConfigIP();
 
         void m_saveBrute();
-        void m_saveActive();
+        void m_saveHost();
         void m_saveDns();
         void m_saveSSL();
         void m_saveURL();

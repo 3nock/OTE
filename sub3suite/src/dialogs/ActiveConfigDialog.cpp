@@ -36,19 +36,19 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, brute::ScanConfig *confi
     this->adjustSize();
 }
 
-/* for active... */
+/* for host... */
 ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, host::ScanConfig *config) :
     QDialog(parent),
     ui(new Ui::ActiveConfigDialog),
-    m_configActive(config),
+    m_configHost(config),
     m_customNameserverListModel(new QStringListModel)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
-    active = true;
+    host = true;
     this->m_initWidgets();
-    this->m_loadConfigActive();
+    this->m_loadConfigHost();
 
     /* hiding unused widgets */
     ui->checkBoxWildcards->hide();
@@ -56,6 +56,10 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, host::ScanConfig *config
     ui->checkBoxRedirects->hide();
     ui->checkBoxScreenshot->hide();
     ui->checkBoxTitle->hide();
+    ui->groupBoxPortScan->hide();
+#if defined (Q_OS_UNIX)
+    ui->groupBoxPingScan->hide();
+#endif
 
     this->adjustSize();
 }
@@ -84,11 +88,16 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ip::ScanConfig *config) 
     ui->radioButtonAAAA->hide();
     ui->radioButtonANY->hide();
     ui->labelRecordType->hide();
+    ui->tabWidget->removeTab(1);
+    ui->groupBoxPortScan->hide();
+#if defined (Q_OS_UNIX)
+    ui->groupBoxPingScan->hide();
+#endif
 
     this->adjustSize();
 }
 
-/* for records... */
+/* for DNS... */
 ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, dns::ScanConfig *config) :
     QDialog(parent),
     ui(new Ui::ActiveConfigDialog),
@@ -174,6 +183,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, url::ScanConfig *config)
     ui->tabWidget->removeTab(1);
     ui->groupBoxPingScan->hide();
     ui->groupBoxPortScan->hide();
+    ui->checkBoxScreenshot->hide();
 
     this->adjustSize();
 }
@@ -190,8 +200,8 @@ void ActiveConfigDialog::on_buttonCancel_clicked(){
 void ActiveConfigDialog::on_buttonOk_clicked(){
     if(brute)
         this->m_saveBrute();
-    if(active)
-        this->m_saveActive();
+    if(host)
+        this->m_saveHost();
     if(dns)
         this->m_saveDns();
     if(ssl)
@@ -256,7 +266,7 @@ void ActiveConfigDialog::m_loadConfigBrute(){
     CONFIG.endArray();
 }
 
-void ActiveConfigDialog::m_loadConfigActive(){
+void ActiveConfigDialog::m_loadConfigHost(){
     CONFIG.beginGroup(CFG_ACTIVE);
     ui->lineEditTimeout->setText(CONFIG.value(CFG_VAL_TIMEOUT).toString());
     ui->lineEditThreads->setText(CONFIG.value(CFG_VAL_THREADS).toString());
@@ -266,6 +276,8 @@ void ActiveConfigDialog::m_loadConfigActive(){
     QString portScan = CONFIG.value(CFG_VAL_PORTSCAN).toString();
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();
     QString nsType = CONFIG.value(CFG_VAL_NAMESERVER).toString();
+    ui->lineEditPingTTL->setText(CONFIG.value("ping_ttl").toString());
+    ui->lineEditPingByte->setText(CONFIG.value("ping_bytes").toString());
     CONFIG.endGroup();
 
     if(record == "A")
@@ -370,6 +382,8 @@ void ActiveConfigDialog::m_loadConfigIP(){
     ui->groupBoxTimeout->setChecked(CONFIG.value(CFG_VAL_SETTIMEOUT).toBool());
     QString nsType = CONFIG.value(CFG_VAL_NAMESERVER).toString();
     QString portScan = CONFIG.value(CFG_VAL_PORTSCAN).toString();
+    ui->lineEditPingTTL->setText(CONFIG.value("ping_ttl").toString());
+    ui->lineEditPingByte->setText(CONFIG.value("ping_bytes").toString());
     CONFIG.endGroup();
 
     if(nsType == "single")
@@ -500,11 +514,12 @@ void ActiveConfigDialog::m_saveBrute(){
     CONFIG.endArray();
 }
 
-void ActiveConfigDialog::m_saveActive(){
-    /* get values... */
-
+void ActiveConfigDialog::m_saveHost(){
+    /* get values */
     QString thread = ui->lineEditThreads->text();
     QString timeout = ui->lineEditTimeout->text();
+    int ping_ttl = ui->lineEditPingTTL->text().toInt();
+    int ping_byte = ui->lineEditPingByte->text().toInt();
 
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
@@ -529,6 +544,8 @@ void ActiveConfigDialog::m_saveActive(){
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
     CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
+    CONFIG.setValue("ping_ttl", ping_ttl);
+    CONFIG.setValue("ping_bytes", ping_byte);
 
     if(nsSingle)
         CONFIG.setValue(CFG_VAL_NAMESERVER, "single");
@@ -560,48 +577,50 @@ void ActiveConfigDialog::m_saveActive(){
 
     /* saving to brute::ScanConfig structure... */
 
-    m_configActive->timeout = timeout.toInt();
-    m_configActive->threads = thread.toInt();
-    m_configActive->noDuplicates = noDuplicates;
-    m_configActive->autoSaveToProject = autosaveToProject;
-    m_configActive->setTimeout = setTimeout;
+    m_configHost->timeout = timeout.toInt();
+    m_configHost->threads = thread.toInt();
+    m_configHost->noDuplicates = noDuplicates;
+    m_configHost->autoSaveToProject = autosaveToProject;
+    m_configHost->setTimeout = setTimeout;
+    m_configHost->pingScanConfig->ttl = ping_ttl;
+    m_configHost->pingScanConfig->data_size = ping_byte;
 
     if(recordA)
-        m_configActive->recordType = QDnsLookup::A;
+        m_configHost->recordType = QDnsLookup::A;
     if(recordAAAA)
-        m_configActive->recordType = QDnsLookup::AAAA;
+        m_configHost->recordType = QDnsLookup::AAAA;
     if(recordANY)
-        m_configActive->recordType = QDnsLookup::ANY;
+        m_configHost->recordType = QDnsLookup::ANY;
 
     if(syn)
-        m_configActive->portScanConfig->scan_type = port::ScanType::SYN;
+        m_configHost->portScanConfig->scan_type = port::ScanType::SYN;
     if(connection)
-        m_configActive->portScanConfig->scan_type = port::ScanType::CONNECTION;
+        m_configHost->portScanConfig->scan_type = port::ScanType::CONNECTION;
 
-    m_configActive->nameservers.clear();
+    m_configHost->nameservers.clear();
     if(nsSingle){
         CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
         QString nameserver = CONFIG.value(ui->comboBoxSingleNameserver->currentText()).toString();
-        m_configActive->nameservers.enqueue(nameserver);
+        m_configHost->nameservers.enqueue(nameserver);
         CONFIG.endGroup();
     }
     if(nsRandom){
         CONFIG.beginGroup(CFG_GRP_DEFAULT_NS);
         QStringList nameservers = CONFIG.childKeys();
         foreach(const QString &key, nameservers)
-            m_configActive->nameservers.enqueue(CONFIG.value(key).toString());
+            m_configHost->nameservers.enqueue(CONFIG.value(key).toString());
         CONFIG.endGroup();
     }
     if(nsCustom){
         foreach(const QString &nameserver, m_customNameserverListModel->stringList())
-            m_configActive->nameservers.enqueue(nameserver);
+            m_configHost->nameservers.enqueue(nameserver);
     }
 
     /* save used nameservers to config file */
     CONFIG.beginWriteArray("nameservers_active");
-    for (int i = 0; i < m_configActive->nameservers.length(); ++i) {
+    for (int i = 0; i < m_configHost->nameservers.length(); ++i) {
         CONFIG.setArrayIndex(i);
-        CONFIG.setValue("value", m_configActive->nameservers.at(i));
+        CONFIG.setValue("value", m_configHost->nameservers.at(i));
     }
     CONFIG.endArray();
 }
@@ -766,6 +785,8 @@ void ActiveConfigDialog::m_saveIP(){
     /* get values... */
     QString thread = ui->lineEditThreads->text();
     QString timeout = ui->lineEditTimeout->text();
+    int ping_ttl = ui->lineEditPingTTL->text().toInt();
+    int ping_byte = ui->lineEditPingByte->text().toInt();
 
     bool noDuplicates = ui->checkBoxNoDuplicates->isChecked();
     bool autosaveToProject = ui->checkBoxAutosave->isChecked();
@@ -785,6 +806,8 @@ void ActiveConfigDialog::m_saveIP(){
     CONFIG.setValue(CFG_VAL_DUPLICATES, noDuplicates);
     CONFIG.setValue(CFG_VAL_AUTOSAVE, autosaveToProject);
     CONFIG.setValue(CFG_VAL_SETTIMEOUT, setTimeout);
+    CONFIG.setValue("ping_ttl", ping_ttl);
+    CONFIG.setValue("ping_bytes", ping_byte);
 
     if(nsSingle)
         CONFIG.setValue(CFG_VAL_NAMESERVER, "single");
@@ -814,6 +837,8 @@ void ActiveConfigDialog::m_saveIP(){
     m_configIP->noDuplicates = noDuplicates;
     m_configIP->autoSaveToProject = autosaveToProject;
     m_configIP->setTimeout = setTimeout;
+    m_configIP->pingScanConfig->ttl = ping_ttl;
+    m_configIP->pingScanConfig->data_size = ping_byte;
 
     if(syn)
         m_configIP->portScanConfig->scan_type = port::ScanType::SYN;

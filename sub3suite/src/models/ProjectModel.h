@@ -128,11 +128,19 @@ public:
     QMap<QString, s3s_item::MX*> map_enumMX;
     QMap<QString, s3s_item::SSL*> map_enumSSL;
     QMap<QString, s3s_item::Email*> map_enumEmail;
+    QSet<QString> set_activeA;
+    QSet<QString> set_activeAAAA;
+    QSet<QString> set_activeNS;
+    QSet<QString> set_activeMX;
+    QSet<QString> set_activeTXT;
+    QSet<QString> set_activeCNAME;
+    QSet<QString> set_activeSRV;
 
     /* for active results */
     void addActiveHost(const s3s_struct::HOST &host);
     void addActiveWildcard(const s3s_struct::Wildcard &wildcard);
     void addActiveDNS(const s3s_struct::DNS &dns);
+    void addActiveRecord(const s3s_struct::DNS &dns);
     void addActiveURL(const s3s_struct::URL &url);
     void addActiveSSL(const QString &target, const QSslCertificate &cert);
     void addActiveSSL_hash(const QString &hash);

@@ -106,7 +106,7 @@ void ProjectModel::setHeaderLabels(){
     activeMX->setHorizontalHeaderLabels({QObject::tr(" MX DNS Records")});
     activeTXT->setHorizontalHeaderLabels({QObject::tr(" TXT DNS Records")});
     activeCNAME->setHorizontalHeaderLabels({QObject::tr(" CNAME DNS Records")});
-    activeSRV->setHorizontalHeaderLabels({QObject::tr(" Name"), QObject::tr(" Target"), QObject::tr(" Port")});
+    activeSRV->setHorizontalHeaderLabels({QObject::tr(" SRV Record")});
     activeSSL->setHorizontalHeaderLabels({QObject::tr(" SSL Certificates"), QObject::tr(" Values")});
     activeSSL_sha1->setHorizontalHeaderLabels({QObject::tr(" SSL Certificates SHA-1 Fingerprints")});
     activeSSL_sha256->setHorizontalHeaderLabels({QObject::tr(" SSL Certificates SHA-256 Fingerprints")});

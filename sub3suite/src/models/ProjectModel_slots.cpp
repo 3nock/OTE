@@ -82,6 +82,7 @@ void ProjectModel::addActiveDNS(const s3s_struct::DNS &dns){
     if(map_activeDNS.contains(dns.dns)){
         s3s_item::DNS *item = map_activeDNS.value(dns.dns);
         item->setValues(dns);
+        this->addActiveRecord(dns);
         return;
     }
 
@@ -90,6 +91,52 @@ void ProjectModel::addActiveDNS(const s3s_struct::DNS &dns){
     activeDNS->appendRow(item);
     map_activeDNS.insert(dns.dns, item);
     modified = true;
+    this->addActiveRecord(dns);
+}
+
+void ProjectModel::addActiveRecord(const s3s_struct::DNS &dns){
+    foreach(const QString &a, dns.A){
+        if(!set_activeA.contains(a)){
+            set_activeA.insert(a);
+            activeA->appendRow(new QStandardItem(a));
+        }
+    }
+    foreach(const QString &aaaa, dns.AAAA){
+        if(!set_activeAAAA.contains(aaaa)){
+            set_activeAAAA.insert(aaaa);
+            activeAAAA->appendRow(new QStandardItem(aaaa));
+        }
+    }
+    foreach(const QString &ns, dns.NS){
+        if(!set_activeNS.contains(ns)){
+            set_activeNS.insert(ns);
+            activeNS->appendRow(new QStandardItem(ns));
+        }
+    }
+    foreach(const QString &mx, dns.MX){
+        if(!set_activeMX.contains(mx)){
+            set_activeMX.insert(mx);
+            activeMX->appendRow(new QStandardItem(mx));
+        }
+    }
+    foreach(const QString &txt, dns.TXT){
+        if(!set_activeTXT.contains(txt)){
+            set_activeTXT.insert(txt);
+            activeTXT->appendRow(new QStandardItem(txt));
+        }
+    }
+    foreach(const QString &srv, dns.SRV){
+        if(!set_activeSRV.contains(srv)){
+            set_activeSRV.insert(srv);
+            activeSRV->appendRow(new QStandardItem(srv));
+        }
+    }
+    foreach(const QString &cname, dns.CNAME){
+        if(!set_activeCNAME.contains(cname)){
+            set_activeCNAME.insert(cname);
+            activeCNAME->appendRow(new QStandardItem(cname));
+        }
+    }
 }
 
 void ProjectModel::addActiveURL(const s3s_struct::URL &url){

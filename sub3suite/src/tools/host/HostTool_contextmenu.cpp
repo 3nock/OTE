@@ -89,8 +89,8 @@ void HostTool::on_tableViewResults_customContextMenuRequested(const QPoint &pos)
     QMenu extractMenu(this);
     extractMenu.setTitle(tr("Extract"));
     extractMenu.setIcon(QIcon(":/img/res/icons/extract.png"));
-    extractMenu.addAction(tr("Subdomain(*.)"), this, [=](){this->extractSelected(true, false);});
-    extractMenu.addAction(tr("Top level domain(.*)"), this, [=](){this->extractSelected(false, true);});
+    extractMenu.addAction(tr("Subdomain"), this, [=](){this->extractSelected(true, false);});
+    extractMenu.addAction(tr("Top level domain(TLD)"), this, [=](){this->extractSelected(false, true);});
 
     /* main menu */
     QMenu menu(this);

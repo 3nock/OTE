@@ -9,6 +9,7 @@ port::Scanner::~Scanner(){
 }
 
 void port::Scanner::lookup(){
+    /*
     switch (m_args->scan_type)
     {
     case port::ScanType::SYN:
@@ -19,6 +20,9 @@ void port::Scanner::lookup(){
         this->scanner_connection();
         break;
     }
+    */
+
+    this->scanner_connection();
 
     emit quitThread();
 }
@@ -30,6 +34,18 @@ void port::Scanner::scanner_connection(){
     while(m_target != nullptr)
     {
         foreach(const quint16 &port, m_args->target_ports){
+            m_mutex.lock();
+
+            /* if received pause signal lock the thread, dont unlock until resume signal*/
+            if(pause)
+                m_wait.wait(&m_mutex);
+
+            /* check if received stop signal */
+            if(stop)
+                break;
+
+            m_mutex.unlock();
+
             socket->connectToHost(m_target, port);
             if(socket->waitForConnected(m_args->timeout)){
                 if(m_args->is_host)
@@ -113,18 +129,15 @@ void port::Scanner::scanner_syn(){
 
 #endif // WINDOWS
 
-#if defined(Q_OS_UNIX)
+#if defined (Q_OS_UNIX)
     m_target = port::getTarget(m_args);
     while(m_target != nullptr) {
+        log.target = m_target;
         QByteArray ba = m_target.toLocal8Bit();
-        char *target = ba.data();
-
-        // Resolve the destination address
-        if(m_args->is_host)
-            target = hostname_to_ip(target);
 
         // start scan
-        start_syn_unix(target, m_args->target_ports.values());
+        if(start_syn_unix(ba.data(), m_args->target_ports.values()) == -1)
+            emit scanLog(log);
 
         // next target
         m_target = getTarget(m_args);

@@ -32,6 +32,15 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
+      <widget class="QComboBox" name="comboBox">
+       <item>
+        <property name="text">
+         <string>URL Lookup</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="lineEditTarget"/>
      </item>
      <item>

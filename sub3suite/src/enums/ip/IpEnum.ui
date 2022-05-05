@@ -29,13 +29,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="labelOut">
-       <property name="text">
-        <string>OUT:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="comboBoxOutput">
        <property name="minimumSize">
         <size>
@@ -56,13 +49,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="labelModule">
-       <property name="text">
-        <string>MODULE:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="comboBoxEngine">
        <property name="minimumSize">
         <size>
@@ -72,22 +58,22 @@
        </property>
        <item>
         <property name="text">
-         <string>IpRegistry</string>
+         <string>ipregistry Module</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>IpData</string>
+         <string>ipdata Module</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>IpInfo</string>
+         <string>ipinfo Module</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>IpApi</string>
+         <string>ipapi Module</string>
         </property>
        </item>
       </widget>

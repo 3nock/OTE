@@ -36,8 +36,24 @@ MainWindow::MainWindow(QWidget *parent) :
     m_updateChecker = new UpdateChecker(this);
     m_updateChecker->checkForUpdates_onStart();
     ui->statusbar->showMessage("Checking For Updates...", 3000);
+    this->setWindowIcon(QIcon(":/img/res/icons/main_logo.ico"));
+
+#if defined (Q_OS_LINUX)
+    this->setWindowIcon(QIcon(":/img/res/icons/main_logo.ico"));
+#endif
+
+#if defined(Q_OS_WIN)
+    // Load Winsock
+    WSADATA wsd;
+    int rc;
+    if ((rc = WSAStartup(MAKEWORD(2,2), &wsd)) != 0)
+        qWarning() << "WSAStartup() failed: " << rc;
+#endif // WINDOWS
 }
 MainWindow::~MainWindow(){
+#if defined (Q_OS_WIN)
+    WSACleanup();
+#endif
     delete ui;
 }
 
@@ -96,7 +112,7 @@ void MainWindow::initUI(){
 }
 
 void MainWindow::closeEvent(QCloseEvent *event){
-    int retVal = QMessageBox::warning(nullptr, "Close",
+    int retVal = QMessageBox::warning(nullptr, "Exit",
                                "Do you want to close Sub3 Suite?",
                                    QMessageBox::Close |
                                    QMessageBox::Cancel,
@@ -142,14 +158,15 @@ void MainWindow::initActions(){
     ui->actionSaveCopy->setIcon(QIcon(":/img/res/icons/save.png"));
 
     /* for tools */
-    ui->menuTools->addAction("OSINT Engine", this, [=](){this->onChangeTabToOsint();})->setIcon(QIcon(":/img/res/icons/osint.png"));
-    ui->menuTools->addAction("RAW Engine", this, [=](){this->onChangeTabToRaw();})->setIcon(QIcon(":/img/res/icons/raw.png"));
+    ui->menuTools->addAction("OSINT Tool", this, [=](){this->onChangeTabToOsint();})->setIcon(QIcon(":/img/res/icons/osint.png"));
+    ui->menuTools->addAction("RAW Tool", this, [=](){this->onChangeTabToRaw();})->setIcon(QIcon(":/img/res/icons/raw.png"));
     ui->menuTools->addSeparator();
-    ui->menuTools->addAction("BRUTE Engine", this, [=](){this->onChangeTabToBrute();})->setIcon(QIcon(":/img/res/icons/lock.png"));
-    ui->menuTools->addAction("ACTIVE Engine", this, [=](){this->onChangeTabToHost();})->setIcon(QIcon(":/img/res/icons/active.png"));
-    ui->menuTools->addAction("DNS Engine", this, [=](){this->onChangeTabToDns();})->setIcon(QIcon(":/img/res/icons/dns.png"));
-    ui->menuTools->addAction("SSL Engine", this, [=](){this->onChangeTabToSSL();})->setIcon(QIcon(":/img/res/icons/ssl.png"));
-    ui->menuTools->addAction("URL Engine", this, [=](){this->onChangeTabToURL();})->setIcon(QIcon(":/img/res/icons/url.png"));
+    ui->menuTools->addAction("BRUTE Tool", this, [=](){this->onChangeTabToBrute();})->setIcon(QIcon(":/img/res/icons/lock.png"));
+    ui->menuTools->addAction("HOST Tool", this, [=](){this->onChangeTabToHost();})->setIcon(QIcon(":/img/res/icons/active.png"));
+    ui->menuTools->addAction("IP Tool", this, [=](){this->onChangeTabToIP();})->setIcon(QIcon(":/img/res/icons/ip.png"));
+    ui->menuTools->addAction("DNS Tool", this, [=](){this->onChangeTabToDns();})->setIcon(QIcon(":/img/res/icons/dns.png"));
+    ui->menuTools->addAction("SSL Tool", this, [=](){this->onChangeTabToSSL();})->setIcon(QIcon(":/img/res/icons/ssl.png"));
+    ui->menuTools->addAction("URL Tool", this, [=](){this->onChangeTabToURL();})->setIcon(QIcon(":/img/res/icons/url.png"));
     ui->menuTools->addSeparator();
     ui->menuTools->addAction("IP Enumerator", this, [=](){this->onChangeTabToIpEnum();})->setIcon(QIcon(":/img/res/icons/ip.png"));
     ui->menuTools->addAction("ASN Enumerator", this, [=](){this->onChangeTabToAsnEnum();})->setIcon(QIcon(":/img/res/icons/asn.png"));

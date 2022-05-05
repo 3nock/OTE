@@ -353,7 +353,6 @@ void dns::Scanner::lookupFinished_srv(){
         s3s_struct::DNS dns;
         dns.dns = m_args->currentTarget;
         foreach(const QDnsServiceRecord &record, m_dns_srv->serviceRecords())
-            // dns.SRV.insert({record.name(), record.target(), QString::number(record.port())});
             dns.SRV.insert(record.target());
         emit scanResult(dns);
     }

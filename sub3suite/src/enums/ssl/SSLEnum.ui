@@ -29,13 +29,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="labelOut">
-       <property name="text">
-        <string>OUT:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="comboBoxOption">
        <property name="minimumSize">
         <size>
@@ -51,13 +44,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="labelModule">
-       <property name="text">
-        <string>MODULE:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="comboBoxModule">
        <property name="minimumSize">
         <size>
@@ -67,7 +53,7 @@
        </property>
        <item>
         <property name="text">
-         <string>Crstsh</string>
+         <string>crst.sh Module</string>
         </property>
        </item>
       </widget>

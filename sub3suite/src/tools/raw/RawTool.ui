@@ -29,6 +29,15 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
+      <widget class="QComboBox" name="comboBox">
+       <item>
+        <property name="text">
+         <string>Target</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="lineEditTarget"/>
      </item>
      <item>

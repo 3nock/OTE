@@ -191,12 +191,12 @@
                </font>
               </property>
               <property name="text">
-               <string>Time To Live(TTL):</string>
+               <string>Time To Live (TTL):</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="lineEditPingTTL"/>
             </item>
            </layout>
           </item>
@@ -217,12 +217,12 @@
                </font>
               </property>
               <property name="text">
-               <string>Bytes:</string>
+               <string>Data Size (bytes):</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2"/>
+             <widget class="QLineEdit" name="lineEditPingByte"/>
             </item>
            </layout>
           </item>
@@ -531,8 +531,8 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup_3"/>
-  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

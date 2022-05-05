@@ -45,6 +45,7 @@ IPTool::IPTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent, pr
 
     /* config */
     m_scanConfig->portScanConfig = m_portscannerArgs;
+    m_scanConfig->pingScanConfig = m_pingscannerArgs;
     m_scanArgs->config = m_scanConfig;
     m_pingscannerArgs->is_ip = true;
     m_portscannerArgs->is_ip = true;
@@ -194,6 +195,8 @@ void IPTool::initConfigValues(){
     m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
     m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
+    m_scanArgs->config->pingScanConfig->ttl = CONFIG.value("ping_ttl").toInt();
+    m_scanArgs->config->pingScanConfig->data_size = CONFIG.value("ping_bytes").toInt();
     QString portScan = CONFIG.value(CFG_VAL_PORTSCAN).toString();
     CONFIG.endGroup();
 
@@ -234,15 +237,6 @@ void IPTool::on_comboBoxOption_currentIndexChanged(int index){
         proxyModel->setSourceModel(m_model_dns);
         break;
     case 1: // PORT SCAN
-        if(!s3s_global::is_priv){
-#if defined (Q_OS_WIN)
-            QMessageBox::warning(this, "Warning!", "Please run Sub3 Suite as Administrator to use this feature!");
-#else
-            QMessageBox::warning(this, "Warning!", "Please run Sub3 Suite with root permission to use this feature!");
-#endif
-            ui->comboBoxOption->setCurrentIndex(0);
-            return;
-        }
         ui->framePort->show();
         proxyModel->setSourceModel(m_model_port);
         break;

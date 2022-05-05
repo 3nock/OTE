@@ -171,6 +171,7 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
         json_to_dns(value.toObject(), item);
         activeDNS->appendRow(item);
         map_activeDNS.insert(item->text(), item);
+        this->addActiveRecord(dns_to_struct(item));
     }
 
     /* active SSL sha1 */

@@ -23,8 +23,6 @@ void OsintTool::onScanLog(ScanLog log){
         ui->plainTextEditLogs->appendHtml("[Target]        : <font color=\"green\">"+log.target+"</font>");
         ui->plainTextEditLogs->appendHtml("[Status Code]   : <font color=\"green\">"+QString::number(log.statusCode)+"</font>");
         ui->plainTextEditLogs->appendHtml("[Results Count] : <font color=\"green\">"+QString::number(log.resultsCount)+"</font>");
-        if(!log.message.isEmpty())
-            ui->plainTextEditLogs->appendHtml("[Error message] : <font color=\"green\">"+log.message+"</font>");
     }
 
     // add a new line...

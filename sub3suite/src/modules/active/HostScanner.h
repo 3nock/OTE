@@ -15,6 +15,7 @@
 #include "src/items/HostItem.h"
 
 #include "PortScanner.h"
+#include "PingScanner.h"
 
 namespace host {
 
@@ -30,6 +31,7 @@ struct ScanConfig { // scan configurations
     QDnsLookup::Type recordType = QDnsLookup::A;
     QQueue<QString> nameservers;
     port::ScanArgs *portScanConfig;
+    ping::ScanArgs *pingScanConfig;
     int threads = 50;
     int timeout = 3000;
 

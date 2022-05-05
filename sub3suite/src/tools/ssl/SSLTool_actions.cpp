@@ -18,7 +18,7 @@ void SSLTool::clearResults(){
     case 0: // subdomain
         m_model_subdomain->clear();
         set_subdomain.clear();
-        m_model_subdomain->setHorizontalHeaderLabels({tr(" Alternative Names")});
+        m_model_subdomain->setHorizontalHeaderLabels({tr(" Associated Names")});
         break;
     case 1: // cert hash
         m_model_hash->clear();

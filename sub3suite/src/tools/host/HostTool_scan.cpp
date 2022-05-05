@@ -89,7 +89,7 @@ void HostTool::startScan(){
     for(int i = 0; i < status->activeScanThreads; i++)
     {
         switch (ui->comboBoxOption->currentIndex()) {
-        case 0: // ACTIVE DNS
+        case 0: // RESOLVE
         {
             host::Scanner *scanner = new host::Scanner(m_scanArgs);
             QThread *cThread = new QThread;
@@ -107,7 +107,7 @@ void HostTool::startScan(){
             cThread->start();
             break;
         }
-        case 1: // ACTIVE PORT
+        case 1: // PORTSCAN
         {
             port::Scanner *scanner = new port::Scanner(m_portscannerArgs);
             QThread *cThread = new QThread;
@@ -125,7 +125,7 @@ void HostTool::startScan(){
             cThread->start();
             break;
         }
-        case 2: // ACTIVE PING
+        case 2: // PING SCAN
         {
             ping::Scanner *scanner = new ping::Scanner(m_pingscannerArgs);
             QThread *cThread = new QThread;
@@ -162,7 +162,7 @@ void HostTool::onReScan(QQueue<QString> targets){
 
     /* logs */
     log("----------------- Re-Scan ---------------\n");
-    qInfo() << "[ACTIVE] Re-Scan Started";
+    qInfo() << "[HOST] Re-Scan Started";
 }
 
 void HostTool::onScanThreadEnded(){
@@ -179,7 +179,7 @@ void HostTool::onScanThreadEnded(){
         else
             log("------------------ End --------------\n");
 
-        qInfo() << "[ACTIVE] Scan Ended";
+        qInfo() << "[HOST] Scan Ended";
 
         /* set the progress bar to 100% just in case... */
         if(!status->isStopped)

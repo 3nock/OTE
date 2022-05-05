@@ -44,6 +44,7 @@ HostTool::HostTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent
 
     /* config... */
     m_scanConfig->portScanConfig = m_portscannerArgs;
+    m_scanConfig->pingScanConfig = m_pingscannerArgs;
     m_scanArgs->config = m_scanConfig;
     m_pingscannerArgs->is_host = true;
     m_portscannerArgs->is_host = true;
@@ -193,6 +194,8 @@ void HostTool::initConfigValues(){
     m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
     m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
     m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
+    m_scanArgs->config->pingScanConfig->ttl = CONFIG.value("ping_ttl").toInt();
+    m_scanArgs->config->pingScanConfig->data_size = CONFIG.value("ping_bytes").toInt();
     QString record = CONFIG.value(CFG_VAL_RECORD).toString();
     QString portScan = CONFIG.value(CFG_VAL_PORTSCAN).toString();
     CONFIG.endGroup();
@@ -236,24 +239,15 @@ void HostTool::on_lineEditFilter_textChanged(const QString &filterKeyword){
 
 void HostTool::on_comboBoxOption_currentIndexChanged(int index){
     switch (index) {
-    case 0: // ACTIVE DNS
+    case 0: // RESOLVE
         ui->framePort->hide();
         proxyModel->setSourceModel(m_model_dns);
         break;
-    case 1: // ACTIVE PORT]
-        if(!s3s_global::is_priv){
-#if defined (Q_OS_WIN)
-            QMessageBox::warning(this, "Warning!", "Please run Sub3 Suite as Administrator to use this feature!");
-#else
-            QMessageBox::warning(this, "Warning!", "Please run Sub3 Suite with root permission to use this feature!");
-#endif
-            ui->comboBoxOption->setCurrentIndex(0);
-            return;
-        }
+    case 1: // PORT SCAN
         ui->framePort->show();
         proxyModel->setSourceModel(m_model_port);
         break;
-    case 2: // ACTIVE PING
+    case 2: // PING SCAN
         if(!s3s_global::is_priv){
 #if defined (Q_OS_WIN)
             QMessageBox::warning(this, "Warning!", "Please run Sub3 Suite as Administrator to use this feature!");

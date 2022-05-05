@@ -3,7 +3,7 @@
 
 #if defined(Q_OS_UNIX)
 
-void ping::Scanner::ping_unix() {
+int ping::Scanner::ping() {
     int error;
     socket_t sockfd = -1;
     struct addrinfo *addrinfo_list = nullptr;
@@ -12,25 +12,14 @@ void ping::Scanner::ping_unix() {
     struct sockaddr_storage addr;
     socklen_t dst_addr_len;
     uint16_t id = (uint16_t)getpid();
-    uint16_t seq;
-    uint64_t start_time;
-    uint64_t delay;
+    uint16_t seq = random();
+    int optlevel = 0, option = 0;
 
     /* get ping type */
-    int ip_version;
-    switch (m_args->ping_type) {
-    case PING_TYPE::IPV4:
-        ip_version = IP_V4;
-        break;
-    case PING_TYPE::IPV6:
-        ip_version = IP_V6;
-        break;
-    case PING_TYPE::ANY:
-        ip_version = IP_VERSION_ANY;
-    }
-
+    int ip_version = IP_V4;
     if (ip_version == IP_V4 || ip_version == IP_VERSION_ANY) {
-        struct addrinfo hints = {0};
+        struct addrinfo hints;
+        hints.ai_flags = 0;
         hints.ai_family = AF_INET;
         hints.ai_socktype = SOCK_RAW;
         hints.ai_protocol = IPPROTO_ICMP;
@@ -38,14 +27,17 @@ void ping::Scanner::ping_unix() {
     }
     if (ip_version == IP_V6
         || (ip_version == IP_VERSION_ANY && error != 0)) {
-        struct addrinfo hints = {0};
+        struct addrinfo hints;
+        hints.ai_flags = 0;
         hints.ai_family = AF_INET6;
         hints.ai_socktype = SOCK_RAW;
         hints.ai_protocol = IPPROTO_ICMPV6;
         error = getaddrinfo(m_target.toUtf8(),nullptr,&hints,&addrinfo_list);
     }
-    if (error != 0)
+    if (error != 0){
+        log.message = "getaddrinfo() failed!";
         goto exit_error;
+    }
 
     for (addrinfo = addrinfo_list;
         addrinfo != nullptr;
@@ -54,9 +46,10 @@ void ping::Scanner::ping_unix() {
         if (sockfd >= 0)
             break;
     }
-
-    if ((int)sockfd < 0)
+    if ((int)sockfd < 0){
+        log.message = "socket() failed!";
         goto exit_error;
+    }
 
     memcpy(&addr, addrinfo->ai_addr, addrinfo->ai_addrlen);
     dst_addr_len = (socklen_t)addrinfo->ai_addrlen;
@@ -69,8 +62,10 @@ void ping::Scanner::ping_unix() {
      * Switch the socket to non-blocking I/O mode. This allows us to implement
      * the timeout feature.
      */
-    if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1)
+    if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1){
+        log.message = "fcntl() failed!";
         goto exit_error;
+    }
 
     if (addr.ss_family == AF_INET6) {
         /*
@@ -78,8 +73,10 @@ void ping::Scanner::ping_unix() {
          */
         int opt_value = 1;
         error = setsockopt(sockfd,IPPROTO_IPV6,IPV6_RECVPKTINFO,(char *)&opt_value,sizeof(opt_value));
-        if (error != 0)
+        if (error != 0){
+            log.message = "setsockopt() failed!";
             goto exit_error;
+        }
     }
 
     /*
@@ -93,7 +90,6 @@ void ping::Scanner::ping_unix() {
               sizeof(addr_str));
 
     struct icmp request;
-
     request.icmp_type = addr.ss_family == AF_INET6 ? ICMP6_ECHO : ICMP_ECHO;
     request.icmp_code = 0;
     request.icmp_cksum = 0;
@@ -111,8 +107,7 @@ void ping::Scanner::ping_unix() {
         struct icmp6_packet request_packet = {0};
 
         request_packet.ip6_hdr.src = in6addr_loopback;
-        request_packet.ip6_hdr.dst =
-            ((struct sockaddr_in6 *)&addr)->sin6_addr;
+        request_packet.ip6_hdr.dst = ((struct sockaddr_in6 *)&addr)->sin6_addr;
         request_packet.ip6_hdr.plen = htons((uint16_t)ICMP_HEADER_LENGTH);
         request_packet.ip6_hdr.nxt = IPPROTO_ICMPV6;
         request_packet.icmp = request;
@@ -130,10 +125,13 @@ void ping::Scanner::ping_unix() {
                         0,
                         (struct sockaddr *)&addr,
                         (int)dst_addr_len);
-    if (error < 0)
+    if (error < 0){
+        log.message = "sendto() failed!";
         goto exit_error;
+    }
 
-    start_time = utime();
+    struct timespec start_ts;
+    clock_gettime(CLOCK_REALTIME, &start_ts);
 
     for (;;) {
         char msg_buf[MESSAGE_BUFFER_SIZE];
@@ -165,18 +163,25 @@ void ping::Scanner::ping_unix() {
         uint16_t checksum;
 
         error = (int)recvmsg(sockfd, &msg, 0);
-        delay = utime() - start_time;
+
+        /* get delay time */
+        struct timespec recv_ts;
+        clock_gettime(CLOCK_REALTIME, &recv_ts);
+        int delay = (recv_ts.tv_nsec - start_ts.tv_nsec)/1000000;
 
         if (error < 0) {
             if (errno == EAGAIN) {
-                if (delay > REQUEST_TIMEOUT)
-                    /*printf("Request timed out\n");*/
-                    goto next;
-                else
-                    /* No data available yet, try to receive again. */
+                if (delay > m_args->timeout){
+                    log.message = "Request timed out";
+                    goto exit_error;
+                }
+                else // No data available yet, try to receive again.
                     continue;
-            } else
-                goto next;
+            }
+            else{
+                log.message = "recvmsg() failed";
+                goto exit_error;
+            }
         }
         msg_len = error;
 
@@ -247,8 +252,10 @@ void ping::Scanner::ping_unix() {
             size_t size = sizeof(struct ip6_pseudo_hdr) + msg_len;
             struct icmp6_packet *reply_packet = (icmp6_packet*)calloc(1, size);
 
-            if (reply_packet == NULL)
+            if (reply_packet == NULL){
+                log.message = "reply_packet == NULL";
                 goto exit_error;
+            }
 
             memcpy(&reply_packet->ip6_hdr.src,
                    &((struct sockaddr_in6 *)&addr)->sin6_addr,
@@ -266,33 +273,29 @@ void ping::Scanner::ping_unix() {
                                         msg_len - ip_hdr_len);
         }
 
-        /* send results
-         name = m_target;
-         ip = addr_str;
-         time = (int)delay;
-         */
+        if(m_args->is_host)
+            emit scanResult_host(m_target, addr_str, delay);
+        if(m_args->is_ip)
+            emit scanResult_ip(addr_str, delay);
         break;
     }
 
-    close_socket(sockfd);
-    return;
+    if (addrinfo_list != nullptr)
+        freeaddrinfo(addrinfo_list);
+
+    if(sockfd != -1)
+        close_socket(sockfd);
+
+    return 0;
 
 exit_error:
     if (addrinfo_list != nullptr)
         freeaddrinfo(addrinfo_list);
 
-    close_socket(sockfd);
-    scan::Log log;
-    log.target = m_target;
-    log.message = "An Error Occured!";
-    emit scanLog(log);
-}
+    if(sockfd != -1)
+        close_socket(sockfd);
 
-uint64_t ping::Scanner::utime(void){
-    struct timeval now;
-    return gettimeofday(&now, NULL) != 0
-        ? 0
-        : now.tv_sec * 1000000 + now.tv_usec;
+    return -1;
 }
 
 uint16_t ping::Scanner::compute_checksum(const char *buf, size_t size) {

@@ -12,11 +12,11 @@
 ///    response in case the endpoint is not responding. When we
 ///    receive a packet decode it.
 ///
-int ping::Scanner::ping_win() {
+int ping::Scanner::ping() {
     WSAOVERLAPPED      recvol;
     SOCKET             s=INVALID_SOCKET;
-    char              *icmpbuf=nullptr;
-    struct addrinfo   *dest=nullptr, *local=nullptr;
+    char               *icmpbuf=nullptr;
+    struct addrinfo    *dest=nullptr, *local=nullptr;
     SOCKADDR_STORAGE   from;
     DWORD              bytes, flags;
     int                packetlen=0, fromlen, rc, status = 0;
@@ -35,7 +35,7 @@ int ping::Scanner::ping_win() {
     hints.ai_socktype = 0;
     hints.ai_protocol = 0;
     if(getaddrinfo(gDestination, "0", &hints, &dest) != 0) {
-        qWarning() << __FILE__ << "Invalid address: " + QString::fromLocal8Bit(gDestination) + "getaddrinfo() failed ";
+        qWarning() << __FILE__ << "Invalid address: " + QString::fromLocal8Bit(gDestination) + " getaddrinfo() failed ";
         status = -1;
         goto CLEANUP;
     }
@@ -62,7 +62,12 @@ int ping::Scanner::ping_win() {
         goto CLEANUP;
     }
 
-    SetTtl(s, m_args->ttl);
+    // setting ttl
+    if(SetTtl(s, m_args->ttl) == -1){
+        status = -1;
+        goto CLEANUP;
+    }
+
 
     // Figure out the size of the ICMP header and payload
     if(gAddressFamily == AF_INET)
@@ -106,7 +111,10 @@ int ping::Scanner::ping_win() {
 
     // Post the first overlapped receive
     fromlen = sizeof(from);
-    PostRecvfrom(s, recvbuf, recvbuflen, reinterpret_cast<SOCKADDR*>(&from), &fromlen, &recvol);
+    if(PostRecvfrom(s, recvbuf, recvbuflen, reinterpret_cast<SOCKADDR*>(&from), &fromlen, &recvol) == -1){
+        status = -1;
+        goto CLEANUP;
+    }
 
     // Set the sequence number and compute the checksum
     SetIcmpSequence(icmpbuf);
@@ -129,13 +137,19 @@ int ping::Scanner::ping_win() {
         status = -1;
         goto CLEANUP;
     }
-    else if(rc == WAIT_TIMEOUT)
-        qDebug() << "Ping Request timed out.";
+    else if(rc == WAIT_TIMEOUT){
+        log.message = "Ping Request timed out.";
+        status = -1;
+        goto CLEANUP;
+    }
     else
     {
         rc = WSAGetOverlappedResult(s,&recvol,&bytes,FALSE,&flags);
-        if(rc == FALSE)
+        if(rc == FALSE){
             log.message = "WSAGetOverlappedResult failed: " + QString::number(WSAGetLastError());
+            status = -1;
+            goto CLEANUP;
+        }
 
         time = GetTickCount() - time;
 
@@ -160,7 +174,6 @@ CLEANUP:
     if(icmpbuf)
         HeapFree(GetProcessHeap(), 0, icmpbuf);
 
-    WSACleanup();
     return status;
 }
 

@@ -100,7 +100,6 @@ void EmailEnum::initUI(){
     /* setting specific properties */
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
-    ui->labelModule->setProperty("s3s_color", true);
 
     /* placeholder texts... */
     ui->lineEditFilter->setPlaceholderText("Filter...");

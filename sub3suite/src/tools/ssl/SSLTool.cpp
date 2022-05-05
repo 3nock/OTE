@@ -32,7 +32,7 @@ SSLTool::SSLTool(QWidget *parent, ProjectModel *project): AbstractTool(parent, p
 
     /* result models */
     ui->treeViewResults->setHeaderHidden(false);
-    m_model_subdomain->setHorizontalHeaderLabels({tr(" Alternative Names")});
+    m_model_subdomain->setHorizontalHeaderLabels({tr(" Associated Names")});
     m_model_hash->setHorizontalHeaderLabels({tr(" Certificate Hash")});
     m_model_ssl->setHorizontalHeaderLabels({tr(" SSL"), tr(" Values")});
     proxyModel->setSourceModel(m_model_subdomain);
@@ -59,7 +59,6 @@ void SSLTool::initUI(){
     /* setting widget's properties */
     ui->frame->setProperty("default_frame", true);
     ui->labelResultsCount->setProperty("dark", true);
-    ui->labelOUT->setProperty("s3s_color", true);
 
     /* enabling and disabling widgets */
     ui->progressBar->hide();

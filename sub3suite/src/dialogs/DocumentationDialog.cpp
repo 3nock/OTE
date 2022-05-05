@@ -13,7 +13,7 @@ DocumentationDialog::DocumentationDialog(QWidget *parent) :
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
     ui->textBrowser->setSearchPaths(QStringList() << QCoreApplication::applicationDirPath()+"/doc"
-                                                  << QCoreApplication::applicationDirPath()+"/doc/engines"
+                                                  << QCoreApplication::applicationDirPath()+"/doc/tools"
                                                   << QCoreApplication::applicationDirPath()+"/doc/enums");
 
     this->setWindowTitle("Documentation");
@@ -30,41 +30,41 @@ DocumentationDialog::DocumentationDialog(TOOL engine, QWidget *parent) :
 
     /* text broswer */
     ui->textBrowser->setOpenExternalLinks(true);
-    ui->textBrowser->setSearchPaths(QStringList() << QCoreApplication::applicationDirPath()+"/doc/engines"
+    ui->textBrowser->setSearchPaths(QStringList() << QCoreApplication::applicationDirPath()+"/doc/tools"
                                                   << QCoreApplication::applicationDirPath()+"/doc");
 
     switch(engine){
     case TOOL::OSINT:
-        this->setWindowTitle("About OSINT");
-        ui->textBrowser->setSource(QUrl("engines/osint.html"));
+        this->setWindowTitle("About OSINT TOOL");
+        ui->textBrowser->setSource(QUrl("tools/osint.html"));
         break;
     case TOOL::RAW:
-        this->setWindowTitle("About RAW");
-        ui->textBrowser->setSource(QUrl("engines/raw.html"));
+        this->setWindowTitle("About RAW TOOL");
+        ui->textBrowser->setSource(QUrl("tools/raw.html"));
         break;
     case TOOL::BRUTE:
-        this->setWindowTitle("About BRUTE");
-        ui->textBrowser->setSource(QUrl("engines/brute.html"));
+        this->setWindowTitle("About BRUTEFORCE TOOL");
+        ui->textBrowser->setSource(QUrl("tools/brute.html"));
         break;
     case TOOL::HOST:
-        this->setWindowTitle("About ACTIVE");
-        ui->textBrowser->setSource(QUrl("engines/host.html"));
+        this->setWindowTitle("About HOSTNAME TOOL");
+        ui->textBrowser->setSource(QUrl("tools/host.html"));
         break;
     case TOOL::IP:
-        this->setWindowTitle("About IP");
-        ui->textBrowser->setSource(QUrl("engines/ip.html"));
+        this->setWindowTitle("About IP-ADDRESS TOOL");
+        ui->textBrowser->setSource(QUrl("tools/ip.html"));
         break;
     case TOOL::DNS:
-        this->setWindowTitle("About DNS");
-        ui->textBrowser->setSource(QUrl("engines/dns.html"));
+        this->setWindowTitle("About DNS TOOL");
+        ui->textBrowser->setSource(QUrl("tools/dns.html"));
         break;
     case TOOL::SSL:
-        this->setWindowTitle("About SSL");
-        ui->textBrowser->setSource(QUrl("engines/ssl.html"));
+        this->setWindowTitle("About SSL TOOL");
+        ui->textBrowser->setSource(QUrl("tools/ssl.html"));
         break;
     case TOOL::URL:
-        this->setWindowTitle("About URL");
-        ui->textBrowser->setSource(QUrl("engines/url.html"));
+        this->setWindowTitle("About URL TOOL");
+        ui->textBrowser->setSource(QUrl("tools/url.html"));
         break;
     default:
         break;

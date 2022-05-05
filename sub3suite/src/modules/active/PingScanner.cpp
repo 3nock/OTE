@@ -11,17 +11,6 @@ ping::Scanner::~Scanner(){
 void ping::Scanner::lookup(){
     m_target = ping::getTarget(m_args);
 
-#if defined(Q_OS_WIN)
-    // Load Winsock
-    WSADATA wsd;
-    int rc;
-    if ((rc = WSAStartup(MAKEWORD(2,2), &wsd)) != 0){
-        qWarning() << "WSAStartup() failed: " << rc;
-        emit quitThread();
-        return;
-    }
-#endif // WINDOWS
-
     while(m_target != nullptr) {
         m_mutex.lock();
 
@@ -40,12 +29,12 @@ void ping::Scanner::lookup(){
 
         /* start scan */
 #if defined(Q_OS_UNIX)
-        if(ping_unix() == -1)
+        if(ping() == -1)
             emit scanLog(log);
 #endif
 #if defined(Q_OS_WIN)
         gDestination = target.data();
-        if(ping_win() == -1)
+        if(ping() == -1)
             emit scanLog(log);
 #endif
         /* scan progress */
