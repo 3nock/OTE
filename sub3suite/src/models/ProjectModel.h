@@ -24,6 +24,7 @@
 #include "src/items/SSLItem.h"
 #include "src/items/HostItem.h"
 #include "src/items/RawItem.h"
+#include "src/items/IPToolItem.h"
 #include "src/items/WildcardItem.h"
 #include "src/modules/active/DNSScanner.h"
 #include "src/modules/active/SSLScanner.h"
@@ -76,6 +77,7 @@ public:
 
     /* active Results Model */
     QStandardItemModel *activeHost;
+    QStandardItemModel *activeIP;
     QStandardItemModel *activeWildcard;
     QStandardItemModel *activeDNS;
     QStandardItemModel *activeA;
@@ -117,6 +119,7 @@ public:
 
     /* item's maps */
     QMap<QString, s3s_item::HOST*> map_activeHost;
+    QMap<QString, s3s_item::IPTool*> map_activeIP;
     QMap<QString, s3s_item::Wildcard*> map_activeWildcard;
     QMap<QString, s3s_item::DNS*> map_activeDNS;
     QMap<QString, s3s_item::SSL*> map_activeSSL;
@@ -138,6 +141,8 @@ public:
 
     /* for active results */
     void addActiveHost(const s3s_struct::HOST &host);
+    void addActiveIP(const s3s_struct::IPTool &ip);
+    void addActiveIP(const QString &ip, unsigned short port);
     void addActiveWildcard(const s3s_struct::Wildcard &wildcard);
     void addActiveDNS(const s3s_struct::DNS &dns);
     void addActiveRecord(const s3s_struct::DNS &dns);

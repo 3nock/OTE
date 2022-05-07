@@ -12,6 +12,7 @@ ProjectModel::ProjectModel(QObject *parent): QObject (parent),
     explorer(new ExplorerModel),
     /* active Results Model */
     activeHost(new QStandardItemModel),
+    activeIP(new QStandardItemModel),
     activeWildcard(new QStandardItemModel),
     activeDNS(new QStandardItemModel),
     activeA(new QStandardItemModel),
@@ -92,12 +93,14 @@ ProjectModel::~ProjectModel(){
     delete activeA;
     delete activeDNS;
     delete activeWildcard;
+    delete activeIP;
     delete activeHost;
     delete explorer;
 }
 
 void ProjectModel::setHeaderLabels(){
     activeHost->setHorizontalHeaderLabels({QObject::tr(" Host"), QObject::tr(" IPv4"), QObject::tr(" IPv6")});
+    activeIP->setHorizontalHeaderLabels({QObject::tr(" IP-Address"), QObject::tr(" Ports")});
     activeWildcard->setHorizontalHeaderLabels({QObject::tr(" Wildcard"), QObject::tr(" IPv4"), QObject::tr(" IPv6")});
     activeDNS->setHorizontalHeaderLabels({QObject::tr(" DNS Records")});
     activeA->setHorizontalHeaderLabels({QObject::tr(" A DNS Records")});
@@ -143,6 +146,7 @@ void ProjectModel::setHeaderLabels(){
 
 void ProjectModel::clearModels(){
     activeHost->clear();
+    activeIP->clear();
     activeWildcard->clear();
     activeDNS->clear();
     activeA->clear();
@@ -180,6 +184,7 @@ void ProjectModel::clearModels(){
     raw->clear();
 
     map_activeHost.clear();
+    map_activeIP.clear();
     map_activeWildcard.clear();
     map_activeDNS.clear();
     map_activeSSL.clear();
@@ -191,12 +196,20 @@ void ProjectModel::clearModels(){
     map_enumMX.clear();
     map_enumSSL.clear();
     map_enumEmail.clear();
+    set_activeA.clear();
+    set_activeAAAA.clear();
+    set_activeNS.clear();
+    set_activeMX.clear();
+    set_activeTXT.clear();
+    set_activeCNAME.clear();
+    set_activeSRV.clear();
 
     this->setHeaderLabels();
 }
 
 int ProjectModel::getItemsCount(){
     return  activeHost->rowCount()+
+            activeIP->rowCount()+
             activeWildcard->rowCount()+
             activeDNS->rowCount()+
             activeA->rowCount()+

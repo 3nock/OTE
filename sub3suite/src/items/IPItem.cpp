@@ -42,7 +42,7 @@ s3s_struct::IP ip_to_struct(s3s_item::IP *item){
 
     /* domains */
     for(int i = 0; i < item->domains->rowCount(); i++)
-        ip.domains.insert(item->domains->child(i, 1)->text());
+        ip.domains.insert(item->domains->child(i, 0)->text());
 
     return ip;
 }
@@ -87,7 +87,7 @@ QJsonObject ip_to_json(s3s_item::IP *item){
     /* domains */
     QJsonArray domains;
     for(int i = 0; i < item->domains->rowCount(); i++)
-        domains.append(item->domains->child(i, 1)->text());
+        domains.append(item->domains->child(i, 0)->text());
     ip.insert("domains", domains);
 
     ip.insert("item_info", item_info);
@@ -127,12 +127,8 @@ void json_to_ip(const QJsonObject &ip, s3s_item::IP *item){
     item->privacyInfo_threat->setText(ip.value("privacyInfo_threat").toString());
 
     /* domains */
-    int count = 0;
-    foreach(const QJsonValue &value, ip.value("domains").toArray()){
-        item->domains->appendRow({new QStandardItem(QString::number(count)),
-                                  new QStandardItem(value.toString())});
-        count++;
-    }
+    foreach(const QJsonValue &value, ip.value("domains").toArray())
+        item->domains->appendRow(new QStandardItem(value.toString()));
 
     QJsonObject item_info = ip.value("item_info").toObject();
     item->comment = item_info["comment"].toString();

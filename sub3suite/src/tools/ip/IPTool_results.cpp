@@ -28,11 +28,25 @@ void IPTool::onScanResult_ping(QString ip, unsigned long time){
 }
 
 void IPTool::onScanResult_port(QString ip, u_short port){
-    m_model_port->appendRow({new QStandardItem(ip),
-                             new QStandardItem(QString::number(port))});
+    if(set_ports.contains(ip)){
+        s3s_item::IPTool *item = set_ports.value(ip);
+        item->addPort(QString::number(port));
+        return;
+    }
+
+    s3s_item::IPTool *item = new s3s_item::IPTool;
+    item->setValues(ip, QString::number(port));
+
+    m_model_port->appendRow({item, item->ports});
+
+    set_ports.insert(ip, item);
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
+
+    /* save to Project model */
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveIP(ip, port);
 }
 
 void IPTool::onScanResult_dns(QString ip, QString hostname){

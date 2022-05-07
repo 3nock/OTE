@@ -8,7 +8,7 @@
 #include <QMutex>
 #include <QHostInfo>
 
-namespace ip {
+namespace reverseip {
 
 struct ScanStat {  // scan statistics
     int nameservers = 0;
@@ -32,7 +32,7 @@ struct ScanConfig { // scan configurations
 
 struct ScanArgs { // scan arguments
     QMutex mutex;
-    ip::ScanConfig *config;
+    reverseip::ScanConfig *config;
     QQueue<QString> targets;
     QHostAddress nameserver;
     int progress;
@@ -43,22 +43,43 @@ class Scanner : public AbstractScanner{
     Q_OBJECT
 
     public:
-        explicit Scanner(ip::ScanArgs *args);
+        explicit Scanner(reverseip::ScanArgs *args);
         ~Scanner() override;
 
     private slots:
         void lookup() override;
-        void lookupFinished(QHostInfo);
 
     signals:
-        void next(); // next lookup
         void scanResult(QString ip, QString hostname); // send active enumerated results
 
+    public slots:
+        virtual void onStopScan() override {
+            stop = true;
+        }
+
+        void onPauseScan() override {
+            m_mutex.lock();
+            pause = true;
+            m_mutex.unlock();
+        }
+
+        void onResumeScan() override {
+            m_mutex.lock();
+            pause = false;
+            m_mutex.unlock();
+            m_wait.wakeAll();
+        }
+
     private:
-        ip::ScanArgs *m_args;
+        reverseip::ScanArgs *m_args;
+        QString m_target;
+        bool stop = false;
+        bool pause = false;
+        QWaitCondition m_wait;
+        QMutex m_mutex;
 };
 
-QString getTarget(ip::ScanArgs *args);
+QString getTarget(reverseip::ScanArgs *args);
 
 }
 

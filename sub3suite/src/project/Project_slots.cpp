@@ -44,6 +44,16 @@ void Project::on_treeViewExplorer_clicked(const QModelIndex &index){
             a_collapse.setDisabled(true);
             ui->treeViewTree->setSortingEnabled(true);
         }
+        if(index == model->explorer->activeIP->index()){
+            proxyModel->setSourceModel(model->activeIP);
+            ui->treeViewTree->setProperty(SITEMAP_TYPE, ExplorerType::activeIP);
+            ui->comboBoxFilter->addItems({"IP Address", "Ports"});
+            ui->comboBoxFilter->show();
+
+            a_expand.setDisabled(true);
+            a_collapse.setDisabled(true);
+            ui->treeViewTree->setSortingEnabled(true);
+        }
         if(index == model->explorer->activeDNS->index()){
             ui->treeViewTree->setIndentation(15);
 
@@ -348,6 +358,15 @@ void Project::on_treeViewTree_clicked(const QModelIndex &index){
         item_comment = &item->comment;
     }
         break;
+    case ExplorerType::activeIP:
+    {
+        ui->label_item_type->setText("IP-Address");
+        s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(model->activeIP->itemFromIndex(proxyModel->mapToSource(index)));
+        ui->label_item_modified->setText(item->last_modified);
+        ui->plainTextEdit_item_comment->setPlainText(item->comment);
+        item_comment = &item->comment;
+    }
+        break;
     case ExplorerType::activeWildcard:
     {
         ui->label_item_type->setText("Wildcard");
@@ -473,6 +492,18 @@ void Project::on_treeViewTree_doubleClicked(const QModelIndex &index){
             s3s_item::HOST *item = static_cast<s3s_item::HOST*>(model->activeHost->itemFromIndex(model_index));
             QJsonDocument document;
             document.setObject(host_to_json(item));
+            ui->plainTextEditJson->setPlainText(document.toJson());
+            return;
+        }
+    }
+        break;
+    case ExplorerType::activeIP:
+    {
+        QModelIndex model_index = proxyModel->mapToSource(index);
+        if(model_index.parent() == model->activeIP->invisibleRootItem()->index()){
+            s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(model->activeIP->itemFromIndex(model_index));
+            QJsonDocument document;
+            document.setObject(iptool_to_json(item));
             ui->plainTextEditJson->setPlainText(document.toJson());
             return;
         }

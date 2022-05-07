@@ -31,6 +31,10 @@ void ProjectModel::saveProject(){
     qDebug() << "Saving Project: " << info.path;
 
     QFile file(info.path);
+    file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                        QFileDevice::ReadUser | QFileDevice::WriteUser |
+                        QFileDevice::ReadGroup | QFileDevice::WriteGroup |
+                        QFileDevice::ReadOther | QFileDevice::WriteOther);
     if(file.open(QIODevice::WriteOnly))
     {
         /* compress the data then save */
@@ -59,6 +63,10 @@ void ProjectModel::saveProjectCopy(){
     qDebug() << "Saving Project Copy: " << info.path;
 
     QFile file(info.path);
+    file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                        QFileDevice::ReadUser | QFileDevice::WriteUser |
+                        QFileDevice::ReadGroup | QFileDevice::WriteGroup |
+                        QFileDevice::ReadOther | QFileDevice::WriteOther);
     if(file.open(QIODevice::WriteOnly))
     {
         /* compress the data then save */
@@ -111,6 +119,10 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
     qDebug() << "Opening Project: " << info.path;
 
     QFile file(info.path);
+    file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                        QFileDevice::ReadUser | QFileDevice::WriteUser |
+                        QFileDevice::ReadGroup | QFileDevice::WriteGroup |
+                        QFileDevice::ReadOther | QFileDevice::WriteOther);
     if(!file.open(QIODevice::ReadOnly)){
         qWarning() << "Failed To Open Project File.";
         return;
@@ -153,6 +165,15 @@ void ProjectModel::openProject(ProjectStruct projectStruct){
                                item->ipv4,
                                item->ipv6});
         map_activeHost.insert(item->text(), item);
+    }
+
+    /* active ip */
+    foreach(const QJsonValue &value, data["active_IP"].toArray()){
+        s3s_item::IPTool *item = new s3s_item::IPTool;
+        json_to_iptool(value.toObject(), item);
+        activeIP->appendRow({item, item->ports});
+        map_activeIP.insert(item->text(), item);
+        this->addActiveIP(iptool_to_struct(item));
     }
 
     /* active Wildcards */
@@ -339,6 +360,7 @@ QByteArray ProjectModel::getJson(){
     QJsonArray active_SSL_sha256_array;
     QJsonArray active_SSL_altNames_array;
     QJsonArray active_Host_array;
+    QJsonArray active_IP_array;
     QJsonArray active_wildcard_array;
     QJsonArray active_SSL_array;
     QJsonArray active_DNS_array;
@@ -432,6 +454,12 @@ QByteArray ProjectModel::getJson(){
         active_Host_array.append(host_to_json(item));
     }
 
+    /* active IP */
+    for(int i = 0; i < activeIP->rowCount(); ++i){
+        s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(activeIP->itemFromIndex(activeIP->index(i, 0)));
+        active_IP_array.append(iptool_to_json(item));
+    }
+
     /* active Wildcard */
     for(int i = 0; i < activeWildcard->rowCount(); ++i){
         s3s_item::Wildcard *item = static_cast<s3s_item::Wildcard*>(activeWildcard->itemFromIndex(activeWildcard->index(i, 0)));
@@ -506,6 +534,7 @@ QByteArray ProjectModel::getJson(){
 
     QJsonObject data;
     data.insert("active_Host", active_Host_array);
+    data.insert("active_IP", active_IP_array);
     data.insert("active_wildcard", active_wildcard_array);
     data.insert("active_dns", active_DNS_array);
     data.insert("active_SSL", active_SSL_array);

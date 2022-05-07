@@ -13,7 +13,6 @@ int ping::Scanner::ping() {
     socklen_t dst_addr_len;
     uint16_t id = (uint16_t)getpid();
     uint16_t seq = random();
-    int optlevel = 0, option = 0;
 
     /* get ping type */
     int ip_version = IP_V4;

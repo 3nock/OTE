@@ -53,6 +53,8 @@ SOURCES += \
     src/dialogs/EnumConfigDialog.cpp \
     src/dialogs/WordlistDialog_choose.cpp \
     src/dialogs/WordlistDialog_generate.cpp \
+    src/items/IPToolItem.cpp \
+    src/modules/active/ReverseIPScanner.cpp \
     src/tools/ip/IPTool_actions.cpp \
     src/tools/ip/IPTool_contextmenu.cpp \
     src/tools/ip/IPTool_results.cpp \
@@ -72,7 +74,7 @@ SOURCES += \
     src/tools/dns/DNSTool_actions.cpp \
     src/tools/dns/DNSTool_contextmenu.cpp \
     src/tools/dns/DNSTool_results.cpp \
-    src/tools/dns/DNsTool_scan.cpp \
+    src/tools/dns/DNSTool_scan.cpp \
     src/tools/osint/OsintTool_actions.cpp \
     src/tools/osint/OsintTool_contextmenu.cpp \
     src/tools/osint/OsintTool_modules.cpp \
@@ -126,7 +128,7 @@ SOURCES += \
     src/enums/ssl/SSLEnum_scan.cpp \
     src/enums/asn/ASNEnum.cpp \
     src/enums/email/EmailEnum.cpp \
-    src/enums/ip/IpEnum.cpp \
+    src/enums/ip/IPEnum.cpp \
     src/enums/mx/MXEnum.cpp \
     src/enums/ns/NSEnum.cpp \
     src/enums/ssl/SSLEnum.cpp \
@@ -139,7 +141,6 @@ SOURCES += \
     src/items/MXItem.cpp \
     src/items/NSItem.cpp \
     src/models/ExplorerModel.cpp \
-    src/modules/active/IPScanner.cpp \
     src/modules/active/PingScanner.cpp \
     src/modules/active/PingScanner_unix.cpp \
     src/modules/active/PingScanner_win.cpp \
@@ -285,6 +286,8 @@ HEADERS += \
     src/dialogs/SaveProjectDialog.h \
     src/dialogs/StartupDialog.h \
     src/dialogs/EnumConfigDialog.h \
+    src/items/IPToolItem.h \
+    src/modules/active/ReverseIPScanner.h \
     src/tools/ip/IPTool.h \
     src/tools/url/URLTool.h \
     src/tools/ssl/SSLTool.h \
@@ -303,7 +306,6 @@ HEADERS += \
     src/items/MXItem.h \
     src/items/NSItem.h \
     src/models/ExplorerModel.h \
-    src/modules/active/IPScanner.h \
     src/modules/active/PingScanner.h \
     src/modules/active/URLScanner.h \
     src/modules/active/utils/iphdr.h \
@@ -484,15 +486,21 @@ RESOURCES += \
     res.qrc
 
 win32 {
-    INCLUDEPATH += ../vendor/npcap/include
-    LIBS += -L"lib" -lAdvapi32
-
-    contains(QT_ARCH, i386) {
-        LIBS += -L"$$PWD/../vendor/npcap/lib" -lPacket -lwpcap
-    } else {
-        LIBS += -L"$$PWD/../vendor/npcap/lib/x64" -lPacket -lwpcap
-    }
+    LIBS += -lAdvapi32
 }
+
+#
+# FOR WINDOWS SYN SCAN
+#win32 {
+#    INCLUDEPATH += ../vendor/npcap/include
+#    LIBS += -L"lib" -lAdvapi32
+#
+#    contains(QT_ARCH, i386) {
+#        LIBS += -L"$$PWD/../vendor/npcap/lib" -lPacket -lwpcap
+#    } else {
+#        LIBS += -L"$$PWD/../vendor/npcap/lib/x64" -lPacket -lwpcap
+#    }
+#}
 
 # setting the icon...
 RC_ICONS = res/icons/main_logo.ico

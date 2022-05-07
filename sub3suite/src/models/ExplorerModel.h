@@ -6,6 +6,7 @@
 
 enum ExplorerType {
     activeHost,
+    activeIP,
     activeWildcard,
     activeDNS,
     activeDNS_A,
@@ -60,6 +61,7 @@ class ExplorerModel: public QStandardItemModel {
 
         /* active Results Explorer */
         QStandardItem *activeHost;
+        QStandardItem *activeIP;
         QStandardItem *activeWildcard;
         QStandardItem *activeDNS;
         QStandardItem *activeA;

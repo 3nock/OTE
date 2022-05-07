@@ -86,6 +86,26 @@ void registerMetaTypes(){
     qRegisterMetaType<QSslCertificate>("QSslCertificate");
 }
 
+void create_desktop_file(){
+    if(QDir::isAbsolutePath("/usr/share/applications/")){
+        QFile file("/usr/share/applications/sub3suite.desktop");
+        if(file.open(QIODevice::WriteOnly | QIODevice::Text)){
+            file.write("[Desktop Entry]\n");
+            file.write("Type=Application\n");
+            file.write("Exec="+QCoreApplication::applicationFilePath().toUtf8()+"\n");
+            file.write("Name=Sub3 Suite\n");
+            file.write("GenericName=Advance Intelligence Gathering Tool\n");
+            file.write("Icon="+QCoreApplication::applicationDirPath().toUtf8()+"/icon/s3s.png\n");
+            file.write("Terminal=false\n");
+            file.close();
+        }
+        else
+            qWarning() << "Couldnt open /usr/share/applications/sub3suite.desktop for write";
+    }
+    else
+        qWarning() << "Path /usr/share/applications/ not available";
+}
+
 ///
 /// a custom messagehandler for logging messages to log file
 ///
@@ -115,6 +135,10 @@ void s3s_MessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
 
     QString date = QDateTime::currentDateTime().toString("dd-MM-yyyy");
     QFile logfile(QApplication::applicationDirPath()+"/logs/"+date+".log");
+    logfile.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                           QFileDevice::ReadUser | QFileDevice::WriteUser |
+                           QFileDevice::ReadGroup | QFileDevice::WriteGroup |
+                           QFileDevice::ReadOther | QFileDevice::WriteOther);
 
     if(logfile.open(QIODevice::WriteOnly | QIODevice::Append)){
         QTextStream ts(&logfile);
@@ -157,15 +181,9 @@ namespace s3s_global {
     bool is_priv = false;
     bool is_dark_theme = false;
     bool is_light_theme = false;
-    int font_size = NULL;
+    int font_size = 0;
 }
 
-/*
-namespace s3s_tool {
-}
-namespace s3s_enum {
-}
-*/
 
 int main(int argc, char *argv[])
 {
@@ -209,6 +227,37 @@ int main(int argc, char *argv[])
     qInfo() << "*                                             Sub3 Suite                              ";
     qInfo() << "**************************************************************************************";
 
+    QFile::setPermissions(QGuiApplication::applicationDirPath()+"/sub3suite.ini",
+                          QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                          QFileDevice::ReadUser | QFileDevice::WriteUser |
+                          QFileDevice::ReadGroup | QFileDevice::WriteGroup |
+                          QFileDevice::ReadOther | QFileDevice::WriteOther);
+
+    QFile::setPermissions(QGuiApplication::applicationDirPath()+"/keys.ini",
+                          QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                          QFileDevice::ReadUser | QFileDevice::WriteUser |
+                          QFileDevice::ReadGroup | QFileDevice::WriteGroup |
+                          QFileDevice::ReadOther | QFileDevice::WriteOther);
+
+    if(CONFIG.value("is_first_run").toBool()){
+        CONFIG.setValue("is_first_run", false);
+        CONFIG.setValue("s3s", QCoreApplication::applicationFilePath());
+#if defined (Q_OS_LINUX)
+        create_desktop_file();
+        qDebug() << "sub3suite.desktop file created!";
+#endif
+    }
+
+
+    /* check s3s path */
+    if(CONFIG.value("s3s").toString() != QCoreApplication::applicationFilePath()){
+        CONFIG.setValue("s3s", QCoreApplication::applicationFilePath());
+#if defined (Q_OS_LINUX)
+        create_desktop_file();
+        qDebug() << "sub3suite.desktop file changed!";
+#endif
+    }
+
     check_priv();
     log_device_info();
     registerMetaTypes();
@@ -242,7 +291,7 @@ int main(int argc, char *argv[])
         stylesheet.setFileName(":/themes/res/themes/default.css");
         s3s_global::is_dark_theme = true;
     }
-    if(CONFIG.value(CFG_VAL_THEME).toString() == "light"){
+    else{
         stylesheet.setFileName(":/themes/res/themes/light.css");
         s3s_global::is_light_theme = true;
     }

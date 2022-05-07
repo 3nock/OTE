@@ -18,9 +18,9 @@
 
 IPTool::IPTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent, project),
     ui(new Ui::IPTool),
-    m_scanConfig(new ip::ScanConfig),
-    m_scanArgs(new ip::ScanArgs),
-    m_scanStats(new ip::ScanStat),
+    m_scanConfig(new reverseip::ScanConfig),
+    m_scanArgs(new reverseip::ScanArgs),
+    m_scanStats(new reverseip::ScanStat),
     m_portscannerArgs(new port::ScanArgs),
     m_pingscannerArgs(new ping::ScanArgs),
     m_targetListModel(new QStringListModel),

@@ -57,6 +57,7 @@ class HostTool : public AbstractTool{
         QElapsedTimer m_timer;
         QMap<QString,QString> m_failedScans;
         QMap<QString, s3s_item::HOST*> set_subdomain;
+        QMap<QString, s3s_item::IPTool*> set_ports;
         host::ScanConfig *m_scanConfig;
         host::ScanArgs *m_scanArgs;
         host::ScanStat *m_scanStats;

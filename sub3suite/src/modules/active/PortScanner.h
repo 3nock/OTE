@@ -10,7 +10,12 @@
 #include <QWaitCondition>
 
 #if defined(Q_OS_WIN)
+#include <WinSock2.h>
+#endif
 
+#if defined(SYN_SCAN)
+
+#if defined(Q_OS_WIN)
 #include <WinSock2.h>
 #include <Windows.h>
 #include <pcap.h>
@@ -104,6 +109,8 @@ struct pseudo_header { //Needed for checksum calculation
 
 #endif // UNIX
 
+#endif // SYN SCAN
+
 namespace port {
 
 enum ScanType{
@@ -167,8 +174,9 @@ class Scanner: public AbstractScanner {
         void scanner_syn();
 
         /* for syn scanner */
+#if defined(SYN_SCAN)
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN_)
         pcap_t* fp = nullptr;
         char device_name[200];
         char *source_ip_address = nullptr;
@@ -217,6 +225,8 @@ class Scanner: public AbstractScanner {
 
         static struct in_addr dest_ip;
 #endif  // UNIX
+
+#endif // SYN SCAN
 };
 
 QString getTarget(port::ScanArgs *args);

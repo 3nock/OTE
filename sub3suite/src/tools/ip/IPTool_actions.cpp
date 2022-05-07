@@ -16,16 +16,16 @@
 void IPTool::clearResults(){
     /* clear the results */
     switch (ui->comboBoxOption->currentIndex()) {
-    case 0: // DNS
+    case 0: // REVERSE IP
         m_model_dns->clear();
         m_model_dns->setHorizontalHeaderLabels({tr(" IP"), tr(" Hostname")});
-        set_subdomain.clear();
         break;
-    case 1:
+    case 1: // PORT
         m_model_port->clear();
         m_model_port->setHorizontalHeaderLabels({tr(" IP"), tr(" Ports")});
+        set_ports.clear();
         break;
-    case 2:
+    case 2: // PING
         m_model_ping->clear();
         m_model_ping->setHorizontalHeaderLabels({tr(" IP"), tr(" Time(ms)")});
         break;
@@ -48,22 +48,18 @@ void IPTool::removeResults(){
     QModelIndexList selectedIndexes = model_selectedIndexes.indexes();
     switch (ui->comboBoxOption->currentIndex()) {
     case 0: // DNS
-        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
-            set_subdomain.remove(i->data().toString());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
             m_model_dns->removeRow(i->row());
-        }
         break;
     case 1: // PORT
         for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
-            set_subdomain.remove(i->data().toString());
+            set_ports.remove(i->data().toString());
             m_model_port->removeRow(i->row());
         }
         break;
     case 2: // PING
-        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
-            set_subdomain.remove(i->data().toString());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
             m_model_ping->removeRow(i->row());
-        }
     }
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());
@@ -86,48 +82,13 @@ void IPTool::saveResults(const RESULT_TYPE &result_type){
     switch(result_type){
     case RESULT_TYPE::SUBDOMAIN:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
-            file.write(proxyModel->index(i, 0).data().toString().append(NEWLINE).toUtf8());
+            file.write(proxyModel->index(i, 1).data().toString().append(NEWLINE).toUtf8());
         break;
 
     case RESULT_TYPE::IP:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QString ipv4(proxyModel->index(i, 1).data().toString());
-            QString ipv6(proxyModel->index(i, 2).data().toString());
-            if(!ipv4.isEmpty())
-                file.write(ipv4.append(NEWLINE).toUtf8());
-            if(!ipv6.isEmpty())
-                file.write(ipv6.append(NEWLINE).toUtf8());
-        }
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            file.write(proxyModel->index(i, 0).data().toString().append(NEWLINE).toUtf8());
         break;
-
-    case RESULT_TYPE::CSV:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QString host(proxyModel->index(i, 0).data().toString());
-            QString ipv4(proxyModel->index(i, 1).data().toString());
-            QString ipv6(proxyModel->index(i, 2).data().toString());
-
-            if(!ipv4.isEmpty())
-                host.append(",").append(ipv4);
-            if(!ipv6.isEmpty())
-                host.append(",").append(ipv6);
-
-            file.write(host.append(NEWLINE).toUtf8());
-        }
-        break;
-
-    case RESULT_TYPE::JSON:
-    {
-        QJsonDocument document;
-        QJsonArray array;
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
-            array.append(host_to_json(item));
-        }
-        document.setArray(array);
-        file.write(document.toJson());
-        break;
-    }
 
     default:
         break;
@@ -164,49 +125,12 @@ void IPTool::copyResults(const RESULT_TYPE &result_type){
     switch(result_type){
     case RESULT_TYPE::SUBDOMAIN:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
-            clipboardData.append(proxyModel->index(i, 0).data().toString()).append(NEWLINE);
+            clipboardData.append(proxyModel->index(i, 1).data().toString()).append(NEWLINE);
         break;
 
     case RESULT_TYPE::IP:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
-            QString ipv4(proxyModel->index(i, 1).data().toString());
-            QString ipv6(proxyModel->index(i, 2).data().toString());
-            if(!ipv4.isEmpty())
-                clipboardData.append(ipv4).append(NEWLINE);
-            if(!ipv6.isEmpty())
-                clipboardData.append(ipv6).append(NEWLINE);
-        }
-        break;
-
-    case RESULT_TYPE::CSV:
-        for(int i = 0; i != proxyModel->rowCount(); ++i)
-        {
-            QString host(proxyModel->index(i, 0).data().toString());
-            QString ipv4(proxyModel->index(i, 1).data().toString());
-            QString ipv6(proxyModel->index(i, 2).data().toString());
-
-            if(!ipv4.isEmpty())
-                host.append(",").append(ipv4);
-            if(!ipv6.isEmpty())
-                host.append(",").append(ipv6);
-
-            clipboardData.append(host).append(NEWLINE);
-        }
-        break;
-
-    case RESULT_TYPE::JSON:
-    {
-        QJsonDocument document;
-        QJsonArray array;
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
-            array.append(host_to_json(item));
-        }
-        document.setArray(array);
-        clipboardData.append(document.toJson());
-    }
+            clipboardData.append(proxyModel->index(i, 0).data().toString()).append(NEWLINE);
         break;
 
     default:
@@ -226,47 +150,6 @@ void IPTool::copySelectedResults(){
     clipboard->setText(data.trimmed());
 }
 
-void IPTool::extract(bool subdomain, bool tld){
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    QSet<QString> extracts;
-
-    /* extracting and saving to a set to avoid repeatition */
-    for(int i = 0; i != proxyModel->rowCount(); ++i){
-        if(subdomain)
-            extracts.insert(proxyModel->index(i, 0).data().toString().split(".").at(0));
-        if(tld)
-            extracts.insert(proxyModel->index(i, 0).data().toString().split(".").last());
-    }
-
-    /* setting the data to clipboard */
-    QString data;
-    foreach(const QString &extract, extracts)
-        data.append(extract).append(NEWLINE);
-    clipboard->setText(data.trimmed());
-}
-
-void IPTool::extractSelected(bool subdomain, bool tld){
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    QSet<QString> extracts;
-
-    /* extracting and saving to a set to avoid repeatition */
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        if(index.column())
-            continue;
-
-        if(subdomain)
-            extracts.insert(index.data().toString().split(".").at(0));
-        if(tld)
-            extracts.insert(index.data().toString().split(".").last());
-    }
-
-    /* setting the data to clipboard */
-    QString data;
-    foreach(const QString &extract, extracts)
-        data.append(extract).append(NEWLINE);
-    clipboard->setText(data.trimmed());
-}
-
 ///
 /// sending results...
 ///
@@ -275,8 +158,8 @@ void IPTool::sendToProject(){
     for(int i = 0; i != proxyModel->rowCount(); ++i)
     {
         QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(index));
-        project->addActiveHost(host_to_struct(item));
+        s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(m_model_port->itemFromIndex(index));
+        project->addActiveIP(iptool_to_struct(item));
     }
 }
 
@@ -285,8 +168,8 @@ void IPTool::sendSelectedToProject(){
         if(index.column())
             continue;
         QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
-        project->addActiveHost(host_to_struct(item));
+        s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(m_model_port->itemFromIndex(model_index));
+        project->addActiveIP(iptool_to_struct(item));
     }
 }
 
@@ -297,13 +180,11 @@ void IPTool::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
     switch (result_type) {
     case RESULT_TYPE::SUBDOMAIN:
         for(int i = 0; i != proxyModel->rowCount(); ++i)
-            targets.insert(proxyModel->index(i, 0).data().toString());
+            targets.insert(proxyModel->index(i, 1).data().toString());
         break;
     case RESULT_TYPE::IP:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            targets.insert(proxyModel->index(i, 1).data().toString());
-            targets.insert(proxyModel->index(i, 2).data().toString());
-        }
+        for(int i = 0; i != proxyModel->rowCount(); ++i)
+            targets.insert(proxyModel->index(i, 0).data().toString());
         break;
     default:
         break;
@@ -355,13 +236,13 @@ void IPTool::sendSelectedToEngine(const TOOL &engine, const RESULT_TYPE &result_
     switch (result_type) {
     case RESULT_TYPE::SUBDOMAIN:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column() == 0)
+            if(index.column() == 1)
                 targets.insert(index.data().toString());
         }
         break;
     case RESULT_TYPE::IP:
         foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-            if(index.column())
+            if(index.column() == 0)
                 targets.insert(index.data().toString());
         }
         break;
@@ -412,10 +293,8 @@ void IPTool::sendToEnum(const ENUMERATOR &tool){
     QSet<QString> targets;
 
     /* getting the targets */
-    for(int i = 0; i != proxyModel->rowCount(); ++i){
-        targets.insert(proxyModel->index(i, 1).data().toString());
-        targets.insert(proxyModel->index(i, 2).data().toString());
-    }
+    for(int i = 0; i != proxyModel->rowCount(); ++i)
+        targets.insert(proxyModel->index(i, 0).data().toString());
 
     /* sending the targets */
     switch (tool) {
@@ -433,7 +312,7 @@ void IPTool::sendSelectedToEnum(const ENUMERATOR &tool){
 
     /* getting the targets */
     foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        if(index.column())
+        if(index.column() == 0)
             targets.insert(index.data().toString());
     }
 

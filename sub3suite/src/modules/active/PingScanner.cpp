@@ -25,7 +25,6 @@ void ping::Scanner::lookup(){
         m_mutex.unlock();
 
         log.target = m_target;
-        QByteArray target = m_target.toLocal8Bit();
 
         /* start scan */
 #if defined(Q_OS_UNIX)
@@ -33,6 +32,7 @@ void ping::Scanner::lookup(){
             emit scanLog(log);
 #endif
 #if defined(Q_OS_WIN)
+        QByteArray target = m_target.toLocal8Bit();
         gDestination = target.data();
         if(ping() == -1)
             emit scanLog(log);

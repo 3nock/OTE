@@ -72,15 +72,15 @@ void IPTool::startScan(){
             for(ushort i = from; i < to; i++)
                 m_portscannerArgs->target_ports << i;
         }
-        m_portscannerArgs->timeout = m_scanArgs->config->timeout;
         m_portscannerArgs->target_ips = m_scanArgs->targets;
+        m_portscannerArgs->timeout = m_scanArgs->config->timeout;
     }
         break;
 
     case 2: // PING SCAN
     {
-        m_pingscannerArgs->targets = m_scanArgs->targets;
         m_pingscannerArgs->progress = 0;
+        m_pingscannerArgs->targets = m_scanArgs->targets;
         m_pingscannerArgs->timeout = m_scanArgs->config->timeout;
     }
     }
@@ -91,19 +91,19 @@ void IPTool::startScan(){
         switch (ui->comboBoxOption->currentIndex()) {
         case 0: // ACTIVE DNS
         {
-            ip::Scanner *scanner = new ip::Scanner(m_scanArgs);
+            reverseip::Scanner *scanner = new reverseip::Scanner(m_scanArgs);
             QThread *cThread = new QThread;
             scanner->startScan(cThread);
             scanner->moveToThread(cThread);
-            connect(scanner, &ip::Scanner::scanResult, this, &IPTool::onScanResult_dns);
-            connect(scanner, &ip::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
-            connect(scanner, &ip::Scanner::scanLog, this, &IPTool::onScanLog);
+            connect(scanner, &reverseip::Scanner::scanResult, this, &IPTool::onScanResult_dns);
+            connect(scanner, &reverseip::Scanner::scanProgress, ui->progressBar, &QProgressBar::setValue);
+            connect(scanner, &reverseip::Scanner::scanLog, this, &IPTool::onScanLog);
             connect(cThread, &QThread::finished, this, &IPTool::onScanThreadEnded);
-            connect(cThread, &QThread::finished, scanner, &ip::Scanner::deleteLater);
+            connect(cThread, &QThread::finished, scanner, &reverseip::Scanner::deleteLater);
             connect(cThread, &QThread::finished, cThread, &QThread::deleteLater);
-            connect(this, &IPTool::stopScanThread, scanner, &ip::Scanner::onStopScan);
-            connect(this, &IPTool::pauseScanThread, scanner, &ip::Scanner::onPauseScan);
-            connect(this, &IPTool::resumeScanThread, scanner, &ip::Scanner::onResumeScan, Qt::DirectConnection);
+            connect(this, &IPTool::stopScanThread, scanner, &reverseip::Scanner::onStopScan, Qt::DirectConnection);
+            connect(this, &IPTool::pauseScanThread, scanner, &reverseip::Scanner::onPauseScan, Qt::DirectConnection);
+            connect(this, &IPTool::resumeScanThread, scanner, &reverseip::Scanner::onResumeScan, Qt::DirectConnection);
             cThread->start();
             break;
         }

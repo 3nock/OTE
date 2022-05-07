@@ -23,7 +23,6 @@ void HostTool::on_buttonAction_clicked(){
     QMenu saveMenu(this);
     saveMenu.setTitle(tr("Save"));
     saveMenu.setIcon(QIcon(":/img/res/icons/save.png"));
-    saveMenu.addAction(tr("as JSON"), this, [=](){this->saveResults(RESULT_TYPE::JSON);});
     saveMenu.addAction(tr("as CSV"), this, [=](){this->saveResults(RESULT_TYPE::CSV);});
     saveMenu.addSeparator();
     saveMenu.addAction(tr("Subdomain"), this, [=](){this->saveResults(RESULT_TYPE::SUBDOMAIN);});
@@ -33,8 +32,7 @@ void HostTool::on_buttonAction_clicked(){
     QMenu copyMenu(this);
     copyMenu.setTitle(tr("Copy"));
     copyMenu.setIcon(QIcon(":/img/res/icons/copy.png"));
-    copyMenu.addAction(tr("as JSON"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAINIP);});
-    copyMenu.addAction(tr("as CSV"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAINIP);});
+    copyMenu.addAction(tr("as CSV"), this, [=](){this->copyResults(RESULT_TYPE::CSV);});
     copyMenu.addSeparator();
     copyMenu.addAction(tr("Subdomain"), this, [=](){this->copyResults(RESULT_TYPE::SUBDOMAIN);});
     copyMenu.addAction(tr("Ip"), this, [=](){this->copyResults(RESULT_TYPE::IP);});
@@ -55,8 +53,10 @@ void HostTool::on_buttonAction_clicked(){
     menu.addMenu(&copyMenu);
     menu.addMenu(&extractMenu);
     menu.addSeparator();
-    menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
-    menu.addSeparator();
+    if(ui->comboBoxOption->currentIndex() == 0 || ui->comboBoxOption->currentIndex() == 1){
+        menu.addAction(tr("Send To Project"), this, [=](){this->sendToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
+        menu.addSeparator();
+    }
     menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendToEngine(TOOL::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
     menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendToEngine(TOOL::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
     menu.addAction(tr("Send IpAddress to IP"), this, [=](){this->sendToEngine(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
@@ -100,13 +100,15 @@ void HostTool::on_tableViewResults_customContextMenuRequested(const QPoint &pos)
     menu.addSeparator();
     menu.addAction(tr("Save"), this, [=](){this->saveSelectedResults();})->setIcon(QIcon(":/img/res/icons/save.png"));
     menu.addAction(tr("Copy"), this, [=](){this->copySelectedResults();})->setIcon(QIcon(":/img/res/icons/copy.png"));
-    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent()))
+    if(selectionModel->columnIntersectsSelection(0, selectionModel->currentIndex().parent())){
         menu.addMenu(&extractMenu);
-    menu.addSeparator();
+        menu.addSeparator();
+    }
     menu.addAction(tr("Send To Project"), this, [=](){this->sendSelectedToProject();})->setIcon(QIcon(":/img/res/icons/project.png"));
     menu.addSeparator();
     if(selectionModel->columnIntersectsSelection(1, selectionModel->currentIndex().parent()) ||
-       selectionModel->columnIntersectsSelection(2, selectionModel->currentIndex().parent())){
+       (selectionModel->columnIntersectsSelection(2, selectionModel->currentIndex().parent()) &&
+        ui->comboBoxOption->currentIndex() == 0)){
         menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->sendSelectedToEngine(TOOL::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->sendSelectedToEngine(TOOL::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
         menu.addAction(tr("Send IpAddress to IP"), this, [=](){this->sendSelectedToEngine(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));

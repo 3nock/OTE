@@ -10,6 +10,7 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
 
     /* active Results ExplorerModel */
     activeHost(new QStandardItem("Hostnames")),
+    activeIP(new QStandardItem("IP-Addresses")),
     activeWildcard(new QStandardItem("Wildcards")),
     activeDNS(new QStandardItem("DNS")),
     activeA(new QStandardItem("A")),
@@ -73,6 +74,7 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
         enums->setForeground(Qt::white);
         custom->setForeground(Qt::white);
         activeHost->setForeground(Qt::white);
+        activeIP->setForeground(Qt::white);
         activeWildcard->setForeground(Qt::white);
         activeDNS->setForeground(Qt::white);
         activeA->setForeground(Qt::white);
@@ -111,6 +113,7 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     }
 
     activeHost->setIcon(QIcon(":/img/res/icons/domain.png"));
+    activeIP->setIcon(QIcon(":/img/res/icons/ip.png"));
     activeWildcard->setIcon(QIcon(":/img/res/icons/wildcard.png"));
     activeDNS->setIcon(QIcon(":/img/res/icons/dns.png"));
     activeA->setIcon(QIcon(":/img/res/icons/ipv4.png"));
@@ -161,6 +164,7 @@ ExplorerModel::ExplorerModel(): QStandardItemModel(),
     activeSSL->appendRow(activeSSL_sha256);
     activeSSL->appendRow(activeSSL_altNames);
     active->appendRow(activeHost);
+    active->appendRow(activeIP);
     active->appendRow(activeWildcard);
     active->appendRow(activeURL);
     active->appendRow(activeDNS);

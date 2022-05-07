@@ -16,16 +16,17 @@
 void HostTool::clearResults(){
     /* clear the results */
     switch (ui->comboBoxOption->currentIndex()) {
-    case 0: // DNS
+    case 0: // DNS RESOLVE
         m_model_dns->clear();
         m_model_dns->setHorizontalHeaderLabels({tr(" Host"), tr(" IPv4"), tr(" IPv6")});
         set_subdomain.clear();
         break;
-    case 1:
+    case 1: // PORT
         m_model_port->clear();
         m_model_port->setHorizontalHeaderLabels({tr(" Host"), tr(" IP"), tr(" Ports")});
+        set_ports.clear();
         break;
-    case 2:
+    case 2: // PING
         m_model_ping->clear();
         m_model_ping->setHorizontalHeaderLabels({tr(" Host"), tr(" IP"), tr(" Time(ms)")});
         break;
@@ -55,15 +56,13 @@ void HostTool::removeResults(){
         break;
     case 1: // PORT
         for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
-            set_subdomain.remove(i->data().toString());
+            set_ports.remove(i->data().toString());
             m_model_port->removeRow(i->row());
         }
         break;
     case 2: // PING
-        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
-            set_subdomain.remove(i->data().toString());
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i)
             m_model_ping->removeRow(i->row());
-        }
     }
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());
@@ -92,11 +91,13 @@ void HostTool::saveResults(const RESULT_TYPE &result_type){
     case RESULT_TYPE::IP:
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             QString ipv4(proxyModel->index(i, 1).data().toString());
-            QString ipv6(proxyModel->index(i, 2).data().toString());
             if(!ipv4.isEmpty())
                 file.write(ipv4.append(NEWLINE).toUtf8());
-            if(!ipv6.isEmpty())
-                file.write(ipv6.append(NEWLINE).toUtf8());
+            if(ui->comboBoxOption->currentIndex() == 0){
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+                if(!ipv6.isEmpty())
+                    file.write(ipv6.append(NEWLINE).toUtf8());
+            }
         }
         break;
 
@@ -114,20 +115,6 @@ void HostTool::saveResults(const RESULT_TYPE &result_type){
             file.write(host.append(NEWLINE).toUtf8());
         }
         break;
-
-    case RESULT_TYPE::JSON:
-    {
-        QJsonDocument document;
-        QJsonArray array;
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
-            array.append(host_to_json(item));
-        }
-        document.setArray(array);
-        file.write(document.toJson());
-        break;
-    }
 
     default:
         break;
@@ -171,11 +158,13 @@ void HostTool::copyResults(const RESULT_TYPE &result_type){
         for(int i = 0; i != proxyModel->rowCount(); ++i)
         {
             QString ipv4(proxyModel->index(i, 1).data().toString());
-            QString ipv6(proxyModel->index(i, 2).data().toString());
             if(!ipv4.isEmpty())
                 clipboardData.append(ipv4).append(NEWLINE);
-            if(!ipv6.isEmpty())
-                clipboardData.append(ipv6).append(NEWLINE);
+            if(ui->comboBoxOption->currentIndex() == 0){
+                QString ipv6(proxyModel->index(i, 2).data().toString());
+                if(!ipv6.isEmpty())
+                    clipboardData.append(ipv6).append(NEWLINE);
+            }
         }
         break;
 
@@ -193,20 +182,6 @@ void HostTool::copyResults(const RESULT_TYPE &result_type){
 
             clipboardData.append(host).append(NEWLINE);
         }
-        break;
-
-    case RESULT_TYPE::JSON:
-    {
-        QJsonDocument document;
-        QJsonArray array;
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
-            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
-            array.append(host_to_json(item));
-        }
-        document.setArray(array);
-        clipboardData.append(document.toJson());
-    }
         break;
 
     default:
@@ -271,23 +246,44 @@ void HostTool::extractSelected(bool subdomain, bool tld){
 /// sending results...
 ///
 
-void HostTool::sendToProject(){
-    for(int i = 0; i != proxyModel->rowCount(); ++i)
-    {
-        QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(index));
-        project->addActiveHost(host_to_struct(item));
+void HostTool::sendToProject() {
+    if(ui->comboBoxOption->currentIndex() == 0){
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,0));
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(index));
+            project->addActiveHost(host_to_struct(item));
+        }
     }
+    if(ui->comboBoxOption->currentIndex() == 1){
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex index = proxyModel->mapToSource(proxyModel->index(i ,1));
+            s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(m_model_port->itemFromIndex(index));
+            project->addActiveIP(iptool_to_struct(item));
+        }
+    }
+
 }
 
-void HostTool::sendSelectedToProject(){
-    foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
-        if(index.column())
-            continue;
-        QModelIndex model_index = proxyModel->mapToSource(index);
-        s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
-        project->addActiveHost(host_to_struct(item));
+void HostTool::sendSelectedToProject() {
+    if(ui->comboBoxOption->currentIndex() == 0){
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column())
+                continue;
+            QModelIndex model_index = proxyModel->mapToSource(index);
+            s3s_item::HOST *item = static_cast<s3s_item::HOST*>(m_model_dns->itemFromIndex(model_index));
+            project->addActiveHost(host_to_struct(item));
+        }
     }
+    if(ui->comboBoxOption->currentIndex() == 1){
+        foreach(const QModelIndex &index, selectionModel->selectedIndexes()){
+            if(index.column() == 1){
+                QModelIndex model_index = proxyModel->mapToSource(index);
+                s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(m_model_port->itemFromIndex(model_index));
+                project->addActiveIP(iptool_to_struct(item));
+            }
+        }
+    }
+
 }
 
 void HostTool::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
@@ -302,7 +298,8 @@ void HostTool::sendToEngine(const TOOL &engine, const RESULT_TYPE &result_type){
     case RESULT_TYPE::IP:
         for(int i = 0; i != proxyModel->rowCount(); ++i){
             targets.insert(proxyModel->index(i, 1).data().toString());
-            targets.insert(proxyModel->index(i, 2).data().toString());
+            if(ui->comboBoxOption->currentIndex() == 0)
+                targets.insert(proxyModel->index(i, 2).data().toString());
         }
         break;
     default:
@@ -414,7 +411,8 @@ void HostTool::sendToEnum(const ENUMERATOR &tool){
     /* getting the targets */
     for(int i = 0; i != proxyModel->rowCount(); ++i){
         targets.insert(proxyModel->index(i, 1).data().toString());
-        targets.insert(proxyModel->index(i, 2).data().toString());
+        if(ui->comboBoxOption->currentIndex() == 0)
+            targets.insert(proxyModel->index(i, 2).data().toString());
     }
 
     /* sending the targets */

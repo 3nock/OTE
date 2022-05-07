@@ -1,5 +1,7 @@
 #include "PortScanner.h"
 
+#if defined(SYN_SCAN)
+
 #if defined(Q_OS_UNIX)
 
 struct in_addr port::Scanner::dest_ip;
@@ -309,3 +311,5 @@ void port::Scanner::ip_to_host(const char* ip, char* buffer) {
 }
 
 #endif // UNIX
+
+#endif // SYN SCAN

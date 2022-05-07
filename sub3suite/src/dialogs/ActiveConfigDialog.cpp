@@ -65,7 +65,7 @@ ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, host::ScanConfig *config
 }
 
 /* for ip... */
-ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, ip::ScanConfig *config) :
+ActiveConfigDialog::ActiveConfigDialog(QWidget *parent, reverseip::ScanConfig *config) :
     QDialog(parent),
     ui(new Ui::ActiveConfigDialog),
     m_configIP(config),

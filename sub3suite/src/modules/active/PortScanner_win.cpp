@@ -1,5 +1,6 @@
 #include "PortScanner.h"
 
+#if defined(SYN_SCAN)
 #if defined(Q_OS_WIN)
 
 int port::Scanner::start_syn_scan(QList<u_short> target_ports) {
@@ -418,3 +419,4 @@ bool port::Scanner::get_address(SOCKADDR *sa, size_t salen, char* addr) {
     }
 }
 #endif // WINDOWS
+#endif // SYN SCAN

@@ -27,15 +27,37 @@ void HostTool::onScanResult_ping(QString host, QString ip, unsigned long time){
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
+
+    /* save to Project model */
+    if(m_scanConfig->autoSaveToProject){
+        s3s_struct::HOST s3s_host;
+        s3s_host.host = host;
+        s3s_host.ipv4 = ip;
+        project->addActiveHost(s3s_host);
+    }
 }
 
 void HostTool::onScanResult_port(QString hostname, QString ip, u_short port){
+    if(set_ports.contains(hostname)){
+        s3s_item::IPTool *item = set_ports.value(hostname);
+        item->addPort(QString::number(port));
+        return;
+    }
+
+    s3s_item::IPTool *item = new s3s_item::IPTool;
+    item->setValues(ip, QString::number(port));
+
     m_model_port->appendRow({new QStandardItem(hostname),
-                             new QStandardItem(ip),
-                             new QStandardItem(QString::number(port))});
+                             item, item->ports});
+
+    set_ports.insert(hostname, item);
 
     ui->labelResultsCount->setNum(proxyModel->rowCount());
     m_scanStats->resolved++;
+
+    /* save to Project model */
+    if(m_scanConfig->autoSaveToProject)
+        project->addActiveIP(ip, port);
 }
 
 void HostTool::onScanResult_dns(s3s_struct::HOST host){

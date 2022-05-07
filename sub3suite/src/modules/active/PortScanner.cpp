@@ -41,8 +41,10 @@ void port::Scanner::scanner_connection(){
                 m_wait.wait(&m_mutex);
 
             /* check if received stop signal */
-            if(stop)
-                break;
+            if(stop){
+                delete socket;
+                return;
+            }
 
             m_mutex.unlock();
 
@@ -62,10 +64,12 @@ void port::Scanner::scanner_connection(){
         m_target = getTarget(m_args);
     }
 
-    socket->deleteLater();
+    delete socket;
 }
 
 void port::Scanner::scanner_syn(){
+#if defined(SYN_SCAN)
+
 #if defined(Q_OS_WIN)
     if(init_syn_scan() == -1)
         return;
@@ -132,17 +136,30 @@ void port::Scanner::scanner_syn(){
 #if defined (Q_OS_UNIX)
     m_target = port::getTarget(m_args);
     while(m_target != nullptr) {
+        m_mutex.lock();
+
+        /* if received pause signal lock the thread, dont unlock until resume signal*/
+        if(pause)
+            m_wait.wait(&m_mutex);
+
+        /* check if received stop signal */
+        if(stop)
+            break;
+
+        m_mutex.unlock();
+
         log.target = m_target;
         QByteArray ba = m_target.toLocal8Bit();
 
         // start scan
-        if(start_syn_unix(ba.data(), m_args->target_ports.values()) == -1)
+        if(start_syn_scan(ba.data(), m_args->target_ports.values()) == -1)
             emit scanLog(log);
 
         // next target
         m_target = getTarget(m_args);
     }
 #endif // UNIX
+#endif // SYN SCAN
 }
 
 QString port::getTarget(port::ScanArgs *args){

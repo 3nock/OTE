@@ -11,6 +11,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <QApplication>
 #include <QSettings>
 #include <QDebug>
 
@@ -66,11 +67,11 @@ class Config
 {
     public:
         static QSettings &apiKeys(){
-            static QSettings settings("keys.ini", QSettings::IniFormat);
+            static QSettings settings(QGuiApplication::applicationDirPath()+"/keys.ini", QSettings::IniFormat);
             return settings;
         }
         static QSettings &general(){
-            static QSettings settings("sub3suite.ini", QSettings::IniFormat);
+            static QSettings settings(QGuiApplication::applicationDirPath()+"/sub3suite.ini", QSettings::IniFormat);
             return settings;
         }
         static QSettings &donors(){

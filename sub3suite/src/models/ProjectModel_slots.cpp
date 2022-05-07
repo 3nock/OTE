@@ -24,6 +24,36 @@ void ProjectModel::addActiveHost(const s3s_struct::HOST &host){
     modified = true;
 }
 
+void ProjectModel::addActiveIP(const s3s_struct::IPTool &ip){
+    if(map_activeIP.contains(ip.ip))
+    {
+        s3s_item::IPTool *item = map_activeIP.value(ip.ip);
+        item->setValues(ip);
+        return;
+    }
+
+    s3s_item::IPTool *item = new s3s_item::IPTool;
+    item->setValues(ip);
+    activeIP->appendRow({item, item->ports});
+    map_activeIP.insert(ip.ip, item);
+    modified = true;
+}
+
+void ProjectModel::addActiveIP(const QString &ip, unsigned short port){
+    if(map_activeIP.contains(ip))
+    {
+        s3s_item::IPTool *item = map_activeIP.value(ip);
+        item->addPort(QString::number(port));
+        return;
+    }
+
+    s3s_item::IPTool *item = new s3s_item::IPTool;
+    item->setValues(ip, QString::number(port));
+    activeIP->appendRow({item, item->ports});
+    map_activeIP.insert(ip, item);
+    modified = true;
+}
+
 void ProjectModel::addActiveWildcard(const s3s_struct::Wildcard &wildcard){
     if(map_activeWildcard.contains(wildcard.wildcard))
     {

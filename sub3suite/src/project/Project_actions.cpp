@@ -17,6 +17,10 @@ void Project::action_clear(){
         model->activeHost->clear();
         model->map_activeHost.clear();
         break;
+    case ExplorerType::activeIP:
+        model->activeIP->clear();
+        model->map_activeIP.clear();
+        break;
     case ExplorerType::activeWildcard:
         model->activeWildcard->clear();
         model->map_activeWildcard.clear();
@@ -253,6 +257,7 @@ void Project::action_save(const RESULT_TYPE &result_type){
     case ExplorerType::activeDNS_MX:
     case ExplorerType::activeDNS_TXT:
     case ExplorerType::activeDNS_CNAME:
+    case ExplorerType::activeDNS_SRV:
     case ExplorerType::activeSSL_sha1:
     case ExplorerType::activeSSL_sha256:
     case ExplorerType::activeSSL_altNames:
@@ -294,20 +299,6 @@ void Project::action_save(const RESULT_TYPE &result_type){
             break;
         default:
             break;
-        }
-        break;
-    case ExplorerType::activeDNS_SRV:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QString name(proxyModel->index(i, 0).data().toString());
-            QString target(proxyModel->index(i, 1).data().toString());
-            QString port(proxyModel->index(i, 2).data().toString());
-
-            if(!target.isEmpty())
-                name.append(",").append(target);
-            if(!port.isEmpty())
-                name.append(",").append(port);
-
-            file.write(name.append(NEWLINE).toUtf8());
         }
         break;
     case ExplorerType::activeHost:
@@ -432,6 +423,19 @@ void Project::action_save(const RESULT_TYPE &result_type){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
             array.append(dns_to_json(item));
+        }
+        QJsonDocument document;
+        document.setArray(array);
+        file.write(document.toJson());
+    }
+        break;
+    case ExplorerType::activeIP:
+    {
+        QJsonArray array;
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(model->activeIP->itemFromIndex(model_index));
+            array.append(iptool_to_json(item));
         }
         QJsonDocument document;
         document.setArray(array);
@@ -588,6 +592,7 @@ void Project::action_copy(const RESULT_TYPE &result_type){
     case ExplorerType::activeDNS_MX:
     case ExplorerType::activeDNS_TXT:
     case ExplorerType::activeDNS_CNAME:
+    case ExplorerType::activeDNS_SRV:
     case ExplorerType::activeSSL_sha1:
     case ExplorerType::activeSSL_sha256:
     case ExplorerType::activeSSL_altNames:
@@ -629,20 +634,6 @@ void Project::action_copy(const RESULT_TYPE &result_type){
             break;
         default:
             break;
-        }
-        break;
-    case ExplorerType::activeDNS_SRV:
-        for(int i = 0; i != proxyModel->rowCount(); ++i){
-            QString name(proxyModel->index(i, 0).data().toString());
-            QString target(proxyModel->index(i, 1).data().toString());
-            QString port(proxyModel->index(i, 2).data().toString());
-
-            if(!target.isEmpty())
-                name.append(",").append(target);
-            if(!port.isEmpty())
-                name.append(",").append(port);
-
-            clipboardData.append(name.append(NEWLINE));
         }
         break;
     case ExplorerType::activeHost:
@@ -767,6 +758,19 @@ void Project::action_copy(const RESULT_TYPE &result_type){
             QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
             s3s_item::DNS *item = static_cast<s3s_item::DNS*>(model->activeDNS->itemFromIndex(model_index));
             array.append(dns_to_json(item));
+        }
+        QJsonDocument document;
+        document.setArray(array);
+        clipboardData.append(document.toJson());
+    }
+        break;
+    case ExplorerType::activeIP:
+    {
+        QJsonArray array;
+        for(int i = 0; i != proxyModel->rowCount(); ++i){
+            QModelIndex model_index = proxyModel->mapToSource(proxyModel->index(i, 0));
+            s3s_item::IPTool *item = static_cast<s3s_item::IPTool*>(model->activeIP->itemFromIndex(model_index));
+            array.append(iptool_to_json(item));
         }
         QJsonDocument document;
         document.setArray(array);
@@ -1756,6 +1760,14 @@ void Project::action_remove_selected(){
             if((i->parent() == model->activeHost->invisibleRootItem()->index()) && (i->column() == 0)){
                 model->map_activeHost.remove(i->data().toString());
                 model->activeHost->removeRow(i->row());
+            }
+        }
+        break;
+    case ExplorerType::activeIP:
+        for(QModelIndexList::const_iterator i = selectedIndexes.constEnd()-1; i >= selectedIndexes.constBegin(); --i){
+            if((i->parent() == model->activeHost->invisibleRootItem()->index()) && (i->column() == 0)){
+                model->map_activeIP.remove(i->data().toString());
+                model->activeIP->removeRow(i->row());
             }
         }
         break;

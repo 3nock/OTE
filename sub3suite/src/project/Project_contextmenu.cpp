@@ -164,17 +164,20 @@ void Project::on_treeViewTree_customContextMenuRequested(const QPoint &pos){
             menu.addAction(tr("Send NS to NS-Enum"), this, [=](){this->action_send_selected_toEnum(ENUMERATOR::NS);})->setIcon(QIcon(":/img/res/icons/ns.png"));
         }
         break;
+    case ExplorerType::activeIP:
     case ExplorerType::activeDNS_A:
     case ExplorerType::activeDNS_AAAA:
     case ExplorerType::passive_A:
     case ExplorerType::passive_AAAA:
-        menu.addAction(tr("Open in Browser"), this, [=](){this->action_openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
-        menu.addSeparator();
-        menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->action_send_selected_toEngine(TOOL::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
-        menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->action_send_selected_toEngine(TOOL::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
-        menu.addAction(tr("Send IpAddress to IP"), this, [=](){this->action_send_selected_toEngine(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
-        menu.addSeparator();
-        menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->action_send_selected_toEnum(ENUMERATOR::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+        if(m_selectionModel->columnIntersectsSelection(0, m_selectionModel->currentIndex().parent())){
+            menu.addAction(tr("Open in Browser"), this, [=](){this->action_openInBrowser();})->setIcon(QIcon(":/img/res/icons/browser.png"));
+            menu.addSeparator();
+            menu.addAction(tr("Send IpAddress to OSINT"), this, [=](){this->action_send_selected_toEngine(TOOL::OSINT, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+            menu.addAction(tr("Send IpAddress to RAW"), this, [=](){this->action_send_selected_toEngine(TOOL::RAW, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+            menu.addAction(tr("Send IpAddress to IP"), this, [=](){this->action_send_selected_toEngine(TOOL::IP, RESULT_TYPE::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+            menu.addSeparator();
+            menu.addAction(tr("Send IpAddress to IP-Enum"), this, [=](){this->action_send_selected_toEnum(ENUMERATOR::IP);})->setIcon(QIcon(":/img/res/icons/ip.png"));
+        }
         break;
     case ExplorerType::activeDNS_NS:
     case ExplorerType::passive_NS:
@@ -330,6 +333,7 @@ void Project::init_action_send(){
         menu_send->addAction(tr("Send MX to MX-Enum"), this, [=](){this->action_send_mx();})->setIcon(QIcon(":/img/res/icons/mx.png"));
         menu_send->addAction(tr("Send NS to NS-Enum"), this, [=](){this->action_send_ns();})->setIcon(QIcon(":/img/res/icons/ns.png"));
         break;
+    case ExplorerType::activeIP:
     case ExplorerType::activeDNS_A:
     case ExplorerType::activeDNS_AAAA:
     case ExplorerType::passive_A:

@@ -15,7 +15,7 @@
 
 #include "../AbstractTool.h"
 #include "src/utils/utils.h"
-#include "src/modules/active/IPScanner.h"
+#include "src/modules/active/ReverseIPScanner.h"
 #include "src/modules/active/PortScanner.h"
 #include "src/modules/active/PingScanner.h"
 
@@ -56,10 +56,10 @@ class IPTool : public AbstractTool{
         Ui::IPTool *ui;
         QElapsedTimer m_timer;
         QMap<QString,QString> m_failedScans;
-        QMap<QString, s3s_item::HOST*> set_subdomain;
-        ip::ScanConfig *m_scanConfig;
-        ip::ScanArgs *m_scanArgs;
-        ip::ScanStat *m_scanStats;
+        QMap<QString, s3s_item::IPTool*> set_ports;
+        reverseip::ScanConfig *m_scanConfig;
+        reverseip::ScanArgs *m_scanArgs;
+        reverseip::ScanStat *m_scanStats;
         port::ScanArgs *m_portscannerArgs;
         ping::ScanArgs *m_pingscannerArgs;
         QStringListModel *m_targetListModel;
@@ -84,9 +84,6 @@ class IPTool : public AbstractTool{
         void saveSelectedResults();
         void copyResults(const RESULT_TYPE&);
         void copySelectedResults();
-        /* extracting subdomain names */
-        void extract(bool subdomain, bool tld);
-        void extractSelected(bool subdomain, bool tld);
         /* sending results to other parts */
         void sendToProject();
         void sendSelectedToProject();
