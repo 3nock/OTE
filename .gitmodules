@@ -2,7 +2,3 @@
 	path = sub3suite/include/gumbo-parser
 	url = https://github.com/google/gumbo-parser
 	ignore = dirty
-[submodule "sub3suite/include/breakpad"]
-	path = sub3suite/include/breakpad
-	url = https://github.com/google/breakpad
-	ignore = dirty
