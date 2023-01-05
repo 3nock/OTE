@@ -16,10 +16,6 @@
 #include <QStandardPaths>
 #include <QTranslator>
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
-#include "src/utils/CrashHandler.h"
-#endif
-
 #if defined(Q_OS_WIN)
 #include <Windows.h>
 #endif
@@ -211,11 +207,6 @@ int main(int argc, char *argv[])
 
     /* create the sub3suite app */
     s3s_Application s3s_app(argc, argv);
-
-#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
-    /* initializing the crash handler */
-    Breakpad::CrashHandler::instance()->Init(QGuiApplication::applicationDirPath()+"/logs");
-#endif
 
     /* splash screen */
     QPixmap splashImage = QPixmap(":/img/res/icons/splash.png");

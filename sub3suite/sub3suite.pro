@@ -40,7 +40,6 @@ unix {
 
 # included external libraries
 include(include/gumbo-parser.pri)
-include(include/breakpad.pri)
 
 SOURCES += \
     src/dialogs/DocumentationDialog.cpp \
@@ -268,7 +267,6 @@ SOURCES += \
     src/project/Project_actions.cpp \
     src/project/Project_slots.cpp \
     src/utils/UpdateChecker.cpp \
-    src/utils/CrashHandler.cpp \
     src/widgets/InputWidget.cpp \
     src/dialogs/LogViewerDialog.cpp \
     src/dialogs/AboutDialog.cpp \
@@ -436,7 +434,6 @@ HEADERS += \
     src/modules/passive/site/Rapiddns.h \
     src/modules/passive/site/SiteDossier.h \
     src/modules/passive/AbstractOsintModule.h \
-    src/utils/CrashHandler.h \
     src/utils/s3s.h \
     src/utils/JsonSyntaxHighlighter.h \
     src/utils/LogsSyntaxHighlighter.h \
