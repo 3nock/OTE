@@ -68,5 +68,5 @@ windeployqt release/sub3suite.exe
 
 ## Run
 
-The folder `sub3suite/bin` contains all the necessary files required by the sub3suite program. Copy the relevant Qt libraries to appropriate locations and the built sub3suite
+The folder `sub3suite/build` contains all the necessary files required by the sub3suite program. Copy the relevant Qt libraries (Qt5Widgets, Qt5Network, Qt5Gui & Qt5Core) to appropriate locations and the built sub3suite
 application into this folder and run.
