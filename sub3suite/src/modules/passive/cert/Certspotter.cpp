@@ -20,7 +20,7 @@ Certspotter::Certspotter(ScanArgs args) : AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Certspotter::replyFinishedSSL);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_CERTSPOTTER).toString();
+    m_key = gConfig.keys.CertSpotter;
 }
 Certspotter::~Certspotter(){
     delete manager;

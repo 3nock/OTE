@@ -20,35 +20,29 @@ StartupDialog::StartupDialog(ProjectStruct *project, QWidget *parent) : QDialog(
 {
     this->initUI();
 
-    /* model for existing projects */
     model_existing->setHorizontalHeaderLabels({tr(" Name"), tr(" File")});
     ui->tableViewProjects->setModel(model_existing);
 
-    /* projects path */
+    // projects path
     ui->lineEditNew_path->setText(QGuiApplication::applicationDirPath()+"/projects");
 
-    /* load recent projects */
-    CONFIG.beginGroup(CFG_GRP_RECENT);
-    QStringList projects = CONFIG.childKeys();
-
-    foreach(const QString &project, projects)
+    // load recent projects
+    foreach(const QString &project, gConfig.recents.keys())
     {
-        QString projectfile = CONFIG.value(project).toString();
+        QString projectfile = gConfig.recents[project];
 
-        /* check if project file exists if it doesnt delete in recents */
+        // check if project file exists if it doesnt delete in recents
         QFile file(projectfile);
         if(!file.exists()){
             qWarning() << "Project File: " << projectfile << " doesnt exists. Deleting from existing Projects";
-            CONFIG.remove(project);
-            continue;
+            gConfig.recents.remove(project);
         }
-
-        /* if project exists add to list */
-        QFileInfo fileInfo(file.fileName());
-        model_existing->invisibleRootItem()->appendRow({new QStandardItem(fileInfo.fileName().split(".")[0]),
-                                                        new QStandardItem(projectfile)});
+        else {
+            QFileInfo fileInfo(file.fileName());
+            model_existing->invisibleRootItem()->appendRow({new QStandardItem(fileInfo.fileName().split(".")[0]),
+                                                            new QStandardItem(projectfile)});
+        }
     }
-    CONFIG.endGroup();
 
     /* default option */
     ui->radioButtonTemporary->setChecked(true);

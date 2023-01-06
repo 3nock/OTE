@@ -58,7 +58,6 @@ class URLTool : public AbstractTool{
         QStandardItemModel *m_model;
         QMap<QString, s3s_item::URL*> set_results;
 
-        void initConfigValues();
         void initUI();
 
         void startScan();

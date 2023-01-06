@@ -9,7 +9,7 @@
 #define LOGVIEWERDIALOG_H
 
 #include <QDialog>
-#include "src/utils/LogsSyntaxHighlighter.h"
+#include "src/utils/SyntaxHighlighter.h"
 
 
 namespace Ui {
@@ -28,7 +28,7 @@ class LogViewerDialog : public QDialog{
 
     private:
         Ui::LogViewerDialog *ui;
-        LogsSyntaxHighlighter *m_logsSyntaxHighlighter;
+        SyntaxHighlighter *mSyntaxHighlighter;
 };
 
 #endif // LOGVIEWERDIALOG_H

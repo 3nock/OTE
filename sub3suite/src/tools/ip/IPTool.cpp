@@ -13,7 +13,7 @@
 
 #include "src/utils/Config.h"
 #include "src/utils/utils.h"
-#include "src/dialogs/ActiveConfigDialog.h"
+#include "src/dialogs/config/IPConfigDialog.h"
 
 
 IPTool::IPTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent, project),
@@ -49,8 +49,6 @@ IPTool::IPTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent, pr
     m_scanArgs->config = m_scanConfig;
     m_pingscannerArgs->is_ip = true;
     m_portscannerArgs->is_ip = true;
-
-    this->initConfigValues();
 }
 IPTool::~IPTool(){
     delete m_model_ping;
@@ -183,34 +181,9 @@ void IPTool::on_buttonStop_clicked(){
 }
 
 void IPTool::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
+    IPConfigDialog *configDialog = new IPConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
-}
-
-void IPTool::initConfigValues(){
-    CONFIG.beginGroup(CFG_IP);
-    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
-    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
-    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
-    m_scanArgs->config->pingScanConfig->ttl = CONFIG.value("ping_ttl").toInt();
-    m_scanArgs->config->pingScanConfig->data_size = CONFIG.value("ping_bytes").toInt();
-    QString portScan = CONFIG.value(CFG_VAL_PORTSCAN).toString();
-    CONFIG.endGroup();
-
-    if(portScan == "syn")
-        m_portscannerArgs->scan_type = port::ScanType::SYN;
-    if(portScan == "connection")
-        m_portscannerArgs->scan_type = port::ScanType::CONNECTION;
-
-    int size = CONFIG.beginReadArray("nameservers_active");
-    for (int i = 0; i < size; ++i) {
-        CONFIG.setArrayIndex(i);
-        m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());
-    }
-    CONFIG.endArray();
 }
 
 void IPTool::log(QString log){

@@ -69,7 +69,6 @@ class SSLTool : public AbstractTool{
         QStandardItemModel *m_model_hash;
         QStandardItemModel *m_model_ssl;
 
-        void initConfigValues();
         void initUI();
 
         void startScan();

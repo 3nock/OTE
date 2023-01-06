@@ -42,9 +42,7 @@ void ProjectModel::saveProject(){
         file.close();
 
         /* adding to recent projects */
-        CONFIG.beginGroup(CFG_GRP_RECENT);
-        CONFIG.setValue(info.name, info.path);
-        CONFIG.endGroup();
+        gConfig.recents.insert(info.name, info.path);
 
         /* setting status as no modifications to the project */
         modified = false;
@@ -74,9 +72,7 @@ void ProjectModel::saveProjectCopy(){
         file.close();
 
         /* adding to recent projects */
-        CONFIG.beginGroup(CFG_GRP_RECENT);
-        CONFIG.setValue(info.name, info.path);
-        CONFIG.endGroup();
+        gConfig.recents.insert(info.name, info.path);
 
         qDebug() << "Project Copy Saved!";
     }

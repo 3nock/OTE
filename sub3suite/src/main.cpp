@@ -230,9 +230,9 @@ int main(int argc, char *argv[])
                           QFileDevice::ReadGroup | QFileDevice::WriteGroup |
                           QFileDevice::ReadOther | QFileDevice::WriteOther);
 
-    if(CONFIG.value("is_first_run").toBool()){
-        CONFIG.setValue("is_first_run", false);
-        CONFIG.setValue("s3s", QCoreApplication::applicationFilePath());
+    if(gConfig.general.isFirstRun){
+        gConfig.general.isFirstRun = false;
+        gConfig.general.s3s = QCoreApplication::applicationFilePath();
 #if defined (Q_OS_LINUX)
         create_desktop_file();
         qDebug() << "sub3suite.desktop file created!";
@@ -240,9 +240,9 @@ int main(int argc, char *argv[])
     }
 
 
-    /* check s3s path */
-    if(CONFIG.value("s3s").toString() != QCoreApplication::applicationFilePath()){
-        CONFIG.setValue("s3s", QCoreApplication::applicationFilePath());
+    // check s3s path
+    if(gConfig.general.s3s != QCoreApplication::applicationFilePath()){
+        gConfig.general.s3s = QCoreApplication::applicationFilePath();
 #if defined (Q_OS_LINUX)
         create_desktop_file();
         qDebug() << "sub3suite.desktop file changed!";
@@ -254,7 +254,7 @@ int main(int argc, char *argv[])
     registerMetaTypes();
 
     /* setting font */
-    switch (CONFIG.value(CFG_VAL_FONT).toInt()) {
+    switch (gConfig.general.font) {
     case 11:
     {
         QFont font = qApp->font();
@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
 
     /* setting stylesheets */
     QFile stylesheet;
-    if(CONFIG.value(CFG_VAL_THEME).toString() == "dark"){
+    if(gConfig.general.theme == "dark"){
         stylesheet.setFileName(":/themes/res/themes/default.css");
         s3s_global::is_dark_theme = true;
     }

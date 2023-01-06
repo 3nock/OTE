@@ -24,7 +24,7 @@ Ipfy::Ipfy(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Ipfy::replyFinishedCidr);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_IPFY).toString();
+    m_key = gConfig.keys.Ipfy;
 }
 Ipfy::~Ipfy(){
     delete manager;

@@ -30,7 +30,7 @@ SpyOnWeb::SpyOnWeb(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpyOnWeb::replyFinishedSubdomainIp);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_SPYONWEB).toString();
+    m_key = gConfig.keys.SpyOnWeb;
 }
 SpyOnWeb::~SpyOnWeb(){
     delete manager;

@@ -22,7 +22,7 @@ Hunter::Hunter(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Hunter::replyFinishedEmail);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_HUNTER).toString();
+    m_key = gConfig.keys.Hunter;
 }
 Hunter::~Hunter(){
     delete manager;

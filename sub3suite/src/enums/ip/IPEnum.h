@@ -60,7 +60,6 @@ private:
         ScanArgs *m_scanArgs;
 
         void initUI();
-        void initConfigValues();
 
         void startScan();
         void startScanThread(AbstractOsintModule*);

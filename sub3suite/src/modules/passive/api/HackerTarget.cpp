@@ -37,7 +37,7 @@ HackerTarget::HackerTarget(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HackerTarget::replyFinishedCidr);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_HACKERTARGET).toString();
+    m_key = gConfig.keys.HackerTarget;
 }
 HackerTarget::~HackerTarget(){
     delete manager;

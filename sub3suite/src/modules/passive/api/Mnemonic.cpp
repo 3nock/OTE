@@ -25,7 +25,7 @@ Mnemonic::Mnemonic(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Mnemonic::replyFinishedSubdomain);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_MNEMONIC).toString();
+    m_key = gConfig.keys.Mnemonic;
 }
 Mnemonic::~Mnemonic(){
     delete manager;

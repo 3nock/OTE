@@ -44,7 +44,7 @@ VirusTotal::VirusTotal(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &VirusTotal::replyFinishedSSL);
 
     /* obtain apikey */
-    m_key = APIKEY.value(OSINT_MODULE_VIRUSTOTAL).toString();
+    m_key = gConfig.keys.VirusTotal;
 }
 VirusTotal::~VirusTotal(){
     delete manager;

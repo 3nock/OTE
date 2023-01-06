@@ -18,12 +18,14 @@ SaveProjectDialog::SaveProjectDialog(ProjectModel *projectModel, QWidget *parent
     /* setting the data */
     ui->lineEditName->setText(m_projectModel->info.name);
 
+    /*
     if(m_projectModel->info.path.isEmpty())
         ui->lineEditPath->setText(CONFIG.value("projects_path").toString());
     else{
         QString path = m_projectModel->info.path.remove(m_projectModel->info.name+".s3s");
         ui->lineEditPath->setText(path);
     }
+    */
 }
 SaveProjectDialog::~SaveProjectDialog(){
     delete ui;

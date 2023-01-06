@@ -40,8 +40,8 @@ RiskIq::RiskIq(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &RiskIq::replyFinishedSSL);
 
     /* getting api-key */
-    m_key = APIKEY.value("riskiq_key").toString();
-    m_secret = APIKEY.value("riskiq_secret").toString();
+    m_key = gConfig.keys.RiskIQ.key;
+    m_secret = gConfig.keys.RiskIQ.secret;
 }
 RiskIq::~RiskIq(){
     delete manager;

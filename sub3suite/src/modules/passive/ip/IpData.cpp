@@ -33,7 +33,7 @@ IpData::IpData(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpData::replyFinishedEnumASNPrefixes);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_IPDATA).toString();
+    m_key = gConfig.keys.IpData;
 }
 IpData::~IpData(){
     delete manager;

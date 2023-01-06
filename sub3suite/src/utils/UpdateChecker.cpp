@@ -40,7 +40,7 @@ void UpdateChecker::onFinished(QNetworkReply* reply){
             if(serverTime.isValid())
             {
                 QString url = mainObj["assets"].toArray().at(0).toObject()["browser_download_url"].toString();
-                QDateTime build = QDateTime::fromString(CONFIG.value("build_date").toString(), "yyyy-MM-dd");
+                QDateTime build = QDateTime::fromString(gConfig.general.build_date, "yyyy-MM-dd");
 
                 if(serverTime.date() > build.date()){
                     QString info = QString(tr("New build %1 available!<br>Download <a href=\"https://github.com/3nock/sub3suite/releases\">here</a><br><br>You are now on build %2")).arg(serverTime.toString()).arg(build.toString());
@@ -69,7 +69,7 @@ void UpdateChecker::onFinished(QNetworkReply* reply){
             }
 
             QString url = mainObj["assets"].toArray().at(0).toObject()["browser_download_url"].toString();
-            QDateTime build = QDateTime::fromString(CONFIG.value("build_date").toString(), "yyyy-MM-dd");
+            QDateTime build = QDateTime::fromString(gConfig.general.build_date, "yyyy-MM-dd");
 
             QString info;
             if(serverTime.date() > build.date())

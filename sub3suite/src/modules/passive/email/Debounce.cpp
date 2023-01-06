@@ -16,7 +16,7 @@ Debounce::Debounce(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Debounce::replyFinishedRawJson);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_DEBOUNCE).toString();
+    m_key = gConfig.keys.Debounce;
 }
 Debounce::~Debounce(){
     delete manager;

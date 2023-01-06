@@ -41,7 +41,7 @@ ViewDns::ViewDns(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ViewDns::replyFinishedEnumMX);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_VIEWDNS).toString();
+    m_key = gConfig.keys.ViewDns;
 }
 ViewDns::~ViewDns(){
     delete manager;

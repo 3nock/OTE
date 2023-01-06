@@ -70,7 +70,6 @@ class BruteTool : public AbstractTool{
         QMap<QString,QString> m_failedScans;
 
         void iniUI();
-        void initConfigValues();
 
         void startScan();
         void scanSummary();

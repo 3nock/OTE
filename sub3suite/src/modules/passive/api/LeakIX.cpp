@@ -21,7 +21,7 @@ LeakIX::LeakIX(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakIX::replyFinishedSSL);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_LEAKIX).toString();
+    m_key = gConfig.keys.LeakIX;
 }
 LeakIX::~LeakIX(){
     delete manager;

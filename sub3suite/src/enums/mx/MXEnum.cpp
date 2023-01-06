@@ -10,7 +10,7 @@
 
 #include "src/utils/Config.h"
 #include "src/dialogs/ApiKeysDialog.h"
-#include "src/dialogs/EnumConfigDialog.h"
+#include "src/dialogs/config/EnumConfigDialog.h"
 
 
 MXEnum::MXEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
@@ -21,7 +21,6 @@ MXEnum::MXEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
-    this->initConfigValues();
 
     /* setting targets model */
     ui->targets->setListName(tr("Targets"));
@@ -85,9 +84,8 @@ void MXEnum::on_buttonStop_clicked(){
 }
 
 void MXEnum::on_buttonConfig_clicked(){
-    EnumConfigDialog *scanConfig = new EnumConfigDialog(this, m_scanConfig);
+    EnumConfigDialog *scanConfig = new EnumConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
-    scanConfig->loadConfig_mx();
     scanConfig->show();
 }
 
@@ -109,15 +107,6 @@ void MXEnum::initUI(){
     /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                            << static_cast<int>((this->width() * 0.50)));
-}
-
-void MXEnum::initConfigValues(){
-    CONFIG.beginGroup(CFG_ENUM);
-    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_mx").toBool();
-    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_mx").toBool();
-    m_scanConfig->setTimeout = CONFIG.value("set_timeout_mx").toBool();
-    m_scanConfig->timeout = CONFIG.value("timeout_mx").toInt();
-    CONFIG.endGroup();
 }
 
 void MXEnum::log(QString log){

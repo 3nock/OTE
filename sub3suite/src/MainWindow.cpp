@@ -17,7 +17,7 @@
 #include "src/dialogs/ApiKeysDialog.h"
 #include "src/dialogs/LogViewerDialog.h"
 #include "src/dialogs/DocumentationDialog.h"
-#include "src/dialogs/ProjectConfigDialog.h"
+#include "src/dialogs/config/ProjectConfigDialog.h"
 #include "src/dialogs/SaveProjectDialog.h"
 
 #include "src/utils/Config.h"
@@ -187,11 +187,11 @@ void MainWindow::initActions(){
     dark_theme->setCheckable(true);
 
     connect(light_theme, &QAction::triggered, this, [=](){
-        CONFIG.setValue(CFG_VAL_THEME, "light");
+        gConfig.general.theme = "light";
         QMessageBox::information(this, "Info", "The theme will be applied after re-start");
     });
     connect(dark_theme, &QAction::triggered, this, [=](){
-        CONFIG.setValue(CFG_VAL_THEME, "dark");
+        gConfig.general.theme = "dark";
         QMessageBox::information(this, "Info", "The theme will be applied after re-start");
     });
 
@@ -225,15 +225,15 @@ void MainWindow::initActions(){
     font_none->setCheckable(true);
 
     connect(font_11, &QAction::triggered, this, [=](){
-        CONFIG.setValue(CFG_VAL_FONT, 11);
+        gConfig.general.font = 11;
         QMessageBox::information(this, "Info", "The font size will be applied after re-start");
     });
     connect(font_12, &QAction::triggered, this, [=](){
-        CONFIG.setValue(CFG_VAL_FONT, 12);
+        gConfig.general.font = 12;
         QMessageBox::information(this, "Info", "The font size will be applied after re-start");
     });
     connect(font_none, &QAction::triggered, this, [=](){
-        CONFIG.setValue(CFG_VAL_FONT, 0);
+        gConfig.general.font = 0;
         QMessageBox::information(this, "Info", "The font size will be applied after re-start");
     });
 
@@ -261,17 +261,12 @@ void MainWindow::initActions(){
 void MainWindow::setRecentProjects(){
     m_menuRecents = new QMenu(this);
 
-    CONFIG.beginGroup(CFG_GRP_RECENT);
-    QStringList recentList =  CONFIG.allKeys();
-
-    foreach(const QString &project_name, CONFIG.allKeys()){
-        QString project_path = CONFIG.value(project_name).toString();
+    foreach(const QString &project_name, gConfig.recents.keys()){
+        QString project_path = gConfig.recents[project_name];
         m_menuRecents->addAction(project_name, this, [=](){projectModel->openExistingProject(project_name, project_path);});
     }
 
-    /* set the menu */
     ui->actionRecentProjects->setMenu(m_menuRecents);
-    CONFIG.endGroup();
 }
 
 void MainWindow::initProject(ProjectStruct project_info){

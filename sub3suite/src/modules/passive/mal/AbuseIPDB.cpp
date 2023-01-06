@@ -18,7 +18,7 @@ AbuseIPDB::AbuseIPDB(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &AbuseIPDB::replyFinishedRawJson);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_ABUSEIPDB).toString();
+    m_key = gConfig.keys.AbuseIPDB;
 }
 AbuseIPDB::~AbuseIPDB(){
     delete manager;

@@ -26,8 +26,8 @@ Circl::Circl(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Circl::replyFinishedSSL);
 
     /* get login credentials */
-    m_id = APIKEY.value("circlUser").toString();
-    m_password = APIKEY.value("circlPwd").toString();
+    m_id = gConfig.keys.Circl.user;
+    m_password = gConfig.keys.Circl.pwd;
 }
 Circl::~Circl(){
     delete manager;

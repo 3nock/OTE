@@ -22,7 +22,7 @@ IpApi::IpApi(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpApi::replyFinishedEnumIP);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_IPAPI).toString();
+    m_key = gConfig.keys.IpApi;
 }
 IpApi::~IpApi(){
     delete manager;

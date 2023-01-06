@@ -37,7 +37,7 @@ Spyse::Spyse(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Spyse::replyFinishedIp);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_SPYSE).toString();
+    m_key = gConfig.keys.Spyse;
 }
 Spyse::~Spyse(){
     delete manager;

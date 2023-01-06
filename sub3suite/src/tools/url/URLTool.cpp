@@ -13,7 +13,7 @@
 
 #include "src/utils/Config.h"
 #include "src/utils/utils.h"
-#include "src/dialogs/ActiveConfigDialog.h"
+#include "src/dialogs/config/URLConfigDialog.h"
 
 /*
  * TODO:
@@ -36,11 +36,7 @@ URLTool::URLTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent, 
 
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-    /* config... */
     m_scanArgs->config = m_scanConfig;
-
-    /* get prev config values */
-    this->initConfigValues();
 }
 URLTool::~URLTool(){
     delete m_model;
@@ -167,24 +163,9 @@ void URLTool::on_buttonStop_clicked(){
 }
 
 void URLTool::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
+    URLConfigDialog *configDialog = new URLConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
-}
-
-void URLTool::initConfigValues(){
-    CONFIG.beginGroup(CFG_URL);
-    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
-    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
-    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
-    m_scanArgs->config->force_scheme = CONFIG.value(CFG_VAL_FORCESCHEME).toBool();
-    m_scanArgs->config->scheme = CONFIG.value(CFG_VAL_SCHEME).toString();
-    m_scanArgs->config->follow_redirect = CONFIG.value("follow_redirects").toBool();
-    m_scanArgs->config->take_screenshots = CONFIG.value("take_screenshots").toBool();
-    m_scanArgs->config->get_title = CONFIG.value("get_title").toBool();
-    CONFIG.endGroup();
 }
 
 void URLTool::log(const QString &log){

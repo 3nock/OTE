@@ -23,7 +23,7 @@ Whoxy::Whoxy(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Whoxy::replyFinishedRawJson);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_WHOXY).toString();
+    m_key = gConfig.keys.Whoxy;
 }
 Whoxy::~Whoxy(){
     delete manager;

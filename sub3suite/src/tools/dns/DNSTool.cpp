@@ -11,7 +11,7 @@
 #include <QDateTime>
 #include <QClipboard>
 #include "src/utils/Config.h"
-#include "src/dialogs/ActiveConfigDialog.h"
+#include "src/dialogs/config/DNSConfigDialog.h"
 #include "src/utils/utils.h"
 
 
@@ -41,7 +41,6 @@ DNSTool::DNSTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent, 
     m_scanArgs->config = m_scanConfig;
 
     this->initSrvWordlist();
-    this->initConfigValues();
 }
 DNSTool::~DNSTool(){
     delete m_model;
@@ -180,7 +179,7 @@ void DNSTool::initSrvWordlist(){
 }
 
 void DNSTool::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
+    DNSConfigDialog *configDialog = new DNSConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }
@@ -190,23 +189,6 @@ void DNSTool::on_checkBoxSRV_clicked(bool checked){
         ui->srvWordlist->show();
     else
         ui->srvWordlist->hide();
-}
-
-void DNSTool::initConfigValues(){
-    CONFIG.beginGroup(CFG_DNS);
-    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
-    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
-    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
-    CONFIG.endGroup();
-
-    int size = CONFIG.beginReadArray("nameservers_dns");
-    for (int i = 0; i < size; ++i) {
-        CONFIG.setArrayIndex(i);
-        m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());
-    }
-    CONFIG.endArray();
 }
 
 void DNSTool::log(QString log){

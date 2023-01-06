@@ -13,7 +13,6 @@
 #include <QClipboard>
 #include <QDesktopServices>
 
-#include "src/utils/s3s.h"
 #include "src/utils/Config.h"
 
 
@@ -53,9 +52,9 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for authors...
     ///
 
-    foreach(const QString &author, AUTHORS.allKeys())
+    foreach(const QString &author, gConfig.about.authors.keys())
         m_authorsModel->appendRow({new QStandardItem(author),
-                                   new QStandardItem(AUTHORS.value(author).toString())});
+                                   new QStandardItem(gConfig.about.authors[author])});
 
     m_authorsModel->setHorizontalHeaderLabels({tr(" Author"), tr(" Contact")});
     ui->tableViewContributors->setModel(m_authorsModel);
@@ -65,9 +64,9 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for modules...
     ///
 
-    foreach(const QString &module, MODULES.allKeys())
+    foreach(const QString &module, gConfig.about.modules.keys())
         m_modulesModel->appendRow({new QStandardItem(module),
-                                   new QStandardItem(MODULES.value(module).toString())});
+                                   new QStandardItem(gConfig.about.modules[module])});
 
     m_modulesModel->setHorizontalHeaderLabels({tr(" Module"), tr(" Source")});
     ui->tableViewModules->setModel(m_modulesModel);
@@ -77,9 +76,9 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent),
     /// for sponsors...
     ///
 
-    foreach(const QString &donor, DONORS.allKeys())
+    foreach(const QString &donor, gConfig.about.donors.keys())
         m_sponsorsModel->appendRow({new QStandardItem(donor),
-                                   new QStandardItem(DONORS.value(donor).toString())});
+                                   new QStandardItem(gConfig.about.donors[donor])});
 
     m_sponsorsModel->setHorizontalHeaderLabels({tr(" Name"), tr(" Contact")});
     ui->tableViewDonations->setModel(m_sponsorsModel);

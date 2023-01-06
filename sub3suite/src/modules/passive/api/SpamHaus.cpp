@@ -16,7 +16,7 @@ SpamHaus::SpamHaus(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SpamHaus::replyFinishedRawJson);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_SPAMHAUS).toString();
+    m_key = gConfig.keys.SpamHaus;
 }
 SpamHaus::~SpamHaus(){
     delete manager;

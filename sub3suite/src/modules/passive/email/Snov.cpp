@@ -24,7 +24,7 @@ Snov::Snov(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Snov::replyFinishedEmail);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_SNOV).toString();
+    m_key = gConfig.keys.Snov;
 }
 Snov::~Snov(){
     delete manager;

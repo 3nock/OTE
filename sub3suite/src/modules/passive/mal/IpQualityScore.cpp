@@ -19,7 +19,7 @@ IpQualityScore::IpQualityScore(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpQualityScore::replyFinishedRawJson);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_IPQUALITYSCORE).toString();
+    m_key = gConfig.keys.IpQualityScore;
 }
 IpQualityScore::~IpQualityScore(){
     delete manager;

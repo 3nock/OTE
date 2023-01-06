@@ -5,7 +5,7 @@
 #include <QMenuBar>
 
 #include "src/models/ProjectModel.h"
-#include "src/utils/JsonSyntaxHighlighter.h"
+#include "src/utils/SyntaxHighlighter.h"
 
 #define SITEMAP_TYPE "smt"
 
@@ -78,7 +78,7 @@ class Project : public QWidget{
         QSortFilterProxyModel *proxyModel;
 
         QItemSelectionModel *m_selectionModel = nullptr;
-        JsonSyntaxHighlighter *m_jsonHighlighter = nullptr;
+        SyntaxHighlighter *mJsonHighlighter = nullptr;
 
         QString m_projectFile;
         QString *item_comment = nullptr;

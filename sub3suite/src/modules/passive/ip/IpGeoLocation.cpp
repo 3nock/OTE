@@ -16,7 +16,7 @@ IpGeoLocation::IpGeoLocation(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpGeoLocation::replyFinishedRawJson);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_IPGEOLOCATION).toString();
+    m_key = gConfig.keys.IpGeoLocation;
 }
 IpGeoLocation::~IpGeoLocation(){
     delete manager;

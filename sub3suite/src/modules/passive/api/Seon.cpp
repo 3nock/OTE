@@ -15,7 +15,7 @@ Seon::Seon(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Seon::replyFinishedRawJson);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_SEON).toString();
+    m_key = gConfig.keys.Seon;
 }
 Seon::~Seon(){
     delete manager;

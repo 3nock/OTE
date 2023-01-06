@@ -33,7 +33,7 @@ BinaryEdge::BinaryEdge(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BinaryEdge::replyFinishedIp);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_BINARYEDGE).toString();
+    m_key = gConfig.keys.BinaryEdge;
 }
 BinaryEdge::~BinaryEdge(){
     delete manager;

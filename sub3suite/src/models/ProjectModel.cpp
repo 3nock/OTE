@@ -1,6 +1,6 @@
 #include "ProjectModel.h"
 
-#include "src/dialogs/ProjectConfigDialog.h"
+#include "src/dialogs/config/ProjectConfigDialog.h"
 #include <QCryptographicHash>
 #include <QTranslator>
 

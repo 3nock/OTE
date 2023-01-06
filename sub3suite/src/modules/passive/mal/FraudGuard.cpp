@@ -22,8 +22,8 @@ FraudGuard::FraudGuard(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FraudGuard::replyFinishedRawJson);
 
     /* get api key */
-    m_user = APIKEY.value("fraudguard_user").toString();
-    m_pass = APIKEY.value("fraudguard_pass").toString();
+    m_user = gConfig.keys.fraudguard.user;
+    m_pass = gConfig.keys.fraudguard.pass;
 }
 FraudGuard::~FraudGuard(){
     delete manager;

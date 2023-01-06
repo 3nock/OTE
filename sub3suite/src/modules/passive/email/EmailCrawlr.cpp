@@ -23,7 +23,7 @@ EmailCrawlr::EmailCrawlr(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailCrawlr::replyFinishedEmail);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_EMAILCRAWLR).toString();
+    m_key = gConfig.keys.EmailCrawlr;
 }
 EmailCrawlr::~EmailCrawlr(){
     delete manager;

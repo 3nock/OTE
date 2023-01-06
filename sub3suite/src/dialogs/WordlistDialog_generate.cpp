@@ -45,7 +45,7 @@ void WordListDialog::m_initGenerate(){
 
     ui->lineEditAZCombination->setText("1");
 
-    /* setting the substitutes */
+    /* setting the substitutes
     CONFIG.beginGroup("wordlist_substitutions");
     QStringList keys(CONFIG.allKeys());
     foreach(const QString &key, keys){
@@ -53,6 +53,7 @@ void WordListDialog::m_initGenerate(){
         ui->comboBoxSubstituteTo->addItem(CONFIG.value(key).toString());
     }
     CONFIG.endGroup();
+    */
 }
 
 void WordListDialog::on_buttonGenerate_clicked(){

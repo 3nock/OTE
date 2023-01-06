@@ -13,7 +13,7 @@ HybridAnalysis::HybridAnalysis(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &HybridAnalysis::replyFinishedRawJson);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_HYBRIDANALYSIS).toString();
+    m_key = gConfig.keys.HybridAnalysis;
 }
 HybridAnalysis::~HybridAnalysis(){
     delete manager;

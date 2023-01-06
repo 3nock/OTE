@@ -36,14 +36,14 @@ LogViewerDialog::LogViewerDialog(QWidget *parent): QDialog(parent),
     ui->comboBoxLogFile->addItems(logfiles); // adding the filenames to the log file comboBox...
 
     /* syntax higlighting... */
-    m_logsSyntaxHighlighter = new LogsSyntaxHighlighter(ui->plainTextEdit->document());
+    mSyntaxHighlighter = new SyntaxHighlighter(ui->plainTextEdit->document());
     if(s3s_global::is_dark_theme)
-        m_logsSyntaxHighlighter->forDarkTheme();
+        mSyntaxHighlighter->logs_dark();
     if(s3s_global::is_light_theme)
-        m_logsSyntaxHighlighter->forLightTheme();
+        mSyntaxHighlighter->Logs_light();
 }
 LogViewerDialog::~LogViewerDialog(){
-    delete m_logsSyntaxHighlighter;
+    delete mSyntaxHighlighter;
     delete ui;
 }
 

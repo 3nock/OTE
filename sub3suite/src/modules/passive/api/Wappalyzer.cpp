@@ -19,7 +19,7 @@ Wappalyzer::Wappalyzer(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Wappalyzer::replyFinishedRawJson);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_WAPPALYZER).toString();
+    m_key = gConfig.keys.Wappalyzer;
 }
 Wappalyzer::~Wappalyzer(){
     delete manager;

@@ -10,7 +10,7 @@
 
 #include "src/utils/Config.h"
 #include "src/dialogs/ApiKeysDialog.h"
-#include "src/dialogs/EnumConfigDialog.h"
+#include "src/dialogs/config/EnumConfigDialog.h"
 
 
 NSEnum::NSEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
@@ -21,7 +21,6 @@ NSEnum::NSEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, pr
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
-    this->initConfigValues();
 
     /* setting targets model */
     ui->targets->setListName("Targets");
@@ -85,9 +84,8 @@ void NSEnum::on_buttonStop_clicked(){
 }
 
 void NSEnum::on_buttonConfig_clicked(){
-    EnumConfigDialog *scanConfig = new EnumConfigDialog(this, m_scanConfig);
+    EnumConfigDialog *scanConfig = new EnumConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
-    scanConfig->loadConfig_ns();
     scanConfig->show();
 }
 
@@ -109,15 +107,6 @@ void NSEnum::initUI(){
     /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                            << static_cast<int>((this->width() * 0.50)));
-}
-
-void NSEnum::initConfigValues(){
-    CONFIG.beginGroup(CFG_ENUM);
-    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_ns").toBool();
-    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_ns").toBool();
-    m_scanConfig->setTimeout = CONFIG.value("set_timeout_ns").toBool();
-    m_scanConfig->timeout = CONFIG.value("timeout_ns").toInt();
-    CONFIG.endGroup();
 }
 
 void NSEnum::log(QString log){

@@ -13,7 +13,7 @@
 
 #include "src/utils/utils.h"
 #include "src/dialogs/ApiKeysDialog.h"
-#include "src/dialogs/PassiveConfigDialog.h"
+#include "src/dialogs/config/OsintConfigDialog.h"
 
 
 OsintTool::OsintTool(QWidget *parent, ProjectModel *project): AbstractTool(parent, project),
@@ -150,9 +150,8 @@ void OsintTool::on_buttonKeys_clicked(){
 }
 
 void OsintTool::on_buttonConfig_clicked(){
-    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this, m_scanConfig);
+    OsintConfigDialog *scanConfig = new OsintConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
-    scanConfig->loadConfig_osint();
     scanConfig->show();
 }
 
@@ -302,14 +301,4 @@ void OsintTool::on_checkBoxMultipleTargets_stateChanged(int state){
 void OsintTool::log(QString log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
-}
-
-void OsintTool::initConfigValues(){
-    CONFIG.beginGroup(CFG_OSINT);
-    m_scanConfig->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanConfig->maxPage = CONFIG.value(CFG_VAL_MAXPAGES).toInt();
-    m_scanConfig->autosaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
-    m_scanConfig->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
-    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
-    CONFIG.endGroup();
 }

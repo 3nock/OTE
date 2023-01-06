@@ -17,7 +17,7 @@ IpStack::IpStack(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpStack::replyFinishedRawJson);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_IPSTACK).toString();
+    m_key = gConfig.keys.IpStack;
 }
 IpStack::~IpStack(){
     delete manager;

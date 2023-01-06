@@ -15,15 +15,16 @@ ProjectConfigDialog::ProjectConfigDialog(ProjectModel *projectModel, QWidget *pa
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/img/res/icons/gear.png"));
 
-    /* setting the data */
     ui->lineEditName->setText(m_projectModel->info.name);
 
+    /*
     if(m_projectModel->info.path.isEmpty())
         ui->lineEditFile->setText(CONFIG.value("projects_path").toString());
     else{
         QString path = m_projectModel->info.path.remove(m_projectModel->info.name+".s3s");
         ui->lineEditFile->setText(path);
     }
+    */
 }
 ProjectConfigDialog::~ProjectConfigDialog(){
     delete ui;

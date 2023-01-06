@@ -19,7 +19,7 @@ Projectdiscovery::Projectdiscovery(ScanArgs args):
         connect(manager, &s3sNetworkAccessManager::finished, this, &Projectdiscovery::replyFinishedSubdomain);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_PROJECTDISCOVERY).toString();
+    m_key = gConfig.keys.ProjectDiscovery;
 }
 Projectdiscovery::~Projectdiscovery(){
     delete manager;

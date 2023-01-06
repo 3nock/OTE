@@ -50,7 +50,7 @@ Onyphe::Onyphe(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Onyphe::replyFinishedSSL);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_ONYPHE).toString();
+    m_key = gConfig.keys.Onyphe;
 }
 Onyphe::~Onyphe(){
     delete manager;

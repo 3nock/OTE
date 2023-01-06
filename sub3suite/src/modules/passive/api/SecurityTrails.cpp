@@ -36,7 +36,7 @@ SecurityTrails::SecurityTrails(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &SecurityTrails::replyFinishedCidr);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_SECURITYTRAILS).toString();
+    m_key = gConfig.keys.SecurityTrails;
 }
 SecurityTrails::~SecurityTrails(){
     delete manager;

@@ -19,7 +19,7 @@ IpRegistry::IpRegistry(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpRegistry::replyFinishedEnumIP);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_IPREGISTRY).toString();
+    m_key = gConfig.keys.IpRegistry;
 }
 IpRegistry::~IpRegistry(){
     delete manager;

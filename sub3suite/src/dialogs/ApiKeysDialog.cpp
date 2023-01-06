@@ -28,71 +28,71 @@ ApiKeysDialog::~ApiKeysDialog(){
 }
 
 void ApiKeysDialog::on_buttonSave_clicked(){
-    APIKEY.setValue("censys_id", ui->lineEditCensysId->text());
-    APIKEY.setValue("censys_secret", ui->lineEditCensysSecret->text());
-    APIKEY.setValue(OSINT_MODULE_CERTSPOTTER, ui->lineEditCertspotter->text());
-    APIKEY.setValue(OSINT_MODULE_GITHUB, ui->lineEditGithub->text());
-    APIKEY.setValue(OSINT_MODULE_HUNTER, ui->lineEditHunter->text());
-    APIKEY.setValue(OSINT_MODULE_PROJECTDISCOVERY, ui->lineEditProjectDiscovery->text());
-    APIKEY.setValue("riskiq_key", ui->lineEditRiskIqKey->text());
-    APIKEY.setValue("riskiq_secret", ui->lineEditRiskIqSecret->text());
-    APIKEY.setValue("passivetotal_key", ui->lineEditPassiveTotalKey->text());
-    APIKEY.setValue("passivetotal_username", ui->lineEditPassiveTotalUsername->text());
-    APIKEY.setValue(OSINT_MODULE_SECURITYTRAILS, ui->lineEditSecurityTrails->text());
-    APIKEY.setValue(OSINT_MODULE_SHODAN, ui->lineEditShodan->text());
-    APIKEY.setValue(OSINT_MODULE_SPYSE, ui->lineEditSpyse->text());
-    APIKEY.setValue(OSINT_MODULE_VIRUSTOTAL, ui->lineEditVirusTotal->text());
-    APIKEY.setValue(OSINT_MODULE_BINARYEDGE, ui->lineEditBinaryEdge->text());
-    APIKEY.setValue(OSINT_MODULE_C99, ui->lineEditC99->text());
-    APIKEY.setValue(OSINT_MODULE_IPAPI, ui->lineEditIpApi->text());
-    APIKEY.setValue(OSINT_MODULE_IPINFO, ui->lineEditIpInfo->text());
-    APIKEY.setValue(OSINT_MODULE_THREATBOOK, ui->lineEditThreatBook->text());
-    APIKEY.setValue(OSINT_MODULE_WHOISXMLAPI, ui->lineEditWhoisXmlApi->text());
-    APIKEY.setValue(OSINT_MODULE_ZOOMEYE, ui->lineEditZoomEye->text());
-    APIKEY.setValue(OSINT_MODULE_VIEWDNS, ui->lineEditViewDns->text());
-    APIKEY.setValue(OSINT_MODULE_HACKERTARGET, ui->lineEditHackerTarget->text());
-    APIKEY.setValue(OSINT_MODULE_WEBRESOLVER, ui->lineEditWebResolver->text());
-    APIKEY.setValue("circlUser", ui->lineEditCirclUser->text());
-    APIKEY.setValue("circlPwd", ui->lineEditCirclPwd->text());
-    APIKEY.setValue(OSINT_MODULE_MNEMONIC, ui->lineEditMnemonic->text());
-    APIKEY.setValue(OSINT_MODULE_ROBTEX, ui->lineEditRobtex->text());
-    APIKEY.setValue(OSINT_MODULE_OTX, ui->lineEditRobtex->text());
-    APIKEY.setValue(OSINT_MODULE_BUILTWITH, ui->lineEditBuiltWith->text());
-    APIKEY.setValue(OSINT_MODULE_DNSLYTICS, ui->lineEditDnslytics->text());
-    APIKEY.setValue("domaintools_username", ui->lineEditDomainToolsUsername->text());
-    APIKEY.setValue("domaintools_key", ui->lineEditDomainToolsKey->text());
-    APIKEY.setValue(OSINT_MODULE_ONYPHE, ui->lineEditOnyphe->text());
-    APIKEY.setValue(OSINT_MODULE_FULLHUNT, ui->lineEditFullHunt->text());
-    APIKEY.setValue(OSINT_MODULE_SPAMHAUS, ui->lineEditSpamHaus->text());
-    APIKEY.setValue(OSINT_MODULE_DEBOUNCE, ui->lineEditDebounce->text());
-    APIKEY.setValue(OSINT_MODULE_HAVEIBEENPAWNED, ui->lineEditHaveIBeenPawned->text());
-    APIKEY.setValue(OSINT_MODULE_HOST, ui->lineEditHost->text());
-    APIKEY.setValue(OSINT_MODULE_JSONWHOIS, ui->lineEditJsonWhois->text());
-    APIKEY.setValue(OSINT_MODULE_LEAKIX, ui->lineEditLeakIX->text());
-    APIKEY.setValue(OSINT_MODULE_NETWORKSDB, ui->lineEditNetworksDB->text());
-    APIKEY.setValue("neutrinoapi_key", ui->lineEditNeutrinoApiKey->text());
-    APIKEY.setValue("neutrinoapi_uid", ui->lineEditNeutrinoApiUID->text());
-    APIKEY.setValue(OSINT_MODULE_SEON, ui->lineEditSeon->text());
-    APIKEY.setValue(OSINT_MODULE_SPYONWEB, ui->lineEditSpyOnWeb->text());
-    APIKEY.setValue(OSINT_MODULE_WHATCMS, ui->lineEditWhatcms->text());
-    APIKEY.setValue(OSINT_MODULE_WHOXY, ui->lineEditWhoxy->text());
-    APIKEY.setValue(OSINT_MODULE_EMAILCRAWLR, ui->lineEditEmailCrawlr->text());
-    APIKEY.setValue(OSINT_MODULE_EMAILFORMAT, ui->lineEditEmailFormat->text());
-    APIKEY.setValue(OSINT_MODULE_EMAILREP, ui->lineEditEmailRep->text());
-    APIKEY.setValue(OSINT_MODULE_SNOV, ui->lineEditSnov->text());
-    APIKEY.setValue(OSINT_MODULE_IPDATA, ui->lineEditIpData->text());
-    APIKEY.setValue(OSINT_MODULE_IPGEOLOCATION, ui->lineEditIpGeoLocation->text());
-    APIKEY.setValue(OSINT_MODULE_IPREGISTRY, ui->lineEditIpRegistry->text());
-    APIKEY.setValue(OSINT_MODULE_IPSTACK, ui->lineEditIpStack->text());
-    APIKEY.setValue(OSINT_MODULE_ABUSEIPDB, ui->lineEditAbuseIPDB->text());
-    APIKEY.setValue("fraudguard_user", ui->lineEditFraudGuardUser->text());
-    APIKEY.setValue("fraudguard_pass", ui->lineEditFraudGuardPass->text());
-    APIKEY.setValue(OSINT_MODULE_HYBRIDANALYSIS, ui->lineEditHybridAnalysis->text());
-    APIKEY.setValue(OSINT_MODULE_IPQUALITYSCORE, ui->lineEditIpQualityScore->text());
-    APIKEY.setValue(OSINT_MODULE_LEAKLOOKUP, ui->lineEditLeakLookup->text());
-    APIKEY.setValue(OSINT_MODULE_ZETALYTICS, ui->lineEditZETAlytics->text());
-    APIKEY.setValue(OSINT_MODULE_WAPPALYZER, ui->lineEditWappalyzer->text());
-    APIKEY.setValue(OSINT_MODULE_IPFY, ui->lineEditIpfy->text());
+    gConfig.keys.Censys.id = ui->lineEditCensysId->text();
+    gConfig.keys.Censys.secret = ui->lineEditCensysSecret->text();
+    gConfig.keys.CertSpotter = ui->lineEditCertspotter->text();
+    gConfig.keys.Github = ui->lineEditGithub->text();
+    gConfig.keys.Hunter = ui->lineEditHunter->text();
+    gConfig.keys.ProjectDiscovery = ui->lineEditProjectDiscovery->text();
+    gConfig.keys.RiskIQ.key = ui->lineEditRiskIqKey->text();
+    gConfig.keys.RiskIQ.secret = ui->lineEditRiskIqSecret->text();
+    gConfig.keys.PassiveTotal.key = ui->lineEditPassiveTotalKey->text();
+    gConfig.keys.PassiveTotal.username = ui->lineEditPassiveTotalUsername->text();
+    gConfig.keys.SecurityTrails = ui->lineEditSecurityTrails->text();
+    gConfig.keys.Shodan = ui->lineEditShodan->text();
+    gConfig.keys.Spyse = ui->lineEditSpyse->text();
+    gConfig.keys.VirusTotal = ui->lineEditVirusTotal->text();
+    gConfig.keys.BinaryEdge = ui->lineEditBinaryEdge->text();
+    gConfig.keys.C99 = ui->lineEditC99->text();
+    gConfig.keys.IpApi = ui->lineEditIpApi->text();
+    gConfig.keys.IpInfo = ui->lineEditIpInfo->text();
+    gConfig.keys.ThreatBook = ui->lineEditThreatBook->text();
+    gConfig.keys.WhoIsXMLAPI = ui->lineEditWhoisXmlApi->text();
+    gConfig.keys.ZoomEye = ui->lineEditZoomEye->text();
+    gConfig.keys.ViewDns = ui->lineEditViewDns->text();
+    gConfig.keys.HackerTarget = ui->lineEditHackerTarget->text();
+    gConfig.keys.WebResolver = ui->lineEditWebResolver->text();
+    gConfig.keys.Circl.user = ui->lineEditCirclUser->text();
+    gConfig.keys.Circl.pwd = ui->lineEditCirclPwd->text();
+    gConfig.keys.Mnemonic = ui->lineEditMnemonic->text();
+    gConfig.keys.Robtex = ui->lineEditRobtex->text();
+    gConfig.keys.Otx = ui->lineEditRobtex->text();
+    gConfig.keys.BuiltWith = ui->lineEditBuiltWith->text();
+    gConfig.keys.DNSlytics = ui->lineEditDnslytics->text();
+    gConfig.keys.DomainTools.username = ui->lineEditDomainToolsUsername->text();
+    gConfig.keys.DomainTools.key = ui->lineEditDomainToolsKey->text();
+    gConfig.keys.Onyphe = ui->lineEditOnyphe->text();
+    gConfig.keys.FullHunt = ui->lineEditFullHunt->text();
+    gConfig.keys.SpamHaus = ui->lineEditSpamHaus->text();
+    gConfig.keys.Debounce = ui->lineEditDebounce->text();
+    gConfig.keys.HaveIBeenPawned = ui->lineEditHaveIBeenPawned->text();
+    gConfig.keys.Host = ui->lineEditHost->text();
+    gConfig.keys.JsonWhois = ui->lineEditJsonWhois->text();
+    gConfig.keys.LeakIX = ui->lineEditLeakIX->text();
+    gConfig.keys.NetworksDB = ui->lineEditNetworksDB->text();
+    gConfig.keys.neutrinoapi.key = ui->lineEditNeutrinoApiKey->text();
+    gConfig.keys.neutrinoapi.uid = ui->lineEditNeutrinoApiUID->text();
+    gConfig.keys.Seon = ui->lineEditSeon->text();
+    gConfig.keys.SpyOnWeb = ui->lineEditSpyOnWeb->text();
+    gConfig.keys.WhatCMS = ui->lineEditWhatcms->text();
+    gConfig.keys.Whoxy = ui->lineEditWhoxy->text();
+    gConfig.keys.EmailCrawlr = ui->lineEditEmailCrawlr->text();
+    gConfig.keys.EmailFormat = ui->lineEditEmailFormat->text();
+    gConfig.keys.EmailRep = ui->lineEditEmailRep->text();
+    gConfig.keys.Snov = ui->lineEditSnov->text();
+    gConfig.keys.IpData = ui->lineEditIpData->text();
+    gConfig.keys.IpGeoLocation = ui->lineEditIpGeoLocation->text();
+    gConfig.keys.IpRegistry = ui->lineEditIpRegistry->text();
+    gConfig.keys.IpStack = ui->lineEditIpStack->text();
+    gConfig.keys.AbuseIPDB = ui->lineEditAbuseIPDB->text();
+    gConfig.keys.fraudguard.user = ui->lineEditFraudGuardUser->text();
+    gConfig.keys.fraudguard.pass = ui->lineEditFraudGuardPass->text();
+    gConfig.keys.HybridAnalysis = ui->lineEditHybridAnalysis->text();
+    gConfig.keys.IpQualityScore = ui->lineEditIpQualityScore->text();
+    gConfig.keys.LeakLookup = ui->lineEditLeakLookup->text();
+    gConfig.keys.ZETAlytics = ui->lineEditZETAlytics->text();
+    gConfig.keys.Wappalyzer = ui->lineEditWappalyzer->text();
+    gConfig.keys.Ipfy = ui->lineEditIpfy->text();
     accept();
 }
 
@@ -104,324 +104,324 @@ void ApiKeysDialog::m_loadApiKeys(){
     QString key;
 
     /* loading the keys.... */
-    key = APIKEY.value("censys_id").toString();
+    key = gConfig.keys.Censys.id;
     if(!key.isEmpty()){
         ui->lineEditCensysId->setText(key);
         ui->buttonGetCensys->hide();
     }
-    key = APIKEY.value("censys_secret").toString();
+    key = gConfig.keys.Censys.secret;
     if(!key.isEmpty()){
         ui->lineEditCensysSecret->setText(key);
         ui->buttonGetCensys->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_CERTSPOTTER).toString();
+    key = gConfig.keys.CertSpotter;
     if(!key.isEmpty()){
         ui->lineEditCertspotter->setText(key);
         ui->buttonGetCertspotter->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_GITHUB).toString();
+    key = gConfig.keys.Github;
     if(!key.isEmpty()){
         ui->lineEditGithub->setText(key);
         ui->buttonGetGithub->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_HUNTER).toString();
+    key = gConfig.keys.Hunter;
     if(!key.isEmpty()){
         ui->lineEditHunter->setText(key);
         ui->buttonGetHunter->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_PROJECTDISCOVERY).toString();
+    key = gConfig.keys.ProjectDiscovery;
     if(!key.isEmpty()){
         ui->lineEditProjectDiscovery->setText(key);
         ui->buttonGetProjectDiscovery->hide();
     }
-    key = APIKEY.value("riskiq_key").toString();
+    key = gConfig.keys.RiskIQ.key;
     if(!key.isEmpty()){
         ui->lineEditRiskIqKey->setText(key);
     }
-    key = APIKEY.value("riskiq_secret").toString();
+    key = gConfig.keys.RiskIQ.secret;
     if(!key.isEmpty()){
         ui->lineEditRiskIqSecret->setText(key);
         ui->buttonGetRiskIq->hide();
     }
-    key = APIKEY.value("passivetotal_key").toString();
+    key = gConfig.keys.PassiveTotal.key;
     if(!key.isEmpty()){
         ui->lineEditPassiveTotalKey->setText(key);
     }
-    key = APIKEY.value("passivetotal_username").toString();
+    key = gConfig.keys.PassiveTotal.username;
     if(!key.isEmpty()){
         ui->lineEditPassiveTotalUsername->setText(key);
         ui->buttonGetPassiveTotal->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_SECURITYTRAILS).toString();
+    key = gConfig.keys.SecurityTrails;
     if(!key.isEmpty()){
         ui->lineEditSecurityTrails->setText(key);
         ui->buttonGetSecurityTrails->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_SHODAN).toString();
+    key = gConfig.keys.Shodan;
     if(!key.isEmpty()){
         ui->lineEditShodan->setText(key);
         ui->buttonGetShodan->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_SPYSE).toString();
+    key = gConfig.keys.Spyse;
     if(!key.isEmpty()){
         ui->lineEditSpyse->setText(key);
         ui->buttonGetSpyse->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_VIRUSTOTAL).toString();
+    key = gConfig.keys.VirusTotal;
     if(!key.isEmpty()){
         ui->lineEditVirusTotal->setText(key);
         ui->buttonGetVirusTotal->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_BINARYEDGE).toString();
+    key = gConfig.keys.BinaryEdge;
     if(!key.isEmpty()){
         ui->lineEditBinaryEdge->setText(key);
         ui->buttonGetBinaryEdge->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_C99).toString();
+    key = gConfig.keys.C99;
     if(!key.isEmpty()){
         ui->lineEditC99->setText(key);
         ui->buttonGetC99->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_IPINFO).toString();
+    key = gConfig.keys.IpInfo;
     if(!key.isEmpty()){
         ui->lineEditIpInfo->setText(key);
         ui->buttonGetIpInfo->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_THREATBOOK).toString();
+    key = gConfig.keys.ThreatBook;
     if(!key.isEmpty()){
         ui->lineEditThreatBook->setText(key);
         ui->buttonGetThreatBook->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_WHOISXMLAPI).toString();
+    key = gConfig.keys.WhoIsXMLAPI;
     if(!key.isEmpty()){
         ui->lineEditWhoisXmlApi->setText(key);
         ui->buttonGetWhoisXmlApi->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_ZETALYTICS).toString();
+    key = gConfig.keys.ZETAlytics;
     if(!key.isEmpty()){
         ui->lineEditZETAlytics->setText(key);
         ui->buttonGetZETAlytics->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_ZOOMEYE).toString();
+    key = gConfig.keys.ZoomEye;
     if(!key.isEmpty()){
         ui->lineEditZoomEye->setText(key);
         ui->buttonGetZoomEye->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_IPAPI).toString();
+    key = gConfig.keys.IpApi;
     if(!key.isEmpty()){
         ui->lineEditIpApi->setText(key);
         ui->buttonGetIpApi->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_VIEWDNS).toString();
+    key = gConfig.keys.ViewDns;
     if(!key.isEmpty()){
         ui->lineEditViewDns->setText(key);
         ui->buttonGetViewDns->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_HACKERTARGET).toString();
+    key = gConfig.keys.HackerTarget;
     if(!key.isEmpty()){
         ui->lineEditHackerTarget->setText(key);
         ui->buttonGetHackerTarget->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_WEBRESOLVER).toString();
+    key = gConfig.keys.WebResolver;
     if(!key.isEmpty()){
         ui->lineEditWebResolver->setText(key);
         ui->buttonGetWebResolver->hide();
     }
-    key = APIKEY.value("circlUser").toString();
+    key = gConfig.keys.Circl.user;
     if(!key.isEmpty()){
         ui->lineEditCirclUser->setText(key);
         /*
          */
     }
-    key = APIKEY.value("circlPwd").toString();
+    key = gConfig.keys.Circl.pwd;
     if(!key.isEmpty()){
         ui->lineEditCirclPwd->setText(key);
         ui->buttonGetCircl->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_MNEMONIC).toString();
+    key = gConfig.keys.Mnemonic;
     if(!key.isEmpty()){
         ui->lineEditMnemonic->setText(key);
         ui->buttonGetMnemonic->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_ROBTEX).toString();
+    key = gConfig.keys.Robtex;
     if(!key.isEmpty()){
         ui->lineEditRobtex->setText(key);
         ui->buttonGetRobtex->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_OTX).toString();
+    key = gConfig.keys.Otx;
     if(!key.isEmpty()){
         ui->lineEditOtx->setText(key);
         ui->buttonGetOtx->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_BUILTWITH).toString();
+    key = gConfig.keys.BuiltWith;
     if(!key.isEmpty()){
         ui->lineEditBuiltWith->setText(key);
         ui->buttonGetBuiltWith->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_DNSLYTICS).toString();
+    key = gConfig.keys.DNSlytics;
     if(!key.isEmpty()){
         ui->lineEditDnslytics->setText(key);
         ui->buttonGetDnslytics->hide();
     }
-    key = APIKEY.value("domaintools_username").toString();
+    key = gConfig.keys.DomainTools.username;
     if(!key.isEmpty()){
         ui->lineEditDomainToolsUsername->setText(key);
         ui->buttonGetDomainTools->hide();
     }
-    key = APIKEY.value("domaintools_key").toString();
+    key = gConfig.keys.DomainTools.key;
     if(!key.isEmpty()){
         ui->lineEditDomainToolsKey->setText(key);
         ui->buttonGetDomainTools->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_ONYPHE).toString();
+    key = gConfig.keys.Onyphe;
     if(!key.isEmpty()){
         ui->lineEditOnyphe->setText(key);
         ui->buttonGetOnyphe->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_FULLHUNT).toString();
+    key = gConfig.keys.FullHunt;
     if(!key.isEmpty()){
         ui->lineEditFullHunt->setText(key);
         ui->buttonGetFullHunt->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_SPAMHAUS).toString();
+    key = gConfig.keys.SpamHaus;
     if(!key.isEmpty()){
         ui->lineEditSpamHaus->setText(key);
         ui->buttonGetSpamHaus->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_DEBOUNCE).toString();
+    key = gConfig.keys.Debounce;
     if(!key.isEmpty()){
         ui->lineEditDebounce->setText(key);
         ui->buttonGetDebounce->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_HAVEIBEENPAWNED).toString();
+    key = gConfig.keys.HaveIBeenPawned;
     if(!key.isEmpty()){
         ui->lineEditHaveIBeenPawned->setText(key);
         ui->buttonGetHaveIBeenPawned->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_HOST).toString();
+    key = gConfig.keys.Host;
     if(!key.isEmpty()){
         ui->lineEditHost->setText(key);
         ui->buttonGetHost->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_JSONWHOIS).toString();
+    key = gConfig.keys.JsonWhois;
     if(!key.isEmpty()){
         ui->lineEditJsonWhois->setText(key);
         ui->buttonGetJsonWhois->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_LEAKIX).toString();
+    key = gConfig.keys.LeakIX;
     if(!key.isEmpty()){
         ui->lineEditLeakIX->setText(key);
         ui->buttonGetLeakIX->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_NETWORKSDB).toString();
+    key = gConfig.keys.NetworksDB;
     if(!key.isEmpty()){
         ui->lineEditNetworksDB->setText(key);
         ui->buttonGetNetworksDB->hide();
     }
     //...
-    key = APIKEY.value("neutrinoapi_key").toString();
-    QString uid = APIKEY.value("neutrinoapi_uid").toString();
+    key = gConfig.keys.neutrinoapi.key;
+    QString uid = gConfig.keys.neutrinoapi.uid;
     if(!key.isEmpty() && !uid.isEmpty()){
         ui->lineEditNeutrinoApiKey->setText(key);
         ui->lineEditNeutrinoApiUID->setText(uid);
         ui->buttonGetNeutrinoApi->hide();
     }
     //...
-    key = APIKEY.value(OSINT_MODULE_SEON).toString();
+    key = gConfig.keys.Seon;
     if(!key.isEmpty()){
         ui->lineEditSeon->setText(key);
         ui->buttonGetSeon->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_SPYONWEB).toString();
+    key = gConfig.keys.SpyOnWeb;
     if(!key.isEmpty()){
         ui->lineEditSpyOnWeb->setText(key);
         ui->buttonGetSpyOnWeb->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_WHATCMS).toString();
+    key = gConfig.keys.WhatCMS;
     if(!key.isEmpty()){
         ui->lineEditWhatcms->setText(key);
         ui->buttonGetWhatcms->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_WHOXY).toString();
+    key = gConfig.keys.Whoxy;
     if(!key.isEmpty()){
         ui->lineEditWhoxy->setText(key);
         ui->buttonGetWhoxy->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_EMAILCRAWLR).toString();
+    key = gConfig.keys.EmailCrawlr;
     if(!key.isEmpty()){
         ui->lineEditEmailCrawlr->setText(key);
         ui->buttonGetEmailCrawlr->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_EMAILFORMAT).toString();
+    key = gConfig.keys.EmailFormat;
     if(!key.isEmpty()){
         ui->lineEditEmailFormat->setText(key);
         ui->buttonGetEmailFormat->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_EMAILREP).toString();
+    key = gConfig.keys.EmailRep;
     if(!key.isEmpty()){
         ui->lineEditEmailRep->setText(key);
         ui->buttonGetEmailRep->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_SNOV).toString();
+    key = gConfig.keys.Snov;
     if(!key.isEmpty()){
         ui->lineEditSnov->setText(key);
         ui->buttonGetSnov->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_IPDATA).toString();
+    key = gConfig.keys.IpData;
     if(!key.isEmpty()){
         ui->lineEditIpData->setText(key);
         ui->buttonGetIpData->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_IPGEOLOCATION).toString();
+    key = gConfig.keys.IpGeoLocation;
     if(!key.isEmpty()){
         ui->lineEditIpGeoLocation->setText(key);
         ui->buttonGetIpGeoLocation->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_IPREGISTRY).toString();
+    key = gConfig.keys.IpRegistry;
     if(!key.isEmpty()){
         ui->lineEditIpRegistry->setText(key);
         ui->buttonGetIpRegistry->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_IPSTACK).toString();
+    key = gConfig.keys.IpStack;
     if(!key.isEmpty()){
         ui->lineEditIpStack->setText(key);
         ui->buttonGetIpStack->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_ABUSEIPDB).toString();
+    key = gConfig.keys.AbuseIPDB;
     if(!key.isEmpty()){
         ui->lineEditAbuseIPDB->setText(key);
         ui->buttonGetAbuseIPDB->hide();
     }
     //...
-    QString user = APIKEY.value("fraudguard_user").toString();
-    QString pass = APIKEY.value("fraudguard_pass").toString();
+    QString user = gConfig.keys.fraudguard.user;
+    QString pass = gConfig.keys.fraudguard.pass;
     if(!key.isEmpty() && !uid.isEmpty()){
         ui->lineEditFraudGuardUser->setText(user);
         ui->lineEditFraudGuardPass->setText(pass);
         ui->buttonGetFraudGuard->hide();
     }
     //...
-    key = APIKEY.value(OSINT_MODULE_HYBRIDANALYSIS).toString();
+    key = gConfig.keys.HybridAnalysis;
     if(!key.isEmpty()){
         ui->lineEditHybridAnalysis->setText(key);
         ui->buttonGetHybridAnalysis->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_IPQUALITYSCORE).toString();
+    key = gConfig.keys.IpQualityScore;
     if(!key.isEmpty()){
         ui->lineEditIpQualityScore->setText(key);
         ui->buttonGetIpQualityScore->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_LEAKLOOKUP).toString();
+    key = gConfig.keys.LeakLookup;
     if(!key.isEmpty()){
         ui->lineEditLeakLookup->setText(key);
         ui->buttonGetLeakLookup->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_WAPPALYZER).toString();
+    key = gConfig.keys.Wappalyzer;
     if(!key.isEmpty()){
         ui->lineEditWappalyzer->setText(key);
         ui->buttonGetWappalyzer->hide();
     }
-    key = APIKEY.value(OSINT_MODULE_IPFY).toString();
+    key = gConfig.keys.Ipfy;
     if(!key.isEmpty()){
         ui->lineEditIpfy->setText(key);
         ui->buttonGetIpfy->hide();

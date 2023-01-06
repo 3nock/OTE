@@ -11,7 +11,7 @@
 #include "src/utils/Config.h"
 #include "src/utils/utils.h"
 #include "src/dialogs/ApiKeysDialog.h"
-#include "src/dialogs/EnumConfigDialog.h"
+#include "src/dialogs/config/EnumConfigDialog.h"
 
 
 ASNEnum::ASNEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, project),
@@ -22,7 +22,6 @@ ASNEnum::ASNEnum(QWidget *parent, ProjectModel *project) : AbstractEnum(parent, 
     m_scanArgs(new ScanArgs)
 {
     this->initUI();
-    this->initConfigValues();
 
     /* setting targets model */
     ui->targets->setListName("Targets");
@@ -86,9 +85,8 @@ void ASNEnum::on_buttonStop_clicked(){
 }
 
 void ASNEnum::on_buttonConfig_clicked(){
-    EnumConfigDialog *scanConfig = new EnumConfigDialog(this, m_scanConfig);
+    EnumConfigDialog *scanConfig = new EnumConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
-    scanConfig->loadConfig_asn();
     scanConfig->show();
 }
 
@@ -110,15 +108,6 @@ void ASNEnum::initUI(){
     /* resizing splitter */
     ui->splitter->setSizes(QList<int>() << static_cast<int>((this->width() * 0.50))
                            << static_cast<int>((this->width() * 0.50)));
-}
-
-void ASNEnum::initConfigValues(){
-    CONFIG.beginGroup(CFG_ENUM);
-    m_scanConfig->autosaveToProject = CONFIG.value("autosave_to_Project_asn").toBool();
-    m_scanConfig->noDuplicates = CONFIG.value("no_duplicates_asn").toBool();
-    m_scanConfig->setTimeout = CONFIG.value("set_timeout_asn").toBool();
-    m_scanConfig->timeout = CONFIG.value("timeout_asn").toInt();
-    CONFIG.endGroup();
 }
 
 void ASNEnum::log(QString log){

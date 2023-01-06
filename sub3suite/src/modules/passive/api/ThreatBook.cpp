@@ -26,7 +26,7 @@ ThreatBook::ThreatBook(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ThreatBook::replyFinishedIp);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_THREATBOOK).toString();
+    m_key = gConfig.keys.ThreatBook;
 }
 ThreatBook::~ThreatBook(){
     delete manager;

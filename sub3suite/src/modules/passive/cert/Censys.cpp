@@ -23,8 +23,8 @@ Censys::Censys(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Censys::replyFinishedSubdomain);
 
     /* getting api key */
-    m_uid = APIKEY.value("censys_id").toString();
-    m_key = APIKEY.value("censys_secret").toString();
+    m_uid = gConfig.keys.Censys.id;
+    m_key = gConfig.keys.Censys.secret;
 }
 Censys::~Censys(){
     delete manager;

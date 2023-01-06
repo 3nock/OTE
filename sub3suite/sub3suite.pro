@@ -43,15 +43,21 @@ include(include/gumbo-parser.pri)
 
 SOURCES += \
     src/dialogs/DocumentationDialog.cpp \
-    src/dialogs/ActiveConfigDialog.cpp \
     src/dialogs/FailedScansDialog.cpp \
-    src/dialogs/PassiveConfigDialog.cpp \
-    src/dialogs/ProjectConfigDialog.cpp \
     src/dialogs/SaveProjectDialog.cpp \
     src/dialogs/StartupDialog.cpp \
-    src/dialogs/EnumConfigDialog.cpp \
     src/dialogs/WordlistDialog_choose.cpp \
     src/dialogs/WordlistDialog_generate.cpp \
+    src/dialogs/config/BruteConfigDialog.cpp \
+    src/dialogs/config/DNSConfigDialog.cpp \
+    src/dialogs/config/EnumConfigDialog.cpp \
+    src/dialogs/config/HostConfigDialog.cpp \
+    src/dialogs/config/IPConfigDialog.cpp \
+    src/dialogs/config/OsintConfigDialog.cpp \
+    src/dialogs/config/ProjectConfigDialog.cpp \
+    src/dialogs/config/RawConfigDialog.cpp \
+    src/dialogs/config/SSLConfigDialog.cpp \
+    src/dialogs/config/URLConfigDialog.cpp \
     src/items/IPToolItem.cpp \
     src/modules/active/ReverseIPScanner.cpp \
     src/tools/ip/IPTool_actions.cpp \
@@ -268,22 +274,30 @@ SOURCES += \
     src/project/Project_slots.cpp \
     src/utils/UpdateChecker.cpp \
     src/widgets/InputWidget.cpp \
+    src/utils/SyntaxHighlighter.cpp \
     src/dialogs/LogViewerDialog.cpp \
     src/dialogs/AboutDialog.cpp \
     src/dialogs/ApiKeysDialog.cpp \
     src/dialogs/WordlistDialog.cpp \
+    src/utils/Config.cpp \
     src/MainWindow.cpp \
     src/main.cpp
 
 HEADERS += \
     src/dialogs/DocumentationDialog.h \
-    src/dialogs/ActiveConfigDialog.h \
     src/dialogs/FailedScansDialog.h \
-    src/dialogs/PassiveConfigDialog.h \
-    src/dialogs/ProjectConfigDialog.h \
     src/dialogs/SaveProjectDialog.h \
     src/dialogs/StartupDialog.h \
-    src/dialogs/EnumConfigDialog.h \
+    src/dialogs/config/BruteConfigDialog.h \
+    src/dialogs/config/DNSConfigDialog.h \
+    src/dialogs/config/EnumConfigDialog.h \
+    src/dialogs/config/HostConfigDialog.h \
+    src/dialogs/config/IPConfigDialog.h \
+    src/dialogs/config/OsintConfigDialog.h \
+    src/dialogs/config/ProjectConfigDialog.h \
+    src/dialogs/config/RawConfigDialog.h \
+    src/dialogs/config/SSLConfigDialog.h \
+    src/dialogs/config/URLConfigDialog.h \
     src/items/IPToolItem.h \
     src/modules/active/ReverseIPScanner.h \
     src/tools/ip/IPTool.h \
@@ -435,8 +449,7 @@ HEADERS += \
     src/modules/passive/site/SiteDossier.h \
     src/modules/passive/AbstractOsintModule.h \
     src/utils/s3s.h \
-    src/utils/JsonSyntaxHighlighter.h \
-    src/utils/LogsSyntaxHighlighter.h \
+    src/utils/SyntaxHighlighter.h \
     src/utils/UpdateChecker.h \
     src/widgets/InputWidget.h \
     src/dialogs/LogViewerDialog.h \
@@ -449,13 +462,19 @@ HEADERS += \
 
 FORMS += \
     src/dialogs/DocumentationDialog.ui \
-    src/dialogs/ActiveConfigDialog.ui \
     src/dialogs/FailedScansDialog.ui \
-    src/dialogs/PassiveConfigDialog.ui \
-    src/dialogs/ProjectConfigDialog.ui \
     src/dialogs/SaveProjectDialog.ui \
     src/dialogs/StartupDialog.ui \
-    src/dialogs/EnumConfigDialog.ui \
+    src/dialogs/config/BruteConfigDialog.ui \
+    src/dialogs/config/DNSConfigDialog.ui \
+    src/dialogs/config/EnumConfigDialog.ui \
+    src/dialogs/config/HostConfigDialog.ui \
+    src/dialogs/config/IPConfigDialog.ui \
+    src/dialogs/config/OsintConfigDialog.ui \
+    src/dialogs/config/ProjectConfigDialog.ui \
+    src/dialogs/config/RawConfigDialog.ui \
+    src/dialogs/config/SSLConfigDialog.ui \
+    src/dialogs/config/URLConfigDialog.ui \
     src/tools/ip/IPTool.ui \
     src/tools/url/URLTool.ui \
     src/tools/ssl/SSLTool.ui \

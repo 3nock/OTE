@@ -49,8 +49,8 @@ DomainTools::DomainTools(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &DomainTools::replyFinishedSubdomainIp);
 
     /* getting api key... */
-    m_key = APIKEY.value("domaintools_key").toString();
-    m_username = APIKEY.value("domaintools_username").toString();
+    m_key = gConfig.keys.DomainTools.key;
+    m_username = gConfig.keys.DomainTools.username;
     
 }
 DomainTools::~DomainTools(){

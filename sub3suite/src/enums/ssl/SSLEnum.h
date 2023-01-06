@@ -55,7 +55,6 @@ class SSLEnum : public AbstractEnum {
         ScanArgs *m_scanArgs;
 
         void initUI();
-        void initConfigValues();
 
         void startScan();
         void log(QString log);

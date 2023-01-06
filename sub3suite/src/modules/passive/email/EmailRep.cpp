@@ -13,7 +13,7 @@ EmailRep::EmailRep(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailRep::replyFinishedRawJson);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_EMAILREP).toString();
+    m_key = gConfig.keys.EmailRep;
 }
 EmailRep::~EmailRep(){
     delete manager;

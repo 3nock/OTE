@@ -11,7 +11,7 @@
 #include <QMessageBox>
 #include <QTextCursor>
 #include "src/dialogs/ApiKeysDialog.h"
-#include "src/dialogs/PassiveConfigDialog.h"
+#include "src/dialogs/config/RawConfigDialog.h"
 
 
 RawTool::RawTool(QWidget *parent, ProjectModel *project): AbstractTool(parent, project),
@@ -41,9 +41,7 @@ RawTool::RawTool(QWidget *parent, ProjectModel *project): AbstractTool(parent, p
     ui->treeViewResults->setModel(proxyModel);
     ui->treeViewResults->setHeaderHidden(false);
 
-    /* ... */
     m_scanArgs->config = m_scanConfig;
-    this->initConfigValues();
 }
 RawTool::~RawTool(){
     delete m_scanConfig;
@@ -88,15 +86,15 @@ void RawTool::initUI(){
     ui->labelApiDoc->setOpenExternalLinks(true);
 
     /* json syntax higlighting */
-    m_resultsHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditResults->document());
-    m_jsonHighlighter = new JsonSyntaxHighlighter(ui->plainTextEditJson->document());
+    m_resultsHighlighter = new SyntaxHighlighter(ui->plainTextEditResults->document());
+    m_jsonHighlighter = new SyntaxHighlighter(ui->plainTextEditJson->document());
     if(s3s_global::is_dark_theme){
-        m_resultsHighlighter->forDarkTheme();
-        m_jsonHighlighter->forDarkTheme();
+        m_resultsHighlighter->json_dark();
+        m_jsonHighlighter->json_dark();
     }
     if(s3s_global::is_light_theme){
-        m_resultsHighlighter->forLightTheme();
-        m_jsonHighlighter->forLightTheme();
+        m_resultsHighlighter->json_light();
+        m_jsonHighlighter->json_light();
     }
 
     /* equally seperate the widgets... */
@@ -105,15 +103,6 @@ void RawTool::initUI(){
 
     ui->targets->hide();
     ui->tabWidgetInput->adjustSize();
-}
-
-void RawTool::initConfigValues(){
-    CONFIG.beginGroup(CFG_RAW);
-    m_scanConfig->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanConfig->autosaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
-    m_scanConfig->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
-    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
-    CONFIG.endGroup();
 }
 
 void RawTool::on_lineEditTarget_returnPressed(){
@@ -207,9 +196,8 @@ void RawTool::on_buttoApiKeys_clicked(){
 }
 
 void RawTool::on_buttonConfig_clicked(){
-    PassiveConfigDialog *scanConfig = new PassiveConfigDialog(this, m_scanConfig);
+    RawConfigDialog *scanConfig = new RawConfigDialog(this);
     scanConfig->setAttribute(Qt::WA_DeleteOnClose, true);
-    scanConfig->loadConfig_raw();
     scanConfig->show();
 }
 

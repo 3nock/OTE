@@ -48,7 +48,7 @@ WhoisXmlApi::WhoisXmlApi(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &WhoisXmlApi::replyFinishedEnumMX);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_WHOISXMLAPI).toString();
+    m_key = gConfig.keys.WhoIsXMLAPI;
 }
 WhoisXmlApi::~WhoisXmlApi(){
     delete manager;

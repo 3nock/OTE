@@ -18,7 +18,7 @@ LeakLookup::LeakLookup(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &LeakLookup::replyFinishedRawJson);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_LEAKLOOKUP).toString();
+    m_key = gConfig.keys.LeakLookup;
 }
 LeakLookup::~LeakLookup(){
     delete manager;

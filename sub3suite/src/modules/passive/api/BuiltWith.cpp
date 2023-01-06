@@ -29,7 +29,7 @@ BuiltWith::BuiltWith(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &BuiltWith::replyFinishedRawJson);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_BUILTWITH).toString();
+    m_key = gConfig.keys.BuiltWith;
 }
 BuiltWith::~BuiltWith(){
     delete manager;

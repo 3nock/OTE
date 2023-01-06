@@ -16,7 +16,7 @@
 #include "../AbstractTool.h"
 #include "src/utils/utils.h"
 #include "src/modules/passive/OsintHeaders.h"
-#include "src/utils/JsonSyntaxHighlighter.h"
+#include "src/utils/SyntaxHighlighter.h"
 
 
 namespace Ui {
@@ -169,12 +169,11 @@ class RawTool : public AbstractTool{
         ScanArgs *m_scanArgs;
         QMap<QString,QString> m_failedScans;
         QMap<QString, QStringList> m_optionSet;
-        JsonSyntaxHighlighter *m_resultsHighlighter = nullptr;
-        JsonSyntaxHighlighter *m_jsonHighlighter = nullptr;
+        SyntaxHighlighter *m_resultsHighlighter = nullptr;
+        SyntaxHighlighter *m_jsonHighlighter = nullptr;
         int m_resultsCountJson = 0;
 
         void initUI();
-        void initConfigValues();
 
         void startScan();
         void startScanThread(AbstractOsintModule *);

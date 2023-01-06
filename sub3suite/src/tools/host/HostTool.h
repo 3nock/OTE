@@ -69,7 +69,6 @@ class HostTool : public AbstractTool{
         QStandardItemModel *m_model_ping;
 
         void initUI();
-        void initConfigValues();
 
         void startScan();
         void scanSummary();

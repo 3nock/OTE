@@ -15,7 +15,7 @@ EmailFormat::EmailFormat(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &EmailFormat::replyFinishedRawJson);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_EMAILFORMAT).toString();
+    m_key = gConfig.keys.EmailFormat;
 }
 EmailFormat::~EmailFormat(){
     delete manager;

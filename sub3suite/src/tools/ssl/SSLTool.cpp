@@ -9,7 +9,7 @@
 #include "ui_SSLTool.h"
 
 #include <QSslKey>
-#include "src/dialogs/ActiveConfigDialog.h"
+#include "src/dialogs/config/SSLConfigDialog.h"
 #include "src/utils/Config.h"
 #include "src/utils/utils.h"
 #include "src/modules/active/SSLScanner.h"
@@ -39,8 +39,6 @@ SSLTool::SSLTool(QWidget *parent, ProjectModel *project): AbstractTool(parent, p
     ui->treeViewResults->setModel(proxyModel);
 
     m_scanArgs->config = m_scanConfig;
-
-    this->initConfigValues();
 }
 SSLTool::~SSLTool(){
     delete m_model_hash;
@@ -193,7 +191,7 @@ void SSLTool::on_comboBoxOutput_currentIndexChanged(int index){
 }
 
 void SSLTool::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
+    SSLConfigDialog *configDialog = new SSLConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }
@@ -206,16 +204,6 @@ void SSLTool::on_lineEditFilter_textChanged(const QString &filterKeyword){
 
     ui->treeViewResults->setModel(proxyModel);
     ui->labelResultsCount->setNum(proxyModel->rowCount());
-}
-
-void SSLTool::initConfigValues(){
-    CONFIG.beginGroup(CFG_SSL);
-    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
-    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
-    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
-    CONFIG.endGroup();
 }
 
 void SSLTool::log(const QString &log){

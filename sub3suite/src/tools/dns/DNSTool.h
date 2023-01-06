@@ -72,7 +72,6 @@ class DNSTool : public AbstractTool{
         QElapsedTimer m_timer;
 
         void initUI();
-        void initConfigValues();
         void initSrvWordlist();
 
         void startScan();

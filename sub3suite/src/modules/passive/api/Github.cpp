@@ -20,7 +20,7 @@ Github::Github(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Github::replyFinishedSubdomain);
 
     /* getting the api-key */
-    m_key = APIKEY.value(OSINT_MODULE_GITHUB).toString();
+    m_key = gConfig.keys.Github;
 }
 Github::~Github(){
     delete manager;

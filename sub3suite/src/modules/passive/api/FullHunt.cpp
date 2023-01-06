@@ -27,7 +27,7 @@ FullHunt::FullHunt(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &FullHunt::replyFinishedIp);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_FULLHUNT).toString();
+    m_key = gConfig.keys.FullHunt;
 }
 FullHunt::~FullHunt(){
     delete manager;

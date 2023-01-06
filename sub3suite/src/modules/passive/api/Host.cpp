@@ -18,7 +18,7 @@ Host::Host(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Host::replyFinishedRawJson);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_HOST).toString();
+    m_key = gConfig.keys.Host;
 }
 Host::~Host(){
     delete manager;

@@ -17,7 +17,7 @@ JsonWhois::JsonWhois(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &JsonWhois::replyFinishedRawJson);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_JSONWHOIS).toString();
+    m_key = gConfig.keys.JsonWhois;
 }
 JsonWhois::~JsonWhois(){
     delete manager;

@@ -29,7 +29,7 @@ Robtex::Robtex(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Robtex::replyFinishedCidr);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_ROBTEX).toString();
+    m_key = gConfig.keys.Robtex;
 }
 Robtex::~Robtex(){
     delete manager;

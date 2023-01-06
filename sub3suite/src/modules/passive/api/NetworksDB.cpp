@@ -37,7 +37,7 @@ NetworksDB::NetworksDB(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NetworksDB::replyFinishedSubdomainIp);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_NETWORKSDB).toString();
+    m_key = gConfig.keys.NetworksDB;
 }
 NetworksDB::~NetworksDB(){
     delete manager;

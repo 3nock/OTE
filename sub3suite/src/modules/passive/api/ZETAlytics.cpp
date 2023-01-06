@@ -14,7 +14,7 @@ ZETAlytics::ZETAlytics(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZETAlytics::replyFinishedRawJson);
 
     /* get api key */
-    m_key = APIKEY.value(OSINT_MODULE_ZETALYTICS).toString();
+    m_key = gConfig.keys.ZETAlytics;
 }
 ZETAlytics::~ZETAlytics(){
     delete manager;

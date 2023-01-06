@@ -22,10 +22,11 @@ void WordListDialog::m_initChoose(){
 }
 
 void WordListDialog::initTLDWordlist(){
+    /*
     m_defaultWordlist = CFG_WL_TLD;
     m_specialWordlist = CFG_WL_TLD_SPECIAL;
 
-    /* loading the worldists names to the comboBox... */
+    // loading the worldists names to the comboBox...
     QStringList keys;
     CONFIG.beginGroup(m_defaultWordlist);
     keys = CONFIG.childKeys();
@@ -52,13 +53,15 @@ void WordListDialog::initTLDWordlist(){
     CONFIG.endGroup();
 
     TLD = true;
+    */
 }
 
 void WordListDialog::initSubdomainWordlist(){
+    /*
     m_defaultWordlist = CFG_WL_SUBDOMAIN;
     m_specialWordlist = CFG_WL_SUBDOMAIN_SPECIAL;
 
-    /* loading the worldists names to the comboBox... */
+    // loading the worldists names to the comboBox...
     QStringList keys;
     CONFIG.beginGroup(m_defaultWordlist);
     keys = CONFIG.childKeys();
@@ -85,6 +88,7 @@ void WordListDialog::initSubdomainWordlist(){
     CONFIG.endGroup();
 
     Subdomain = true;
+    */
 }
 
 void WordListDialog::on_checkBoxNewCustomWordlist_clicked(bool checked){
@@ -93,7 +97,7 @@ void WordListDialog::on_checkBoxNewCustomWordlist_clicked(bool checked){
     else
         ui->groupBoxCustomWordlist->hide();
 
-    /* adjust the dialog size accordingly */
+    // adjust the dialog size accordingly
     ui->tabChoose->adjustSize();
     ui->tabWidget->adjustSize();
     this->adjustSize();
@@ -102,6 +106,7 @@ void WordListDialog::on_checkBoxNewCustomWordlist_clicked(bool checked){
 void WordListDialog::on_buttonLoadChoosen_clicked(){
     QString choosenWordlistfFile;
 
+    /*
     if(ui->radioButtonDefaultWordlist->isChecked()){
         CONFIG.beginGroup(m_defaultWordlist);
         choosenWordlistfFile = QApplication::applicationDirPath()+CONFIG.value(ui->comboBoxDefaultWordlist->currentText()).toString();
@@ -112,6 +117,7 @@ void WordListDialog::on_buttonLoadChoosen_clicked(){
         choosenWordlistfFile = QApplication::applicationDirPath()+CONFIG.value(ui->comboBoxSpecialWordlist->currentText()).toString();
         CONFIG.endGroup();
     }
+    */
 
     /* get the stringList from model */
     QStringList list(m_wordlistModel->stringList());
@@ -153,10 +159,11 @@ void WordListDialog::on_buttonCreate_clicked(){
         file.close();
     }
 
-    /* saving the name of the new special wordlist profile... */
+    /* saving the name of the new special wordlist profile...
     CONFIG.beginGroup(m_specialWordlist);
     CONFIG.setValue(name, filePath);
     CONFIG.endGroup();
     ui->comboBoxSpecialWordlist->addItem(name);
     ui->lineEditName->clear();
+    */
 }

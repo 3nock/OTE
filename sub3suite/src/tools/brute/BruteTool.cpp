@@ -13,7 +13,7 @@
 #include <QDesktopWidget>
 #include "src/utils/Config.h"
 #include "src/utils/utils.h"
-#include "src/dialogs/ActiveConfigDialog.h"
+#include "src/dialogs/config/BruteConfigDialog.h"
 #include "src/dialogs/WordlistDialog.h"
 
 
@@ -44,7 +44,6 @@ BruteTool::BruteTool(QWidget *parent, ProjectModel *project) : AbstractTool(pare
     ui->tableViewResults->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     m_scanArgs->config = m_scanConfig;
-    this->initConfigValues();
 }
 BruteTool::~BruteTool(){
     delete m_model_tld;
@@ -223,7 +222,7 @@ void BruteTool::on_lineEditFilter_textChanged(const QString &filterKeyword){
 }
 
 void BruteTool::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
+    BruteConfigDialog *configDialog = new BruteConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
 }
@@ -272,30 +271,4 @@ void BruteTool::on_comboBoxOutput_currentIndexChanged(int index){
 void BruteTool::log(const QString &log){
     QString logTime = QDateTime::currentDateTime().toString("hh:mm:ss  ");
     ui->plainTextEditLogs->appendPlainText("\n"+logTime+log+"\n");
-}
-
-void BruteTool::initConfigValues(){
-    CONFIG.beginGroup(CFG_BRUTE);
-    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
-    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanArgs->config->checkWildcard = CONFIG.value(CFG_VAL_WILDCARD).toBool();
-    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
-    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
-    QString record = CONFIG.value(CFG_VAL_RECORD).toString();
-    CONFIG.endGroup();
-
-    if(record == "A")
-        m_scanArgs->config->recordType = QDnsLookup::A;
-    if(record == "AAAA")
-        m_scanArgs->config->recordType = QDnsLookup::AAAA;
-    if(record == "ANY")
-        m_scanArgs->config->recordType = QDnsLookup::ANY;
-
-    int size = CONFIG.beginReadArray("nameservers_brute");
-    for (int i = 0; i < size; ++i) {
-        CONFIG.setArrayIndex(i);
-        m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());
-    }
-    CONFIG.endArray();
 }

@@ -23,8 +23,8 @@ NeutrinoApi::NeutrinoApi(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &NeutrinoApi::replyFinishedRawJson);
 
     /* getting api key */
-    m_key = APIKEY.value("neutrinoapi_key").toString();
-    m_userId = APIKEY.value("neutrinoapi_uid").toString();
+    m_key = gConfig.keys.neutrinoapi.key;
+    m_userId = gConfig.keys.neutrinoapi.uid;
 }
 NeutrinoApi::~NeutrinoApi(){
     delete manager;

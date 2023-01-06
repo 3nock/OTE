@@ -121,7 +121,6 @@ class OsintTool : public AbstractTool{
         void initUI();
         void initModules();
         void initProfiles();
-        void initConfigValues();
         void uncheckAllModules();
 
         void startScan();

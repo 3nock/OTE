@@ -49,7 +49,7 @@ C99::C99(ScanArgs args):
         connect(manager, &s3sNetworkAccessManager::finished, this, &C99::replyFinishedSubdomain);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_C99).toString();
+    m_key = gConfig.keys.C99;
 }
 C99::~C99(){
     delete manager;

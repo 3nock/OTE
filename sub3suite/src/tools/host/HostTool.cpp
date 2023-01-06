@@ -12,7 +12,7 @@
 #include <QDateTime>
 #include "src/utils/Config.h"
 #include "src/utils/utils.h"
-#include "src/dialogs/ActiveConfigDialog.h"
+#include "src/dialogs/config/HostConfigDialog.h"
 
 
 HostTool::HostTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent, project),
@@ -48,8 +48,6 @@ HostTool::HostTool(QWidget *parent, ProjectModel *project) : AbstractTool(parent
     m_scanArgs->config = m_scanConfig;
     m_pingscannerArgs->is_host = true;
     m_portscannerArgs->is_host = true;
-
-    this->initConfigValues();
 }
 HostTool::~HostTool(){
     delete m_model_ping;
@@ -182,42 +180,9 @@ void HostTool::on_buttonStop_clicked(){
 }
 
 void HostTool::on_buttonConfig_clicked(){
-    ActiveConfigDialog *configDialog = new ActiveConfigDialog(this, m_scanConfig);
+    HostConfigDialog *configDialog = new HostConfigDialog(this);
     configDialog->setAttribute( Qt::WA_DeleteOnClose, true );
     configDialog->show();
-}
-
-void HostTool::initConfigValues(){
-    CONFIG.beginGroup(CFG_ACTIVE);
-    m_scanArgs->config->timeout = CONFIG.value(CFG_VAL_TIMEOUT).toInt();
-    m_scanArgs->config->threads = CONFIG.value(CFG_VAL_THREADS).toInt();
-    m_scanArgs->config->noDuplicates = CONFIG.value(CFG_VAL_DUPLICATES).toBool();
-    m_scanArgs->config->autoSaveToProject = CONFIG.value(CFG_VAL_AUTOSAVE).toBool();
-    m_scanArgs->config->setTimeout = CONFIG.value(CFG_VAL_SETTIMEOUT).toBool();
-    m_scanArgs->config->pingScanConfig->ttl = CONFIG.value("ping_ttl").toInt();
-    m_scanArgs->config->pingScanConfig->data_size = CONFIG.value("ping_bytes").toInt();
-    QString record = CONFIG.value(CFG_VAL_RECORD).toString();
-    QString portScan = CONFIG.value(CFG_VAL_PORTSCAN).toString();
-    CONFIG.endGroup();
-
-    if(portScan == "syn")
-        m_portscannerArgs->scan_type = port::ScanType::SYN;
-    if(portScan == "connection")
-        m_portscannerArgs->scan_type = port::ScanType::CONNECTION;
-
-    if(record == "A")
-        m_scanArgs->config->recordType = QDnsLookup::A;
-    if(record == "AAAA")
-        m_scanArgs->config->recordType = QDnsLookup::AAAA;
-    if(record == "ANY")
-        m_scanArgs->config->recordType = QDnsLookup::ANY;
-
-    int size = CONFIG.beginReadArray("nameservers_active");
-    for (int i = 0; i < size; ++i) {
-        CONFIG.setArrayIndex(i);
-        m_scanArgs->config->nameservers.enqueue(CONFIG.value("value").toString());
-    }
-    CONFIG.endArray();
 }
 
 void HostTool::log(QString log){

@@ -39,8 +39,8 @@ PassiveTotal::PassiveTotal(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &PassiveTotal::replyFinishedSSL);
 
     /* getting api-key */
-    m_username = APIKEY.value("passivetotal_username").toString();
-    m_key = APIKEY.value("passivetotal_key").toString();
+    m_username = gConfig.keys.PassiveTotal.username;
+    m_key = gConfig.keys.PassiveTotal.key;
 }
 PassiveTotal::~PassiveTotal(){
     delete manager;

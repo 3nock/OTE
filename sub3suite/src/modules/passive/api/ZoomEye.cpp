@@ -31,7 +31,7 @@ ZoomEye::ZoomEye(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &ZoomEye::replyFinishedIp);
 
     /* getting api key */
-    m_key = APIKEY.value(OSINT_MODULE_ZOOMEYE).toString();
+    m_key = gConfig.keys.ZoomEye;
 }
 ZoomEye::~ZoomEye(){
     delete manager;

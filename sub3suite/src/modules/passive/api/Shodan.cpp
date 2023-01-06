@@ -35,7 +35,7 @@ Shodan::Shodan(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &Shodan::replyFinishedSubdomainIp);
 
     /* getting api-key */
-    m_key = APIKEY.value(OSINT_MODULE_SHODAN).toString();
+    m_key = gConfig.keys.Shodan;
 }
 Shodan::~Shodan(){
     delete manager;

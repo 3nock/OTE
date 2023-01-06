@@ -26,7 +26,7 @@ IpInfo::IpInfo(ScanArgs args): AbstractOsintModule(args)
         connect(manager, &s3sNetworkAccessManager::finished, this, &IpInfo::replyFinishedSubdomain);
 
     /* getting the api key */
-    m_key = APIKEY.value(OSINT_MODULE_IPINFO).toString();
+    m_key = gConfig.keys.IpInfo;
 }
 IpInfo::~IpInfo(){
     delete manager;
