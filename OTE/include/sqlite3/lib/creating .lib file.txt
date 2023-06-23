@@ -1,0 +1,1 @@
+LIB /DEF:sqlite3.def /OUT:sqlite3.lib /MACHINE:X64

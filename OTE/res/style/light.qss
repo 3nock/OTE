@@ -1,0 +1,37 @@
+QMenuBar {
+  color: #E0E1E3;
+  background-color: #434343;
+  padding: 4px;
+}
+
+QMenuBar::item:hover,
+QMenuBar::item:selected,
+QMenu::item:hover,
+QMenu::item:selected {
+  background-color: rgba(0,130,140,50);
+  border: 1px solid rgba(0,130,140,100);
+}
+
+QMenu {
+  border: 1px solid #303030;
+  color: #E0E1E3;
+  margin: 0px;
+  background-color: #434343;
+}
+
+QMenu::separator {
+  height: 1px;
+  background-color: #303030;
+  color: #E0E1E3;
+}
+
+QMenu::item {
+  padding: 4px 20px 4px 8px;
+  margin-left: 10px;
+}
+
+QWidget[HasBorder="true"] {
+  border: 1px solid #2b2b2b;
+  border-bottom: 0px;
+  border-right: 0px;
+}
