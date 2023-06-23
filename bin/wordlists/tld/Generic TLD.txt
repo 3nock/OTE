@@ -1,5 +1,0 @@
-co
-com
-info
-net
-org
