@@ -10,6 +10,8 @@
 
 #include <QWidget>
 
+#include "src/template/Template.h"
+
 namespace Ui {
 class WelcomeView;
 }
@@ -21,6 +23,9 @@ class WelcomeView : public QWidget
 public:
     explicit WelcomeView(QWidget *parent = nullptr);
     ~WelcomeView();
+
+public slots:
+    void onNewTemplate(OTE::Template *tmplt);
 
 private:
     Ui::WelcomeView *ui;

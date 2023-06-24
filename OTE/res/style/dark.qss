@@ -54,6 +54,15 @@ QCheckBox::indicator:checked:disabled {
 }
 
 /* QTreeView QListView QTableView */
+QTableView {
+  alternate-background-color: rgb(53,53,53);
+}
+
+QListView::item,
+QTreeView::item {
+  min-height: 19px;
+}
+
 QTreeView:branch:has-children:!has-siblings:closed,
 QTreeView:branch:closed:has-children:has-siblings {
   border-image: none;
@@ -194,4 +203,8 @@ QMenu::item {
 
 QComboBox {
   combobox-popup: 0;
+}
+
+QScrollArea[noBorder="true"]{
+  border: 0px;
 }

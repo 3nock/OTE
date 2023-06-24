@@ -27,9 +27,9 @@ public:
 
     enum AUTH_TYPE {
         QUERY = 0,
-        HEADER = 1,
-        BASIC = 2,
-        BEARER = 4
+        HEADER,
+        BASIC,
+        BEARER
     };
 
     struct {

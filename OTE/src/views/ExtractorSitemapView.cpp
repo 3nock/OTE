@@ -27,9 +27,10 @@ ExtractorSitemapView::ExtractorSitemapView(QWidget *parent) :
     ui->lineEditFilter->setPlaceholderText(tr("Filter..."));
 
     ui->tableViewSitemap->setModel(mSitemapModel->proxy);
-
     ui->tableViewSitemap->horizontalHeader()->setDefaultAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
     ui->comboBoxType->addItems(OTE::gInputOutput.outputTypes);
+    ui->comboBoxType->setCurrentText("asn");
 }
 
 ExtractorSitemapView::~ExtractorSitemapView()

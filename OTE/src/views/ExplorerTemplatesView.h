@@ -33,7 +33,6 @@ public slots:
     void onNewTemplate(OTE::Template *tmplt);
 
 private slots:
-    void on_comboBoxFilter_currentIndexChanged(int index);
     void on_lineEditFilter_textChanged(const QString &arg1);
     void on_tableViewTemplates_clicked(const QModelIndex &index);
     void on_tableViewTemplates_customContextMenuRequested(const QPoint &pos);

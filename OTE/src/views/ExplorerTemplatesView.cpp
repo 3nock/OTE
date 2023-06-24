@@ -24,6 +24,7 @@ ExplorerTemplatesView::ExplorerTemplatesView(QWidget *parent) :
 
     ui->textBrowserTemplateDescription->setOpenExternalLinks(true);
 
+    ui->lineEditFilter->setPlaceholderText(tr("Filter templates according to API endpoint's input type e.g. ip"));
     ui->textBrowserTemplateDescription->setPlaceholderText(tr("OSINT Template description"));
     ui->plainTextEditEndpointDescription->setPlaceholderText(tr("API Endpoint description"));
 
@@ -37,10 +38,6 @@ ExplorerTemplatesView::ExplorerTemplatesView(QWidget *parent) :
     }
 
     ui->tableViewTemplates->setModel(mModelTemplates);
-
-    ui->comboBoxFilter->addItems({tr("Input Type"),
-                                  tr("Endpoint Name"),
-                                  tr("Description")});
 }
 
 ExplorerTemplatesView::~ExplorerTemplatesView()
@@ -62,25 +59,6 @@ void ExplorerTemplatesView::onNewTemplate(OTE::Template *tmplt)
     mTemplateItems << item;
 }
 
-void ExplorerTemplatesView::on_comboBoxFilter_currentIndexChanged(int index)
-{
-    switch (index) {
-    case 0: // input type
-        ui->lineEditFilter->setPlaceholderText(tr("Filter according to API endpoint's input type"));
-        break;
-    case 1: // endpoint
-        ui->lineEditFilter->setPlaceholderText(tr("Filter according to API endpoint's name"));
-        break;
-    case 2: // description
-        ui->lineEditFilter->setPlaceholderText(tr("Filter according to API endpoint's description"));
-        break;
-    }
-
-    QString filterPattern = ui->lineEditFilter->text();
-    if(!filterPattern.isEmpty())
-        this->on_lineEditFilter_textChanged(filterPattern);
-}
-
 void ExplorerTemplatesView::on_lineEditFilter_textChanged(const QString &pattern)
 {
     // clear
@@ -100,46 +78,16 @@ void ExplorerTemplatesView::on_lineEditFilter_textChanged(const QString &pattern
         return;
     }
 
-    switch (ui->comboBoxFilter->currentIndex()) {
-    case 0: // endpoint input type
-        foreach(OTE::TemplateItem *item, mTemplateItems)
+    foreach(OTE::TemplateItem *item, mTemplateItems)
+    {
+        foreach(OTE::Endpoint *endpoint, item->tmplt->endpoints)
         {
-            foreach(OTE::Endpoint *endpoint, item->tmplt->endpoints)
+            if(endpoint->inputTypes.contains(pattern, Qt::CaseInsensitive))
             {
-                if(endpoint->inputTypes.contains(pattern, Qt::CaseInsensitive))
-                {
-                    mModelTemplates->appendRow(item);
-                    break;
-                }
+                mModelTemplates->appendRow(item);
+                break;
             }
         }
-        break;
-    case 1: // endpoint name
-        foreach(OTE::TemplateItem *item, mTemplateItems)
-        {
-            foreach(OTE::Endpoint *endpoint, item->tmplt->endpoints)
-            {
-                if(endpoint->name.contains(pattern, Qt::CaseInsensitive))
-                {
-                    mModelTemplates->appendRow(item);
-                    break;
-                }
-            }
-        }
-        break;
-    case 2: // endpoint description
-        foreach(OTE::TemplateItem *item, mTemplateItems)
-        {
-            foreach(OTE::Endpoint *endpoint, item->tmplt->endpoints)
-            {
-                if(endpoint->description.contains(pattern, Qt::CaseInsensitive))
-                {
-                    mModelTemplates->appendRow(item);
-                    break;
-                }
-            }
-        }
-        break;
     }
 }
 
@@ -180,31 +128,11 @@ void ExplorerTemplatesView::on_tableViewTemplates_clicked(const QModelIndex &ind
         }
         else
         {
-            switch (ui->comboBoxFilter->currentIndex()) {
-            case 0: // input types
-                if(endpoint->inputTypes.contains(filterPattern, Qt::CaseInsensitive))
-                {
-                    QVariant v;
-                    v.setValue(endpoint);
-                    ui->comboBoxEndpoints->addItem(endpoint->name, v);
-                }
-                break;
-            case 1: // endpoint name
-                if(endpoint->name.contains(filterPattern, Qt::CaseInsensitive))
-                {
-                    QVariant v;
-                    v.setValue(endpoint);
-                    ui->comboBoxEndpoints->addItem(endpoint->name, v);
-                }
-                break;
-            case 2: // endpoint description
-                if(endpoint->description.contains(filterPattern, Qt::CaseInsensitive))
-                {
-                    QVariant v;
-                    v.setValue(endpoint);
-                    ui->comboBoxEndpoints->addItem(endpoint->name, v);
-                }
-                break;
+            if(endpoint->inputTypes.contains(filterPattern, Qt::CaseInsensitive))
+            {
+                QVariant v;
+                v.setValue(endpoint);
+                ui->comboBoxEndpoints->addItem(endpoint->name, v);
             }
         }
     }

@@ -25,11 +25,12 @@ public:
 
     enum REQUEST_TYPE {
         GET = 0,
-        POST = 1
+        POST
     };
+
     enum RESPONSE_TYPE {
         JSON = 0,
-        XML = 1
+        XML
     };
 
     Template *tmplt;

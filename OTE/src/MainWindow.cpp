@@ -302,12 +302,12 @@ void MainWindow::on_actionTwitter_triggered()
 
 void MainWindow::on_actionGithub_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://github.com/3nock/SpiderSuite", QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl("https://github.com/3nock/OTE", QUrl::TolerantMode));
 }
 
 void MainWindow::on_actionWebsite_triggered()
 {
-    QDesktopServices::openUrl(QUrl("https://SpiderSuite.github.io", QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl("https://SpiderSuite.github.io/OTE", QUrl::TolerantMode));
 }
 
 void MainWindow::on_actionCheckUpdates_triggered()
