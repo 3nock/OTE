@@ -5,8 +5,8 @@ The Steps are easy since the project doesn't have many dependancies for now & on
 
 ## Prerequisites
 
-1. Download [Qt5.13.0](https://download.qt.io/archive/qt/5.13/5.13.0) & install. (other versions can be used, i've only tested in Qt5.13 & Qt5.12).
-2. Download [Qt Creator 4.9.1](https://www.qt.io/offline-installers) & install. (not a must to use version 4.9.1).
+1. Download [Qt5.13.0](https://download.qt.io/archive/qt/5.14/5.14.2) & install. (other versions can be used, i've only tested in Qt5.14).
+2. Download [Qt Creator](https://www.qt.io/offline-installers) & install.
 3. Clone the repository (`main branch`) to your local drive.
 
  **For main-branch (stable)**

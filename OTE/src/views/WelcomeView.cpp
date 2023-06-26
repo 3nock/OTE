@@ -34,7 +34,7 @@ WelcomeView::WelcomeView(QWidget *parent) :
     ui->labelSocial->setText(tr("[Website](https://SpiderSuite.github.io/OTE) | [Twitter](https://twitter.com/spider_suite) | [Telegram](https://t.me/SpiderSuite) | [Github](https://github.com/3nock/OTE)"));
 
     ui->labelLoadedTemplates->setTextFormat(Qt::RichText);
-    ui->labelLoadedTemplates->setText("<h1>Loaded Templates</h1>");
+    ui->labelLoadedTemplates->setText("<h1>Templates</h1>");
 
     QVBoxLayout *vLayout = new QVBoxLayout(ui->scrollAreaWidgetContents);
     foreach(OTE::Template *tmplt, OTE::gTemplates)
@@ -48,6 +48,9 @@ WelcomeView::WelcomeView(QWidget *parent) :
         linkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
         linkLabel->setOpenExternalLinks(true);
         linkLabel->setText(tmplt->info.link);
+        auto font = linkLabel->font();
+        font.setUnderline(true);
+        linkLabel->setFont(font);
 
         layout->addWidget(nameLabel);
         layout->addWidget(linkLabel, 1);
