@@ -5,8 +5,8 @@
 //
 //  Author: Enock N. Michael (enock.n.michael@gmail.com)
 
-#include "MiscConfig.h"
-#include "ui_MiscConfig.h"
+#include "GeneralConfig.h"
+#include "ui_GeneralConfig.h"
 
 #include <QFontDialog>
 #include <QMessageBox>
@@ -14,22 +14,21 @@
 #include "src/core/Config.h"
 
 
-MiscConfig::MiscConfig(QWidget *parent) :
+GeneralConfig::GeneralConfig(QWidget *parent) :
     AbstractConfig(parent),
-    ui(new Ui::MiscConfig)
+    ui(new Ui::GeneralConfig)
 {
     ui->setupUi(this);
 
-    ui->labelExplain->setText(tr("Miscellaneous Configurations"));
     ui->labelExplainFont->setText(tr("Configure the entire Application's Font type, size and style"));
 }
 
-MiscConfig::~MiscConfig()
+GeneralConfig::~GeneralConfig()
 {
     delete ui;
 }
 
-void MiscConfig::openConfig()
+void GeneralConfig::openConfig()
 {
     ui->checkBoxDisableAutomaticUpdate->setChecked(OTE::gConfig.general.disableAutomaticUpdateCheck);
 
@@ -38,7 +37,7 @@ void MiscConfig::openConfig()
     ui->labelFontStyle->setText(OTE::gConfig.general.font_style);
 }
 
-void MiscConfig::saveConfig()
+void GeneralConfig::saveConfig()
 {
     OTE::gConfig.general.disableAutomaticUpdateCheck = ui->checkBoxDisableAutomaticUpdate->isChecked();
     OTE::gConfig.general.font_name = ui->labelFontName->text();
@@ -46,12 +45,12 @@ void MiscConfig::saveConfig()
     OTE::gConfig.general.font_size = ui->labelFontSize->text().toInt();
 }
 
-void MiscConfig::resetConfig()
+void GeneralConfig::resetConfig()
 {
 
 }
 
-void MiscConfig::on_buttonChangeFont_clicked()
+void GeneralConfig::on_buttonChangeFont_clicked()
 {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, qApp->font(), this);

@@ -29,7 +29,7 @@ SOURCES += \
     src/core/Highlighter.cpp \
     src/dialogs/MultipleTargetsDialog.cpp \
     src/dialogs/preferences/EngineConfig.cpp \
-    src/dialogs/preferences/MiscConfig.cpp \
+    src/dialogs/preferences/GeneralConfig.cpp \
     src/engine/ExplorerEngine.cpp \
     src/engine/ExtractorEngine.cpp \
     src/core/Database.cpp \
@@ -68,7 +68,7 @@ HEADERS += \
     src/dialogs/MultipleTargetsDialog.h \
     src/dialogs/preferences/AbstractConfig.h \
     src/dialogs/preferences/EngineConfig.h \
-    src/dialogs/preferences/MiscConfig.h \
+    src/dialogs/preferences/GeneralConfig.h \
     src/engine/ExplorerEngine.h \
     src/engine/ExtractorEngine.h \
     src/core/Database.h \
@@ -111,7 +111,7 @@ FORMS += \
     src/dialogs/TemplateDialog.ui \
     src/dialogs/PreferencesDialog.ui \
     src/dialogs/preferences/EngineConfig.ui \
-    src/dialogs/preferences/MiscConfig.ui \
+    src/dialogs/preferences/GeneralConfig.ui \
     src/views/ExplorerScannerView.ui \
     src/views/ExplorerSitemapView.ui \
     src/views/ExplorerTemplatesView.ui \

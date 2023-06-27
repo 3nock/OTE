@@ -96,10 +96,26 @@ void Explorer::onLookup()
     QNetworkRequest request;
     request.setUrl(link);
 
-    // set request headers
-    request.setRawHeader("User-Agent", "OTE/1.0.0");
-    if(mEndpoint->responseType == Endpoint::RESPONSE_TYPE::JSON)
-        request.setRawHeader("Content-Type", "application/json");
+    if(gConfig.engine.user_agent.use)
+    {
+        if(gConfig.engine.user_agent.oteUA)
+            request.setRawHeader("User-Agent", "OTE/1.0.0");
+        else if(gConfig.engine.user_agent.randomUA)
+            request.setRawHeader("User-Agent", "Mozilla/1.0.0");
+    }
+
+    if(gConfig.engine.accept.use)
+    {
+        if(gConfig.engine.accept.jsonXml)
+        {
+            if(mEndpoint->responseType == Endpoint::RESPONSE_TYPE::JSON)
+                request.setRawHeader("Accept", "application/json");
+            else if(mEndpoint->responseType == Endpoint::RESPONSE_TYPE::XML)
+                request.setRawHeader("Accept", "application/xml");
+        }
+        else if(gConfig.engine.accept.all)
+            request.setRawHeader("Accept", "*/*");
+    }
 
     // set authentication tokens
     switch (mEndpoint->tmplt->authentication.authType) {
@@ -132,8 +148,8 @@ void Explorer::onLookup()
         mCurrentReply = mManager->get(request);
         mActiveRequests++;
 
-        if(gConfig.query.timeout.first)
-            ReplyTimeout::set(mCurrentReply, gConfig.query.timeout.second);
+        if(gConfig.engine.timeout.use)
+            ReplyTimeout::set(mCurrentReply, gConfig.engine.timeout.msec);
     }
     else if(mEndpoint->requestType == Endpoint::REQUEST_TYPE::POST)
     {
@@ -152,8 +168,8 @@ void Explorer::onLookup()
         mCurrentReply = mManager->post(request, data.toUtf8());
         mActiveRequests++;
 
-        if(gConfig.query.timeout.first)
-            ReplyTimeout::set(mCurrentReply, gConfig.query.timeout.second);
+        if(gConfig.engine.timeout.use)
+            ReplyTimeout::set(mCurrentReply, gConfig.engine.timeout.msec);
     }
     else
         emit next();

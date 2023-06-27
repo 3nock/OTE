@@ -11,29 +11,29 @@
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PreferencesDialog),
-    mMiscConfig(new MiscConfig(this)),
+    mGeneralConfig(new GeneralConfig(this)),
     mEngineConfig(new EngineConfig(this))
 {
     ui->setupUi(this);
 
-    mMiscConfig->openConfig();
+    mGeneralConfig->openConfig();
     mEngineConfig->openConfig();
 
     ui->tabWidget->insertTab(0, mEngineConfig, tr("Engine"));
-    ui->tabWidget->insertTab(1, mMiscConfig, tr("Misc"));
+    ui->tabWidget->insertTab(1, mGeneralConfig, tr("General"));
 }
 
 PreferencesDialog::~PreferencesDialog()
 {
     delete mEngineConfig;
-    delete mMiscConfig;
+    delete mGeneralConfig;
     delete ui;
 }
 
 void PreferencesDialog::on_buttonSave_clicked()
 {
     mEngineConfig->saveConfig();
-    mMiscConfig->saveConfig();
+    mGeneralConfig->saveConfig();
 
     accept();
 }

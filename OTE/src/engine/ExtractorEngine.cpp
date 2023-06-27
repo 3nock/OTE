@@ -109,8 +109,26 @@ void Extractor::onLookup()
     QNetworkRequest request;
     request.setUrl(link);
 
-    if(requester.endpoint->responseType == Endpoint::RESPONSE_TYPE::JSON)
-        request.setRawHeader("Content-Type", "application/json");
+    if(gConfig.engine.user_agent.use)
+    {
+        if(gConfig.engine.user_agent.oteUA)
+            request.setRawHeader("User-Agent", "OTE/1.0.0");
+        else if(gConfig.engine.user_agent.randomUA)
+            request.setRawHeader("User-Agent", "Mozilla/1.0.0");
+    }
+
+    if(gConfig.engine.accept.use)
+    {
+        if(gConfig.engine.accept.jsonXml)
+        {
+            if(requester.endpoint->responseType == Endpoint::RESPONSE_TYPE::JSON)
+                request.setRawHeader("Accept", "application/json");
+            else if(requester.endpoint->responseType == Endpoint::RESPONSE_TYPE::XML)
+                request.setRawHeader("Accept", "application/xml");
+        }
+        else if(gConfig.engine.accept.all)
+            request.setRawHeader("Accept", "*/*");
+    }
 
     if(requester.endpoint->tmplt->authentication.authType == Template::AUTH_TYPE::HEADER)
     {
@@ -140,8 +158,8 @@ void Extractor::onLookup()
         reply->setProperty("endpoint", requester.endpoint->name);
         reply->setProperty("extractor", requester.extractor->name);
 
-        if(gConfig.query.timeout.first)
-            ReplyTimeout::set(reply, gConfig.query.timeout.second);
+        if(gConfig.engine.timeout.use)
+            ReplyTimeout::set(reply, gConfig.engine.timeout.msec);
     }
     else if(requester.endpoint->requestType == Endpoint::REQUEST_TYPE::POST)
     {
@@ -163,8 +181,8 @@ void Extractor::onLookup()
         reply->setProperty("endpoint", requester.endpoint->name);
         reply->setProperty("extractor", requester.extractor->name);
 
-        if(gConfig.query.timeout.first)
-            ReplyTimeout::set(reply, gConfig.query.timeout.second);
+        if(gConfig.engine.timeout.use)
+            ReplyTimeout::set(reply, gConfig.engine.timeout.msec);
     }
     else
         emit next();

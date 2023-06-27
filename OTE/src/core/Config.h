@@ -13,7 +13,7 @@
 
 namespace OTE {
 
-struct Configs
+struct Config
 {
     struct {
         QString font_name;
@@ -27,8 +27,23 @@ struct Configs
     }general;
 
     struct {
-        QPair<bool, int> timeout;
-    }query;
+        struct {
+            bool use = true;
+            int msec = 5000;
+        }timeout;
+
+        struct {
+            bool use = true;
+            bool oteUA = true;
+            bool randomUA = false;
+        }user_agent;
+
+        struct {
+            bool use = true;
+            bool jsonXml = true;
+            bool all = false;
+        }accept;
+    }engine;
 
     QMap<QString,QPair<QString,QString> > apiKeys;
 
@@ -37,7 +52,7 @@ struct Configs
     void createNewConfigFile();
 };
 
-extern OTE::Configs gConfig;
+extern OTE::Config gConfig;
 
 } // OTE namespace
 

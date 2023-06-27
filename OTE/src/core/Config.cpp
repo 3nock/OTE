@@ -18,9 +18,9 @@
 
 namespace OTE {
 
-Configs gConfig;
+Config gConfig;
 
-void Configs::fromConfigFile()
+void Config::fromConfigFile()
 {
     // get settings from settings file
     QString filename(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/ote.conf");
@@ -44,10 +44,10 @@ void Configs::fromConfigFile()
     file.close();
 
     // renew config file
-    gConfig = Configs{};
+    gConfig = Config{};
 
     // general configurations
-    QJsonObject generalObj = settings["General"].toObject();
+    QJsonObject generalObj = settings["general"].toObject();
     general.font_name = generalObj["font_name"].toString();
     general.font_style = generalObj["font_style"].toString();
     general.font_size = generalObj["font_size"].toInt();
@@ -63,6 +63,17 @@ void Configs::fromConfigFile()
             general.recents.insert(name, project);
     }
 
+    // engine config
+    QJsonObject engineObj = settings["engine"].toObject();
+    engine.timeout.use = engineObj["use_timeout"].toBool();
+    engine.timeout.msec = engineObj["timeout_msec"].toInt();
+    engine.accept.use = engineObj["use_accept"].toBool();
+    engine.accept.all = engineObj["accept_all"].toBool();
+    engine.accept.jsonXml = engineObj["accept_jsonXml"].toBool();
+    engine.user_agent.use = engineObj["use_ua"].toBool();
+    engine.user_agent.oteUA = engineObj["ua_ote"].toBool();
+    engine.user_agent.randomUA = engineObj["ua_random"].toBool();
+
     // api keys
     QJsonObject apiKeysObj = settings["apiKeys"].toObject();
     foreach(const QString &key, apiKeysObj.keys())
@@ -72,7 +83,7 @@ void Configs::fromConfigFile()
     }
 }
 
-void Configs::toConfigFile()
+void Config::toConfigFile()
 {
     // general configurations
     QJsonObject generalObj;
@@ -87,6 +98,17 @@ void Configs::toConfigFile()
     foreach(const QString &project_name, general.recents.keys())
         recentsObj.insert(project_name, general.recents[project_name]);
     generalObj.insert("recents", recentsObj);
+
+    // engine config
+    QJsonObject engineObj;
+    engineObj.insert("use_timeout", engine.timeout.use);
+    engineObj.insert("timeout_msec", engine.timeout.msec);
+    engineObj.insert("use_accept", engine.accept.use);
+    engineObj.insert("accept_all", engine.accept.all);
+    engineObj.insert("accept_jsonXml", engine.accept.jsonXml);
+    engineObj.insert("use_ua", engine.user_agent.use);
+    engineObj.insert("ua_ote", engine.user_agent.oteUA);
+    engineObj.insert("ua_random", engine.user_agent.randomUA);
 
     // api keys
     QJsonObject apiKeysObj;
@@ -103,7 +125,8 @@ void Configs::toConfigFile()
 
 
     QJsonObject settings;
-    settings.insert("General", generalObj);
+    settings.insert("general", generalObj);
+    settings.insert("engine", engineObj);
     settings.insert("apiKeys", apiKeysObj);
 
     // save settings
@@ -124,7 +147,7 @@ void Configs::toConfigFile()
     file.close();
 }
 
-void Configs::createNewConfigFile()
+void Config::createNewConfigFile()
 {
     QJsonObject generalObj;
 #ifdef Q_OS_WIN32

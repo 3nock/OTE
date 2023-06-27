@@ -11,7 +11,7 @@
 #include <QDialog>
 
 #include "src/dialogs/preferences/EngineConfig.h"
-#include "src/dialogs/preferences/MiscConfig.h"
+#include "src/dialogs/preferences/GeneralConfig.h"
 
 namespace Ui {
 class PreferencesDialog;
@@ -32,7 +32,7 @@ private slots:
 private:
     Ui::PreferencesDialog *ui;
 
-    MiscConfig *mMiscConfig;
+    GeneralConfig *mGeneralConfig;
     EngineConfig *mEngineConfig;
 };
 

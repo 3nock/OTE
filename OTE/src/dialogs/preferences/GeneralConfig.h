@@ -5,22 +5,22 @@
 //
 //  Author: Enock N. Michael (enock.n.michael@gmail.com)
 
-#ifndef DIALOGS_PREFERENCES_MISCCONFIG_H
-#define DIALOGS_PREFERENCES_MISCCONFIG_H
+#ifndef DIALOGS_PREFERENCES_GENERALCCONFIG_H
+#define DIALOGS_PREFERENCES_GENERALCCONFIG_H
 
 #include "AbstractConfig.h"
 
 namespace Ui {
-class MiscConfig;
+class GeneralConfig;
 }
 
-class MiscConfig : public AbstractConfig
+class GeneralConfig : public AbstractConfig
 {
     Q_OBJECT
 
 public:
-    explicit MiscConfig(QWidget *parent = nullptr);
-    ~MiscConfig() override;
+    explicit GeneralConfig(QWidget *parent = nullptr);
+    ~GeneralConfig() override;
 
     void openConfig() override;
     void saveConfig() override;
@@ -30,7 +30,7 @@ private slots:
     void on_buttonChangeFont_clicked();
 
 private:
-    Ui::MiscConfig *ui;
+    Ui::GeneralConfig *ui;
 };
 
-#endif // DIALOGS_PREFERENCES_MISCCONFIG_H
+#endif // DIALOGS_PREFERENCES_GENERALCCONFIG_H
