@@ -131,7 +131,7 @@ RESOURCES += \
 unix {
     CONFIG += link_pkgconfig
 
-    # SQLite3 library
+    # SQLite3
     PKGCONFIG += sqlite3
 }
 

@@ -84,6 +84,5 @@
     </qresource>
     <qresource prefix="/files">
         <file>res/files/about.html</file>
-        <file>res/files/welcome.html</file>
     </qresource>
 </RCC>
