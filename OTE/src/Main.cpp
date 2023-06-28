@@ -16,14 +16,14 @@
 #include "src/core/Utility.h"
 #include "src/template/Template.h"
 
-static QMutex messageMutex;
+static QMutex gMessageMutex;
 
 void MessageHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
     QString log;
     QString time(QDateTime::currentDateTime().toString("hh:mm:ss"));
 
-    QMutexLocker locker(&messageMutex);
+    QMutexLocker locker(&gMessageMutex);
 
     if(LogViewerDialog::logsTextEdit)
     {

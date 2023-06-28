@@ -223,7 +223,6 @@ void Extractor::onLookupFinished(QNetworkReply *reply)
                requester.extractor->name == extractor)
             {
                 QStringList extract = requester.extractor->extract(data);
-                qDebug() << "extracted count: " << extract.count();
                 if(!extract.isEmpty())
                 {
                     emit result(mOutputType, Database::insertExtractorResult(mOutputType, extract));

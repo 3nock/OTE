@@ -13,7 +13,7 @@ There are various way you can contribute to OSINT Template Engine project:
 
 ## Creating/Updating/Fixing Templates
 
-You can contribute by creating new Templates or Improving & Fixing existing Templates. The template engine is only as good as the existing templates. Visit [Template Repository](https://github.com/3nock/OTE-Templates) to see how you can contribute.
+You can contribute by creating new Templates or Improving & Fixing existing Templates. The template engine is only as good as the existing templates. Visit [Template Repository](https://github.com/3nock/OTE-Templates) to contribute.
 
 ## Reporting Bugs
 
