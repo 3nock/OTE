@@ -35,6 +35,11 @@ void GeneralConfig::openConfig()
     ui->labelFontName->setText(OTE::gConfig.general.font_name);
     ui->labelFontSize->setText(QString::number(OTE::gConfig.general.font_size));
     ui->labelFontStyle->setText(OTE::gConfig.general.font_style);
+
+    if(OTE::gConfig.general.theme == OTE::LIGHT)
+        ui->radioButtonLightTheme->setChecked(true);
+    else
+        ui->radioButtonDarkTheme->setChecked(true);
 }
 
 void GeneralConfig::saveConfig()
@@ -43,6 +48,11 @@ void GeneralConfig::saveConfig()
     OTE::gConfig.general.font_name = ui->labelFontName->text();
     OTE::gConfig.general.font_style = ui->labelFontStyle->text();
     OTE::gConfig.general.font_size = ui->labelFontSize->text().toInt();
+
+    if(ui->radioButtonLightTheme->isChecked())
+        OTE::gConfig.general.theme = OTE::THEME::LIGHT;
+    else
+        OTE::gConfig.general.theme = OTE::THEME::DARK;
 }
 
 void GeneralConfig::resetConfig()
@@ -66,6 +76,18 @@ void GeneralConfig::on_buttonChangeFont_clicked()
         ui->labelFontStyle->setText(font.styleName());
         ui->labelFontSize->setText(QString::number(font.pointSize()));
 
-        QMessageBox::information(this, tr("Info"), tr("Font Changes will be applied when you restart SpiderSuite"));
+        QMessageBox::information(this, tr("Info"), tr("Font Changes will be applied when you restart the application"));
     }
+}
+
+void GeneralConfig::on_radioButtonDarkTheme_clicked(bool checked)
+{
+    if(checked)
+        QMessageBox::information(this, tr("Info"), tr("Theme will be applied when you restart the application"));
+}
+
+void GeneralConfig::on_radioButtonLightTheme_clicked(bool checked)
+{
+    if(checked)
+        QMessageBox::information(this, tr("Info"), tr("Theme will be applied when you restart the application"));
 }

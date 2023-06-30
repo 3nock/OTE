@@ -35,3 +35,22 @@ QWidget[HasBorder="true"] {
   border-bottom: 0px;
   border-right: 0px;
 }
+
+QListView::item,
+QTreeView::item {
+  min-height: 19px;
+}
+
+QTreeView::item:!selected:hover,
+QTableView::item:!selected:hover {
+  background-color: rgba(0,130,140,40);
+  border: 1px solid rgba(0,130,140,70);
+}
+
+QComboBox {
+  combobox-popup: 0;
+}
+
+QScrollArea[noBorder="true"]{
+  border: 0px;
+}

@@ -11,6 +11,8 @@
 #include <QDebug>
 #include <QMenu>
 
+#include "src/dialogs/EndpointDialog.h"
+#include "src/dialogs/ExtractorDialog.h"
 #include "src/dialogs/TemplateDialog.h"
 
 ExtractorTemplatesView::ExtractorTemplatesView(QWidget *parent) :
@@ -150,16 +152,43 @@ void ExtractorTemplatesView::on_treeViewTemplates_customContextMenuRequested(con
     if(!selectionModel->isSelected(ui->treeViewTemplates->currentIndex()))
         return;
 
-    // get item
-    OTE::TemplateItem *item = static_cast<OTE::TemplateItem*>(mModelTemplates->itemFromIndex(ui->treeViewTemplates->currentIndex()));
-
+    // menu
     QMenu menu(this);
 
-    menu.addAction(tr("Edit Template"), this, [=](){
-        TemplateDialog templateDialog(this, item->tmplt);
-        if(templateDialog.exec() == QDialog::Accepted)
-            OTE::Template::SaveTemplate(item->tmplt);
-    });
+    // get item
+    QStandardItem *item = mModelTemplates->itemFromIndex(ui->treeViewTemplates->currentIndex());
+
+    if(item->hasChildren())
+    {
+        OTE::TemplateItem *templateItem = static_cast<OTE::TemplateItem*>(item);
+
+        menu.addAction(tr("Edit Template"), this, [=](){
+            TemplateDialog templateDialog(this, templateItem->tmplt);
+            if(templateDialog.exec() == QDialog::Accepted)
+                OTE::Template::SaveTemplate(templateItem->tmplt);
+        });
+    }
+    else
+    {
+        OTE::EndpointItem *endpointItem = static_cast<OTE::EndpointItem*>(item);
+
+        menu.addAction(tr("Edit Endpoint"), this, [=](){
+            EndpointDialog endpointDialog(this, endpointItem->endpoint);
+            if(endpointDialog.exec() == QDialog::Accepted)
+                OTE::Template::SaveTemplate(endpointItem->endpoint->tmplt);
+        });
+        menu.addAction(tr("Edit Extractor"), this, [=](){
+            foreach(OTE::Extractor *extractor, endpointItem->endpoint->extractors)
+            {
+                if(extractor->name == mCurrentOutputType)
+                {
+                    ExtractorDialog extractorDialog(this, extractor);
+                    if(extractorDialog.exec() == QDialog::Accepted)
+                        OTE::Template::SaveTemplate(endpointItem->endpoint->tmplt);
+                }
+            }
+        });
+    }
 
     menu.exec(QCursor::pos());
 }

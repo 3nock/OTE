@@ -147,4 +147,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 # setting the icon...
-RC_ICONS = res/icons/logo.ico
+RC_ICONS = res/icons/icon.ico

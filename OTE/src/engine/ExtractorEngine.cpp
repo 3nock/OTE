@@ -114,7 +114,7 @@ void Extractor::onLookup()
         if(gConfig.engine.user_agent.oteUA)
             request.setRawHeader("User-Agent", "OTE/1.0.0");
         else if(gConfig.engine.user_agent.randomUA)
-            request.setRawHeader("User-Agent", "Mozilla/1.0.0");
+            gCOMMON_USERAGENTS.at(rand() % gCOMMON_USERAGENTS.size());
     }
 
     if(gConfig.engine.accept.use)
@@ -198,24 +198,7 @@ void Extractor::onLookupFinished(QNetworkReply *reply)
         QString extractor = reply->property("extractor").toString();
 
         QByteArray data = reply->readAll();
-
         QString contentType = reply->header(QNetworkRequest::ContentTypeHeader).toByteArray();
-        if(contentType.contains("ndjson", Qt::CaseInsensitive))
-        {
-
-        }
-        else if(contentType.contains("json", Qt::CaseInsensitive))
-        {
-
-        }
-        else if(contentType.contains("xml", Qt::CaseInsensitive))
-        {
-
-        }
-        else
-        {
-
-        }
 
         foreach(Requester requester, mRequesters)
         {
@@ -224,9 +207,7 @@ void Extractor::onLookupFinished(QNetworkReply *reply)
             {
                 QStringList extract = requester.extractor->extract(data);
                 if(!extract.isEmpty())
-                {
                     emit result(mOutputType, Database::insertExtractorResult(mOutputType, extract));
-                }
             }
         }
     }

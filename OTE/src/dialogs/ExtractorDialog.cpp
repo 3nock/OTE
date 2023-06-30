@@ -12,6 +12,8 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 
+#include "src/template/Endpoint.h"
+
 ExtractorDialog::ExtractorDialog(QWidget *parent, OTE::Extractor *extractor) :
     QDialog(parent),
     ui(new Ui::ExtractorDialog),
@@ -34,6 +36,11 @@ ExtractorDialog::ExtractorDialog(QWidget *parent, OTE::Extractor *extractor) :
     }
 
     mHighlighter = new OTE::SyntaxHighlighter(ui->plainTextEditExtractor->document());
+
+    if(extractor->endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::JSON)
+        mHighlighter->setCurrentLanguage(OTE::SyntaxHighlighter::CodeJSON);
+    else if(extractor->endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::XML)
+        mHighlighter->setCurrentLanguage(OTE::SyntaxHighlighter::CodeXML);
 }
 
 ExtractorDialog::~ExtractorDialog()

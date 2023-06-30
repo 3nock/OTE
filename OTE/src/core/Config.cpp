@@ -51,6 +51,7 @@ void Config::fromConfigFile()
     general.font_name = generalObj["font_name"].toString();
     general.font_style = generalObj["font_style"].toString();
     general.font_size = generalObj["font_size"].toInt();
+    general.theme = static_cast<THEME>(generalObj["theme"].toInt());
     general.highDPI = generalObj["highDPI"].toInt();
     general.disableAutomaticUpdateCheck = generalObj["disableAutomaticUpdateCheck"].toBool();
     general.recentDirectory = generalObj["recentDirectory"].toString();
@@ -90,6 +91,7 @@ void Config::toConfigFile()
     generalObj.insert("font_name", general.font_name);
     generalObj.insert("font_style", general.font_style);
     generalObj.insert("font_size", general.font_size);
+    generalObj.insert("theme", static_cast<int>(general.theme));
     generalObj.insert("highDPI", general.highDPI);
     generalObj.insert("disableAutomaticUpdateCheck", general.disableAutomaticUpdateCheck);
     generalObj.insert("recentDirectory", general.recentDirectory);
@@ -161,6 +163,7 @@ void Config::createNewConfigFile()
     generalObj.insert("font_style", "Regular");
     generalObj.insert("font_size", 8);
 #endif
+    generalObj.insert("theme", 0);
     generalObj.insert("highDPI", 1);
     generalObj.insert("disableAutomaticUpdateCheck", false);
     generalObj.insert("recentDirectory", "./");
@@ -199,6 +202,7 @@ void Config::createNewConfigFile()
     general.font_style = "Regular";
     general.font_size = 8;
 #endif
+    general.theme = THEME::DARK;
     general.highDPI =1;
     general.disableAutomaticUpdateCheck = false;
     general.recentDirectory = "./";

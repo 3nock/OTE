@@ -10,7 +10,7 @@
         <img src="https://img.shields.io/twitter/follow/spider_suite?label=follow&style=social" /></a>
 </p>
 
-OSINT Template Engine is a research-grade tool for OSINT Information gathering & Attack Surface Mapping which uses customizable templates to collect data from respective sources. It allows for new template creation and modification of existing ones which gives it a competitive advantage over other tools of the same category. For more information see the [documentation](https://github.com/3nock/OTE/wiki).
+OSINT Template Engine is a research-grade tool for OSINT Information gathering & Attack Surface Mapping which uses customizable templates to collect data from sources. It allows for new template creation and modification of existing ones which gives it a competitive advantage over other tools of the same category. For more information see the [documentation](https://github.com/3nock/OTE/wiki).
 
 
 <center><img src="resources/screenshot1.png"/></center>

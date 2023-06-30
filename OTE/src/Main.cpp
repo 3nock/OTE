@@ -153,7 +153,10 @@ int main(int argc, char *argv[])
 #endif
 
     // set style theme
-    app.setStyle(new OTE::DarkStyle);
+    if(OTE::gConfig.general.theme == OTE::THEME::LIGHT)
+        app.setStyle(new OTE::LightStyle);
+    else
+        app.setStyle(new OTE::DarkStyle);
 
     // Set ui font from preferences after theming
     QFont f = QFont(QApplication::font());

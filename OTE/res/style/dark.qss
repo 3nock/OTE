@@ -53,6 +53,91 @@ QCheckBox::indicator:checked:disabled {
   image: url(":/dark/res/style/dark/checkbox_checked_disabled.png");
 }
 
+QGroupBox::indicator {
+  margin-left: 2px;
+  margin-top: 2px;
+  padding: 0;
+  height: 14px;
+  width: 14px;
+}
+
+QGroupBox::indicator:unchecked {
+  border: none;
+  image: url(":/dark/res/style/dark/checkbox_unchecked.png");
+}
+
+QGroupBox::indicator:unchecked:hover,
+QGroupBox::indicator:unchecked:focus,
+QGroupBox::indicator:unchecked:pressed {
+  border: none;
+  image: url(":/dark/res/style/dark/checkbox_unchecked_focus.png");
+}
+
+QGroupBox::indicator:unchecked:disabled {
+  image: url(":/dark/res/style/dark/checkbox_unchecked_disabled.png");
+}
+
+QGroupBox::indicator:checked {
+  border: none;
+  image: url(":/dark/res/style/dark/checkbox_checked.png");
+}
+
+QGroupBox::indicator:checked:hover,
+QGroupBox::indicator:checked:focus,
+QGroupBox::indicator:checked:pressed {
+  border: none;
+  image: url(":/dark/res/style/dark/checkbox_checked_focus.png");
+}
+
+QGroupBox::indicator:checked:disabled {
+  image: url(":/dark/res/style/dark/checkbox_checked_disabled.png");
+}
+
+/* QRadioButton */
+
+QRadioButton::indicator {
+  border: none;
+  outline: none;
+  margin-left: 2px;
+  height: 14px;
+  width: 14px;
+}
+
+QRadioButton::indicator:unchecked {
+  image: url(":/dark/res/style/dark/radio_unchecked.png");
+}
+
+QRadioButton::indicator:unchecked:hover,
+QRadioButton::indicator:unchecked:focus,
+QRadioButton::indicator:unchecked:pressed {
+  border: none;
+  outline: none;
+  image: url(":/dark/res/style/dark/radio_unchecked_focus.png");
+}
+
+QRadioButton::indicator:unchecked:disabled {
+  image: url(":/dark/res/style/dark/radio_unchecked_disabled.png");
+}
+
+QRadioButton::indicator:checked {
+  border: none;
+  outline: none;
+  image: url(":/dark/res/style/dark/radio_checked.png");
+}
+
+QRadioButton::indicator:checked:hover,
+QRadioButton::indicator:checked:focus,
+QRadioButton::indicator:checked:pressed {
+  border: none;
+  outline: none;
+  image: url(":/dark/res/style/dark/radio_checked_focus.png");
+}
+
+QRadioButton::indicator:checked:disabled {
+  outline: none;
+  image: url(":/dark/res/style/dark/radio_checked_disabled.png");
+}
+
 /* QTreeView QListView QTableView */
 QTableView {
   alternate-background-color: rgb(53,53,53);

@@ -13,13 +13,20 @@
 
 namespace OTE {
 
+enum THEME {
+    DARK = 0,
+    LIGHT = 1
+};
+
 struct Config
 {
     struct {
         QString font_name;
         QString font_style;
         int font_size;
-        int highDPI = 1;
+        int highDPI;
+
+        THEME theme;
 
         QString recentDirectory;
         QMap<QString,QString> recents;

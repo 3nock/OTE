@@ -79,8 +79,17 @@
         <file>res/icons/grid.png</file>
         <file>res/icons/add.png</file>
         <file>res/icons/logs.png</file>
-        <file>res/icons/logo.ico</file>
         <file>res/icons/copy.png</file>
+        <file>res/icons/locked_black.png</file>
+        <file>res/icons/unlocked_black.png</file>
+        <file>res/icons/icon.ico</file>
+        <file>res/icons/logo16.png</file>
+        <file>res/icons/logo24.png</file>
+        <file>res/icons/logo32.png</file>
+        <file>res/icons/logo48.png</file>
+        <file>res/icons/logo64.png</file>
+        <file>res/icons/logo128.png</file>
+        <file>res/icons/logo512.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/about.html</file>

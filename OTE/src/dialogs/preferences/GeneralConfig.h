@@ -28,6 +28,8 @@ public:
 
 private slots:
     void on_buttonChangeFont_clicked();
+    void on_radioButtonDarkTheme_clicked(bool checked);
+    void on_radioButtonLightTheme_clicked(bool checked);
 
 private:
     Ui::GeneralConfig *ui;

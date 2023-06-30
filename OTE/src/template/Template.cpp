@@ -310,12 +310,27 @@ void TemplateItem::configureIcon()
     if(tmplt->authentication.uses_key)
     {
         if(tmplt->authentication.key.isEmpty())
-            setIcon(QIcon(":/icons/res/icons/locked.png"));
+        {
+            if(OTE::gConfig.general.theme == OTE::THEME::DARK)
+                setIcon(QIcon(":/icons/res/icons/locked.png"));
+            else
+                setIcon(QIcon(":/icons/res/icons/locked_black.png"));
+        }
         else
-            setIcon(QIcon(":/icons/res/icons/unlocked.png"));
+        {
+            if(OTE::gConfig.general.theme == OTE::THEME::DARK)
+                setIcon(QIcon(":/icons/res/icons/unlocked.png"));
+            else
+                setIcon(QIcon(":/icons/res/icons/unlocked_black.png"));
+        }
     }
     else
-        setIcon(QIcon(":/icons/res/icons/unlocked.png"));
+    {
+        if(OTE::gConfig.general.theme == OTE::THEME::DARK)
+            setIcon(QIcon(":/icons/res/icons/unlocked.png"));
+        else
+            setIcon(QIcon(":/icons/res/icons/unlocked_black.png"));
+    }
 }
 
 void TemplateItem::configureExtractors()

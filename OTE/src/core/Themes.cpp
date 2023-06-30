@@ -92,6 +92,7 @@ QStyle *LightStyle::baseStyle() const
 void LightStyle::polish(QPalette &palette)
 {
     palette.setColor(QPalette::Link, QColor(0,130,140,255));
+    palette.setColor(QPalette::Highlight, QColor(0,130,140,100));
 
     /* modify palette to light
     palette.setColor(QPalette::Link, QColor(0,130,140,255));

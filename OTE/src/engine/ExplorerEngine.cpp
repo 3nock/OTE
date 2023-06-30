@@ -101,7 +101,7 @@ void Explorer::onLookup()
         if(gConfig.engine.user_agent.oteUA)
             request.setRawHeader("User-Agent", "OTE/1.0.0");
         else if(gConfig.engine.user_agent.randomUA)
-            request.setRawHeader("User-Agent", "Mozilla/1.0.0");
+            gCOMMON_USERAGENTS.at(rand() % gCOMMON_USERAGENTS.size());
     }
 
     if(gConfig.engine.accept.use)
