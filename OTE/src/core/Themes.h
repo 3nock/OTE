@@ -15,7 +15,8 @@
 
 namespace OTE {
 
-class DarkStyle : public QProxyStyle {
+class DarkStyle : public QProxyStyle
+{
     Q_OBJECT
 
 public:
@@ -28,7 +29,7 @@ public:
     void polish(QApplication *app) override;
 
 private:
-    QStyle *styleBase(QStyle *style = Q_NULLPTR) const;
+    QStyle *styleBase(QStyle *style = nullptr) const;
 };
 
 class LightStyle : public QProxyStyle {
@@ -44,7 +45,7 @@ public:
     void polish(QApplication *app) override;
 
 private:
-    QStyle *styleBase(QStyle *style = Q_NULLPTR) const;
+    QStyle *styleBase(QStyle *style = nullptr) const;
 };
 
 } // namespace OTE

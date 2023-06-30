@@ -16,9 +16,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    mGeneralConfig->openConfig();
-    mEngineConfig->openConfig();
-
     ui->tabWidget->insertTab(0, mEngineConfig, tr("Engine"));
     ui->tabWidget->insertTab(1, mGeneralConfig, tr("General"));
 }

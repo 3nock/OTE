@@ -21,8 +21,6 @@ public:
 
     virtual void openConfig() = 0;
     virtual void saveConfig() = 0;
-    virtual void resetConfig() = 0;
-
 };
 
 #endif // DIALOGS_PREFERENCES_ABSTRACTCONF_H

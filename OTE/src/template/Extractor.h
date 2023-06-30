@@ -32,9 +32,6 @@ public:
     QByteArray script;
     Endpoint *endpoint;
 
-    bool isJson = false;
-    bool isXml = false;
-
     QJsonDocument extractorJsonDoc;
     QDomDocument extractorXmlDoc;
 
@@ -46,7 +43,7 @@ public:
 private:
     static void extractFromJsonObject(const QJsonObject &extractorParentObj, const QJsonObject &resultParentObj, QStringList &results);
     static void extractFromJsonArray(const QJsonArray &extractorParentArr, const QJsonArray &resultParentArr, QStringList &results);
-    static void extractFromXmlElement(const QDomElement &extractParentElement, const QDomElement &resultParentElement, QStringList &results);
+    static void extractFromXmlNode(const QDomNode &extractParentNode, const QDomNode &resultParentNode, QStringList &results);
 };
 
 class ExtractorItem: public QStandardItem

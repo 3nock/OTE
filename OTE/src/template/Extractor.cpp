@@ -10,6 +10,7 @@
 #include <QDebug>
 
 #include "src/template/Endpoint.h"
+#include "src/template/Template.h"
 
 OTE::Extractor::Extractor(OTE::Endpoint *_endpoint):
     endpoint(_endpoint)
@@ -20,43 +21,93 @@ OTE::Extractor::~Extractor()
 
 OTE::Extractor *OTE::Extractor::createExtractor(OTE::Endpoint *endpoint, const QByteArray &src)
 {
-    QJsonDocument doc = QJsonDocument::fromJson(src);
-
-    if(doc.isObject() || doc.isArray())
+    if(endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::XML)
     {
-        Extractor *extractor = new Extractor(endpoint);
+        QDomDocument doc;
+        if(doc.setContent(src))
+        {
+            Extractor *extractor = new Extractor(endpoint);
 
-        extractor->isJson = true;
-        extractor->isXml = false;
-        extractor->extractorJsonDoc = doc;
-        extractor->script = doc.toJson(QJsonDocument::Compact);
-        return extractor;
+            extractor->extractorXmlDoc = doc;
+            extractor->script = doc.toByteArray(0);
+            return extractor;
+        }
+        else
+        {
+            qWarning() << "Failed to create xml Extractor for Template: "
+                       << endpoint->tmplt->info.name
+                       << " Endpoint: "
+                       << endpoint->name;
+        }
     }
-    else
-        return nullptr;
+    else if(endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::JSON)
+    {
+        QJsonDocument doc = QJsonDocument::fromJson(src);
+        if(doc.isObject() || doc.isArray())
+        {
+            Extractor *extractor = new Extractor(endpoint);
+
+            extractor->extractorJsonDoc = doc;
+            extractor->script = doc.toJson(QJsonDocument::Compact);
+            return extractor;
+        }
+        else
+        {
+            qWarning() << "Failed to create json Extractor for Template: "
+                       << endpoint->tmplt->info.name
+                       << " Endpoint: "
+                       << endpoint->name;
+        }
+    }
+
+    return nullptr;
 }
 
 bool OTE::Extractor::createExtractor(OTE::Extractor *extractor, const QByteArray &src)
 {
-    QJsonDocument doc = QJsonDocument::fromJson(src);
-
-    if(doc.isObject() || doc.isArray())
+    if(extractor->endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::XML)
     {
-        extractor->isJson = true;
-        extractor->isXml = false;
-        extractor->extractorJsonDoc = doc;
-        extractor->script = doc.toJson(QJsonDocument::Compact);
-        return true;
+        QDomDocument doc;
+        if(doc.setContent(src))
+        {
+            extractor->extractorXmlDoc = doc;
+            extractor->script = doc.toByteArray(0);
+            return true;
+        }
+        else
+        {
+            qWarning() << "Failed to load xml Extractor for Template: "
+                       << extractor->endpoint->tmplt->info.name
+                       << " Endpoint: "
+                       << extractor->endpoint->name;
+        }
     }
-    else
-        return false;
+    else if(extractor->endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::JSON)
+    {
+        QJsonDocument doc = QJsonDocument::fromJson(src);
+        if(doc.isObject() || doc.isArray())
+        {
+            extractor->extractorJsonDoc = doc;
+            extractor->script = doc.toJson(QJsonDocument::Compact);
+            return true;
+        }
+        else
+        {
+            qWarning() << "Failed to load json Extractor for Template: "
+                       << extractor->endpoint->tmplt->info.name
+                       << " Endpoint: "
+                       << extractor->endpoint->name;
+        }
+    }
+
+    return false;
 }
 
 QStringList OTE::Extractor::extract(const QByteArray &src)
 {
     QStringList results;
 
-    if(isJson)
+    if(endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::JSON)
     {
         QJsonDocument resultJsonDoc  = QJsonDocument::fromJson(src);
 
@@ -69,9 +120,13 @@ QStringList OTE::Extractor::extract(const QByteArray &src)
             extractFromJsonObject(extractorJsonDoc.object(), resultJsonDoc.object(), results);
         }
     }
-    else if(isXml)
+    else if(endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::XML)
     {
-
+        QDomDocument resultXmlDoc;
+        if(resultXmlDoc.setContent(src))
+        {
+            extractFromXmlNode(extractorXmlDoc.documentElement(), resultXmlDoc.documentElement(), results);
+        }
     }
 
     return results;
@@ -207,7 +262,28 @@ void OTE::Extractor::extractFromJsonArray(const QJsonArray &extractorParentArr, 
     }
 }
 
-void OTE::Extractor::extractFromXmlElement(const QDomElement &extractParentElement, const QDomElement &resultParentElement, QStringList &results)
+void OTE::Extractor::extractFromXmlNode(const QDomNode &extractParentNode, const QDomNode &resultParentNode, QStringList &results)
 {
+    if(extractParentNode.isText())
+    {
+        if(extractParentNode.toText().data().compare("$$") == 0)
+            results << resultParentNode.toText().data();
+    }
+    else if(extractParentNode.isElement())
+    {
+        for(QDomNode extractChildNode = extractParentNode.firstChild(); !extractChildNode.isNull(); extractChildNode = extractChildNode.nextSibling())
+        {
+            for(QDomNode resultChildNode = resultParentNode.firstChild(); !resultChildNode.isNull(); resultChildNode = resultChildNode.nextSibling())
+            {
+                if(extractChildNode.isElement() && resultChildNode.isElement())
+                {
+                    QDomElement extractElement = extractChildNode.toElement();
+                    QDomElement resultElemet = resultChildNode.toElement();
 
+                    if(extractElement.tagName().compare(resultElemet.tagName(), Qt::CaseInsensitive) == 0)
+                        extractFromXmlNode(extractElement, resultElemet, results);
+                }
+            }
+        }
+    }
 }

@@ -24,7 +24,6 @@ public:
 
     void openConfig() override;
     void saveConfig() override;
-    void resetConfig() override;
 
 private slots:
     void on_buttonChangeFont_clicked();

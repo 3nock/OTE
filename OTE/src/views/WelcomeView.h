@@ -8,6 +8,7 @@
 #ifndef VIEWS_WELCOMEVIEW_H
 #define VIEWS_WELCOMEVIEW_H
 
+#include <QVBoxLayout>
 #include <QWidget>
 
 #include "src/template/Template.h"
@@ -29,6 +30,8 @@ public slots:
 
 private:
     Ui::WelcomeView *ui;
+
+    QVBoxLayout *mVLayout;
 };
 
 #endif // VIEWS_WELCOMEVIEW_H

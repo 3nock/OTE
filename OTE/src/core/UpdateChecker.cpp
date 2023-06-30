@@ -51,7 +51,8 @@ void UpdateChecker::onFinished(QNetworkReply* reply)
             {
                 QDateTime build = QDateTime::fromString("2023-06-06", "yyyy-MM-dd");
 
-                if(serverTime.date() > build.date()){
+                if(serverTime.date() > build.date())
+                {
                     QString info = QString(tr("New build %1 available!<br>Download <a href=\"https://github.com/3nock/SpiderSuite/releases\">here</a><br><br>You are now on build %2")).arg(serverTime.date().toString()).arg(build.date().toString());
                     QMessageBox::information(mParent, tr("New Update!"), info);
                     qDebug() << "New Updates Found!";

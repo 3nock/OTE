@@ -12,6 +12,7 @@ namespace OTE {
 DarkStyle::DarkStyle() :
     DarkStyle(styleBase())
 {}
+
 DarkStyle::DarkStyle(QStyle *style) :
     QProxyStyle(style)
 {}
@@ -93,34 +94,6 @@ void LightStyle::polish(QPalette &palette)
 {
     palette.setColor(QPalette::Link, QColor(0,130,140,255));
     palette.setColor(QPalette::Highlight, QColor(0,130,140,100));
-
-    /* modify palette to light
-    palette.setColor(QPalette::Link, QColor(0,130,140,255));
-    palette.setColor(QPalette::Window, QColor(53, 53, 53));
-    palette.setColor(QPalette::Disabled, QPalette::Window, QColor(80, 80, 80));
-    palette.setColor(QPalette::WindowText, QColor(238, 238, 238));
-    palette.setColor(QPalette::Disabled, QPalette::WindowText,
-                        QColor(127, 127, 127));
-    palette.setColor(QPalette::Base, QColor(40, 40, 40));
-    palette.setColor(QPalette::Disabled, QPalette::Base, QColor(80, 80, 80));
-    palette.setColor(QPalette::AlternateBase, QColor(66, 66, 66));
-    palette.setColor(QPalette::ToolTipBase, QColor(0, 0, 0));
-    palette.setColor(QPalette::ToolTipText, QColor(250, 250, 250));
-    palette.setColor(QPalette::Text, QColor(238, 238, 238));
-    palette.setColor(QPalette::Disabled, QPalette::Text, QColor(127, 127, 127));
-    palette.setColor(QPalette::Dark, QColor(35, 35, 35));
-    palette.setColor(QPalette::Shadow, QColor(20, 20, 20));
-    palette.setColor(QPalette::Button, QColor(53, 53, 53));
-    palette.setColor(QPalette::ButtonText, QColor(238, 238, 238));
-    palette.setColor(QPalette::Disabled, QPalette::ButtonText,
-                        QColor(127, 127, 127));
-    palette.setColor(QPalette::BrightText, Qt::red);
-    palette.setColor(QPalette::Highlight, QColor(0,130,140,30));
-    palette.setColor(QPalette::Disabled, QPalette::Highlight, QColor(80, 80, 80));
-    palette.setColor(QPalette::HighlightedText, QColor(238, 238, 238));
-    palette.setColor(QPalette::Disabled, QPalette::HighlightedText,
-                        QColor(127, 127, 127));
-    */
 }
 
 void LightStyle::polish(QApplication *app)

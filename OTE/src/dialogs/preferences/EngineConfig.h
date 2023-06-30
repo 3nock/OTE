@@ -17,7 +17,6 @@ public:
 
     void openConfig() override;
     void saveConfig() override;
-    void resetConfig() override;
 
 private:
     Ui::EngineConfig *ui;

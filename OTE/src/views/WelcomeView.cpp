@@ -9,7 +9,6 @@
 #include "ui_WelcomeView.h"
 
 #include <QFile>
-#include <QHBoxLayout>
 
 WelcomeView::WelcomeView(QWidget *parent) :
     QWidget(parent),
@@ -52,7 +51,7 @@ WelcomeView::WelcomeView(QWidget *parent) :
     ui->labelLoadedTemplates->setTextFormat(Qt::RichText);
     ui->labelLoadedTemplates->setText("<h1>Templates</h1>");
 
-    QVBoxLayout *vLayout = new QVBoxLayout(ui->scrollAreaWidgetContents);
+    mVLayout = new QVBoxLayout(ui->scrollAreaWidgetContents);
     foreach(OTE::Template *tmplt, OTE::gTemplates)
     {
         QHBoxLayout *layout = new QHBoxLayout;
@@ -71,7 +70,7 @@ WelcomeView::WelcomeView(QWidget *parent) :
         layout->addWidget(nameLabel);
         layout->addWidget(linkLabel, 1);
 
-        vLayout->addLayout(layout, 1);
+        mVLayout->addLayout(layout, 1);
     }
 
     ui->scrollArea->setProperty("noBorder", true);
@@ -84,5 +83,21 @@ WelcomeView::~WelcomeView()
 
 void WelcomeView::onNewTemplate(OTE::Template *tmplt)
 {
+    QHBoxLayout *layout = new QHBoxLayout;
+    QLabel *nameLabel = new QLabel(this);
+    nameLabel->setText(tmplt->info.name);
 
+    QLabel *linkLabel = new QLabel(this);
+    linkLabel->setTextFormat(Qt::MarkdownText);
+    linkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    linkLabel->setOpenExternalLinks(true);
+    linkLabel->setText(tmplt->info.link);
+    auto font = linkLabel->font();
+    font.setUnderline(true);
+    linkLabel->setFont(font);
+
+    layout->addWidget(nameLabel);
+    layout->addWidget(linkLabel, 1);
+
+    mVLayout->addLayout(layout, 1);
 }

@@ -10,6 +10,8 @@ EngineConfig::EngineConfig(QWidget *parent) :
     ui->setupUi(this);
 
     ui->lineEditTimeout->setPlaceholderText(tr("timeout in milliseconds e.g. 3000"));
+
+    openConfig();
 }
 
 EngineConfig::~EngineConfig()
@@ -43,9 +45,4 @@ void EngineConfig::saveConfig()
     OTE::gConfig.engine.user_agent.use = ui->groupBoxUA->isChecked();
     OTE::gConfig.engine.user_agent.oteUA = ui->radioButtonUA_OTE->isChecked();
     OTE::gConfig.engine.user_agent.randomUA = ui->radioButtonUA_Random->isChecked();
-}
-
-void EngineConfig::resetConfig()
-{
-
 }

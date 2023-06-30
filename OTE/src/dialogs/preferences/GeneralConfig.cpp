@@ -21,6 +21,8 @@ GeneralConfig::GeneralConfig(QWidget *parent) :
     ui->setupUi(this);
 
     ui->labelExplainFont->setText(tr("Configure the entire Application's Font type, size and style"));
+
+    openConfig();
 }
 
 GeneralConfig::~GeneralConfig()
@@ -44,20 +46,16 @@ void GeneralConfig::openConfig()
 
 void GeneralConfig::saveConfig()
 {
-    OTE::gConfig.general.disableAutomaticUpdateCheck = ui->checkBoxDisableAutomaticUpdate->isChecked();
-    OTE::gConfig.general.font_name = ui->labelFontName->text();
-    OTE::gConfig.general.font_style = ui->labelFontStyle->text();
-    OTE::gConfig.general.font_size = ui->labelFontSize->text().toInt();
-
     if(ui->radioButtonLightTheme->isChecked())
         OTE::gConfig.general.theme = OTE::THEME::LIGHT;
     else
         OTE::gConfig.general.theme = OTE::THEME::DARK;
-}
 
-void GeneralConfig::resetConfig()
-{
+    OTE::gConfig.general.font_name = ui->labelFontName->text();
+    OTE::gConfig.general.font_style = ui->labelFontStyle->text();
+    OTE::gConfig.general.font_size = ui->labelFontSize->text().toInt();
 
+    OTE::gConfig.general.disableAutomaticUpdateCheck = ui->checkBoxDisableAutomaticUpdate->isChecked();
 }
 
 void GeneralConfig::on_buttonChangeFont_clicked()

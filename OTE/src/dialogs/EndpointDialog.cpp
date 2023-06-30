@@ -24,8 +24,8 @@ EndpointDialog::EndpointDialog(QWidget *parent, OTE::Endpoint *endpoint):
 
     this->setWindowTitle(tr("API Endpoint"));
 
-    ui->lineEditEndpointName->setPlaceholderText(tr("e.g. Domain Profile"));
-    ui->plainTextEditEndpointDescription->setPlaceholderText(tr("e.g. Basic registrant, server, and registration data for a domain name"));
+    ui->lineEditEndpointName->setPlaceholderText(tr("e.g. Host search"));
+    ui->plainTextEditEndpointDescription->setPlaceholderText(tr("e.g. Search Shodan using the same query syntax as the website and use facets to get summary information for different properties."));
     ui->lineEditEndpointLink->setPlaceholderText(tr("e.g. https://api.domaintools.com/v1/$$input$$?api_username=$$user$$&api_key=$$key$$"));
     ui->plainTextEditPostData->setPlaceholderText(tr("e.g. api_user={{user}}&api_key={{key}}&target={{input}}"));
 

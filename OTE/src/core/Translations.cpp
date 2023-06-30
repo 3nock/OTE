@@ -18,7 +18,7 @@
 
 namespace OTE {
 
-static QString TRANSLATION_FILE_PREFIX = "ssuite_";
+static QString TRANSLATION_FILE_PREFIX = "ote_";
 static QString TRANSLATION_FILE_SUFFIX = ".qm";
 
 QStringList Translations::GetPossibleTranslationPaths()

@@ -51,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent):
     ui->actionWebsite->setIcon(QIcon(":/icons/res/icons/website.png"));
     ui->actionOpen->setIcon(QIcon(":/icons/res/icons/open.png"));
     ui->actionSave->setIcon(QIcon(":/icons/res/icons/save.png"));
-    ui->actionClear->setIcon(QIcon(":/icons/res/icons/delete.png"));
     ui->actionOpenRecents->setIcon(QIcon(":/icons/res/icons/recent.png"));
     ui->actionCheckUpdates->setIcon(QIcon(":/icons/res/icons/updates.png"));
     ui->actionPreferences->setIcon(QIcon(":/icons/res/icons/gear.png"));
@@ -60,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent):
     ui->actionApiKeys->setIcon(QIcon(":/icons/res/icons/key.png"));
     ui->actionNewTemplate->setIcon(QIcon(":/icons/res/icons/add.png"));
 
+    connect(this, &MainWindow::newTemplate, mWelcomeView, &WelcomeView::onNewTemplate);
     connect(this, &MainWindow::newTemplate, mExplorerView, &ExplorerView::onNewTemplate);
     connect(this, &MainWindow::newTemplate, mExtractorView, &ExtractorView::onNewTemplate);
     connect(this, &MainWindow::newTemplate, mApiKeysDialog, &ApiKeysDialog::onNewTemplate);
@@ -212,7 +212,6 @@ void MainWindow::on_actionOpen_triggered()
     QFile file(filename);
     if(file.exists())
     {
-        emit clear();
         this->openProject(filename);
         OTE::gConfig.general.recentDirectory = QFileInfo(file).dir().path();
     }
@@ -248,11 +247,6 @@ void MainWindow::on_actionSave_triggered()
     });
 
     watcher->setFuture(QtConcurrent::run(OTE::Database::saveDatabase, project));
-}
-
-void MainWindow::on_actionClear_triggered()
-{
-
 }
 
 void MainWindow::on_actionClose_triggered()
