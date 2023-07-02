@@ -166,7 +166,7 @@ void ExtractorTemplatesView::on_treeViewTemplates_customContextMenuRequested(con
             TemplateDialog templateDialog(this, templateItem->tmplt);
             if(templateDialog.exec() == QDialog::Accepted)
                 OTE::Template::SaveTemplate(templateItem->tmplt);
-        });
+        })->setIcon(QIcon(":/icons/res/icons/edit.png"));
     }
     else
     {
@@ -176,7 +176,7 @@ void ExtractorTemplatesView::on_treeViewTemplates_customContextMenuRequested(con
             EndpointDialog endpointDialog(this, endpointItem->endpoint);
             if(endpointDialog.exec() == QDialog::Accepted)
                 OTE::Template::SaveTemplate(endpointItem->endpoint->tmplt);
-        });
+        })->setIcon(QIcon(":/icons/res/icons/edit.png"));
         menu.addAction(tr("Edit Extractor"), this, [=](){
             foreach(OTE::Extractor *extractor, endpointItem->endpoint->extractors)
             {
@@ -187,7 +187,7 @@ void ExtractorTemplatesView::on_treeViewTemplates_customContextMenuRequested(con
                         OTE::Template::SaveTemplate(endpointItem->endpoint->tmplt);
                 }
             }
-        });
+        })->setIcon(QIcon(":/icons/res/icons/edit.png"));
     }
 
     menu.exec(QCursor::pos());

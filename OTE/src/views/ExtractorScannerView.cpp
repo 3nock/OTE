@@ -124,12 +124,23 @@ void ExtractorScannerView::on_comboBoxInputType_currentTextChanged(const QString
 
 void ExtractorScannerView::startScan(const QStringList &targets)
 {
-    QList<OTE::Endpoint*> choosenEndpoints = mTemplatesView->getCheckedEnpoints();
-
-    if(choosenEndpoints.isEmpty())
+    QList<OTE::Endpoint*> checkedEndpoints = mTemplatesView->getCheckedEnpoints();
+    if(checkedEndpoints.isEmpty())
     {
         QMessageBox::warning(this, tr("Error!"), tr("Please select OSINT Templates to use!"));
         return;
+    }
+
+    QList<OTE::Endpoint*> endpoints;
+    foreach(OTE::Endpoint* endpoint, checkedEndpoints)
+    {
+        if((endpoint->tmplt->authentication.uses_id && endpoint->tmplt->authentication.id.isEmpty()) ||
+           (endpoint->tmplt->authentication.uses_key && endpoint->tmplt->authentication.key.isEmpty()))
+        {
+            QMessageBox::warning(this, tr("No Key Error"), tr("Template ( %1 ) requires API key but you haven't provided one!").arg(endpoint->tmplt->info.name));
+        }
+        else
+            endpoints << endpoint;
     }
 
     ui->buttonStart->setDisabled(true);
@@ -138,7 +149,7 @@ void ExtractorScannerView::startScan(const QStringList &targets)
     QString inputType = ui->comboBoxInputType->currentText();
     QString outputType = ui->comboBoxOutputType->currentText();
 
-    OTE::Engine::Extractor *engine = new OTE::Engine::Extractor(choosenEndpoints, inputType, outputType, targets);
+    OTE::Engine::Extractor *engine = new OTE::Engine::Extractor(endpoints, inputType, outputType, targets);
     QThread *cThread = new QThread;
     engine->moveToThread(cThread);
 

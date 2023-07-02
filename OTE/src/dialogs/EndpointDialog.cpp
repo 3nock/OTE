@@ -26,7 +26,7 @@ EndpointDialog::EndpointDialog(QWidget *parent, OTE::Endpoint *endpoint):
 
     ui->lineEditEndpointName->setPlaceholderText(tr("e.g. Host search"));
     ui->plainTextEditEndpointDescription->setPlaceholderText(tr("e.g. Search Shodan using the same query syntax as the website and use facets to get summary information for different properties."));
-    ui->lineEditEndpointLink->setPlaceholderText(tr("e.g. https://api.domaintools.com/v1/$$input$$?api_username=$$user$$&api_key=$$key$$"));
+    ui->lineEditEndpointLink->setPlaceholderText(tr("e.g. https://api.shodan.io/shodan/host/search?key={{key}}&query={{input}}"));
     ui->plainTextEditPostData->setPlaceholderText(tr("e.g. api_user={{user}}&api_key={{key}}&target={{input}}"));
 
     if(!mEndpoint->name.isEmpty())

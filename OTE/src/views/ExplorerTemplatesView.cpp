@@ -160,7 +160,7 @@ void ExplorerTemplatesView::on_tableViewTemplates_customContextMenuRequested(con
         TemplateDialog templateDialog(this, item->tmplt);
         if(templateDialog.exec() == QDialog::Accepted)
             OTE::Template::SaveTemplate(item->tmplt);
-    });
+    })->setIcon(QIcon(":/icons/res/icons/edit.png"));
 
     menu.exec(QCursor::pos());
 }

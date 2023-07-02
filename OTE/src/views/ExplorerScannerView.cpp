@@ -141,6 +141,13 @@ void ExplorerScannerView::on_buttonMultipleTargets_clicked()
 
 void ExplorerScannerView::startScan()
 {
+    if((mCurrentTemplate->authentication.uses_id && mCurrentTemplate->authentication.id.isEmpty()) ||
+       (mCurrentTemplate->authentication.uses_key && mCurrentTemplate->authentication.key.isEmpty()))
+    {
+        QMessageBox::warning(this, tr("No Key Error"), tr("This template requires API key but you haven't provided one!"));
+        return;
+    }
+
     ui->buttonGet->setDisabled(true);
     ui->buttonStop->setEnabled(true);
 
@@ -149,6 +156,13 @@ void ExplorerScannerView::startScan()
 
 void ExplorerScannerView::startScan(const QStringList &targets)
 {
+    if((mCurrentTemplate->authentication.uses_id && mCurrentTemplate->authentication.id.isEmpty()) ||
+       (mCurrentTemplate->authentication.uses_key && mCurrentTemplate->authentication.key.isEmpty()))
+    {
+        QMessageBox::warning(this, tr("No Key Error"), tr("This template requires API key but you haven't provided one!"));
+        return;
+    }
+
     ui->buttonGet->setDisabled(true);
     ui->buttonStop->setEnabled(true);
 
