@@ -38,7 +38,6 @@ SOURCES += \
     src/template/Extractor.cpp \
     src/template/Template.cpp \
     src/core/Themes.cpp \
-    src/core/Translations.cpp \
     src/core/UpdateChecker.cpp \
     src/core/Utility.cpp \
     src/dialogs/AboutDialog.cpp \
@@ -77,7 +76,6 @@ HEADERS += \
     src/template/Extractor.h \
     src/template/Template.h \
     src/core/Themes.h \
-    src/core/Translations.h \
     src/core/UpdateChecker.h \
     src/core/Utility.h \
     src/dialogs/AboutDialog.h \
