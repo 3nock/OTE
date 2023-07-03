@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
     app.setWindowIcon(Utility::getApplicationIcon());
 #if QT_VERSION >= 0x050700
     // Wayland needs this clarified in order to propery assign the icon
-    app.setDesktopFileName(QStringLiteral("SpiderSuite.desktop"));
+    app.setDesktopFileName(QStringLiteral("OTE.desktop"));
 #endif
 #endif
 

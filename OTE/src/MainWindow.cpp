@@ -139,7 +139,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     int retVal = QMessageBox::warning(nullptr,
                                       tr("Exit"),
-                                      tr("Do you want to close SpiderSuite OSINT Tool?"),
+                                      tr("Do you want to close OSINT Template Engine?"),
                                       QMessageBox::Close |
                                       QMessageBox::Cancel,
                                       QMessageBox::Close);

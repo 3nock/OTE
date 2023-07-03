@@ -77,7 +77,7 @@ public:
     static QString getEnvironmentVar(const QString &variable_name);
 
     /**
-     * @brief GetApplicationIcon, returns the SpiderSuite app icon of various sizes, for linux
+     * @brief GetApplicationIcon, returns the OTE app icon of various sizes, for linux
      * @return QIcon icon
      */
     static QIcon getApplicationIcon();

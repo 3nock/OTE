@@ -26,13 +26,13 @@ UpdateChecker::UpdateChecker(QWidget* parent):
 
 void UpdateChecker::checkForUpdates()
 {
-    get(QNetworkRequest(QUrl("https://api.github.com/repos/3nock/SpiderSuite/releases/latest")));
+    get(QNetworkRequest(QUrl("https://api.github.com/repos/3nock/OTE/releases/latest")));
     qDebug() << "Checking for Updates...";
 }
 
 void UpdateChecker::checkForUpdates_onStart()
 {
-    get(QNetworkRequest(QUrl("https://api.github.com/repos/3nock/SpiderSuite/releases/latest")));
+    get(QNetworkRequest(QUrl("https://api.github.com/repos/3nock/OTE/releases/latest")));
     qDebug() << "Checking for Updates...";
     onStart = true;
 }
@@ -53,7 +53,7 @@ void UpdateChecker::onFinished(QNetworkReply* reply)
 
                 if(serverTime.date() > build.date())
                 {
-                    QString info = QString(tr("New build %1 available!<br>Download <a href=\"https://github.com/3nock/SpiderSuite/releases\">here</a><br><br>You are now on build %2")).arg(serverTime.date().toString()).arg(build.date().toString());
+                    QString info = QString(tr("New build %1 available!<br>Download <a href=\"https://github.com/3nock/OTE/releases\">here</a><br><br>You are now on build %2")).arg(serverTime.date().toString()).arg(build.date().toString());
                     QMessageBox::information(mParent, tr("New Update!"), info);
                     qDebug() << "New Updates Found!";
                 }
@@ -86,11 +86,11 @@ void UpdateChecker::onFinished(QNetworkReply* reply)
 
             QString info;
             if(serverTime.date() > build.date())
-                info = QString(tr("New build %1 available!<br>Download <a href=\"https://github.com/3nock/SpiderSuite/releases\">here</a><br><br>You are now on build %2")).arg(serverTime.date().toString()).arg(build.date().toString());
+                info = QString(tr("New build %1 available!<br>Download <a href=\"https://github.com/3nock/OTE/releases\">here</a><br><br>You are now on build %2")).arg(serverTime.date().toString()).arg(build.date().toString());
             else if(serverTime.date() < build.date())
-                info = QString(tr("You have a development build (%1) of SpiderSuite!")).arg(build.date().toString());
+                info = QString(tr("You have a development build (%1) of OTE!")).arg(build.date().toString());
             else
-                info = QString(tr("You have the latest build (%1) of SpiderSuite!")).arg(build.date().toString());
+                info = QString(tr("You have the latest build (%1) of OTE!")).arg(build.date().toString());
 
             QMessageBox::information(mParent, tr("Update Info"), info);
         }
