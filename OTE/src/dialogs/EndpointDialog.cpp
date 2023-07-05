@@ -114,7 +114,7 @@ void EndpointDialog::on_buttonOK_clicked()
 
     for(int i = 0; i < mModelExtrators->rowCount(); i++)
     {
-        OTE::ExtractorItem *item = static_cast<OTE::ExtractorItem*>(mModelExtrators->item(i, 0));
+        OTE::ExtractorItem *item = dynamic_cast<OTE::ExtractorItem*>(mModelExtrators->item(i, 0));
         mEndpoint->extractors << item->extractor;
     }
 
@@ -138,7 +138,7 @@ void EndpointDialog::on_buttonEdit_clicked()
     if(!selectionModel->isSelected(ui->tableView->currentIndex()))
         return;
 
-    OTE::ExtractorItem *item = static_cast<OTE::ExtractorItem*>(mModelExtrators->itemFromIndex(ui->tableView->currentIndex()));
+    OTE::ExtractorItem *item = dynamic_cast<OTE::ExtractorItem*>(mModelExtrators->itemFromIndex(ui->tableView->currentIndex()));
     ExtractorDialog extractorDialog(this, item->extractor);
     extractorDialog.exec();
 }

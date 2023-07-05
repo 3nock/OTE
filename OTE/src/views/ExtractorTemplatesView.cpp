@@ -160,7 +160,7 @@ void ExtractorTemplatesView::on_treeViewTemplates_customContextMenuRequested(con
 
     if(item->hasChildren())
     {
-        OTE::TemplateItem *templateItem = static_cast<OTE::TemplateItem*>(item);
+        OTE::TemplateItem *templateItem = dynamic_cast<OTE::TemplateItem*>(item);
 
         menu.addAction(tr("Edit Template"), this, [=](){
             TemplateDialog templateDialog(this, templateItem->tmplt);
@@ -170,7 +170,7 @@ void ExtractorTemplatesView::on_treeViewTemplates_customContextMenuRequested(con
     }
     else
     {
-        OTE::EndpointItem *endpointItem = static_cast<OTE::EndpointItem*>(item);
+        OTE::EndpointItem *endpointItem = dynamic_cast<OTE::EndpointItem*>(item);
 
         menu.addAction(tr("Edit Endpoint"), this, [=](){
             EndpointDialog endpointDialog(this, endpointItem->endpoint);
@@ -200,7 +200,7 @@ void ExtractorTemplatesView::on_treeViewTemplates_clicked(const QModelIndex &ind
 
     if(item->hasChildren())
     {
-        OTE::TemplateItem *templateItem = static_cast<OTE::TemplateItem*>(item);
+        OTE::TemplateItem *templateItem = dynamic_cast<OTE::TemplateItem*>(item);
         QString info = QString("<b>"
                                "Template: <a href=\"%1\">%2</a>"
                                "<br>"
@@ -216,7 +216,7 @@ void ExtractorTemplatesView::on_treeViewTemplates_clicked(const QModelIndex &ind
     }
     else
     {
-        OTE::EndpointItem *endpointItem = static_cast<OTE::EndpointItem*>(item);
+        OTE::EndpointItem *endpointItem = dynamic_cast<OTE::EndpointItem*>(item);
         ui->textBrowserDescription->setText(endpointItem->endpoint->description);
     }
 }

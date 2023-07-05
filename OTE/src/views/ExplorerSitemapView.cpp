@@ -76,9 +76,9 @@ void ExplorerSitemapView::on_tableViewSitemap_clicked(const QModelIndex &index)
     OTE::Explorer::ResultItem *item = nullptr;
 
     if(index.column())
-        item = static_cast<OTE::Explorer::ResultItem*>(mModelSitemap->itemFromIndex(index.siblingAtColumn(0)));
+        item = dynamic_cast<OTE::Explorer::ResultItem*>(mModelSitemap->itemFromIndex(index.siblingAtColumn(0)));
     else
-        item = static_cast<OTE::Explorer::ResultItem*>(mModelSitemap->itemFromIndex(index));
+        item = dynamic_cast<OTE::Explorer::ResultItem*>(mModelSitemap->itemFromIndex(index));
 
     QByteArray results = OTE::Database::getExplorerResult(item->text(),
                                                           item->endpointItem->text(),
@@ -130,9 +130,9 @@ void ExplorerSitemapView::on_tableViewSitemap_customContextMenuRequested(const Q
     OTE::Explorer::ResultItem *item;
 
     if(index.column())
-        item = static_cast<OTE::Explorer::ResultItem*>(mModelSitemap->itemFromIndex(index.siblingAtColumn(0)));
+        item = dynamic_cast<OTE::Explorer::ResultItem*>(mModelSitemap->itemFromIndex(index.siblingAtColumn(0)));
     else
-        item = static_cast<OTE::Explorer::ResultItem*>(mModelSitemap->itemFromIndex(index));
+        item = dynamic_cast<OTE::Explorer::ResultItem*>(mModelSitemap->itemFromIndex(index));
 
     QMenu menu(this);
 

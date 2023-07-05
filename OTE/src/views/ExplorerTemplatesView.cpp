@@ -100,7 +100,7 @@ void ExplorerTemplatesView::on_tableViewTemplates_clicked(const QModelIndex &ind
     ui->plainTextEditEndpointDescription->clear();
 
     // obtain template item & set the details
-    OTE::TemplateItem *item = static_cast<OTE::TemplateItem*>(mModelTemplates->itemFromIndex(index));
+    OTE::TemplateItem *item = dynamic_cast<OTE::TemplateItem*>(mModelTemplates->itemFromIndex(index));
 
     QString info = QString("<b>"
                            "Template: <a href=\"%1\">%2</a>"
@@ -152,7 +152,7 @@ void ExplorerTemplatesView::on_tableViewTemplates_customContextMenuRequested(con
         return;
 
     // get item
-    OTE::TemplateItem *item = static_cast<OTE::TemplateItem*>(mModelTemplates->itemFromIndex(ui->tableViewTemplates->currentIndex()));
+    OTE::TemplateItem *item = dynamic_cast<OTE::TemplateItem*>(mModelTemplates->itemFromIndex(ui->tableViewTemplates->currentIndex()));
 
     QMenu menu(this);
 

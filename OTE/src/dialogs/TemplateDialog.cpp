@@ -25,8 +25,6 @@ TemplateDialog::TemplateDialog(QWidget *parent, OTE::Template *_template):
 
     ui->lineEditAuthorName->setPlaceholderText("Enock N. M.");
     ui->lineEditAuthorSocial->setPlaceholderText("https://github.com/3nock");
-    ui->lineEditAuthorName->setPlaceholderText(tr("e.g. Enock N. M."));
-    ui->lineEditAuthorSocial->setPlaceholderText(tr("e.g. enock.n.michael@gmail.com"));
     ui->lineEditTemplateName->setPlaceholderText("e.g. Shodan");
     ui->lineEditTemplateWebsite->setPlaceholderText("e.g. https://shodan.io/");
     ui->lineEditTemplateDoc->setPlaceholderText(tr("e.g. https://shodan.io/api/doc"));
@@ -171,7 +169,7 @@ void TemplateDialog::on_buttonSave_clicked()
     mTemplate->endpoints.clear();
     for(int i = 0; i < mModelEndpoints->rowCount(); i++)
     {
-        OTE::EndpointItem *item = static_cast<OTE::EndpointItem*>(mModelEndpoints->item(i, 0));
+        OTE::EndpointItem *item = dynamic_cast<OTE::EndpointItem*>(mModelEndpoints->item(i, 0));
         mTemplate->endpoints << item->endpoint;
     }
 
@@ -195,7 +193,7 @@ void TemplateDialog::on_buttonEditEndPoint_clicked()
     if(!selectionModel->isSelected(ui->tableViewEndpoints->currentIndex()))
         return;
 
-    OTE::EndpointItem *item = static_cast<OTE::EndpointItem*>(mModelEndpoints->itemFromIndex(ui->tableViewEndpoints->currentIndex()));
+    OTE::EndpointItem *item = dynamic_cast<OTE::EndpointItem*>(mModelEndpoints->itemFromIndex(ui->tableViewEndpoints->currentIndex()));
     EndpointDialog endpointDialog(this, item->endpoint);
     endpointDialog.exec();
 }

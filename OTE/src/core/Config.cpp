@@ -16,6 +16,8 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 
+#define DEFAULT_FONT_SIZE 8
+
 namespace OTE {
 
 Config gConfig;
@@ -60,7 +62,7 @@ void Config::fromConfigFile()
     foreach(const QString &name, recentsObj.keys())
     {
         QString project = recentsObj[name].toString();
-        if(QFileInfo(project).exists())
+        if(QFileInfo::exists(project))
             general.recents.insert(name, project);
     }
 
@@ -155,13 +157,13 @@ void Config::createNewConfigFile()
 #ifdef Q_OS_WIN32
     generalObj.insert("font_name", "Segoe UI");
     generalObj.insert("font_style", "Regular");
-    generalObj.insert("font_size", 8);
+    generalObj.insert("font_size", DEFAULT_FONT_SIZE);
 #elif defined(Q_OS_MAC)
         // Just in case
 #else
     generalObj.insert("font_name", "Sans Serif");
     generalObj.insert("font_style", "Regular");
-    generalObj.insert("font_size", 8);
+    generalObj.insert("font_size", DEFAULT_FONT_SIZE);
 #endif
     generalObj.insert("theme", 0);
     generalObj.insert("highDPI", 1);
@@ -194,13 +196,13 @@ void Config::createNewConfigFile()
 #ifdef Q_OS_WIN32
     general.font_name = "Segoe UI";
     general.font_style = "Regular";
-    general.font_size = 8;
+    general.font_size = DEFAULT_FONT_SIZE;
 #elif defined(Q_OS_MAC)
         // Just in case
 #else
     general.font_name = "Sans Serif";
     general.font_style = "Regular";
-    general.font_size = 8;
+    general.font_size = DEFAULT_FONT_SIZE;
 #endif
     general.theme = THEME::DARK;
     general.highDPI =1;

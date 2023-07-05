@@ -90,6 +90,8 @@
         <file>res/icons/logo64.png</file>
         <file>res/icons/logo128.png</file>
         <file>res/icons/logo512.png</file>
+        <file>res/icons/edit.png</file>
+        <file>res/icons/edit_black.png</file>
     </qresource>
     <qresource prefix="/files">
         <file>res/files/about.html</file>

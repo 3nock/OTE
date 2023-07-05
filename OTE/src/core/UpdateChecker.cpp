@@ -49,7 +49,8 @@ void UpdateChecker::onFinished(QNetworkReply* reply)
             QDateTime serverTime = QDateTime::fromString(mainObj["published_at"].toString(), Qt::ISODate);
             if(serverTime.isValid())
             {
-                QDateTime build = QDateTime::fromString("2023-06-06", "yyyy-MM-dd");
+                //QDateTime build = QDateTime::fromString("2023-07-10", "yyyy-MM-dd");
+                QDateTime build = QDateTime::fromString(QStringLiteral(__DATE__));
 
                 if(serverTime.date() > build.date())
                 {
@@ -82,7 +83,8 @@ void UpdateChecker::onFinished(QNetworkReply* reply)
                 return;
             }
 
-            QDateTime build = QDateTime::fromString("2023-06-06", "yyyy-MM-dd");
+            //QDateTime build = QDateTime::fromString("2023-07-10", "yyyy-MM-dd");
+            QDateTime build = QDateTime::fromString(QStringLiteral(__DATE__));
 
             QString info;
             if(serverTime.date() > build.date())

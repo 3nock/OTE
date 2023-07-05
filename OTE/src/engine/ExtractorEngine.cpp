@@ -37,7 +37,7 @@ Extractor::Extractor(const QList<OTE::Endpoint*> &endpoints, const QString &inpu
             if(extractor->name.compare(output, Qt::CaseInsensitive) != 0)
                 continue;
 
-            Requester requester;
+            Requester requester{};
             requester.endpoint = endpoint;
             requester.extractor = extractor;
             mRequesters << requester;
@@ -198,7 +198,6 @@ void Extractor::onLookupFinished(QNetworkReply *reply)
         QString extractor = reply->property("extractor").toString();
 
         QByteArray data = reply->readAll();
-        QString contentType = reply->header(QNetworkRequest::ContentTypeHeader).toByteArray();
 
         foreach(Requester requester, mRequesters)
         {

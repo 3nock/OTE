@@ -24,10 +24,7 @@ namespace OTE {
 QList<Template*> gTemplates;
 InputOutput gInputOutput;
 
-Template::Template()
-{
-
-}
+Template::Template() = default;
 
 Template::~Template()
 {

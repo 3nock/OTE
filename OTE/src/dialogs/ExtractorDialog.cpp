@@ -24,7 +24,7 @@ ExtractorDialog::ExtractorDialog(QWidget *parent, OTE::Extractor *extractor) :
     this->setWindowTitle(tr("Extractor"));
 
     ui->lineEditExtractorName->setPlaceholderText(tr("Extractor name e.g. subdomain"));
-    ui->plainTextEditExtractor->setPlaceholderText(tr("Extraction script e.g. {\"data\":{subdomains:[\"$$\"]}}"));
+    ui->plainTextEditExtractor->setPlaceholderText(tr(R"(Extraction script e.g. {"data":{subdomains:["$$"]}})"));
 
     if(!mExtractor->name.isEmpty())
         ui->lineEditExtractorName->setText(mExtractor->name);

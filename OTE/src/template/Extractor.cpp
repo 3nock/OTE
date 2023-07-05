@@ -16,8 +16,7 @@ OTE::Extractor::Extractor(OTE::Endpoint *_endpoint):
     endpoint(_endpoint)
 {}
 
-OTE::Extractor::~Extractor()
-{}
+OTE::Extractor::~Extractor() = default;
 
 OTE::Extractor *OTE::Extractor::createExtractor(OTE::Endpoint *endpoint, const QByteArray &src)
 {

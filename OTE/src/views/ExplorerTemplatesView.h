@@ -43,8 +43,8 @@ private:
 
     QStandardItemModel *mModelTemplates;
 
-    OTE::Template *mCurrentTemplate;
-    QList<OTE::TemplateItem*> mTemplateItems;
+    OTE::Template *mCurrentTemplate{};
+    QList<OTE::TemplateItem*> mTemplateItems{};
 };
 
 #endif // VIEWS_EXPLORERTEMPLATESVIEW_H
