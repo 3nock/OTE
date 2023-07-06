@@ -41,7 +41,7 @@ void ExplorerScannerView::setLogsEdit(QPlainTextEdit *logsEdit)
         QString log = QString("<b><font color=\"red\">Link: </font> </b> %1"
                               "<br>"
                               "<b><font color=\"red\">Error: </font> </b> %2"
-                              "<br>").arg(link).arg(error);
+                              "<br>").arg(link,error);
 
         mLogsEdit->appendHtml(log);
     });

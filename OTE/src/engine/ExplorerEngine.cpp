@@ -121,7 +121,7 @@ void Explorer::onLookup()
     switch (mEndpoint->tmplt->authentication.authType) {
     case Template::AUTH_TYPE::BASIC:
     {
-        QString credentials = QString("%1:%2").arg(mEndpoint->tmplt->authentication.id).arg(mEndpoint->tmplt->authentication.key);
+        QString credentials = QString("%1:%2").arg(mEndpoint->tmplt->authentication.id, mEndpoint->tmplt->authentication.key);
         QByteArray base64 = credentials.toLocal8Bit().toBase64();
         QString value = "Basic " + base64;
         request.setRawHeader("Authorization", value.toLocal8Bit());

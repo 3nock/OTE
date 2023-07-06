@@ -29,19 +29,19 @@ void MessageHandler(QtMsgType type, const QMessageLogContext &, const QString &m
     {
         switch (type) {
         case QtInfoMsg:
-            log = QString("[%1] <b><font color=\"blue\">INFO: </font></b> %2").arg(time).arg(msg);
+            log = QString("[%1] <b><font color=\"blue\">INFO: </font></b> %2").arg(time, msg);
             break;
         case QtDebugMsg:
-            log = QString("[%1] <b><font color=\"green\">DEBUG: </font></b> %2").arg(time).arg(msg);
+            log = QString("[%1] <b><font color=\"green\">DEBUG: </font></b> %2").arg(time, msg);
             break;
         case QtWarningMsg:
-            log = QString("[%1] <b><font color=\"yellow\">WARNING: </font></b> %2").arg(time).arg(msg);
+            log = QString("[%1] <b><font color=\"yellow\">WARNING: </font></b> %2").arg(time, msg);
             break;
         case QtCriticalMsg:
-            log = QString("[%1] <b><font color=\"yellow\">CRITICAL: </font></b> %2").arg(time).arg(msg);
+            log = QString("[%1] <b><font color=\"yellow\">CRITICAL: </font></b> %2").arg(time, msg);
             break;
         case QtFatalMsg:
-            log = QString("[%1] <b><font color=\"red\">FATAL: </font></b> %2").arg(time).arg(msg);
+            log = QString("[%1] <b><font color=\"red\">FATAL: </font></b> %2").arg(time, msg);
             break;
         }
         LogViewerDialog::logsTextEdit->appendHtml(log);
@@ -50,19 +50,19 @@ void MessageHandler(QtMsgType type, const QMessageLogContext &, const QString &m
     {
         switch (type) {
         case QtInfoMsg:
-            log = QString("[%1] INFO: %2").arg(time).arg(msg);
+            log = QString("[%1] INFO: %2").arg(time, msg);
             break;
         case QtDebugMsg:
-            log = QString("[%1] DEBUG: %2").arg(time).arg(msg);
+            log = QString("[%1] DEBUG: %2").arg(time, msg);
             break;
         case QtWarningMsg:
-            log = QString("[%1] WARNING: %2").arg(time).arg(msg);
+            log = QString("[%1] WARNING: %2").arg(time, msg);
             break;
         case QtCriticalMsg:
-            log = QString("[%1] CRITICAL: %2").arg(time).arg(msg);
+            log = QString("[%1] CRITICAL: %2").arg(time, msg);
             break;
         case QtFatalMsg:
-            log = QString("[%1] FATAL: %2").arg(time).arg(msg);
+            log = QString("[%1] FATAL: %2").arg(time, msg);
             break;
         }
         fprintf(stderr, "%s", log.toLocal8Bit().data());

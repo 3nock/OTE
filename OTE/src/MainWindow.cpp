@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mUpdateChecker(new OTE::UpdateChecker),
-    // database
     mDatabase(new OTE::Database),
     // dialogs
     mAboutDialog(new AboutDialog(this)),
@@ -41,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent):
 {
     ui->setupUi(this);
 
-    // actions
     ui->actionExit->setIcon(QIcon(":/icons/res/icons/exit.png"));
     ui->actionAbout->setIcon(QIcon(":/icons/res/icons/about.png"));
     ui->actionDonate->setIcon(QIcon(":/icons/res/icons/donate.png"));

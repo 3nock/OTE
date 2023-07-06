@@ -139,7 +139,7 @@ void Extractor::onLookup()
 
     if(requester.endpoint->tmplt->authentication.authType == Template::AUTH_TYPE::BASIC)
     {
-        QString credentials = QString("%1:%2").arg(requester.endpoint->tmplt->authentication.id).arg(requester.endpoint->tmplt->authentication.key);
+        QString credentials = QString("%1:%2").arg(requester.endpoint->tmplt->authentication.id, requester.endpoint->tmplt->authentication.key);
         QByteArray base64 = credentials.toLocal8Bit().toBase64();
         QString value = "Basic " + base64;
         request.setRawHeader("Authorization", value.toLocal8Bit());

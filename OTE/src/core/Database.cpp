@@ -254,7 +254,7 @@ bool Database::insertExplorerResult(const QString &tmplt, const QString &endpoin
 {
     sqlite3_stmt *stmt = nullptr;
 
-    QByteArray name = QString("%1__%2__%3").arg(tmplt).arg(endpoint).arg(target).toUtf8();
+    QByteArray name = QString("%1__%2__%3").arg(tmplt, endpoint, target).toUtf8();
     QByteArray compressedResult = qCompress(result);
 
     if(sqlite3_prepare_v2(db, "INSERT OR REPLACE INTO Explorer(target,result) VALUES(?,?)", -1, &stmt, nullptr) != SQLITE_OK)
@@ -325,7 +325,7 @@ QStringList Database::insertExtractorResult(const QString &type, const QStringLi
 QByteArray Database::getExplorerResult(const QString &tmplt, const QString &endpoint, const QString &target)
 {
     QByteArray result;
-    QByteArray name =  QString("%1__%2__%3").arg(tmplt).arg(endpoint).arg(target).toUtf8();
+    QByteArray name =  QString("%1__%2__%3").arg(tmplt, endpoint, target).toUtf8();
 
     sqlite3_stmt *stmt = nullptr;
     if(sqlite3_prepare_v2(db, "SELECT result FROM Explorer WHERE target = ?", -1, &stmt, nullptr) != SQLITE_OK)
@@ -355,7 +355,7 @@ QByteArray Database::getExplorerResult(const QString &tmplt, const QString &endp
 
 bool Database::removeExplorerResult(const QString &tmplt, const QString &endpoint, const QString &target)
 {
-    QByteArray name = QString("%1__%2__%3").arg(tmplt).arg(endpoint).arg(target).toUtf8();
+    QByteArray name = QString("%1__%2__%3").arg(tmplt, endpoint, target).toUtf8();
 
     sqlite3_stmt *stmt = nullptr;
     if(sqlite3_prepare_v2(db, "DELETE FROM Explorer WHERE target = ?", -1, &stmt, nullptr) != SQLITE_OK)
@@ -487,7 +487,7 @@ QMap<QString, QStringList> Database::loadExtractorResults()
 
 QByteArray Database::targetFromExplorer(const ExplorerResult &result)
 {
-    return QString("%1__%2__%3").arg(result.tmplt).arg(result.endpoint).arg(result.target).toUtf8();
+    return QString("%1__%2__%3").arg(result.tmplt, result.endpoint, result.target).toUtf8();
 }
 
 ExplorerResult Database::targetToExplorer(const QByteArray &target)

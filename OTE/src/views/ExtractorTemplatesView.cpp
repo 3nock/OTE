@@ -177,6 +177,7 @@ void ExtractorTemplatesView::on_treeViewTemplates_customContextMenuRequested(con
             if(endpointDialog.exec() == QDialog::Accepted)
                 OTE::Template::SaveTemplate(endpointItem->endpoint->tmplt);
         })->setIcon(QIcon(":/icons/res/icons/edit.png"));
+
         menu.addAction(tr("Edit Extractor"), this, [=](){
             foreach(OTE::Extractor *extractor, endpointItem->endpoint->extractors)
             {
@@ -207,11 +208,11 @@ void ExtractorTemplatesView::on_treeViewTemplates_clicked(const QModelIndex &ind
                                "API Documentation: <a href=\"%3\">%4</a>"
                                "</b>"
                                "<br>"
-                               "<p>%5</p>").arg(templateItem->tmplt->info.link)
-                                           .arg(templateItem->tmplt->info.name)\
-                                           .arg(templateItem->tmplt->info.documentation)\
-                                           .arg(templateItem->tmplt->info.documentation)\
-                                           .arg(templateItem->tmplt->info.description);
+                               "<p>%5</p>").arg(templateItem->tmplt->info.link,
+                                                templateItem->tmplt->info.name,
+                                                templateItem->tmplt->info.documentation,
+                                                templateItem->tmplt->info.documentation,
+                                                templateItem->tmplt->info.description);
         ui->textBrowserDescription->setText(info);
     }
     else

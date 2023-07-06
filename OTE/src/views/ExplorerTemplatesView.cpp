@@ -108,11 +108,11 @@ void ExplorerTemplatesView::on_tableViewTemplates_clicked(const QModelIndex &ind
                            "API Documentation: <a href=\"%3\">%4</a>"
                            "</b>"
                            "<br>"
-                           "<p>%5</p>").arg(item->tmplt->info.link)
-                                       .arg(item->tmplt->info.name)\
-                                       .arg(item->tmplt->info.documentation)\
-                                       .arg(item->tmplt->info.documentation)\
-                                       .arg(item->tmplt->info.description);
+                           "<p>%5</p>").arg(item->tmplt->info.link,
+                                            item->tmplt->info.name,
+                                            item->tmplt->info.documentation,
+                                            item->tmplt->info.documentation,
+                                            item->tmplt->info.description);
 
     ui->textBrowserTemplateDescription->append(info);
 
