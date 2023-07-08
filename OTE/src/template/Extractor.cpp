@@ -263,6 +263,7 @@ void OTE::Extractor::extractFromJsonArray(const QJsonArray &extractorParentArr, 
 
 void OTE::Extractor::extractFromXmlNode(const QDomNode &extractParentNode, const QDomNode &resultParentNode, QStringList &results)
 {
+    /*
     if(extractParentNode.isText())
     {
         if(extractParentNode.toText().data().compare("$$") == 0)
@@ -285,4 +286,5 @@ void OTE::Extractor::extractFromXmlNode(const QDomNode &extractParentNode, const
             }
         }
     }
+    */
 }
