@@ -263,28 +263,36 @@ void OTE::Extractor::extractFromJsonArray(const QJsonArray &extractorParentArr, 
 
 void OTE::Extractor::extractFromXmlNode(const QDomNode &extractParentNode, const QDomNode &resultParentNode, QStringList &results)
 {
-    /*
-    if(extractParentNode.isText())
-    {
-        if(extractParentNode.toText().data().compare("$$") == 0)
-            results << resultParentNode.toText().data();
-    }
-    else if(extractParentNode.isElement())
+    if(extractParentNode.isElement())
     {
         for(QDomNode extractChildNode = extractParentNode.firstChild(); !extractChildNode.isNull(); extractChildNode = extractChildNode.nextSibling())
         {
-            for(QDomNode resultChildNode = resultParentNode.firstChild(); !resultChildNode.isNull(); resultChildNode = resultChildNode.nextSibling())
+            if(extractChildNode.isElement())
             {
-                if(extractChildNode.isElement() && resultChildNode.isElement())
-                {
-                    QDomElement extractElement = extractChildNode.toElement();
-                    QDomElement resultElemet = resultChildNode.toElement();
+                QDomElement extractElement = extractChildNode.toElement();
+                QString extractElementTagName = extractElement.tagName();
 
-                    if(extractElement.tagName().compare(resultElemet.tagName(), Qt::CaseInsensitive) == 0)
-                        extractFromXmlNode(extractElement, resultElemet, results);
+                for(QDomNode resultChildNode = resultParentNode.firstChild(); !resultChildNode.isNull(); resultChildNode = resultChildNode.nextSibling())
+                {
+                    if(resultChildNode.isElement())
+                    {
+                        QDomElement resultElemet = resultChildNode.toElement();
+
+                        if(extractElementTagName.compare(resultElemet.tagName(), Qt::CaseInsensitive) == 0)
+                            extractFromXmlNode(extractElement, resultElemet, results);
+                    }
+                }
+            }
+            else if(extractChildNode.isText() && extractChildNode.toText().data().compare("$$") == 0)
+            {
+                for(QDomNode resultChildNode = resultParentNode.firstChild(); !resultChildNode.isNull(); resultChildNode = resultChildNode.nextSibling())
+                {
+                    if(resultChildNode.isText())
+                        results << resultChildNode.toText().data();
+                    else if(resultChildNode.isElement())
+                        results << resultChildNode.toElement().text();
                 }
             }
         }
     }
-    */
 }
