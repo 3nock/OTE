@@ -208,6 +208,15 @@ void Config::createNewConfigFile()
     general.highDPI =1;
     general.disableAutomaticUpdateCheck = false;
     general.recentDirectory = "./";
+
+    engine.timeout.use = true;
+    engine.timeout.msec = 7000;
+    engine.accept.use = true;
+    engine.accept.all = false;
+    engine.accept.jsonXml = true;
+    engine.user_agent.use = true;
+    engine.user_agent.oteUA = true;
+    engine.user_agent.randomUA = false;
 }
 
 } // namespace OTE

@@ -43,6 +43,7 @@ void ExtractorSitemapView::onClear()
 {
     ui->lineEditFilter->clear();
     mSitemapModel->clear();
+    ui->labelCount->clear();
 }
 
 void ExtractorSitemapView::onNewProject()

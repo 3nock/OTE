@@ -24,7 +24,10 @@ ExtractorDialog::ExtractorDialog(QWidget *parent, OTE::Extractor *extractor) :
     this->setWindowTitle(tr("Extractor"));
 
     ui->lineEditExtractorName->setPlaceholderText(tr("Extractor name e.g. subdomain"));
-    ui->plainTextEditExtractor->setPlaceholderText(tr(R"(Extraction script e.g. {"data":{subdomains:["$$"]}})"));
+    if(extractor->endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::JSON)
+        ui->plainTextEditExtractor->setPlaceholderText(tr(R"(Extraction script e.g. {"data":{subdomains:["$$"]}})"));
+    else if(extractor->endpoint->responseType == OTE::Endpoint::RESPONSE_TYPE::XML)
+        ui->plainTextEditExtractor->setPlaceholderText(tr("Extraction script e.g. <data><subdomains>$$</subdomains></data>"));
 
     if(!mExtractor->name.isEmpty())
         ui->lineEditExtractorName->setText(mExtractor->name);

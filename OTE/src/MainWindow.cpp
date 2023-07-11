@@ -113,13 +113,6 @@ MainWindow::MainWindow(QWidget *parent):
     // check for updates
     if(!OTE::gConfig.general.disableAutomaticUpdateCheck)
         mUpdateChecker->checkForUpdates_onStart();
-
-    QString xml("<name><is>enock</is></name>");
-    QDomDocument doc;
-    if(doc.setContent(xml))
-    {
-        qDebug() << "is: " << doc.documentElement().text();
-    }
 }
 
 MainWindow::~MainWindow()

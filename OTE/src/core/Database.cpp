@@ -454,7 +454,7 @@ QMap<QString, QStringList> Database::loadExtractorResults()
         sqlite3_stmt *stmt;
 
         if(sqlite3_prepare_v2(Database::db,
-                              QString("SELECT result,target FROM %1").arg(type).toUtf8(),
+                              QString("SELECT result FROM %1").arg(type).toUtf8(),
                               -1, &stmt,
                               nullptr))
         {
