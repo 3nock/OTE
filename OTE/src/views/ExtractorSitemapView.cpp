@@ -93,15 +93,16 @@ void ExtractorSitemapView::on_buttonActions_clicked()
 
     menu.addAction(tr("Remove All"), this, [=]
     {
-        for(int i = 0; i < mSitemapModel->proxy->rowCount(); i++)
+        while(mSitemapModel->proxy->rowCount())
         {
-            QModelIndex proxyIndex = mSitemapModel->proxy->index(i, 0);
+            QModelIndex proxyIndex = mSitemapModel->proxy->index(0, 0);
             QModelIndex index = mSitemapModel->proxy->mapToSource(proxyIndex);
             QStandardItem *item = mSitemapModel->currentModel->itemFromIndex(index);
 
             if(OTE::Database::removeExtractorResult(mSitemapModel->currentModelName, item->text()))
                 mSitemapModel->currentModel->removeRow(index.row());
         }
+        ui->labelCount->setNum(mSitemapModel->proxy->rowCount());
     })->setIcon(QIcon(":/icons/res/icons/delete.png"));
 
     menu.addSeparator();
@@ -170,6 +171,7 @@ void ExtractorSitemapView::on_tableViewSitemap_customContextMenuRequested(const 
     {
         if(OTE::Database::removeExtractorResult(mSitemapModel->currentModelName, item->text()))
             mSitemapModel->currentModel->removeRow(index.row());
+        ui->labelCount->setNum(mSitemapModel->proxy->rowCount());
     })->setIcon(QIcon(":/icons/res/icons/delete.png"));
 
     menu.addSeparator();

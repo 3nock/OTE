@@ -16,10 +16,6 @@ namespace OTE {
 class SyntaxHighlighter : public QSyntaxHighlighter
 {
 public:
-    enum Themes {
-        Custom
-    };
-
     enum Language {
         CodeTXT,
         CodeJSON,
@@ -28,19 +24,16 @@ public:
     };
 
     enum Token {
-        CodeBlock,
         CodeKeyWord,
         CodeString,
         CodeComment,
-        CodeType,
         CodeLiteral,
         CodeNumeral,
-        CodeBuiltIn
+        CodeXmlAttr
     };
 
-    explicit SyntaxHighlighter(QTextDocument *doc, Language language = Language::CodeTXT, Themes theme = Themes::Custom);
+    explicit SyntaxHighlighter(QTextDocument *doc, Language language = Language::CodeTXT);
 
-    void setTheme(Themes theme);
     void setCurrentLanguage(Language language);
     Language currentLanguage();
 
@@ -85,19 +78,17 @@ public:
         QHash<SyntaxHighlighter::Token, QTextCharFormat> _formats;
 
         QTextCharFormat defaultFormat = QTextCharFormat();
-
-        _formats[SyntaxHighlighter::Token::CodeBlock] = defaultFormat;
         _formats[SyntaxHighlighter::Token::CodeKeyWord] = defaultFormat;
         _formats[SyntaxHighlighter::Token::CodeString] = defaultFormat;
         _formats[SyntaxHighlighter::Token::CodeComment] = defaultFormat;
-        _formats[SyntaxHighlighter::Token::CodeType] = defaultFormat;
         _formats[SyntaxHighlighter::Token::CodeLiteral] = defaultFormat;
         _formats[SyntaxHighlighter::Token::CodeNumeral] = defaultFormat;
-        _formats[SyntaxHighlighter::Token::CodeBuiltIn] = defaultFormat;
+        _formats[SyntaxHighlighter::Token::CodeXmlAttr] = defaultFormat;
+
         return _formats;
     }
 
-    static QHash<SyntaxHighlighter::Token, QTextCharFormat> custom()
+    static QHash<SyntaxHighlighter::Token, QTextCharFormat> customTheme()
     {
         QHash<SyntaxHighlighter::Token, QTextCharFormat> _formats = formats();
 
@@ -105,17 +96,10 @@ public:
         _formats[SyntaxHighlighter::Token::CodeString].setForeground(QColor(10,160,170));
         _formats[SyntaxHighlighter::Token::CodeComment].setForeground(QColor(95, 180, 180));
         _formats[SyntaxHighlighter::Token::CodeComment].setFontItalic(true);
-        _formats[SyntaxHighlighter::Token::CodeType].setForeground(QColor(198, 149, 198));
         _formats[SyntaxHighlighter::Token::CodeLiteral].setForeground(Qt::magenta);
         _formats[SyntaxHighlighter::Token::CodeNumeral].setForeground(Qt::green);
-        _formats[SyntaxHighlighter::Token::CodeBuiltIn].setForeground(QColor(216, 222, 233));
+        _formats[SyntaxHighlighter::Token::CodeXmlAttr].setForeground(QColor(95, 180, 180));
         return _formats;
-    }
-
-    static QHash<SyntaxHighlighter::Token,QTextCharFormat> theme(SyntaxHighlighter::Themes theme)
-    {
-        Q_UNUSED(theme)
-        return custom();
     }
 };
 

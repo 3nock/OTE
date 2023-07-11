@@ -15,15 +15,15 @@
 
 namespace OTE {
 
-const QMultiHash<char, QLatin1String> JSON_LITERALS {
+const QMultiHash<char, QLatin1String> cJSON_LITERALS {
     {('f'), QLatin1String("false")},
     {('n'), QLatin1String("null")},
     {('t'), QLatin1String("true")}
 };
 
-SyntaxHighlighter::SyntaxHighlighter(QTextDocument *doc, Language language, SyntaxHighlighter::Themes theme):
+SyntaxHighlighter::SyntaxHighlighter(QTextDocument *doc, Language language):
     QSyntaxHighlighter(doc),
-    _formats(SyntaxHighlighterTheme::theme(theme)),
+    _formats(SyntaxHighlighterTheme::customTheme()),
     _language(language)
 {
 }
@@ -37,12 +37,6 @@ void SyntaxHighlighter::setCurrentLanguage(Language language)
 SyntaxHighlighter::Language SyntaxHighlighter::currentLanguage()
 {
     return _language;
-}
-
-void SyntaxHighlighter::setTheme(SyntaxHighlighter::Themes theme)
-{
-    _formats = SyntaxHighlighterTheme::theme(theme);
-    rehighlight();
 }
 
 void SyntaxHighlighter::highlightBlock(const QString &text)
@@ -117,7 +111,7 @@ int SyntaxHighlighter::highlightLiterals(int i, const QString &text)
     if (i == 0 || (!text.at(i - 1).isLetterOrNumber() &&
                    text.at(i-1) != QLatin1Char('_')))
     {
-        const auto wordList = JSON_LITERALS.values(text.at(i).toLatin1());
+        const auto wordList = cJSON_LITERALS.values(text.at(i).toLatin1());
         for (const QLatin1String &word : wordList)
         {
             // we have a word match check
@@ -203,8 +197,6 @@ void SyntaxHighlighter::xmlHighlighter(const QString &text)
         return;
     const auto textLen = text.length();
 
-    setFormat(0, textLen, _formats[CodeBlock]);
-
     int insideTag = 0;
     for (int i = 0; i < textLen; ++i)
     {
@@ -259,46 +251,21 @@ XMLComment:
             if (lastSpace == i-1)
                 lastSpace = text.lastIndexOf(QLatin1Char(' '), i-2);
             if (lastSpace > 0)
-                setFormat(lastSpace, i - lastSpace, _formats[CodeBuiltIn]);
+                setFormat(lastSpace, i - lastSpace, _formats[CodeXmlAttr]);
         }
 
-        if ((i < insideTag) && text[i] == QLatin1Char('\"'))
+        if ((i < insideTag) &&
+            (text[i] == QLatin1Char('"') || text[i] == QLatin1Char('\'')))
         {
             const int pos = i;
             int cnt = 1;
             ++i;
-            //bound check
-            if ( (i+1) >= textLen)
-                return;
-            while (i < textLen) {
-                if (text[i] == QLatin1Char('\"')) {
-                    ++cnt;
-                    ++i;
-                    break;
-                }
-                ++i;
-                ++cnt;
-                //bound check
-                if ( (i+1) >= textLen)
-                {
-                    ++cnt;
-                    break;
-                }
-            }
-            setFormat(pos, cnt, _formats[CodeString]);
-        }
 
-        if ((i < insideTag) && text[i] == QLatin1Char('\''))
-        {
-            const int pos = i;
-            int cnt = 1;
-            ++i;
-            //bound check
             if ( (i+1) >= textLen)
                 return;
             while (i < textLen)
             {
-                if (text[i] == QLatin1Char('\''))
+                if (text[i] == QLatin1Char('"') || text[i] == QLatin1Char('\''))
                 {
                     ++cnt;
                     ++i;
@@ -306,14 +273,14 @@ XMLComment:
                 }
                 ++i;
                 ++cnt;
-                //bound check
+
                 if ( (i+1) >= textLen)
                 {
                     ++cnt;
                     break;
                 }
             }
-            setFormat(pos, cnt, _formats[CodeString]);
+            setFormat(pos, cnt, _formats[CodeXmlAttr]);
         }
     }
 }
