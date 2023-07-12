@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton, true);
 
     // installing the message handler
-    //qInstallMessageHandler(MessageHandler);
+    qInstallMessageHandler(MessageHandler);
 
     // app info
     QCoreApplication::setOrganizationName("SpiderSuite");

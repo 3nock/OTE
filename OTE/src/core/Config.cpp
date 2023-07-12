@@ -27,6 +27,8 @@ void Config::fromConfigFile()
     // get settings from settings file
     QString filename(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/ote.conf");
 
+    qDebug() << "Configuration file location: " << filename;
+
     if(!QFileInfo::exists(filename))
     {
         QDir dir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));

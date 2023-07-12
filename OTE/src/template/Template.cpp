@@ -227,6 +227,8 @@ void Template::loadTemplates()
     QString location(QCoreApplication::applicationDirPath());
     location.append("/templates/");
 
+    qDebug() << "Templates folder location: " << location;
+
     for (const QFileInfo &fileInfo : QDir(location).entryInfoList(QDir::Files))
     {
         if(fileInfo.completeSuffix().compare("json", Qt::CaseInsensitive) != 0)
