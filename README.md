@@ -47,7 +47,7 @@ For More information see [contribution guide](CONTRIBUTING.md).
 
 # Sponsors
 
-<center><img src="resources/websec.png" width=300/></center>
+<img src="resources/websec.png" width=300/>
 
 WebSec BV, a cybersecurity company based in Amsterdam, is recognized for their dedication to helping businesses and individuals protect themselves against online threats. As a valued sponsor, they have contributed significantly to the promotion of cybersecurity and the creation of a safer online world.
 
@@ -58,6 +58,7 @@ Through their sponsorship and support, WebSec has demonstrated their commitment 
 Overall, WebSec BV is a trusted and respected leader in the fight against cybercrime, and their sponsorship and support have been instrumental in promoting a safer online world. They are a valued partner and their contributions to this important work are truly appreciated.
 
 Website: [websec.nl](https://websec.nl)
+
 Blog: [websec.nl/blog](https://websec.nl/blog) 
 
 # Credits
