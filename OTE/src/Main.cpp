@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
     // On Windows this is handled by the RC file,
     // and on Mac by the ICNS file.
 #if !defined(Q_OS_WIN32) && !defined(Q_OS_MAC)
-    app.setWindowIcon(Utility::getApplicationIcon());
+    app.setWindowIcon(OTE::Utility::getApplicationIcon());
 #if QT_VERSION >= 0x050700
     // Wayland needs this clarified in order to propery assign the icon
     app.setDesktopFileName(QStringLiteral("OTE.desktop"));

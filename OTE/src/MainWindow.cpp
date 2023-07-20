@@ -107,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent):
     ui->sidebar->click(0);
 
 #if defined (Q_OS_LINUX)
-    this->setWindowIcon(Utility::getApplicationIcon());
+    this->setWindowIcon(OTE::Utility::getApplicationIcon());
 #endif
 
     // check for updates
